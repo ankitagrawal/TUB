@@ -206,7 +206,7 @@
         <br/>
         <a href="reconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-        <s:submit name="reconcileAdd" value="Save" class="saveButton"/>
+        <s:submit id="reconcileAdd" name="reconcileAdd" value="Save" class="saveButton"/>
         <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <hr/>
         <fieldset>
@@ -253,18 +253,22 @@
 				    return false;
 			    }
 			    else {
+			    	$(this).hide();
 				    return $(this).submit();
 			    }
 			    $(this).css("display", "none");
 		    });
 		    
 		    $('#excelUpload').live("click", function() {
+		    	$(this).hide();
                 var filebean = $('#fileBean').val();
                 if (filebean == null || filebean == '') {
+                	$(this).show();
                   alert('choose file');
                   return false;
                 }
               });
+		    
 	    });
     </script>
 </s:layout-component>

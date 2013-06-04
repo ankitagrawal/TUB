@@ -222,7 +222,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     /*pre method for similar product screen*/
     public Resolution notifyMeListForDeletedHiddenOOSProduct() {
-        Page page = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
+        Page page = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, true, productHidden);
         notifyMeDtoList = page.getList();
         totalProductVariant = notifyMeDtoList.size();
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");

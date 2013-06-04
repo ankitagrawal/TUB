@@ -124,8 +124,8 @@
                                     <c:set var="similarProductInventoryList"
                                            value="${hk:similarProductWithUnbookedInventory(notifyMeDto.productVariant)}"/>
                                     name -- unbooked inventory
-                                    <c:forEach items="${similarProductInventoryList}" var="productInventoryDomain">
-                                        ${productInventoryDomain.product.id} -- ${productInventoryDomain.inventory}
+                                    <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
+                                        ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
                                         <br/>
                                     </c:forEach>
                                 </td>

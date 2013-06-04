@@ -2,6 +2,8 @@ package com.hk.admin.impl.service.email;
 
 import com.hk.domain.catalog.product.Product;
 
+import java.util.Comparator;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Seema
@@ -9,18 +11,14 @@ import com.hk.domain.catalog.product.Product;
  * Time: 2:14 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ProductInventoryDomain implements Comparable<ProductInventoryDomain> {
+public class ProductInventoryDto {
 
     private Product product;
     private Integer inventory;
 
-    public ProductInventoryDomain(Product product, Integer inventory) {
+    public ProductInventoryDto(Product product, Integer inventory) {
         this.product = product;
         this.inventory = inventory;
-    }
-
-    public int compareTo(ProductInventoryDomain productInventoryDomain) {
-        return this.getInventory().compareTo(productInventoryDomain.getInventory());
     }
 
 
@@ -38,5 +36,14 @@ public class ProductInventoryDomain implements Comparable<ProductInventoryDomain
 
     public void setInventory(Integer inventory) {
         this.inventory = inventory;
+    }
+
+    public static class InventoryComparator implements Comparator<ProductInventoryDto> {
+        @Override
+        public int compare(ProductInventoryDto o1, ProductInventoryDto o2) {
+            return (o1.getInventory().compareTo(o2.getInventory()));
+        }
+
+
     }
 }

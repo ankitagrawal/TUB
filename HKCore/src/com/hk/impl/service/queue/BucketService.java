@@ -1,7 +1,9 @@
 package com.hk.impl.service.queue;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
+import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
@@ -31,6 +33,8 @@ public interface BucketService {
 
     List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
 
+    List<Bucket> listAll();
+
     /*
       createUpdateActionItem  --> inputs needed (SO, calledAuto/EscalatedBack/manual), (Reporter loggedIn/Admin)
 
@@ -48,6 +52,7 @@ public interface BucketService {
 
      */
 
+    public Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage);
 
     ActionItem existsActionItem(ShippingOrder shippingOrder);
 
@@ -60,4 +65,12 @@ public interface BucketService {
     void popFromActionQueue(ShippingOrder shippingOrder);
 
     public Bucket getBucketById(Long bucketId);
+
+    ActionItem autoUpdateActionItem(ActionItem actionItem, boolean autoUpdate);
+
+    public ActionItem getActionItemById (Long actionItemId);
+
+    public List<ActionTask> listNextActionTasks(ActionItem actionItem);
+
+    List<EnumBucket> getCategoryDefaultersBuckets(ShippingOrder shippingOrder);
 }

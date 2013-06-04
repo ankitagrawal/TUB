@@ -3,22 +3,18 @@ package com.hk.admin.impl.service.email;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.constants.core.Keys;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.user.User;
-import com.hk.impl.dao.email.NotifyMeDto;
 import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -115,7 +111,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
                 }
                 Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
-                if (alreadyNotified != null &&  alreadyNotified < allowedUserNumber ) {
+                if (alreadyNotified != null && alreadyNotified < allowedUserNumber) {
                     /* get List of user to be informed */
                     List<NotifyMe> notifyMeListPerUser = null;
                     boolean isEligible = false;
@@ -154,7 +150,6 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                 }
             }
 
-
         } catch (Exception ex) {
             logger.error("Unable to send bulk notify me emails " + ex.getMessage());
         }
@@ -163,28 +158,28 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
 
     private int getSumOFSimilarProductInventory(ProductVariant productVariant) {
         int sumOfUnbookedInvn = 0;
-        List<ProductInventoryDomain> productInventoryDomains = getProductVariantOfSimilarProductWithNthMaxAvailableInventory(productVariant, 3);
+        List<ProductInventoryDto> productInventoryDtos = getProductVariantOfSimilarProductWithNthMaxAvailableInventory(productVariant, 3);
 
-        if (productInventoryDomains != null) {
-            for (ProductInventoryDomain productInventoryDomain : productInventoryDomains) {
-                sumOfUnbookedInvn = sumOfUnbookedInvn + productInventoryDomain.getInventory();
+        if (productInventoryDtos != null) {
+            for (ProductInventoryDto productInventoryDto : productInventoryDtos) {
+                sumOfUnbookedInvn = sumOfUnbookedInvn + productInventoryDto.getInventory();
             }
         }
         return sumOfUnbookedInvn;
     }
 
 
-    public List<ProductInventoryDomain> getProductVariantOfSimilarProductWithNthMaxAvailableInventory(ProductVariant productVariant, int numberOfSimilarProduct) {
-        List<ProductInventoryDomain> similarProductWithInvnInDescOrder = getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
-        List<ProductInventoryDomain> finalSimilarProductWithInvnInDescOrderList = new ArrayList<ProductInventoryDomain>();
+    public List<ProductInventoryDto> getProductVariantOfSimilarProductWithNthMaxAvailableInventory(ProductVariant productVariant, int numberOfSimilarProduct) {
+        List<ProductInventoryDto> similarProductWithInvnInDescOrder = getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
+        List<ProductInventoryDto> finalSimilarProductWithInvnInDescOrderList = new ArrayList<ProductInventoryDto>();
 
         int count = 0;
         if (similarProductWithInvnInDescOrder != null) {
-            for (ProductInventoryDomain productInventoryDomain : similarProductWithInvnInDescOrder) {
+            for (ProductInventoryDto productInventoryDto : similarProductWithInvnInDescOrder) {
                 if (count >= numberOfSimilarProduct) {
                     return finalSimilarProductWithInvnInDescOrderList;
                 }
-                finalSimilarProductWithInvnInDescOrderList.add(productInventoryDomain);
+                finalSimilarProductWithInvnInDescOrderList.add(productInventoryDto);
                 count++;
 
             }
@@ -194,28 +189,26 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
 
 
     public List<Product> getInStockSimilarProductsWithMaxInvn(ProductVariant productVariant, int noOfSimilarProduct) {
-        List<ProductInventoryDomain> similarProductListInvn = getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
+        List<ProductInventoryDto> similarProductListInvn = getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
         List<Product> similarProductList = new ArrayList<Product>();
         int count = 0;
         if (similarProductListInvn != null) {
-            for (ProductInventoryDomain productInventoryDomain : similarProductListInvn) {
+            for (ProductInventoryDto productInventoryDto : similarProductListInvn) {
                 if (count >= noOfSimilarProduct) {
                     return similarProductList;
                 }
-                similarProductList.add(productInventoryDomain.getProduct());
+                similarProductList.add(productInventoryDto.getProduct());
                 count++;
 
             }
         }
-
         return similarProductList;
     }
 
 
-    public List<ProductInventoryDomain> getProductVariantOfSimilarProductWithAvailableInventory(ProductVariant productVariant) {
-        List<ProductInventoryDomain> similarProductWithInvnInDescOrder = new ArrayList<ProductInventoryDomain>();
+    public List<ProductInventoryDto> getProductVariantOfSimilarProductWithAvailableInventory(ProductVariant productVariant) {
+        List<ProductInventoryDto> similarProductWithInvnInDescOrder = new ArrayList<ProductInventoryDto>();
         List<SimilarProduct> similarProductList = productVariant.getProduct().getSimilarProducts();
-
 
         if (similarProductList != null) {
             for (SimilarProduct similarProduct : similarProductList) {
@@ -227,13 +220,13 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     availableInventoryForProduct = availableInventoryForProduct + (netInvn - bookedInvn);
                 }
                 if (availableInventoryForProduct > 0) {
-                    ProductInventoryDomain productInventoryDomain = new ProductInventoryDomain(similarProduct.getSimilarProduct(), availableInventoryForProduct);
-                    similarProductWithInvnInDescOrder.add(productInventoryDomain);
+                    ProductInventoryDto productInventoryDto = new ProductInventoryDto(similarProduct.getSimilarProduct(), availableInventoryForProduct);
+                    similarProductWithInvnInDescOrder.add(productInventoryDto);
                 }
             }
-            Collections.sort(similarProductWithInvnInDescOrder);
+            Comparator<ProductInventoryDto> InventoryComparator = new ProductInventoryDto.InventoryComparator();
+            Collections.sort(similarProductWithInvnInDescOrder, Collections.reverseOrder(InventoryComparator));
         }
-
         return similarProductWithInvnInDescOrder;
     }
 
@@ -245,7 +238,6 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     return true;
                 }
             }
-
         }
 
         return false;

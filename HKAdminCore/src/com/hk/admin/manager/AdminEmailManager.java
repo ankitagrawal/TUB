@@ -3,7 +3,6 @@ package com.hk.admin.manager;
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
-import com.hk.admin.impl.service.email.ProductInventoryDomain;
 import com.hk.admin.pact.service.email.AdminEmailService;
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.cache.RoleCache;

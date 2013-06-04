@@ -303,7 +303,8 @@
         </description>
         <name>collectionContainsBoth</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>boolean collectionContainsBoth(java.util.Collection,java.lang.Object,java.lang.Object)</function-signature>
+        <function-signature>boolean collectionContainsBoth(java.util.Collection,java.lang.Object,java.lang.Object)
+        </function-signature>
         <example>
             ${hk:collectionContainsBoth(${coll}, ${object}, ${object2})}
         </example>
@@ -346,7 +347,8 @@
     </function>
     <function>
         <description>
-            returns the Booked qty of sku/productVariant, i.e looks in all the queues till it has been shipped/delivered/cancelled
+            returns the Booked qty of sku/productVariant, i.e looks in all the queues till it has been
+            shipped/delivered/cancelled
         </description>
         <name>bookedQty</name>
         <function-class>com.hk.taglibs.Functions</function-class>
@@ -357,7 +359,7 @@
     </function>
     <function>
         <description>
-            returns the net inventory  of product variant or sku
+            returns the net inventory of product variant or sku
         </description>
         <name>netInventory</name>
         <function-class>com.hk.taglibs.Functions</function-class>
@@ -366,17 +368,17 @@
             ${hk:netInventory(${object})}
         </example>
     </function>
-	<function>
-		<description>
-			returns the net inventory  of product variant or sku
-		</description>
-		<name>netInventoryAtServiceableWarehouses</name>
-		<function-class>com.hk.taglibs.Functions</function-class>
-		<function-signature>java.lang.Long netInventoryAtServiceableWarehouses(java.lang.Object)</function-signature>
-		<example>
-			${hk:netInventoryAtServiceableWarehouses(${object})}
-		</example>
-	</function>
+    <function>
+        <description>
+            returns the net inventory of product variant or sku
+        </description>
+        <name>netInventoryAtServiceableWarehouses</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long netInventoryAtServiceableWarehouses(java.lang.Object)</function-signature>
+        <example>
+            ${hk:netInventoryAtServiceableWarehouses(${object})}
+        </example>
+    </function>
     <function>
         <description>
             returns the net available unbooked inventory of product variant or sku
@@ -394,7 +396,8 @@
         </description>
         <name>topLevelCategory</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.domain.catalog.category.Category topLevelCategory(java.lang.Object)</function-signature>
+        <function-signature>com.hk.domain.catalog.category.Category topLevelCategory(java.lang.Object)
+        </function-signature>
         <example>
             ${hk:topLevelCategory(${object})}
         </example>
@@ -482,7 +485,8 @@
         </description>
         <name>getExtraOptionsAsString</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String getExtraOptionsAsString(java.lang.Object,java.lang.String)</function-signature>
+        <function-signature>java.lang.String getExtraOptionsAsString(java.lang.Object,java.lang.String)
+        </function-signature>
         <example>
             ${hk:getExtraOptionsAsString(${o1}, ${str})}
         </example>
@@ -588,7 +592,8 @@
         </description>
         <name>getS3ImageUrl</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object,boolean)</function-signature>
+        <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object,boolean)
+        </function-signature>
         <example>
             ${hk:getS3ImageUrl(${object}, ${object})}
         </example>
@@ -612,7 +617,8 @@
         </description>
         <name>getTopDealVariant</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.domain.catalog.product.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
+        <function-signature>com.hk.domain.catalog.product.ProductVariant getTopDealVariant(java.lang.Object)
+        </function-signature>
         <example>
             ${hk:getTopDealVariant(${object})}
         </example>
@@ -709,7 +715,8 @@
         </description>
         <name>getOrderBasedApplicableOfferPrice</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Double getApplicableOfferPrice(java.lang.Object, java.lang.Object)</function-signature>
+        <function-signature>java.lang.Double getApplicableOfferPrice(java.lang.Object, java.lang.Object)
+        </function-signature>
         <example>
             ${hk:getApplicableOfferPrice(${object}, ${object})}
         </example>
@@ -721,7 +728,8 @@
         </description>
         <name>getMenuNodeForProduct</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.dto.menu.MenuNode getMenuNodeForProduct(com.hk.domain.catalog.product.Product)</function-signature>
+        <function-signature>com.hk.dto.menu.MenuNode getMenuNodeForProduct(com.hk.domain.catalog.product.Product)
+        </function-signature>
         <example>
             ${hk:getMenuNodeForProduct(${product)}
         </example>
@@ -797,15 +805,15 @@
         </example>
     </function>
     <!--<function>-->
-        <!--<description>-->
-            <!--product list for a primary heading in a sorted order.-->
-        <!--</description>-->
-        <!--<name>getCategoryHeadingProductsSortedByOrder</name>-->
-        <!--<function-class>com.hk.taglibs.Functions</function-class>-->
-        <!--<function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>-->
-        <!--<example>-->
-            <!--${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}-->
-        <!--</example>-->
+    <!--<description>-->
+    <!--product list for a primary heading in a sorted order.-->
+    <!--</description>-->
+    <!--<name>getCategoryHeadingProductsSortedByOrder</name>-->
+    <!--<function-class>com.hk.taglibs.Functions</function-class>-->
+    <!--<function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>-->
+    <!--<example>-->
+    <!--${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}-->
+    <!--</example>-->
     <!--</function>-->
     <function>
         <description>
@@ -868,18 +876,20 @@
         </description>
         <name>findInventorySoldInGivenNoOfDays</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,int)</function-signature>
+        <function-signature>java.lang.Long findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,int)
+        </function-signature>
         <example>
             ${hk:findInventorySoldByDateAndProduct(${sku},${noOfDays})}
         </example>
     </function>
- <function>
+    <function>
         <description>
             checks if collection contains the given object
         </description>
         <name>isCollectionContainsObject</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>boolean isCollectionContainsObject(java.util.Collection,java.lang.Object))</function-signature>
+        <function-signature>boolean isCollectionContainsObject(java.util.Collection,java.lang.Object))
+        </function-signature>
         <example>
             ${hk:isCollectionContainsObject(${collection},${object})}
         </example>
@@ -912,7 +922,8 @@
         </description>
         <name>getProductURL</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String getProductURL(com.hk.domain.catalog.product.Product , java.lang.Long )</function-signature>
+        <function-signature>java.lang.String getProductURL(com.hk.domain.catalog.product.Product , java.lang.Long )
+        </function-signature>
         <example>
             ${hk:getProductURL(${product},1)}
         </example>
@@ -935,7 +946,8 @@
         </description>
         <name>validTryOnProductVariant</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature> com.hk.domain.catalog.product.ProductVariant validTryOnProductVariant(com.hk.domain.catalog.product.Product)
+        <function-signature>com.hk.domain.catalog.product.ProductVariant
+            validTryOnProductVariant(com.hk.domain.catalog.product.Product)
         </function-signature>
         <example>
             ${hk:getTryOnImageURL(${product})}
@@ -968,8 +980,9 @@
             returns true if cod is allowed on order
         </description>
         <name>getHubForHkdeliveryUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>                                
-        <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)</function-signature>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)
+        </function-signature>
         <example>
             ${hk:getHubForHkdeliveryUser(${user})}
         </example>
@@ -980,9 +993,11 @@
         </description>
         <name>searchProductImages</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,java.lang.Object)</function-signature>
+        <function-signature>java.lang.Long
+            searchProductImages(com.hk.domain.catalog.product.Product,com.hk.domain.catalog.product.ProductVariant,java.lang.Long,boolean,java.lang.Object)
+        </function-signature>
         <example>
-        ${hk:searchProductImages(${product})}
+            ${hk:searchProductImages(${product})}
         </example>
     </function>
     <function>
@@ -1002,13 +1017,15 @@
         </description>
         <name>getApplicableWarehouses</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.util.List getApplicableWarehouses(com.hk.domain.catalog.product.ProductVariant,com.hk.domain.order.Order))</function-signature>
+        <function-signature>java.util.List
+            getApplicableWarehouses(com.hk.domain.catalog.product.ProductVariant,com.hk.domain.order.Order))
+        </function-signature>
         <example>
             ${hk:getApplicableWarehouses(${object})}
         </example>
     </function>
 
-	<function>
+    <function>
         <description>
             Returns status/default source and distination in user friendly way
         </description>
@@ -1020,31 +1037,33 @@
         </example>
     </function>
 
-	<function>
-		<description>
-			Returns PO Line Item qty corresponding to the grn Line Item Qty
-		</description>
-		<name>getPoLineItemQty</name>
-		<function-class>com.hk.taglibs.Functions</function-class>
-		<function-signature>java.lang.Long getPoLineItemQty(com.hk.domain.inventory.GrnLineItem)</function-signature>
-		<example>
-			${hk:getPoLineItemQty(${grnLineItem})}
-		</example>
-	</function>
+    <function>
+        <description>
+            Returns PO Line Item qty corresponding to the grn Line Item Qty
+        </description>
+        <name>getPoLineItemQty</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long getPoLineItemQty(com.hk.domain.inventory.GrnLineItem)</function-signature>
+        <example>
+            ${hk:getPoLineItemQty(${grnLineItem})}
+        </example>
+    </function>
 
-	<function>
-		<description>
-			Returns the line item qty for all other grns
-		</description>
-		<name>getGrnLineItemQtyAlreadySet</name>
-		<function-class>com.hk.taglibs.Functions</function-class>
-		<function-signature>java.lang.Long getGrnLineItemQtyAlreadySet(com.hk.domain.inventory.GoodsReceivedNote,com.hk.domain.sku.Sku))</function-signature>
-		<example>
-			${hk:getGrnLineItemQtyAlreadySet(${grn, sku})}
-		</example>
-	</function>
+    <function>
+        <description>
+            Returns the line item qty for all other grns
+        </description>
+        <name>getGrnLineItemQtyAlreadySet</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long
+            getGrnLineItemQtyAlreadySet(com.hk.domain.inventory.GoodsReceivedNote,com.hk.domain.sku.Sku))
+        </function-signature>
+        <example>
+            ${hk:getGrnLineItemQtyAlreadySet(${grn, sku})}
+        </example>
+    </function>
 
-     <function>
+    <function>
         <description>
             returns a country based on countryid
         </description>
@@ -1056,7 +1075,7 @@
         </example>
     </function>
 
-     <function>
+    <function>
         <description>
             returns Heading Products based on rank
         </description>
@@ -1068,7 +1087,7 @@
         </example>
     </function>
     <function>
-    <description>
+        <description>
             returns a encrypted orderId
         </description>
         <name>encryptOrderId</name>
@@ -1095,33 +1114,37 @@
         </description>
         <name>isOrderForDiscretePackaging</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Boolean isOrderForDiscretePackaging(com.hk.domain.order.ShippingOrder)</function-signature>
+        <function-signature>java.lang.Boolean isOrderForDiscretePackaging(com.hk.domain.order.ShippingOrder)
+        </function-signature>
         <example>
             <!--${hk:isOrderForDiscretePackaging(${id})}-->
         </example>
     </function>
-	<function>
-		<description>
-			returns ProductVariantSupplierInfo
-		</description>
-		<name>getPVSupplierInfo</name>
-		<function-class>com.hk.taglibs.Functions</function-class>
-		<function-signature>com.hk.domain.catalog.ProductVariantSupplierInfo getPVSupplierInfo(com.hk.domain.catalog.Supplier,com.hk.domain.catalog.product.ProductVariant)</function-signature>
-		<example>
-			${hk:getPVSupplierInfo(${supplier, productVariant})}
-		</example>
-	</function>
-	<function>
-		<description>
-			returns true if filter heads need to be hidden
-		</description>
-		<name>hideFilterHeads</name>
-		<function-class>com.hk.taglibs.Functions</function-class>
-		<function-signature>boolean hideFilterHeads(java.lang.String,java.lang.String,java.lang.String)</function-signature>
-		<example>
-			${hk:hideFilterHeads(${o1, o2, o3})}
-		</example>
-	</function>
+    <function>
+        <description>
+            returns ProductVariantSupplierInfo
+        </description>
+        <name>getPVSupplierInfo</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.catalog.ProductVariantSupplierInfo
+            getPVSupplierInfo(com.hk.domain.catalog.Supplier,com.hk.domain.catalog.product.ProductVariant)
+        </function-signature>
+        <example>
+            ${hk:getPVSupplierInfo(${supplier, productVariant})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns true if filter heads need to be hidden
+        </description>
+        <name>hideFilterHeads</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean hideFilterHeads(java.lang.String,java.lang.String,java.lang.String)
+        </function-signature>
+        <example>
+            ${hk:hideFilterHeads(${o1, o2, o3})}
+        </example>
+    </function>
     <function>
         <description>
             returns true if filter heads need to be hidden
@@ -1144,13 +1167,14 @@
             ${hk:getActionAwaitingSO(${o1})}
         </example>
     </function>
-     <function>
+    <function>
         <description>
             returns appropriate WH based on SO
         </description>
         <name>getShippingWarehouse</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.domain.warehouse.Warehouse getShippingWarehouse(com.hk.domain.order.ShippingOrder))</function-signature>
+        <function-signature>com.hk.domain.warehouse.Warehouse getShippingWarehouse(com.hk.domain.order.ShippingOrder))
+        </function-signature>
         <example>
             ${hk:getShippingWarehouse(${o1})}
         </example>
@@ -1161,7 +1185,8 @@
         </description>
         <name>getB2bUserDetails</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.domain.user.B2bUserDetails getB2bUserDetails(com.hk.domain.user.User)</function-signature>
+        <function-signature>com.hk.domain.user.B2bUserDetails getB2bUserDetails(com.hk.domain.user.User)
+        </function-signature>
         <example>
             ${hk:getB2bUserDetails(${o1})}
         </example>
@@ -1183,38 +1208,39 @@
         </description>
         <name>getAppendedURL</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String getAppendedURL(java.lang.String,java.lang.String, java.lang.String)</function-signature>
+        <function-signature>java.lang.String getAppendedURL(java.lang.String,java.lang.String, java.lang.String)
+        </function-signature>
         <example>
             ${hk:getAppendedURL(${o1}),${o1},${o1}}
         </example>
     </function>
-    
+
     <function>
         <description>
             returns loyalty karma points for a user
         </description>
         <name>getLoyaltyKarmaPointsForUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>                                
+        <function-class>com.hk.taglibs.Functions</function-class>
         <function-signature>double getLoyaltyKarmaPointsForUser(java.lang.Long))</function-signature>
         <example>
             ${hk:getLoyaltyKarmaPointsForUser(${userId})}
         </example>
     </function>
-	<function>
+    <function>
         <description>
             returns loyalty karma points for a user
 
         </description>
         <name>getBadgeInfoForUser</name>
 
-        <function-class>com.hk.taglibs.Functions</function-class>                                
+        <function-class>com.hk.taglibs.Functions</function-class>
         <function-signature>com.hk.domain.loyaltypg.Badge getBadgeInfoForUser(java.lang.Long))</function-signature>
         <example>
             ${hk:getBadgeInfoForUser(${userId})}
 
         </example>
-	</function>
-	<function>
+    </function>
+    <function>
         <description>
             returns rounded number for display on jsp page
         </description>
@@ -1223,8 +1249,32 @@
         <function-signature>java.lang.String roundNumberForDisplay(double))</function-signature>
         <example>
             ${hk:round(${number})}
-		</example>
-	</function>
+        </example>
+    </function>
+    <function>
+        <description>
+            returns appropriate Action Item based on SO
+        </description>
+        <name>getActionItem</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.queue.ActionItem getActionItem(com.hk.domain.order.ShippingOrder))
+        </function-signature>
+        <example>
+            ${hk:getActionItem(${o1})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns appropriate Action Item based on SO
+        </description>
+        <name>listNextActionTasks</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List listNextActionTasks(com.hk.domain.queue.ActionItem)
+        </function-signature>
+        <example>
+            ${hk:listNextActionTasks(${o1})}
+        </example>
+    </function>
     <function>
         <description>
             returns n number of similar product with  max inventory
@@ -1236,5 +1286,4 @@
             ${hk:similarProductWithUnbookedInventory(${productVariant})}
         </example>
     </function>
-
 </taglib>

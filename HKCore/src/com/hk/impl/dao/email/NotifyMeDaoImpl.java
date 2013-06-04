@@ -3,7 +3,7 @@ package com.hk.impl.dao.email;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Criteria;
+
 import org.hibernate.criterion.*;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
@@ -110,7 +110,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     public List<NotifyMe> getNotifyMeListForProductVariantInStock() {
         return (List<NotifyMe>) getSession().createQuery(
                 "Select nm from NotifyMe nm, ProductVariant pv  where pv =nm.productVariant and nm.notifiedByUser is null "
-                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock and pv.product.hidden is null  order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).list();
+                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock and pv.product.hidden != true order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).list();
     }
 
     public Page getNotifyMeListForProductVariantInStock(int pageNo, int perPage) {
@@ -146,7 +146,6 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted, Boolean productHidden) {
         DetachedCriteria notifyMeDetachedCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
         int totalResults = count(notifyMeDetachedCriteria,false);
-
         ProjectionList projectionList = Projections.projectionList();
         projectionList.add(Projections.alias(Projections.property("id"), "id"));
         projectionList.add(Projections.alias(Projections.property("name"), "name"));
@@ -161,5 +160,4 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         return new Page(resultList, perPage, pageNo, totalResults);
 
     }
-
 }

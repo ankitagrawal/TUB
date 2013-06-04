@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.catalog.product.SimilarProductsDao;
 import com.hk.pact.service.catalog.ProductService;
 
 import com.hk.domain.catalog.product.Product;
@@ -34,9 +33,6 @@ public class EditSimilarProductsAction extends BaseAction {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired
-    SimilarProductsDao     similarProductsDao;
 
     public String          productId;
     Product                inputProduct;

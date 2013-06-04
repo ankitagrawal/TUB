@@ -17,17 +17,9 @@ public class NotifyMeDto {
 
 
     private Long id;
-
-
     private String name;
-
-
     private String email;
-
-
     private ProductVariant productVariant;
-
-
     int userCount;
 
 

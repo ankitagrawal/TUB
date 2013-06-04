@@ -232,6 +232,5 @@
             </s:form>
         </c:otherwise>
     </c:choose>
-
 </s:layout-component>
 </s:layout-render>
