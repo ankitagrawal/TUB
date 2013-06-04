@@ -166,8 +166,12 @@ public class CourierAWBAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadCourierAWBExcelForDelete() {
-        if (fileBean == null) {
-            addRedirectAlertMessage(new SimpleMessage("Select Courier  and choose file to upload"));
+        if (fileBean == null ) {
+            addRedirectAlertMessage(new SimpleMessage("Select choose file to upload"));
+            return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+        }
+        if(!(fileBean.getContentType().equals("application/vnd.ms-excel"))){
+            addRedirectAlertMessage(new SimpleMessage("upload xls file only"));
             return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
         }
 
@@ -177,19 +181,15 @@ public class CourierAWBAction extends BaseAction {
         List<Awb> awbListFromExcel = null;
         List<Awb> awbListToBeDeleted = new ArrayList<Awb>();
         List<Awb> wrongEntriesInExcel = new ArrayList<Awb>();
-        List<Awb> awbListInExcelAlreadyUsed = new ArrayList<Awb>();
+
         try {
             fileBean.save(excelFile);
             awbListFromExcel = xslAwbParser.readAwbExcel(excelFile);
             if (awbListFromExcel != null && awbListFromExcel.size() > 0) {
                 for (Awb awb : awbListFromExcel) {
-                    Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(awb.getCourier(), awb.getAwbNumber(), awb.getWarehouse(), awb.getCod(), null);
+                   Awb awbFromDb = awbService.isAwbEligibleForDeletion(awb.getCourier(), awb.getAwbNumber(), awb.getWarehouse(), awb.getCod());
                     if (awbFromDb != null) {
-                        if (awbFromDb.getAwbStatus().equals(EnumAwbStatus.Unused.getAsAwbStatus())) {
-                            awbListToBeDeleted.add(awbFromDb);
-                        } else {
-                            awbListInExcelAlreadyUsed.add(awbFromDb);
-                        }
+                        awbListToBeDeleted.add(awbFromDb);
                     } else {
                         wrongEntriesInExcel.add(awb);
                     }
@@ -199,16 +199,10 @@ public class CourierAWBAction extends BaseAction {
                     awbService.delete(awbDelete);
                 }
                 addRedirectAlertMessage(new SimpleMessage("database updated"));
-                // AWb on excel which are already used
-                if (awbListInExcelAlreadyUsed.size() > 0) {
-                    addRedirectAlertMessage(new SimpleMessage("Deletion Failed ::: Below AWBs  already  Used By Shipment"));
-                    for (Awb awb : awbListInExcelAlreadyUsed) {
-                        addRedirectAlertMessage(new SimpleMessage("Awb Number :: " + awb.getAwbNumber() + " ,  Courier Id  ::  " + awb.getCourier().getId()));
-                    }
-                }
-                //Invalid Awb in excel which are not present in DB
+
+                //Awb which cannot be deleted
                 if (wrongEntriesInExcel.size() > 0) {
-                    addRedirectAlertMessage(new SimpleMessage("Deletion Failed :::  Below wrong entries Does Not Exist In System "));
+                    addRedirectAlertMessage(new SimpleMessage("Deletion Failed :::  Below wrong can not be deleted"));
                     for (Awb awb : wrongEntriesInExcel) {
                         addRedirectAlertMessage(new SimpleMessage("Awb Number :: " + awb.getAwbNumber() + " ,  Courier Id  ::  " + awb.getCourier().getId()));
                     }
@@ -221,6 +215,7 @@ public class CourierAWBAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage(dup.getMessage() + " AWB_Number  : " + dup.getAwbNumber() + "  is present in Excel twice for Courier ::   " + dup.getCourier().getId()));
 
         }
+
         catch (Exception ex) {
                 addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
         }

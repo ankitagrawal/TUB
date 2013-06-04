@@ -70,6 +70,13 @@ public class ProductResource {
 		return getHkapiProductService().syncProductImages();
 	}
 
+    @GET
+    @Path("/ooshiddendeleted/all")
+    @Produces (MediaType.APPLICATION_JSON)
+    public HKAPIBaseDTO getOOSHiddenDeletedProducts() {
+        return getHkapiProductService().getOOSHiddenDeletedProducts();
+    }
+
 	@GET
 	@Path ("/lowresolutionimage")
 	@Produces (MediaType.APPLICATION_JSON)

@@ -95,6 +95,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 .setParameter("nonDeleted", false).list();
     }
 
+    public List<Product> getOOSHiddenDeletedProducts(){
+       return  (List<Product>) findByNamedParams(" from Product p where p.hidden =:hidden or p.deleted =:deleted or p.outOfStock =:outOfStock", new String[]{"hidden","deleted","outOfStock"}, new Object[]{true, true, true});
+    }
+
     /**
      * returns list of all the products irrespective of whether they are deleted or not.
      *

@@ -52,6 +52,7 @@ import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.impl.service.codbridge.OrderEventPublisher;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.order.OrderDao;
@@ -132,6 +133,9 @@ public class OrderManager {
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
     @Autowired
     OrderEventPublisher orderEventPublisher;
+    
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double                            codCharges;
@@ -393,6 +397,10 @@ public class OrderManager {
 
             // award reward points, if using a reward point offer coupon
             this.rewardPointService.awardRewardPoints(order);
+            
+			// credit loyalty points
+			// to do move this API out
+			loyaltyProgramService.creditKarmaPoints(order);
 
             // save order with placed status since amount has been applied
             order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());

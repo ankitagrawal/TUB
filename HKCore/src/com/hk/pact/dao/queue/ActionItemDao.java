@@ -34,4 +34,6 @@ public interface ActionItemDao extends BaseDao
     Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage);
 
     List<ActionTask> listNextActionTasks(ActionTask currentActionTask, List<Bucket> buckets);
+
+    public List<ActionItem> getActionItemsOfActionQueue ();
 }
