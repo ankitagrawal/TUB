@@ -73,7 +73,7 @@ public class InvoiceDto {
 					+ replacementOrder.getRefShippingOrder().getGatewayOrderId();
 		}
 
-		for (EnumTax enumTax : EnumTax.values()) {
+		for (EnumTax enumTax : EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE)) {
 
 			summaryAmountMap.put(enumTax.getName(), 0.0);
 			summaryTaxMap.put(enumTax.getName(), 0.0);
@@ -160,7 +160,7 @@ public class InvoiceDto {
 			totalTaxable += invoiceLineItemdto.getTaxable();
 			totalSurcharge += invoiceLineItemdto.getSurcharge();
 
-			for (EnumTax enumTax : EnumTax.values()) {
+			for (EnumTax enumTax : EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE)) {
 
 				if (!enumTax.equals(EnumTax.NA)) {
 					if (invoiceLineItemdto.getTaxValue() == enumTax.getValue()) {
@@ -501,7 +501,7 @@ public class InvoiceDto {
 		HashMap<String, Double> summaryPayableMap = new HashMap<String, Double>();
 		HashMap<String, Double> summarySurchargeMap = new HashMap<String, Double>();
 
-		for (EnumTax enumTax : EnumTax.values()) {
+		for (EnumTax enumTax : EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE)) {
 
 			System.out.println(enumTax.name());
 			summaryAmountMap.put(enumTax.name(), 0.0);
