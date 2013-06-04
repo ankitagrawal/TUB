@@ -10,6 +10,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.queue.Bucket;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;

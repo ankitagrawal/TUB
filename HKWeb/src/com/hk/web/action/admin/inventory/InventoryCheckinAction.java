@@ -218,6 +218,10 @@ public class InventoryCheckinAction extends BaseAction {
                 productVariant = getProductVariantService().getVariantById(upc);
             }
             if (productVariant != null) {
+                if (productVariant.getProduct().isDeleted()) {
+                  addRedirectAlertMessage(new SimpleMessage("Product is marked Deleted for Variant:" + productVariant.getId() + " - Plz get it fixed by Category Team"));
+                  return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+                }
                 Sku sku = getSkuService().findSKU(productVariant, grn.getWarehouse());
                 // Check for In Progress Audit  for Variant.
                 List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());

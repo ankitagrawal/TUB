@@ -7,6 +7,8 @@ import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.impl.service.queue.BucketService;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +78,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     AwbService awbService;
     @Autowired
     UserService userService;
+    
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
@@ -197,12 +202,14 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     @Transactional
-    public ShippingOrder markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
+    public ShippingOrder
+    markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Delivered));
         getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
         Order order = shippingOrder.getBaseOrder();
         getAdminOrderService().markOrderAsDelivered(order);
+        loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
 //	    smsManager.sendOrderDeliveredSMS(shippingOrder);
 	    return shippingOrder;
     }

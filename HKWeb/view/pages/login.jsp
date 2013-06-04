@@ -16,7 +16,6 @@
 
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
-        $.ajax('http://${vanillaForumUrl}/book/forums/entry/signin');
       $(document).ready(function() {
         $('#forgotPasswordWindow').jqm({trigger: '#forgotPasswordLink', ajax: '@href'});
       });
@@ -46,7 +45,7 @@
             <s:password class="signUpInputNew" name="passwordConfirm"/>
             <div class='label' style="left: 15px;position: relative">
               <s:checkbox name="agreeToTerms"/>Agree to
-              <a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">terms and conditions</a>
+              <s:link href="/pages/termsAndConditions.jsp">terms and conditions</s:link>
               <span class='aster' title="this field is required">*</span>
             </div>
             <s:submit name="signup" value="SIGNUP" class="button signUpButtonNew"/>

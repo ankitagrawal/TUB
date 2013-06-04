@@ -25,8 +25,6 @@
       pageContext.setAttribute("combo", combo);
     }
 
-    boolean isSecure = pageContext.getRequest().isSecure();
-    pageContext.setAttribute("isSecure", isSecure);
   %>
 	<style type="text/css">
 		.opaque {
@@ -44,7 +42,7 @@
 			<div class='grid_4 product'>
 				<div class='img128 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
 					<s:link href="${product.productURL}?productReferrerId=${productReferrerId}" class="prod_link" title="${product.name}">
-						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 					</s:link>
 				</div>
