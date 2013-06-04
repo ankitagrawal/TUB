@@ -111,7 +111,7 @@ public class ApplyCouponAction extends BaseAction {
         if (coupon == null) {
             coupon = ihoManager.createIHOCoupon(user, couponCode);
         }
-        if (coupon == null) {
+        if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
             coupon = employeeManager.createEmpCoupon(user, couponCode);
         }
 
