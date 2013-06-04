@@ -454,10 +454,10 @@ public class EmailManager {
         */
         String productImage = "";
         if(productVariant.getMainImageId() != null) {
-            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getMainImageId(),false);
+            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getMainImageId());
         }
         else if(productVariant.getProduct().getMainImageId() != null) {
-            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getProduct().getMainImageId(),false);
+            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getProduct().getMainImageId());
         }
         else{
             String url = "/images/ProductImages/ProductImagesThumb/"+productVariant.getProduct().getId()+".jpg";

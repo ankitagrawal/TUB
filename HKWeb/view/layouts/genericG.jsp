@@ -19,7 +19,7 @@
     </title>
     <s:layout-component name="htmlHead"/>
     <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
-    <link href="<hk:vhostCss/>/css/new.dev.css?v=1.1" rel="stylesheet" type="text/css"/>
+    <link href="<hk:vhostCss/>/css/new.dev.css" rel="stylesheet" type="text/css"/>
     <s:layout-component name="analytics">
       <jsp:include page="/includes/_analytics.jsp"/>
     </s:layout-component>
