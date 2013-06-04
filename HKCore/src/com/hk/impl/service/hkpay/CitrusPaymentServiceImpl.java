@@ -168,8 +168,7 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
         if(enquiryCollection != null){
             if(GatewayResponseKeys.CitrusConstants.GOOD_ENQ_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())){
                 enquiryList = enquiryCollection.getEnquiry();
-            } else if (GatewayResponseKeys.CitrusConstants.MANDATORY_FIELD_MISSING_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())
-                    || GatewayResponseKeys.CitrusConstants.BAD_ENQ_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())) {
+            } else if (GatewayResponseKeys.CitrusConstants.MANDATORY_FIELD_MISSING_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())|| GatewayResponseKeys.CitrusConstants.BAD_ENQ_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())) {
                 logger.debug("Citrus Payment bad enquiry "+ enquiryCollection.getRespCode() + ":" + enquiryCollection.getRespMsg());
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.MANDATORY_FIELD_MISSING);
             } else {
@@ -177,28 +176,20 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
                 //new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
             }
         }
-
         return enquiryList;
     }
 
     private List<HkPaymentResponse> createHkPaymentResponse(List<Enquiry> enquiryList, String gatewayOrderId) throws HealthkartPaymentGatewayException {
         List<HkPaymentResponse> paymentList = null;
-
         if (enquiryList != null && !enquiryList.isEmpty()){
-
             paymentList = new ArrayList<HkPaymentResponse>();
-
             for(Enquiry enquiry : enquiryList){
+
                 // create a payment object
                 HkPaymentResponse hkPaymentResponse = createPayment(gatewayOrderId, enquiry.getPgTxnId(), enquiry.getRrn(), enquiry.getRespMsg(), enquiry.getTxnType(), enquiry.getAmount(),enquiry.getAuthIdCode());
-
-                // set payment status based on enquiry respCode
                 verifyAndSetPaymentStatus(enquiry.getRespCode(),hkPaymentResponse);
-
                 paymentList.add(hkPaymentResponse);
             }
-
-            return paymentList;
 
         } else {
             logger.debug("Seek from Citrus returns either empty or null enquiry list");
