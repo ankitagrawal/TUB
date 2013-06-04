@@ -428,8 +428,10 @@ public class POSAction extends BaseAction {
 		customer = this.updateCustomerDetails(warehouse);
 		if (customer != null) {
 			Hibernate.initialize(customer);
-			HibernateProxy proxy = (HibernateProxy)customer;                                                          
-			customer = (User)proxy.getHibernateLazyInitializer().getImplementation();
+			if (customer instanceof HibernateProxy) {
+				HibernateProxy proxy = (HibernateProxy)customer;                                                          
+				customer = (User)proxy.getHibernateLazyInitializer().getImplementation();
+			}
 
 //			addRedirectAlertMessage(new SimpleMessage("Customer Info updated."));
 			Map dataMap = new HashMap();

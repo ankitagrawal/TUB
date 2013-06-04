@@ -321,6 +321,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		bonusProfile.setUpdateTime(currentTime);
 		bonusProfile.setTransactionType(TransactionType.CREDIT);
 		bonusProfile.setStatus(KarmaPointStatus.BONUS);
+		bonusProfile.setBadge(userBadgeInfo.getBadge());
 		this.loyaltyProductDao.saveOrUpdate(bonusProfile);
 	}
 
@@ -541,6 +542,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			rewardProfile.setOrder(orderReward);
 			rewardProfile.setTransactionType(TransactionType.DEBIT);
 			rewardProfile.setStatus(KarmaPointStatus.REWARDED);
+			rewardProfile.setBadge(this.getUserBadgeInfo(user).getBadge());
 
 			// add reward points
 			RewardPoint loyaltyRewardPoints = this.rewardPointService.addRewardPoints(user, null, orderReward,
