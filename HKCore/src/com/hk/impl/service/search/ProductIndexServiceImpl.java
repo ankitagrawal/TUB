@@ -38,7 +38,7 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     public void indexProduct(Product product){
         try{
             SolrProduct solrProduct = productService.createSolrProduct(product);
-            if(!product.isDeleted()){
+            if(!product.isDeleted() && !product.isHidden() && !product.isGoogleAdDisallowed()){
                 updateExtraProperties(product, solrProduct);
                 indexProduct(solrProduct);
             }else{
@@ -87,9 +87,9 @@ public class ProductIndexServiceImpl implements ProductIndexService {
         try{
             solr.addBean(product);
         }catch(SolrServerException ex){
-            logger.error("Solr error during indexing the product", ex);
+            logger.error("Solr error during indexing the product");
         }catch(IOException ex){
-            logger.error("Solr error during indexing the product", ex);
+            logger.error("Solr error during indexing the product");
         }
     }
 

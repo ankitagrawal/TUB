@@ -37,8 +37,8 @@ public class MenuHelper implements ServletContextAware{
   @Override
   public void setServletContext(ServletContext servletContext) {
       this.appBasePath = servletContext.getRealPath("/");
-      menuFile = new File(appBasePath + "menu.txt");
-      initMenuNodes();
+      this.menuFile = new File(this.appBasePath + "menu.txt");
+      this.initMenuNodes();
   }
   
   /*
@@ -54,20 +54,20 @@ public class MenuHelper implements ServletContextAware{
 
 
 private void initMenuNodes() {
-    menuNodes = MenuParser.parseMenu(menuFile);
-    menuNodesFlat = new ArrayList<MenuNode>();
+    this.menuNodes = MenuParser.parseMenu(this.menuFile);
+    this.menuNodesFlat = new ArrayList<MenuNode>();
 
     for (MenuNode menuNode : this.menuNodes) {
-      menuNodesFlat.addAll(getMenuNodesFlat(menuNode));
+      this.menuNodesFlat.addAll(this.getMenuNodesFlat(menuNode));
     }
   }
 
   public List<MenuNode> getMenuNodes() {
-    return menuNodes;
+    return this.menuNodes;
   }
 
   public List<MenuNode> getMenuNodesFlat() {
-    return menuNodesFlat;
+    return this.menuNodesFlat;
   }
 
   private List<MenuNode> getMenuNodesFlat(MenuNode menuNode) {
@@ -76,7 +76,7 @@ private void initMenuNodes() {
     menuNodes.add(menuNode);
     if (menuNode.getChildNodes() != null && !menuNode.getChildNodes().isEmpty()) {
       for (MenuNode node : menuNode.getChildNodes()) {
-        menuNodes.addAll(getMenuNodesFlat(node));
+        menuNodes.addAll(this.getMenuNodesFlat(node));
       }
     }
 
@@ -84,15 +84,15 @@ private void initMenuNodes() {
   }
 
   public void refresh() {
-    initMenuNodes();
+    this.initMenuNodes();
   }
 
   public List<MenuNode> getSiblings(String urlFragment) {
-    return getMatchingSiblings(urlFragment, menuNodes);
+    return this.getMatchingSiblings(urlFragment, this.menuNodes);
   }
 
   public MenuNode getMenuNode(String urlFragment) {
-    return getMatchingMenuNode(urlFragment, menuNodes);
+    return this.getMatchingMenuNode(urlFragment, this.menuNodes);
   }
 
   private MenuNode getMatchingMenuNode(String urlFragment, List<MenuNode> menuNodes) {
@@ -100,8 +100,10 @@ private void initMenuNodes() {
       if (menuNode.getUrl().equals(urlFragment)) {
         return menuNode;
       } else {
-        MenuNode matchingMenuNode = getMatchingMenuNode(urlFragment, menuNode.getChildNodes());
-        if (matchingMenuNode != null) return matchingMenuNode;
+        MenuNode matchingMenuNode = this.getMatchingMenuNode(urlFragment, menuNode.getChildNodes());
+        if (matchingMenuNode != null) {
+			return matchingMenuNode;
+		}
       }
     }
     return null;
@@ -112,8 +114,10 @@ private void initMenuNodes() {
       if (menuNode.getUrl().equals(urlFragment)) {
         return menuNodes;
       } else {
-        List<MenuNode> matchingSiblings = getMatchingSiblings(urlFragment, menuNode.getChildNodes());
-        if (matchingSiblings != null) return matchingSiblings;
+        List<MenuNode> matchingSiblings = this.getMatchingSiblings(urlFragment, menuNode.getChildNodes());
+        if (matchingSiblings != null) {
+			return matchingSiblings;
+		}
       }
     }
     return null;
@@ -136,13 +140,13 @@ private void initMenuNodes() {
   }
 
   public String getUrlFragementFromProduct(Product breadcrumbProduct) {
-    MenuNode finalMenuNode = getMenoNodeFromProduct(breadcrumbProduct);
+    MenuNode finalMenuNode = this.getMenoNodeFromProduct(breadcrumbProduct);
     return finalMenuNode == null ? null : finalMenuNode.getUrl();
   }
 
   public MenuNode getMenoNodeFromProduct(Product breadcrumbProduct) {
     MenuNode finalMenuNode = null;
-    for (MenuNode menuNode : menuNodesFlat) {
+    for (MenuNode menuNode : this.menuNodesFlat) {
       if (menuNode.hasProduct(breadcrumbProduct) && this.getTopCategorySlug(menuNode).equals(breadcrumbProduct.getPrimaryCategory().getName())) {
         if (finalMenuNode == null) {
           finalMenuNode = menuNode;

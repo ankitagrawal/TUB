@@ -42,17 +42,15 @@ import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.catalog.product.ProductCountDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
-import com.hk.util.ProductReferrerMapper;
+import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
@@ -82,7 +80,9 @@ public class ProductAction extends BaseAction {
     List<Combo>                        relatedCombos = new ArrayList<Combo>();
     String                             renderComboUI = "false";
     SubscriptionProduct                subscriptionProduct;
-    Long                               productReferrerId;
+
+    Long                               productReferrerId;  // Same as HealthkartConstants.URL.productReferrerId
+    String                             productPosition;  // Same as HealthkartConstants.URL.productPosition
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                     preferredZone;
@@ -101,10 +101,6 @@ public class ProductAction extends BaseAction {
     @Autowired
     private LocalityMapDao             localityMapDao;
     @Autowired
-    private ProductCountDao            productCountDao;
-    @Autowired
-    private UserProductHistoryDao      userProductHistoryDao;
-    @Autowired
     private AddressDao                 addressDao;
     @Autowired
     private ProductService             productService;
@@ -120,7 +116,10 @@ public class ProductAction extends BaseAction {
     @Autowired
     TrafficAndUserBrowsingService      trafficAndUserBrowsingService;
 
-    @Override
+   @Autowired
+   ProductSearchService productSearchService;
+
+  @Override
     public PrincipalImpl getPrincipal() {
         return super.getPrincipal();    //To change body of overridden methods use File | Settings | File Templates.
     }
@@ -143,7 +142,11 @@ public class ProductAction extends BaseAction {
                 combo = (Combo) product;
             }
             // Save Browsing
-            trafficAndUserBrowsingService.saveBrowsingHistory(product, WebContext.getRequest());
+            trafficAndUserBrowsingService.saveBrowsingHistory(product, WebContext.getRequest(), productReferrerId, productPosition);
+            // In case of search log the first clicked position in search log table
+            if (productReferrerId != null && productReferrerId.equals(EnumProductReferrer.searchPage.getId())) {
+              productSearchService.updatePositionInSearchLog(productPosition);
+            }
         } else {
             WebContext.getResponse().setStatus(310); // redirection
             return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
@@ -151,9 +154,7 @@ public class ProductAction extends BaseAction {
 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
-            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
             if (user != null) {
-                // userProductHistoryDao.addToUserProductHistory(product, user);
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }
@@ -171,7 +172,7 @@ public class ProductAction extends BaseAction {
             product.setRelatedProducts(relatedProducts);
         }
         for (Product product : relatedProducts) {
-            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+            product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.relatedProductsPage.getId()));
         }
         if (product.isProductHaveColorOptions()) {
             Integer outOfStockOrDeletedCtr = 0;
@@ -232,7 +233,7 @@ public class ProductAction extends BaseAction {
             if (getProductService().isComboInStock(relatedCombo)) {
                 relatedCombos.add(relatedCombo);
                 relatedCombo.setProductURL(linkManager.getRelativeProductURL(relatedCombo,
-                        ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+                        EnumProductReferrer.relatedProductsPage.getId()));
                 if (relatedCombos.size() == 6) {
                     break;
                 }
@@ -272,7 +273,7 @@ public class ProductAction extends BaseAction {
         return addressDistanceDtos;
     }
 
-    public class DistanceComparator implements Comparator<AddressDistanceDto> {
+  public class DistanceComparator implements Comparator<AddressDistanceDto> {
         public int compare(AddressDistanceDto dist1, AddressDistanceDto dist2) {
             if (dist1.getDistance() != null && dist2.getDistance() != null) {
                 return dist1.getDistance().compareTo(dist2.getDistance());
@@ -455,6 +456,14 @@ public class ProductAction extends BaseAction {
 
     public void setProductReferrerId(Long productReferrerId) {
         this.productReferrerId = productReferrerId;
+    }
+
+    public String getProductPosition() {
+      return productPosition;
+    }
+
+    public void setProductPosition(String productPosition) {
+      this.productPosition = productPosition;
     }
 
     public SuperSaverImageService getSuperSaverImageService() {

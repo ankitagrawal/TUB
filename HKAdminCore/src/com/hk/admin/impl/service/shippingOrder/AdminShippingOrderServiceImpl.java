@@ -7,6 +7,8 @@ import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.impl.service.queue.BucketService;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.domain.analytics.Reason;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -54,6 +57,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private BucketService bucketService;
     @Autowired
     private PincodeCourierService pincodeCourierService;
+    private String cancellationRemark;
+
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -73,8 +78,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     AwbService awbService;
     @Autowired
     UserService userService;
+    
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
@@ -83,7 +91,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled,shippingOrder.getReason(),cancellationRemark);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){
@@ -95,6 +103,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	            //shippingOrderService.save(shippingOrder);
             }
 			getShippingOrderService().save(shippingOrder);
+            getBucketService().popFromActionQueue(shippingOrder);
         }
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
@@ -193,12 +202,14 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     @Transactional
-    public ShippingOrder markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
+    public ShippingOrder
+    markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Delivered));
         getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
         Order order = shippingOrder.getBaseOrder();
         getAdminOrderService().markOrderAsDelivered(order);
+        loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
 //	    smsManager.sendOrderDeliveredSMS(shippingOrder);
 	    return shippingOrder;
     }
@@ -448,5 +459,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     public void setPincodeCourierService(PincodeCourierService pincodeCourierService) {
         this.pincodeCourierService = pincodeCourierService;
+    }
+
+    public String getCancellationRemark() {
+        return cancellationRemark;
+    }
+
+    public void setCancellationRemark(String cancellationRemark) {
+        this.cancellationRemark = cancellationRemark;
     }
 }

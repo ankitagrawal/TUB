@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
@@ -182,31 +183,13 @@ public class LinkManager {
 
 
     public String getRelativeProductURL(Product product, Long productReferrerId) {
-        /* String productURL = null;
-                String productSlug = product.getSlug();
-                String productId = product.getId();
-                // commented to stop internal product tagging
-                // productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
-                //productURL = "/product/" + productSlug + "/" + productId;
-
-                 * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
-                 * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
-                 * getUrlFromResolution(redirectResolution);
-
-
-                RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").addParameter("productId", productId).addParameter("productSlug",
-                        productSlug);
-                return getUrlFromResolution(redirectResolution);
-
-                //return productURL;
-        */
         String productURL = null;
         String productSlug = product.getSlug();
         String productId = product.getId();
         productURL = "/product/" + productSlug + "/" + productId;
 
         if (productReferrerId != null && productReferrerId != 0) {
-            productURL = productURL.concat("?productReferrerId=" + productReferrerId);
+          productURL = productURL.concat("?" + HealthkartConstants.URL.productReferrerId + "=" + productReferrerId);
         }
 
         return productURL;
@@ -222,7 +205,7 @@ public class LinkManager {
 
         RedirectResolution redirectResolution = new RedirectResolution(productURL);
         if (productReferrerId != null && productReferrerId != 0) {
-            redirectResolution.addParameter("productReferrerId", productReferrerId);
+            redirectResolution.addParameter(HealthkartConstants.URL.productReferrerId, productReferrerId);
         }
 
         return getUrlFromResolution(redirectResolution);

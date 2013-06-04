@@ -52,7 +52,6 @@ import com.hk.rest.mobile.service.model.MProductJSONResponse;
 import com.hk.rest.mobile.service.model.MProductVariantJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.util.HKImageUtils;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.HealthkartResponse;
 
 /**
@@ -169,7 +168,7 @@ public class MProductAction extends MBaseAction{
                 product.setRelatedProducts(relatedProducts);
             }
             for (Product product : relatedProducts) {
-                product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+                product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.relatedProductsPage.getId()));
             }
             if (product.isProductHaveColorOptions()) {
                 Integer outOfStockOrDeletedCtr = 0;
@@ -251,7 +250,7 @@ public class MProductAction extends MBaseAction{
 */
            
                 if(null!=product.getMainImageId())
-                	productJSON.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
+                	productJSON.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId()));
                 else
                 	productJSON.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
                 productJSON.setAmazonProduct(product.getAmazonProduct());

@@ -1,14 +1,5 @@
 package com.hk.web.action.core.user;
 
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.RoleCache;
@@ -25,7 +16,14 @@ import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
-import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.List;
 
@@ -56,6 +54,8 @@ public class MyAccountAction extends BaseAction {
   UserManager userManager;
   @Autowired
   RoleDao roleDao;
+  @Autowired
+  UserService userService;
   
   /*@Autowired
   private RoleService roleService;*/
@@ -130,6 +130,18 @@ public class MyAccountAction extends BaseAction {
     }
 
     addRedirectAlertMessage(new SimpleMessage("Your basic information has been updated"));
+    return new RedirectResolution(MyAccountAction.class);
+  }
+
+    public Resolution subscribeForEmails() {
+        user = getUserService().getUserById(getPrincipal().getId());
+        return new ForwardResolution("/pages/emailSubscriptions.jsp");
+    }
+
+  public Resolution subscribeForNotifications() {
+    user = getUserService().getUserById(getPrincipal().getId());
+    userService.subscribeAllNotifications(user.getLogin());
+    addRedirectAlertMessage(new SimpleMessage("You have successfully subscribed to HealthKart Mails"));
     return new RedirectResolution(MyAccountAction.class);
   }
 

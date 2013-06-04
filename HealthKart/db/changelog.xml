@@ -11295,11 +11295,11 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
-     <changeSet author="Shrey (generated)" id="29-01-2013-01">
-        <createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">
-            <column name="shipping_order_id"/>
-        </createIndex>
-    </changeSet>
+     <!--<changeSet author="Shrey (generated)" id="29-01-2013-01">-->
+        <!--<createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">-->
+            <!--<column name="shipping_order_id"/>-->
+        <!--</createIndex>-->
+    <!--</changeSet>-->
 <!--
      <changeSet author="Shrey (generated)" id="29-01-2013-02">
         <createIndex indexName="uniq_shipment_awb" tableName="shipment" unique="true">
@@ -11482,7 +11482,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(45)">
-                <constraints nullable="false"/>            
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -11573,7 +11573,7 @@
     <changeSet author="Seema (generated)" id="1360944809663-2">
         <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_cod_call"  constraintName="fk_user_cod_call_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
     </changeSet>
-    
+
     <changeSet author="Ajeet (generated)" id="1361217619752-1">
            <addNotNullConstraint columnDataType="DOUBLE" columnName="order_ranking" tableName="product" defaultNullValue="100000.0"/>
     </changeSet>
@@ -11732,22 +11732,22 @@
             ALTER TABLE user_cod_call ADD UNIQUE(order_id);
         </sql>
     </changeSet>
-    <changeSet author="Ankit (generated)" id="1359711888969-1">
-        <addColumn tableName="rv_line_item">
-            <column name="sku_group_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-1">
-        <addColumn tableName="cycle_count_item">
-            <column name="sku_item_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-2">
-        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-3">
-        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
-    </changeSet>
+    <!--<changeSet author="Ankit (generated)" id="1359711888969-1">-->
+        <!--<addColumn tableName="rv_line_item">-->
+            <!--<column name="sku_group_id" type="INT"/>-->
+        <!--</addColumn>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-1">-->
+        <!--<addColumn tableName="cycle_count_item">-->
+            <!--<column name="sku_item_id" type="INT"/>-->
+        <!--</addColumn>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-2">-->
+        <!--<dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-3">-->
+        <!--<addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>-->
+    <!--</changeSet>-->
     <changeSet author="Ankur (generated)" id="1358841573903-1">
         <createTable tableName="mail">
             <column autoIncrement="true" name="id" type="INT">
@@ -12156,7 +12156,7 @@
           INSERT INTO role_has_permission VALUES ("WH_EMPLOYEE_REVERSE_PICKUP","MARK_RECEIVED"),("WH_EMPLOYEE_REVERSE_PICKUP","ADVICE_PROPOSED");
         </sql>
     </changeSet>
-    
+
     <changeSet author="Ajeet (generated)" id="1366219849770-1">
         <createTable tableName="b2b_order_checklist">
             <column autoIncrement="true" name="id" type="INT">
@@ -12358,7 +12358,7 @@
     <changeSet author="Pratham (generated)" id="1366787798141-28">
         <addForeignKeyConstraint baseColumnNames="next_action_task_id" baseTableName="action_task" constraintName="fk_action_task_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
     </changeSet>
-    
+
     <changeSet author="Pratham (generated)" id="1366787798141-31">
         <addForeignKeyConstraint baseColumnNames="bucket_id" baseTableName="reason_has_bucket" constraintName="fk_reason_has_bucket_bucket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bucket" referencesUniqueColumn="false"/>
     </changeSet>
@@ -12371,7 +12371,7 @@
     <changeSet author="Pratham (generated)" id="1366787798141-34">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="watcher" constraintName="fk_action_item_has_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-   
+
     <changeSet author="Rajesh" id="24-04-2013-01">
     		<sql>
               INSERT INTO category(name,display_name) VALUES("dynamic-remarketing", "Dynamic Remarketing") on duplicate key update display_name = 'Dynamic Remarketing';
@@ -12520,13 +12520,13 @@
     </changeSet>
     <!--<changeSet author="Ajeet (generated)" id="1366966901739-2">
         <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="inv_txn_type"/>
-    </changeSet> -->    
+    </changeSet> -->
     <changeSet author="Ajeet (generated)" id="1366966901739-4">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1366966901739-5">
-        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
-    </changeSet>
+    <!--<changeSet author="Ajeet (generated)" id="1366966901739-5">-->
+        <!--<addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>-->
+    <!--</changeSet>-->
     <changeSet author="marut (generated)" id="1366356450756-01">
         <createTable tableName="marketing_feed">
             <column autoIncrement="true" name="id" type="INT">
@@ -12710,7 +12710,6 @@
     <changeSet author="Ajeet (generated)" id="1368526085655-12">
         <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
     </changeSet>
-    
     <changeSet author="Ajeet (generated)" id="1368641223302-1">
         <createTable tableName="search_log">
             <column autoIncrement="true" name="id" type="INT">
@@ -12737,6 +12736,362 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368859876126-1">
+        <addColumn tableName="search_log">
+            <column name="first_click_pos" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368859876126-2">
+        <addColumn tableName="user_browsing_history">
+            <column name="product_pos" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368860696832-1">
+        <addColumn tableName="user_browsing_history">
+            <column name="product_referrer_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-1">
+        <createTable tableName="loyalty_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="variant_id" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="points" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-2">
+        <createTable tableName="user_badge_info">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="badge_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="card_number" type="VARCHAR(45)"/>
+            <column name="creation_time" type="DATETIME"/>
+            <column name="updation_time" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-3">
+        <createTable tableName="user_order_karma_profile">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_type" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="points" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-4">
+        <addColumn tableName="badge">
+            <column name="icon_rel_url" type="VARCHAR(32)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-5">
+        <addColumn tableName="badge">
+            <column name="loyalty_percentage" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-6">
+        <modifyDataType columnName="max_score" newDataType="DOUBLE" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-7">
+        <dropNotNullConstraint columnDataType="DOUBLE" columnName="max_score" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-8">
+        <modifyDataType columnName="min_score" newDataType="DOUBLE" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-9">
+        <dropNotNullConstraint columnDataType="DOUBLE" columnName="min_score" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-10">
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="inv_txn_type"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-11">
+        <addForeignKeyConstraint baseColumnNames="variant_id" baseTableName="loyalty_product" constraintName="fk_loyalty_product_variant" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-12">
+        <addForeignKeyConstraint baseColumnNames="badge_id" baseTableName="user_badge_info" constraintName="fk_user_badge_info_badge" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="badge" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-13">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_badge_info" constraintName="fk_user_badge_info_user" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-14">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_order_karma_profile" constraintName="fk_ukarma_order" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-15">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_order_karma_profile" constraintName="fk_ukarma_user" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra" id="1369032364175-16">
+		<sql>
+			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values 
+			('NORMAL', 0, 1500, 0.0),
+			('BRONZE', 1501, 3000, 1.0),
+			('SILVER', 3001, 6000, 1.5),
+			('GOLD', 6001, 12000, 1.75),
+			('PLATINUM', 12001, -1, 2.0);
+		</sql>
+	</changeSet>
+    <changeSet author="Ankit Chhabra" id="1369032364175-17">
+    	<sql>
+    		insert into reward_point_mode (id,name) values ('80','HK Loyalty Points');
+    	</sql>
+	</changeSet>
+	 <changeSet author="Ankit Chhabra" id="1369032364175-18">
+		 <sql>
+    		insert into role (name) values ('HK_LOYALTY_USER');
+    	</sql>
+	</changeSet>
+    	<changeSet author="Ankit Chhabra" id="1369032364175-19">
+		<sql>
+    		insert into store (id,name,prefix) values ('4','LOYALTYPG', 'LP');
+    	</sql>
+	</changeSet>
+    <changeSet author="Nihal (generated)" id="1367838930686-3">
+        <createTable tableName="purchase_invoice_has_rtv_note">
+            <column name="purchase_invoice_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rtv_note_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367838930686-7">
+        <addPrimaryKey columnNames="purchase_invoice_id, rtv_note_id" tableName="purchase_invoice_has_rtv_note"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367838930686-11">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367838930686-12">
+        <addForeignKeyConstraint baseColumnNames="rtv_note_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_rtv_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rtv_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-2">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-3">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-4">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="surcharge_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-5">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-6">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-7">
+        <addForeignKeyConstraint baseColumnNames="surcharge_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_surcharge1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="surcharge" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367911904146-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="tax_id" tableName="extra_inventory_line_item"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-2">
+        <addColumn tableName="purchase_invoice">
+            <column name="pi_rtv_short_total" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-3">
+        <addColumn tableName="purchase_invoice">
+            <column name="rtv_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-4">
+        <addColumn tableName="purchase_invoice">
+            <column name="short_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-2">
+        <createTable tableName="purchase_invoice_has_extra_inventory_line_item">
+            <column name="purchase_invoice_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra_inventory_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-4">
+        <addPrimaryKey columnNames="purchase_invoice_id, extra_inventory_line_item_id" tableName="purchase_invoice_has_extra_inventory_line_item"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-7">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_line_item_id" baseTableName="purchase_invoice_has_extra_inventory_line_item" constraintName="fk_purchase_invoice_has_extra_inventory_line_item_extra_inven1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-8">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_extra_inventory_line_item" constraintName="fk_purchase_invoice_has_extra_inventory_line_item_purchase_in1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+     <changeSet author="Nihal (generated)" id="1368515586650-2">
+        <createTable tableName="extra_inventory_line_item_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-7">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="extra_inventory_line_item_type_id" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-8">
+        <addColumn tableName="purchase_invoice_line_item">
+            <column name="grn_line_item_id" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-13">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_line_item_type_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_extra_inventory_line_item_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_line_item_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-14">
+        <addForeignKeyConstraint baseColumnNames="grn_line_item_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_grn_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="grn_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-24">
+        <addColumn tableName="purchase_invoice">
+            <column name="physical_invoice_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (written)" id="1367842551660-2">
+      <sql>
+        insert into permission(name)  values  ("RECEIVE_CONSIGNMENTS"),("EDIT_RUNSHEET"),("VIEW_CONSIGNMENTS"),("VIEW_PAYMENT_HISTORY"),("TRACK_CONSIGNMENTS"),("CREATE_PAYMENT_RECONCILATION"),("ADD_EDIT_HUB"),("ADD_REMOVE_AGENT"),("CONSIGNMENT_TRACKING_REPORT"),("VIEW_NDR"),("EDIT_NDR")  on duplicate key update name = values(name);
+
+       insert into role_has_permission (role_name, permission_name)  values  ("ADMIN","RECEIVE_CONSIGNMENTS"),("ADMIN","EDIT_RUNSHEET"),("ADMIN","VIEW_CONSIGNMENTS"),("ADMIN","VIEW_PAYMENT_HISTORY"),("ADMIN","TRACK_CONSIGNMENTS"),("ADMIN","CREATE_PAYMENT_RECONCILATION"),("ADMIN","ADD_EDIT_HUB"),("ADMIN","ADD_REMOVE_AGENT"),("ADMIN",                   "CONSIGNMENT_TRACKING_REPORT"),("ADMIN","VIEW_NDR"),("ADMIN","EDIT_NDR"),("OPS_MANAGER_L1","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT","VIEW_NDR"),("CUSTOMER_SUPPORT",             "EDIT_NDR"),("CUSTOMER_SUPPORT","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L2","VIEW_NDR"),("CUSTOMER_SUPPORT_L2","EDIT_NDR"),("CUSTOMER_SUPPORT_L2",                               "TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L3","VIEW_NDR"),("CUSTOMER_SUPPORT_L3","EDIT_NDR"),("CUSTOMER_SUPPORT_L3","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN",                    "RECEIVE_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","EDIT_RUNSHEET"),("HK_DELIVERY_ADMIN","VIEW_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","VIEW_PAYMENT_HISTORY"),                             ("HK_DELIVERY_ADMIN","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_ADMIN","ADD_EDIT_HUB"),("HK_DELIVERY_ADMIN",                        "ADD_REMOVE_AGENT"),("HK_DELIVERY_ADMIN","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_ADMIN","VIEW_NDR"),("HK_DELIVERY_ADMIN","EDIT_NDR"),("HK_DELIVERY_HUB_MANAGER",             "EDIT_RUNSHEET"),("HK_DELIVERY_HUB_MANAGER","VIEW_CONSIGNMENTS"),("HK_DELIVERY_HUB_MANAGER","VIEW_PAYMENT_HISTORY"),("HK_DELIVERY_HUB_MANAGER","TRACK_CONSIGNMENTS"),             ("HK_DELIVERY_HUB_MANAGER","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_HUB_MANAGER","ADD_EDIT_HUB"),("HK_DELIVERY_HUB_MANAGER","ADD_REMOVE_AGENT"),                             ("HK_DELIVERY_HUB_MANAGER","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_HUB_MANAGER","VIEW_NDR")  on duplicate key update permission_name = values(permission_name);
+      </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-1">
+        <createTable tableName="action_path_workflow">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="bucket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-28">
+        <addForeignKeyConstraint baseColumnNames="action_task_id" baseTableName="action_path_workflow" constraintName="fk_action_path_workflow_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-30">
+        <addForeignKeyConstraint baseColumnNames="next_action_task_id" baseTableName="action_path_workflow" constraintName="fk_action_path_workflow_action_task2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+<!--    <changeSet author="Pratham (generated)" id="1369649792220-8">
+        <dropForeignKeyConstraint baseTableName="action_task" constraintName="fk_action_item_user1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369649792220-9">
+        <dropForeignKeyConstraint baseTableName="action_task" constraintName="fk_action_task_action_task1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-31">
+        <dropColumn columnName="acknowledged" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-32">
+        <dropColumn columnName="acknowledged_by" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-33">
+        <dropColumn columnName="next_action_task_id" tableName="action_task"/>
+    </changeSet>-->
+    <changeSet author="Pratham (generated)" id="1369727618286-2">
+        <createTable tableName="reason_has_action_task">
+            <column name="reason_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369727618286-9">
+        <addPrimaryKey columnNames="reason_id, action_task_id" tableName="reason_has_action_task"/>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20130531-01">
+        <sql>
+            update seo_data set meta_description=replace(meta_description, '300', '500');
+        </sql>
+    </changeSet>
+		<changeSet author="Tarun (generated)" id="1369725542349-1">
+        <addColumn tableName="tax">
+            <column name="type" type="VARCHAR(30)"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun (written)" id="1369725542349-2">
+			<sql>
+				UPDATE `tax` SET type='VAT';
+
+				INSERT INTO `tax` (`id`, `name`, `value`, `type`) VALUES
+					(110, 'ZeroPercent', 0.00000, 'VAT_SECONDARY'),
+					(120, 'OnePercent', 0.01000, 'VAT_SECONDARY'),
+					(125, 'OneDotFivePercent', 0.01500, 'VAT_SECONDARY'),
+					(130, 'TwoPercent', 0.02000, 'CST'),
+					(135, 'FourPercent', 0.04000, 'VAT_SECONDARY'),
+					(140, 'FivePercent', 0.05000, 'VAT_SECONDARY'),
+					(150, 'TwelveDotFivePercent', 0.12500, 'VAT_SECONDARY'),
+					(160, 'ThirteenDotOneTwoFivePercent', 0.13125, 'VAT_SECONDARY'),
+					(165, 'FourteenDotFive', 0.14500, 'VAT_SECONDARY'),
+					(170, 'TwentyPercent', 0.20000, 'VAT_SECONDARY')
+					on duplicate key update
+					name = values(name),
+					value = values(value),
+					type = values(type);
+			</sql>
+	</changeSet>
+	<changeSet author="Tarun (written)" id="1369725542349-3">
+			<sql>
+					UPDATE purchase_invoice_line_item
+					SET tax_id= surcharge_id+100
+					WHERE tax_id IS NULL and surcharge_id IS NOT NULL;
+
+					UPDATE extra_inventory_line_item
+					SET tax_id= surcharge_id+100
+					WHERE tax_id IS NULL and surcharge_id IS NOT NULL;
+			</sql>
+	</changeSet>
     <changeSet author="Tarun (generated)" id="1368701511031-1">
         <addColumn tableName="credit_note_line_item">
             <column name="tax_id" type="INT"/>

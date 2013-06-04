@@ -11,20 +11,22 @@
           HEALTHKART
         </h5>
         <ul>
-          <li><a href="/"><span class="txt-white">Home</span></a></li>
+          <li><s:link href="/"><span class="txt-white">Home</span></s:link></li>
           <li>
-            <a href="${pageContext.request.contextPath}/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></a>
+            <s:link href="/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></s:link>
           </li>
-          <li><a href="${pageContext.request.contextPath}/affiliate"><span class="txt-white">Affiliate</span></a></li>
+          
+          <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" target="_blank"><span class="txt-white">Stellar</span></s:link></li>
+          <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAction"><span class="txt-white">Affiliate</span></s:link></li>
           <%--<li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>--%>
           <li><s:link beanclass="com.hk.web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
           </li>
-          <li><a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp"><span class="txt-white">Terms & Conditions</span></a>
+          <li><s:link href="/pages/termsAndConditions.jsp"><span class="txt-white">Terms & Conditions</span></s:link>
           </li>
-          <li><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp"><span class="txt-white">Return and Cancellations</span></a>
+          <li><s:link href="/pages/returnAndCancellations.jsp"><span class="txt-white">Return and Cancellations</span></s:link>
           </li>
-          <li><a href="${pageContext.request.contextPath}/blog" target="_blank"><span class="txt-white">Blog</span></a></li>
-          <li><a href="${pageContext.request.contextPath}/pages/careers.jsp"><span class="txt-white">Careers</span></a>
+          <li><s:link href="/blog" target="_blank"><span class="txt-white">Blog</span></s:link></li>
+          <li><s:link href="/pages/careers.jsp"><span class="txt-white">Careers</span></s:link>
           </li>
 
         </ul>
@@ -37,9 +39,9 @@
         <ul>
           <c:forEach items="${menuAction.menuNodes}" var="topMenuNode" varStatus="idx">
             <c:if test="${topMenuNode.name != 'Baby'}">
-            <li><a href="${pageContext.request.contextPath}${topMenuNode.url}">${topMenuNode.name}</a></li>
+            <li><s:link href="${topMenuNode.url}">${topMenuNode.name}</s:link></li>
             </c:if>
-          </c:forEach>
+          </c:forEach>           
         </ul>
       </div>
       <div class='column'>
@@ -71,9 +73,13 @@
             <h5>
                 Misc
             </h5>
-            <ul>
-                <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
-            </ul>
+          <ul>
+            <li><s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction"
+                        event="pre">Subscriptions </s:link></li>
+            <li>
+              <s:link beanclass="com.hk.web.action.core.catalog.SuperSaversAction"><span class="txt-white">Super Savers</span></s:link>
+            </li>
+          </ul>
         </div>
       <div style="float:right;">
         <img src="<hk:vhostImage/>/images/banners/home/safe_secure_footer.gif" alt="safe and secure shopping at healthkart">
@@ -98,8 +104,8 @@
           <a href="https://plus.google.com/116027214366934328880?prsrc=3" rel="publisher" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/googleplus.png" alt="HealthKart Google Plus">
         </a>
-        <a href="${pageContext.request.contextPath}/blog" target="_blank" style="border-bottom:none">
-          <img src="<hk:vhostImage/>/images/banners/home/Blog.png" alt="HealthKart Blog"></a>
+        <s:link href="/blog" target="_blank" style="border-bottom:none">
+          <img src="<hk:vhostImage/>/images/banners/home/Blog.png" alt="HealthKart Blog"></s:link>
 
         <div class='floatfix'></div>
       </div>

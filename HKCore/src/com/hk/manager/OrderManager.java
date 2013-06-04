@@ -1,22 +1,20 @@
-
 package com.hk.manager;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import com.hk.domain.subscription.Subscription;
-import com.hk.impl.service.codbridge.OrderEventPublisher;
-import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hk.cache.UserCache;
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -48,9 +46,13 @@ import com.hk.domain.order.PrimaryReferrerForOrder;
 import com.hk.domain.order.SecondaryReferrerForOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.store.EnumStore;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.order.OrderDao;
@@ -60,6 +62,7 @@ import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.clm.KarmaProfileService;
+import com.hk.pact.service.combo.ComboService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
@@ -130,6 +133,9 @@ public class OrderManager {
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
     @Autowired
     OrderEventPublisher orderEventPublisher;
+    
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double                            codCharges;
@@ -149,20 +155,21 @@ public class OrderManager {
 
     @Transactional
     public Order getOrCreateOrder(User user) {
-       Order order = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
-        if (order != null && !order.isSubscriptionOrder())
-            return order;
+       Order order = this.getOrderService().findCart(user, EnumStore.HEALTHKART.asStore());
+        if (order != null && !order.isSubscriptionOrder()) {
+			return order;
+		}
 
         order = new Order();
         order.setUser(user);
-        order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InCart));
+        order.setOrderStatus(this.getOrderStatusService().find(EnumOrderStatus.InCart));
         order.setAmount(0D);
         order.setSubscriptionOrder(false);
 
         if (user.getRoleStrings().contains(EnumRole.B2B_USER.getRoleName())) {
             order.setB2bOrder(true);
         }
-        Order existingOrderNow = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+        Order existingOrderNow = this.getOrderService().findCart(user, EnumStore.HEALTHKART.asStore());
         if (existingOrderNow != null) {
             return existingOrderNow;
         }
@@ -170,20 +177,20 @@ public class OrderManager {
 	    HttpSession session = WebContext.getRequest().getSession();
 	    if (session.getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID) != null) {
             Long primaryReferrerForOrderId = (Long) session.getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID);
-            order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, primaryReferrerForOrderId));
+            order.setPrimaryReferrerForOrder(this.getBaseDao().get(PrimaryReferrerForOrder.class, primaryReferrerForOrderId));
         }
         if (session.getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID) != null) {
             Long secondaryReferrerForOrderId = (Long) session.getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID);
-            order.setSecondaryReferrerForOrder(getBaseDao().get(SecondaryReferrerForOrder.class, secondaryReferrerForOrderId));
+            order.setSecondaryReferrerForOrder(this.getBaseDao().get(SecondaryReferrerForOrder.class, secondaryReferrerForOrderId));
         }
         if (user.getOrders().size() == 0 && user.getReferredBy() != null) {
-            order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, EnumPrimaryReferrerForOrder.RFERRAL.getId()));
+            order.setPrimaryReferrerForOrder(this.getBaseDao().get(PrimaryReferrerForOrder.class, EnumPrimaryReferrerForOrder.RFERRAL.getId()));
         }
         if (session.getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN) != null) {
             order.setUtmCampaign((String) session.getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN));
         }
 
-        order = getOrderService().save(order);
+        order = this.getOrderService().save(order);
 	    
         return order;
     }
@@ -194,7 +201,7 @@ public class OrderManager {
         Double totalActualHkPriceofComboVariants = 0D;
         if (combo != null && combo.getId() != null) {
 
-            for (ComboInstanceHasProductVariant variant : comboInstanceHasProductVariantDao.findByComboInstance(comboInstance)) {
+            for (ComboInstanceHasProductVariant variant : this.comboInstanceHasProductVariantDao.findByComboInstance(comboInstance)) {
                 totalActualHkPriceofComboVariants += variant.getProductVariant().getHkPrice(null) * variant.getQty();
             }
 
@@ -209,18 +216,18 @@ public class OrderManager {
             if (productVariant.getQty() == null || productVariant.getQty() == 0 && combo == null) {
                 productVariant.setQty(1L);
             }
-            if (canAddVariantToCart(productVariant)) {
+            if (this.canAddVariantToCart(productVariant)) {
                 CartLineItem cartLineItem = null;
                 if (comboInstance != null) {
                     CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addComboInstance(comboInstance).addCartLineItemType(
                             EnumCartLineItemType.Product);
-                    cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
+                    cartLineItem = this.getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
 
                     // cartLineItem = getCartLineItemService().getCartLineItemFromOrder(order, productVariant,
                     // comboInstance);
                 } else {
                     CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addCartLineItemType(EnumCartLineItemType.Product);
-                    cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
+                    cartLineItem = this.getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
                     // cartLineItem = getCartLineItemService().getCartLineItemFromOrder(order, productVariant);
                 }
                 if (cartLineItem != null) {
@@ -228,10 +235,10 @@ public class OrderManager {
                      * if (cartLineItem.getQty() == 0) { cartLineItem.setQty(productVariant.getQty());
                      * getCartLineItemService().save(cartLineItem); }
                      */
-                    updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
+                    this.updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
                 } else {
                     if (combo != null && combo.getId() != null) {
-                        cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+                        cartLineItem = this.getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
                         Double totalDiscount = totalActualHkPriceofComboVariants - combo.getHkPrice();
                         Double percentDiscount = totalDiscount / totalActualHkPriceofComboVariants;
                         cartLineItem.setHkPrice(productVariant.getHkPrice(null) * (1 - percentDiscount));
@@ -239,12 +246,12 @@ public class OrderManager {
                         // productVariant.getHkPrice(null) * productVariant.getQty()));
                         cartLineItem.setComboInstance(comboInstance);
                     } else {
-                        cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+                        cartLineItem = this.getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
                     }
                     if (productReferrer != null) {
                         cartLineItem.setProductReferrer(productReferrer);
                     }
-                    cartLineItem = getCartLineItemService().save(cartLineItem);
+                    cartLineItem = this.getCartLineItemService().save(cartLineItem);
                     isCartLineItemCreated = true;
                 }
             }
@@ -255,16 +262,16 @@ public class OrderManager {
     public boolean createLineItems(ProductVariant productVariant, CartLineItemConfig cartLineItemConfig, Order order, ProductReferrer productReferrer) throws OutOfStockException {
         boolean isCartLineItemCreated = false;
 
-        if (canAddVariantToCart(productVariant)) {
+        if (this.canAddVariantToCart(productVariant)) {
             CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addCartLineItemConfig(cartLineItemConfig);
-            CartLineItem cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
+            CartLineItem cartLineItem = this.getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
             // CartLineItem cartLineItem = getCartLineItemService().getCartLineItemFromOrder(order, productVariant,
             // cartLineItemConfig);
             if (cartLineItem != null) {
-                updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
+                this.updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
             } else {
-                cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
-                cartLineItemConfig = (CartLineItemConfig) getBaseDao().save(cartLineItemConfig);
+                cartLineItem = this.getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+                cartLineItemConfig = (CartLineItemConfig) this.getBaseDao().save(cartLineItemConfig);
                 cartLineItem.setLineItemConfig(cartLineItemConfig);
                 double configPrice = cartLineItemConfig.getPrice();
                 cartLineItem.setMarkedPrice(productVariant.getMarkedPrice() + configPrice);
@@ -273,7 +280,7 @@ public class OrderManager {
                     cartLineItem.setProductReferrer(productReferrer);
                 }
                 // cartLineItem.setCostPrice(productVariant.getCostPrice() + configPrice);
-                cartLineItem = getCartLineItemService().save(cartLineItem);
+                cartLineItem = this.getCartLineItemService().save(cartLineItem);
                 isCartLineItemCreated = true;
             }
         }
@@ -284,23 +291,23 @@ public class OrderManager {
     public boolean createLineItems(ProductVariant productVariant, List<CartLineItemExtraOption> extraOptions, Order order, ProductReferrer productReferrer)
             throws OutOfStockException {
         boolean isCartLineItemCreated = false;
-        if (canAddVariantToCart(productVariant)) {
+        if (this.canAddVariantToCart(productVariant)) {
             CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addExtraOptions(extraOptions);
-            CartLineItem cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
+            CartLineItem cartLineItem = this.getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
             // CartLineItem cartLineItem = cartLineItemService.getCartLineItemFromOrder(order, productVariant,
             // extraOptions);
 
             if (cartLineItem != null) {
-                updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
+                this.updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
             } else {
-                cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+                cartLineItem = this.getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
                 if (productReferrer != null) {
                     cartLineItem.setProductReferrer(productReferrer);
                 }
-                cartLineItem = getCartLineItemService().save(cartLineItem);
+                cartLineItem = this.getCartLineItemService().save(cartLineItem);
                 for (CartLineItemExtraOption extraOption : extraOptions) {
                     extraOption.setCartLineItem(cartLineItem);
-                    getBaseDao().save(extraOption);
+                    this.getBaseDao().save(extraOption);
                 }
                 isCartLineItemCreated = true;
             }
@@ -324,7 +331,7 @@ public class OrderManager {
         if (variantQty != null && variantQty > 0 && cartLineItem.getQty() != variantQty) {
             Long previousQty = cartLineItem.getQty() == null ? 0 : cartLineItem.getQty();
             cartLineItem.setQty(previousQty + variantQty);
-            cartLineItem = getCartLineItemService().save(cartLineItem);
+            cartLineItem = this.getCartLineItemService().save(cartLineItem);
         }
         return cartLineItem;
     }
@@ -340,16 +347,16 @@ public class OrderManager {
             // apply pricing and save cart line items
             // logger.info("catrLineItems prev size: " + order.getCartLineItems().size() + " for order : " +
             // order.getId());
-            Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
+            Set<CartLineItem> cartLIFromPricingEngine = this.getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
                     order.getRewardPointsUsed());
-            Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
+            Set<CartLineItem> cartLineItems = this.getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
 
             // logger.info("catrLineItems size after pricign engine: " + cartLineItems.size() + " for order : " +
             // order.getId());
             PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
 
             // give commissions to affiliates and and award them reward points if order came from them.
-            getAffilateService().saveOfferInstanceAndSaveAffiliateCommission(order, pricingDto);
+            this.getAffilateService().saveOfferInstanceAndSaveAffiliateCommission(order, pricingDto);
 
             // apply cod charges if applicable and update payment object
             Double codCharges = 0D;
@@ -358,22 +365,22 @@ public class OrderManager {
                 if ((pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal()) >= this.codFreeAfter) {
                     codCharges = 0D;
                 }
-                CartLineItem codLine = createCodLineItem(order, codCharges);
+                CartLineItem codLine = this.createCodLineItem(order, codCharges);
                 order.setAmount(order.getAmount() + codCharges);
                 cartLineItems.add(codLine);
                 payment.setAmount(order.getAmount());
-                getPaymentService().save(payment);
+                this.getPaymentService().save(payment);
             }
 
             // Order lifecycle activity logging - Payment Marked Successful
             if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
-                getOrderLoggingService().logOrderActivity(order, order.getUser(),
-                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+                this.getOrderLoggingService().logOrderActivity(order, order.getUser(),
+                        this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
             } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
                 //User adminUser = UserCache.getInstance().getAdminUser();
-                User adminUser = getUserService().getAdminUser();
-                getOrderLoggingService().logOrderActivity(order, adminUser,
-                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
+                User adminUser = this.getUserService().getAdminUser();
+                this.getOrderLoggingService().logOrderActivity(order, adminUser,
+                        this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
             }
 
             if (EnumPaymentStatus.getEscalablePaymentStatuses().contains(payment.getPaymentStatus())) {
@@ -385,57 +392,62 @@ public class OrderManager {
             order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
             // function made to handle deals and offers which are associated with a variant, this will help in minimizing brutal use of free checkout
-            cartLineItems = addFreeVariantsToCart(cartLineItems);
+            cartLineItems = this.addFreeVariantsToCart(cartLineItems);
             order.setCartLineItems(cartLineItems);
 
             // award reward points, if using a reward point offer coupon
-            rewardPointService.awardRewardPoints(order);
+            this.rewardPointService.awardRewardPoints(order);
+            
+			// credit loyalty points
+			// to do move this API out
+			loyaltyProgramService.creditKarmaPoints(order);
 
             // save order with placed status since amount has been applied
             order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
 
-            Set<OrderCategory> categories = getOrderService().getCategoriesForBaseOrder(order);
+            Set<OrderCategory> categories = this.getOrderService().getCategoriesForBaseOrder(order);
             order.setCategories(categories);
 
             // update user karma profile for those whose score is not yet set
-            KarmaProfile karmaProfile = getKarmaProfileService().updateKarmaAfterOrder(order);
+            KarmaProfile karmaProfile = this.getKarmaProfileService().updateKarmaAfterOrder(order);
             if (karmaProfile != null) {
                 order.setScore((long) karmaProfile.getKarmaPoints());
             }
 
-            order = getOrderService().save(order);
+            order = this.getOrderService().save(order);
 
             // Order lifecycle activity logging - Order Placed
-            getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+            this.getOrderLoggingService().logOrderActivity(order, order.getUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             // Check Inventory health of order lineItems
             for (CartLineItem cartLineItem : productCartLineItems) {
-                inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+                this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
             }
 
-            getUserService().updateIsProductBought(order);
+            this.getUserService().updateIsProductBought(order);
 
             // if reward points redeemed then add reward point txns
             if (pricingDto.getRedeemedRewardPoints() > 0) {
-                getRewardPointService().redeemRewardPoints(order, pricingDto.getRedeemedRewardPoints());
+                this.getRewardPointService().redeemRewardPoints(order, pricingDto.getRedeemedRewardPoints());
             }
 
             if(!order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
                 Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
                 if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
-                    subscriptionService.placeSubscriptions(order);
+                    this.subscriptionService.placeSubscriptions(order);
                 }
             }
-            getEmailManager().sendOrderConfirmEmailToAdmin(order);
+            this.getEmailManager().sendOrderConfirmEmailToAdmin(order);
         }
 
         // Check if HK order then only send emails and no order placed email is necessary for subscription orders
-        if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
+        if (order.getStore() != null && (order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) || 
+        		order.getStore().getId().equals(StoreService.LOYALTYPG_ID))&& !order.isSubscriptionOrder()) {
             // Send mail to Customer
-            getPaymentService().sendPaymentEmailForOrder(order);
-            sendReferralProgramEmail(order.getUser());
-            getSmsManager().sendOrderPlacedSMS(order);
+            this.getPaymentService().sendPaymentEmailForOrder(order);
+            this.sendReferralProgramEmail(order.getUser());
+            this.getSmsManager().sendOrderPlacedSMS(order);
         }
 
 //        //this is the most important method, so it is very important as to from where it is called
@@ -452,27 +464,27 @@ public class OrderManager {
 		    }else{
 				trafficTracking.setFirstOrder(1L);			    
 		    }
-		    getBaseDao().save(trafficTracking);
+		    this.getBaseDao().save(trafficTracking);
 	    }
 
         return order;
     }
 
     public void sendReferralProgramEmail(User user) {
-        Order lastOrder = getOrderService().getLatestOrderForUser(user);
+        Order lastOrder = this.getOrderService().getLatestOrderForUser(user);
         if (lastOrder == null) {
-            getEmailManager().sendReferralProgramIntro(user, getLinkManager().getReferralProgramUrl());
+            this.getEmailManager().sendReferralProgramIntro(user, this.getLinkManager().getReferralProgramUrl());
         }
     }
 
     public Set<CartLineItem> addFreeCartLineItems(String variantId, Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
-        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+        ProductVariant productVariant = this.getProductVariantService().getVariantById(variantId);
         if (productVariant != null) {
             productVariant.setQty(1L);
-            CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+            CartLineItem cartLineItem = this.getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
             cartLineItem.setDiscountOnHkPrice(cartLineItem.getHkPrice());
-            cartLineItem = getCartLineItemService().save(cartLineItem);
+            cartLineItem = this.getCartLineItemService().save(cartLineItem);
             cartLineItems.add(cartLineItem);
         }
         return cartLineItems;
@@ -487,11 +499,11 @@ public class OrderManager {
 
                 ProductVariant freeVariant = cartLineItem.getProductVariant().getFreeProductVariant();
                 if (freeVariant != null) {
-                    CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, cartLineItem.getOrder());
+                    CartLineItem existingCartLineItem = this.getCartLineItemDao().getLineItem(freeVariant, cartLineItem.getOrder());
                     if (existingCartLineItem != null) {
                         updatedCartLineItems.remove(existingCartLineItem);
                     }
-                    CartLineItem freeLineItem = createFreeLineItem(cartLineItem, freeVariant);
+                    CartLineItem freeLineItem = this.createFreeLineItem(cartLineItem, freeVariant);
                     if (freeLineItem != null) {
                         updatedCartLineItems.add(freeLineItem);
                     }
@@ -508,15 +520,15 @@ public class OrderManager {
         freeVariant.setQty(cartLineItem.getQty());
         //as on 04-02-13, free variants which are out of stock, will be added to an order, but they wont be processed
 //        if (!freeVariant.isOutOfStock()) {
-            CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, order);
+            CartLineItem existingCartLineItem = this.getCartLineItemDao().getLineItem(freeVariant, order);
             if (existingCartLineItem == null) { // The variant is not added in user account already
-                CartLineItem freeCartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
+                CartLineItem freeCartLineItem = this.cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
                 freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice() * freeVariant.getQty());
-                return cartLineItemService.save(freeCartLineItem);
+                return this.cartLineItemService.save(freeCartLineItem);
             } else {
                 existingCartLineItem.setQty(existingCartLineItem.getQty() + freeVariant.getQty());
                 existingCartLineItem.setDiscountOnHkPrice(existingCartLineItem.getDiscountOnHkPrice() + (freeVariant.getHkPrice() * freeVariant.getQty()));
-                return cartLineItemService.save(existingCartLineItem);
+                return this.cartLineItemService.save(existingCartLineItem);
             }
 //        }
 //        return null;
@@ -528,7 +540,7 @@ public class OrderManager {
         for (CartLineItem cartLineItem : cartLineItems) {
             cartLineItem.setOrder(order);
             OrderUtil.roundOffPricesOnCartLineItem(cartLineItem);
-            cartLineItem = getCartLineItemService().save(cartLineItem);
+            cartLineItem = this.getCartLineItemService().save(cartLineItem);
             finalCartLineItems.add(cartLineItem);
         }
         return finalCartLineItems;
@@ -553,22 +565,22 @@ public class OrderManager {
             codLine = cartLineItems.iterator().next();
         }
 
-        return getCartLineItemService().save(codLine);
+        return this.getCartLineItemService().save(codLine);
     }
 
     public Order recalAndUpdateAmount(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();
 
-        PricingDto pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
+        PricingDto pricingDto = new PricingDto(this.getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
                 order.getAddress());
 
         order.setAmount(pricingDto.getGrandTotalPayable());
 
-        return getOrderService().save(order);
+        return this.getOrderService().save(order);
     }
 
     public Order orderPaymentAuthPending(Payment payment) {
-        return orderPaymentReceieved(payment);
+        return this.orderPaymentReceieved(payment);
     }
 
 
@@ -581,12 +593,12 @@ public class OrderManager {
           ProductVariant productVariant = lineItem.getProductVariant();
           Product product = productVariant.getProduct();
           ComboInstance comboInstance = lineItem.getComboInstance();
-          List<Sku> skuList = skuService.getSKUsForMarkingProductOOS(productVariant);
+          List<Sku> skuList = this.skuService.getSKUsForMarkingProductOOS(productVariant);
 
           if(lineItem.getQty() <= 0){
            iterator.remove();
            order.getCartLineItems().remove(lineItem);
-           getBaseDao().delete(lineItem);
+           this.getBaseDao().delete(lineItem);
           }
           else{
 
@@ -601,7 +613,7 @@ public class OrderManager {
           }
 
           if (!(product.isJit() || product.isService() || product.isDropShipping() ||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
-              Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
+              Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(skuList);
               if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
                   // Check in case of negative unbooked inventory
                   if (comboInstance != null) {
@@ -625,19 +637,19 @@ public class OrderManager {
               iterator.remove();
               //check for subscription
               if(lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())){
-                  Subscription subscription= subscriptionService.getSubscriptionFromCartLineItem(lineItem);
-                  subscriptionService.abandonSubscription(subscription);
+                  Subscription subscription= this.subscriptionService.getSubscriptionFromCartLineItem(lineItem);
+                  this.subscriptionService.abandonSubscription(subscription);
               }
               order.getCartLineItems().remove(lineItem);
-              getBaseDao().delete(lineItem);
+              this.getBaseDao().delete(lineItem);
               if(qty<=0){
               productVariant.setOutOfStock(true);
-              getProductVariantService().save(productVariant);
-              getComboService().markProductOutOfStock(productVariant);
+              this.getProductVariantService().save(productVariant);
+              this.getComboService().markProductOutOfStock(productVariant);
                }
           }
       }
-      order = getOrderService().save(order);
+      order = this.getOrderService().save(order);
       return trimmedCartLineItems;
   }
 
@@ -645,14 +657,16 @@ public class OrderManager {
         ProductVariant productVariant = cartLineItem.getProductVariant();
         Product product = productVariant.getProduct();
         boolean isService = false;
-        if (product.isService() != null && product.isService())
-            isService = true;
+        if (product.isService() != null && product.isService()) {
+			isService = true;
+		}
         boolean isJit = false;
-        if (product.isJit() != null && product.isJit())
-            isJit = true;
+        if (product.isJit() != null && product.isJit()) {
+			isJit = true;
+		}
         if (!isJit && !isService) {
             //Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-	        Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
+	        Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(this.skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
             if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
                 return false;
             }
@@ -739,7 +753,7 @@ public class OrderManager {
         try {
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
             for (CartLineItem lineItem : productCartLineItems) {
-                List<Sku> skuList = getSkuService().getSKUsForProductVariant(lineItem.getProductVariant());
+                List<Sku> skuList = this.getSkuService().getSKUsForProductVariant(lineItem.getProductVariant());
                 if (skuList != null && !skuList.isEmpty()) {
                     Sku sku = skuList.get(0);
                     Double costPrice = 0.0;
@@ -750,7 +764,7 @@ public class OrderManager {
                     }
                     Double taxPaid = 0.0;
                     Double taxRecoverable = 0.0;
-                    Supplier supplier = getInventoryService().getSupplierForSKU(sku);
+                    Supplier supplier = this.getInventoryService().getSupplierForSKU(sku);
                     if (supplier != null && costPrice != null) {
                         if (supplier.getState().equalsIgnoreCase("haryana")) {
                             Double surcharge = 0.05;
@@ -792,7 +806,7 @@ public class OrderManager {
     }
 
     public CartLineItemService getCartLineItemService() {
-        return cartLineItemService;
+        return this.cartLineItemService;
     }
 
     public void setCartLineItemService(CartLineItemService cartLineItemService) {
@@ -800,7 +814,7 @@ public class OrderManager {
     }
 
     public OrderService getOrderService() {
-        return orderService;
+        return this.orderService;
     }
 
     public void setOrderService(OrderService orderService) {
@@ -808,7 +822,7 @@ public class OrderManager {
     }
 
     public PaymentService getPaymentService() {
-        return paymentService;
+        return this.paymentService;
     }
 
     public void setPaymentService(PaymentService paymentService) {
@@ -816,7 +830,7 @@ public class OrderManager {
     }
 
     public UserService getUserService() {
-        return userService;
+        return this.userService;
     }
 
     public void setUserService(UserService userService) {
@@ -824,7 +838,7 @@ public class OrderManager {
     }
 
     public KarmaProfileService getKarmaProfileService() {
-        return karmaProfileService;
+        return this.karmaProfileService;
     }
 
     public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
@@ -832,7 +846,7 @@ public class OrderManager {
     }
 
     public AffilateService getAffilateService() {
-        return affilateService;
+        return this.affilateService;
     }
 
     public void setAffilateService(AffilateService affilateService) {
@@ -840,7 +854,7 @@ public class OrderManager {
     }
 
     public RewardPointService getRewardPointService() {
-        return rewardPointService;
+        return this.rewardPointService;
     }
 
     public void setRewardPointService(RewardPointService rewardPointService) {
@@ -848,7 +862,7 @@ public class OrderManager {
     }
 
     public ShippingOrderService getShippingOrderService() {
-        return shippingOrderService;
+        return this.shippingOrderService;
     }
 
     public void setShippingOrderService(ShippingOrderService shippingOrderService) {
@@ -856,7 +870,7 @@ public class OrderManager {
     }
 
     public EmailManager getEmailManager() {
-        return emailManager;
+        return this.emailManager;
     }
 
     public void setEmailManager(EmailManager emailManager) {
@@ -864,7 +878,7 @@ public class OrderManager {
     }
 
     public OrderDao getOrderDao() {
-        return orderDao;
+        return this.orderDao;
     }
 
     public void setOrderDao(OrderDao orderDao) {
@@ -872,7 +886,7 @@ public class OrderManager {
     }
 
     public PricingEngine getPricingEngine() {
-        return pricingEngine;
+        return this.pricingEngine;
     }
 
     public void setPricingEngine(PricingEngine pricingEngine) {
@@ -880,7 +894,7 @@ public class OrderManager {
     }
 
     public LineItemDao getLineItemDao() {
-        return lineItemDao;
+        return this.lineItemDao;
     }
 
     public void setLineItemDao(LineItemDao lineItemDao) {
@@ -888,7 +902,7 @@ public class OrderManager {
     }
 
     public CartLineItemDao getCartLineItemDao() {
-        return cartLineItemDao;
+        return this.cartLineItemDao;
     }
 
     public void setCartLineItemDao(CartLineItemDao cartLineItemDao) {
@@ -896,7 +910,7 @@ public class OrderManager {
     }
 
     public LinkManager getLinkManager() {
-        return linkManager;
+        return this.linkManager;
     }
 
     public void setLinkManager(LinkManager linkManager) {
@@ -904,7 +918,7 @@ public class OrderManager {
     }
 
     public SkuService getSkuService() {
-        return skuService;
+        return this.skuService;
     }
 
     public void setSkuService(SkuService skuService) {
@@ -912,7 +926,7 @@ public class OrderManager {
     }
 
     public InventoryService getInventoryService() {
-        return inventoryService;
+        return this.inventoryService;
     }
 
     public void setInventoryService(InventoryService inventoryService) {
@@ -920,7 +934,7 @@ public class OrderManager {
     }
 
     public OrderStatusService getOrderStatusService() {
-        return orderStatusService;
+        return this.orderStatusService;
     }
 
     public void setOrderStatusService(OrderStatusService orderStatusService) {
@@ -928,7 +942,7 @@ public class OrderManager {
     }
 
     public BaseDao getBaseDao() {
-        return baseDao;
+        return this.baseDao;
     }
 
     public void setBaseDao(BaseDao baseDao) {
@@ -936,7 +950,7 @@ public class OrderManager {
     }
 
     public ProductVariantService getProductVariantService() {
-        return productVariantService;
+        return this.productVariantService;
     }
 
     public void setProductVariantService(ProductVariantService productVariantService) {
@@ -944,7 +958,7 @@ public class OrderManager {
     }
 
     public OrderLoggingService getOrderLoggingService() {
-        return orderLoggingService;
+        return this.orderLoggingService;
     }
 
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
@@ -952,7 +966,7 @@ public class OrderManager {
     }
 
     public SubscriptionService getSubscriptionService() {
-        return subscriptionService;
+        return this.subscriptionService;
     }
 
     public void setSubscriptionService(SubscriptionService subscriptionService) {
@@ -960,7 +974,7 @@ public class OrderManager {
     }
 
     public SMSManager getSmsManager() {
-        return smsManager;
+        return this.smsManager;
     }
 
     public void setSmsManager(SMSManager smsManager) {
@@ -968,6 +982,6 @@ public class OrderManager {
     }
 
   public ComboService getComboService() {
-    return comboService;
+    return this.comboService;
   }
 }

@@ -55,8 +55,8 @@ public class DebitNoteLineItem implements java.io.Serializable {
   private String remarks;
 
 	@ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "tax_id")
-  private Tax tax;
+    @JoinColumn (name = "tax_id")
+    private Tax tax;
 
   public Long getId() {
     return this.id;

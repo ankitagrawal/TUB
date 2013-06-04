@@ -28,6 +28,8 @@ public class GRNDto {
 
 	private Double finalPayable = 0.0;
 
+    private Long totalQty=0L;
+
 	public Double getTotalTax() {
 		return totalTax;
 	}
@@ -83,4 +85,12 @@ public class GRNDto {
 	public void setFinalPayable(Double finalPayable) {
 		this.finalPayable = finalPayable;
 	}
+
+    public Long getTotalQty() {
+        return totalQty;
+    }
+
+    public void setTotalQty(Long totalQty) {
+        this.totalQty = totalQty;
+    }
 }

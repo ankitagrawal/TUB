@@ -16,6 +16,8 @@ import javax.persistence.Transient;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Surcharge;
 import com.hk.domain.core.Tax;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 
 /**
@@ -74,6 +76,10 @@ public class PurchaseInvoiceLineItem implements java.io.Serializable {
 	@JoinColumn(name = "surcharge_id")
 	private Surcharge surcharge;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "grn_line_item_id")
+	private GrnLineItem grnLineItem;
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -184,6 +190,14 @@ public class PurchaseInvoiceLineItem implements java.io.Serializable {
 
 	public void setSurcharge(Surcharge surcharge) {
 		this.surcharge = surcharge;
+	}
+
+	public GrnLineItem getGrnLineItem() {
+		return grnLineItem;
+	}
+
+	public void setGrnLineItem(GrnLineItem grnLineItem) {
+		this.grnLineItem = grnLineItem;
 	}
 
 	@Override

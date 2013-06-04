@@ -28,6 +28,8 @@ public class TaxSeedData extends BaseSeedData {
                 insert(enumTax.getName(), enumTax.getValue());
             } else {
                 tax.setValue(enumTax.getValue());
+	            tax.setId(enumTax.getId());
+	            tax.setType(enumTax.getType());
                 save(tax);
             }
         }

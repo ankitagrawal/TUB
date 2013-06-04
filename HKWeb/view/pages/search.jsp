@@ -1,11 +1,11 @@
-<%@ page import="com.hk.constants.core.Keys" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.search.SearchAction" var="ca"/>
 <%
-  boolean isSecure = pageContext.getRequest().isSecure();
+	boolean isSecure = WebContext.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/catalogLayoutG.jsp">
@@ -87,10 +87,10 @@
 			</div>
 
 			<div id="prod_grid" class="grid_19">
-				<c:forEach items="${ca.productList}" var="product">
+				<c:forEach items="${ca.productList}" var="product" varStatus="ctr">
 					<c:if test="${!product.googleAdDisallowed}">
 						<div class="product_box grid_6">
-							<s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}"/>
+							<s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}" position="${ca.pageNo}/${ctr.index+1}"/>
 							<div class="clear"></div>
 						</div>
 					</c:if>

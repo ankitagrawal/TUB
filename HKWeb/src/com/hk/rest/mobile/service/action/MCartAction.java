@@ -34,7 +34,6 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
@@ -44,6 +43,7 @@ import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.store.EnumStore;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -139,7 +139,7 @@ public class MCartAction extends MBaseAction{
             order = orderManager.getOrCreateOrder(user);
 
             
-            order = orderService.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            order = orderService.findCart(user, EnumStore.HEALTHKART.asStore());
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {
@@ -166,7 +166,7 @@ public class MCartAction extends MBaseAction{
                     cartItemResponse.setId(lineItem.getId());
                     cartItemResponse.setName(productVariant.getProduct().getName());
                     if(null!=productVariant.getProduct() && null!=productVariant.getProduct().getMainImageId())
-                    	cartItemResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,productVariant.getProduct().getMainImageId(),false));
+                    	cartItemResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,productVariant.getProduct().getMainImageId()));
                     else
                     	cartItemResponse.setImageUrl(getImageUrl()+productVariant.getProduct().getId()+MHKConstants.IMAGETYPE);
                     if(null!=productVariant.getProduct())
@@ -252,7 +252,7 @@ public class MCartAction extends MBaseAction{
             user = getUserService().getUserById(((Principal) SecurityUtils.getSubject().getPrincipal()).getId());
         }
         if (user != null) {
-            order = orderService.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            order = orderService.findCart(user, EnumStore.HEALTHKART.asStore());
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {

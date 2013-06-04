@@ -2,6 +2,7 @@ package com.hk.pact.dao;
 
 import java.util.List;
 
+import com.hk.constants.core.EnumTax;
 import com.hk.domain.core.Tax;
 
 public interface TaxDao extends BaseDao{
@@ -11,9 +12,12 @@ public interface TaxDao extends BaseDao{
         
     public List<Tax> taxListForReport() ;
 
-    public List<Tax> getTaxList() ;
+    public List<Tax> getLocalTaxList() ;
 
+		public List<Tax> getCentralTaxList();
+
+		public List<Tax> getTaxListByType(List<String> taxType);
 //    public Tax findByValue(Double taxValue);
-       
+
 
 }

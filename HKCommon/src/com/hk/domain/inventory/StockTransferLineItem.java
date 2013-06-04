@@ -74,8 +74,8 @@ public class StockTransferLineItem implements java.io.Serializable {
 	private SkuGroup checkedInSkuGroup;
 
 	@ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "tax_id")
-  private Tax tax;
+    @JoinColumn (name = "tax_id")
+    private Tax tax;
 
 	public Long getId() {
 		return id;

@@ -11,6 +11,7 @@ public class HKAPIProductVariantDTO {
     private double mrp;
     private double hkPrice;
     private double hkDiscountPercent;
+    private HKAPIProductOptionDTO[] productOptions;
 
     public String getProductVariantID() {
         return productVariantID;
@@ -58,5 +59,13 @@ public class HKAPIProductVariantDTO {
 
     public void setHkDiscountPercent(double hkDiscountPercent) {
         this.hkDiscountPercent = hkDiscountPercent;
+    }
+
+    public HKAPIProductOptionDTO[] getProductOptions() {
+        return productOptions;
+    }
+
+    public void setProductOptions(HKAPIProductOptionDTO[] productOptions) {
+        this.productOptions = productOptions;
     }
 }

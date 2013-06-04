@@ -1,15 +1,28 @@
 package com.hk.web.action.core.payment;
 
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.Ssl;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.Keys;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.impl.service.codbridge.OrderEventPublisher;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.order.OrderLoggingService;
@@ -18,14 +31,6 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {
@@ -42,7 +47,8 @@ public class PaymentSuccessAction extends BaseAction {
     private String purchaseDate;
     private String couponCode;
     private int couponAmount = 0;
-
+    private double loyaltyPointsEarned=0;
+    
     @Autowired
     private PaymentDao paymentDao;
     @Autowired
@@ -59,35 +65,37 @@ public class PaymentSuccessAction extends BaseAction {
     OrderService orderService;
     @Autowired
     OrderLoggingService orderLoggingService;
+	@Autowired
+	LoyaltyProgramService loyaltyProgramService;
     @Autowired
     OrderEventPublisher orderEventPublisher;
 
     public Resolution pre() {
-        payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-        if (payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(payment.getPaymentStatus().getId())) {
+        this.payment = this.paymentDao.findByGatewayOrderId(this.gatewayOrderId);
+        if (this.payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(this.payment.getPaymentStatus().getId())) {
 
-            Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
+            Long paymentStatusId = this.payment.getPaymentStatus() != null ? this.payment.getPaymentStatus().getId() : null;
 
             logger.info("payment success page payment status " + paymentStatusId);
 
-            order = payment.getOrder();
-            pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
+            this.order = this.payment.getOrder();
+            this.pricingDto = new PricingDto(this.order.getCartLineItems(), this.payment.getOrder().getAddress());
 
             // for google analytics
-            paymentMode = EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
-            purchaseDate = GAUtil.formatDate(order.getCreateDate());
+            this.paymentMode = EnumPaymentMode.getPaymentModeFromId(this.payment.getPaymentMode().getId());
+            this.purchaseDate = GAUtil.formatDate(this.order.getCreateDate());
 
-            OfferInstance offerInstance = order.getOfferInstance();
+            OfferInstance offerInstance = this.order.getOfferInstance();
             if (offerInstance != null) {
                 Coupon coupon = offerInstance.getCoupon();
                 if (coupon != null) {
-                    couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                	this.couponCode = coupon.getCode() + "@" + offerInstance.getId();
                 }
-                couponAmount = pricingDto.getTotalPromoDiscount().intValue();
+                this.couponAmount = this.pricingDto.getTotalPromoDiscount().intValue();
             }
             //moved to orderManager, orderPaymentReceived
 //            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-            orderEventPublisher.publishOrderPlacedEvent(order);
+            this.orderEventPublisher.publishOrderPlacedEvent(this.order);
 
             //todo disabling, cod conversion and repay prepaid order as for now, need to do qa if the functionality still works or not
 /*
@@ -122,7 +130,6 @@ public class PaymentSuccessAction extends BaseAction {
                                 Set<ShippingOrder> shippingOrders = order.getShippingOrders();
                                 if (shippingOrders != null) {
                                     for (ShippingOrder shippingOrder : shippingOrders) {
-                                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.COD_Converter);
                                         shippingOrderService.nullifyCodCharges(shippingOrder);
                                         shipmentService.recreateShipment(shippingOrder);
                                         shippingOrderService.autoEscalateShippingOrder(shippingOrder);                          
@@ -148,11 +155,18 @@ public class PaymentSuccessAction extends BaseAction {
             httpResponse.addCookie(wantedCODCookie);
 */
         }
+
+	    //Loyalty program
+        UserOrderKarmaProfile karmaProfile = loyaltyProgramService.getUserOrderKarmaProfile(order.getId());
+        if (karmaProfile!=null) {
+        	loyaltyPointsEarned = karmaProfile.getKarmaPoints(); 
+        }
+
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
 
     public String getGatewayOrderId() {
-        return gatewayOrderId;
+        return this.gatewayOrderId;
     }
 
     public void setGatewayOrderId(String gatewayOrderId) {
@@ -160,11 +174,11 @@ public class PaymentSuccessAction extends BaseAction {
     }
 
     public Payment getPayment() {
-        return payment;
+        return this.payment;
     }
 
     public PricingDto getPricingDto() {
-        return pricingDto;
+        return this.pricingDto;
     }
 
     public void setPaymentDao(PaymentDao paymentDao) {
@@ -172,7 +186,7 @@ public class PaymentSuccessAction extends BaseAction {
     }
 
     public OrderService getOrderService() {
-        return orderService;
+        return this.orderService;
     }
 
     public void setOrderService(OrderService orderService) {
@@ -180,7 +194,7 @@ public class PaymentSuccessAction extends BaseAction {
     }
 
     public Order getOrder() {
-        return order;
+        return this.order;
     }
 
     public void setOrder(Order order) {
@@ -188,7 +202,7 @@ public class PaymentSuccessAction extends BaseAction {
     }
 
     public EnumPaymentMode getPaymentMode() {
-        return paymentMode;
+        return this.paymentMode;
     }
 
     public void setPaymentMode(EnumPaymentMode paymentMode) {
@@ -196,7 +210,7 @@ public class PaymentSuccessAction extends BaseAction {
     }
 
     public String getPurchaseDate() {
-        return purchaseDate;
+        return this.purchaseDate;
     }
 
     public void setPurchaseDate(String purchaseDate) {
@@ -204,10 +218,24 @@ public class PaymentSuccessAction extends BaseAction {
     }
 
     public String getCouponCode() {
-        return couponCode;
+        return this.couponCode;
     }
 
     public int getCouponAmount() {
-        return couponAmount;
+        return this.couponAmount;
     }
+
+	/**
+	 * @return the loyaltyPointsEarned
+	 */
+	public double getLoyaltyPointsEarned() {
+		return this.loyaltyPointsEarned;
+	}
+
+	/**
+	 * @param loyaltyPointsEarned the loyaltyPointsEarned to set
+	 */
+	public void setLoyaltyPointsEarned(double loyaltyPointsEarned) {
+		this.loyaltyPointsEarned = loyaltyPointsEarned;
+	}
 }

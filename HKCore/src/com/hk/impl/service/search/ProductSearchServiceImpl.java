@@ -2,8 +2,8 @@ package com.hk.impl.service.search;
 
 import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.constants.HttpRequestAndSessionConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.*;
@@ -12,10 +12,10 @@ import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.analytics.SearchLogDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -55,7 +55,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     LinkManager           linkManager;
 
     @Autowired
-    BaseDao baseDao;
+    SearchLogDao searchLogDao;
 
     private final String  SEARCH_SERVER = "SOLR";
 
@@ -70,7 +70,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList) {
-                if (!pr.getDeleted()) {
+                if (!pr.getDeleted() && !pr.isHidden() && !pr.isGoogleAdDisallowed()) {
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
                     productIndexService.updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
@@ -102,14 +102,15 @@ class ProductSearchServiceImpl implements ProductSearchService {
         // resultsMap.getResultSize().longValue());
     }
 
-    public SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
+    public SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone, boolean showGoogleBannedProducts) throws SearchException {
         SolrQuery query = new SolrQuery("*:*");
         //query.addFilterQuery("{!field f= brand}" + brand);
         //query.addFilterQuery(SolrSchemaConstants.brand + ":" + brand);
         query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + brand+"\"");
         if(topLevelCategory != null)
           query.addFilterQuery(SolrSchemaConstants.category + ":" + topLevelCategory.getName());
-        query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
+        if(!showGoogleBannedProducts)
+          query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
 
@@ -238,7 +239,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return searchResult;
     }
 
-   private SearchResult getCategoryResults(String category, int page, int perPage) throws SearchException {
+   private SearchResult getCategorySearchResults(String category, int page, int perPage) throws SearchException {
 
      SolrQuery query = new SolrQuery("*:*");
        query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + category+"\"");
@@ -303,7 +304,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             products = productService.getAllProductsById(productIds);
             sortedProducts = new ArrayList<Product>(products);
             for (Product product : products) {
-                product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+                product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.searchPage.getId()));
                 int index = solrProductIndexMap.get(product.getId());
                 sortedProducts.set(index, product);
             }
@@ -371,9 +372,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
             query = sanitizeQuery(query);
             //Level 1 check Starts - Ajeet
             if (this.isBrandTerm(query)) {
-              return this.getBrandCatalogResults(query, null, page, perPage, null);
+              return this.getBrandCatalogResults(query, null, page, perPage, null, false);
             } else if (this.isCategoryTerm(query)) {
-              return this.getCategoryResults(query, page, perPage);
+              return this.getCategorySearchResults(query, page, perPage);
             }
             //End - Ajeet
             response = solr.query(getResultsQuery(query, searchFilters, page, perPage));
@@ -473,18 +474,35 @@ class ProductSearchServiceImpl implements ProductSearchService {
         searchLog.setKeyword(keyword);
         searchLog.setResults(results);
         searchLog.setCategory(category);
-        getBaseDao().save(searchLog);
+        getSearchLogDao().save(searchLog);
       }
     } catch (Exception e) {
       logger.error("Exception while logging search results "+e.getMessage());
     }
   }
 
-  public BaseDao getBaseDao() {
-    return baseDao;
+  @Override
+  public void updatePositionInSearchLog(String position) {
+    try {
+      TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+      if (trafficTracking != null) {
+        Long trafficTrackingId = trafficTracking.getId();
+        SearchLog searchLog = getSearchLogDao().getLatestSearchLog(trafficTrackingId);
+        if (searchLog != null && searchLog.getFirstClickPos() == null) {
+          searchLog.setFirstClickPos(position);
+          getSearchLogDao().save(searchLog);
+        }
+      }
+    } catch (Exception e) {
+      logger.error("Exception while updating first click position" + e.getMessage());
+    }
   }
 
-  public void setBaseDao(BaseDao baseDao) {
-    this.baseDao = baseDao;
+  public SearchLogDao getSearchLogDao() {
+    return searchLogDao;
+  }
+
+  public void setSearchLogDao(SearchLogDao searchLogDao) {
+    this.searchLogDao = searchLogDao;
   }
 }

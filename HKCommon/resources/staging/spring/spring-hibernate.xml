@@ -118,16 +118,16 @@
 		<property name="driverClassName">
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
-        <property name="url">
-            <value>jdbc:mysql://DB_SERVER:DB_PORT/DB_NAME</value>
-        </property>
-        <property name="username">
-            <value>DB_USERID</value>
-        </property>
-        <property name="password">
-            <value>DB_PASSWD</value>
-        </property>
-        <property name="maxActive">
+		<property name="url">
+			<value>jdbc:mysql://DB_SERVER:DB_PORT/DB_NAME</value>
+		</property>
+		<property name="username">
+			<value>DB_USERID</value>
+		</property>
+		<property name="password">
+			<value>DB_PASSWD</value>
+		</property>
+		<property name="maxActive">
 			<value>50</value>
 		</property>
 		<property name="maxWait">

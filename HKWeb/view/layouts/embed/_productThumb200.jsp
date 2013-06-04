@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
@@ -22,8 +23,6 @@
 		Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
 		pageContext.setAttribute("combo", combo);
 
-    boolean isSecure = pageContext.getRequest().isSecure();
-    pageContext.setAttribute("isSecure", isSecure);
 	%>
 	<style type="text/css">
 		.opaque {
@@ -37,21 +36,18 @@
 			filter: alpha(opacity = 100);
 		}
 	</style>
-	<c:choose>
-		<c:when test="${product.googleAdDisallowed || product.deleted}">
-		</c:when>
-		<c:otherwise>
+	<c:if test="${!product.googleAdDisallowed && !product.deleted && !product.hidden}">
 			<div class='grid_6 product' style="width:240px;height:300px;">
-
+        <c:set var="urlParameter" value="<%=HealthkartConstants.URL.productPosition%>"/>
 				<div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
-					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
-						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+					<s:link href="${hk:getAppendedURL(product.productURL, urlParameter, position)}" class="prod_link" title="${product.name}">
+						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 					</s:link>
 				</div>
 				<div>
 					<span style="height:20px;max-width:240px;">
-						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
+						<s:link href="${hk:getAppendedURL(product.productURL, urlParameter, position)}" title="${product.name}" class="prod_link">
 							${product.name}
 						</s:link>
 					</span>
@@ -157,6 +153,5 @@
 
 				<div class="floatfix"></div>
 			</div>
-		</c:otherwise>
-	</c:choose>
+	</c:if>
 </s:layout-definition>

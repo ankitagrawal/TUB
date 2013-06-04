@@ -38,6 +38,13 @@
 	</s:layout-component>
 
 	<s:layout-component name="content">
+				<script type="text/javascript">
+				 $(document).ready(function(){
+					 $('#shipment-upload-button').click(function(event){
+						 $('#shipment-upload-button').hide();
+					 });
+				 });
+		</script>
 		<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
 			<div style="float: left; width: 70%">
 
@@ -132,7 +139,7 @@
 									<h3>Shipment Details File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
 								</li>
 								<li>
-									<s:submit name="parse" value="Upload Shipment Details"/>
+									<s:submit name="parse" value="Upload Shipment Details" id="shipment-upload-button"/>
 									<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
 								</li>
 							</ul>

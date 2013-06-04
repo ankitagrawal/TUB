@@ -54,10 +54,10 @@
          <p><a href="http://www.healthkart.com/brand/beauty/VLCC">FREE VEGA Set of 7 Make-up Brushes Worth Rs 450/- With Purchase  of VLCC Products Worth Rs 3000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/Lotus+Herbals">FREE Lotus Herbals Jojobawash Active Milli Capsules Nourishing Face Wash Worth Rs 75/- With Purchase  of Lotus Herbals Products Worth Rs 500/-</a></p>
          <p><a href="http://www.healthkart.com/search?query=Schwarzkopf&search.x=-815&search.y=-54">FREE Vega Premium Collection  Straightening Hair Brush Worth Rs 450/- With Purchase  of Schwarzkopf Products Worth
-             </br> Rs 3000/-</a></p>
+             </br> Rs 1500/-</a></p>
          <p><a href="http://www.healthkart.com/beauty/make-up/eyes">FREE Basicare Syling Eyelash Worth Rs 200/- With Purchase  of Eye Makeup Worth Rs 1000/-</a></p>
 
-         <p><a href="http://www.healthkart.com/beauty">FREE  Basicare Perfume Atomizer Worth Rs.240/- With  Purchase of Beauty Products Worth Rs 1000/-</a></p>
+         
 
        <p><a href="http://www.healthkart.com/beauty">FREE Faces Emery Boards Small Worth Rs.65/- With Purchase of Beauty products Worth Rs 500/- (Prepaid Order) </a></p>
 

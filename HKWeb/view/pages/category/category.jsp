@@ -1,18 +1,18 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
+<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
-<%@ page import="com.hk.domain.catalog.category.Category" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="com.hk.domain.MapIndia" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
-<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -28,7 +28,7 @@
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
 
-    boolean isSecure = pageContext.getRequest().isSecure();
+	  boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 
     MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
@@ -156,31 +156,42 @@
   <div class='grid_6'>
     <c:set var="sportsNutrition" value="<%=CategoryConstants.SPORTS_NUTRITION%>"/>
     <c:set var="healthNutrition" value="<%=CategoryConstants.HEALTH_NUTRITION%>"/>
+    <c:set var="homeLiving" value="<%=CategoryConstants.HOME_LIVING%>"/>
     <c:choose>
       <c:when test="${categoryBean.category.name eq sportsNutrition}">
         <%-- <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
         <a class="bulkOrder" href="#" style="cursor: pointer;">
-          <img src="${pageContext.request.contextPath}/images/banners/Shipping.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+          <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
-        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/muscleblaze">
-          <img src="${pageContext.request.contextPath}/images/banners/Muscleblaze_small.jpg" alt="Brand Of the Week - MuscleBlaze"
+        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
+          <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek.jpg" alt="Brand Of the Week - DYMATIZE!"
                class="small_banner"/>
         </a>
       </c:when>
       <c:when test="${categoryBean.category.name eq healthNutrition}">
-        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
-        <a class="bulkOrder" href="#" style="cursor: pointer;">
-          <img src="${pageContext.request.contextPath}/images/banners/Shipping.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+        <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
+          <img src="${pageContext.request.contextPath}/images/banners/patanjali-banner.jpg" alt="Patanjali Offer" class="small_banner"/>
         </a>
-        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
+        <a href="${pageContext.request.contextPath}/brand/health-nutrition/Vitamin+Shoppe">
+          <img src="${pageContext.request.contextPath}/images/banners/VS.jpg" alt="Vitamin Shoppe" class="small_banner"/>
+        </a>
+      </c:when>
+      <c:when test="${categoryBean.category.name eq homeLiving}">
+        <a class="bulkOrder" href="#" style="cursor: pointer;">
+          <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+               class="small_banner"/>
+        </a>
+        <a href="${pageContext.request.contextPath}/product/westinghouse-wkfsfs133-food-steamer/WST022?productReferrerId=20">
+        <img src="<hk:vhostImage/>/images/banners/Westinghouse.jpg" alt="Product of the Week"
              class="small_banner"/>
+        </a>
       </c:when>
       <c:otherwise>
         <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                class="small_banner"/>
         </a>
-        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
+        <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
              class="small_banner"/>
       </c:otherwise>
     </c:choose>

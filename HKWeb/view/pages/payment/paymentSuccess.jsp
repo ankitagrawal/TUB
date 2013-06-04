@@ -13,9 +13,7 @@
 <%
     Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
     Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
-    
-    boolean isSecure = pageContext.getRequest().isSecure();
-    pageContext.setAttribute("isSecure", isSecure);
+
 %>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
@@ -293,6 +291,7 @@
 
 
             <div class="leftPS">
+            <div>
                 <c:choose>
                     <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
                         <%--your cod ka message--%>
@@ -312,6 +311,7 @@
                         <br/>
                     </c:otherwise>
                 </c:choose>
+               </div>
 
                 <jsp:include page="/includes/checkoutNotice.jsp"/>
 
@@ -367,7 +367,35 @@
                   </p>
                 </c:if>--%>
                 <br/>
-
+                
+			<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+				<div class='loyaltyMessage' >
+  				<p>Congratulations! Your payment is successful. Did you know about our Loyalty Program yet?<br>
+  				It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
+  				<br> 
+				<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.		
+    			</p>
+    			</div>
+    			<br/>
+    		</shiro:lacksRole>
+  		
+  			<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+  				<div class='loyaltyMessage' >
+  				<p>
+  				<c:if test="${actionBean.loyaltyPointsEarned > 0}">
+  				You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your stellar account once your order has been delivered.
+  				</c:if>
+                
+  				<c:if test="${actionBean.loyaltyPointsEarned <= 0}">
+  				<br/> Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
+  				</c:if>
+  				<br/>
+                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
+  				<p>
+  				</div>
+  				<br/>
+  			</shiro:hasRole>
+  		
                 <div class="confirmationEmailText" >
                     <p>The estimated dispatch time for each product is mentioned below. The delivery time would be extra and will vary according to your location.</p>
                     <p id="learnMore" class="learnMore" style="margin: 0px;float: right;" >learn more</p>

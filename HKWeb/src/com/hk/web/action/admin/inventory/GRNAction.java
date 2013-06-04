@@ -14,8 +14,10 @@ import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
+import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
+import com.hk.constants.core.EnumTax;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
@@ -25,6 +27,7 @@ import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.GrnStatus;
@@ -32,6 +35,8 @@ import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -94,8 +99,8 @@ public class GRNAction extends BasePaginatedAction {
     private ExtraInventoryService extraInventoryService;
     @Autowired
 	PoLineItemDao poLineItemDao;
-
-
+    @Autowired
+    RtvNoteService rtvNoteService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -394,6 +399,7 @@ public class GRNAction extends BasePaginatedAction {
 				Double discountPercentage = 0D;
 				PurchaseInvoiceLineItem purchaseInvoiceLineItem = new PurchaseInvoiceLineItem();
 				purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
+				purchaseInvoiceLineItem.setGrnLineItem(grnLineItem);
 				if (grnLineItem.getCostPrice() != null) {
 					purchaseInvoiceLineItem.setCostPrice(grnLineItem.getCostPrice());
 				}
@@ -408,15 +414,15 @@ public class GRNAction extends BasePaginatedAction {
 					purchaseInvoiceLineItem.setDiscountPercent(discountPercentage);
 				}
 				sku = grnLineItem.getSku();
-				if (sku != null) {
+				
+				if (supplier != null && supplier.getState() != null && !supplier.getState().equals(sku.getWarehouse().getState())) {
+					purchaseInvoiceLineItem.setTax(getBaseDao().get(Tax.class, EnumTax.CST.getId()));
+
+				}else if (sku != null) {
 					purchaseInvoiceLineItem.setSku(sku);
 					purchaseInvoiceLineItem.setTax(sku.getTax());
 				}
-				if (supplier != null && supplier.getState() != null && !supplier.getState().equals(sku.getWarehouse().getState())) {
 
-					purchaseInvoiceLineItem.setSurcharge(EnumSurcharge.TwoPercent.asSurcharge());
-
-				}
 				if (grnLineItem.getQty() != null && grnLineItem.getCostPrice() != null) {
 					taxableAmount = (grnLineItem.getQty() * (grnLineItem.getCostPrice() - grnLineItem.getCostPrice() * discountPercentage / 100));
 					totalTaxable += taxableAmount;
@@ -441,6 +447,7 @@ public class GRNAction extends BasePaginatedAction {
 			grn.setReconciled(true);
 			goodsReceivedNoteDao.save(grn);
 		}
+		
 		purchaseInvoice.setDiscount(overallDiscount);
 		purchaseInvoice.setGoodsReceivedNotes(grnListForPurchaseInvoice);
 		purchaseInvoice.setTaxableAmount(totalTaxable);
@@ -448,6 +455,9 @@ public class GRNAction extends BasePaginatedAction {
 		purchaseInvoice.setSurchargeAmount(totalSurcharge);
 		purchaseInvoice.setPayableAmount(totalPayable);
 		purchaseInvoice.setFinalPayableAmount(totalPayable - overallDiscount);
+		purchaseInvoice.setShortAmount(0.0);
+		purchaseInvoice.setRtvAmount(0.0);
+		purchaseInvoice.setPiRtvShortTotal(totalPayable - overallDiscount);
 		purchaseInvoiceDao.save(purchaseInvoice);
 
 		addRedirectAlertMessage(new SimpleMessage("Purchase Invoice generated from GRN(s). Please adjust it according to invoice"));

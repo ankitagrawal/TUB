@@ -68,7 +68,7 @@
                         <tr>
                             <td>For Warehouse</td>
                             <td>
-                                    ${pa.reconciliationVoucher.warehouse.name}
+                                    ${pa.reconciliationVoucher.warehouse.identifier}
                             </td>
                         </tr>
                     </table>
@@ -104,7 +104,7 @@
 
                         <tr>
                             <td colspan="2">
-                                <div style="float:left;"><s:submit name="SubtractReconciled" value="Subtract"/></div>
+                                <div style="float:left;"><s:submit id="SubtractReconciled" name="SubtractReconciled" value="Subtract"/></div>
                             </td>
                         </tr>
 
@@ -183,10 +183,10 @@
 
                 <br/><br/>
 
-                <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+                <h2>File to Upload: <s:file id="fileBean" name="fileBean" size="30"/></h2>
 
                 <div class="buttons">
-                    <s:submit name="parseSubtractRVExcel" value="Create RV LineItems"/>
+                    <s:submit id="excelUpload" name="parseSubtractRVExcel" value="Create RV LineItems"/>
                 </div>
 
             </fieldset>
@@ -226,6 +226,19 @@
                     return $(this).submit();
                 }
 
+            });
+            
+            $('#excelUpload').live("click", function() {
+            	$(this).hide();
+                var filebean = $('#fileBean').val();
+                if (filebean == null || filebean == '') {
+                	$(this).show();
+                  alert('choose file');
+                  return false;
+                }
+              });
+            $("#SubtractReconciled").click(function(){
+            	$(this).hide();
             });
 
         });

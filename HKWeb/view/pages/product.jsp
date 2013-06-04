@@ -5,7 +5,8 @@
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -24,7 +25,7 @@
     pageContext.setAttribute("productService", productService);
     pageContext.setAttribute("eyeGlass", eyeGlass);
 
-    boolean isSecure = pageContext.getRequest().isSecure();
+	boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
     Category stethoscope = categoryDao.getCategoryByName("stethoscope");
     pageContext.setAttribute("stethoscope", stethoscope);
@@ -213,13 +214,15 @@
 			</s:link>
 			&nbsp;|&nbsp;
 		</shiro:hasPermission>
-		<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+		<shiro:hasPermission name="<%=PermissionConstants.VIEW_VARIANT_INFO%>">
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editProductVariantDetails"
 			        target="_blank" class="popup">
 				Edit Variant Attributes
 				<s:param name="product" value="${product}"/>
 			</s:link>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="<%=PermissionConstants.VIEW_PRODUCT_INFO%>">
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editProductDetails"
 			        target="_blank"
@@ -227,6 +230,8 @@
 				Edit Product Attributes
 				<s:param name="product" value="${product}"/>
 			</s:link>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="<%=PermissionConstants.VIEW_SKU_INFO%>">
 			<s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
 				Edit Sku Attributes
 				<s:param name="productId" value="${product.id}"/>
@@ -240,9 +245,9 @@
 	<div class='product_slideshow'>
 
 		<div class="img320" style="position:relative;">
-			<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+			<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId)}" class="jqzoom" rel='gal1'
 			   title="${product.name}">
-				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
+				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 				<c:if test="${gosf == 'true'}">
 					<img style="position:absolute;right:0px;bottom:0px;z-index:100" class="gosf-logo"
@@ -261,8 +266,8 @@
 				<%--<ul class="thumblist">--%>
 				<ul id="mycarousel" class="jcarousel-skin-tango">
 					<c:forEach items="${pa.productImages}" var="productImage">
-						<li><a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}">
-              <img itemprop="image" style="height:75px;" src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id,isSecure)}'></a>
+						<li><a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}">
+              <img itemprop="image" style="height:75px;" src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id)}'></a>
             </li>
 					</c:forEach>
 				</ul>
@@ -456,6 +461,7 @@
 		</div>
 	</c:if>
 	<input type="hidden" id="productReferrerId" value="${pa.productReferrerId}"/>
+	<input type="hidden" id="productPosition" value="${pa.productPosition}"/>
 	<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
 		<div>
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"

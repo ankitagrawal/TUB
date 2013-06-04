@@ -17,7 +17,7 @@
 
 <%
 	TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
-	List<Tax> taxList = taxDao.getTaxList();
+	List<Tax> taxList = taxDao.getLocalTaxList();
 	pageContext.setAttribute("taxList", taxList);
 
 	MasterDataDao masterDataDao = (MasterDataDao) ServiceLocatorFactory.getService(MasterDataDao.class);

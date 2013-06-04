@@ -11,65 +11,70 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
+<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="com.hk.domain.queue.ActionTask" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-
+<s:layout-definition>
 <%
-    Set<ShippingOrder> shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
+    Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+    ShippingOrder shippingOrder = (ShippingOrder) pageContext.getAttribute("shippingOrder");
+    if (shippingOrder != null) {
+        shippingOrders.add(shippingOrder);
+    } else {
+        shippingOrders.addAll((Collection<? extends ShippingOrder>) pageContext.getAttribute("shippingOrders"));
+    }
     pageContext.setAttribute("shippingOrders", shippingOrders);
-    Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
-    Boolean isProcessingQueue = (Boolean) pageContext.getAttribute("isProcessingQueue");
-    Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
-    Boolean isServiceQueue = (Boolean) pageContext.getAttribute("isServiceQueue");
-    Boolean isShipmentQueue = (Boolean) pageContext.getAttribute("isShipmentQueue");
-
-
+    String isActionQueue = (String) pageContext.getAttribute("isActionQueue");
+    String isProcessingQueue = (String) pageContext.getAttribute("isProcessingQueue");
+    String isDropShipQueue = (String) pageContext.getAttribute("isDropShipQueue");
+    String isServiceQueue = (String) pageContext.getAttribute("isServiceQueue");
+    String isShipmentQueue = (String) pageContext.getAttribute("isShipmentQueue");
     if (isActionQueue != null) {
-        pageContext.setAttribute("isActionQueue", isActionQueue);
+        pageContext.setAttribute("isActionQueue", Boolean.valueOf(isActionQueue));
     } else {
         pageContext.setAttribute("isActionQueue", false);
     }
     if (isShipmentQueue != null) {
-        pageContext.setAttribute("isShipmentQueue", isShipmentQueue);
+        pageContext.setAttribute("isShipmentQueue", Boolean.valueOf(isShipmentQueue));
     } else {
         pageContext.setAttribute("isShipmentQueue", false);
     }
     if (isProcessingQueue != null) {
-        pageContext.setAttribute("isProcessingQueue", isProcessingQueue);
+        pageContext.setAttribute("isProcessingQueue", Boolean.valueOf(isProcessingQueue));
     } else {
         pageContext.setAttribute("isProcessingQueue", false);
     }
     if (isDropShipQueue != null) {
-        pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
+        pageContext.setAttribute("isDropShipQueue", Boolean.valueOf(isDropShipQueue));
     } else {
         pageContext.setAttribute("isDropShipQueue", false);
     }
     if (isServiceQueue != null) {
-        pageContext.setAttribute("isServiceQueue", isServiceQueue);
+        pageContext.setAttribute("isServiceQueue", Boolean.valueOf(isServiceQueue));
     } else {
         pageContext.setAttribute("isServiceQueue", false);
     }
-    Boolean showCourier = (Boolean) pageContext.getAttribute("showCourier");
+    String showCourier = (String) pageContext.getAttribute("showCourier");
     if (showCourier != null) {
-        pageContext.setAttribute("showCourier", showCourier);
+        pageContext.setAttribute("showCourier", Boolean.valueOf(showCourier));
     } else {
         pageContext.setAttribute("showCourier", false);
     }
-    Boolean hasAction = (Boolean) pageContext.getAttribute("hasAction");
+    String hasAction = (String) pageContext.getAttribute("hasAction");
     if (hasAction != null) {
-        pageContext.setAttribute("hasAction", hasAction);
+        pageContext.setAttribute("hasAction", Boolean.valueOf(hasAction));
     } else {
         pageContext.setAttribute("hasAction", true);
     }
-    Boolean isSearchShippingOrder = (Boolean) pageContext.getAttribute("isSearchShippingOrder");
+    String isSearchShippingOrder = (String) pageContext.getAttribute("isSearchShippingOrder");
     if (isSearchShippingOrder != null) {
-        pageContext.setAttribute("isSearchShippingOrder", isSearchShippingOrder);
+        pageContext.setAttribute("isSearchShippingOrder", Boolean.valueOf(isSearchShippingOrder));
     } else {
         pageContext.setAttribute("isSearchShippingOrder", false);
     }
 %>
-
-<s:layout-definition>
 <c:set var="shippingOrderStatusActionAwaiting" value="<%=EnumShippingOrderStatus.SO_ActionAwaiting.getId()%>"/>
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
 <c:set var="shippingOrderStatusHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getId()%>"/>
@@ -112,6 +117,7 @@
     </tr>
     </thead>
 </c:if>
+${shippingOrder.id}
 <c:forEach items="${shippingOrders}" var="shippingOrder" varStatus="shippingOrderCtr">
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="payment" value="${shippingOrder.baseOrder.payment}"/>
@@ -175,9 +181,14 @@
 </c:if>
 <div class="clear"></div>
 <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
-    <c:if test="${! empty shippingOrder.shippingOrderLifecycles}">
+    <c:if test="${! empty shippingOrder.shippingOrderLifecycles || shippingOrder.shippingOrderStatus.id eq shippingOrderStatusCancelled }">
+
         <label style="font-weight:bold;">Last Activity:</label><br>
-        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} on
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} Reason:
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.classification.primary}-
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.classification.secondary}-
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].comments}
+        on
         <br>
         <fmt:formatDate
                 value="${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].activityDate}"
@@ -254,6 +265,11 @@
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Split SO
             </s:link>)
+                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
+                                     class="splitShippingOrder" event="view" >
+                <s:param name="actionItem" value="${hk:getActionItem(shippingOrder).id}"/>
+                Edit Action Item
+            </s:link>)
                 <c:if test="${isSearchShippingOrder == true}">
                     &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
                                          class="pseudoSplitBaseOrder" event="splitOrderPractically">
@@ -271,15 +287,48 @@
             </shiro:hasPermission>
         </c:if>
 
-    <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
-                             event="cancelShippingOrder"
-                             class="cancelSO">
-        <s:param name="shippingOrder" value="${shippingOrder}"/>
-        Cancel SO
-    </s:link>)
+        <%--&nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"--%>
+                             <%--event="cancelShippingOrder"--%>
+                             <%--class="cancelSO button_orange">--%>
+        <%--<s:param name="shippingOrder" value="${shippingOrder}"/>--%>
+        <%--Cancel SO--%>
+    <%--</s:link>)--%>
+    <%--</c:if>--%>
+
+    <c:if test="${isActionQueue == false || isSearchShippingOrder == true }">
+    <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
+            <s:param name="shippingOrder" value="${shippingOrder}"/>
+
+            <c:if test="${shippingOrder.shippingOrderStatus.id eq shippingOrderStatusActionAwaiting}">
+            <br>
+            Reason:
+            <s:select name="shippingOrder.reason" id="soReason">
+            <s:option value="">-------Select-------</s:option>
+            <c:set var="soCancelReasonVar" value="<%=EnumReasonType.So_Cancelled.getName()%>"/>
+            <c:forEach items="${hk:getReasonsByType(soCancelReasonVar)}" var="soCancelReason">
+            <s:option value="${soCancelReason.id}"> ${soCancelReason.classification.primary} - ${soCancelReason.classification.secondary} </s:option>
+            </c:forEach>
+             </s:select>
+             <br>
+             Remark:
+                <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
+                <div class="buttons">
+                   <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO"/>
+                </div>
+            </c:if>
+        </s:form>                             
+        <script type="text/javascript">
+            $ ('.cancelSO').click(function(){
+                if($('#soReason').val()==""){
+                alert("Please select Reason");
+                return false;
+                }
+                 var proceed = confirm('Are you sure you want to cancel shipping order?');
+                 if (!proceed) return false;
+                $(this).hide();
+             });
+        </script>
     </c:if>
-    
     <c:if test="${isSearchShippingOrder}">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered ||
                     shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
@@ -373,8 +422,7 @@
                     </script>
                 </c:if>
 
-                <c:if
-                        test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
+                <c:if test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
@@ -405,10 +453,10 @@
     <td>
         <c:choose>
             <c:when test="${baseOrder.priorityOrder}">
-                <div id="userContactDetails" style="background:#F6CECE;">
+                <div id="userContactDetails" style="background:#F6CECE;"> </div>
             </c:when>
             <c:otherwise>
-                <div id="userContactDetails" >
+                <div id="userContactDetails" >  </div>
             </c:otherwise>
         </c:choose>
 
@@ -424,7 +472,7 @@
 
         <div class="clear"></div>
         <div class="floatleft" style="margin-top:3px;">
-            Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}
+            <%--Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}--%>
         </div>
       <span style="margin-left:10px;">
         (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
@@ -623,6 +671,7 @@
             <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldShippingOrder"
                     title="Unhold Shipping Order" class="orderStatusLink onHoldStatusLink">
                 <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                <s:param name="isActionQueue" value="${isActionQueue}" />
                 <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Shipping Order"
                      title="Unhold Shipping Order"/>
             </s:link>
@@ -634,6 +683,7 @@
                             title="Put Shipping Order on Hold"
                             class="orderStatusLink normalStatusLink">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                        <s:param name="isActionQueue" value="${isActionQueue}" />
                         <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Shipping Order on Hold"
                              title="Put Shipping Order on Hold"/>
                     </s:link>
