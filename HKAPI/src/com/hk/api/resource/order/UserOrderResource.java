@@ -20,7 +20,6 @@ import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.report.ReportConstants;
 import com.hk.domain.user.UserCodCall;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.service.order.OrderService;
@@ -226,7 +225,7 @@ public class UserOrderResource {
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
             }
             userCodCall = orderService.saveUserCodCall(userCodCall);
-            bucketService.confirmCOD(userCodCall.getBaseOrder());
+            bucketService.updateCODBucket(userCodCall.getBaseOrder());
             return Response.status(Response.Status.OK).build();
         } catch (DataIntegrityViolationException dataInt) {
             logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status: " + dataInt.getMessage());

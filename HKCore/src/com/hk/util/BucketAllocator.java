@@ -81,9 +81,10 @@ public class BucketAllocator {
                     actionableBuckets.add(EnumBucket.Dispatch_Issues);
                 }
             }
-
         }
-
+        if(baseOrder.isB2bOrder()){
+            actionableBuckets.add(EnumBucket.B2B);
+        }
         return actionableBuckets;
     }
 

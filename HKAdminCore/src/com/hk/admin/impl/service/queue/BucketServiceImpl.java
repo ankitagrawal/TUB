@@ -1,6 +1,7 @@
 package com.hk.admin.impl.service.queue;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.queue.EnumTrafficState;
@@ -9,6 +10,7 @@ import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.payment.Payment;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
@@ -115,7 +117,7 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
-    public void confirmCOD(Order order) {
+    public void updateCODBucket(Order order) {
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
             autoCreateUpdateActionItem(shippingOrder);
         }
@@ -148,7 +150,10 @@ public class BucketServiceImpl implements BucketService {
 
     protected List<EnumBucket> autoCreateDefaultBuckets(ShippingOrder shippingOrder) {
         List<EnumBucket> actionableBuckets = BucketAllocator.allocateBuckets(shippingOrder);
-        actionableBuckets.addAll(getCategoryDefaultersBuckets(shippingOrder));
+        Payment payment = shippingOrder.getBaseOrder().getPayment();
+        if(!EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
+            actionableBuckets.addAll(getCategoryDefaultersBuckets(shippingOrder));
+        }
         return actionableBuckets;
     }
 
@@ -162,6 +167,7 @@ public class BucketServiceImpl implements BucketService {
         }
         if (actionableBuckets.contains(find(EnumBucket.CM))) {
             actionableBuckets.addAll(getBuckets(BucketAllocator.getBucketsFromSOC(shippingOrder)));
+            actionableBuckets.remove(find(EnumBucket.CM));
         }
         return actionableBuckets;
     }

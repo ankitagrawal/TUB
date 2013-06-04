@@ -592,7 +592,7 @@
         </description>
         <name>getS3ImageUrl</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object,boolean)
+        <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object)
         </function-signature>
         <example>
             ${hk:getS3ImageUrl(${object}, ${object})}
@@ -964,7 +964,7 @@
             ${hk:getCodConverterLink(${order})}
         </example>
     </function>
-    <function>
+    <!--<function>
         <description>
             returns true if cod is allowed on order
         </description>
@@ -974,7 +974,7 @@
         <example>
             ${hk:isCodAllowedOnOrder(${order})}
         </example>
-    </function>
+    </function>-->
     <function>
         <description>
             returns true if cod is allowed on order

@@ -1,20 +1,5 @@
 package com.hk.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.jsoup.Jsoup;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.domain.amazon.AmazonFeed;
@@ -23,6 +8,15 @@ import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.DoomDayDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
 
 @Component
 public class AmazonXslGenerator {
@@ -373,8 +367,8 @@ public class AmazonXslGenerator {
     }
 
     private String getImageUrl(Product product) {
-        if (product.getMainImageId() != null && HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId(),false) != null) {
-            return HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId(),false);
+        if (product.getMainImageId() != null && HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId()) != null) {
+            return HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId());
         } else {
             return "http://img.healthkart.com/images/ProductImages/ProductImagesOriginal/" + product.getId();
         }
