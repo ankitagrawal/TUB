@@ -52,7 +52,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     }
 
 
-     /*send mails for product which are deleted or hidden or out of stock*/
+    /*send mails for product which are deleted or hidden or out of stock*/
     public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate, List<NotifyMe> notifyMeList) {
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, notifyMeList);
         return adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
@@ -95,7 +95,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
                     if (alreadyNotified != null && alreadyNotified < allowedUserNumber) {
                         /*  List of Notify request per users*/
-                        List<NotifyMe> notifyMeListPerUser ;
+                        List<NotifyMe> notifyMeListPerUser;
                         if ((finalUserListForNotificationMap.containsKey(email))) {
                             notifyMeListPerUser = finalUserListForNotificationMap.get(email);
                         } else {
@@ -146,7 +146,6 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     }
 
 
-
     /* To evaluate  no. of users to be notified for product which is  OOS : sum inventory of first three of  similar product list order by desc inventory*/
     private int getSumOfSimilarProductInventory(ProductVariant productVariant) {
         int sumOfUnbookedInvn = 0;
@@ -160,32 +159,8 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         return sumOfUnbookedInvn;
     }
 
-
-
-
-    public List<ProductInventoryDto> getProductVariantOfSimilarProductWithNthMaxAvailableInventory(ProductVariant productVariant, int numberOfSimilarProduct) {
-        List<ProductInventoryDto> similarProductWithInvnInDescOrder = getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
-        List<ProductInventoryDto> finalSimilarProductWithInvnInDescOrderList = new ArrayList<ProductInventoryDto>();
-
-        int count = 0;
-        if (similarProductWithInvnInDescOrder != null) {
-            for (ProductInventoryDto productInventoryDto : similarProductWithInvnInDescOrder) {
-                if (count >= numberOfSimilarProduct) {
-                    return finalSimilarProductWithInvnInDescOrderList;
-                }
-                finalSimilarProductWithInvnInDescOrderList.add(productInventoryDto);
-                count++;
-
-            }
-        }
-        return finalSimilarProductWithInvnInDescOrderList;
-    }
-
-
-
-
-    public List<Product> getInStockSimilarProductsWithMaxInvn(ProductVariant productVariant, int noOfSimilarProduct) {
-        List<ProductInventoryDto> similarProductListInvn = getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
+    public List<Product> getSimilarProductsWithMaxUnbookedInvn(ProductVariant productVariant, int noOfSimilarProduct) {
+        List<ProductInventoryDto> similarProductListInvn = getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(productVariant);
         List<Product> similarProductList = new ArrayList<Product>();
         int count = 0;
         if (similarProductListInvn != null) {
@@ -202,22 +177,21 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     }
 
 
-
-    public List<ProductInventoryDto> getProductVariantOfSimilarProductWithAvailableInventory(ProductVariant productVariant) {
+    public List<ProductInventoryDto> getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(ProductVariant productVariant) {
         List<ProductInventoryDto> similarProductWithInvnInDescOrder = new ArrayList<ProductInventoryDto>();
         List<SimilarProduct> similarProductList = productVariant.getProduct().getSimilarProducts();
 
         if (similarProductList != null) {
             for (SimilarProduct similarProduct : similarProductList) {
                 List<ProductVariant> similarProductVariantList = similarProduct.getSimilarProduct().getProductVariants();
-                int availableInventoryForProduct = 0;
+                int availableUnbookedInventoryForProduct = 0;
                 for (ProductVariant similarProductVariant : similarProductVariantList) {
                     int bookedInvn = adminInventoryService.getBookedInventory(similarProductVariant).intValue();
                     int netInvn = adminInventoryService.getNetInventory(similarProductVariant).intValue();
-                    availableInventoryForProduct = availableInventoryForProduct + (netInvn - bookedInvn);
+                    availableUnbookedInventoryForProduct = availableUnbookedInventoryForProduct + (netInvn - bookedInvn);
                 }
-                if (availableInventoryForProduct > 0) {
-                    ProductInventoryDto productInventoryDto = new ProductInventoryDto(similarProduct.getSimilarProduct(), availableInventoryForProduct);
+                if (availableUnbookedInventoryForProduct > 0) {
+                    ProductInventoryDto productInventoryDto = new ProductInventoryDto(similarProduct.getSimilarProduct(), availableUnbookedInventoryForProduct);
                     similarProductWithInvnInDescOrder.add(productInventoryDto);
                 }
             }
@@ -226,8 +200,6 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         }
         return similarProductWithInvnInDescOrder;
     }
-
-
 
 
     private boolean userNotifyListAlreadyContainsProduct(List<NotifyMe> notifyMeList, ProductVariant productVariant) {
@@ -240,6 +212,23 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         }
 
         return false;
+    }
+
+    private List<ProductInventoryDto> getProductVariantOfSimilarProductWithNthMaxAvailableInventory(ProductVariant productVariant, int numberOfSimilarProduct) {
+        List<ProductInventoryDto> similarProductWithInvnInDescOrder = getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(productVariant);
+        List<ProductInventoryDto> finalSimilarProductWithInvnInDescOrderList = new ArrayList<ProductInventoryDto>();
+        int count = 0;
+        if (similarProductWithInvnInDescOrder != null) {
+            for (ProductInventoryDto productInventoryDto : similarProductWithInvnInDescOrder) {
+                if (count >= numberOfSimilarProduct) {
+                    return finalSimilarProductWithInvnInDescOrderList;
+                }
+                finalSimilarProductWithInvnInDescOrderList.add(productInventoryDto);
+                count++;
+
+            }
+        }
+        return finalSimilarProductWithInvnInDescOrderList;
     }
 
 }

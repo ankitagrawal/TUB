@@ -919,7 +919,7 @@ public class Functions {
 
     public static List<ProductInventoryDto> similarProductWithUnbookedInventory(ProductVariant productVariant) {
         ProductVariantNotifyMeEmailService productVariantNotifyMeEmailService = ServiceLocatorFactory.getService(ProductVariantNotifyMeEmailService.class);
-        return productVariantNotifyMeEmailService.getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
+        return productVariantNotifyMeEmailService.getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(productVariant);
     }
 
 }

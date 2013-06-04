@@ -358,7 +358,7 @@ public class AdminEmailManager {
                 valuesMap.put("productNotifyList", notifyMeListPerUser);
                 Map<String, List<Product>> productSimilarProductMap = new HashMap<String, List<Product>>();
                 for (NotifyMe notifyMe : notifyMeListPerUser) {
-                    List<Product> similarProductList = productVariantNotifyMeEmailService.getInStockSimilarProductsWithMaxInvn(notifyMe.getProductVariant(), 3);
+                    List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMe.getProductVariant(), 3);
                     if (similarProductList != null && similarProductList.size() > 0) {
                         productSimilarProductMap.put(notifyMe.getProductVariant().getProduct().getId(), similarProductList);
                     }
@@ -371,7 +371,7 @@ public class AdminEmailManager {
             } else {
                 /*Single variant notification*/
                 valuesMap.put("product", notifyMeObject.getProductVariant().getProduct());
-                List<Product> similarProductList = productVariantNotifyMeEmailService.getInStockSimilarProductsWithMaxInvn(notifyMeObject.getProductVariant(), 3);
+                List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMeObject.getProductVariant(), 3);
                 if (similarProductList != null && similarProductList.size() > 0) {
                     valuesMap.put("similarProductList", similarProductList);
                     Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserForSimilarProductsForSingleVariants);

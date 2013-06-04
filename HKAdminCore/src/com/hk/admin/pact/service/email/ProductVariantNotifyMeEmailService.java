@@ -20,7 +20,7 @@ public interface ProductVariantNotifyMeEmailService {
 
     public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate,List<NotifyMe> notifyMeList);
 
-    public List<ProductInventoryDto> getProductVariantOfSimilarProductWithAvailableInventory(ProductVariant productVariant);
+    public List<ProductInventoryDto> getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(ProductVariant productVariant);
 
-    public List<Product> getInStockSimilarProductsWithMaxInvn(ProductVariant productVariant, int noOfSimilarProduct);
+    public List<Product> getSimilarProductsWithMaxUnbookedInvn(ProductVariant productVariant, int noOfSimilarProduct);
 }
