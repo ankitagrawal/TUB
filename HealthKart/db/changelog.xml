@@ -13116,4 +13116,62 @@
     <changeSet author="Tarun (generated)" id="1368701511031-6">
         <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
     </changeSet>
+	<changeSet author="Tarun (written)" id="20130605-01">
+		<sql>
+			UPDATE line_item
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE extra_inventory_line_item
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE purchase_invoice_line_item
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE sku
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE line_item
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE extra_inventory_line_item
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE purchase_invoice_line_item
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE sku
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE line_item
+			SET tax_id = 6
+			where tax_id = 51;
+
+			UPDATE extra_inventory_line_item
+			SET tax_id = 6
+			where tax_id = 51;
+
+			UPDATE purchase_invoice_line_item
+			SET tax_id = 6
+			where tax_id = 51;
+
+			UPDATE sku
+			SET tax_id = 6
+			where tax_id = 51;
+
+			DELETE FROM tax where id in (51,5,32);
+		</sql>
+	</changeSet>
+	<changeSet author="Tarun (written)" id="20130605-02">
+		<sql>
+			ALTER TABLE  `tax` CHANGE  `id`  `id` INT( 11 ) NOT NULL;
+		</sql>
+	</changeSet>
 </databaseChangeLog>

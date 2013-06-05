@@ -64,7 +64,7 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
 		taxList.add(this.findById(EnumTax.VAT_0.getId()));
 		taxList.add(this.findById(EnumTax.VAT_5.getId()));
 		taxList.add(this.findById(EnumTax.VAT_12_5.getId()));
-		taxList.add(this.findById(EnumTax.VAT_10_3.getId()));
+		taxList.add(this.findById(EnumTax.SERVICE_10_3.getId()));
 		taxList.add(this.findById(EnumTax.VAT_12_36.getId()));
 		taxList.add(this.findById(EnumTax.VAT_12_5.getId()));
 		return taxList;

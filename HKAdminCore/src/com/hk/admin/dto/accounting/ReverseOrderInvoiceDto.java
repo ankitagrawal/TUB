@@ -123,7 +123,7 @@ public class ReverseOrderInvoiceDto {
       totalSurcharge += invoiceLineItemdto.getSurcharge();
 
       for (EnumTax enumTax : EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE)) {
-        if (!enumTax.equals(EnumTax.NA)) {
+        if (!enumTax.equals(EnumTax.VAT_0)) {
           if (invoiceLineItemdto.getTaxValue() == enumTax.getValue()) {
             getSummaryMapsForVat(enumTax.getName(), invoiceLineItemdto);
           }

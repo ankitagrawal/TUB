@@ -10,13 +10,13 @@ public enum EnumTax {
     SERVICE_10_3(1L, "Service Tax @ 10.3%", .103D, "VAT"),
 		VAT_5_25(2L, "VAT @ 5.25%", .0525D, "VAT"),
 		VAT_13_125(3L, "VAT @ 13.125%", .13125D, "VAT"),
-		VAT_negative_5(5L, "VAT - 5.25%", .0525D, "VAT"),
+//		VAT_negative_5(5L, "VAT - 5.25%", .0525D, "VAT"),
     VAT_0(6L, "0.0", 0.0D, "VAT"),
 		VAT_12_5(7L, ".125", .125D, "VAT"),
     VAT_5(8L, "0.05", .05D, "VAT"),
     VAT_12_36(10L, "0.1236", .1236D, "VAT"),
-		VAT_10_3(32L, "0.103",0.103D, "VAT"),
-		NA(51L, "NA", 0.0D, "VAT"),
+//		VAT_10_3(32L, "0.103",0.103D, "VAT"),
+//		NA(51L, "NA", 0.0D, "VAT"),
 		VAT_2(52L, "0.02", 0.02D, "VAT"),
 
 		VAT_SEC_0(110L, "ZeroPercent", 0.00D, "VAT_SECONDARY"),
@@ -72,13 +72,13 @@ public enum EnumTax {
 			enumTaxList.add(EnumTax.SERVICE_10_3);
 			enumTaxList.add(EnumTax.VAT_5_25);
 			enumTaxList.add(EnumTax.VAT_13_125);
-			enumTaxList.add(EnumTax.VAT_negative_5);
+//			enumTaxList.add(EnumTax.VAT_negative_5);
 			enumTaxList.add(EnumTax.VAT_0);
 			enumTaxList.add(EnumTax.VAT_12_5);
 			enumTaxList.add(EnumTax.VAT_5);
 			enumTaxList.add(EnumTax.VAT_12_36);
-			enumTaxList.add(EnumTax.VAT_10_3);
-			enumTaxList.add(EnumTax.NA);
+//			enumTaxList.add(EnumTax.VAT_10_3);
+//			enumTaxList.add(EnumTax.NA);
 			enumTaxList.add(EnumTax.VAT_2);
 		}
 		return enumTaxList;
