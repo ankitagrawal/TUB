@@ -3123,6 +3123,14 @@ color: #e62580;
     height: 100%;
     overflow: scroll;
 }
+.paymentFailureMessageTop{
+    position: relative;
+    float: left;
+    width: 100%;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    font-family: Arial;
+}
 
 /*
 slider pager end

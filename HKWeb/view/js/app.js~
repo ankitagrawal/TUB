@@ -1,0 +1,24 @@
+require('templates');
+App = Ember.Application.create({});
+App.showOfferFlag = false;
+
+App.MyAppController = Ember.Controller.create({
+    content:[1,2,3,4,5],
+    init:function(){
+        console.log("Hi!");
+    }
+});
+App.MyAppView = Ember.View.create({
+    template:Ember.Handlebars.compile('<hr noshade size=1 width="100%">' +
+        '<div class="applicableOfferHead">Other Applicable Offers!</div>'+
+        '<div class="applicableOffer"> ' +
+        '{{#each value in controller.content}}' +
+        '<div class="applicableOfferDesc">Coupon Title goes here like 10% off on selected product in beauty and personal care section</div>' +
+        '<div class="button_grey" style="width: 33px;left: 30px;top: 5px;">Apply</div>' +
+        '{{/each}}' +
+        '</div>'),
+    controllerBinding:"App.MyAppController"
+
+});
+
+App.MyAppView.appendTo('#hihi');
