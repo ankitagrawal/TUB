@@ -31,6 +31,7 @@ public class PaymentModeAction extends BaseAction {
     Map<String, String> codFailureMap = new HashMap<String, String>();
     private PricingDto pricingDto;
     private boolean showFailureMessage = false;
+    private String paymentFailureGatewayOrderId;
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
@@ -101,5 +102,13 @@ public class PaymentModeAction extends BaseAction {
 
     public void setShowFailureMessage(boolean showFailureMessage) {
         this.showFailureMessage = showFailureMessage;
+    }
+
+    public String getPaymentFailureGatewayOrderId() {
+        return paymentFailureGatewayOrderId;
+    }
+
+    public void setPaymentFailureGatewayOrderId(String paymentFailureGatewayOrderId) {
+        this.paymentFailureGatewayOrderId = paymentFailureGatewayOrderId;
     }
 }

@@ -9,9 +9,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaymentFailAction extends BaseAction {
 
+    private String gatewayOrderId;
+
+
 	public Resolution pre() {
-		return new ForwardResolution(PaymentModeAction.class).addParameter("showFailureMessage", true);
+        return new ForwardResolution(PaymentModeAction.class).addParameter("showFailureMessage", true).addParameter("paymentFailureGatewayOrderId", gatewayOrderId);
 //		return new ForwardResolution("/pages/payment/paymentFail.jsp");
 	}
 
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
 }
