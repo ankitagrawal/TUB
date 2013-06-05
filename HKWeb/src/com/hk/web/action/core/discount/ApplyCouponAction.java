@@ -22,6 +22,7 @@ import com.hk.admin.manager.EmployeeManager;
 import com.hk.admin.manager.IHOManager;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.Offer;
@@ -30,6 +31,7 @@ import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.manager.OfferManager;
@@ -44,6 +46,7 @@ import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.HealthkartResponse;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.util.OfferTriggerMatcher;
+import com.hk.cache.RoleCache;
 
 import javax.ws.rs.PathParam;
 
@@ -145,8 +148,14 @@ public class ApplyCouponAction extends BaseAction {
 	            } else {
 		            message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
 	            }
+            } else if (coupon.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
+              Role hkEmpRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
+              if (!user.getRoles().contains(hkEmpRole)) {
+                error = error_role;
+                message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
+              }
             } else if (user.equals(coupon.getReferrerUser())) {
-                message = new LocalizableMessage("/ApplyCoupon.action.same.user.referrel.coupon").getMessage(getContext().getLocale());
+              message = new LocalizableMessage("/ApplyCoupon.action.same.user.referrel.coupon").getMessage(getContext().getLocale());
             } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {
                 error = error_alreadyReferrer;
                 message = new LocalizableMessage("/ApplyCoupon.action.already.has.referrer").getMessage(getContext().getLocale());
