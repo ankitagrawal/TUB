@@ -635,7 +635,7 @@ public class OrderServiceImpl implements OrderService {
 
         logger.debug("Trying to split order " + order.getId());
 
-        User loggedinUser = getUserService().getLoggedInUser();
+        User adminUser = getUserService().getAdminUser();
 
         if (shippingOrderAlreadyExists) {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
@@ -645,7 +645,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             //DO Nothing for B2B Orders
             if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
-                orderLoggingService.logOrderActivity(order, loggedinUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
             } else {
                 if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                     shippingOrders = createShippingOrders(order);
@@ -660,7 +660,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setShippingOrders(shippingOrders);
                 order = save(order);
                 String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-                orderLoggingService.logOrderActivity(order, loggedinUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
             }
             for (ShippingOrder shippingOrder : shippingOrders) {
                 if (!shippingOrder.isDropShipping()) {
@@ -698,7 +698,7 @@ public class OrderServiceImpl implements OrderService {
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         } else {
-			orderLoggingService.logOrderActivity(order, loggedinUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Number of shipping orders are zero");
+			orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Number of shipping orders are zero");
 		}
 
         // Check Inventory health of order lineItems
