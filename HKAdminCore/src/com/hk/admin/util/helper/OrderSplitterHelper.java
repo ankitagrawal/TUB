@@ -68,10 +68,7 @@ public class OrderSplitterHelper {
                 try {
                     sku = skuService.getSKU(productVariant, warehouse);
                 } catch (NoSkuException e) {
-                    List<Sku> skuList = skuService.getSkus(productVariant, warehouseService.getWarehoueForFlipping(warehouse));
-                    if(skuList != null && !skuList.isEmpty()){
-                      sku = skuList.get(0);
-                    }
+                	logger.debug("no sku exists for variant" + productVariant.getId());
                 } catch (Exception e) {
                     logger.debug("no sku exists for variant" + productVariant.getId());
                 }

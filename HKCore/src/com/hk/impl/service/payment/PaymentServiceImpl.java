@@ -1,7 +1,9 @@
 package com.hk.impl.service.payment;
 
+import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.core.OrderStatus;
 import com.hk.manager.SMSManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,9 +85,14 @@ public class PaymentServiceImpl implements PaymentService {
         return getPaymentModeDao().listWorkingPaymentModes();
     }
 
+    @Override
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses) {
+        return getPaymentModeDao().searchPayments(order,paymentStatuses,gatewayOrderId,paymentModes,startCreateDate, endCreateDate, orderStatuses);
+    }
+
     /**
      * Send payment emails and return true if emails sent successfully
-     * 
+     *
      * @param order
      * @return
      */
