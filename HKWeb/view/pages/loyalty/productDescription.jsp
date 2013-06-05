@@ -27,7 +27,8 @@
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
-  <div class="mainContainer container_16 clearfix embedMarginTop20">
+	<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction" var="lpa"/>
+  	<div class="mainContainer container_16 clearfix embedMarginTop20">
     	
     	<!-- Main Title starts -->
     	<div class="titleLine grid_16 embedMarginBottom40">
