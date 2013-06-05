@@ -117,6 +117,8 @@ public class ApplyCouponAction extends BaseAction {
         /*if (coupon == null) {
             coupon = employeeManager.createEmpCoupon(user, couponCode);
         }*/
+        Role hkEmpRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
+
 
         if (coupon == null) {
             message = new LocalizableMessage("/ApplyCoupon.action.invalid.coupon").getMessage(getContext().getLocale());
@@ -148,12 +150,9 @@ public class ApplyCouponAction extends BaseAction {
 	            } else {
 		            message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
 	            }
-            } else if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
-              Role hkEmpRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
-              if (!user.getRoles().contains(hkEmpRole)) {
+            } else if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE) && !user.getRoles().contains(hkEmpRole)) {
                 error = error_role;
                 message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
-              }
             } else if (user.equals(coupon.getReferrerUser())) {
               message = new LocalizableMessage("/ApplyCoupon.action.same.user.referrel.coupon").getMessage(getContext().getLocale());
             } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {
