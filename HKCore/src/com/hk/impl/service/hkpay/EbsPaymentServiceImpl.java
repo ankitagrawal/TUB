@@ -136,13 +136,13 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
             // again call gateway and update all child payment list
             if(paymentList != null){
                 for(Payment payment : paymentList){
-                    //Ignore base payment
-                    //if(!gatewayOrderId.equalsIgnoreCase(payment.getGatewayOrderId())){
-                    Element ele = callPaymentGateway(gatewayOrderId, payment.getGatewayReferenceId(),payment.getRrn(),null,EbsPaymentGatewayWrapper.TXN_ACTION_STATUS_PAYMENT_ID);
-                    HkPaymentResponse childPayment = verifyAndCreateHkResponsePayment(ele, payment.getGatewayOrderId(),EnumPaymentTransactionType.REFUND.getName());
-
-                    gatewayPaymentList.add(childPayment);
-                    //}
+                    String gatewayReferenceId = payment.getGatewayReferenceId();
+                    String rrn = payment.getRrn();
+                    if(gatewayReferenceId != null && rrn != null){
+                        Element ele = callPaymentGateway(gatewayOrderId, payment.getGatewayReferenceId(),payment.getRrn(),null,EbsPaymentGatewayWrapper.TXN_ACTION_STATUS_PAYMENT_ID);
+                        HkPaymentResponse childPayment = verifyAndCreateHkResponsePayment(ele, payment.getGatewayOrderId(),EnumPaymentTransactionType.REFUND.getName());
+                        gatewayPaymentList.add(childPayment);
+                    }
 
                 }
             }
@@ -175,19 +175,8 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
                 hkPaymentResponse.setRrn(transactionId);
                 hkPaymentResponse.setAmount(NumberUtils.toDouble(amount));
                 hkPaymentResponse.setResponseMsg(status);
+                updateResponseStatus(hkPaymentResponse, transactionType, isFlagged,status);
 
-                //if transactionType is refund then return from here
-                if(transactionType.equalsIgnoreCase(EnumPaymentTransactionType.REFUND.getName())) {
-                    return hkPaymentResponse;
-                }
-
-                if (isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_FALSE.getKey())) {
-                    hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
-                } else if (isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_TRUE.getKey())) {
-                    hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
-                } else {
-                    hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
-                }
             } else {
                 hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
                 hkPaymentResponse.setErrorLog(errorMessage);
@@ -197,15 +186,46 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         return hkPaymentResponse;
     }
 
+    private void updateResponseStatus(HkPaymentResponse hkPaymentResponse, String transactionType , String isFlagged, String status){
+        if(transactionType.equalsIgnoreCase(EnumPaymentTransactionType.REFUND.getName())){
+            updateRefundPaymentStatus(hkPaymentResponse,status);
+        } else {
+            updateSalePaymentStatus(hkPaymentResponse,transactionType,isFlagged);
+        }
+    }
+
+    private void updateRefundPaymentStatus(HkPaymentResponse hkPaymentResponse,String status) {
+        if(GatewayResponseKeys.EbsConstants.PROCESSING.getKey().equalsIgnoreCase(status)){
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus());
+        } else if (GatewayResponseKeys.EbsConstants.PROCESSED.getKey().equalsIgnoreCase(status)) {
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
+        } else {
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+        }
+    }
+
+    private void updateSalePaymentStatus(HkPaymentResponse hkPaymentResponse, String transactionType, String isFlagged) {
+        if (isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_FALSE.getKey())) {
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+        } else if (isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_TRUE.getKey())) {
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
+        } else {
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
+        }
+    }
+
     @Override
     public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
         String baseGatewayOrderId = basePayment.getGatewayOrderId();
+        String gatewayReferenceId = basePayment.getGatewayReferenceId();
         HkPaymentResponse hkRefundPaymentResponse = null;
         try{
             // Call payment gateway
-            Element element = callPaymentGateway(baseGatewayOrderId,null, null, amount.toString(), EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
+            if(baseGatewayOrderId != null && gatewayReferenceId != null){
+                Element element = callPaymentGateway(null,gatewayReferenceId, null, amount.toString(), EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
 
-            hkRefundPaymentResponse = verifyAndCreateHkResponsePayment(element, baseGatewayOrderId,EnumPaymentTransactionType.REFUND.getName());
+                hkRefundPaymentResponse = verifyAndCreateHkResponsePayment(element, baseGatewayOrderId,EnumPaymentTransactionType.REFUND.getName());
+            }
 
         } catch (Exception e){
             logger.debug("Ebs Payment gateway exception :",e);
@@ -303,7 +323,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
 
     private HkPaymentResponse createPayment(String gatewayOrderId, String gatewayReferenceId, String rrn , String respMsg, String txnType, String amount, String authIdCode){
         HkPaymentResponse hkPaymentResponse = new HkPaymentResponse(gatewayOrderId,gatewayReferenceId,respMsg,
-                                                    EnumGateway.CITRUS.asGateway(),null,null,rrn,authIdCode,NumberUtils.toDouble(amount));
+                                                    EnumGateway.EBS.asGateway(),null,null,rrn,authIdCode,NumberUtils.toDouble(amount));
 
         if(txnType.equalsIgnoreCase(EnumPaymentTransactionType.SALE.getName())){
             hkPaymentResponse.setGatewayOrderId(gatewayOrderId);

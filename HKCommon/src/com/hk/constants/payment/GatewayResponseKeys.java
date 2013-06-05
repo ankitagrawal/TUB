@@ -208,7 +208,11 @@ public class GatewayResponseKeys {
         TXN_PAYMENT_ID("paymentId"),
         TXN_STATUS("status"),
         TXN_ERROR_CODE("errorCode"),
-        TXN_ERROR_MSG("error");
+        TXN_ERROR_MSG("error"),
+        PROCESSING("Processing"),
+        PROCESSED("Processed"),
+        ;
+
 
 
         private String key;
