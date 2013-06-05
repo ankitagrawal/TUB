@@ -123,15 +123,14 @@
                         <a href="javascript:void(0)" class="searchBuckets" id="anchorBuckets"> Show Buckets  </a>
                         <div id="bucketCont" style="position:relative;float:left;" class="bucketContainer">
                             <div class="mainBuckets">
-                                <c:forEach items="${bucketList}" var="bucket" varStatus="ctr">
+                                <c:forEach items="${actionItemQueueBean.totalUserCheckedBuckets}" var="bucket" varStatus="ctr">
                                     <label>
                                         <c:choose>
-                                            <c:when test="${fn:contains(actionItemQueueBean.userBuckets,bucket)}">
-                                                <input type="checkbox" name="buckets[${ctr.index}].selected"
-                                                       checked="checked"/> ${bucket.name}
-                                            </c:when>
+                                          <c:when test="${bucket.selected}">
+                                            <input type="checkbox" name="buckets[${ctr.index}].selected" checked="checked" /> ${bucket.name}
+                                        </c:when>
                                             <c:otherwise>
-                                                <input type="checkbox" name="buckets[${ctr.index}].selected"/> ${bucket.name}
+                                            <input type="checkbox" name="buckets[${ctr.index}].selected" /> ${bucket.name}
                                             </c:otherwise>
                                         </c:choose>
                                         <s:hidden name="buckets[${ctr.index}].id" value="${bucket.id}"/>
