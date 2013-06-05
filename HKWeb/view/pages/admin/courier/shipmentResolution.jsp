@@ -153,7 +153,7 @@
                    <h2>Case Resolved?</h2>
                    <br>
                    If the case has been resolved by OPS team, Please press this button, then only the order will move out of your jurisdiction.
-                   <s:submit name="resolveCase" value="Hit me If you are done" id="cSSType"/>
+                   <s:submit name="resolveCase" value="Hit me If you are done" id="resolveCase"/>
                </fieldset>
                <div class="clear"></div>
                <fieldset>

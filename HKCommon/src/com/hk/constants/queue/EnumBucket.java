@@ -42,6 +42,7 @@ public enum EnumBucket {
     CM(470L,"CM",EnumClassification.AD_HOC),
     Customer_Service(480L,"Customer Service",EnumClassification.Customer_Service),
     Tech_Support(490L,"Tech Support",EnumClassification.Tech_Support),
+    B2B(500L,"B2B",EnumClassification.Tech_Support),
     Vendor(510L, "Vendor", EnumClassification.Vendor),
     Logistics(520L, "Logistics", EnumClassification.Logistics),
     Receiving(530L, "Receiving", EnumClassification.Vendor);
