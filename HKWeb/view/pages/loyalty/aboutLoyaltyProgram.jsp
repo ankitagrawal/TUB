@@ -257,7 +257,7 @@
             <div class="qAndA removeBorderBottom">
               <p>Q: I have more questions. Who can help? </p>
               A: Call the HealthKart Customer Support for general questions about the healthkartstellar program, as well as for questions regarding your membership.
-				Contact us 24X 7 at
+				Contact us at
 				0124-4616444 or mail us your query at info@healthkart.com.
 				You can also find us on Facebook and Twitter. We love connecting with you and are here to answer any questions or just enjoy hearing about how your day is going. 
 

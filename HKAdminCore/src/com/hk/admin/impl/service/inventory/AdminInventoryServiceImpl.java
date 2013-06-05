@@ -330,7 +330,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         return getAdminPVIDao().getAllVariantConfig();
     }
 
-
     public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems) {
         int strLength = 20;
         SkuItem skuItem = checkedInSkuItems.get(0);
