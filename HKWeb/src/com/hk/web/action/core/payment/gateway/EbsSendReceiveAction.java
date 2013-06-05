@@ -177,7 +177,7 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
 				paymentManager.pendingApproval(gatewayOrderId,ePGTxnID);
-				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else {
 				 paymentManager.fail(gatewayOrderId, ePGTxnID,TxMsg);
 				resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
