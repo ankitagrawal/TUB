@@ -30,6 +30,7 @@ public class PaymentModeAction extends BaseAction {
     List<Issuer> cardIssuers;
     Map<String, String> codFailureMap = new HashMap<String, String>();
     private PricingDto pricingDto;
+    private boolean showFailureMessage = false;
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
@@ -92,5 +93,13 @@ public class PaymentModeAction extends BaseAction {
 
     public void setCodFailureMap(Map<String, String> codFailureMap) {
         this.codFailureMap = codFailureMap;
+    }
+
+    public boolean isShowFailureMessage() {
+        return showFailureMessage;
+    }
+
+    public void setShowFailureMessage(boolean showFailureMessage) {
+        this.showFailureMessage = showFailureMessage;
     }
 }
