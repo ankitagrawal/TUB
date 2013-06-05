@@ -151,7 +151,7 @@ public class BucketServiceImpl implements BucketService {
     protected List<EnumBucket> autoCreateDefaultBuckets(ShippingOrder shippingOrder) {
         List<EnumBucket> actionableBuckets = BucketAllocator.allocateBuckets(shippingOrder);
         Payment payment = shippingOrder.getBaseOrder().getPayment();
-        if(!EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
+        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
             actionableBuckets.addAll(getCategoryDefaultersBuckets(shippingOrder));
         }
         return actionableBuckets;

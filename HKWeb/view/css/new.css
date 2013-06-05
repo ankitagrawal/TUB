@@ -6464,12 +6464,12 @@ color: #e62580;
 .newTotals2 .left{
     position: relative;
     float: left;
-    line-height: 1.5em;
+    line-height: 20px;
 }
 .newTotals2 .right{
     position: relative;
     float: left;
-    line-height: 2em;
+    line-height: 20px;
 }
 
 .deliveryDetails{
