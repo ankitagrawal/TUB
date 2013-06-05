@@ -19,7 +19,7 @@
             <s:messages/>
             <table>
                 <tr>
-                    <td>Enter ProductVariant list seperated by commas</td>
+                    <td>Enter ProductVariant list separated by commas</td>
                     <td><s:textarea name="productVariantList" style="height:40px;"/></td>
                 </tr>
                 <tr>
