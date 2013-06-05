@@ -4,6 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -520,7 +521,11 @@ public class PaymentManager {
     }
 
     public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
-        return ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        HkPaymentService hkPaymentService = null;
+        if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
+            hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        }
+        return hkPaymentService;
     }
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus){
