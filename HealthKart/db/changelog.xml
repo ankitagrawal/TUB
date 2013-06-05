@@ -13050,4 +13050,9 @@
     <changeSet author="Pratham (generated)" id="1369727618286-9">
         <addPrimaryKey columnNames="reason_id, action_task_id" tableName="reason_has_action_task"/>
     </changeSet>
+    <changeSet author="Ajeet (written)" id="20130531-01">
+        <sql>
+            update seo_data set meta_description=replace(meta_description, '300', '500');
+        </sql>
+    </changeSet>
 </databaseChangeLog>

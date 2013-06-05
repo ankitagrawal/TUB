@@ -1,18 +1,18 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
+<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
-<%@ page import="com.hk.domain.catalog.category.Category" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="com.hk.domain.MapIndia" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
-<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -28,7 +28,7 @@
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
 
-    boolean isSecure = pageContext.getRequest().isSecure();
+	  boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 
     MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
@@ -163,21 +163,20 @@
         <a class="bulkOrder" href="#" style="cursor: pointer;">
           <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
-        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
-          <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek.jpg" alt="Brand Of the Week - DYMATIZE!"
+        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Twinlab">
+          <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small.jpg" alt="Brand Of the Week - Twinlab!"
                class="small_banner"/>
         </a>
       </c:when>
       <c:when test="${categoryBean.category.name eq healthNutrition}">
-        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
-        <a class="bulkOrder" href="#" style="cursor: pointer;">
-          <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+        <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
+          <img src="${pageContext.request.contextPath}/images/banners/patanjali-banner.jpg" alt="Patanjali Offer" class="small_banner"/>
         </a>
-        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
-             class="small_banner"/>
+        <a href="${pageContext.request.contextPath}/brand/health-nutrition/Vitamin+Shoppe">
+          <img src="${pageContext.request.contextPath}/images/banners/VS.jpg" alt="Vitamin Shoppe" class="small_banner"/>
+        </a>
       </c:when>
       <c:when test="${categoryBean.category.name eq homeLiving}">
-        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
         <a class="bulkOrder" href="#" style="cursor: pointer;">
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                class="small_banner"/>
@@ -192,7 +191,7 @@
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                class="small_banner"/>
         </a>
-        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
+        <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
              class="small_banner"/>
       </c:otherwise>
     </c:choose>

@@ -16,7 +16,6 @@ public enum EnumAwbStatus {
 
     Unused(10L, "Unused"),
     Attach(20L, "Attach"),
-    Authorization_Pending(30L, "Authorization Pending"),
     Used(40L, "Used");
 
     private Long id;
@@ -52,11 +51,11 @@ public enum EnumAwbStatus {
     }
 
 	public static List<AwbStatus> getAllStatusExceptUnused(){
-		return Arrays.asList(Attach.getAsAwbStatus(),Authorization_Pending.getAsAwbStatus(),Used.getAsAwbStatus());
+		return Arrays.asList(Attach.getAsAwbStatus(),Used.getAsAwbStatus());
 	}
 
 
 	public static List<AwbStatus> getAllStatusExceptUsed(){
-		return Arrays.asList(Attach.getAsAwbStatus(),Authorization_Pending.getAsAwbStatus(),Unused.getAsAwbStatus());
+		return Arrays.asList(Attach.getAsAwbStatus(),Unused.getAsAwbStatus());
 	}
 }

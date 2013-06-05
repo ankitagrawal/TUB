@@ -57,7 +57,7 @@
              </br> Rs 1500/-</a></p>
          <p><a href="http://www.healthkart.com/beauty/make-up/eyes">FREE Basicare Syling Eyelash Worth Rs 200/- With Purchase  of Eye Makeup Worth Rs 1000/-</a></p>
 
-         <p><a href="http://www.healthkart.com/beauty">FREE  Basicare Perfume Atomizer Worth Rs.240/- With  Purchase of Beauty Products Worth Rs 1000/-</a></p>
+         
 
        <p><a href="http://www.healthkart.com/beauty">FREE Faces Emery Boards Small Worth Rs.65/- With Purchase of Beauty products Worth Rs 500/- (Prepaid Order) </a></p>
 

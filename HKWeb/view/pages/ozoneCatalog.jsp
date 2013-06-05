@@ -33,9 +33,9 @@
                             <c:set var="imageId" value="${product.mainImageId}"/>
                             <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
                             <image
-                                    srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId,false)%>"
-                                    srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId,false)%>"
-                                    srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId,false)%>"
+                                    srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId )%>"
+                                    srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId )%>"
+                                    srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId )%>"
                                     />
                         </c:when>
                         <c:otherwise>
