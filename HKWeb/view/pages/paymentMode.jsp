@@ -90,8 +90,7 @@
 <jsp:include
         page="/includes/checkoutNotice.jsp"/>
 
-<c:set var="paymentFailureIds" value="<%=EnumPaymentStatus.getPaymentFailureStatusIds()%>" />
-<c:if test="${orderSummary.order.payment.paymentStatus.id !=null and fn:contains(paymentFailureIds,orderSummary.order.payment.paymentStatus.id)}">
+<c:if test="${paymentModeBean.showFailureMessage}">
         <div class="paymentFailureMessageTop">
             <h4> We are extremely sorry but your payment could not be processed.</h4>
             <p> The reason for this might be a network error or a communication error between the bank and the payment gateway.</p>
