@@ -81,8 +81,7 @@ public class CCAvenueDummyGatewaySendReceiveAction extends BasePaymentGatewaySen
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (CCAvenueDummyPaymentGatewayWrapper.AuthDesc_PendingApproval.equals(authDesc)) {
 				paymentManager.pendingApproval(gatewayOrderId);
-				emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
-				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (CCAvenueDummyPaymentGatewayWrapper.AuthDesc_Fail.equals(authDesc)) {
 				paymentManager.fail(gatewayOrderId);
 				emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);

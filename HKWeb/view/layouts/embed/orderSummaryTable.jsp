@@ -44,7 +44,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                 <div style="font-size: 12px;font-weight: normal;" class="shipping">COD Charges</div>
             </c:if>
             <c:if test="${pricingDto.totalCashback > 0.00}">
-                <div class='special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                <div class='special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);font-style: normal;">
                     Cashback:
                 </div>
             </c:if>
@@ -78,7 +78,7 @@ Pass an attribute called pricingDto to render a table with pricing details
             </c:if>
 
             <c:if test="${pricingDto.totalCashback > 0.00}">
-                <div class='special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                <div class='special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);font-style: normal;">
                     <span><fmt:formatNumber value="${pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/></span>
                 </div>
             </c:if>
@@ -106,7 +106,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                 <div style="font-size: 12px;font-weight: normal;" class="lightBlue">Reward Points</div>
             </c:if>
             <c:if test="${pricingDto.totalCashback > 0.00}">
-                <div class='discount ' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                <div class='discount ' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);font-style: normal;">
                     Cashback:
                 </div>
             </c:if>
@@ -138,7 +138,7 @@ Pass an attribute called pricingDto to render a table with pricing details
             </c:if>
 
             <c:if test="${pricingDto.totalCashback > 0.00}">
-                <div class='discount green' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                <div class='discount green' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);font-style: normal;">
                     <span><fmt:formatNumber value="${pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/></span>
                 </div>
             </c:if>

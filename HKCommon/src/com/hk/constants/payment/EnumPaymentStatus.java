@@ -64,10 +64,22 @@ public enum EnumPaymentStatus {
         return Arrays.asList(EnumPaymentStatus.SUCCESS.asPaymenStatus(), EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
     }
 
+    public static List<PaymentStatus> getSeekPaymentStatuses() {
+        return Arrays.asList(REQUEST.asPaymenStatus(),
+                AUTHORIZATION_PENDING.asPaymenStatus(),
+                FAILURE.asPaymenStatus(),
+                ERROR.asPaymenStatus()
+        );
+    }
+
     public static List<Long> getOnlinePaymentErrorStatusIds() {
         return Arrays.asList(EnumPaymentStatus.REQUEST.getId(),
                 EnumPaymentStatus.ERROR.getId(),
                 EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
+    }
+
+    public static List<Long> getPaymentFailureStatusIds(){
+        return Arrays.asList(FAILURE.getId(),ERROR.getId());
     }
 
   public static List<Long> getPaymentSuccessPageStatusIds() {

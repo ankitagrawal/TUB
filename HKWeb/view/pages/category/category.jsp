@@ -163,8 +163,8 @@
         <a class="bulkOrder" href="#" style="cursor: pointer;">
           <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
-        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
-          <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek.jpg" alt="Brand Of the Week - DYMATIZE!"
+        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Twinlab">
+          <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small.jpg" alt="Brand Of the Week - Twinlab!"
                class="small_banner"/>
         </a>
       </c:when>
