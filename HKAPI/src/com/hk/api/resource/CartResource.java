@@ -16,6 +16,7 @@ import com.hk.domain.offer.OfferEmailDomain;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 import com.hk.domain.store.EnumStore;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
@@ -29,8 +30,10 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.util.OfferTriggerMatcher;
 import com.hk.util.json.JSONResponseBuilder;
+import com.hk.cache.RoleCache;
 import com.shiro.PrincipalImpl;
 import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.action.LocalizableMessage;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -153,6 +156,12 @@ public class CartResource extends BaseAction {
           }
         } else {
           message = "This offer is not activated for you yet.";
+        }
+      } else if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
+        Role hkEmpRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
+        if (!user.getRoles().contains(hkEmpRole)) {
+          error = error_role;
+          message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
         }
       } else if (user.equals(coupon.getReferrerUser())) {
         message = "You are not allowed to use your own referrer code.";

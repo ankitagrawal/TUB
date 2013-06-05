@@ -148,7 +148,7 @@ public class ApplyCouponAction extends BaseAction {
 	            } else {
 		            message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
 	            }
-            } else if (coupon.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
+            } else if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
               Role hkEmpRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
               if (!user.getRoles().contains(hkEmpRole)) {
                 error = error_role;
