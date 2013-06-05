@@ -10,10 +10,12 @@ import com.hk.domain.payment.Gateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pojo.HkPaymentResponse;
+import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,11 @@ public class CheckPaymentAction extends BaseAction {
 
     private List<Payment> paymentList;
 
-    List<HkPaymentResponse> hkPaymentResponseList;
+    private List<HkPaymentResponse> hkPaymentResponseList;
+
+    private HkPaymentResponse hkPaymentResponse;
+
+    private Payment updatedPayment;
 
     @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful"})
     private Payment payment;
@@ -77,8 +83,8 @@ public class CheckPaymentAction extends BaseAction {
 
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
     private String gatewayOrderId;
-    private String txnStartDate;
-    private String txnEndDate;
+    private Date txnStartDate;
+    private Date txnEndDate;
     private String merchantId;
     private String paymentId;
     private String amount;
@@ -116,12 +122,12 @@ public class CheckPaymentAction extends BaseAction {
 
     @DontValidate
     public Resolution bulkSeekPayment() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         try {
-            Date startDate = sdf.parse(txnStartDate);
-            Date endDate = sdf.parse(txnEndDate);
+            //Date startDate = sdf.parse(txnStartDate);
+            //Date endDate = sdf.parse(txnEndDate);
             List orderStatuses = Arrays.asList(EnumOrderStatus.Placed.asOrderStatus(), EnumOrderStatus.InProcess.asOrderStatus());
-            paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null, Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), startDate, endDate, orderStatuses);
+            paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null, Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses,null);
             HkPaymentService hkPaymentService;
             for (Payment seekPayment : paymentList) {
                 if (seekPayment != null) {
@@ -159,31 +165,30 @@ public class CheckPaymentAction extends BaseAction {
 
 
     @DontValidate
-    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
-        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
-        if (payment != null) {
-            int gatewayId = payment.getGateway().getId().intValue();
-            switch (gatewayId) {
-                case 80:
-                    paymentResultMap = PaymentFinder.refundCitrusPayment(payment);
-                    if (paymentResultMap.isEmpty()) {
-                        paymentResultMap = PaymentFinder.refundIciciPayment(payment, "00007751");
-                    }
-                    break;
-                case 90:
-                    if (paymentId == null || StringUtils.isEmpty(paymentId) || amount == null || StringUtils.isEmpty(amount)) {
-                        addRedirectAlertMessage(new SimpleMessage("Payment Id and Amount cannot be null"));
-                        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
-                    }
-                    paymentResultMap = PaymentFinder.findEbsTransaction(null, paymentId, amount, EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
-                    break;
-                case 100:
-                    paymentResultMap = PaymentFinder.refundIciciPayment(payment, "00007518");
-            }
+        try{
+            hkPaymentResponse = paymentManager.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
 
+        } catch (HealthkartPaymentGatewayException e){
+            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            // redirect to error page
         }
-        transactionList.add(paymentResultMap);
+
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
+    @DontValidate
+    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    public Resolution updatePayment() {
+        try{
+            updatedPayment =  paymentManager.updatePayment(gatewayOrderId);
+
+        } catch (HealthkartPaymentGatewayException e){
+            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            // redirect to error page
+        }
+
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
@@ -425,19 +430,21 @@ public class CheckPaymentAction extends BaseAction {
         this.transactionList = transactionList;
     }
 
-    public String getTxnStartDate() {
+    public Date getTxnStartDate() {
         return txnStartDate;
     }
 
-    public void setTxnStartDate(String txnStartDate) {
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setTxnStartDate(Date txnStartDate) {
         this.txnStartDate = txnStartDate;
     }
 
-    public String getTxnEndDate() {
+    public Date getTxnEndDate() {
         return txnEndDate;
     }
 
-    public void setTxnEndDate(String txnEndDate) {
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setTxnEndDate(Date txnEndDate) {
         this.txnEndDate = txnEndDate;
     }
 
@@ -463,5 +470,29 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public List<HkPaymentResponse> getHkPaymentResponseList() {
+        return hkPaymentResponseList;
+    }
+
+    public void setHkPaymentResponseList(List<HkPaymentResponse> hkPaymentResponseList) {
+        this.hkPaymentResponseList = hkPaymentResponseList;
+    }
+
+    public HkPaymentResponse getHkPaymentResponse() {
+        return hkPaymentResponse;
+    }
+
+    public void setHkPaymentResponse(HkPaymentResponse hkPaymentResponse) {
+        this.hkPaymentResponse = hkPaymentResponse;
+    }
+
+    public Payment getUpdatedPayment() {
+        return updatedPayment;
+    }
+
+    public void setUpdatedPayment(Payment updatedPayment) {
+        this.updatedPayment = updatedPayment;
     }
 }

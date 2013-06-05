@@ -129,7 +129,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
             // call payment gateway and get the base payment object
             Element element = callPaymentGateway(gatewayOrderId,null, null, null, EbsPaymentGatewayWrapper.TXN_ACTION_STATUS);
             HkPaymentResponse baseGatewayPayment = verifyAndCreateHkResponsePayment(element, gatewayOrderId,EnumPaymentTransactionType.SALE.getName());
-            List<Payment> paymentList = paymentDao.listAllDependentPaymentByBasePaymentGatewayOrderId(baseGatewayPayment.getGatewayOrderId());
+            List<Payment> paymentList = paymentDao.searchPayments(null, null, null, null, null, null,null,basePayment);
 
             gatewayPaymentList.add(baseGatewayPayment);
 
@@ -149,7 +149,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
 
         } catch (Exception e){
             logger.debug("Ebs Payment gateway exception :",e);
-            new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
+            //throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
         }
 
         return gatewayPaymentList;
@@ -199,13 +199,13 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
 
     @Override
     public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
-        String gatewayOrderId = basePayment.getGatewayOrderId();
+        String baseGatewayOrderId = basePayment.getGatewayOrderId();
         HkPaymentResponse hkRefundPaymentResponse = null;
         try{
             // Call payment gateway
-            Element element = callPaymentGateway(gatewayOrderId,null, null, amount.toString(), EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
+            Element element = callPaymentGateway(baseGatewayOrderId,null, null, amount.toString(), EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
 
-            hkRefundPaymentResponse = verifyAndCreateHkResponsePayment(element, gatewayOrderId,EnumPaymentTransactionType.REFUND.getName());
+            hkRefundPaymentResponse = verifyAndCreateHkResponsePayment(element, baseGatewayOrderId,EnumPaymentTransactionType.REFUND.getName());
 
         } catch (Exception e){
             logger.debug("Ebs Payment gateway exception :",e);
@@ -272,7 +272,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         NameValuePair nvp3 = new NameValuePair(EbsPaymentGatewayWrapper.Amount, amount);  //txnAmount
         NameValuePair nvp4 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_REF_NO, gatewayOrderId);   // AccountID
         NameValuePair nvp5 = new NameValuePair(EbsPaymentGatewayWrapper.PaymentID, gatewayReferenceId); //txnPaymentId
-        NameValuePair nvp6 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_TRANSACTION_ID, rrn);
+        NameValuePair nvp6 = new NameValuePair(EbsPaymentGatewayWrapper.TransactionID, rrn); //TODO: change here too
         //   Account id should be the last parameter
         NameValuePair nvp7 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACCOUNT_ID, (String) properties.get(GatewayResponseKeys.EbsConstants.ACCOUNT_ID.getKey()));
 
@@ -284,7 +284,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         } else if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_REFUND) || action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_CAPTURE) || action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_CANCEL)) {
             method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp3, nvp5, nvp7});
         } else if (action.equalsIgnoreCase(EbsPaymentGatewayWrapper.TXN_ACTION_STATUS_PAYMENT_ID)){
-            method.setQueryString(new NameValuePair[]{nvp1,nvp4, nvp5, nvp6, nvp7 });
+            method.setQueryString(new NameValuePair[]{nvp1,nvp2, nvp5, nvp6, nvp7 });    //TODO: npv4->npv2
         }
 
         client.executeMethod(method);

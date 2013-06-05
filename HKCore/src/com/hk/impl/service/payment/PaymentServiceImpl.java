@@ -91,8 +91,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses) {
-        return getPaymentModeDao().searchPayments(order, paymentStatuses, gatewayOrderId, paymentModes, startCreateDate, endCreateDate, orderStatuses);
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment parentPayment) {
+        return getPaymentDao().searchPayments(order, paymentStatuses, gatewayOrderId, paymentModes, startCreateDate, endCreateDate, orderStatuses,parentPayment);
     }
 
     @Override
@@ -178,15 +178,17 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException {
+    public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException {  //TODO: change ==
         if(!gatewayAmount.equals(actualAmount)){
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH);
         }
     }
 
     @Override
-    public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderIdForFaultyPayments) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderId) {
+        if(gatewayOrderId != null){
+            emailManager.sendPaymentMisMatchMailToAdmin(actualAmt,gatewayAmount,gatewayOrderId);
+        }
     }
 
     @Override
@@ -204,17 +206,34 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public boolean updatePaymentBasedOnResponse(HkPaymentResponse hkPaymentResponse, Payment hkPaymentRequest) {
         boolean isUpdated = false;
-        if(hkPaymentRequest != null && hkPaymentResponse != null){
-            hkPaymentRequest.setAmount(hkPaymentResponse.getAmount());
-            hkPaymentRequest.setGatewayReferenceId(hkPaymentResponse.getGatewayReferenceId());
-            hkPaymentRequest.setRrn(hkPaymentResponse.getRrn());
-            hkPaymentRequest.setAuthIdCode(hkPaymentResponse.getAuthIdCode());
-            hkPaymentRequest.setResponseMessage(hkPaymentResponse.getResponseMsg());
-            hkPaymentRequest.setPaymentStatus(hkPaymentResponse.getPaymentStatus());
+        if(hkPaymentResponse != null && hkPaymentResponse.getPaymentStatus().getId() == EnumPaymentStatus.REFUNDED.asPaymenStatus().getId()){
+            isUpdated = updatePayment(hkPaymentRequest, hkPaymentResponse.getAmount(), hkPaymentResponse.getGatewayReferenceId(),
+                           hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg(),EnumPaymentStatus.REFUNDED.asPaymenStatus(),null);
+        }  else if(hkPaymentResponse != null && hkPaymentResponse.getPaymentStatus().getId() == EnumPaymentStatus.FAILURE.asPaymenStatus().getId()){
+            isUpdated = updatePayment(hkPaymentRequest, hkPaymentResponse.getAmount(), hkPaymentResponse.getGatewayReferenceId(),
+                    hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg(),EnumPaymentStatus.FAILURE.asPaymenStatus(),null);
+        } else {
+            isUpdated = updatePayment(hkPaymentRequest, hkPaymentResponse.getAmount(), hkPaymentResponse.getGatewayReferenceId(),
+                    hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg(),EnumPaymentStatus.ERROR.asPaymenStatus(),hkPaymentResponse.getResponseMsg());
+        }
 
+        return isUpdated;
+    }
+
+    private boolean updatePayment(Payment hkPaymentRequest, Double amount, String gatewayReferenceId, String rrn, String authIdCode, String respMsg, PaymentStatus paymentStatus, String errorMsg) {
+        boolean isUpdated = false;
+        if(hkPaymentRequest != null){
+            hkPaymentRequest.setAmount(amount);
+            hkPaymentRequest.setGatewayReferenceId(gatewayReferenceId);
+            hkPaymentRequest.setRrn(rrn);
+            hkPaymentRequest.setAuthIdCode(authIdCode);
+            hkPaymentRequest.setResponseMessage(respMsg);
+            hkPaymentRequest.setPaymentStatus(paymentStatus);
+            hkPaymentRequest.setErrorLog(errorMsg);
             save(hkPaymentRequest);
             isUpdated = true;
         }
+
         return isUpdated;
     }
 
@@ -229,7 +248,8 @@ public class PaymentServiceImpl implements PaymentService {
         return null;
     }
 
-    @Override
+    // TODO: Not needed now, check if needed later
+    /*@Override
     public void verifyIfRefundAmountValid(List<Payment> paymentList, Double amount) throws HealthkartPaymentGatewayException {
         Double totalAmount = null;
         for(Payment payment : paymentList){
@@ -244,7 +264,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (totalAmount < amount){
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_REFUND_AMOUNT);
         }
-    }
+    }*/
 
     @Override
     public List<Payment> listPaymentFamily(String gatewayOrderId) {
@@ -255,7 +275,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentFamilyList.add(basePayment);
 
             // get all brothers related to base Payment
-            List<Payment> listOfBrotherPayments = getPaymentDao().listAllDependentPaymentByBasePaymentGatewayOrderId(gatewayOrderId);
+            List<Payment> listOfBrotherPayments = getPaymentDao().searchPayments(null, null, null, null, null, null,null,basePayment);
             if(listOfBrotherPayments != null && !listOfBrotherPayments.isEmpty()){
                 paymentFamilyList.addAll(listOfBrotherPayments);
             }
@@ -293,14 +313,14 @@ public class PaymentServiceImpl implements PaymentService {
                             respRequestMap.put("Response",hkPaymentResponse);
                             requestRespList.add(respRequestMap);
                         }
-                    } else if(EnumPaymentTransactionType.REFUND.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())){
+                    } /*else if(EnumPaymentTransactionType.REFUND.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())){
                         if (hkPaymentRequest.getGatewayReferenceId() == hkPaymentResponse.getGatewayReferenceId() && hkPaymentRequest.getRrn() == hkPaymentResponse.getRrn()){
                             Map<String,Object> respRequestMap = new HashMap<String,Object>();
                             respRequestMap.put("Request",hkPaymentRequest);
                             respRequestMap.put("Response",hkPaymentResponse);
                             requestRespList.add(respRequestMap);
                         }
-                    }
+                    }*/  //TODO: Think a better method to map request and response object, not needed now
                 }
             }
         }
@@ -308,38 +328,39 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void verifyForConsistencyOfRequestAndResponseList(List<Map<String, Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException {
+    public void verifyRequestAndResponseList(List<Map<String, Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException {
         if(requestResponseMappedList != null && !requestResponseMappedList.isEmpty()){
             for(Map<String,Object> reqResponseMap : requestResponseMappedList){
                 Payment requestPayment = (Payment)reqResponseMap.get("Request");
                 HkPaymentResponse hkPaymentResponse = (HkPaymentResponse) reqResponseMap.get("Response");
-                verifyForConsistencyOfRequestAndResponse(requestPayment,hkPaymentResponse);
+                verifyRequestAndResponse(requestPayment,hkPaymentResponse);
             }
         }
     }
 
     @Override
-    public void verifyForConsistencyOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException {
+    public void verifyRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException {
         if(request == null || response == null){
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.REQUEST_RESPONSE_INCONSISTENCY);
         }
     }
 
+
     @Override
-    public Map<String,Object> verifyForAmountConsistencyOfRequestAndResponseList(List<Map<String, Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException {
+    public Map<String,Object> verifyAmountOfRequestAndResponseList(List<Map<String, Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException {
         Map<String,Object> faultyAmountMap=null;
         if(requestResponseMappedList != null && !requestResponseMappedList.isEmpty()){
             for(Map<String,Object> reqResponseMap : requestResponseMappedList){
                 Payment requestPayment = (Payment)reqResponseMap.get("Request");
                 HkPaymentResponse hkPaymentResponse = (HkPaymentResponse) reqResponseMap.get("Response");
-                faultyAmountMap = verifyForAmountConsistencyOfRequestAndResponse(requestPayment,hkPaymentResponse);
+                faultyAmountMap = verifyAmountOfRequestAndResponse(requestPayment,hkPaymentResponse);
             }
         }
         return faultyAmountMap;
     }
 
     @Override
-    public Map<String,Object> verifyForAmountConsistencyOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException {
+    public Map<String,Object> verifyAmountOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException {
         Map<String,Object> faultyAmountMap=null;
         if(request != null && response != null){
             faultyAmountMap = new HashMap<String,Object>();
@@ -351,7 +372,7 @@ public class PaymentServiceImpl implements PaymentService {
         return faultyAmountMap;
     }
 
-    public EmailManager getEmailManager() {
+        public EmailManager getEmailManager() {
         return emailManager;
     }
 

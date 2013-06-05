@@ -41,7 +41,7 @@ public interface PaymentService {
 
     public List<PaymentMode> listWorkingPaymentModes();
 
-    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses);
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment parentPayment);
 
     public List<HkPaymentResponse> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;// returns a non-persistable Payment object, created by what we get from gateway
 
@@ -60,7 +60,7 @@ public interface PaymentService {
 
     public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException;
 
-    public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderIdForFaultyPayments);
+    public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderId);
 
     public void verifyPaymentStatus(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus) throws HealthkartPaymentGatewayException;
 
@@ -70,19 +70,18 @@ public interface PaymentService {
 
     public List<Payment> findByBasePayment(Payment basePayment);
 
-    public void verifyIfRefundAmountValid(List<Payment> paymentList, Double amount) throws HealthkartPaymentGatewayException;
-
     public List<Payment> listPaymentFamily(String gatewayOrderId);
 
     public void verifyHkRequestAndResponse(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) throws HealthkartPaymentGatewayException;
 
     public List<Map<String,Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList);
 
-    public void verifyForConsistencyOfRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
+    public void verifyRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
 
-    public void verifyForConsistencyOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
+    public void verifyRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
 
-    public Map<String,Object> verifyForAmountConsistencyOfRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
+    public Map<String,Object> verifyAmountOfRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
 
-    public Map<String,Object> verifyForAmountConsistencyOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
+    public Map<String,Object> verifyAmountOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
+
 }

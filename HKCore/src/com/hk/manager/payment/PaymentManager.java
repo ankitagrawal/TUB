@@ -547,11 +547,22 @@ public class PaymentManager {
         try {
             hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
             List<Payment> hkPaymentRequestList = paymentService.listPaymentFamily(gatewayOrderId);
-            // First verify both request and response must have same number of elements
-            paymentService.verifyHkRequestAndResponse(hkPaymentRequestList, hkPaymentResponseList);
+
+            //TODO: remove it later, stuffing gateway Order Id in refund objects
+            if(hkPaymentResponseList != null && hkPaymentRequestList != null){
+                for(HkPaymentResponse resp : hkPaymentResponseList){
+                    for (Payment req : hkPaymentRequestList){
+                        stuffGatewayOrderIdInRespObj(resp,req);
+                    }
+                }
+            }
+
+
+            //TODO: Uncomment this call, if necessary later, if we could map both
+            //paymentService.verifyHkRequestAndResponse(hkPaymentRequestList, hkPaymentResponseList);
             List<Map<String, Object>> requestResponseMappedList = paymentService.mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
-            paymentService.verifyForConsistencyOfRequestAndResponseList(requestResponseMappedList);
-            faultyAmountMap = paymentService.verifyForAmountConsistencyOfRequestAndResponseList(requestResponseMappedList);
+            paymentService.verifyRequestAndResponseList(requestResponseMappedList);
+            faultyAmountMap = paymentService.verifyAmountOfRequestAndResponseList(requestResponseMappedList);
 
         } catch (HealthkartPaymentGatewayException e) {
             if (e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)) {
@@ -565,54 +576,59 @@ public class PaymentManager {
         return hkPaymentResponseList;
     }
 
-    public void updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
+    public Payment updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
+        Payment payment = null;
         try{
             List<HkPaymentResponse> hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
             List<Payment> hkPaymentRequestList = paymentService.listPaymentFamily(gatewayOrderId);
             // First verify both request and response must have same number of elements
-            paymentService.verifyHkRequestAndResponse(hkPaymentRequestList,hkPaymentResponseList);
+            //paymentService.verifyHkRequestAndResponse(hkPaymentRequestList,hkPaymentResponseList);
             List<Map<String,Object>> requestResponseMappedList = paymentService.mapRequestAndResponseObject(hkPaymentRequestList,hkPaymentResponseList);
-            paymentService.verifyForConsistencyOfRequestAndResponseList(requestResponseMappedList);
-            updateRequestResponseList(requestResponseMappedList);
+            paymentService.verifyRequestAndResponseList(requestResponseMappedList);
+            Order order = updateRequestResponseList(requestResponseMappedList);
+            // bring updated payment
+            payment = order.getPayment();
 
         } catch(HealthkartPaymentGatewayException e){
              logger.info("Healthkart Payment Exception : " + e);
         }
-
+        return payment;
     }
 
-    private void updateRequestResponseList(List<Map<String, Object>> requestResponseMappedList)  {
+    private Order updateRequestResponseList(List<Map<String, Object>> requestResponseMappedList)  {
         Payment requestPayment = null;
+        Order order = null;
         HkPaymentResponse hkPaymentResponse = null;
         try{
             if(requestResponseMappedList != null && !requestResponseMappedList.isEmpty()){
                 for(Map<String,Object> reqResponseMap : requestResponseMappedList){
                     requestPayment = (Payment)reqResponseMap.get("Request");
                     hkPaymentResponse = (HkPaymentResponse) reqResponseMap.get("Response");
-                    updateRequestResponseMap(requestPayment,hkPaymentResponse);
+                    order = updateRequestResponseMap(requestPayment,hkPaymentResponse);
                 }
             }
 
         } catch (HealthkartPaymentGatewayException e){
             error(requestPayment.getGatewayOrderId(),e);
         }
-
+        return order;
     }
 
-    private void updateRequestResponseMap(Payment requestPayment, HkPaymentResponse hkPaymentResponse) throws HealthkartPaymentGatewayException {
-
+    private Order updateRequestResponseMap(Payment requestPayment, HkPaymentResponse hkPaymentResponse) throws HealthkartPaymentGatewayException {
+        Order order = null;
         if(requestPayment != null && hkPaymentResponse != null){
             PaymentStatus gatewayPaymentStatus = hkPaymentResponse.getPaymentStatus();
             if(gatewayPaymentStatus != null && EnumPaymentStatus.SUCCESS.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
-                success(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getResponseMsg(), hkPaymentResponse.getAuthIdCode());
+                order = success(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getResponseMsg(), hkPaymentResponse.getAuthIdCode());
             } else if (gatewayPaymentStatus != null && EnumPaymentStatus.FAILURE.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
                 fail(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getResponseMsg());
             } else if (gatewayPaymentStatus != null && EnumPaymentStatus.AUTHORIZATION_PENDING.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
-                pendingApproval(requestPayment.getGatewayOrderId(),hkPaymentResponse.getGatewayReferenceId());
+                order = pendingApproval(requestPayment.getGatewayOrderId(),hkPaymentResponse.getGatewayReferenceId());
             }  else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
             }
         }
+        return order;
     }
 
     public HkPaymentResponse refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
@@ -622,23 +638,25 @@ public class PaymentManager {
         try{
             Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
             // create a refund Payment Object
-            Payment refundRequestPayment = createNewPayment(basePayment.getOrder(),EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode(),
-                    basePayment.getIp(),basePayment.getGateway(),basePayment.getIssuer(),basePayment.getBillingAddress());
-            refundRequestPayment.setPaymentStatus(EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus());
-            refundRequestPayment.setBasePaymentGatewayOrderId(gatewayOrderId);
+            Payment refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
 
             hkRefundPaymentResponse = paymentService.refundPayment(gatewayOrderId,amount);
-
+            //TODO: stuffing gatewayOrderId like this, but remove it later
+            hkRefundPaymentResponse.setGatewayOrderId(refundRequestPayment.getGatewayOrderId());
+            //TODO: remove this check, call it at
             // verify this refund gateway Payment
             //Do verification on refund amount, it should not be greater than (sale amount-sum(refund amounts))
             // from gateway order Id, we will get the base sale amount
             // from base payment gateway reference id, Since it is very gateway specific we will go to respective gateway
-            List<Payment> hkPaymentRequestList = paymentService.listPaymentFamily(gatewayOrderId);
-            paymentService.verifyIfRefundAmountValid(hkPaymentRequestList, amount);
+            /*List<Payment> hkPaymentRequestList = paymentService.listPaymentFamily(gatewayOrderId);
+            paymentService.verifyIfRefundAmountValid(hkPaymentRequestList, amount);*/
 
             // Also verify if payment amount refunded be gateway and amount requested for refund is same, if not send mail to admin
-            gatewayAmount = hkRefundPaymentResponse.getAmount();
-            paymentService.verifyPaymentAmount(gatewayAmount, amount);
+
+            if(hkRefundPaymentResponse != null && EnumPaymentStatus.REFUNDED.getId() == hkRefundPaymentResponse.getPaymentStatus().getId()){
+                gatewayAmount = hkRefundPaymentResponse.getAmount();
+                paymentService.verifyPaymentAmount(gatewayAmount, amount);
+            }
             paymentService.updatePaymentBasedOnResponse(hkRefundPaymentResponse,refundRequestPayment);
             // TODO: logging needs to be implemented
         } catch(HealthkartPaymentGatewayException e){
@@ -649,6 +667,34 @@ public class PaymentManager {
         }
 
         return hkRefundPaymentResponse;
+    }
+
+    public Payment createNewRefundPayment(Payment basePayment, PaymentStatus paymentStatus, Double amount, PaymentMode paymentMode){
+        Payment refundPayment = createNewPayment(basePayment.getOrder(),paymentMode,
+                basePayment.getIp(),basePayment.getGateway(),basePayment.getIssuer(),basePayment.getBillingAddress());
+
+        refundPayment.setPaymentStatus(paymentStatus);
+        refundPayment.setParent(basePayment);
+        refundPayment.setAmount(amount);
+
+        refundPayment = paymentDao.save(refundPayment);
+
+        return refundPayment;
+    }
+    /*
+    * A utility for time being used to stuff refund gateway order id into response object
+    * TODO: remove later if a better method is construed.
+    * */
+    private void stuffGatewayOrderIdInRespObj(HkPaymentResponse resp, Payment req) {
+        if(resp != null && req != null){
+            if(EnumPaymentTransactionType.REFUND.getName().equalsIgnoreCase(resp.getTransactionType())){
+                String gatewayReferenceId = req.getGatewayReferenceId();
+                String rrn = req.getRrn();
+                if(rrn != null && gatewayReferenceId !=null && gatewayReferenceId.equalsIgnoreCase(resp.getGatewayReferenceId()) && rrn.equalsIgnoreCase(resp.getRrn())){
+                    resp.setGatewayOrderId(req.getGatewayOrderId());
+                }
+            }
+        }
     }
 
     public OrderManager getOrderManager() {

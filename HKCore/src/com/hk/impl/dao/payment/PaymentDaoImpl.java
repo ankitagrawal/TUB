@@ -1,7 +1,12 @@
 package com.hk.impl.dao.payment;
 
+import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.core.OrderStatus;
+import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.PaymentStatus;
+import com.hk.domain.order.Order;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -60,20 +65,35 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
 
     @Override
     public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn) {
-        /*DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
-        if(gatewayReferenceId != null){
-            paymentCriteria.add(Restrictions.eq("gatewayReferenceId", gatewayReferenceId));
-        }
-        if(gatewayReferenceId != null){
-            paymentCriteria.add(Restrictions.eq("rrn", rrn));
-        }*/
-
         return (Payment)getSession().createQuery("from Payment p where p.gatewayReferenceId = gatewayReferenceId and p.rrn = rrn").uniqueResult();
     }
 
     @Override
-    public List<Payment> listAllDependentPaymentByBasePaymentGatewayOrderId(String basePaymentGatewayOrderId) {
-        return (List<Payment>) getSession().createQuery("from Payment p where p.basePaymentGatewayOrderId = :basePaymentGatewayOrderId").setString("basePaymentGatewayOrderId",basePaymentGatewayOrderId);
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment salePayment) {
+        DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
+        if(paymentModes != null && !paymentModes.isEmpty()){
+            paymentCriteria.add(Restrictions.in("paymentMode", paymentModes));
+        }
+        if(paymentStatuses != null && !paymentStatuses.isEmpty()){
+            paymentCriteria.add(Restrictions.in("paymentStatus", paymentStatuses));
+        }
+        if(gatewayOrderId != null){
+            paymentCriteria.add(Restrictions.eq("gatewayOrderId", gatewayOrderId));
+        }
+        if(order != null){
+            paymentCriteria.add(Restrictions.eq("order", order));
+        }
+        if(startCreateDate != null && endCreateDate != null){
+            paymentCriteria.add(Restrictions.between("createDate", startCreateDate, endCreateDate));
+        }
+        if(orderStatuses != null){
+            DetachedCriteria orderCriteria = paymentCriteria.createCriteria("order");
+            orderCriteria.add(Restrictions.in("orderStatus", orderStatuses));
+        }
+        if(salePayment != null){
+            paymentCriteria.add(Restrictions.eq("parent",salePayment));
+        }
+        return findByCriteria(paymentCriteria);
     }
 
 }

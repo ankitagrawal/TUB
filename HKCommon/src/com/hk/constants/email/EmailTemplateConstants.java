@@ -69,5 +69,6 @@ public class EmailTemplateConstants {
     public static final String orderConfirmUserEmailLoyalty = "/orderConfirmUserEmailLoyalty.ftl";
     public static final String orderCancelEmailUserLoyalty = "/orderCancelEmailUserLoyalty.ftl";
     public static final String adminPaymentStatusChangeEmail= "/adminPaymentStatusChangeEmail.ftl";
+    public static final String adminPaymentMisMatchMail="/adminPaymentMisMatchMail.ftl";
 
 }

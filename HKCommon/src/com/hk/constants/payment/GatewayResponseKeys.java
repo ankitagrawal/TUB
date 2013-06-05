@@ -68,7 +68,7 @@ public class GatewayResponseKeys {
         PG_RESP_CODE("pgRespCode"),
         TX_MSG("TxMsg"),
         AUTH_ID_CODE("authCode"),
-        AMOUNT("Amount"),
+        AMOUNT("amount"),
         MANDATORY_ERR_MSG("mandatoryErrorMsg"),
         PAID_TXN_EXISTS("paidTxnExists"),
         RRN("rrn"),
@@ -79,17 +79,19 @@ public class GatewayResponseKeys {
         TXN_TYPE("txnType"),
         KEY("key"),
         TXN_DATE_TIME("txnDateTime"),
-
+        REFUND_KEY("R"),
         SUCCESS_MSG("SUCCESS"),
         SUCCESS_CODE("0"),
         REJECTED_BY_ISSUER("1"),
         REJECTED_BY_GATEWAY("2"),
         CANCELLED_BY_USER("3"),
         FAIL("FAIL"),
-        REFUND_SUCCESS_CODE("11"),
+        REFUND_SUCCESS_CODE("0"),
         MANDATORY_FIELD_MISSING_COD("400"),
         GOOD_ENQ_COD("200"),
         BAD_ENQ_COD("401"),
+        INR("INR"),
+        REFUND_SEEK_SUCCESS_CODE("11"),
         ;
 
         private String key;

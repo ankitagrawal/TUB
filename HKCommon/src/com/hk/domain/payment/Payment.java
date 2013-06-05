@@ -114,8 +114,9 @@ public class Payment implements java.io.Serializable {
     @Column(name = "transaction_type")
     private String transactionType;
 
-    @Column(name = "base_payment_gateway_order_id")
-    private String basePaymentGatewayOrderId;
+    @ManyToOne
+    @JoinColumn(name="parent_id")
+    private Payment parent;
 
 	@Transient
 	private boolean selected;
@@ -354,12 +355,12 @@ public class Payment implements java.io.Serializable {
         this.transactionType = transactionType;
     }
 
-    public String getBasePaymentGatewayOrderId() {
-        return basePaymentGatewayOrderId;
+    public Payment getParent() {
+        return parent;
     }
 
-    public void setBasePaymentGatewayOrderId(String basePaymentGatewayOrderId) {
-        this.basePaymentGatewayOrderId = basePaymentGatewayOrderId;
+    public void setParent(Payment parent) {
+        this.parent = parent;
     }
 
     public String getPaymentDetails() {

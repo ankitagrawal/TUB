@@ -123,6 +123,7 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
 
     @Override
     public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
+        HkPaymentResponse hkPaymentResponse = null;
 
         Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + CITRUS_LIVE_PROPERTIES;
@@ -134,31 +135,31 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
         paymentSearchMap.put(GatewayResponseKeys.Citrus.transactionId, basePayment.getGatewayOrderId());
         paymentSearchMap.put(GatewayResponseKeys.Citrus.rrn, basePayment.getRrn());
         paymentSearchMap.put(GatewayResponseKeys.Citrus.authIdCode, basePayment.getAuthIdCode());
-        paymentSearchMap.put(GatewayResponseKeys.Citrus.amount, amount);
-        paymentSearchMap.put(GatewayResponseKeys.Citrus.currencyCode, properties.get(GatewayResponseKeys.Citrus.currencyCode));
-        paymentSearchMap.put(GatewayResponseKeys.Citrus.txnType, properties.get(GatewayResponseKeys.Citrus.txnType));
+        paymentSearchMap.put(GatewayResponseKeys.CitrusConstants.AMOUNT.getKey(), amount.toString());
+        paymentSearchMap.put(GatewayResponseKeys.Citrus.currencyCode, GatewayResponseKeys.CitrusConstants.INR.getKey());
+        paymentSearchMap.put(GatewayResponseKeys.Citrus.txnType, GatewayResponseKeys.CitrusConstants.REFUND_KEY.getKey());
 
         try{
             com.citruspay.pg.model.Refund refund = com.citruspay.pg.model.Refund.create(paymentSearchMap);
 
             if(refund != null){
-                return verifyRefundPaymentStatusAndReturnPayment(refund);
+                hkPaymentResponse = verifyRefundPaymentStatusAndReturnPayment(refund);
             }
 
         } catch (CitruspayException e){
             logger.debug("Citrus Exception occurred : ",e);
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
         }
-        return null;
+        return hkPaymentResponse;
     }
 
     private HkPaymentResponse verifyRefundPaymentStatusAndReturnPayment(Refund refund) throws HealthkartPaymentGatewayException {
-        HkPaymentResponse hkPaymentResponse = null;
+        HkPaymentResponse hkPaymentResponse = createPayment(refund.getMerTxnId(),refund.getPgTxnId(),refund.getRRN(),refund.getRespMessage(),EnumPaymentTransactionType.REFUND.getName(),refund.getAmount(),refund.getAuthIdCode());
         if(GatewayResponseKeys.CitrusConstants.REFUND_SUCCESS_CODE.getKey().equalsIgnoreCase(refund.getRespCode())){
-            hkPaymentResponse = createPayment(refund.getMerTxnId(),refund.getTxnId(),refund.getRRN(),refund.getRespMessage(),EnumPaymentTransactionType.REFUND.getName(),refund.getAmount(),refund.getAuthIdCode());
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
         } else if (GatewayResponseKeys.CitrusConstants.MANDATORY_FIELD_MISSING_COD.getKey().equalsIgnoreCase(refund.getRespCode())){
             logger.debug("Citrus Refund : Mandatory Fields missing "+ refund.getRespCode() + ":" + refund.getRespMessage());
-            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.MANDATORY_FIELD_MISSING);
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
         }
         return hkPaymentResponse;
     }
@@ -187,7 +188,7 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
 
                 // create a payment object
                 HkPaymentResponse hkPaymentResponse = createPayment(gatewayOrderId, enquiry.getPgTxnId(), enquiry.getRrn(), enquiry.getRespMsg(), enquiry.getTxnType(), enquiry.getAmount(),enquiry.getAuthIdCode());
-                verifyAndSetPaymentStatus(enquiry.getRespCode(),hkPaymentResponse);
+                setPaymentStatus(enquiry.getRespCode(),hkPaymentResponse);
                 paymentList.add(hkPaymentResponse);
             }
 
@@ -197,12 +198,31 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
         return paymentList;
     }
 
-    private void verifyAndSetPaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse){
-        if (respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.SUCCESS_CODE.getKey()) || respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REFUND_SUCCESS_CODE.getKey())) {
+    private void setPaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse){
+        if(hkPaymentResponse != null ){
+            String transactionType = hkPaymentResponse.getTransactionType();
+            if(EnumPaymentTransactionType.SALE.getName().equalsIgnoreCase(transactionType)){
+                setSalePaymentStatus(respCode,hkPaymentResponse);
+            } else {
+                setRefundPaymentStatus(respCode,hkPaymentResponse);
+            }
+        }
+    }
+
+    private void setSalePaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse){
+        if (respCode != null && respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.SUCCESS_CODE.getKey())) {
             hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
-        } else if (respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REJECTED_BY_ISSUER.getKey())) {
+        } else if (respCode != null && respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REJECTED_BY_ISSUER.getKey())) {
             hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
         } else {
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+        }
+    }
+
+    private void setRefundPaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse){
+        if (respCode != null && respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REFUND_SEEK_SUCCESS_CODE.getKey())) {
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
+        }  else {
             hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
         }
     }

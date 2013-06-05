@@ -958,6 +958,16 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
     }
 
+    public boolean sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderId){
+        HashMap valueMap = new HashMap();
+        valueMap.put("username","Admin");
+        valueMap.put("gatewayOrderId", gatewayOrderId);
+        valueMap.put("RequestAmount", actualAmt);
+        valueMap.put("RequestAmount", gatewayAmount);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.adminPaymentMisMatchMail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
+    }
+
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();
      * valuesMap.put("product", product); valuesMap.put("stockStatus", stockStatus); boolean success = true; Template
