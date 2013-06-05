@@ -6,7 +6,6 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentType" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -87,16 +86,7 @@
 <div class='current_step_content step3'>
 <jsp:include
         page="/includes/checkoutNotice.jsp"/>
-<c:set var="paymentFailureIds" value="<%=EnumPaymentStatus.getPaymentFailureStatusIds()%>" />
-<c:if test="${orderSummary.order.payment.paymentStatus.id !=null and fn:contains(paymentFailureIds,orderSummary.order.payment.paymentStatus.id)}">
-    <div class="paymentFailureMessageTop">
-        <h4> We are extremely sorry but your payment could not be processed.</h4>
-        <p> The reason for this might be a network error or a communication error between the bank and the payment gateway.</p>
-        <p> The transaction id ${orderSummary.order.gatewayOrderId}. In case, any money has been deducted from your account please contact our customer care on 0124-4616444 or write to us at <a href="mailto:info@healthkart.com">info@healthkart.com</a></p>
-        <p> We request you to please try the payment again with a different payment mode or a different card. Sometimes,
-            trying with the same card might also work as you may have entered some details incorrectly.</p>
-    </div>
-  </c:if>
+
 <div class='pre'>
             <div id="CODOption" style="display: none;">
                 <h4>Your total billable amount is <strong class='num arialBold'> <fmt:formatNumber

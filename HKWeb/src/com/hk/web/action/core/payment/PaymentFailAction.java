@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class PaymentFailAction extends BaseAction {
 
 	public Resolution pre() {
-		return new ForwardResolution("/pages/payment/paymentFail.jsp");
+		return new ForwardResolution("/pages/paymentMode.jsp");
 	}
 
 }
