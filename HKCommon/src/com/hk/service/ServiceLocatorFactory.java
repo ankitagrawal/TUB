@@ -117,4 +117,8 @@ public class ServiceLocatorFactory implements ApplicationContextAware, ServletCo
         return getApplicationContext();
     }
 
+    public static <T> T getBean(String beanName, Class<T> interfaceClass) {
+        return applicationContext.getBean(beanName, interfaceClass);
+    }
+
 }

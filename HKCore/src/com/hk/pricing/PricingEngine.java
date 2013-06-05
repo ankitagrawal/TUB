@@ -22,7 +22,9 @@ import com.hk.domain.offer.OfferAction;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.CartLineItemConfig;
+import com.hk.domain.order.Order;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.store.EnumStore;
 import com.hk.domain.user.Address;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.pact.service.inventory.SkuService;
@@ -472,6 +474,24 @@ public class PricingEngine {
                     lineitem.setDiscountOnHkPrice(0D);
                 }
             }
+        }
+        
+        // For loyalty store
+        if (lineitems != null && lineitems.size() > 0) {
+        	Order order = null;
+        	for (CartLineItem lineitem : lineitems) {
+        		if (lineitem.getOrder() != null) {
+        			order = lineitem.getOrder();
+        			break;
+        		}
+        	}
+        	if(order != null && order.getStore().getId().equals(EnumStore.LOYALTYPG.asStore().getId())) {
+        		for (CartLineItem lineitem : lineitems) {
+        			if (lineitem.getLineItemType().getId().equals(EnumCartLineItemType.Shipping.getId())) {
+                        lineitem.setDiscountOnHkPrice(lineitem.getHkPrice());
+                    }
+            	}
+        	}
         }
 
     }

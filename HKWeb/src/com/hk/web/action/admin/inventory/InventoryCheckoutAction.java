@@ -293,7 +293,7 @@ public class InventoryCheckoutAction extends BaseAction {
                 }
                 if (lineItem != null) {
                     ProductVariant variant = skuGroup.getSku().getProductVariant();
-                    if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() != lineItem.getMarkedPrice()) {
+                    if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp().doubleValue() != lineItem.getMarkedPrice().doubleValue()) {
                         addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout wrong MRP variant."));
                     } else {
                         Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);

@@ -55,6 +55,7 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.OrderSplitter;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
@@ -114,6 +115,8 @@ public class OrderServiceImpl implements OrderService {
     BucketService bucketService;
     @Autowired
     SubscriptionService subscriptionService;
+
+    @Autowired OrderSplitter orderSplitter;
 
     @Transactional
     public Order save(Order order) {
@@ -307,7 +310,7 @@ public class OrderServiceImpl implements OrderService {
     private Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            shippingOrders = splitOrder(order);
+            shippingOrders = orderSplitter.split(order.getId());
         } catch (NoSkuException e) {
             logger.error("Sku could not be found" + e.getMessage());
         } catch (OrderSplitException e) {
@@ -622,6 +625,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
+    	order = this.find(order.getId());
+    	logger.info("SPLIT START ORDER-ID: " + order.getId() + " ORDER STATUS: " + order.getOrderStatus().getName());
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = false;
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
@@ -631,7 +636,7 @@ public class OrderServiceImpl implements OrderService {
 
         logger.debug("Trying to split order " + order.getId());
 
-        User adminUser = getUserService().getAdminUser();
+        User loggedinUser = getUserService().getLoggedInUser();
 
         if (shippingOrderAlreadyExists) {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
@@ -641,7 +646,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             //DO Nothing for B2B Orders
             if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
-                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+                orderLoggingService.logOrderActivity(order, loggedinUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
             } else {
                 if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                     shippingOrders = createShippingOrders(order);
@@ -656,7 +661,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setShippingOrders(shippingOrders);
                 order = save(order);
                 String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+                orderLoggingService.logOrderActivity(order, loggedinUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
             }
             for (ShippingOrder shippingOrder : shippingOrders) {
                 if (!shippingOrder.isDropShipping()) {
@@ -693,13 +698,16 @@ public class OrderServiceImpl implements OrderService {
             subscriptionService.placeSubscriptions(order);
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
-        }
+        } else {
+			orderLoggingService.logOrderActivity(order, loggedinUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Number of shipping orders are zero");
+		}
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
-
+        
+        logger.info("SPLIT END ORDER-ID: " + order.getId());
         return shippingOrderAlreadyExists;
     }
 
