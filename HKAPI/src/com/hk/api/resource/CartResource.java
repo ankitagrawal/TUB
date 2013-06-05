@@ -16,7 +16,6 @@ import com.hk.domain.offer.OfferEmailDomain;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
-import com.hk.domain.user.Role;
 import com.hk.domain.store.EnumStore;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
@@ -30,10 +29,8 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.util.OfferTriggerMatcher;
 import com.hk.util.json.JSONResponseBuilder;
-import com.hk.cache.RoleCache;
 import com.shiro.PrincipalImpl;
 import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.action.LocalizableMessage;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -126,7 +123,6 @@ public class CartResource extends BaseAction {
     /*if (coupon == null) {
       coupon = employeeManager.createEmpCoupon(user, couponCode);
     }*/
-    Role hkEmpRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
 
     if (coupon == null) {
       message = "Coupon code is invalid.";
@@ -150,7 +146,7 @@ public class CartResource extends BaseAction {
       } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
         error = error_role;
         Offer offer = coupon.getOffer();
-        if (offer.getOfferEmailDomains().size() > 0) {
+        if (!offerManager.isOfferValidForUserDomain(coupon.getOffer(), user)) {
           message = "The offer is valid for the following domains only:";
           for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
             message += "<br/>" + offerEmailDomain.getEmailDomain();
@@ -158,9 +154,6 @@ public class CartResource extends BaseAction {
         } else {
           message = "This offer is not activated for you yet.";
         }
-      } else if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE) && !user.getRoles().contains(hkEmpRole)) {
-        error = error_role;
-        message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
       } else if (user.equals(coupon.getReferrerUser())) {
         message = "You are not allowed to use your own referrer code.";
       } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {

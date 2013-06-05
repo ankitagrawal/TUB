@@ -22,7 +22,6 @@ import com.hk.admin.manager.EmployeeManager;
 import com.hk.admin.manager.IHOManager;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.core.RoleConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.Offer;
@@ -46,7 +45,6 @@ import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.HealthkartResponse;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.util.OfferTriggerMatcher;
-import com.hk.cache.RoleCache;
 
 import javax.ws.rs.PathParam;
 
@@ -117,8 +115,6 @@ public class ApplyCouponAction extends BaseAction {
         /*if (coupon == null) {
             coupon = employeeManager.createEmpCoupon(user, couponCode);
         }*/
-        Role hkEmpRole = RoleCache.getInstance().getRoleByName(RoleConstants.HK_EMPLOYEE).getRole();
-
 
         if (coupon == null) {
             message = new LocalizableMessage("/ApplyCoupon.action.invalid.coupon").getMessage(getContext().getLocale());
@@ -142,19 +138,21 @@ public class ApplyCouponAction extends BaseAction {
             } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
                 error = error_role;
 	            Offer offer = coupon.getOffer();
-	            if (offer.getOfferEmailDomains().size() > 0) {
+	            if (!offerManager.isOfferValidForUserDomain(offer, user)) {
 		            message = "The offer is valid for the following domains only:";
 		            for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
 			            message += "<br/>" + offerEmailDomain.getEmailDomain();
 		            }
+	            }else if (!offerManager.isOfferValidForUserRole(offer, user)) {
+		            message = "The offer is valid for the following roles only:";
+		            for (Role role : offer.getRoles()) {
+			            message += "<br/>" + role.getName();
+		            }
 	            } else {
 		            message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
 	            }
-            } else if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE) && !user.getRoles().contains(hkEmpRole)) {
-                error = error_role;
-                message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());
             } else if (user.equals(coupon.getReferrerUser())) {
-              message = new LocalizableMessage("/ApplyCoupon.action.same.user.referrel.coupon").getMessage(getContext().getLocale());
+                message = new LocalizableMessage("/ApplyCoupon.action.same.user.referrel.coupon").getMessage(getContext().getLocale());
             } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {
                 error = error_alreadyReferrer;
                 message = new LocalizableMessage("/ApplyCoupon.action.already.has.referrer").getMessage(getContext().getLocale());
