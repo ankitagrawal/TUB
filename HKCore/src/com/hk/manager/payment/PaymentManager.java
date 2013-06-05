@@ -4,8 +4,10 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
@@ -15,16 +17,15 @@ import com.hk.domain.user.BillingAddress;
 import com.hk.domain.user.UserCodCall;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.impl.service.codbridge.OrderEventPublisher;
-import com.hk.manager.OrderManager;
-import com.hk.manager.ReferrerProgramManager;
-import com.hk.manager.SMSManager;
-import com.hk.manager.UserManager;
+import com.hk.manager.*;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.service.ServiceLocatorFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import com.hk.util.TokenUtils;
@@ -66,6 +67,8 @@ public class PaymentManager {
     SMSManager smsManager;
     @Autowired
     OrderEventPublisher orderEventPublisher;
+    @Autowired
+    EmailManager emailManager;
 
     @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
     private Double cashBackLimit;
@@ -515,6 +518,22 @@ public class PaymentManager {
         } catch (Exception ex) {
             logger.error("Error in Notifying JMS for payment success" + ex.getMessage());
         }
+    }
+
+    public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
+        HkPaymentService hkPaymentService = null;
+        if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
+            hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        }
+        return hkPaymentService;
+    }
+
+    public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus){
+        return oldStatus.getId().equals(changedStatus.getId());
+    }
+
+    public boolean sendUnVerifiedPaymentStatusChangeToAdmin(PaymentStatus actualStatus, PaymentStatus changedStatus,String gatewayOrderId){
+        return emailManager.sendAdminPaymentStatusChangeEmail(actualStatus.getName(),changedStatus.getName(),gatewayOrderId);
     }
 
     public OrderManager getOrderManager() {
