@@ -12,6 +12,8 @@ public interface ProductVariantDao extends BaseDao {
 
     public ProductVariant getVariantById(String variantId);
 
+//    public ProductVariant getVariantByTryOn(String variantId);
+
     public Set<ProductVariant> getProductVariantsFromProductVariantIds(String productVariantIds);
 
     public List<ProductVariant> getProductVariantsByProductId(String productId);

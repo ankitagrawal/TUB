@@ -331,6 +331,36 @@ public class PaymentFinder {
         return null;
     }
 
+    public static Map<String,Object> refundIciciPayment(Payment payment,String merchantId){
+        Map<String,Object> paymentResultMap = new HashMap<String,Object>();
+        com.opus.epg.sfa.java.Merchant oMerchant 	= new com.opus.epg.sfa.java.Merchant();
+        try{
+            PostLib oPostLib	= new PostLib();
+            oMerchant.setMerchantRelatedTxnDetails(merchantId,null,null,
+                    payment.getGatewayOrderId(),null,payment.getRrn(),
+                    payment.getAuthIdCode(),null,null,
+                    "INR","Refund",payment.getAmount().toString(),null,null,
+                    null,null,null,null);
+
+            PGResponse oPgResp = oPostLib.postRelatedTxn(oMerchant);
+            if(oPgResp != null){
+                // logger.error("PGSearchResponse received from payment gateway:" + PGResponse.toString());
+                paymentResultMap.put("Response Code",oPgResp.getRespCode());
+                paymentResultMap.put("Response Message",oPgResp.getRespMessage());
+                paymentResultMap.put("Txn Id",oPgResp.getTxnId());
+                paymentResultMap.put("Epg Txn Id",oPgResp.getEpgTxnId());
+                paymentResultMap.put("AuthIdCode",oPgResp.getAuthIdCode());
+                paymentResultMap.put("RRN",oPgResp.getRRN());
+                //paymentResultMap.put("Refund Amount","");
+            }
+
+        }catch(Exception e){
+            logger.debug("There is an error while processing refund from ICICI"+payment.getGatewayOrderId(),e);
+            System.out.println(e.getMessage());
+        }
+        return paymentResultMap;
+    }
+
 
     public static void main(String[] args) {
 

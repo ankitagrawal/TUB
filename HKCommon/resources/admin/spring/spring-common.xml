@@ -128,18 +128,6 @@
         <property name="brokerURL" value="tcp://172.16.3.92:61616" />
     </bean>
 
-    <!-- A POJO that implements the JMS message listener -->
-    <bean id="orderSplitterListener" class="com.hk.impl.service.order.OrderSplitterResponseObserverImpl" />
-
-    <!-- A JMS namespace aware Spring configuration for the message listener container -->
-    <jms:listener-container
-            container-type="default"
-            connection-factory="connectionFactory"
-            acknowledge="auto"
-            cache="consumer">
-        <jms:listener destination="order.splitter" ref="orderSplitterListener"/>
-    </jms:listener-container>
-
     <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
         <constructor-arg name="address" value="172.16.3.92">
         </constructor-arg>
