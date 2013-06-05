@@ -195,8 +195,8 @@ public class InventoryServiceImpl implements InventoryService {
 
                 // If price is in range - update it Automatically
                 // Tolerance Limit is 15% either way
-                if (Math.abs((leastMRPSkuGroup.getMrp() - productVariant.getMarkedPrice() / productVariant.getMarkedPrice() * 100)) < 15
-                    || Math.abs((leastMRPSkuGroup.getCostPrice() - productVariant.getCostPrice() / productVariant.getCostPrice() * 100)) < 15) {
+                if (Math.abs((leastMRPSkuGroup.getMrp() - productVariant.getMarkedPrice()) / productVariant.getMarkedPrice() * 100) < 15
+                    || Math.abs((leastMRPSkuGroup.getCostPrice() - productVariant.getCostPrice()) / productVariant.getCostPrice() * 100) < 15) {
                   productVariant.setCostPrice(updatePvPrice.getNewCostPrice());
                   productVariant.setMarkedPrice(updatePvPrice.getNewMrp());
                   productVariant.setHkPrice(updatePvPrice.getNewHkprice());
