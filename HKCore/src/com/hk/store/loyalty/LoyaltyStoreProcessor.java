@@ -71,14 +71,6 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 		this.loyaltyProgramService.debitKarmaPoints(order);
 		order = this.paymentManager.success(payment.getGatewayOrderId());
 		
-		for (CartLineItem lineItem : order.getCartLineItems()) {
-			if(lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Shipping.asCartLineItemType().getId())) {
-				lineItem.setDiscountOnHkPrice(lineItem.getHkPrice());
-				this.cartLineItemService.save(lineItem);
-				break;
-			}
-		}
-		
 		return order.getPayment();
 	}
 
