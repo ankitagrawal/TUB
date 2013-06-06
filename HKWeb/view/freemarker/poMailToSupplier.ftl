@@ -21,7 +21,7 @@ PURCHASE ORDER
 </h4>
 </div>
 
-  <table cellspacing="0" id="mainTable">
+  <table cellspacing="0" id="mainTable" border="1">
   <tr>
   <td style="font-weight: bold;">Supplier</td>
   <td>${purchaseOrder.supplier.name}</td>
@@ -72,7 +72,7 @@ PURCHASE ORDER
   </table>
 
 <br/>
-  <table cellspacing="0" id="mainTable" >
+  <table cellspacing="0" id="mainTable" border="1">
   <tr>
   <td style="font-weight: bold;">Variant Id</td>
   <td style="font-weight: bold;">UPC</td>
