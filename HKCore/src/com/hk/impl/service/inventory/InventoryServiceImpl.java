@@ -191,7 +191,22 @@ public class InventoryServiceImpl implements InventoryService {
                 updatePvPrice.setNewHkprice(newHkPrice);
                 updatePvPrice.setTxnDate(new Date());
                 updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
-                baseDao.save(updatePvPrice);
+                updatePvPrice = (UpdatePvPrice) baseDao.save(updatePvPrice);
+
+                // If price is in range - update it Automatically
+                // Tolerance Limit is 15% either way
+                if (Math.abs((leastMRPSkuGroup.getMrp() - productVariant.getMarkedPrice()) / productVariant.getMarkedPrice() * 100) < 15
+                    || Math.abs((leastMRPSkuGroup.getCostPrice() - productVariant.getCostPrice()) / productVariant.getCostPrice() * 100) < 15) {
+                  productVariant.setCostPrice(updatePvPrice.getNewCostPrice());
+                  productVariant.setMarkedPrice(updatePvPrice.getNewMrp());
+                  productVariant.setHkPrice(updatePvPrice.getNewHkprice());
+                  productVariantService.save(productVariant);
+
+                  updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Updated.getId());
+                  updatePvPrice.setUpdateDate(new Date());
+                  updatePvPrice.setUpdatedBy(userService.getAdminUser());
+                  baseDao.save(updatePvPrice);
+                }
             }
         }
     }

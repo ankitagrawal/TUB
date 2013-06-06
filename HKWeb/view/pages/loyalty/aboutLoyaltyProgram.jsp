@@ -98,8 +98,8 @@
 		<c:set var="platinum" value="${lca.badgeList[4]}" />
 	
           <div class="aboutContent">
-            <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Stellar Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
-            <p>Here’s how it works- you’ll earn certain Loyalty points (depending upon your tier) every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Stellar features four reward levels namely (in ascending order)</p>
+            <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Loyalty Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
+            <p>Here’s how it works- you’ll earn certain Loyalty points (depending upon your tier) every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Loyalty features four reward levels namely (in ascending order)</p>
             <p class="embedMargin5">-${bronze.badgeName}</p>
             <p class="embedMargin5">-${silver.badgeName}</p>
             <p class="embedMargin5">-${gold.badgeName}</p>
@@ -174,8 +174,8 @@
             <h2 class="genQues">GENERAL QUESTIONS ABOUT THE PROGRAM</h2>
             
             <div class="qAndA">
-              <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. 
+              <p>Q: First things first. What is HealthKart Loyalty?</p>
+              A: HealthKart Loyalty is our loyalty program. You get great benefits. Oh, yes, there are some goodies too.
               <a href="${pageContext.request.contextPath}/loyaltypg" class="blue">Click here</a> to find out
               more.
             </div>
@@ -234,13 +234,13 @@
             <div class="qAndA">
               <p>Q: How can I redeem my points?</p>
               A: As soon as you make any purchase and it gets successfully delivered, your information will be automatically updated. 
-              Stellar Store is one shop store which has products ranging from all categories at HealthKart. The currency here is only loyalty points.
+              Loyalty Store is one shop store which has products ranging from all categories at HealthKart. The currency here is only loyalty points.
                For your favorite goodie, click on add to my cart and check out. During check out, the points will be deducted from the total.
             </div>            
            
             <div class="qAndA">
-              <p>Q: I am interested to pick a product from the Stellar Store but I am short of points? What should I do? </p>
-              A: The only currency at the Stellar Store is points. Unfortunately you can’t exchange them in lieu of money.
+              <p>Q: I am interested to pick a product from the Loyalty Store but I am short of points? What should I do? </p>
+              A: The only currency at the Loyalty Store is points. Unfortunately you can’t exchange them in lieu of money.
                If you are interested in a purchase but short of them, you need to shop further on HealthKart and earn more points. 
             </div>
            
@@ -257,7 +257,7 @@
             <div class="qAndA removeBorderBottom">
               <p>Q: I have more questions. Who can help? </p>
               A: Call the HealthKart Customer Support for general questions about the healthkartstellar program, as well as for questions regarding your membership.
-				Contact us 24X 7 at
+				Contact us at
 				0124-4616444 or mail us your query at info@healthkart.com.
 				You can also find us on Facebook and Twitter. We love connecting with you and are here to answer any questions or just enjoy hearing about how your day is going. 
 

@@ -20,7 +20,12 @@
       out.print("<tr><td>" + paramName + "</td>\n");
       String paramValue = request.getHeader(paramName);
       out.println("<td> " + paramValue + "</td></tr>\n");
+
    }
+	String xProto = request.getHeader("x-proto");
+        if(xProto != null){
+                out.println("this is ssl ");
+        }
 %>
 </table>
 

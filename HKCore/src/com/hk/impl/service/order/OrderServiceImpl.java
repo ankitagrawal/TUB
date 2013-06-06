@@ -55,6 +55,7 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.OrderSplitter;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
@@ -114,6 +115,8 @@ public class OrderServiceImpl implements OrderService {
     BucketService bucketService;
     @Autowired
     SubscriptionService subscriptionService;
+
+    @Autowired OrderSplitter orderSplitter;
 
     @Transactional
     public Order save(Order order) {
@@ -307,13 +310,14 @@ public class OrderServiceImpl implements OrderService {
     private Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
+//            shippingOrders = orderSplitter.split(order.getId());
             shippingOrders = splitOrder(order);
         } catch (NoSkuException e) {
             logger.error("Sku could not be found" + e.getMessage());
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
-            logger.error("Order could not be split due to some exception ", e);
+            logger.error("Order could not be split due to some exception ", e.getMessage());
         }
         return shippingOrders;
     }
@@ -622,6 +626,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
+    	order = this.find(order.getId());
+    	logger.info("SPLIT START ORDER-ID: " + order.getId() + " ORDER STATUS: " + order.getOrderStatus().getName());
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = false;
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
@@ -693,13 +699,16 @@ public class OrderServiceImpl implements OrderService {
             subscriptionService.placeSubscriptions(order);
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
-        }
+        } else {
+			orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Number of shipping orders are zero");
+		}
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
-
+        
+        logger.info("SPLIT END ORDER-ID: " + order.getId());
         return shippingOrderAlreadyExists;
     }
 

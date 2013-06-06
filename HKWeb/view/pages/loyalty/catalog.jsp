@@ -17,10 +17,6 @@
  <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
 
 
-<%
-boolean isSecure = pageContext.getRequest().isSecure();
-pageContext.setAttribute("isSecure", isSecure);
-%>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 
@@ -187,7 +183,7 @@ pageContext.setAttribute("isSecure", isSecure);
 				<c:set var="product" value="${variant.product}"/>
 				<c:set var="imageId" value = "${variant.product.mainImageId }" />
 				<div class="imgContainer">
-					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId,isSecure)}" alt="${product.name}"
+					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
 					     title="${product.name}" class="productImage" >
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>

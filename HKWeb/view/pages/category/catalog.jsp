@@ -6,10 +6,11 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.taglibs.Functions" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Arrays" %>
-<%@ page import="com.hk.taglibs.Functions" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -33,7 +34,7 @@
 	boolean renderNewCatalogUI = Functions.renderNewCatalogFilter(ca.getChildCategorySlug(), ca.getSecondaryChildCategorySlug());
 	pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
 
-    boolean isSecure = pageContext.getRequest().isSecure();
+	  boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
     
     Category services = categoryDao.getCategoryByName("services");
@@ -178,6 +179,8 @@
 <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"/>
 
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}" secondaryLevelCategory="${ca.childCategorySlug}" />
+<!-- BLADE marketing-->
+<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="category" />
 
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>

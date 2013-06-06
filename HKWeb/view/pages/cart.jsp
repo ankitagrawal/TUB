@@ -4,6 +4,8 @@
 <%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -12,7 +14,7 @@
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
 <c:set var="product" value="${pa.product}"/>
 <%
-  boolean isSecure = pageContext.getRequest().isSecure();
+	boolean isSecure = WebContext.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/cartLayout.jsp" pageTitle="Shopping Cart">
@@ -596,6 +598,8 @@
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+<!--BLADe marketing-->
+<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="cart"/>
 
 <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
@@ -955,25 +959,6 @@
        </table>
    </div>
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
-<!-- BLADE pseudo conversion code -->
-<script type="text/javascript">
-<!--
-var blade_co_account_id='4184';
-var blade_group_id='convtrack14700';
-
-(function() {
-var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
-var path = '/js/bl_track_others.js';
-
-var bs = document.createElement('script');
-bs.type = 'text/javascript'; bs.async = true;
-bs.charset = 'utf-8'; bs.src = host + path;
-
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(bs, s);
-})();
--->
-</script>
 
 <style type="text/css">
 

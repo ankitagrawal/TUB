@@ -72,7 +72,8 @@
             <c:forEach items='${menuAction.menuNodes}' var='topMenuNode' varStatus='idx'>
                 <%--<c:if test="${topMenuNode.url != '/home-living'}">--%>
                     <li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''} ${topMenuNode.url == '/home-living' ? 'new' : ''}'>
-                        <a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a>
+	                      <s:link href="${topMenuNode.url}" rel="${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'noFollow'}">${topMenuNode.name}</s:link>
+                        <%--<a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a>--%>
                     </li>
                 <%--</c:if>--%>
             </c:forEach>

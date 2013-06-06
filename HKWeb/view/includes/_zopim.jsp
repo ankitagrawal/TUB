@@ -46,7 +46,7 @@
     webengage.init({
       licenseCode:"~2024c219"
     }).onReady(function(){
-      webengage.render();
+      webengage.render({ ruleData : {}});
     });
   };
 

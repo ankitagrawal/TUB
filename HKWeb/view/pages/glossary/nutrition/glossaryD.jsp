@@ -3,7 +3,7 @@
 
 
 <%
-  boolean isSecure = pageContext.getRequest().isSecure();
+  boolean isSecure = SslUtil.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/categoryBlankLanding-glossary.jsp"

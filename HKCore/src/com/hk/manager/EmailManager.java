@@ -454,10 +454,10 @@ public class EmailManager {
         */
         String productImage = "";
         if(productVariant.getMainImageId() != null) {
-            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getMainImageId(),false);
+            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getMainImageId());
         }
         else if(productVariant.getProduct().getMainImageId() != null) {
-            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getProduct().getMainImageId(),false);
+            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getProduct().getMainImageId());
         }
         else{
             String url = "/images/ProductImages/ProductImagesThumb/"+productVariant.getProduct().getId()+".jpg";
@@ -948,6 +948,15 @@ public class EmailManager {
         }
     return true;
   }
+    public boolean sendAdminPaymentStatusChangeEmail(String actualStatus, String changedStatus, String gatewayOrderId){
+        HashMap valueMap = new HashMap();
+        valueMap.put("username","Admin");
+        valueMap.put("gatewayOrderId", gatewayOrderId);
+        valueMap.put("oldStatus", actualStatus);
+        valueMap.put("newStatus", changedStatus);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.adminPaymentStatusChangeEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
+    }
 
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();
