@@ -7,12 +7,12 @@ import java.util.List;
 
 public enum EnumTax {
 
-    SERVICE_10_3(1L, ".103%", .103D, "VAT"),
+    SERVICE_10_3(1L, "0.103", .103D, "VAT"),
 		VAT_5_25(2L, "VAT @ 5.25%", .0525D, "VAT"),
 		VAT_13_125(3L, "VAT @ 13.125%", .13125D, "VAT"),
 //		VAT_negative_5(5L, "VAT - 5.25%", .0525D, "VAT"),
     VAT_0(6L, "0.0", 0.0D, "VAT"),
-		VAT_12_5(7L, ".125", .125D, "VAT"),
+		VAT_12_5(7L, "0.125", .125D, "VAT"),
     VAT_5(8L, "0.05", .05D, "VAT"),
     VAT_12_36(10L, "0.1236", .1236D, "VAT"),
 //		VAT_10_3(32L, "0.103",0.103D, "VAT"),
