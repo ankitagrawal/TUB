@@ -74,7 +74,6 @@
         <c:choose>
             <c:when test="${notifyMeBean.notifyMeDtoList!=null}">
                 <div id="table_container">
-                    Total Product Variant = ${notifyMeBean.totalProductVariant} <br/>
                     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${notifyMeBean}"/>
                     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${notifyMeBean}"/>
 

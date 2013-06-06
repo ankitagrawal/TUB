@@ -1,3 +1,4 @@
+You requested to be notified when ${product.name} was back in stock
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -94,7 +95,7 @@
                                                 style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
                                                 <#assign map =  productPriceMap >
                                                 <#assign highestDiscountVariant = map[similarProduct.id]>
-                                                Rs.{highestDiscountVariant.hkPrice}
+                                                Rs.${highestDiscountVariant.hkPrice}
                                             </td>
 
                                             <td align="center" valign="top"
@@ -111,6 +112,9 @@
                                                     </tr>
                                                 </table>
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="25"></td>
                                         </tr>
                                     </#list>
                                     </table>

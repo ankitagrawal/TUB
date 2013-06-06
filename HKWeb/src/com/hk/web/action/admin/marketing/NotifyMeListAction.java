@@ -242,7 +242,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     /*For Similar Products*/
     public Resolution sendAllMailsForDeletedProducts() {
         int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForDeletedOOSHidden(conversionRate, bufferRate);
-        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent" + countOfSentMail));
+        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent     " + countOfSentMail));
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 
