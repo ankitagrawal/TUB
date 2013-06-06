@@ -6,8 +6,7 @@ Purchase Order Approval Mail
 <body>
 <#include "header.ftl">
 
-<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0;">
-	<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0; margin-left: 0;  margin-right: 0;">
+	<div>
 		<div style="padding: 2px;">
 		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.name}</p>
 		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.line1}</p>
@@ -17,7 +16,6 @@ Purchase Order Approval Mail
 		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">Tin No - ${purchaseOrder.warehouse.tin}</p>
 		</div>
 	</div>
-</div>
 
 <div style="text-align: center;">
 <h4>
@@ -25,8 +23,8 @@ PURCHASE ORDER
 </h4>
 </div>
 
-<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0;">
-  <table cellspacing="0" id="mainTable" style=" width: 100%;font-size: .8em;border-width: 0 0 1px 1px;border-style: solid;border-collapse: separate;border-color: black;">
+<div>
+  <table cellspacing="0" id="mainTable">
   <tr>
   <td style="font-weight: bold;">Supplier</td>
   <td>${purchaseOrder.supplier.name}</td>
@@ -78,11 +76,10 @@ PURCHASE ORDER
   </div>
 
 
-<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0;"></div>
 <div style="margin-top: 20px;"></div>
 <br/>
   <div style="display:inline;float: left;position: relative;margin-left: 1%;margin-right: 1%;">
-  <table cellspacing="0" id="mainTable" style=" width: 100%;font-size: .8em;border-width: 0 0 1px 1px;border-style: solid;border-collapse: separate;border-color: black;">
+  <table cellspacing="0" id="mainTable" >
   <tr>
   <td style="font-weight: bold;">Variant Id</td>
   <td style="font-weight: bold;">UPC</td>
