@@ -53,7 +53,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     Long actionTaskId;
     ActionTask currentActionTask;
     Long priorityId;
-    List<Bucket> userBuckets = new ArrayList<Bucket>();
+    List<Bucket> totalUserCheckedBuckets = new ArrayList<Bucket>();
 
     List<ActionTask> currentActionTaskFilter = new ArrayList<ActionTask>();
 
@@ -85,7 +85,13 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         User user = getPrincipalUser();
-        userBuckets = user.getBuckets();
+        totalUserCheckedBuckets =  getBaseDao().getAll(Bucket.class);
+        List <Bucket> userBuckets = user.getBuckets();
+        for (Bucket bucket : totalUserCheckedBuckets) {
+            if (userBuckets.contains(bucket)) {
+                bucket.setSelected(true);
+            }
+        }
 
         currentActionTaskFilter = actionItemDao.listCurrentActionTask(null, userBuckets);
         actionItemsPage = bucketService.searchActionItems(getActionItemSearchCriteria(), getPageNo(), getPerPage());
@@ -417,12 +423,12 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         this.currentActionTask = currentActionTask;
     }
 
-    public List<Bucket> getUserBuckets() {
-        return userBuckets;
+    public List<Bucket> getTotalUserCheckedBuckets() {
+        return totalUserCheckedBuckets;
     }
 
-    public void setUserBuckets(List<Bucket> userBuckets) {
-        this.userBuckets = userBuckets;
+    public void setTotalUserCheckedBuckets(List<Bucket> totalUserCheckedBuckets) {
+        this.totalUserCheckedBuckets = totalUserCheckedBuckets;
     }
 
     public List<ActionTask> getCurrentActionTaskFilter() {
