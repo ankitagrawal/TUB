@@ -255,7 +255,6 @@ public class CheckPaymentAction extends BaseAction {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
-//        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
 
         if (gateway != null && gatewayOrderId != null) {
             HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
@@ -264,12 +263,14 @@ public class CheckPaymentAction extends BaseAction {
                 PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
 
                 if(hkrespObj != null){
-                    hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-                    hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
-                    boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
-                    if (!isValid) {
-                        // send email to admin
-                        paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey());
+                    if(hkRespPayStatus != null){
+                        hkPaymentStatus = hkRespPayStatus.asPaymenStatus();
+                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+                        if (!isValid) {
+                            // send email to admin
+                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                        }
                     }
                 }
             }
