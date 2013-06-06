@@ -1,70 +1,20 @@
+Purchase Order Approval Mail
 <html>
-<style>
-p {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    margin-left: 2px;
-  }
- table {
-    width: 100%;
-    font-size: .8em;
-    border-width: 0 0 1px 1px;
-    border-style: solid;
-    border-collapse: separate;
-    border-color: black;
-  }
-
-  table tr td {
-    text-align: left;
-    font-size: small;
-    border-width: 1px 1px 0 0;
-    border-style: solid;
-    border-color: black;
-  }
-
-  table tr th {
-    border-width: 1px 1px 0 0;
-    border-style: solid;
-    border-color: black;
-  }
-  
-  table th {
-  text-align: center;
-  }
-
-  .clear {
-    clear: both;
-    display: block;
-    overflow: hidden;
-    visibility: hidden;
-    width: 0;
-    height: 0
-  }
-
-  .tdHead{
-	font-weight: bold;
-	}
-	
-  .column {
-    padding: 2px;
-  }
-	
-</style>
 <head>
   <title>Welcome to HealthKart.com</title>
 </head>
 <body>
 <#include "header.ftl">
 
-<div class="grid_12">
-	<div class="grid_4 alpha omega">
-		<div class="column">
-		<p>${purchaseOrder.warehouse.name}</p>
-		<p>${purchaseOrder.warehouse.line1}</p>
-		<p>${purchaseOrder.warehouse.line2}</p>
-		<p>${purchaseOrder.warehouse.city}-${purchaseOrder.warehouse.pincode}</p>
-		<p>${purchaseOrder.warehouse.state}</p>
-		<p>Tin No - ${purchaseOrder.warehouse.tin}</p>
+<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0;">
+	<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0; margin-left: 0;  margin-right: 0;">
+		<div style="padding: 2px;">
+		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.name}</p>
+		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.line1}</p>
+		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.line2}</p>
+		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.city}-${purchaseOrder.warehouse.pincode}</p>
+		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.state}</p>
+		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">Tin No - ${purchaseOrder.warehouse.tin}</p>
 		</div>
 	</div>
 </div>
@@ -75,12 +25,12 @@ PURCHASE ORDER
 </h4>
 </div>
 
-<div class="grid_12">
-  <table cellspacing="0" id="mainTable">
+<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0;">
+  <table cellspacing="0" id="mainTable" style=" width: 100%;font-size: .8em;border-width: 0 0 1px 1px;border-style: solid;border-collapse: separate;border-color: black;">
   <tr>
-  <td class="tdHead">Supplier</td>
+  <td style="font-weight: bold;">Supplier</td>
   <td>${purchaseOrder.supplier.name}</td>
-  <td class="tdHead">PO Place Date</td>
+  <td style="font-weight: bold;">PO Place Date</td>
   
   <#if purchaseOrder.poPlaceDate??>
   <td>${purchaseOrder.poPlaceDate }</td>
@@ -90,33 +40,33 @@ PURCHASE ORDER
   </tr>
   
   <tr>
-  <td class="tdHead">Address</td>
+  <td style="font-weight: bold;">Address</td>
   <td>
   <#if purchaseOrder.supplier.line1??>
-  <p>${purchaseOrder.supplier.line1}</p>
+  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.line1}</p>
   </#if>
   <#if purchaseOrder.supplier.line2??>
-  <p>${purchaseOrder.supplier.line2}</p>
+  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.line2}</p>
   </#if>
   <#if purchaseOrder.supplier.city??>
-  <p>${purchaseOrder.supplier.city}</p>
+  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.city}</p>
   </#if>
   <#if purchaseOrder.supplier.state??>
-  <p>${purchaseOrder.supplier.state}</p>
+  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.state}</p>
   </#if>
   </td>
-  <td class="tdHead">PO#</td>
+  <td style="font-weight: bold;">PO#</td>
   <td>${purchaseOrder.id }</td>
   </tr>
   
   <tr>
-  	<td class="tdHead">Contact Name</td>
+  	<td style="font-weight: bold;">Contact Name</td>
   	<#if purchaseOrder.supplier.contactPerson??>
   	<td>${purchaseOrder.supplier.contactPerson}</td>
   	<#else>
   	<td>N/A</td>
   	</#if>
-  	<td class="tdHead">Contact Number</td>
+  	<td style="font-weight: bold;">Contact Number</td>
   	<#if purchaseOrder.supplier.contactNumber??>
   	<td>${purchaseOrder.supplier.contactNumber}</td>
   	<#else>
@@ -128,23 +78,23 @@ PURCHASE ORDER
   </div>
 
 
-<div class="clear"></div>
+<div style="clear: both;display: block;overflow: hidden;visibility: hidden; width: 0;height: 0;"></div>
 <div style="margin-top: 20px;"></div>
 <br/>
-  <div class="grid_12">
-  <table cellspacing="0" id="mainTable">
+  <div style="display:inline;float: left;position: relative;margin-left: 1%;margin-right: 1%;">
+  <table cellspacing="0" id="mainTable" style=" width: 100%;font-size: .8em;border-width: 0 0 1px 1px;border-style: solid;border-collapse: separate;border-color: black;">
   <tr>
-  <td class="tdHead">Variant Id</td>
-  <td class="tdHead">UPC</td>
-  <td class="tdHead">Details</td>
-  <td class="tdHead">Quantity</td>
-  <td class="tdHead">Cost Price<br/>(Without Tax)</td>
-  <td class="tdHead">MRP</td>
-  <td class="tdHead">Tax(%)</td>
-  <td class="tdHead">Taxable</td>
-  <td class="tdHead">Tax</td>
-  <td class="tdHead">Surcharge</td>
-  <td class="tdHead">Payable</td>
+  <td style="font-weight: bold;">Variant Id</td>
+  <td style="font-weight: bold;">UPC</td>
+  <td style="font-weight: bold;">Details</td>
+  <td style="font-weight: bold;">Quantity</td>
+  <td style="font-weight: bold;">Cost Price<br/>(Without Tax)</td>
+  <td style="font-weight: bold;">MRP</td>
+  <td style="font-weight: bold;">Tax(%)</td>
+  <td style="font-weight: bold;">Taxable</td>
+  <td style="font-weight: bold;">Tax</td>
+  <td style="font-weight: bold;">Surcharge</td>
+  <td style="font-weight: bold;">Payable</td>
   </tr>
   
   <#list purchaseOrder.poLineItems as poLineItem>
