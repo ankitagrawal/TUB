@@ -81,7 +81,12 @@ PURCHASE ORDER
   <td class="tdHead">Supplier</td>
   <td>${purchaseOrder.supplier.name}</td>
   <td class="tdHead">PO Place Date</td>
+  
+  <#if purchaseOrder.poPlaceDate??>
   <td>${purchaseOrder.poPlaceDate }</td>
+  <#else>
+  <td>N/A</td>
+  </#if>
   </tr>
   
   <tr>
