@@ -6,6 +6,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -158,14 +159,16 @@ public class POSServiceImpl implements POSService {
         ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
 
         for (CartLineItem cartLineItem : order.getCartLineItems()) {
-            ProductVariant productVariant = cartLineItem.getProductVariant();
-            Sku sku = skuService.getSKU(productVariant, warehouse);
-            if (sku != null) {
-                LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                shippingOrder.getLineItems().add(shippingOrderLineItem);
-            } else {
-                throw new NoSkuException(productVariant, warehouse);
-            }
+        	if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.asCartLineItemType().getId())) {
+        		ProductVariant productVariant = cartLineItem.getProductVariant();
+        		Sku sku = skuService.getSKU(productVariant, warehouse);
+        		if (sku != null) {
+        			LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+        			shippingOrder.getLineItems().add(shippingOrderLineItem);
+        		} else {
+        			throw new NoSkuException(productVariant, warehouse);
+        		}
+        	}
         }
         shippingOrder.setAmount(order.getAmount());
         shippingOrder = shippingOrderService.save(shippingOrder);

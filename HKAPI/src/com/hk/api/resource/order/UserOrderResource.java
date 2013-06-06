@@ -205,7 +205,7 @@ public class UserOrderResource {
                     logger.debug("Order Already Cancelled" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-                adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
+                adminOrderService.cancelOrder(order, EnumCancellationType.Cod_Authorization_Failure.asCancellationType(), source, loggedInUser);
                 userCodCall.setRemark("Cancelled By " + source);
                 userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
             } else if (action.equalsIgnoreCase(HKAPIConstants.CONFIRMED)) {

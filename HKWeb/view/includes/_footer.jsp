@@ -16,7 +16,7 @@
             <s:link href="/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></s:link>
           </li>
           
-          <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" target="_blank"><span class="txt-white">Stellar</span></s:link></li>
+          <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" target="_blank"><span class="txt-white">Loyalty</span></s:link></li>
           <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAction"><span class="txt-white">Affiliate</span></s:link></li>
           <%--<li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>--%>
           <li><s:link beanclass="com.hk.web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>

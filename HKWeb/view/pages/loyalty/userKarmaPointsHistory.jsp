@@ -7,7 +7,7 @@
  
   <s:layout-component name="contents">
 <script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/bootbox.js"></script>
-<link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
+<link href="<hk:vhostCss/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
   <div class="mainContainer">
       <div class="container_16 clearfix">
         <div class="mainContent">
