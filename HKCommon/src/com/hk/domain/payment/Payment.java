@@ -114,7 +114,7 @@ public class Payment implements java.io.Serializable {
     @Column(name = "transaction_type")
     private String transactionType;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="parent_id")
     private Payment parent;
 
