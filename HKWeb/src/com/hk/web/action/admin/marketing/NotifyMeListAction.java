@@ -225,6 +225,10 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         if(productDeleted == null){
             productDeleted = true;
         }
+        if (!productDeleted && (productInStock == null || !productInStock) && (productHidden == null || !productHidden)) {
+            addRedirectAlertMessage(new SimpleMessage("Please mark product as deleted/OOS/Hidden value , to qualify for similar product mails"));
+            return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
+        }
         notifyMePage = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
         notifyMeDtoList = notifyMePage.getList();
 

@@ -66,51 +66,53 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         Map<String, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<String, Integer>();
 
         try {
-            for (NotifyMe notifyMe : notifyMeList) {
-                ProductVariant productVariant = notifyMe.getProductVariant();
-                String productVariantId = notifyMe.getProductVariant().getId();
-                String email = notifyMe.getEmail();
-                int allowedUserNumber = 0;
-                // get number of eligible user  to be notified for variant by formula
-                if (!(allowedUserPerVariantMap.containsKey(productVariantId))) {
-                    /*send mails if unbooked inventory is greater that zero*/
-                    int unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
-                    if (isSimilarProduct) {
-                        /* product is OOS for similar product Notify me */
-                        unbookedInventory = unbookedInventory > 0 ? unbookedInventory : getSumOfSimilarProductInventory(productVariant);
-                    }
-                    /* Calculate number of users eligible for sending mails */
-                    if (unbookedInventory > 0) {
-                        allowedUserNumber = (int) (unbookedInventory / (notifyConversionRate * bufferRate));
-                        allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
-                    }
-
-                } else {
-                    allowedUserNumber = allowedUserPerVariantMap.get(productVariantId);
-                }
-                if (allowedUserNumber > 0) {
-                    if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariantId))) {
-                        userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
-                    }
-                    Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
-                    if (alreadyNotified != null && alreadyNotified < allowedUserNumber) {
-                        /*  List of Notify request per users*/
-                        List<NotifyMe> notifyMeListPerUser;
-                        if ((finalUserListForNotificationMap.containsKey(email))) {
-                            notifyMeListPerUser = finalUserListForNotificationMap.get(email);
-                        } else {
-                            notifyMeListPerUser = new ArrayList<NotifyMe>();
+            if (notifyMeList != null) {
+                for (NotifyMe notifyMe : notifyMeList) {
+                    ProductVariant productVariant = notifyMe.getProductVariant();
+                    String productVariantId = notifyMe.getProductVariant().getId();
+                    String email = notifyMe.getEmail();
+                    int allowedUserNumber = 0;
+                    // get number of eligible user  to be notified for variant by formula
+                    if (!(allowedUserPerVariantMap.containsKey(productVariantId))) {
+                        /*send mails if unbooked inventory is greater that zero*/
+                        int unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
+                        if (isSimilarProduct) {
+                            /* product is OOS for similar product Notify me */
+                            unbookedInventory = unbookedInventory > 0 ? unbookedInventory : getSumOfSimilarProductInventory(productVariant);
                         }
-                        /*check for user subscription*/
-                        if (isUserSubscribed(email)) {
-                            boolean productAlreadyPresent = userNotifyListAlreadyContainsProduct(notifyMeListPerUser, notifyMe.getProductVariant());
-                            if (!productAlreadyPresent) {
-                                notifyMeListPerUser.add(notifyMe);
-                                finalUserListForNotificationMap.put(email, notifyMeListPerUser);
-                                userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
+                        /* Calculate number of users eligible for sending mails */
+                        if (unbookedInventory > 0) {
+                            allowedUserNumber = (int) (unbookedInventory / (notifyConversionRate * bufferRate));
+                            allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
+                        }
+
+                    } else {
+                        allowedUserNumber = allowedUserPerVariantMap.get(productVariantId);
+                    }
+                    if (allowedUserNumber > 0) {
+                        if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariantId))) {
+                            userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
+                        }
+                        Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
+                        if (alreadyNotified != null && alreadyNotified < allowedUserNumber) {
+                            /*  List of Notify request per users*/
+                            List<NotifyMe> notifyMeListPerUser;
+                            if ((finalUserListForNotificationMap.containsKey(email))) {
+                                notifyMeListPerUser = finalUserListForNotificationMap.get(email);
+                            } else {
+                                notifyMeListPerUser = new ArrayList<NotifyMe>();
                             }
-                        }
+                            /*check for user subscription*/
+                            if (isUserSubscribed(email)) {
+                                boolean productAlreadyPresent = userNotifyListAlreadyContainsProduct(notifyMeListPerUser, notifyMe.getProductVariant());
+                                if (!productAlreadyPresent) {
+                                    notifyMeListPerUser.add(notifyMe);
+                                    finalUserListForNotificationMap.put(email, notifyMeListPerUser);
+                                    userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
+                                }
+                            }
 
+                        }
                     }
                 }
             }

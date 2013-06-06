@@ -8,7 +8,7 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Notify Me List Generator">
     <s:layout-component
-            name="heading">Notify Me List Similar Product Of Deleted/OOS/Hidden Products</s:layout-component>
+            name="heading">Notify Me List Similar Products </s:layout-component>
 
     <s:layout-component name="content">
 
@@ -54,19 +54,19 @@
 
             <fieldset>
                 <legend>Send All Mails for Similar Product By Above Filled Filter</legend>
-                    <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
-                        <ol>
-                            <li>
-                                <label>Conversion Rate</label>
-                                <s:text name="conversionRate"/>
-                            </li>
-                            <li>
-                                <label>Buffer Rate</label>
-                                <s:text name="bufferRate"/>
-                            </li>
-                        </ol>
-                    </shiro:hasPermission>
-                    <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
+                <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
+                    <ol>
+                        <li>
+                            <label>Conversion Rate</label>
+                            <s:text name="conversionRate"/>
+                        </li>
+                        <li>
+                            <label>Buffer Rate</label>
+                            <s:text name="bufferRate"/>
+                        </li>
+                    </ol>
+                </shiro:hasPermission>
+                <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
             </fieldset>
         </s:form>
 
@@ -123,11 +123,17 @@
                                 <td>
                                     <c:set var="similarProductInventoryList"
                                            value="${hk:similarProductWithUnbookedInventory(notifyMeDto.productVariant)}"/>
-                                    Name -- Unbooked Inventory <br/>
-                                    <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
-                                        ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
-                                        <br/>
-                                    </c:forEach>
+                                    <c:choose>
+                                    <c:when test="${similarProductInventoryList != null && fn:length(similarProductInventoryList) > 1}">
+                                        <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
+                                            ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
+                                            <br/>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        No similar products.
+                                    </c:otherwise>
+                                    </c:choose>
                                 </td>
                                 <td>
                                         ${notifyMeDto.userCount}

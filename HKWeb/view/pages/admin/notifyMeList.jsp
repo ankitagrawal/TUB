@@ -62,7 +62,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 </s:layout-component>
-<s:layout-component name="heading">Notify Me List</s:layout-component>
+<s:layout-component name="heading">Notify Me List For Instock Product</s:layout-component>
 <s:layout-component name="content">
     <%--<s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">--%>
         <%--<s:submit name="getNotifyMeProductVariantListInStock" value="Get Product Variant In Stock"/>--%>
