@@ -30,7 +30,8 @@ public class PaymentErrorAction extends BaseAction {
 	public Resolution pre() {
 		payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 		errorMessage = HealthkartPaymentGatewayException.Error.getErrorFromCode(errorCode).getMessage();
-		return new ForwardResolution("/pages/payment/paymentError.jsp");
+        return new ForwardResolution(PaymentModeAction.class).addParameter("showFailureMessage", true).addParameter("paymentFailureGatewayOrderId",gatewayOrderId);
+//		return new ForwardResolution("/pages/payment/paymentError.jsp");
 	}
 
 	public String getGatewayOrderId() {

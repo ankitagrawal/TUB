@@ -88,7 +88,7 @@
           <div id="productCategory" class="grid_12 embedMarginBottom40">
             <div class="dottedLine"></div>
             <div class="productCategoryText">
-              <img alt="1" class="stellarLogo" src="<hk:vhostJs/>/pages/loyalty/resources/images/stellarLogo.png"/>
+              <img alt="1" class="stellarLogo" src="<hk:vhostImage/>/pages/loyalty/resources/images/stellarLogo.png"/>
             </div>
             <div class="dottedLine"></div>
           </div>

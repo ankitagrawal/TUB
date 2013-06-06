@@ -81,9 +81,10 @@ public class BucketAllocator {
                     actionableBuckets.add(EnumBucket.Dispatch_Issues);
                 }
             }
-
         }
-
+        if(baseOrder.isB2bOrder()){
+            actionableBuckets.add(EnumBucket.B2B);
+        }
         return actionableBuckets;
     }
 
@@ -99,9 +100,11 @@ public class BucketAllocator {
 
     public static EnumActionTask listCurrentActionTask(List<Bucket> buckets){
 
-        if(buckets.contains(EnumBucket.Cod_Confirmation.asBucket()) || buckets.contains(EnumBucket.Cheque_Cash_Neft.asBucket())){
+        if(buckets.contains(EnumBucket.Cod_Confirmation.asBucket()) || buckets.contains(EnumBucket.Cheque_Cash_Neft.asBucket())
+                || buckets.contains(EnumBucket.Knowlarity.asBucket()) || buckets.contains(EnumBucket.Effort_BPO.asBucket())){
             return EnumActionTask.Payment_Confirmation;
         }
+
         if(buckets.contains(EnumBucket.Online_Payment_Disputes.asBucket())){
             return EnumActionTask.Online_Authorization;
         }

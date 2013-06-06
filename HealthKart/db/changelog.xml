@@ -13055,7 +13055,15 @@
             update seo_data set meta_description=replace(meta_description, '300', '500');
         </sql>
     </changeSet>
-		<changeSet author="Tarun (generated)" id="1369725542349-1">
+    <changeSet author="Ankit Chhabra (generated)" id="1370256769302-1">
+        <addColumn tableName="user_order_karma_profile">
+            <column name="badge_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1370256769302-2">
+        <addForeignKeyConstraint baseColumnNames="badge_id" baseTableName="user_order_karma_profile"  constraintName="fk_ukarma_badge" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="badge" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Tarun (generated)" id="1369725542349-1">
         <addColumn tableName="tax">
             <column name="type" type="VARCHAR(30)"/>
         </addColumn>
