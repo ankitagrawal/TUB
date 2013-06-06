@@ -15,17 +15,19 @@
                 </tr>
                 <tr>
                     <td valign="top" align="center"><a href="http://www.healthkart.com" target="_blank"><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/healthkart.jpg"
+                            src="images/healthkart.jpg"
                             border="0"
-                            alt="HealthKart.com" title="HealthKart.com"/></a></td>
+                            alt="HealthKart.com"
+                            title="HealthKart.com"/></a>
+                    </td>
                 </tr>
                 <tr>
                     <td valign="top">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top" align="center"><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/nav.jpg"
-                            alt="HealthKart.com" usemap="#Map" title="HealthKart.com" border="0"/></td>
+                    <td valign="top" align="center"><img src="images/nav.jpg" alt="HealthKart.com" usemap="#Map"
+                                                         title="HealthKart.com"
+                                                         border="0"/></td>
                 </tr>
                 <tr>
                     <td valign="top" height="33"></td>
@@ -52,8 +54,7 @@
                             <tr>
                                 <td valign="top"
                                     style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; padding:10px 0px 10px 0px;">
-                                    -Waits
-                                </td>
+                                    <em>Waits</em></td>
                             </tr>
                             <tr>
                                 <td align="left" valign="top"
@@ -62,19 +63,14 @@
                                         of 'product x'. Terrible, we know!<br/>
                                         We let you down, so let us pick you up.</p>
 
-                                    <p>
-                                        We have two options for you.<br/>
-                                        1. You give us time, we work our rear ends to get this product back in stock.
-                                        Once we do, we will notify
-                                        you. We however, cannot guarantee on the time it will take to get it. It may
-                                        take days or forever.</p>
+                                    <p>How about we introduce you to something similar. Something that will make up for
+                                        'product x'. If you like
+                                        them, we suggest you pick them up.</p>
 
-                                    <p>2. We introduce you to something similar. Something that will make up for
-                                        'product x'. If you like them, we
-                                        suggest you pick them up.</p>
-
-                                    <p>Here we go.</p><br/>
+                                    <p>&nbsp;</p><br/>
+                                </td>
                             </tr>
+
 
 
                         <#list productNotifyList as  notify>
@@ -85,55 +81,50 @@
                                         suggest</p></td>
                             </tr>
                         <tr>
-                            <#list similarProductMap?keys  as  key>
-                                <#assign similarProductList = similarProductMap[notify.productVariant.product.id]>
-                                <#if similarProductList?? >
-                                    <#list  similarProductList as  similarProduct>
-                                        <td valign="top">
-                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                <tr>
-                                                    <td align="center" valign="middle"
-                                                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
-                                                    ${similarProduct.name}
-                                                    </td>
-                                                    <#list productPriceMap?keys  as  key>
-                                                        <#assign highestDiscountVariantList = productPriceMap[similarProduct.id]>
-                                                        <#list  highestDiscountVariantList as  discountedVariant>
-                                                            <td align="center" valign="middle"
-                                                                style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
-                                                                Rs. {discountedVariant.hkPrice}
-                                                            </td>
-                                                        </#list>
-                                                    </#list>
-                                                    <td align="center" valign="top"
-                                                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
 
-                                                        <table align="center" border="0" cellspacing="0"
-                                                               cellpadding="0">
-                                                            <tr>
-                                                                <td valign="middle"
-                                                                    style="color:#000; font-family:Verdana, Geneva, sans-serif; font-weight:bold;">
-                                                                    <a href="www.healthkart.com/product/${similarProduct.slug}/${similarProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${similarProduct.id}-${currentDate}"
-                                                                       target="_blank"
-                                                                       style="font-weight:bold; color:#646464; padding:2px 10px 4px 10px; text-decoration:none; font-size:12px; display:block; border:1px solid #646464;">Buy
-                                                                        Now</a></td>
-                                                            </tr>
-                                                        </table>
+                            <#assign  map =  similarProductMap >
+                            <#assign similarProductList = map[notify.productVariant.product.id]>
 
-                                                    </td>
-                                                </tr>
-
-                                            </table>
-                                        </td>
-                                    </tr>
-
+                            <#list  similarProductList as  similarProduct>
+                                <td valign="top">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td height="25"></td>
-                                        </tr>
-                                    </#list>
-                                </#if>
-                            </#list>
+                                            <td align="center" valign="middle"
+                                                style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
+                                            ${similarProduct.name}
+                                            </td>
+                                            <td align="center" valign="middle"
+                                                style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
+                                                <#assign priceMap =  productPriceMap>
+                                                <#assign highestDiscountVariant = priceMap[similarProduct.id]>
+                                                Rs. {highestDiscountVariant.hkPrice}
+                                            </td>
+                                            <td align="center" valign="top"
+                                                style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
 
+                                                <table align="center" border="0" cellspacing="0"
+                                                       cellpadding="0">
+                                                    <tr>
+                                                        <td valign="middle"
+                                                            style="color:#000; font-family:Verdana, Geneva, sans-serif; font-weight:bold;">
+                                                            <a href="www.healthkart.com/product/${similarProduct.slug}/${similarProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${similarProduct.id}-${currentDate}"
+                                                               target="_blank"
+                                                               style="font-weight:bold; color:#646464; padding:2px 10px 4px 10px; text-decoration:none; font-size:12px; display:block; border:1px solid #646464;">Buy
+                                                                Now</a></td>
+                                                    </tr>
+                                                </table>
+
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+                            </tr>
+
+                                <tr>
+                                    <td height="25"></td>
+                                </tr>
+                            </#list>
                             <tr>
                                 <td height="25"></td>
                             </tr>
@@ -154,11 +145,15 @@
                         style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
                         <img
                                 src="images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a style="color:#646464">info@healthkart.com</a>
-                        | +91 124 4551616 &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp;
+                        | +91 124 4551616 &nbsp;&nbsp;&nbsp;<img
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
+                            alt="HealthKart"/>&nbsp;
                         <a
                                 href="https://www.facebook.com/healthkart" style="color:#646464; text-decoration:none;">Like
                             us on
-                            facebook</a> &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp;
+                            facebook</a> &nbsp;&nbsp;&nbsp;<img
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
+                            alt="HealthKart"/>&nbsp;
                         <a
                                 href="https://www.twitter.com/healthkart" style="color:#646464; text-decoration:none;">Tweet
                             about
@@ -179,8 +174,10 @@
                     <td height="12" valign="top"></td>
                 </tr>
                 <tr>
-                    <td valign="top" align="center"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/all-heart.jpg" border="0"
-                                                         alt="ESTD 2011 ALL HEART"/></td>
+                    <td valign="top" align="center"><img
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/all-heart.jpg"
+                            border="0"
+                            alt="ESTD 2011 ALL HEART"/></td>
                 </tr>
                 <tr>
                     <td valign="top" height="33"></td>

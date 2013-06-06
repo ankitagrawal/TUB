@@ -344,6 +344,7 @@ public class AdminEmailManager {
             User user = userService.findByLogin(emailId);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             String currentDate = sdf.format(new Date());
+            Map<String, ProductVariant> productPriceRangeMap = new HashMap<String, ProductVariant>();
             valuesMap.put("currentDate", currentDate);
             /* find existing recipients or create recipients through the emails ids passed */
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
@@ -357,7 +358,6 @@ public class AdminEmailManager {
                 /*User has asked for multiple variant notification  */
                 valuesMap.put("productNotifyList", notifyMeListPerUser);
                 Map<String, List<Product>> productSimilarProductMap = new HashMap<String, List<Product>>();
-                Map<String, ProductVariant> productPriceRangeMap = new HashMap<String, ProductVariant>();
                 for (NotifyMe notifyMe : notifyMeListPerUser) {
                     List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMe.getProductVariant(), 3);
                     if (similarProductList != null && similarProductList.size() > 0) {
@@ -384,6 +384,10 @@ public class AdminEmailManager {
                 List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMeObject.getProductVariant(), 3);
                 if (similarProductList != null && similarProductList.size() > 0) {
                     valuesMap.put("similarProductList", similarProductList);
+                    for (Product product : similarProductList) {
+                        productPriceRangeMap.put(product.getId(), product.getMaximumDiscountProducVariant());
+                        valuesMap.put("productPriceMap", productPriceRangeMap);
+                    }
                     Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserForSimilarProductsForSingleVariants);
                     mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
                 }
@@ -417,6 +421,9 @@ public class AdminEmailManager {
             List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);
             NotifyMe notifyMeObject = notifyMeListPerUser.get(0);
             User user = userService.findByLogin(emailId);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String currentDate = sdf.format(new Date());
+            valuesMap.put("currentDate", currentDate);
             // find existing recipients or create recipients through the emails ids passed
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
             if (user != null) {

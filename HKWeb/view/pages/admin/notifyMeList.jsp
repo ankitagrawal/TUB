@@ -141,7 +141,7 @@
                     </li>
                 </ol>
             </shiro:hasPermission>
-            <s:submit name="sendAllNotifyMails" value="SendAllNotifyMailsForInstockProducts"/>
+            <s:submit name="sendAllNotifyMailsForAvailableProductVariant" value="SendAllNotifyMailsForInstockProducts"/>
         </s:form>
 
     </fieldset>

@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.akube.framework.util.DateUtils;
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.impl.dao.email.NotifyMeDto;
 import com.hk.web.action.core.user.NotifyMeAction;
@@ -30,6 +31,7 @@ import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -210,7 +212,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         return new RedirectResolution(NotifyMeListAction.class);
     }
 
-    /*According to conversion logic*/
+    /*According to conversion logic for Automation*/
     public Resolution sendAllNotifyMailsForAvailableProductVariant() {
         if (conversionRate > 1) {
             addRedirectAlertMessage(new SimpleMessage("enter conversion rate less than 1"));
@@ -222,7 +224,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     /*pre method for similar product screen*/
     public Resolution notifyMeListForDeletedHiddenOOSProduct() {
-        if(productDeleted == null){
+        if (productDeleted == null) {
             productDeleted = true;
         }
         if (!productDeleted && (productInStock == null || !productInStock) && (productHidden == null || !productHidden)) {
@@ -239,12 +241,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     /*For Similar Products*/
     public Resolution sendAllMailsForDeletedProducts() {
-        if (!productDeleted && (productInStock == null || !productInStock) && (productHidden == null || !productHidden)) {
-            addRedirectAlertMessage(new SimpleMessage("Please mark product as deleted/OOS/Hidden value , to qualify for similar product mails"));
-            return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
-        }
-        notifyMeList = notifyMeDao.searchNotifyMe(startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
-        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForDeletedOOSHidden(conversionRate, bufferRate, notifyMeList);
+        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForDeletedOOSHidden(conversionRate, bufferRate);
         addRedirectAlertMessage(new SimpleMessage("Total Emails Sent" + countOfSentMail));
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }

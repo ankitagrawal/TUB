@@ -138,6 +138,10 @@ public class DateUtils {
         return formatter.parseDateTime(dateString);
     }
 
+    public static DateTime startOfMonthBack(DateTime currentDate) {
+        return currentDate.minusMonths(1);
+    }
+
 
     public static void main(String[] args) {
     System.out.println(getEndOfDay(BaseUtils.getCurrentTimestamp()));

@@ -18,7 +18,7 @@ public interface ProductVariantNotifyMeEmailService {
 
     public void sendNotifyMeEmailForInStockProducts(final float notifyConversionRate, final int bufferRate);
 
-    public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate,List<NotifyMe> notifyMeList);
+    public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate);
 
     public List<ProductInventoryDto> getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(ProductVariant productVariant);
 

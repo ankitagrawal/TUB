@@ -1,8 +1,10 @@
 package com.hk.admin.impl.service.email;
 
+import com.akube.framework.util.DateUtils;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.SimilarProduct;
@@ -13,6 +15,7 @@ import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.UserService;
+import org.joda.time.DateTime;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +56,18 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
 
 
     /*send mails for product which are deleted or hidden or out of stock*/
-    public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate, List<NotifyMe> notifyMeList) {
+    public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate) {
+        Date monthBackDate = DateUtils.startOfMonthBack(new DateTime()).toDate();
+        List<NotifyMe> notifyMeList = new ArrayList<NotifyMe>();
+        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMe(null, monthBackDate, null, null, null, false, false, null);
+        if (nonDeletedOOSList != null && nonDeletedOOSList.size() > 0) {
+            notifyMeList.addAll(nonDeletedOOSList);
+        }
+        List<NotifyMe> deletedList = notifyMeDao.searchNotifyMe(null, null, null, null, null, null, true, null);
+        if (deletedList != null && deletedList.size() > 0) {
+            notifyMeList.addAll(deletedList);
+        }
+
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, notifyMeList);
         return adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
     }
