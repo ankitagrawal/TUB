@@ -309,13 +309,14 @@ public class OrderServiceImpl implements OrderService {
     private Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            shippingOrders = orderSplitter.split(order.getId());
+//            shippingOrders = orderSplitter.split(order.getId());
+            shippingOrders = splitOrder(order);
         } catch (NoSkuException e) {
             logger.error("Sku could not be found" + e.getMessage());
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
-            logger.error("Order could not be split due to some exception ", e);
+            logger.error("Order could not be split due to some exception ", e.getMessage());
         }
         return shippingOrders;
     }
