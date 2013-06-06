@@ -112,10 +112,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public HkPaymentService getHkPaymentService(Gateway gateway) {
-        if(gateway != null){
-            return ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        HkPaymentService hkPaymentService = null;
+        if(gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
+            hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
         }
-        return null;
+        return hkPaymentService;
     }
 
     @Override

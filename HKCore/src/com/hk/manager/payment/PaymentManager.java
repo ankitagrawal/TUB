@@ -656,6 +656,10 @@ public class PaymentManager {
             if(hkRefundPaymentResponse != null && hkRefundPaymentResponse.getPaymentStatus() != null
                     && EnumPaymentStatus.REFUNDED.getId() == hkRefundPaymentResponse.getPaymentStatus().getId()){
                 gatewayAmount = hkRefundPaymentResponse.getAmount();
+                //TODO: in case of icici amount is not returned,
+                if(gatewayAmount == null){
+                    gatewayAmount = amount;
+                }
                 paymentService.verifyPaymentAmount(gatewayAmount, amount);
             }
             paymentService.updatePaymentBasedOnResponse(hkRefundPaymentResponse,refundRequestPayment);
