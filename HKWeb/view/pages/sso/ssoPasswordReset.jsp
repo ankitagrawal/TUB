@@ -1,37 +1,31 @@
-
-
 <%@ include file="/includes/_taglibInclude.jsp"%>
 <c:set var="httpPath" value="${pageContext.request.contextPath}" />
-<s:useActionBean beanclass="com.hk.web.action.core.auth.SSOLoginAction" var="sla" />
+<s:useActionBean beanclass="com.hk.web.action.core.user.SSOPasswordResetAction" var="resetBean" />
 <!DOCTYPE HTML>
 <html>
 <head>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-    <title>Healthkart Login</title>
+    <title>HealthKart - Reset Password</title>
     <link type="text/css" rel="stylesheet" href="${httpPath}/css/single_login.css" />
 </head>
 <body>
 <div id="container">
-    <div id="tabbox">
-        <img src="${httpPath}/images/hk_bar_SSO.jpg" alt="top_stripe" border="0" height="10" width="705">
-    </div>
     <div class="logo_block">
-        <a title="go to healthkart home" href="/"><img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="40" width="140"></a>
-        <a title="go to healthkart home" href="/"><img src="${httpPath}/images/hk_logo.png" alt="Healthkart Plus Logo" border="0" height="25" width="140"></a>
+        <img src="${httpPath}/images/hkp-logo.jpg" alt="HealthKart Plus Logo" border="0">
+        <img src="${httpPath}/images/hk_logo.png" alt="HealthKart Logo" border="0">
 
 
     </div>
-    <s:errors/>
     <div id="panel">
         <h1 class="login-header">Reset your password</h1>
 
         <div id="loginbox">
             <s:form beanclass="com.hk.web.action.core.user.SSOPasswordResetAction" method="post">
+                <div>
                 <s:errors/>
-
-                <s:errors/>
+                </div>
                 <s:hidden name="token" value="${resetBean.token}"/>
-                <div >Enter the new password:</div>
+                <div>Enter the new password:</div>
                 <s:password name="password" />
                 <div class="label">Confirm Password: </div>
                 <div><s:password name="passwordConfirm"/></div>
@@ -42,7 +36,14 @@
             </s:form>
         </div>
     </div>
-    <div class="footer"> <img src="${httpPath}/images/hk_bar_SSO.jpg" alt="bottom_stripe" border="0" height="10" width="705"> </div>
+  <div class="clear"></div>
+  <%--<div class="footer">
+    <br/>
+    <span class="bottom">
+                <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of
+                  Use</a>
+        | &copy; 2013 HealthKart.com</span>
+  </div>--%>
 </div>
 </body>
 </html>

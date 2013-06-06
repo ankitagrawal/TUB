@@ -27,7 +27,7 @@ $(document).ready(function(){
 				class="embedMargin119">Welcome to healthkart stellar !!</div>
 			<div class="topText" id="message1"
 				style="float: left; margin-left: 100px; width: 680px;">
-				Hi! <br> Stellar is healthkart’s own loyalty program <br>
+				Hi!
 				Shop with us, get rewarded with points that you can later redeem
 				here. <br> What more, you can convert these points into store
 				credits and use them <br> to buy things off healthkart.com <br>
