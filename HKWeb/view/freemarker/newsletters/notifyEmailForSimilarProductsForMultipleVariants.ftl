@@ -16,7 +16,7 @@ You requested to be notified when some products were back in stock
                 </tr>
                 <tr>
                     <td valign="top" align="center"><a href="http://www.healthkart.com" target="_blank"><img
-                            src="images/healthkart.jpg"
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/healthkart.jpg"
                             border="0"
                             alt="HealthKart.com"
                             title="HealthKart.com"/></a>
@@ -26,7 +26,7 @@ You requested to be notified when some products were back in stock
                     <td valign="top">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top" align="center"><img src="images/nav.jpg" alt="HealthKart.com" usemap="#Map"
+                    <td valign="top" align="center"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/nav.jpg" alt="HealthKart.com" usemap="#Map"
                                                          title="HealthKart.com"
                                                          border="0"/></td>
                 </tr>
@@ -38,7 +38,7 @@ You requested to be notified when some products were back in stock
                         <table width="337" border="0" cellspacing="0" cellpadding="0" align="center"
                                style="font-size:13px; font-family:Verdana, Geneva, sans-serif">
                             <tr>
-                                <td align="left" valign="top"><img src="images/one-that-got-away.png" border="0"
+                                <td align="left" valign="top"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/one-that-got-away.png" border="0"
                                                                    alt="HealthKart"/></td>
                             </tr>
                             <tr>
