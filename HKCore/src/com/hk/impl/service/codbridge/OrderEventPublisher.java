@@ -146,16 +146,16 @@ public class OrderEventPublisher {
     public boolean publishOrderPlacedEvent(final Order order){
         boolean messagePublished = false;
         try{
-        	final User loggedInUser = userService.getLoggedInUser();
         	splitExecutorService.submit(new Runnable() {
 				@Override
 				public void run() {
 					try {
+            final User loggedInUser = userService.getLoggedInUser();
 						UserThreadLocal.set(loggedInUser);
 						orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 					} catch (Throwable t) {
 						logger.error("Error while Splitting the order", t);
-						orderLoggingService.logOrderActivity(order, loggedInUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), t.getMessage());
+						orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), t.getMessage());
 					} finally {
 						UserThreadLocal.unset();
 					}
