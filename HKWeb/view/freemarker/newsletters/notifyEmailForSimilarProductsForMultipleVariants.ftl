@@ -1,4 +1,4 @@
-You requested to be notified when some products were back in stock
+Talking 'bout the one that got away!
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -35,7 +35,7 @@ You requested to be notified when some products were back in stock
                 </tr>
                 <tr>
                     <td align="center" valign="top">
-                        <table width="337" border="0" cellspacing="0" cellpadding="0" align="center"
+                        <table width="400" border="0" cellspacing="0" cellpadding="0" align="center"
                                style="font-size:13px; font-family:Verdana, Geneva, sans-serif">
                             <tr>
                                 <td align="left" valign="top"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/one-that-got-away.png" border="0"
@@ -48,7 +48,7 @@ You requested to be notified when some products were back in stock
                                 <td align="left" valign="top"
                                     style="font-family:Verdana, Geneva, sans-serif; font-size:21px; line-height:25px; color:#646464;">
                                     Talking 'bout
-                                    the one<br/>
+                                    the ones<br/>
                                     that got away!
                                 </td>
                             </tr>
@@ -78,8 +78,7 @@ You requested to be notified when some products were back in stock
                             <tr>
                                 <td height="25"
                                     style="border-top:0px; font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
-                                    <p>You searched for Product  ${notify.productVariant.product.name} , may we
-                                        suggest</p></td>
+                                    <p>For Product ${notify.productVariant.product.name}, may we suggest</p></td>
                             </tr>
                         <tr>
 
@@ -89,7 +88,7 @@ You requested to be notified when some products were back in stock
                                 <td valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td align="center" valign="middle"
+                                            <td align="left" valign="middle"
                                                 style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
                                             ${similarProduct.name}
                                             </td>
@@ -99,7 +98,7 @@ You requested to be notified when some products were back in stock
                                                 <#assign highestDiscountVariant = priceMap[similarProduct.id]>
                                                 Rs. ${highestDiscountVariant.hkPrice}
                                             </td>
-                                            <td align="center" valign="top"
+                                            <td align="right" valign="top"
                                                 style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
 
                                                 <table align="center" border="0" cellspacing="0"
@@ -142,21 +141,12 @@ You requested to be notified when some products were back in stock
                 </tr>
                 <tr>
                     <td colspan="3" align="center" valign="top"
-                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
-                        <img
-                                src="images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a style="color:#646464">info@healthkart.com</a>
-                        | +91 124 4551616 &nbsp;&nbsp;&nbsp;<img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
-                            alt="HealthKart"/>&nbsp;
-                        <a
-                                href="https://www.facebook.com/healthkart" style="color:#646464; text-decoration:none;">Like
-                            us on
-                            facebook</a> &nbsp;&nbsp;&nbsp;<img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
-                            alt="HealthKart"/>&nbsp;
-                        <a
-                                href="https://www.twitter.com/healthkart" style="color:#646464; text-decoration:none;">Tweet
-                            about
+                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;"><img
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a style="color:#646464">info@healthkart.com</a>
+                        | +91 124 4616444 &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a
+                                href="https://www.facebook.com/healthkart" style="color:#646464; text-decoration:none;">Like us on
+                            facebook</a> &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a
+                                href="https://www.twitter.com/healthkart" style="color:#646464; text-decoration:none;">Tweet about
                             us</a></td>
                 </tr>
                 <tr>

@@ -1,4 +1,4 @@
-You requested to be notified when ${product.name} was back in stock
+Talking 'bout the one that got away!
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -36,7 +36,7 @@ You requested to be notified when ${product.name} was back in stock
                 </tr>
                 <tr>
                     <td align="center" valign="top">
-                        <table width="337" border="0" cellspacing="0" cellpadding="0" align="center"
+                        <table width="400" border="0" cellspacing="0" cellpadding="0" align="center"
                                style="font-size:13px; font-family:Verdana, Geneva, sans-serif">
                             <tr>
                                 <td align="left" valign="top"><img
@@ -63,7 +63,7 @@ You requested to be notified when ${product.name} was back in stock
                                 <td align="left" valign="top"
                                     style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
                                     <p>We ran out
-                                        of ${product.name}. Terrible, we know!<br/>
+                                        of  ${product.name}. Terrible, we know!<br/>
                                         We let you down, so let us pick you up.</p>
 
                                     <p>How about we introduce you to something similar. Something that will make up for
@@ -86,7 +86,7 @@ You requested to be notified when ${product.name} was back in stock
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <#list  similarProductList as  similarProduct>
                                         <tr>
-                                            <td align="center" valign="middle"
+                                            <td align="left" valign="middle"
                                                 style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
                                             ${similarProduct.name}
                                             </td>
@@ -140,21 +140,12 @@ You requested to be notified when ${product.name} was back in stock
                 </tr>
                 <tr>
                     <td colspan="3" align="center" valign="top"
-                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
-                        <img
-                                src="images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a style="color:#646464">info@healthkart.com</a>
-                        | +91 124 4551616 &nbsp;&nbsp;&nbsp;<img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
-                            alt="HealthKart"/>&nbsp;
-                        <a
-                                href="https://www.facebook.com/healthkart" style="color:#646464; text-decoration:none;">Like
-                            us on
-                            facebook</a> &nbsp;&nbsp;&nbsp;<img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
-                            alt="HealthKart"/>&nbsp;
-                        <a
-                                href="https://www.twitter.com/healthkart" style="color:#646464; text-decoration:none;">Tweet
-                            about
+                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;"><img
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a style="color:#646464">info@healthkart.com</a>
+                        | +91 124 4616444 &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a
+                                href="https://www.facebook.com/healthkart" style="color:#646464; text-decoration:none;">Like us on
+                            facebook</a> &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a
+                                href="https://www.twitter.com/healthkart" style="color:#646464; text-decoration:none;">Tweet about
                             us</a></td>
                 </tr>
                 <tr>

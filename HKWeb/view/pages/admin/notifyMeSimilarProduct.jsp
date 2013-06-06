@@ -25,7 +25,6 @@
                 Date:</label><s:text class="date_input endDate" style="width:150px"
                                      formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
             <label>Product Id</label><s:text style="width:150px" name="product"/>
-            <label>Product Variant Id</label><s:text style="width:150px" name="productVariant"/><br/>
             <label>Primary Category</label><s:select name="primaryCategory">
             <s:option value="">-ALL-</s:option>
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
