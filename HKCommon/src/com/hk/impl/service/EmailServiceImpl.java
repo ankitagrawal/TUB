@@ -232,9 +232,9 @@ public class EmailServiceImpl implements EmailService {
     }
     
     public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, Map<String, String> headerMap) {
+            String replyToName, String addCc, Map<String, String> headerMap){
         // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
-
+    	boolean isSent = true;
         Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
         if (htmlEmailMap == null) {
             return false;
@@ -242,9 +242,14 @@ public class EmailServiceImpl implements EmailService {
 
         for (Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
             HtmlEmail htmlEmail = mapEntry.getValue();
-            // send this email asynchrounously, we do not want to wait for this process
+            try {
+				htmlEmail.addCc(addCc);
+			} catch (EmailException e) {
+				logger.error("EmailException in adding CC ", addCc);
+	            isSent = false;
+			}
             sendEmail(htmlEmail);
         }
-        return true;
+        return isSent;
     }
 }
