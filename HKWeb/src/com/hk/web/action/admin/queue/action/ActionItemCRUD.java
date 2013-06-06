@@ -60,6 +60,7 @@ public class ActionItemCRUD extends BaseAction {
 
     @Autowired
     private BucketService bucketService;
+    private User user;
 
 
     @JsonHandler
@@ -83,8 +84,7 @@ public class ActionItemCRUD extends BaseAction {
         return new JsonResolution(healthkartResponse);
     }
 
-
-    public Resolution save() {
+      public Resolution save() {
         List<Bucket> actionItemBuckets = new ArrayList<Bucket>();
         User user = getUserService().getUserById(getPrincipal().getId());
         List<Bucket> userBuckets = user.getBuckets();
@@ -283,5 +283,13 @@ public class ActionItemCRUD extends BaseAction {
 
     public void setActionItems(List<ActionItem> actionItems) {
         this.actionItems = actionItems;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

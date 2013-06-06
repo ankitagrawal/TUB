@@ -35,5 +35,7 @@ public interface ActionItemDao extends BaseDao
 
     List<ActionTask> listNextActionTasks(ActionTask currentActionTask, List<Bucket> buckets);
 
+     public List<ActionTask> listCurrentActionTask(ActionTask currentActionTask, List<Bucket> buckets);
+
     public List<ActionItem> getActionItemsOfActionQueue ();
 }

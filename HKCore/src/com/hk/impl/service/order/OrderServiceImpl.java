@@ -16,7 +16,6 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.OrderSplitterFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
@@ -60,7 +59,6 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
-
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -310,8 +308,8 @@ public class OrderServiceImpl implements OrderService {
     private Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-//            shippingOrders = orderSplitter.split(order.getId());
-            shippingOrders = splitOrder(order);
+            shippingOrders = orderSplitter.split(order.getId());
+//            shippingOrders = splitOrder(order);
         } catch (NoSkuException e) {
             logger.error("Sku could not be found" + e.getMessage());
         } catch (OrderSplitException e) {
@@ -679,7 +677,7 @@ public class OrderServiceImpl implements OrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
+                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder, true);
                 }
             }
 

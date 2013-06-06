@@ -106,8 +106,9 @@
                     <shiro:principal property="firstName"/>
                   </shiro:hasAnyRoles>
                 </strong>
+              	<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
                 <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}"/>
-                <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
+          		 <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
                   <c:choose>
                     <c:when test="${badge.badgeName == 'PLATINUM'}">
                       <span style="font-size:1.1em;color:white;
@@ -127,7 +128,9 @@
                     </c:when>
                     
                   </c:choose>
-            </span>
+                  </a>
+                  </shiro:hasRole>
+              </span>
           <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
             <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction"
                     title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber
