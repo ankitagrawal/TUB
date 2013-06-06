@@ -263,7 +263,7 @@ public class CheckPaymentAction extends BaseAction {
                 PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
 
                 if(hkrespObj != null){
-                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey());
+                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus((String)hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
                     if(hkRespPayStatus != null){
                         hkPaymentStatus = hkRespPayStatus.asPaymenStatus();
                         boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
