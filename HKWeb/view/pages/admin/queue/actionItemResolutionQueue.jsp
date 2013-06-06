@@ -262,7 +262,11 @@
                         <%--</div>--%>
                 </td>
                 <td width="70%" style="border:1px solid darkgreen; padding:3px;">
-                        ${actionItem.shippingOrder.id}
+                    <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction"
+                            event="searchOrders"
+                            target="_blank">
+                        <s:param name="orderId" value="${actionItem.shippingOrder.baseOrder.id}"/>
+                    </s:link>
                     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                      shippingOrder="${actionItem.shippingOrder}"
                                      isActionQueue="true"/>
