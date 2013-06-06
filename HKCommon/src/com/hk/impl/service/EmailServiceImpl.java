@@ -230,4 +230,21 @@ public class EmailServiceImpl implements EmailService {
             logger.error("Error while sending bulk emails", ex);
         }
     }
+    
+    public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+            String replyToName, Map<String, String> headerMap) {
+        // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
+
+        Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
+        if (htmlEmailMap == null) {
+            return false;
+        }
+
+        for (Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
+            HtmlEmail htmlEmail = mapEntry.getValue();
+            // send this email asynchrounously, we do not want to wait for this process
+            sendEmail(htmlEmail);
+        }
+        return true;
+    }
 }

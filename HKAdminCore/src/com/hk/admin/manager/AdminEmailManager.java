@@ -1003,6 +1003,14 @@ public class AdminEmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
     }
 
+    public boolean sendPOMailToSupplier(PurchaseOrder purchaseOrder, String supplierEmail) {
+    	//TODO
+    	HashMap valuesMap = new HashMap();
+        valuesMap.put("purchaseOrder", purchaseOrder);
+        String fromPurchaseEmail = "purchase@healthkart.com";
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, null);
+	}
 
     static enum Product_Status {
 
@@ -1097,4 +1105,5 @@ public class AdminEmailManager {
         this.adminEmailService = adminEmailService;
 
     }
+
 }

@@ -256,6 +256,17 @@ function validateSubmitForm() {
 			returnFalse = true;
 			return false;
 		}
+		
+		if(parseFloat($('#poStatus :selected').val())==30 && ${actionBean.purchaseOrder.supplier.email_id==null}){
+			var email = prompt("Please enter Supplier EmailId : ", "");
+			if(email==null){
+				alert("You did not enter any emailId.");
+				return false;
+			}
+			else{
+				$("#supplierEmail").val(email);
+			}
+		}
 	});
 
 
@@ -296,6 +307,7 @@ function temp() {
 <s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" onsubmit="return validateSubmitForm();">
 <s:hidden name="purchaseOrder" value="${pa.purchaseOrder}"/>
 <s:hidden name="previousPurchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus}"/>
+<input type="hidden" id="supplierEmail" name="supplierEmail"/>
 <table>
 	<tr>
         <td>Supplier Name</td>
@@ -371,7 +383,7 @@ function temp() {
 
 	<tr>
 		<td>Status</td>
-		<td class="status">
+		<td class="status" id="poStatus">
 			<c:choose>
 				<c:when test="${pa.purchaseOrder.purchaseOrderStatus.id == poCancelled}">
 					${pa.purchaseOrder.purchaseOrderStatus.name}
