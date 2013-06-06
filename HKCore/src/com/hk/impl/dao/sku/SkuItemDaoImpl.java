@@ -70,7 +70,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
             "group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
         List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
             .setParameter("productVariant", productVariant)
-            .setParameter("warehouseList", warehouseList).list();
+            .setParameterList("warehouseList", warehouseList).list();
         if (skuItemIdList != null && skuItemIdList.size() > bookedQty) {
             List<Long> firstUnBookedSkuItem = skuItemIdList.subList(bookedQty.intValue(), bookedQty.intValue() + 1);
             String query = "select distinct si.skuGroup from SkuItem si where si.id = :skuItemId order by si.skuGroup.mrp asc";
