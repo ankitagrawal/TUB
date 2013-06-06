@@ -56,23 +56,13 @@ public interface PaymentService {
      */
     public boolean sendPaymentEmailForOrder(Order order);
 
-    public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn);
-
     public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException;
 
     public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderId);
 
-    public void verifyPaymentStatus(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus) throws HealthkartPaymentGatewayException;
-
-    public void sendInValidPaymentStatusChangeToAdmin(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus, String gatewayOrderIdForFaultyPayments);
-
     public boolean updatePaymentBasedOnResponse(HkPaymentResponse gatewayPayment, Payment actualPayment);
 
-    public List<Payment> findByBasePayment(Payment basePayment);
-
     public List<Payment> listPaymentFamily(String gatewayOrderId);
-
-    public void verifyHkRequestAndResponse(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) throws HealthkartPaymentGatewayException;
 
     public List<Map<String,Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList);
 

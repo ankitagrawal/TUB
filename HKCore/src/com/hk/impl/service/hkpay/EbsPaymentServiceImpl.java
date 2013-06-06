@@ -333,22 +333,4 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         }
         return hkPaymentResponse;
     }
-
-   /* private void filterAndSendMail(String gatewayOrderId, Map<String, Object> respObject) {
-
-        Payment payment = paymentService.findByGatewayOrderId(gatewayOrderId);
-
-        if (respObject != null && !respObject.isEmpty()) {
-
-            String resp_code = (String) respObject.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey());
-            if (!isPaymentStatusEqual(payment.getPaymentStatus().getName(), resp_code)) {
-                emailManager.sendAdminPaymentStatusChangeEmail(userService.getLoggedInUser(), payment.getPaymentStatus().getName(), resp_code, gatewayOrderId);
-            }
-        }
-
-    }
-
-    private boolean isPaymentStatusEqual(String oldStatus, String newStatus) {
-        return (oldStatus != null && oldStatus.equalsIgnoreCase(newStatus));
-    }*/
 }

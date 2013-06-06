@@ -173,11 +173,6 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn) {
-        return getPaymentDao().findByGatewayReferenceIdAndRrn(gatewayReferenceId,rrn);  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException {  //TODO: change ==
         if(!gatewayAmount.equals(actualAmount)){
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH);
@@ -189,18 +184,6 @@ public class PaymentServiceImpl implements PaymentService {
         if(gatewayOrderId != null){
             emailManager.sendPaymentMisMatchMailToAdmin(actualAmt,gatewayAmount,gatewayOrderId);
         }
-    }
-
-    @Override
-    public void verifyPaymentStatus(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus) throws HealthkartPaymentGatewayException {
-        if(!(gatewayPaymentStatus!= null && paymentStatus!= null && gatewayPaymentStatus.equals(paymentStatus))){
-            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_STATUS_CHANGE);
-        }
-    }
-
-    @Override
-    public void sendInValidPaymentStatusChangeToAdmin(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus, String gatewayOrderIdForFaultyPayments) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -240,17 +223,6 @@ public class PaymentServiceImpl implements PaymentService {
         return isUpdated;
     }
 
-    @Override
-    public List<Payment> findByBasePayment(Payment basePayment) {
-        Gateway gateway = basePayment.getGateway();
-        if(gateway!=null && EnumGateway.CITRUS.getId().equals(gateway.getId())){
-            return getPaymentDao().listByRRN(basePayment.getRrn());
-        } else if(gateway != null && EnumGateway.EBS.getId().equals(gateway.getId())){
-            return getPaymentDao().listByGatewayReferenceOrderId(basePayment.getGatewayReferenceId());
-        }
-        return null;
-    }
-
     // TODO: Not needed now, check if needed later
     /*@Override
     public void verifyIfRefundAmountValid(List<Payment> paymentList, Double amount) throws HealthkartPaymentGatewayException {
@@ -285,22 +257,6 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return paymentFamilyList;
     }
-
-    @Override
-    public void verifyHkRequestAndResponse(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) throws HealthkartPaymentGatewayException {
-        if(hkPaymentRequestList == null || hkPaymentRequestList.isEmpty()){
-           throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.NO_REQUEST_PAYMENT_FOUND);
-        }
-        if(hkPaymentResponseList == null || hkPaymentResponseList.isEmpty()){
-            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.NO_RESPONSE_PAYMENT_FOUND);
-        }
-        if(hkPaymentRequestList.size() != hkPaymentResponseList.size()){
-            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.REQUEST_RESPONSE_SIZE_MISMATCH);
-        }
-
-    }
-
-
 
     @Override
     public List<Map<String, Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) {
