@@ -117,7 +117,6 @@
     </tr>
     </thead>
 </c:if>
-${shippingOrder.id}
 <c:forEach items="${shippingOrders}" var="shippingOrder" varStatus="shippingOrderCtr">
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="payment" value="${shippingOrder.baseOrder.payment}"/>

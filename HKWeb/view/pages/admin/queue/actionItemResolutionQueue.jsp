@@ -265,7 +265,7 @@
                             event="searchOrders"
                             target="_blank">
                         <s:param name="orderId" value="${actionItem.shippingOrder.baseOrder.id}"/>
-                        ${actionItem.shippingOrder.baseOrder.id}
+                        ${actionItem.shippingOrder.baseOrder.payment.gatewayOrderId}
                     </s:link>
                     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                      shippingOrder="${actionItem.shippingOrder}"
