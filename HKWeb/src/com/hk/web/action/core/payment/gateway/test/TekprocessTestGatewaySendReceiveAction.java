@@ -98,7 +98,7 @@ public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySe
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (TekprocessTestPaymentGatewayWrapper.authStatus_PendingApproval.equals(authStatus)) {
 				paymentManager.pendingApproval(gatewayOrderId);
-				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (TekprocessTestPaymentGatewayWrapper.authStatus_Fail.equals(authStatus)) {
 				paymentManager.fail(gatewayOrderId);
 				resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
