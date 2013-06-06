@@ -259,12 +259,13 @@ function validateSubmitForm() {
 		
 		if(parseFloat($('#poStatus :selected').val())==30 && ${actionBean.purchaseOrder.supplier.email_id==null}){
 			var email = prompt("Please enter Supplier EmailId : ", "");
-			if(email==null){
+			if(email==null || email=""){
 				alert("You did not enter any emailId.");
 				return false;
 			}
 			else{
 				$("#supplierEmail").val(email);
+				return true;
 			}
 		}
 	});
