@@ -653,7 +653,8 @@ public class PaymentManager {
 
             // Also verify if payment amount refunded be gateway and amount requested for refund is same, if not send mail to admin
 
-            if(hkRefundPaymentResponse != null && EnumPaymentStatus.REFUNDED.getId() == hkRefundPaymentResponse.getPaymentStatus().getId()){
+            if(hkRefundPaymentResponse != null && hkRefundPaymentResponse.getPaymentStatus() != null
+                    && EnumPaymentStatus.REFUNDED.getId() == hkRefundPaymentResponse.getPaymentStatus().getId()){
                 gatewayAmount = hkRefundPaymentResponse.getAmount();
                 paymentService.verifyPaymentAmount(gatewayAmount, amount);
             }

@@ -55,6 +55,8 @@ public class CheckPaymentAction extends BaseAction {
 
     private List<HkPaymentResponse> hkPaymentResponseList;
 
+    private Map<String,List<HkPaymentResponse>> bulkHkPaymentResponseList;
+
     private HkPaymentResponse hkPaymentResponse;
 
     private Payment updatedPayment;
@@ -114,7 +116,6 @@ public class CheckPaymentAction extends BaseAction {
 
         } catch (HealthkartPaymentGatewayException e){
             logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
-            // redirect to error page
         }
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
@@ -126,22 +127,22 @@ public class CheckPaymentAction extends BaseAction {
         try {
             //Date startDate = sdf.parse(txnStartDate);
             //Date endDate = sdf.parse(txnEndDate);
+            bulkHkPaymentResponseList = new HashMap<String, List<HkPaymentResponse>>();
             List orderStatuses = Arrays.asList(EnumOrderStatus.Placed.asOrderStatus(), EnumOrderStatus.InProcess.asOrderStatus());
             paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null, Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses,null);
             HkPaymentService hkPaymentService;
             for (Payment seekPayment : paymentList) {
                 if (seekPayment != null) {
-                    Gateway gateway = seekPayment.getGateway();
-                    if (gateway != null) {
-                        hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
-                        try {
-                            paymentResultMap = hkPaymentService.seekHkPaymentResponse(seekPayment.getGatewayOrderId());
-                        } catch (Exception e) {
-                            logger.info("Payment Seek exception for gateway order id" + seekPayment.getGatewayOrderId(), e);
+                    String gatewayOrderId = seekPayment.getGatewayOrderId();
+                    if(gatewayOrderId != null){
+                        try{
+                            hkPaymentResponseList = paymentManager.seekPayment(gatewayOrderId);
+                            bulkHkPaymentResponseList.put(gatewayOrderId,hkPaymentResponseList);
+                        } catch (HealthkartPaymentGatewayException e){
+                            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
                         }
                     }
                 }
-                transactionList.add(paymentResultMap);
             }
 
         } catch (Exception e) {
@@ -494,5 +495,13 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setUpdatedPayment(Payment updatedPayment) {
         this.updatedPayment = updatedPayment;
+    }
+
+    public Map<String, List<HkPaymentResponse>> getBulkHkPaymentResponseList() {
+        return bulkHkPaymentResponseList;
+    }
+
+    public void setBulkHkPaymentResponseList(Map<String, List<HkPaymentResponse>> bulkHkPaymentResponseList) {
+        this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
     }
 }

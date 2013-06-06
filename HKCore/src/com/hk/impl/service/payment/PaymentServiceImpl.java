@@ -212,7 +212,10 @@ public class PaymentServiceImpl implements PaymentService {
         }  else if(hkPaymentResponse != null && hkPaymentResponse.getPaymentStatus().getId() == EnumPaymentStatus.FAILURE.asPaymenStatus().getId()){
             isUpdated = updatePayment(hkPaymentRequest, hkPaymentResponse.getAmount(), hkPaymentResponse.getGatewayReferenceId(),
                     hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg(),EnumPaymentStatus.FAILURE.asPaymenStatus(),null);
-        } else {
+        }  else if(hkPaymentResponse != null && hkPaymentResponse.getPaymentStatus().getId() == EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus().getId()){
+            isUpdated = updatePayment(hkPaymentRequest, hkPaymentResponse.getAmount(), hkPaymentResponse.getGatewayReferenceId(),
+                    hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg(),EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(),null);
+        }  else {
             isUpdated = updatePayment(hkPaymentRequest, hkPaymentResponse.getAmount(), hkPaymentResponse.getGatewayReferenceId(),
                     hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg(),EnumPaymentStatus.ERROR.asPaymenStatus(),hkPaymentResponse.getResponseMsg());
         }
