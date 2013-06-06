@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.hk.constants.core.RoleConstants;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 
 /**
@@ -21,11 +22,15 @@ import com.hk.loyaltypg.service.LoyaltyProgramService;
 @Component
 @Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class LoyaltyProductAction extends AbstractLoyaltyAction {
+
 	@Autowired
 	private LoyaltyProgramService loyaltyProgramService;
 
+	private ProductVariant prodVariant;
+	
 	@DefaultHandler
 	public Resolution pre() {
+	
 		
 		return new ForwardResolution("/pages/loyalty/productDescription.jsp");
 	}
