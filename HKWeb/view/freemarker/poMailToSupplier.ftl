@@ -92,6 +92,7 @@ PURCHASE ORDER
 	<#if poLineItem.sku??>
 		<td>${poLineItem.sku.productVariant.id}</td>
 		<#if poLineItem.sku.productVariant.upc??>
+		<td>${poLineItem.sku.productVariant.upc}</td>
 		<#else>
 		<td>N/A</td>
 		</#if>
