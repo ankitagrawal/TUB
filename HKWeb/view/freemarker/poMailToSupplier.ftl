@@ -6,7 +6,6 @@ Purchase Order Approval Mail
 <body>
 <#include "header.ftl">
 
-	<div>
 		<div style="padding: 2px;">
 		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.name}</p>
 		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.line1}</p>
@@ -15,7 +14,6 @@ Purchase Order Approval Mail
 		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.state}</p>
 		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">Tin No - ${purchaseOrder.warehouse.tin}</p>
 		</div>
-	</div>
 
 <div style="text-align: center;">
 <h4>
@@ -23,7 +21,6 @@ PURCHASE ORDER
 </h4>
 </div>
 
-<div>
   <table cellspacing="0" id="mainTable">
   <tr>
   <td style="font-weight: bold;">Supplier</td>
@@ -73,12 +70,8 @@ PURCHASE ORDER
   </tr>
   
   </table>
-  </div>
 
-
-<div style="margin-top: 20px;"></div>
 <br/>
-  <div style="display:inline;float: left;position: relative;margin-left: 1%;margin-right: 1%;">
   <table cellspacing="0" id="mainTable" >
   <tr>
   <td style="font-weight: bold;">Variant Id</td>
@@ -95,6 +88,7 @@ PURCHASE ORDER
   </tr>
   
   <#list purchaseOrder.poLineItems as poLineItem>
+  <tr>
 	<#if poLineItem.sku??>
 		<td>${poLineItem.sku.productVariant.id}</td>
 		<#if poLineItem.sku.productVariant.upc??>
@@ -125,7 +119,7 @@ PURCHASE ORDER
 	<td>${purchaseOrder.surchargeAmount}</td>
 	<td>${purchaseOrder.finalPayableAmount}</td>
 	</tr>
-  </table></div>
+  </table>
 
 <p style="margin-bottom:1em"><strong>HealthKart Team</strong></p>
 <#include "footer.ftl">
