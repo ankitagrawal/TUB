@@ -26,9 +26,34 @@ Talking 'bout the one that got away!
                     <td valign="top">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top" align="center"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/nav.jpg" alt="HealthKart.com" usemap="#Map"
-                                                         title="HealthKart.com"
-                                                         border="0"/></td>
+
+                    <td valign="top" align="center">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/sports-nutrition" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/sports-nutrition.jpg" alt="sports nutrition" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/health-nutrition" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/health-nutrition.jpg" alt="health nutrition" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/sports" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/sports-and-fitness.jpg" alt="sports and fitness" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/diabetes" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/diabetes.jpg" alt="diabetes" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/health-devices" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/health-devices.jpg" alt="health devices" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http:////www.healthkart.com/home-living" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/home-and-living.jpg" alt="home and living" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/eye" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/vision.jpg" alt="vision" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/personal-care" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/personal-care.jpg" alt="personal care" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/beauty" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/beauty.jpg" alt="beauty" border="0"/></a></td>
+                                <td valign="top" align="left"><a href="http://www.healthkart.com/parenting" target="_blank"/><img
+                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/parenting.jpg" alt="parenting" border="0"/></a></td>
+                            </tr>
+                        </table>
+                    </td>
+
                 </tr>
                 <tr>
                     <td valign="top" height="33"></td>
@@ -78,7 +103,7 @@ Talking 'bout the one that got away!
                             <tr>
                                 <td height="25"
                                     style="border-top:0px; font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
-                                    <p>For Product ${notify.productVariant.product.name}, may we suggest</p></td>
+                                    <p>For Product<strong> ${notify.productVariant.product.name}</strong> , may we suggest</p></td>
                             </tr>
                         <tr>
 
@@ -178,18 +203,5 @@ Talking 'bout the one that got away!
         </td>
     </tr>
 </table>
-
-<map name="Map" id="Map">
-    <area shape="rect" coords="2,3,85,28" href="http://www.healthkart.com/sports-nutrition" target="_blank"/>
-    <area shape="rect" coords="86,2,169,28" href="http://www.healthkart.com/health-nutrition" target="_blank"/>
-    <area shape="rect" coords="172,2,259,28" href="http://www.healthkart.com/sports" target="_blank"/>
-    <area shape="rect" coords="262,2,311,28" href="http://www.healthkart.com/diabetes" target="_blank"/>
-    <area shape="rect" coords="312,2,386,28" href="http://www.healthkart.com/health-devices" target="_blank"/>
-    <area shape="rect" coords="388,2,466,29" href="http://www.healthkart.com/home-living" target="_blank"/>
-    <area shape="rect" coords="469,2,504,29" href="http://www.healthkart.com/eye" target="_blank"/>
-    <area shape="rect" coords="507,2,576,28" href="http://www.healthkart.com/personal-care" target="_blank"/>
-    <area shape="rect" coords="578,2,618,28" href="http://www.healthkart.com/beauty" target="_blank"/>
-    <area shape="rect" coords="620,2,673,28" href="http://www.healthkart.com/parenting" target="_blank"/>
-</map>
 </body>
 </html>
