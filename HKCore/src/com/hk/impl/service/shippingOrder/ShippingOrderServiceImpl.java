@@ -8,7 +8,6 @@ import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.queue.Bucket;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.util.*;
@@ -148,11 +147,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
 
-    private boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
+    private boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder, boolean firewall) {
         Payment payment = shippingOrder.getBaseOrder().getPayment();
         List<Reason> reasons = new ArrayList<Reason>();
         if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
-            if(SOFirewall.isAmountMismatch(payment.getOrder())){
+            if(firewall && SOFirewall.isAmountMismatch(payment.getOrder())){
               reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
             }
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
@@ -171,7 +170,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 } else {
                     //putting checks for shipping cost
                     Double estimatedShippingCharges = shippingOrder.getShipment().getEstmShipmentCharge();
-                    if (estimatedShippingCharges != null && estimatedShippingCharges > SOFirewall.minAllowedShippingCharges && estimatedShippingCharges >= SOFirewall.calculateCutoffAmount(shippingOrder)) {
+                    if (firewall && estimatedShippingCharges != null && estimatedShippingCharges > SOFirewall.minAllowedShippingCharges && estimatedShippingCharges >= SOFirewall.calculateCutoffAmount(shippingOrder)) {
                         reasons.add(EnumReason.HighShippingCost.asReason());
                     }
                 }
@@ -277,8 +276,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     @Transactional
-    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder) {
-        if(isShippingOrderAutoEscalable(shippingOrder)){
+    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
+        if(isShippingOrderAutoEscalable(shippingOrder, firewall)){
             User activityUser = getUserService().getAdminUser();
             logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
             shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);

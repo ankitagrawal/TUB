@@ -59,6 +59,8 @@ public enum EnumShippingOrderLifecycleActivity {
   COD_Converter(790L, "COD_Converter"),
   SO_Shipment_Re_Created(795L, "SO Shipment Re Created"),
   SHIPMENT_RESOLUTION_ACTIVITY(800L, "SHIPMENT RESOLUTION ACTIVITY"),
+  AI_BUCKET_CHANGED(810L,"Bucket changed for AI"),
+  AI_ACTION_TASK_CHANGED(820L,"Action Task Changed for AI"),
   SO_Cancelled(999L, "SO  Cancelled");
 
 

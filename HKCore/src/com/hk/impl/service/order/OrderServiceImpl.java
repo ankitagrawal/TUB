@@ -677,7 +677,7 @@ public class OrderServiceImpl implements OrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
+                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder, true);
                 }
             }
 
