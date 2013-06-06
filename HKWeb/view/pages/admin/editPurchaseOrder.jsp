@@ -257,19 +257,19 @@ function validateSubmitForm() {
 			return false;
 		}
 		
-		if(parseFloat($('#poStatus :selected').val())==30 && ${actionBean.purchaseOrder.supplier.email_id==null}){
-			var email = prompt("Please enter Supplier EmailId : ", "");
-			if(email==null || email==""){
-				alert("You did not enter any emailId.");
-				return false;
-			}
-			else{
-				$("#supplierEmail").val(email);
-				return true;
-			}
-		}
 	});
-
+	
+	if(parseFloat($('#poStatus :selected').val())==30 && ${actionBean.purchaseOrder.supplier.email_id==null}){
+		var email = prompt("Please enter Supplier EmailId : ", "");
+		if(email==null || email==""){
+			alert("You did not enter any emailId.");
+			return false;
+		}
+		else{
+			$("#supplierEmail").val(email);
+			return true;
+		}
+	}
 
 	var statusSelected = $('.status').find('option:selected');
 	var approver = $('.approver').find('option:selected');
