@@ -1,163 +1,208 @@
-You requested to be notified when some products were back in stock
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Personal alerts that matter to us. We mean it!</title>
+    <title>Talking 'bout the one that got away!</title>
 </head>
 
-<body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
-<table width="530" border="0" align="center" cellpadding="0" cellspacing="0">
+<body style="margin:0; padding:0; font-family:Verdana, Geneva, sans-serif; background-color:#FFFFFF;">
+<table width="695" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
         <td align="center" valign="top">
-            <table width="500" border="0" cellspacing="0" cellpadding="0" align="center"
-                   style="font-size:13px; line-height:1.75em;">
-
-
+            <table width="683" border="0" cellspacing="0" cellpadding="0" align="center"
+                   style="font-size:13px; font-family:Verdana, Geneva, sans-serif">
                 <tr>
-                    <td height="20"></td>
+                    <td valign="top">&nbsp;</td>
                 </tr>
-
-
                 <tr>
-                    <td>
-                        <table width="500" border="0" cellpadding="0" cellspacing="0">
+                    <td valign="top" align="center"><a href="http://www.healthkart.com" target="_blank"><img
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/healthkart.jpg"
+                            border="0"
+                            alt="HealthKart.com" title="HealthKart.com"/></a></td>
+                </tr>
+                <tr>
+                    <td valign="top">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td valign="top" align="center"><img
+                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/nav.jpg"
+                            alt="HealthKart.com" usemap="#Map" title="HealthKart.com" border="0"/></td>
+                </tr>
+                <tr>
+                    <td valign="top" height="33"></td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <table width="337" border="0" cellspacing="0" cellpadding="0" align="center"
+                               style="font-size:13px; font-family:Verdana, Geneva, sans-serif">
                             <tr>
-                                <td width="222"><a href="http://www.healthkart.com"><img
-                                        src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com Logo"
-                                        width="207" height="30" border="0"/></a></td>
-                                <td width="15" style="border-left: solid 1px #999999"></td>
-                                <td width="245" align="left" style="font-size:13px; font-weight:bold; color:#666666"><a
-                                        href="http://www.healthkart.com" style="color:#666666; text-decoration:none">India&#39;s
-                                    premier e-health store!</a></td>
-                                <td width="18">&nbsp;</td>
+                                <td align="left" valign="top"><img src="images/one-that-got-away.png" border="0"
+                                                                   alt="HealthKart"/></td>
                             </tr>
                             <tr>
-                                <td colspan="5" height="10"></td>
+                                <td height="25"></td>
                             </tr>
                             <tr>
-                                <td colspan="5"><a href="http://www.healthkart.com"><img
-                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/main_banner.jpg"
-                                        width="500" height="148" alt="Personal alerts that matter to us. We mean it!"
-                                        border="0"/></a></td>
+                                <td align="left" valign="top"
+                                    style="font-family:Verdana, Geneva, sans-serif; font-size:21px; line-height:25px; color:#646464;">
+                                    Talking 'bout
+                                    the one<br/>
+                                    that got away!
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top"
+                                    style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; padding:10px 0px 10px 0px;">
+                                    -Waits
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top"
+                                    style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
+                                    <p>We ran out
+                                        of 'product x'. Terrible, we know!<br/>
+                                        We let you down, so let us pick you up.</p>
+
+                                    <p>
+                                        We have two options for you.<br/>
+                                        1. You give us time, we work our rear ends to get this product back in stock.
+                                        Once we do, we will notify
+                                        you. We however, cannot guarantee on the time it will take to get it. It may
+                                        take days or forever.</p>
+
+                                    <p>2. We introduce you to something similar. Something that will make up for
+                                        'product x'. If you like them, we
+                                        suggest you pick them up.</p>
+
+                                    <p>Here we go.</p><br/>
                             </tr>
 
 
-                        </table>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td align="left" height="15"></td>
-                </tr>
-                <tr>
-                    <td width="579" valign="top">Hi ${notifiedUser.name}!<br/>
-                        <br/>
-                        On your last visit, you clicked notify me for the following product(s):<br/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        The products are OOS stock. You can have look on similar products
-                        <br/>
-                        <table>
-                        <#list notifyList as notify>
-                            Similar Products For ${notify.productVariant.product.name}
+                        <#list productNotifyList as  notify>
+                            <tr>
+                                <td height="25"
+                                    style="border-top:0px; font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
+                                    <p>You searched for Product  ${notify.productVariant.product.name} , may we
+                                        suggest</p></td>
+                            </tr>
+                        <tr>
                             <#list similarProductMap?keys  as  key>
-                                <#assign similarProductList = similarProductMap[key]>
-                                <#if similarProductList??>
-                                    <#list similarProductList as similarproduct>
-                                        <tr>
-                                            <td>
-                                                <strong>
-                                                ${similarproduct.name}
-                                                </strong>
-                                            </td>
+                                <#assign similarProductList = similarProductMap[notify.productVariant.product.id]>
+                                <#if similarProductList?? >
+                                    <#list  similarProductList as  similarProduct>
+                                        <td valign="top">
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td align="center" valign="middle"
+                                                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
+                                                    ${similarProduct.name}
+                                                    </td>
+                                                    <#list productPriceMap?keys  as  key>
+                                                        <#assign highestDiscountVariantList = productPriceMap[similarProduct.id]>
+                                                        <#list  highestDiscountVariantList as  discountedVariant>
+                                                            <td align="center" valign="middle"
+                                                                style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
+                                                                Rs. {discountedVariant.hkPrice}
+                                                            </td>
+                                                        </#list>
+                                                    </#list>
+                                                    <td align="center" valign="top"
+                                                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
 
-                                            <td height="15">
-                                                <a href="www.healthkart.com/product/${similarproduct.product.slug}/${similarproduct.product.id}?utm_source=notifyme&utm_medium=email"><img
-                                                        src="http://img.healthkart.com/email/notify_user_emailer_new/images/shop_now.jpg"
-                                                        alt="Click here to shop now" width="157" height="26"
-                                                        border="0"/></a>
-                                            </td>
+                                                        <table align="center" border="0" cellspacing="0"
+                                                               cellpadding="0">
+                                                            <tr>
+                                                                <td valign="middle"
+                                                                    style="color:#000; font-family:Verdana, Geneva, sans-serif; font-weight:bold;">
+                                                                    <a href="www.healthkart.com/product/${similarProduct.slug}/${similarProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${similarProduct.id}-${currentDate}"
+                                                                       target="_blank"
+                                                                       style="font-weight:bold; color:#646464; padding:2px 10px 4px 10px; text-decoration:none; font-size:12px; display:block; border:1px solid #646464;">Buy
+                                                                        Now</a></td>
+                                                            </tr>
+                                                        </table>
+
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                        </td>
+                                    </tr>
+
+                                        <tr>
+                                            <td height="25"></td>
                                         </tr>
-                                        <br/>
                                     </#list>
                                 </#if>
                             </#list>
+
+                            <tr>
+                                <td height="25"></td>
+                            </tr>
+
+                            <tr>
+                                <td height="25" style="border-top:1px dashed #646464;">&nbsp;</td>
+                            </tr>
                         </#list>
+
                         </table>
                     </td>
                 </tr>
                 <tr>
-                    <td height="15"></td>
+                    <td height="33"></td>
                 </tr>
                 <tr>
-                    <td height="15"></td>
+                    <td colspan="3" align="center" valign="top"
+                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
+                        <img
+                                src="images/built.jpg" border="0" alt="HealthKart"/>&nbsp; <a style="color:#646464">info@healthkart.com</a>
+                        | +91 124 4551616 &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp;
+                        <a
+                                href="https://www.facebook.com/healthkart" style="color:#646464; text-decoration:none;">Like
+                            us on
+                            facebook</a> &nbsp;&nbsp;&nbsp;<img src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0" alt="HealthKart"/>&nbsp;
+                        <a
+                                href="https://www.twitter.com/healthkart" style="color:#646464; text-decoration:none;">Tweet
+                            about
+                            us</a></td>
                 </tr>
                 <tr>
-                    <td>Healthy Shopping!<br/>
-
-                        HealthKart.com <br/>
-
-                        (India&#39;s Premier eHealth Store)
+                    <td height="12" valign="top"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center" valign="top"
+                        style="font-family:Verdana, Geneva, sans-serif; font-size:11px; line-height:18px; color:#646464;">
+                        Parsvanath
+                        Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA. © 2011 HealthKart.com. All Rights
+                        Reserved.
                     </td>
                 </tr>
                 <tr>
-                    <td height="15"></td>
+                    <td height="12" valign="top"></td>
+                </tr>
+                <tr>
+                    <td valign="top" align="center"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/all-heart.jpg" border="0"
+                                                         alt="ESTD 2011 ALL HEART"/></td>
+                </tr>
+                <tr>
+                    <td valign="top" height="33"></td>
                 </tr>
             </table>
-        </td>
-    </tr>
-    <tr>
-        <td bgcolor="#b8b8b8" style="border-top: solid #606060 2px">
-            <table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td height="70" colspan="3" align="left" valign="middle"><a href="http://www.healthkart.com/"><img
-                            src="http://img.healthkart.com/email/logos/hk_logo_bw.jpg" alt="HealthKart.com logo"
-                            width="178" height="28" border="0"/></a></td>
-                    <td width="312" align="right" valign="middle"
-                        style="color:#606060; font-weight:bold; font-size:13px;"><a href="http://www.healthkart.com/"
-                                                                                    style="color:#606060; text-decoration:none;">www.healthkart.com</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="106" height="60" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">
-                        Spread the word:
-                    </td>
-                    <td width="39" align="left" valign="middle" style="border-top: solid #929292 1px"><a
-                            href="http://www.facebook.com/healthkart"><img
-                            src="http://img.healthkart.com/email/logos/facebook.png" alt="facebook" width="32"
-                            height="32" border="0"/></a></td>
-                    <td width="43" align="left" valign="middle" style="border-top: solid #929292 1px"><a
-                            href="http://twitter.com/healthkart"><img
-                            src="http://img.healthkart.com/email/logos/twitter.png" alt="twitter" width="32" height="32"
-                            border="0"/></a></td>
-                    <td align="right" valign="middle"
-                        style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
-                            href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;|
-                        &nbsp;t: 0124-4616444
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
 
-    <tr>
-        <td align="center" valign="middle"
-            style="border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px">
-            If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to
-            Unsubscribe</a><br/>
-        </td>
 
-    </tr>
-    <tr>
-        <td align="center" valign="middle"
-            style="border-top: solid #FFFFFF 2px; font-size:11px; text-align:center; color:#929292; padding:10px">
-            Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br/>
-            &copy; 2013 HealthKart.com. All Rights Reserved.
         </td>
     </tr>
 </table>
+
+<map name="Map" id="Map">
+    <area shape="rect" coords="2,3,85,28" href="http://www.healthkart.com/sports-nutrition" target="_blank"/>
+    <area shape="rect" coords="86,2,169,28" href="http://www.healthkart.com/health-nutrition" target="_blank"/>
+    <area shape="rect" coords="172,2,259,28" href="http://www.healthkart.com/sports" target="_blank"/>
+    <area shape="rect" coords="262,2,311,28" href="http://www.healthkart.com/diabetes" target="_blank"/>
+    <area shape="rect" coords="312,2,386,28" href="http://www.healthkart.com/health-devices" target="_blank"/>
+    <area shape="rect" coords="388,2,466,29" href="http://www.healthkart.com/home-living" target="_blank"/>
+    <area shape="rect" coords="469,2,504,29" href="http://www.healthkart.com/eye" target="_blank"/>
+    <area shape="rect" coords="507,2,576,28" href="http://www.healthkart.com/personal-care" target="_blank"/>
+    <area shape="rect" coords="578,2,618,28" href="http://www.healthkart.com/beauty" target="_blank"/>
+    <area shape="rect" coords="620,2,673,28" href="http://www.healthkart.com/parenting" target="_blank"/>
+</map>
 </body>
 </html>

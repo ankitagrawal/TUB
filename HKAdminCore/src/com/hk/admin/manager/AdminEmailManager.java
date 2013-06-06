@@ -357,16 +357,26 @@ public class AdminEmailManager {
                 /*User has asked for multiple variant notification  */
                 valuesMap.put("productNotifyList", notifyMeListPerUser);
                 Map<String, List<Product>> productSimilarProductMap = new HashMap<String, List<Product>>();
+                Map<String, ProductVariant> productPriceRangeMap = new HashMap<String, ProductVariant>();
                 for (NotifyMe notifyMe : notifyMeListPerUser) {
                     List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMe.getProductVariant(), 3);
                     if (similarProductList != null && similarProductList.size() > 0) {
                         productSimilarProductMap.put(notifyMe.getProductVariant().getProduct().getId(), similarProductList);
+                        for (Product product : similarProductList) {
+                            productPriceRangeMap.put(product.getId(), product.getMaximumDiscountProducVariant());
+                            valuesMap.put("productPriceMap", productPriceRangeMap);
+                        }
+
+                    } else {
+                        notifyMeListPerUser.remove(notifyMe);
                     }
                 }
                 /*similarProductMap  KEY: OOS product user asked for notification   VALUE: list of  3 similar products(first three max inv products) */
-                valuesMap.put("similarProductMap", productSimilarProductMap);
-                Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserForSimilarProductsForMultipleVariants);
-                mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
+                if (productSimilarProductMap.size() > 0) {
+                    valuesMap.put("similarProductMap", productSimilarProductMap);
+                    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserForSimilarProductsForMultipleVariants);
+                    mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
+                }
 
             } else {
                 /*Single variant notification*/
@@ -407,9 +417,6 @@ public class AdminEmailManager {
             List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);
             NotifyMe notifyMeObject = notifyMeListPerUser.get(0);
             User user = userService.findByLogin(emailId);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            String currentDate = sdf.format(new Date());
-
             // find existing recipients or create recipients through the emails ids passed
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
             if (user != null) {
@@ -419,7 +426,6 @@ public class AdminEmailManager {
             }
 
             valuesMap.put("notifiedUser", notifyMeObject);
-            valuesMap.put("currentDate", currentDate);
             if (notifyMeListPerUser.size() > 1) {
                 //User has asked for multiple variant notification
                 valuesMap.put("notifyList", notifyMeListPerUser);

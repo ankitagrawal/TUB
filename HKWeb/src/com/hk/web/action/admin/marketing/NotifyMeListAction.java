@@ -92,7 +92,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     private Boolean productInStock;
     private Boolean productDeleted;
     private Boolean productHidden;
-    private Float conversionRate = 0.01f;
+    private Float conversionRate = 0.1f;
     private int bufferRate = 2;
     private int totalProductVariant;
 
@@ -225,8 +225,9 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         if(productDeleted == null){
             productDeleted = true;
         }
-        Page page = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
-        notifyMeDtoList = page.getList();
+        notifyMePage = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
+        notifyMeDtoList = notifyMePage.getList();
+
         totalProductVariant = notifyMeDtoList.size();
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
@@ -234,7 +235,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     /*For Similar Products*/
     public Resolution sendAllMailsForDeletedProducts() {
-        if (!productDeleted && (productInStock != null && !productInStock) && (productHidden != null && !productHidden)) {
+        if (!productDeleted && (productInStock == null || !productInStock) && (productHidden == null || !productHidden)) {
             addRedirectAlertMessage(new SimpleMessage("Please mark product as deleted/OOS/Hidden value , to qualify for similar product mails"));
             return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
         }
