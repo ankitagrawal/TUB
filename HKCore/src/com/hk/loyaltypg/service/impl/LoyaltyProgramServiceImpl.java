@@ -19,6 +19,7 @@ import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.Transformers;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -321,6 +322,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		bonusProfile.setUpdateTime(currentTime);
 		bonusProfile.setTransactionType(TransactionType.CREDIT);
 		bonusProfile.setStatus(KarmaPointStatus.BONUS);
+		bonusProfile.setBadge(this.getUserBadgeInfo(user).getBadge());
 		this.loyaltyProductDao.saveOrUpdate(bonusProfile);
 	}
 
@@ -541,6 +543,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			rewardProfile.setOrder(orderReward);
 			rewardProfile.setTransactionType(TransactionType.DEBIT);
 			rewardProfile.setStatus(KarmaPointStatus.REWARDED);
+			rewardProfile.setBadge(this.getUserBadgeInfo(user).getBadge());
 
 			// add reward points
 			RewardPoint loyaltyRewardPoints = this.rewardPointService.addRewardPoints(user, null, orderReward,

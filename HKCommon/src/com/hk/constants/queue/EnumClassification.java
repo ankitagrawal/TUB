@@ -31,6 +31,7 @@ public enum EnumClassification {
     AD_HOC(460L, "AD_HOC" , "Pending with CC"),
     Customer_Service(480L, "Customer_Service" , "Pending with CC"),
     Tech_Support(490L, "Tech_Support" , "Bug"),
+    B2B(500L, "B2B" , "Bright"),
     Vendor(510L, "Vendor", "Procurement"),
     Logistics(520L, "Logistics", "Pickup/Delivery"),
     Receiving(530L, "Receiving", "GRN");
