@@ -47,7 +47,7 @@
 
 			$('#productVariantBarcode').change(function (event) {
 				var productVariantBarcode = $('#productVariantBarcode').val();
-
+				$('.orderDetails').html(' ');
 				var skuItemList = [];
 				var idx = 0;
 				$("#skuItemHidden option").each(function() {
@@ -93,6 +93,7 @@
 				} else {
 					$(toTotalClass).val(total.toFixed(2));
 				}
+				updateFinalPayable();
 			}
 
 			function createNewRow() {
@@ -140,21 +141,18 @@
 								$('#pincode').val(res.data.pincode);
 								$('#address').val(res.data.address.id);
 								$('#phone').val(res.data.address.phone);
-							} else {
-								//$('.orderDetails').html('<h2>' + res.message + '</h2>');
-							}
+								fillPOSLoyaltyDetails(res);
+								if(res.data.rewardPoints > 0) {
+									$('#rewardPoints').text(res.data.rewardPoints);
+									$('#rewardPointsRow').show();
+								}
+							} 
 						}
 				);
 			});
 
-			$('#receivePayment').click(function() {
-
-				var paymentMode = $('#paymentMode').find('option:selected');
-				if(paymentMode.text() == "-Select-") {
-					alert('Please select the payment mode');
-					return false;
-				}
-
+			function validateCustomerDetails () {
+				
 				if ($.trim($("#line1").val()) != '' && ($.trim($("#city").val()) == '' || $.trim($("#pincode").val()) == '') ) {
 					alert("Please fill the complete address");
 					return false;
@@ -169,7 +167,20 @@
 					alert("Please fill the complete address");
 					return false;
 				}
+			return true;
+			}
+			$('#receivePayment').click(function() {
 
+				var paymentMode = $('#paymentMode').find('option:selected');
+				if(paymentMode.text() == "-Select-") {
+					alert('Please select the payment mode');
+					return false;
+				}
+
+				if(!validateCustomerDetails()) { 
+					return false;
+					}
+				
 				if($('.amountReceived').val() == '') {
 					alert('Please fill the actual Amount Received');
 					return false;
@@ -177,7 +188,11 @@
 
 				var discount = $('#discount').find('option:selected').val();
 				var grandTotal = $('.grandTotal').val();
-				if(parseFloat(discount) > grandTotal) {
+				var rewardPts = 0;
+				if($('#useRewardPoints').checked) {
+					rewardPts = parseFloat($('#rewardPoints').text());
+				}
+				if((parseFloat(discount) + rewardPts) > grandTotal) {
 					alert('Discount cannot be more than the total amount');
 					return false;
 				}
@@ -202,11 +217,92 @@
 			});
 
 			$('#discount').change(function() {
-				var discount = $('#discount').find('option:selected').val();
-				var grandTotal = $('.grandTotal').val();
-				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0));
+				updateFinalPayable();
 			});
 
+		    // Reward points conversion
+		  	$("#rewardLink").click(function(e) {
+		  		e.preventDefault();
+		  		if(confirm("Please note that by clicking OK all loyalty points of the customer will be converted to reward points." +
+		  				" These points will be valid for next six months only. Convert Points?")) {
+			  		$.getJSON($('#rewardLink').attr('href'), {loyaltyCustomer:$('#loyaltyCustomer').val(),email:$('#email').val()},
+			  				function (res) {
+								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+									alert(res.message);
+									$('#loyaltyPoints').text(0);
+									$('#rewardPoints').text(res.data.totalRewardPoints);
+									$('#rewardPointsRow').show();
+								} else {
+									//
+									alert(res.message);
+									}
+							});
+		  		} else {
+		  			return false;
+		  		}
+		  		
+		  	});
+
+		    $('#useRewardPoints').click(function() {
+		    	updateFinalPayable();
+	    	});
+		    
+		    $('#updateCustomerInfo').click(function (e) {
+		    	e.preventDefault();
+				if(!validateCustomerDetails()) { 
+					return false;
+					}
+				var form = $('#posForm');
+				var dataUrl = form.attr('action') + "?" + $(this).attr('name') + "=";
+				$.ajax({
+						url: dataUrl,
+						data: form.serialize(),
+						success: function (res) {
+								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+								alert(res.message);
+								fillPOSLoyaltyDetails(res);
+								}
+							},
+						error: 	function(res) {
+							alert(res.message);
+						}
+						
+				});
+					return false;
+		    });
+		    
+		    $('#rewardPointsRow').hide();
+		    $('#oldLoyaltyCustomer').hide();
+		    
+		    function updateFinalPayable() {
+		    	var discount = $('#discount').find('option:selected').val();
+				var grandTotal = $('.grandTotal').val();
+				var rewardPts = 0;
+				if($('#useRewardPoints').is(':checked')) {
+					rewardPts = parseFloat($('#rewardPoints').text());
+				}
+				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0) - rewardPts.toFixed(2));
+		    }
+		    
+		    function fillPOSLoyaltyDetails(res) {
+		    	if (res.data.loyaltyUser) {
+					$('#oldLoyaltyCustomer').show();
+					$('#newLoyaltyCustomer').hide();
+					$('.loyaltyUser').val(res.data.loyaltyUser);
+					$('#loyaltyCustomerName').text(res.data.customerName);
+					$('#badgeName').text(res.data.badgeName);
+					$('#loyaltyPoints').text(res.data.loyaltyPoints);
+					$('#cardNumber').val(res.data.cardNumber);
+					$('#addLoyaltyUser').removeAttr('checked');
+					var historyUrl = $('#historyLink').attr('href') + "&" + "email=" + $('#email').val();
+			  		$('#historyLink').attr('href', historyUrl);
+			  		$('#loyaltyCustomer').val(res.data.customer.id);
+				} else {
+					$('#addLoyaltyUser').attr('checked','checked');
+					$('#newLoyaltyCustomer').show();
+					$('#oldLoyaltyCustomer').hide();
+				}
+		    }
 		});
 	</script>
 </s:layout-component>
@@ -286,6 +382,29 @@
 					</td>
 				</tr>
 			</table>
+			
+			<div id="loyaltyDiv" style="font-size: 14px;"> 
+					<span id="newLoyaltyCustomer">&nbsp;<s:checkbox name="addLoyaltyUser" id="addLoyaltyUser" checked="checked"></s:checkbox> Add as Loyalty User</span> 
+				
+				<span id="oldLoyaltyCustomer" style="float:left;">
+					Presently <span id="loyaltyCustomerName"> </span>  has <span id="badgeName"> </span> 
+					status and <span id="loyaltyPoints"> </span> loyalty points.
+					<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="historyLink" event="getCustomerLoyaltyHistory"
+					 target="_blank" style="color:red; font-size:1;">Customer History
+					 </s:link>
+ 					<br/>
+ 					<s:link id="rewardLink" beanclass="com.hk.web.action.admin.pos.POSAction" event="convertLoyaltyPoints" >Click here 
+ 					<s:hidden id="loyaltyCustomer" name="loyaltyCustomer"  />
+ 					</s:link>
+ 					to convert customer's loyalty points to reward points.
+				</span>	
+				<span style="float:right; margin-right:150px;">Customer Loyalty Card number <s:text name="cardNumber" id="cardNumber" /></span> 
+				
+			</div>
+				<br/>  
+				<s:hidden name="loyaltyUser" class="loyaltyUser"/>
+				<s:button name="updateCustomerInfo" value="Update Customer Info" id="updateCustomerInfo" style="float:right; clear:both;"/>
+				<br/>
 		</fieldset>
 		<c:if test="${pos.order.id == null}">
 			<fieldset class="right_label">
@@ -340,6 +459,13 @@
 						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="discountsForPOS" />
 					</s:select></td>
 				</tr>
+				<tr id="rewardPointsRow">
+					<td align="right"><b>Reward Points available</b></td>
+					<td colspan="3"><span id="rewardPoints" class="rewardPoints"> </span></td>
+                    <td> Use Reward Points</td><td> <s:checkbox name="useRewardPoints" id="useRewardPoints" /></td>
+					
+				</tr>
+				
 				<tr>
 					<td colspan="5" align="right"><b>Final Payable</b></td>
 					<td><input type="text" id="finalPayable" readonly="readonly"/></td>

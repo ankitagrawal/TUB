@@ -20,8 +20,8 @@ import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.report.ReportConstants;
 import com.hk.domain.user.UserCodCall;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
@@ -73,6 +73,9 @@ public class UserOrderResource {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    BucketService bucketService;
 
     @POST
     @Path("/email/{email}/phone/{phone}")
@@ -202,7 +205,7 @@ public class UserOrderResource {
                     logger.debug("Order Already Cancelled" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-                adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
+                adminOrderService.cancelOrder(order, EnumCancellationType.Cod_Authorization_Failure.asCancellationType(), source, loggedInUser);
                 userCodCall.setRemark("Cancelled By " + source);
                 userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
             } else if (action.equalsIgnoreCase(HKAPIConstants.CONFIRMED)) {
@@ -221,8 +224,8 @@ public class UserOrderResource {
                 userCodCall.setRemark(source);
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
             }
-
-            orderService.saveUserCodCall(userCodCall);
+            userCodCall = orderService.saveUserCodCall(userCodCall);
+            bucketService.updateCODBucket(userCodCall.getBaseOrder());
             return Response.status(Response.Status.OK).build();
         } catch (DataIntegrityViolationException dataInt) {
             logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status: " + dataInt.getMessage());
