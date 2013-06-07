@@ -13063,7 +13063,126 @@
     <changeSet author="Ankit Chhabra (generated)" id="1370256769302-2">
         <addForeignKeyConstraint baseColumnNames="badge_id" baseTableName="user_order_karma_profile"  constraintName="fk_ukarma_badge" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="badge" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1370601362351-5">
+	<changeSet author="Tarun (generated)" id="1369725542349-1">
+        <addColumn tableName="tax">
+            <column name="type" type="VARCHAR(30)"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Tarun (written)" id="1369725542349-2">
+			<sql>
+				UPDATE `tax` SET type='VAT';
+
+				INSERT INTO `tax` (`id`, `name`, `value`, `type`) VALUES
+					(110, 'ZeroPercent', 0.00000, 'VAT_SECONDARY'),
+					(120, 'OnePercent', 0.01000, 'VAT_SECONDARY'),
+					(125, 'OneDotFivePercent', 0.01500, 'VAT_SECONDARY'),
+					(130, 'TwoPercent', 0.02000, 'CST'),
+					(135, 'FourPercent', 0.04000, 'VAT_SECONDARY'),
+					(140, 'FivePercent', 0.05000, 'VAT_SECONDARY'),
+					(150, 'TwelveDotFivePercent', 0.12500, 'VAT_SECONDARY'),
+					(160, 'ThirteenDotOneTwoFivePercent', 0.13125, 'VAT_SECONDARY'),
+					(165, 'FourteenDotFive', 0.14500, 'VAT_SECONDARY'),
+					(170, 'TwentyPercent', 0.20000, 'VAT_SECONDARY')
+					on duplicate key update
+					name = values(name),
+					value = values(value),
+					type = values(type);
+			</sql>
+	</changeSet>
+	<changeSet author="Tarun (written)" id="1369725542349-3">
+			<sql>
+					UPDATE purchase_invoice_line_item
+					SET tax_id= surcharge_id+100
+					WHERE tax_id IS NULL and surcharge_id IS NOT NULL;
+
+					UPDATE extra_inventory_line_item
+					SET tax_id= surcharge_id+100
+					WHERE tax_id IS NULL and surcharge_id IS NOT NULL;
+			</sql>
+	</changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-1">
+        <addColumn tableName="credit_note_line_item">
+            <column name="tax_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-2">
+        <addColumn tableName="debit_note_line_item">
+            <column name="tax_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-3">
+        <addColumn tableName="stock_transfer_line_item">
+            <column name="tax_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-4">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-5">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="debit_note_line_item" constraintName="fk_debit_note_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-6">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Tarun (written)" id="20130605-01">
+		<sql>
+			UPDATE line_item
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE extra_inventory_line_item
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE purchase_invoice_line_item
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE sku
+			SET tax_id = 1
+			where tax_id = 32;
+
+			UPDATE line_item
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE extra_inventory_line_item
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE purchase_invoice_line_item
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE sku
+			SET tax_id = 2
+			where tax_id = 5;
+
+			UPDATE line_item
+			SET tax_id = 6
+			where tax_id = 51;
+
+			UPDATE extra_inventory_line_item
+			SET tax_id = 6
+			where tax_id = 51;
+
+			UPDATE purchase_invoice_line_item
+			SET tax_id = 6
+			where tax_id = 51;
+
+			UPDATE sku
+			SET tax_id = 6
+			where tax_id = 51;
+
+			DELETE FROM tax where id in (51,5,32);
+		</sql>
+	</changeSet>
+	<changeSet author="Tarun (written)" id="20130605-02">
+		<sql>
+			ALTER TABLE  `tax` CHANGE  `id`  `id` INT( 11 ) NOT NULL;
+		</sql>
+	</changeSet>
+	<changeSet author="Nihal (generated)" id="1370601362351-5">
         <addColumn tableName="supplier">
             <column name="contact_number_2" type="VARCHAR(45)"/>
         </addColumn>

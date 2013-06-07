@@ -66,7 +66,7 @@ public class ReverseOrderInvoiceDto {
 
   public ReverseOrderInvoiceDto(ReverseOrder reverseOrder, B2bUserDetails b2bUserDetailsLocal) {
 
-    for (EnumTax enumTax : EnumTax.values()) {
+    for (EnumTax enumTax : EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE)) {
       summaryAmountMap.put(enumTax.getName(), 0.0);
       summaryTaxMap.put(enumTax.getName(), 0.0);
       summarySurchargeMap.put(enumTax.getName(), 0.0);
@@ -122,8 +122,8 @@ public class ReverseOrderInvoiceDto {
       totalTaxable += invoiceLineItemdto.getTaxable();
       totalSurcharge += invoiceLineItemdto.getSurcharge();
 
-      for (EnumTax enumTax : EnumTax.values()) {
-        if (!enumTax.equals(EnumTax.NA)) {
+      for (EnumTax enumTax : EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE)) {
+        if (!enumTax.equals(EnumTax.VAT_0)) {
           if (invoiceLineItemdto.getTaxValue() == enumTax.getValue()) {
             getSummaryMapsForVat(enumTax.getName(), invoiceLineItemdto);
           }
@@ -406,7 +406,7 @@ public class ReverseOrderInvoiceDto {
     HashMap<String, Double> summaryPayableMap = new HashMap<String, Double>();
     HashMap<String, Double> summarySurchargeMap = new HashMap<String, Double>();
 
-    for (EnumTax enumTax : EnumTax.values()) {
+    for (EnumTax enumTax : EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE)) {
 
       System.out.println(enumTax.name());
       summaryAmountMap.put(enumTax.name(), 0.0);

@@ -118,6 +118,7 @@
                                                 res.data.options
                                 );
                                 obj.parent().append('<input type="hidden" name="creditNoteLineItems[' + index + '].sku" value="' + res.data.sku.id + '" />');
+	                              obj.parent().append('<input type="hidden" name="creditNoteLineItems[' + index + '].tax" value="' + res.data.tax_id + '" />');
                             } else {
                                 $('.variantDetails').html('<h2>'+res.message+'</h2>');
                             }
@@ -201,6 +202,7 @@
                 <c:set var="sku" value="${creditNoteLineItemDto.creditNoteLineItem.sku}"/>
                 <c:set var="productVariant" value="${creditNoteLineItemDto.creditNoteLineItem.sku.productVariant}"/>
                 <c:set var="creditNote" value="${creditNoteLineItemDto.creditNoteLineItem.creditNote}" />
+	              <c:set var="tax" value="${creditNoteLineItemDto.creditNoteLineItem.tax}" />
                 <s:hidden name="creditNoteLineItems[${ctr.index}].id" value="${creditNoteLineItemDto.creditNoteLineItem.id}"/>
                 <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                     <td class="sNo">${ctr.index+1}.</td>
@@ -209,6 +211,7 @@
                             ${productVariant.id}
                             <s:hidden name="creditNoteLineItems[${ctr.index}].creditNote" value="${creditNote.id}" />
                             <s:hidden name="creditNoteLineItems[${ctr.index}].sku" value="${sku.id}" />
+	                            <s:hidden name="creditNoteLineItems[${ctr.index}].tax" value="${tax.id}" />
                         <s:hidden class="variant" name="creditNoteLineItems[${ctr.index}].productVariant"
                                   value="${productVariant.id}"/>
                     </td>

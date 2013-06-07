@@ -17,6 +17,7 @@ import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
+import com.hk.constants.core.EnumTax;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
@@ -26,6 +27,7 @@ import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.GrnStatus;
@@ -414,7 +416,7 @@ public class GRNAction extends BasePaginatedAction {
 				sku = grnLineItem.getSku();
 				
 				if (supplier != null && supplier.getState() != null && !supplier.getState().equals(sku.getWarehouse().getState())) {
-					purchaseInvoiceLineItem.setSurcharge(EnumSurcharge.TwoPercent.asSurcharge());
+					purchaseInvoiceLineItem.setTax(getBaseDao().get(Tax.class, EnumTax.CST.getId()));
 
 				}else if (sku != null) {
 					purchaseInvoiceLineItem.setSku(sku);
