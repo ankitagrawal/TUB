@@ -73,7 +73,7 @@ public enum EnumPaymentStatus {
             }else if(hkResponseCode.equalsIgnoreCase(GatewayResponseKeys.HKConstants.ERROR.getKey())){
                 return EnumPaymentStatus.ERROR;
             } else if(hkResponseCode.equalsIgnoreCase(GatewayResponseKeys.HKConstants.AUTH_PEND.getKey())){
-                return EnumPaymentStatus.ERROR;
+                return EnumPaymentStatus.AUTHORIZATION_PENDING;
             }
         }
         return null;
