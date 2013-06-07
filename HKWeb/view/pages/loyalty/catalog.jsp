@@ -183,8 +183,11 @@
 				<c:set var="product" value="${variant.product}"/>
 				<c:set var="imageId" value = "${variant.product.mainImageId }" />
 				<div class="imgContainer">
+					<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction">
 					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
 					     title="${product.name}" class="productImage" >
+					<s:param name ="loylatyProduct" value="lp" />
+					</s:link>
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
                 <div class="stellarPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>

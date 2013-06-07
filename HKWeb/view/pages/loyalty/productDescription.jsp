@@ -28,12 +28,27 @@
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
 	<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction" var="lpa"/>
+	<c:set var="lp" value="${lpa.loyaltyProduct}" />
+	<c:set var="prodVariant" value="${lpa.prodvariant}" />
+	<c:set var="product" value="${prodvariant.product}"/>
   	<div class="mainContainer container_16 clearfix embedMarginTop20">
     	
     	<!-- Main Title starts -->
     	<div class="titleLine grid_16 embedMarginBottom40">
     		<div class="lineAtLeftRight"></div>
-    		<div class="titleLineText">Optimum Nutrition 100% Whey Gold Standard, Double Rich Chocolate, 1KG</div>
+    		<c:choose>
+    		<div class="titleLineText">
+    			<c:when test = "${not empty prodVariant.productOptions }" >
+    					${product.name} , ${prodVariant.variantName}
+    					<c:forEach items="${prodVariant.productOptions}" var="prodOption">
+		        		      , ${prodOption.value}
+		    	        </c:forEach>
+    			</c:when>
+    			<c:otherwise>
+    				${product.name} , ${prodVariant.variantName}
+    			</c:otherwise>
+    		</div>
+    		</c:choose>
     		<div class="lineAtLeftRight"></div>
     	</div>
     	<!-- Main Title ends -->
@@ -43,54 +58,64 @@
 
     		<!-- Left Block -->
     		<div class="leftBlock grid_7">
+				<c:set var="imageId" value = "${product.mainImageId }" />
+				<div class="imgContainer">
+					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
+					     title="${product.name}" class="productImage-Large" >
+				</div>
+    		
     			<div class="productImageLarge">
-    				<img class="productImage-Large" alt="productImage-Large" src="stellarCatalo_files/badaDabba.png">
+    				<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}" title="${product.name}" class="productImage-Large" >
+
     			</div>
     			<div class="smallImages">
-            <img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
-            <img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
-            <img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
-            <img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
-          </div>
+            		<img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
+            		<img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
+            		<img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
+            		<img class="productImage-small" alt="productImage-small" src="stellarCatalo_files/chhotaDabba.png">
+            		
+            		<c:forEach items="${product.productImages}" var="productImage">
+					<%-- <a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',
+								largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}"> --%>
+              		<img src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id)}' class="productImage-small">
+              		<!-- </a> -->
+            		
+					</c:forEach>
+            		
+            		
+          		</div>
     		</div>
 
     		<!-- Right Block -->
     		<div class="rightBlock grid_8">
     			<div class="productInformation">
+    			<c:if test="${!empty (product.productFeatures)}">
     				<ul>
-    					<li>Meet 50% of your Protein Requirements in just 1 Serving of 30 gms</li>
-						<li>Explosive Muscular Pumps from IntraPro AC6 Pure Whey Isolate</li>
-						<li>Tastes way better than any other Whey Isolate</li>
+						<c:forEach var="feature" items="${product.productFeatures}">
+	    					<li>${feature.value}</li>
+						</c:forEach>    				
     				</ul>
+    			</c:if>
     			</div>
     			<div class="productAttrs grid_8">
     				<div class="grid_4">
-    					<label>Flavors</label>
-    					<select>
-    						<option value="chocolate">Chocolate</option>
-    					</select>
-    					<label>Weight</label>
-    					<select>
-    						<option value="1KG">1KG</option>
-    					</select>
+		    			<c:when test = "${not empty prodVariant.productOptions }" >
+    						<c:forEach items="${prodVariant.productOptions}" var="prodOption">
+		    	    		  <label>${prodOption.name}</label>
+							  <label>${prodOption.value}</label>
+			    	        </c:forEach>
+						</c:when>
     				</div>
-    				<div class="grid_3">
-              <div class="points">120 POINTS</div>
-              <div class="buyNowButton">BUY NOW</div>
-              <div class="dpOrCod">Discreet packaging | Cash on delivery</div>
+    		<div class="grid_3">
+              <div class="points">${hk:roundNumberForDisplay(lp.points)} POINTS</div>
+              <div class="buyNowButton">REDEEM NOW</div>
+              <div class="dpOrCod">Discreet packaging</div>
     				</div>
     			</div>
-    			<div class="belowButtons grid_6 embedMarginTop20">
-            <ul>
-              <li class="addTOCmpre">+/- ADD TO COMPARE</li>
-              <li class="speak">SPEAK TO A NUTRITIONIST</li>
-              <li class="wishlist">ADD TO WISHLIST</li>
-            </ul>
-          </div>
     		</div>
 
     	</div>
-    	<!-- Main Content starts -->
+    	<!-- Main Content ends -->
 
 	</stripes:layout-component>
 </stripes:layout-render>
