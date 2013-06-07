@@ -246,17 +246,17 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
-        Gateway gateway = payment.getGateway();
+        /*Gateway gateway = payment.getGateway();
         String gatewayOrderId = payment.getGatewayOrderId();
         Map<String, Object> hkrespObj;
         EnumPaymentStatus hkRespPayStatus;
-        PaymentStatus hkPaymentStatus;
+        PaymentStatus hkPaymentStatus;*/
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
 
-        if (gateway != null && gatewayOrderId != null) {
+        /*if (gateway != null && gatewayOrderId != null) {
             HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
             if(hkPaymentService != null){
                 hkrespObj = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
@@ -274,7 +274,7 @@ public class CheckPaymentAction extends BaseAction {
                     }
                 }
             }
-        }
+        }*/
 
         getPaymentManager().success(payment.getGatewayOrderId());
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
