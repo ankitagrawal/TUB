@@ -12,7 +12,6 @@
 	  
 	  $("#saveButton").click(function () {
 		  if(($.trim($("#contactPerson").val())==null||$.trim($("#contactPerson").val())=="")||
-				  ($.trim($("#contactNumber").val())==null||$.trim($("#contactNumber").val())=="")||
 				  ($.trim($("#contactEmailId").val())==null||$.trim($("#contactEmailId").val())=="")){
 			  alert("Please fill the mandatory fields");
 			  return false;
