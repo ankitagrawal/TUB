@@ -9,6 +9,7 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
+import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -235,29 +236,29 @@ public class EmailServiceImpl implements EmailService {
             String replyToName, String addCc, Map<String, String> headerMap, String attachPdf, String attachXl){
         // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
     	boolean isSent = true;
-        Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
+        Map<String, MultiPartEmail> htmlEmailMap = createMultiPartHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
         if (htmlEmailMap == null) {
             return false;
         }
 
-        for (Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
-            HtmlEmail htmlEmail = mapEntry.getValue();
+        for (Map.Entry<String, MultiPartEmail> mapEntry : htmlEmailMap.entrySet()) {
+        	MultiPartEmail htmlEmail = mapEntry.getValue();
             
             try {
 				htmlEmail.addCc(addCc);
-//				if (StringUtils.isNotBlank(attachPdf)) {
-//	                EmailAttachment attachment1 = new EmailAttachment();
-//	                attachment1.setPath(attachPdf);
-//	                attachment1.setDisposition(EmailAttachment.ATTACHMENT);
-//	                htmlEmail.attach(attachment1);
-//	            }
-//				
-//				if (StringUtils.isNotBlank(attachXl)) {
-//	                EmailAttachment attachment2 = new EmailAttachment();
-//	                attachment2.setPath(attachXl);
-//	                attachment2.setDisposition(EmailAttachment.ATTACHMENT);
-//	                htmlEmail.attach(attachment2);
-//	            }
+				if (StringUtils.isNotBlank(attachPdf)) {
+	                EmailAttachment attachment1 = new EmailAttachment();
+	                attachment1.setPath(attachPdf);
+	                attachment1.setDisposition(EmailAttachment.ATTACHMENT);
+	                htmlEmail.attach(attachment1);
+	            }
+				
+				if (StringUtils.isNotBlank(attachXl)) {
+	                EmailAttachment attachment2 = new EmailAttachment();
+	                attachment2.setPath(attachXl);
+	                attachment2.setDisposition(EmailAttachment.ATTACHMENT);
+	                htmlEmail.attach(attachment2);
+	            }
 				
 			} catch (EmailException e) {
 				logger.error("EmailException in adding CC/attachments ", addCc);
@@ -267,5 +268,35 @@ public class EmailServiceImpl implements EmailService {
             sendEmail(htmlEmail);
         }
         return isSent;
+    }
+    
+    public Map<String, MultiPartEmail> createMultiPartHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+            String replyToName, Map<String, String> headerMap) {
+        Map<String, MultiPartEmail> returnMap = new HashMap<String, MultiPartEmail>();
+        FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templateValues);
+        MultiPartEmail htmlEmail = null;
+        try {
+            if (renderOutput == null) {
+                logger.error("Error while rendering freemarker template in sendHtmlEmail");
+                return null;
+            }
+            htmlEmail = new MultiPartEmail();
+            htmlEmail.addTo(toEmail, toName).setFrom(fromEmail, fromName).setSubject(renderOutput.getSubject()).setHostName("localhost");
+            if (headerMap != null && !headerMap.isEmpty())
+                htmlEmail.setHeaders(headerMap);
+            if (!StringUtils.isBlank(replyToEmail))
+                htmlEmail.addReplyTo(replyToEmail, replyToName);
+            htmlEmail.setMsg(renderOutput.getMessage());
+            returnMap.put(toEmail, htmlEmail);
+
+            logger.debug("Trying to send email with Subject: ");
+            logger.debug(renderOutput.getSubject());
+            logger.debug("Body:");
+            logger.debug(renderOutput.getMessage());
+        } catch (EmailException ex) {
+            logger.error("EmailException in sendHtmlEmail for template "+ ex.getCause() + " message : " + ex.getMessage());
+            return null;
+        }
+        return returnMap;
     }
 }
