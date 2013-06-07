@@ -1,6 +1,28 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.hk.constants.courier.StateList" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<html>
+<head>
+
+<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
+  <script type="text/javascript">
+
+  $(document).ready(function() {
+	  
+	  $("#saveButton").click(function () {
+		  if(($.trim($("#contactPerson").val())==null||$.trim($("#contactPerson").val())=="")||
+				  ($.trim($("#contactNumber").val())==null||$.trim($("#contactNumber").val())=="")||
+				  ($.trim($("#contactEmailId").val())==null||$.trim($("#contactEmailId").val())=="")){
+			  alert("Please fill the mandatory fields");
+			  return false;
+		  }
+	  });
+	 
+	  
+  });
+  </script>
+</head><body>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" var="sma"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add/Edit Supplier">
 
@@ -25,24 +47,24 @@
 							<td><s:text name="supplier.tinNumber" readonly="readonly"/></td>
 						</c:otherwise>
 					</c:choose>
-				</tr>
-				<tr>
-					<td>Supplier Name<span class='aster' title="this field is required">*</span></td>
-					<td><s:text name="supplier.name"/></td>
-				</tr>
-				<tr>
 					<td>Address Line1</td>
 					<td><s:text name="supplier.line1"/></td>
 				</tr>
 				<tr>
+					<td>Supplier Name<span class='aster' title="this field is required">*</span></td>
+					<td><s:text name="supplier.name"/></td>
 					<td>Address Line2</td>
 					<td><s:text name="supplier.line2"/></td>
 				</tr>
 				<tr>
+				<td>Credit Days<span class='aster' title="this field is required">*</span></td>
+					<td><s:text name="supplier.creditDays" maxlength="3"/></td>
 					<td>City</td>
 					<td><s:text name="supplier.city"/></td>
 				</tr>
 				<tr>
+				<td>Target Credit Days<span class='aster' title="this field is required">*</span></td>
+					<td><s:text name="supplier.targetCreditDays" maxlength="3"/></td>
 					<td>State<span class='aster' title="this field is required">*</span></td>
 					<td>
 						<s:select name="supplier.state">
@@ -52,67 +74,75 @@
 					</td>
 				</tr>
 				<tr>
+				<td>Lead Time (in Days)<span class='aster' title="this field is required">*</span></td>
+					<td><s:text name="supplier.leadTime" maxlength="3"/></td>
 					<td>PIN</td>
 					<td><s:text name="supplier.pincode"/></td>
 				</tr>
 				<tr>
-					<td>Contact Person</td>
-					<td><s:text name="supplier.contactPerson"/></td>
-				</tr>
-				<tr>
-					<td>Contact Number</td>
-					<td><s:text name="supplier.contactNumber"/></td>
-				</tr>
-				<tr>
-					<td>Email Id</td>
-					<td><s:text name="supplier.email_id"/></td>
-				</tr>
-				<tr>
-					<td>Credit Days<span class='aster' title="this field is required">*</span></td>
-					<td><s:text name="supplier.creditDays" maxlength="3"/></td>
-				</tr>
-				<tr>
-					<td>Target Credit Days<span class='aster' title="this field is required">*</span></td>
-					<td><s:text name="supplier.targetCreditDays" maxlength="3"/></td>
-				</tr>
-				<tr>
-					<td>Lead Time (in Days)<span class='aster' title="this field is required">*</span></td>
-					<td><s:text name="supplier.leadTime" maxlength="3"/></td>
-				</tr>
-				<tr>
 					<td>Margins <br/></td>
 					<td><s:text name="supplier.margins" maxlength="20"/></td>
+					<td>Contact Person<span class='aster' title="this field is required">*</span></td>
+					<td><s:text name="supplier.contactPerson" id="contactPerson"/></td>
+					
 				</tr>
 				<tr>
-					<td>Damage and Expiry conditions<br/><font color="red">(Max 500 characters)</font></td>
+				<td>Damage and Expiry conditions<br/><font color="red">(Max 500 characters)</font></td>
 					<td><s:text name="supplier.damageConditions" maxlength="500"/></td>
+					<td>Contact Number<span class='aster' title="this field is required">*</span></td>
+					<td><s:text name="supplier.contactNumber" id="contactNumber"/></td>
+					
 				</tr>
 				<tr>
-					<td>Company/Brands Name <br/><font color="red">(If more than one Brand Name, Please enter separated
+				<td>Company/Brands Name <br/><font color="red">(If more than one Brand Name, Please enter separated
 					                                               by comma(,))</font> </td>
 					<td><s:text name="supplier.brandName"/></td>
+					<td>Email Id <span class='aster' title="this field is required">*</span><br/><font color="red">(PO Mail to supplier will be sent on this id.)</font></td>
+					<td><s:text name="supplier.email_id" id="contactEmailId"/></td>
 				</tr>
-
 				<tr>
 					<td>Validity of Terms of Trade</td>
 					<td><s:text name="supplier.tot"/></td>
+					<td>Contact Person 2</td>
+					<td><s:text name="supplier.contactPerson2"/></td>
 				</tr>
 
 				<tr>
 					<td>Status<span class='aster' title="this field is required">*</span> - ${sma.supplier.active}</td>
 					<td><s:radio name="supplier.active" value="true" checked="${sma.supplier.active}"/>Active
 						<s:radio name="supplier.active" value="false" checked="${sma.supplier.active}"/>Inactive</td>
+						<td>Contact Number 2</td>
+					<td><s:text name="supplier.contactNumber2"/></td>
 				</tr>
 
 				<tr>
 					<td>Comments</td>
-					<td><s:textarea name="supplier.comments" rows="5" cols="20"/></td>
+					<td rowspan="5"><s:textarea name="supplier.comments"/></td>
+					<td>Email Id 2</td>
+					<td><s:text name="supplier.email_id2"/></td>
+				</tr>
+				<tr>
+				<td></td>
+					<td>Contact Person 3</td>
+					<td><s:text name="supplier.contactPerson3"/></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Contact Number 3</td>
+					<td><s:text name="supplier.contactNumber3"/></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Email Id 3</td>
+					<td><s:text name="supplier.email_id3"/></td>
 				</tr>
 
 			</table>
-			<s:submit name="save" value="Save" class="buttons"/>
+			<s:submit id="saveButton" name="save" value="Save" class="buttons"/>
 
 		</s:form>
 	</s:layout-component>
 
 </s:layout-render>
+</body>
+</html>

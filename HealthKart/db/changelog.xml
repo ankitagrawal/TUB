@@ -13063,4 +13063,34 @@
     <changeSet author="Ankit Chhabra (generated)" id="1370256769302-2">
         <addForeignKeyConstraint baseColumnNames="badge_id" baseTableName="user_order_karma_profile"  constraintName="fk_ukarma_badge" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="badge" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1370601362351-5">
+        <addColumn tableName="supplier">
+            <column name="contact_number_2" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1370601362351-6">
+        <addColumn tableName="supplier">
+            <column name="contact_number_3" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1370601362351-7">
+        <addColumn tableName="supplier">
+            <column name="contact_person_2" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1370601362351-8">
+        <addColumn tableName="supplier">
+            <column name="contact_person_3" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1370601362351-9">
+        <addColumn tableName="supplier">
+            <column name="email_id_2" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1370601362351-10">
+        <addColumn tableName="supplier">
+            <column name="email_id_3" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
