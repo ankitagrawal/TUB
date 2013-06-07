@@ -1,19 +1,5 @@
 package com.hk.splitter.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -47,6 +33,12 @@ import com.hk.splitter.LineItemClassification.UniqueWhCombination;
 import com.hk.splitter.LineItemContainer;
 import com.hk.splitter.LineItemContainer.Classification;
 import com.hk.splitter.WarehouseBucket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class OrderSplitterImpl implements OrderSplitter {
@@ -62,7 +54,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 	@Autowired private SkuService skuService;
 
 	@Override
-	@Transactional
+	//@Transactional
 	public Set<ShippingOrder> split(long orderId) {
 		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
