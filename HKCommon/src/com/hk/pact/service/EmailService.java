@@ -34,6 +34,6 @@ String replyToName, Map<String, String> headerMap, Template template);*/
   public boolean sendHtmlEmail(String subject, String message, String toEmail, String toName, String attachementPath);
   
   public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-          String replyToName, String addCc, Map<String, String> headerMap);
+          String replyToName, String addCc, Map<String, String> headerMap, String attachPdf, String attachXl);
 
 }

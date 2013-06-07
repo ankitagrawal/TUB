@@ -232,7 +232,7 @@ public class EmailServiceImpl implements EmailService {
     }
     
     public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, String addCc, Map<String, String> headerMap){
+            String replyToName, String addCc, Map<String, String> headerMap, String attachPdf, String attachXl){
         // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
     	boolean isSent = true;
         Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
@@ -242,12 +242,28 @@ public class EmailServiceImpl implements EmailService {
 
         for (Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
             HtmlEmail htmlEmail = mapEntry.getValue();
+            
             try {
 				htmlEmail.addCc(addCc);
+				if (StringUtils.isNotBlank(attachPdf)) {
+	                EmailAttachment attachment1 = new EmailAttachment();
+	                attachment1.setPath(attachPdf);
+	                attachment1.setDisposition(EmailAttachment.ATTACHMENT);
+	                htmlEmail.attach(attachment1);
+	            }
+				
+				if (StringUtils.isNotBlank(attachXl)) {
+	                EmailAttachment attachment2 = new EmailAttachment();
+	                attachment2.setPath(attachXl);
+	                attachment2.setDisposition(EmailAttachment.ATTACHMENT);
+	                htmlEmail.attach(attachment2);
+	            }
+				
 			} catch (EmailException e) {
 				logger.error("EmailException in adding CC ", addCc);
 	            isSent = false;
 			}
+            
             sendEmail(htmlEmail);
         }
         return isSent;

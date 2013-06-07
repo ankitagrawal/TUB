@@ -67,9 +67,15 @@ public class PurchaseOrderManager {
 	public static final String PO_DATE = "PO Date:";
 	public static final String SUPPLIER = "Supplier:";
 	public static final String STATUS = "Status:";
-	public static final String INDICATE_PURCHASE_ORDER_CLAUSE = "1) Please indicate Purchase Order number on all invoice and challan and correspondence.";
-	public static final String ITEM_APPROVAL_CLAUSE = "2) The item supplied will be subject to our approval and all rejections will be to your account.";
-	public static final String NO_EXCESS_SUPPLY_CLAUSE = "3) No excess supply will be accepted ,unless agreed in writing by us.";
+	public static final String INDICATE_PURCHASE_ORDER_CLAUSE = "1) Any Cost Price or MRP changes should be highlighted in advance for acceptance of goods at the warehouse by sending the updated catalog.";
+	public static final String ITEM_APPROVAL_CLAUSE = "2) No excess/damaged/without MRP goods will be accepted against the purchase order raised. The courier charges in case of return of any goods will need to be borne by you.";
+	public static final String NO_EXCESS_SUPPLY_CLAUSE = "3) Please ensure that all details like TIN No, Address, Product Names, Company Name are correct in the invoice sent. Goods will not be accepted at the warehouse if any of the invoice details are incorrect.";
+	public static final String CLAUSE_4 = "4)  PO number and any special schemes should be mentioned on all invoices.";
+	public static final String CLAUSE_5 = "5) Physical products should be packaged well and unique codes, product name and MRP should be clearly mentioned as specified in the catalog.";
+	public static final String CLAUSE_6 = "6) Goods with expiry date in the next 6 months or already expired will not be accepted. Goods about to expire will need to be replaced or returned on request.";
+	public static final String CLAUSE_7 = "7) Please share any unique codes for the products that you may be using in your system, so we can include the same in the PO next time for easy identification of the products while you are sending the goods and while we receive them at our warehouse.";
+	public static final String CLAUSE_8_GURGAON = "8) Kindly ship the goods to our warehouse address as follows - Bright Lifecare Private Limited, Gurgaon Warehouse: Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
+	public static final String CLAUSE_8_MH = "8) Kindly ship the goods to our warehouse address as follows - Bright Lifecare Private Limited, Mumbai Warehouse: Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
 	public static final String TAX_RATE = "TAX RATE";
 	public static final String TAXABLE = "TAXABLE";
 	public static final String TAX = "TAX";
@@ -214,16 +220,60 @@ public class PurchaseOrderManager {
 		cell = row2.createCell(0);
 		cell.setCellStyle(style);
 		setCellValue(row2, 0, INDICATE_PURCHASE_ORDER_CLAUSE);
+		
 		addEmptyLine(row2, sheet1, ++rowCounter, cell);
 		row2 = sheet1.createRow(++rowCounter);
 		cell = row2.createCell(0);
 		cell.setCellStyle(style);
 		setCellValue(row2, 0, ITEM_APPROVAL_CLAUSE);
+		
 		addEmptyLine(row2, sheet1, ++rowCounter, cell);
 		row2 = sheet1.createRow(++rowCounter);
 		cell = row2.createCell(0);
 		cell.setCellStyle(style);
 		setCellValue(row2, 0, NO_EXCESS_SUPPLY_CLAUSE);
+		
+		addEmptyLine(row2, sheet1, ++rowCounter, cell);
+		row2 = sheet1.createRow(++rowCounter);
+		cell = row2.createCell(0);
+		cell.setCellStyle(style);
+		setCellValue(row2, 0, CLAUSE_4);
+		
+		addEmptyLine(row2, sheet1, ++rowCounter, cell);
+		row2 = sheet1.createRow(++rowCounter);
+		cell = row2.createCell(0);
+		cell.setCellStyle(style);
+		setCellValue(row2, 0, CLAUSE_5);
+		
+		addEmptyLine(row2, sheet1, ++rowCounter, cell);
+		row2 = sheet1.createRow(++rowCounter);
+		cell = row2.createCell(0);
+		cell.setCellStyle(style);
+		setCellValue(row2, 0, CLAUSE_6);
+		
+		addEmptyLine(row2, sheet1, ++rowCounter, cell);
+		row2 = sheet1.createRow(++rowCounter);
+		cell = row2.createCell(0);
+		cell.setCellStyle(style);
+		setCellValue(row2, 0, CLAUSE_7);
+		
+		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase("HARYANA")){
+			addEmptyLine(row2, sheet1, ++rowCounter, cell);
+			row2 = sheet1.createRow(++rowCounter);
+			cell = row2.createCell(0);
+			cell.setCellStyle(style);
+			setCellValue(row2, 0, CLAUSE_8_GURGAON);
+		}
+		
+		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase("MAHARASHTRA")){
+			addEmptyLine(row2, sheet1, ++rowCounter, cell);
+			row2 = sheet1.createRow(++rowCounter);
+			cell = row2.createCell(0);
+			cell.setCellStyle(style);
+			setCellValue(row2, 0, CLAUSE_8_MH);
+		}
+		
+		
 
 		wb.write(out);
 		out.close();

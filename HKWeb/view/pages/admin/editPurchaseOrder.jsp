@@ -260,7 +260,7 @@ function validateSubmitForm() {
 	});
 	
 	if(parseFloat($('#poStatus :selected').val())==30 && ${actionBean.purchaseOrder.supplier.email_id==null}){
-		var email = prompt("Please enter Supplier EmailId : ", "");
+		var email = prompt("Please enter a valid Supplier EmailId: ", "");
 		if(email==null || email==""){
 			alert("You did not enter any emailId.");
 			return false;

@@ -5,124 +5,43 @@ Purchase Order Approval Mail
 </head>
 <body>
 <#include "header.ftl">
-
-		<div style="padding: 2px;">
-		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.name}</p>
-		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.line1}</p>
-		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.line2}</p>
-		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.city}-${purchaseOrder.warehouse.pincode}</p>
-		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.warehouse.state}</p>
-		<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">Tin No - ${purchaseOrder.warehouse.tin}</p>
-		</div>
-
-<div style="text-align: center;">
-<h4>
-PURCHASE ORDER
-</h4>
-</div>
-
-  <table cellspacing="0" id="mainTable" border="1">
-  <tr>
-  <td style="font-weight: bold;">Supplier</td>
-  <td>${purchaseOrder.supplier.name}</td>
-  <td style="font-weight: bold;">PO Place Date</td>
-  
-  <#if purchaseOrder.poPlaceDate??>
-  <td>${purchaseOrder.poPlaceDate }</td>
-  <#else>
-  <td>N/A</td>
-  </#if>
-  </tr>
-  
-  <tr>
-  <td style="font-weight: bold;">Address</td>
-  <td>
-  <#if purchaseOrder.supplier.line1??>
-  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.line1}</p>
-  </#if>
-  <#if purchaseOrder.supplier.line2??>
-  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.line2}</p>
-  </#if>
-  <#if purchaseOrder.supplier.city??>
-  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.city}</p>
-  </#if>
-  <#if purchaseOrder.supplier.state??>
-  <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">${purchaseOrder.supplier.state}</p>
-  </#if>
-  </td>
-  <td style="font-weight: bold;">PO#</td>
-  <td>${purchaseOrder.id }</td>
-  </tr>
-  
-  <tr>
-  	<td style="font-weight: bold;">Contact Name</td>
-  	<#if purchaseOrder.supplier.contactPerson??>
-  	<td>${purchaseOrder.supplier.contactPerson}</td>
+<#if purchaseOrder.supplier.contactPerson??>
+  	Dear ${purchaseOrder.supplier.contactPerson}, 
   	<#else>
-  	<td>N/A</td>
+  	Dear ${purchaseOrder.supplier.name}, 
   	</#if>
-  	<td style="font-weight: bold;">Contact Number</td>
-  	<#if purchaseOrder.supplier.contactNumber??>
-  	<td>${purchaseOrder.supplier.contactNumber}</td>
-  	<#else>
-  	<td>N/A</td>
-   </#if>
-  </tr>
-  
-  </table>
+<br/>
+<br/>
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">Please find the PO attached below. Kindly send across the goods at the earliest.</p>
+<br/>
+
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px; font-weight: bold;">Please ensure the following while sending the goods -</p>
+
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">1. Any Cost Price or MRP changes should be highlighted in advance for acceptance of goods at the warehouse by sending the updated catalog.</p>
+
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">2. No excess/damaged/without MRP goods will be accepted against the purchase order raised. The courier charges in case of return of any goods will need to be borne by you.</p>
+
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">3. Please ensure that all details like TIN No, Address, Product Names, Company Name are correct in the invoice sent. Goods will not be accepted at the warehouse if any of the invoice details are incorrect.</p>
+    
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">4. PO number and any special schemes should be mentioned on all invoices.</p>
+
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">5. Physical products should be packaged well and unique codes, product name and MRP should be clearly mentioned as specified in the catalog.</p>
+    
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">6. Goods with expiry date in the next 6 months or already expired will not be accepted. Goods about to expire will need to be replaced or returned on request.</p>
+
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">7. Please share any unique codes for the products that you may be using in your system, so we can include the same in the PO next time for easy identification of the products while you are sending the goods and while we receive them at our warehouse.</p>
+
+<#if purchaseOrder.supplier.state=="HARYANA">
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">8. Kindly ship the goods to our warehouse address as follows - <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;font-weight: bold;">Bright Lifecare Private Limited, Gurgaon Warehouse:</p>Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036</p>
+</#if>
+<#if purchaseOrder.supplier.state=="MAHARASHTRA">
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">8. Kindly ship the goods to our warehouse address as follows - <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;font-weight: bold;">Bright Lifecare Private Limited, Mumbai Warehouse:</p>Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra</p>
+</#if>
 
 <br/>
-  <table cellspacing="0" id="mainTable" border="1">
-  <tr>
-  <td style="font-weight: bold;">Variant Id</td>
-  <td style="font-weight: bold;">UPC</td>
-  <td style="font-weight: bold;">Details</td>
-  <td style="font-weight: bold;">Quantity</td>
-  <td style="font-weight: bold;">Cost Price<br/>(Without Tax)</td>
-  <td style="font-weight: bold;">MRP</td>
-  <td style="font-weight: bold;">Tax(%)</td>
-  <td style="font-weight: bold;">Taxable</td>
-  <td style="font-weight: bold;">Tax</td>
-  <td style="font-weight: bold;">Surcharge</td>
-  <td style="font-weight: bold;">Payable</td>
-  </tr>
-  
-  <#list purchaseOrder.poLineItems as poLineItem>
-  <tr>
-	<#if poLineItem.sku??>
-		<td>${poLineItem.sku.productVariant.id}</td>
-		<#if poLineItem.sku.productVariant.upc??>
-		<td>${poLineItem.sku.productVariant.upc}</td>
-		<#else>
-		<td>N/A</td>
-		</#if>
-		<td>${poLineItem.sku.productVariant.product.name}<br/>${poLineItem.sku.productVariant.optionsCommaSeparated}</td>
-	<#else>
-		<td>N/A</td>
-		<td>N/A</td>
-		<td>${poLineItem.productName}</td>
-	</#if>
-	
-	<td>${poLineItem.qty}</td>
-	<td>${poLineItem.costPrice}</td>
-	<td>${poLineItem.mrp}</td>
-	<td>${poLineItem.sku.tax.value*100}</td>
-	<td>${poLineItem.taxableAmount}</td>
-	<td>${poLineItem.taxAmount}</td>
-	<td>${poLineItem.surchargeAmount}</td>
-	<td>${poLineItem.payableAmount}</td>
-	</tr>
-	</#list>
-	<tr>
-	<td colspan="6">Total</td>
-	<td>${purchaseOrder.taxableAmount}</td>
-	<td>${purchaseOrder.taxAmount}</td>
-	<td>${purchaseOrder.surchargeAmount}</td>
-	<td>${purchaseOrder.finalPayableAmount}</td>
-	</tr>
-  </table>
+<br/>
+<p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;font-weight: bold;">Kindly confirm the receipt of PO via email. </p>
 
-<p style="margin-bottom:1em"><strong>HealthKart Team</strong></p>
 <#include "footer.ftl">
 </body>
 </html>

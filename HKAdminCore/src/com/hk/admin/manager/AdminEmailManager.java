@@ -2,8 +2,10 @@ package com.hk.admin.manager;
 
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
+import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.cache.RoleCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
@@ -54,6 +56,8 @@ import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
+import net.sourceforge.stripes.action.SimpleMessage;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
@@ -88,6 +92,8 @@ public class AdminEmailManager {
     private String marketingAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
     private String logisticsOpsEmails;
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String                                    adminDownloads;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -122,8 +128,14 @@ public class AdminEmailManager {
     private EmailManager emailManager;
     @Autowired
     SkuGroupService skuGroupService;
+    @Autowired
+    private PurchaseOrderManager purchaseOrderManager;
+    @Autowired
+    PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
 
-
+    private File  pdfFile;
+    private File  xlsFile;
+    private PurchaseOrderDto purchaseOrderDto;
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
 
@@ -1009,7 +1021,22 @@ public class AdminEmailManager {
         valuesMap.put("purchaseOrder", purchaseOrder);
         String fromPurchaseEmail = "purchase@healthkart.com";
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, "nihal@healthkart.com", null);
+        
+        try {
+            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
+            pdfFile.getParentFile().mkdirs();
+            purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
+            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".xls");
+            xlsFile.getParentFile().mkdirs();
+            xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
+        } catch (Exception e) {
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+        }
+        
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, "nihal@healthkart.com", null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
 	}
 
     static enum Product_Status {
@@ -1106,4 +1133,19 @@ public class AdminEmailManager {
 
     }
 
+	public PurchaseOrderManager getPurchaseOrderManager() {
+		return purchaseOrderManager;
+	}
+
+	public void setPurchaseOrderManager(PurchaseOrderManager purchaseOrderManager) {
+		this.purchaseOrderManager = purchaseOrderManager;
+	}
+
+	public PurchaseOrderPDFGenerator getPurchaseOrderPDFGenerator() {
+		return purchaseOrderPDFGenerator;
+	}
+
+	public void setPurchaseOrderPDFGenerator(PurchaseOrderPDFGenerator purchaseOrderPDFGenerator) {
+		this.purchaseOrderPDFGenerator = purchaseOrderPDFGenerator;
+	}
 }
