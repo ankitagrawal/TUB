@@ -1,15 +1,18 @@
 package com.hk.impl.dao.sku;
 
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.warehouse.WarehouseDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +28,8 @@ import java.util.List;
 public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     @Autowired
     SkuGroupDao skuGroupDao;
+    @Autowired
+    WarehouseDao warehouseDao;
 
     /*public List<SkuGroup> getInStockSkuGroups(Sku sku) {
          List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
@@ -58,9 +63,14 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
 
     public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
+        List<Warehouse> warehouseList =  warehouseDao.getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
         SkuGroup minMRPUnbookedSkuGroup = null;
-        String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.productVariant = :productVariant group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
-        List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery).setParameter("productVariant", productVariant).list();
+        String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi " +
+            "where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.warehouse in (:warehouseList) and pvi.sku.productVariant = :productVariant " +
+            "group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
+        List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
+            .setParameter("productVariant", productVariant)
+            .setParameterList("warehouseList", warehouseList).list();
         if (skuItemIdList != null && skuItemIdList.size() > bookedQty) {
             List<Long> firstUnBookedSkuItem = skuItemIdList.subList(bookedQty.intValue(), bookedQty.intValue() + 1);
             String query = "select distinct si.skuGroup from SkuItem si where si.id = :skuItemId order by si.skuGroup.mrp asc";
