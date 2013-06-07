@@ -1,9 +1,10 @@
 package com.hk.constants.payment;
 
 import com.hk.domain.payment.Gateway;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,6 +78,11 @@ public enum EnumGateway {
         }
         return paymenLModeIds;
     }
+
+    public static List<Long> getHKServiceEnabledGateways(){
+        return Arrays.asList(CITRUS.asGateway().getId(), EBS.asGateway().getId(), ICICI.asGateway().getId());
+    }
+
 }
 
 

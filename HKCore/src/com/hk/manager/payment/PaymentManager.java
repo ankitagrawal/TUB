@@ -4,6 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -302,7 +303,7 @@ public class PaymentManager {
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             payment.setGatewayReferenceId(null);
             Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
-            if (orderCount != null && orderCount >= 3) {
+            if (orderCount != null && orderCount >= 2) {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
             } else {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
@@ -520,7 +521,11 @@ public class PaymentManager {
     }
 
     public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
-        return ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        HkPaymentService hkPaymentService = null;
+        if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
+            hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        }
+        return hkPaymentService;
     }
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus){

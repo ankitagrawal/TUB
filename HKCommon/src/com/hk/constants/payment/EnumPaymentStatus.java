@@ -78,6 +78,10 @@ public enum EnumPaymentStatus {
                 EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
     }
 
+    public static List<Long> getPaymentFailureStatusIds(){
+        return Arrays.asList(FAILURE.getId(),ERROR.getId());
+    }
+
   public static List<Long> getPaymentSuccessPageStatusIds() {
       return getEnumIDs(Arrays.asList(EnumPaymentStatus.SUCCESS,EnumPaymentStatus.ON_DELIVERY, EnumPaymentStatus.AUTHORIZATION_PENDING));
   }
