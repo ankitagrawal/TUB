@@ -246,34 +246,35 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
-        Gateway gateway = payment.getGateway();
+        /*Gateway gateway = payment.getGateway();
         String gatewayOrderId = payment.getGatewayOrderId();
         Map<String, Object> hkrespObj;
         EnumPaymentStatus hkRespPayStatus;
-        PaymentStatus hkPaymentStatus;
+        PaymentStatus hkPaymentStatus;*/
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
-//        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
 
-        if (gateway != null && gatewayOrderId != null) {
+        /*if (gateway != null && gatewayOrderId != null) {
             HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
             if(hkPaymentService != null){
                 hkrespObj = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
                 PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
 
                 if(hkrespObj != null){
-                    hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-                    hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
-                    boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
-                    if (!isValid) {
-                        // send email to admin
-                        paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus((String)hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
+                    if(hkRespPayStatus != null){
+                        hkPaymentStatus = hkRespPayStatus.asPaymenStatus();
+                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+                        if (!isValid) {
+                            // send email to admin
+                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                        }
                     }
                 }
             }
-        }
+        }*/
 
         getPaymentManager().success(payment.getGatewayOrderId());
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
