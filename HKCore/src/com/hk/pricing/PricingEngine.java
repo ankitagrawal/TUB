@@ -570,4 +570,8 @@ public class PricingEngine {
                         + pricingDto.getPrepaidServicesTotal() + shipping : redeemRewardPoints).build();
     }
 
+    public CartLineItem createRewardPointLineItemPOS (Order order, Double redeemRewardPoints) {
+    	return new CartLineItemBuilder().ofType(EnumCartLineItemType.RewardPoint).discountOnHkPrice(
+                order.getAmount()  < redeemRewardPoints ? order.getAmount() : redeemRewardPoints).build();
+    }
 }

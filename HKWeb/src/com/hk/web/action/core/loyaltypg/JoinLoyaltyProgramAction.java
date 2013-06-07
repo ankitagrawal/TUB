@@ -59,8 +59,6 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 		if (this.dob != null && this.dob instanceof Date) {
 			user.setBirthDate(this.dob);
 		}
-		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
-		this.userService.save(user);
 		this.loyaltyProgramService.createNewUserBadgeInfo(user);
 		return new RedirectResolution(LoyaltyCatalogAction.class);
 	}

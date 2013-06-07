@@ -106,7 +106,9 @@ public class CheckPaymentAction extends BaseAction {
             if (gateway != null) {
                 hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
                 try {
-                    paymentResultMap = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                    if(hkPaymentService != null){
+                        paymentResultMap = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                    }
                 } catch (Exception e) {
                     logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
                 }
@@ -131,7 +133,9 @@ public class CheckPaymentAction extends BaseAction {
                     if (gateway != null) {
                         hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
                         try {
-                            paymentResultMap = hkPaymentService.seekHkPaymentResponse(seekPayment.getGatewayOrderId());
+                            if(hkPaymentService != null){
+                                paymentResultMap = hkPaymentService.seekHkPaymentResponse(seekPayment.getGatewayOrderId());
+                            }
                         } catch (Exception e) {
                             logger.info("Payment Seek exception for gateway order id" + seekPayment.getGatewayOrderId(), e);
                         }
@@ -254,16 +258,19 @@ public class CheckPaymentAction extends BaseAction {
 //        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
 
         if (gateway != null && gatewayOrderId != null) {
-            hkrespObj = paymentManager.getHkPaymentServiceByGateway(gateway).seekHkPaymentResponse(gatewayOrderId);
-            PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+            HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
+            if(hkPaymentService != null){
+                hkrespObj = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
 
-            if(hkrespObj != null){
-                hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-                hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
-                boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
-                if (!isValid) {
-                    // send email to admin
-                    paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                if(hkrespObj != null){
+                    hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
+                    hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
+                    boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+                    if (!isValid) {
+                        // send email to admin
+                        paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                    }
                 }
             }
         }
