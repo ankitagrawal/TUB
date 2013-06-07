@@ -68,6 +68,7 @@ public enum EnumTax {
 
 	public static List<EnumTax> getEnumTaxByType(String type){
 		List<EnumTax> enumTaxList = new ArrayList<EnumTax>();
+		//todo: use a for loop and compare the type.
 		if(type.equals(TaxConstants.VAT_TYPE)){
 			enumTaxList.add(EnumTax.SERVICE_10_3);
 			enumTaxList.add(EnumTax.VAT_5_25);
