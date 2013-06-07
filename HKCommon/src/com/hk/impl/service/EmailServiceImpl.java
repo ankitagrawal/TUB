@@ -245,22 +245,22 @@ public class EmailServiceImpl implements EmailService {
             
             try {
 				htmlEmail.addCc(addCc);
-				if (StringUtils.isNotBlank(attachPdf)) {
-	                EmailAttachment attachment1 = new EmailAttachment();
-	                attachment1.setPath(attachPdf);
-	                attachment1.setDisposition(EmailAttachment.ATTACHMENT);
-	                htmlEmail.attach(attachment1);
-	            }
-				
-				if (StringUtils.isNotBlank(attachXl)) {
-	                EmailAttachment attachment2 = new EmailAttachment();
-	                attachment2.setPath(attachXl);
-	                attachment2.setDisposition(EmailAttachment.ATTACHMENT);
-	                htmlEmail.attach(attachment2);
-	            }
+//				if (StringUtils.isNotBlank(attachPdf)) {
+//	                EmailAttachment attachment1 = new EmailAttachment();
+//	                attachment1.setPath(attachPdf);
+//	                attachment1.setDisposition(EmailAttachment.ATTACHMENT);
+//	                htmlEmail.attach(attachment1);
+//	            }
+//				
+//				if (StringUtils.isNotBlank(attachXl)) {
+//	                EmailAttachment attachment2 = new EmailAttachment();
+//	                attachment2.setPath(attachXl);
+//	                attachment2.setDisposition(EmailAttachment.ATTACHMENT);
+//	                htmlEmail.attach(attachment2);
+//	            }
 				
 			} catch (EmailException e) {
-				logger.error("EmailException in adding CC ", addCc);
+				logger.error("EmailException in adding CC/attachments ", addCc);
 	            isSent = false;
 			}
             
