@@ -4,6 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailAttachment;
@@ -243,7 +250,6 @@ public class EmailServiceImpl implements EmailService {
 
         for (Map.Entry<String, MultiPartEmail> mapEntry : htmlEmailMap.entrySet()) {
         	MultiPartEmail htmlEmail = mapEntry.getValue();
-            
             try {
 				htmlEmail.addCc(addCc);
 				if (StringUtils.isNotBlank(attachPdf)) {
@@ -286,7 +292,17 @@ public class EmailServiceImpl implements EmailService {
                 htmlEmail.setHeaders(headerMap);
             if (!StringUtils.isBlank(replyToEmail))
                 htmlEmail.addReplyTo(replyToEmail, replyToName);
-            htmlEmail.setMsg(renderOutput.getMessage());
+            
+            final MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(renderOutput.getMessage(), "text/html");
+            // Create the Multipart.  Add BodyParts to it.
+            final Multipart mp = new MimeMultipart("alternative");
+            mp.addBodyPart(htmlPart);
+            // Set Multipart as the message's content
+            final MimeMultipart mmp = new MimeMultipart();
+            mmp.addBodyPart(htmlPart);
+            
+            htmlEmail.addPart(mmp);
             returnMap.put(toEmail, htmlEmail);
 
             logger.debug("Trying to send email with Subject: ");
@@ -296,7 +312,10 @@ public class EmailServiceImpl implements EmailService {
         } catch (EmailException ex) {
             logger.error("EmailException in sendHtmlEmail for template "+ ex.getCause() + " message : " + ex.getMessage());
             return null;
-        }
+        } catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return returnMap;
     }
 }
