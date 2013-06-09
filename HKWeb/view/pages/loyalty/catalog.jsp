@@ -186,7 +186,7 @@
 					<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction">
 					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
 					     title="${product.name}" class="productImage" >
-					<s:param name ="loylatyProduct" value="lp" />
+					<s:param name ="loylatyProduct" value="${lp}" />
 					</s:link>
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
