@@ -18,6 +18,7 @@ import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.inventory.rtv.ExtraInventoryStatus;
 import com.hk.manager.EmailManager;
+import com.hk.pact.dao.TaxDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.warehouse.Warehouse;
@@ -88,6 +89,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	UserService userService;
 	@Autowired
 	PurchaseInvoiceService purchaseInvoiceService;
+	@Autowired
+	TaxDao taxDao;
 
 	private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
 	private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
@@ -166,7 +169,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			}
 			
 		}
-		taxList = getMasterDataDao().getTaxList();
+		taxList = taxDao.getLocalTaxList();
 		return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",
 				purchaseOrderId).addParameter("wareHouseId", wareHouseId);
 	}
@@ -623,7 +626,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 		if (purchaseOrder != null) {
 			newPurchaseOrderId = purchaseOrder.getId();
 		}
-		taxList = getMasterDataDao().getTaxList();
+		taxList = taxDao.getLocalTaxList();
 		noCache();
 		addRedirectAlertMessage(new SimpleMessage("PO and PoLine Item has been created !!! with New PO ID - "
 				+ newPurchaseOrder.getId()));

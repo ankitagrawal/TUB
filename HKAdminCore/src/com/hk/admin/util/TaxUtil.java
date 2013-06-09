@@ -83,7 +83,7 @@ public class TaxUtil {
     /**
 	 * To be used in case of ExtraInventory only where sku is not present for certain line items.
 	 * @param supplier
-	 * @param wareHouseState
+	 * @param warehouseState
 	 * @param taxValue
 	 * @param taxable
 	 * @return
