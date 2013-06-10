@@ -59,7 +59,8 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate) {
         Date monthBackDate = DateUtils.startOfMonthBack(new DateTime()).toDate();
         List<NotifyMe> notifyMeList = new ArrayList<NotifyMe>();
-        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMe(null, monthBackDate, null, null, null, false, false, null);
+        List<NotifyMe> notifyMeFinalList = null;
+        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMe(null, monthBackDate, null, null, null, true, false, null);
         if (nonDeletedOOSList != null && nonDeletedOOSList.size() > 0) {
             notifyMeList.addAll(nonDeletedOOSList);
         }
@@ -67,8 +68,11 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         if (deletedList != null && deletedList.size() > 0) {
             notifyMeList.addAll(deletedList);
         }
-
-        Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, notifyMeList);
+        if (notifyMeList.size() > 0) {
+            Set<NotifyMe> notifyMeSet = new HashSet<NotifyMe>(notifyMeList);
+            notifyMeFinalList = new ArrayList<NotifyMe>(notifyMeSet);
+        }
+        Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, notifyMeFinalList);
         return adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
     }
 
@@ -92,7 +96,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                         int unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
                         if (isSimilarProduct) {
                             /* product is OOS for similar product Notify me */
-                            unbookedInventory = unbookedInventory > 0 ? unbookedInventory : getSumOfSimilarProductInventory(productVariant);
+                            unbookedInventory = getSumOfSimilarProductInventory(productVariant);
                         }
                         /* Calculate number of users eligible for sending mails */
                         if (unbookedInventory > 0) {

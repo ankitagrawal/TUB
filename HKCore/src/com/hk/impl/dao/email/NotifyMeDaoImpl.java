@@ -31,9 +31,9 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     }
 
     public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory,
-                               Boolean productInStock, Boolean productDeleted) {
+                               Boolean productVariantOutOfStock, Boolean productDeleted) {
         DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                productInStock, productDeleted, null);
+                productVariantOutOfStock, productDeleted, null);
         if (pageNo == 0 && perPage == 0) {
             return list(notifyMeCriteria, 1, 1000);
         }
@@ -42,20 +42,20 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     }
 
     public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
-                                         Boolean productInStock, Boolean productDeleted) {
+                                         Boolean productVariantOutOfStock, Boolean productDeleted) {
         DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                productInStock, productDeleted, null);
+                productVariantOutOfStock, productDeleted, null);
         return findByCriteria(notifyMeCriteria);
     }
 
-    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted, Boolean productHidden) {
+    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted, Boolean productHidden) {
         DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                productInStock, productDeleted, productHidden);
+                productVariantOutOfStock, productDeleted, productHidden);
         return findByCriteria(notifyMeCriteria);
     }
 
     private DetachedCriteria getNotifyMeListSearchCriteria(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
-                                                           Boolean productInStock, Boolean productDeleted, Boolean productHidden) {
+                                                           Boolean productVariantOutOfStock, Boolean productDeleted, Boolean productHidden) {
         DetachedCriteria notifyMeCriteria = DetachedCriteria.forClass(NotifyMe.class);
         if (startDate != null) {
             notifyMeCriteria.add(Restrictions.gt("createdDate", startDate));
@@ -68,7 +68,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
             notifyMeCriteria.add(Restrictions.eq("productVariant", productVariant));
         }
         DetachedCriteria productVariantCriteria = null;
-        if (product != null || primaryCategory != null || productDeleted != null || productInStock != null || productHidden != null) {
+        if (product != null || primaryCategory != null || productDeleted != null || productVariantOutOfStock != null || productHidden != null) {
             productVariantCriteria = notifyMeCriteria.createCriteria("productVariant");
         }
 
@@ -83,8 +83,8 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         if (productDeleted != null) {
             productVariantCriteria.add(Restrictions.eq("deleted", productDeleted));
         }
-        if (productInStock != null) {
-            productVariantCriteria.add(Restrictions.eq("outOfStock", productInStock));
+        if (productVariantOutOfStock != null) {
+            productVariantCriteria.add(Restrictions.eq("outOfStock", productVariantOutOfStock));
         }
         if (productHidden != null) {
             if (productCriteria == null) {
@@ -143,8 +143,8 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         return getSession().createQuery(query).setParameterList("productVariantList", productVariantList).setParameter("notifyMeEmail", notifyMeEmail).list();
     }
 
-    public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted, Boolean productHidden) {
-        DetachedCriteria notifyMeDetachedCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
+    public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted, Boolean productHidden) {
+        DetachedCriteria notifyMeDetachedCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory, productVariantOutOfStock, productDeleted, productHidden);
         int totalResults = count(notifyMeDetachedCriteria,false);
         ProjectionList projectionList = Projections.projectionList();
         projectionList.add(Projections.alias(Projections.property("id"), "id"));

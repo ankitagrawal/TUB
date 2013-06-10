@@ -93,7 +93,7 @@
                                        value="name" label="displayName"/>
         </s:select>
             <label>Product Out of stock:</label>
-            <s:select name="productInStock">
+            <s:select name="productOutOfStock">
                 <s:option value="">--All--</s:option>
                 <s:option value="true">True</s:option>
                 <s:option value="false">False</s:option>

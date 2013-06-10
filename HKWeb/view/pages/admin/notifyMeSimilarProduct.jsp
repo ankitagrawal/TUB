@@ -7,6 +7,13 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction" var="notifyMeBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Notify Me List Generator">
+    <s:layout-component name="htmlHead">
+        <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+        <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+    </s:layout-component>
+
     <s:layout-component
             name="heading">Notify Me List Similar Products </s:layout-component>
 
@@ -31,7 +38,7 @@
                                        value="name" label="displayName"/>
         </s:select>
             <label>Product Out of stock:</label>
-            <s:select name="productInStock">
+            <s:select name="productOutOfStock">
                 <s:option value="">--All--</s:option>
                 <s:option value="true">True</s:option>
                 <s:option value="false">False</s:option>
@@ -122,15 +129,15 @@
                                     <c:set var="similarProductInventoryList"
                                            value="${hk:similarProductWithUnbookedInventory(notifyMeDto.productVariant)}"/>
                                     <c:choose>
-                                    <c:when test="${similarProductInventoryList != null && fn:length(similarProductInventoryList) > 1}">
-                                        <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
-                                            ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
-                                            <br/>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        No similar products.
-                                    </c:otherwise>
+                                        <c:when test="${similarProductInventoryList != null && fn:length(similarProductInventoryList) > 1}">
+                                            <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
+                                                ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
+                                                <br/>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            No similar products.
+                                        </c:otherwise>
                                     </c:choose>
                                 </td>
                                 <td>

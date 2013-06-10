@@ -15,10 +15,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.akube.framework.util.DateUtils;
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.impl.dao.email.NotifyMeDto;
-import com.hk.web.action.core.user.NotifyMeAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -31,7 +29,6 @@ import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -91,7 +88,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     private ProductVariant productVariant;
     private Product product;
     private Category primaryCategory;
-    private Boolean productInStock;
+    private Boolean productOutOfStock;
     private Boolean productDeleted;
     private Boolean productHidden;
     private Float conversionRate = 0.1f;
@@ -102,7 +99,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted);
+        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productOutOfStock, productDeleted);
         notifyMeList = notifyMePage.getList();
         return new ForwardResolution("/pages/admin/notifyMeList.jsp");
     }
@@ -134,7 +131,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/notify-me-list" + sdf.format(new Date()) + ".xls");
-            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted);
+            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate, product, productVariant, primaryCategory, productOutOfStock, productDeleted);
             addRedirectAlertMessage(new SimpleMessage("Notify me list successfully generated."));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
@@ -227,11 +224,11 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         if (productDeleted == null) {
             productDeleted = true;
         }
-        if (!productDeleted && (productInStock == null || !productInStock) && (productHidden == null || !productHidden)) {
+        if (!productDeleted && (productOutOfStock == null || !productOutOfStock) && (productHidden == null || !productHidden)) {
             addRedirectAlertMessage(new SimpleMessage("Please mark product as deleted/OOS/Hidden value , to qualify for similar product mails"));
             return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
         }
-        notifyMePage = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
+        notifyMePage = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productOutOfStock, productDeleted, productHidden);
         notifyMeDtoList = notifyMePage.getList();
 
         totalProductVariant = notifyMeDtoList.size();
@@ -294,7 +291,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         params.add("startDate");
         params.add("endDate");
         params.add("primaryCategory");
-        params.add("productInStock");
+        params.add("productOutOfStock");
         params.add("productDeleted");
         params.add("productHidden");
         return params;
@@ -360,12 +357,12 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         this.emailCampaignDao = emailCampaignDao;
     }
 
-    public Boolean getProductInStock() {
-        return productInStock;
+    public Boolean getProductOutOfStock() {
+        return productOutOfStock;
     }
 
-    public void setProductInStock(Boolean productInStock) {
-        this.productInStock = productInStock;
+    public void setProductOutOfStock(Boolean productOutOfStock) {
+        this.productOutOfStock = productOutOfStock;
     }
 
     public Boolean getProductDeleted() {
