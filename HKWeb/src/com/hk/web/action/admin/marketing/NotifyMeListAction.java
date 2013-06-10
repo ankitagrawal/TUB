@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -94,6 +95,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     private Float conversionRate = 0.1f;
     private int bufferRate = 2;
     private int totalProductVariant;
+    private Boolean similarProductAvailable;
 
 
     @DefaultHandler
@@ -230,7 +232,25 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         }
         notifyMePage = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productOutOfStock, productDeleted, productHidden);
         notifyMeDtoList = notifyMePage.getList();
+        /*HardCording filter of similar product , ToDo will find from criteria*/
+        if (similarProductAvailable != null) {
+            if (notifyMeDtoList != null && notifyMeDtoList.size() > 0) {
+                List<NotifyMeDto> copyOnWriteDtoList = new CopyOnWriteArrayList<NotifyMeDto>(notifyMeDtoList);
+                for (NotifyMeDto notifyMeDto : copyOnWriteDtoList) {
+                    if (similarProductAvailable) {
+                        if (notifyMeDto.getProductVariant().getProduct().getSimilarProducts().size() == 0) {
+                            copyOnWriteDtoList.remove(notifyMeDto);
+                        }
+                    } else {
+                        if (notifyMeDto.getProductVariant().getProduct().getSimilarProducts().size() > 0) {
+                            copyOnWriteDtoList.remove(notifyMeDto);
+                        }
+                    }
+                }
+                notifyMeDtoList = copyOnWriteDtoList;
+            }
 
+        }
         totalProductVariant = notifyMeDtoList.size();
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
@@ -411,5 +431,13 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     public void setTotalProductVariant(int totalProductVariant) {
         this.totalProductVariant = totalProductVariant;
+    }
+
+    public Boolean getSimilarProductAvailable() {
+        return similarProductAvailable;
+    }
+
+    public void setSimilarProductAvailable(Boolean similarProductAvailable) {
+        this.similarProductAvailable = similarProductAvailable;
     }
 }

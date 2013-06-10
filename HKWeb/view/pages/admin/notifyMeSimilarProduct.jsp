@@ -54,6 +54,12 @@
                 <s:option value="true">True</s:option>
                 <s:option value="false">False</s:option>
             </s:select>
+            <label>Similar Product Available:</label>
+            <s:select name="similarProductAvailable">
+                <s:option value="">--All--</s:option>
+                <s:option value="true">True</s:option>
+                <s:option value="false">False</s:option>
+            </s:select>
             <s:submit name="notifyMeListForDeletedHiddenOOSProduct" value="Search"/>
 
             </fieldset>
