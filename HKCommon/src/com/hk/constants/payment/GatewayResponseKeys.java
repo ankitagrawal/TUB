@@ -211,6 +211,8 @@ public class GatewayResponseKeys {
         TXN_ERROR_MSG("error"),
         PROCESSING("Processing"),
         PROCESSED("Processed"),
+        Authorized("Authorized"),
+        AuthFailed("AuthFailed"),
         ;
 
 

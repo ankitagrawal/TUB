@@ -167,6 +167,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
             String isFlagged = element.getAttributeValue(GatewayResponseKeys.EbsConstants.IS_FLAGGED.getKey());
             String errorCode = element.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_CODE);
             String errorMessage = element.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_MSG);
+            String ebsTransactionType = element.getAttributeValue(EbsPaymentGatewayWrapper.TXN_TRANSACTION_TYPE);
             //String gatewayOrderId = element.getAttributeValue(EbsPaymentGatewayWrapper.TXN_REFERENCE_NO);
 
             if(paymentId != null){
@@ -175,7 +176,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
                 hkPaymentResponse.setRrn(transactionId);
                 hkPaymentResponse.setAmount(NumberUtils.toDouble(amount));
                 hkPaymentResponse.setResponseMsg(status);
-                updateResponseStatus(hkPaymentResponse, transactionType, isFlagged,status);
+                updateResponseStatus(hkPaymentResponse, transactionType, isFlagged,status, ebsTransactionType);
 
             } else {
                 hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
@@ -186,11 +187,11 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         return hkPaymentResponse;
     }
 
-    private void updateResponseStatus(HkPaymentResponse hkPaymentResponse, String transactionType , String isFlagged, String status){
+    private void updateResponseStatus(HkPaymentResponse hkPaymentResponse, String transactionType , String isFlagged, String status, String ebsTransactionType){
         if(transactionType.equalsIgnoreCase(EnumPaymentTransactionType.REFUND.getName())){
             updateRefundPaymentStatus(hkPaymentResponse,status);
         } else {
-            updateSalePaymentStatus(hkPaymentResponse,transactionType,isFlagged);
+            updateSalePaymentStatus(hkPaymentResponse,isFlagged, ebsTransactionType);
         }
     }
 
@@ -204,14 +205,20 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         }
     }
 
-    private void updateSalePaymentStatus(HkPaymentResponse hkPaymentResponse, String transactionType, String isFlagged) {
-        if (isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_FALSE.getKey())) {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
-        } else if (isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_TRUE.getKey())) {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
+    private void updateSalePaymentStatus(HkPaymentResponse hkPaymentResponse,  String isFlagged, String ebsTransactionType) {
+        if(GatewayResponseKeys.EbsConstants.Authorized.getKey().equalsIgnoreCase(ebsTransactionType)){
+            if (isFlagged!= null && isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_FALSE.getKey())) {
+                hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+            } else if (isFlagged!=null && isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_TRUE.getKey())) {
+                hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
+            } else {
+                hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
+            }
         } else {
             hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
+            hkPaymentResponse.setResponseMsg("Authentication Failed");
         }
+
     }
 
     @Override
