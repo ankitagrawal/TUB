@@ -1469,3 +1469,128 @@ ul {
 strong {
 	font-weight:bold;
 }
+
+/* Classes for product description page */
+.productImage-small {
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.productImageLarge {
+	margin-bottom: 10px;
+}
+
+.titleLineText{
+	position: relative;
+	float: left;
+	width: 70%;
+	text-align: center;
+	font-size: 20px;
+}
+
+.lineAtLeftRight{
+	position: relative;
+	float: left;
+	width: 15%;
+	border-bottom: 1px solid #ddd;
+	top: 10px;
+}
+
+.productImage-Large{
+	width: 100%;
+}
+
+.productAttrs select{
+	width: 100%;
+	background: transparent;
+	border: 1px solid #ddd;
+	padding: 5px;
+	margin-bottom: 15px;
+}
+
+.buyNowButton{
+	position: relative;
+	float: left;
+	width: 110px;
+	border: 1px solid #5c9dff;
+	padding: 10px;
+	background: #5c9dff;
+	color: white;
+	margin-bottom: 10px;
+	text-align: center;
+	left: 15px;
+	cursor: pointer;
+}
+
+.points{
+	position: relative;
+	float: left;
+	color: #005000;
+	margin-bottom: 10px;
+	left: 20px;
+}
+
+.dpOrCod{
+	position: relative;
+	float: left;
+	font-size: 10px;
+	left: 15px;
+}
+
+.productInformation ul{
+	list-style-type: square;
+	font-family: sans-serif;
+}
+
+.productInformation{
+	width: 550px;
+}
+
+.productInformation p {
+	font-size: 14px !important; 
+}
+.belowButtons{
+	position: relative;
+	float: left;
+	border:1px solid rgb(172, 172, 172);
+	width: 100%;
+	padding:10px;
+	padding-left: 0px;
+	padding-right: 0px;
+	background: #dcdcdc;
+}
+
+.belowButtons ul{
+	margin: 0px;
+}
+
+.addTOCmpre{
+	cursor: pointer;
+	width: 29%;
+	position: relative;
+	float: left;
+	font-size: 8px;
+	margin: 0px;
+	text-align: center;
+	border-right: 1px solid rgb(172, 172, 172);
+}
+.speak{
+	cursor: pointer;
+	width: 41%;
+	position: relative;
+	float: left;
+	font-size: 8px;
+	margin: 0px;
+	text-align: center;
+	border-right: 1px solid rgb(172, 172, 172);
+}
+
+.wishlist{
+	cursor: pointer;
+	width: 29%;
+	position: relative;
+	float: left;
+	font-size: 8px;
+	margin: 0px;
+	text-align: center;
+}

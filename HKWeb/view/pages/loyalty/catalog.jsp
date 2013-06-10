@@ -179,16 +179,16 @@
 			} else { colCount++; }
 			%>
 				<div class="product clickable">
+				<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction">
 				<c:set var="variant" value="${lp.variant}"/>
 				<c:set var="product" value="${variant.product}"/>
 				<c:set var="imageId" value = "${variant.product.mainImageId }" />
-				<div class="imgContainer">
-					<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction">
-					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
-					     title="${product.name}" class="productImage" >
-					<s:param name ="loylatyProduct" value="${lp}" />
-					</s:link>
-				</div>
+					<div class="imgContainer">
+						<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
+					    	 title="${product.name}" class="productImage" >
+						<s:param name ="prodVariantId" value="${variant.id}" />
+					</div>
+				</s:link>
                 <div class="productDescription embedMargin">${product.name}</div>
                 <div class="stellarPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>
                 <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
