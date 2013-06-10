@@ -58,7 +58,7 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     @Override
     public List<Bucket> getBuckets(List<EnumBucket> enumBuckets) {
         List<Long> bucketIds = EnumBucket.getBucketIDs(enumBuckets);
-        if(bucketIds == null || bucketIds.isEmpty()){
+        if (bucketIds == null || bucketIds.isEmpty()) {
             return new ArrayList<Bucket>();
         }
         Criteria criteria = getSession().createCriteria(Bucket.class);
@@ -89,21 +89,33 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     }
 
 
+    public List<ActionTask> listCurrentActionTask(ActionTask currentActionTask, List<Bucket> buckets) {
+        Set<ActionTask> currentActionTasks = new HashSet<ActionTask>();
+        List<ActionPathWorkflow> actionPathWorkFlows = searchActionPathWorkflow(currentActionTask, buckets);
+        for (ActionPathWorkflow actionPathWorkFlow : actionPathWorkFlows) {
+            currentActionTasks.add(actionPathWorkFlow.getActionTask());
+        }
+        return new ArrayList<ActionTask>(currentActionTasks);
+    }
+
+
     private List<ActionPathWorkflow> searchActionPathWorkflow(ActionTask currentActionTask, List<Bucket> buckets) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ActionPathWorkflow.class);
-        if(buckets != null){
+        if (buckets != null && !buckets.isEmpty()) {
             detachedCriteria.add(Restrictions.in("bucket", buckets));
         }
-        detachedCriteria.add(Restrictions.eq("actionTask", currentActionTask));
+        if (currentActionTask != null) {
+            detachedCriteria.add(Restrictions.eq("actionTask", currentActionTask));
+        }
         return findByCriteria(detachedCriteria);
     }
 
 
-     public List<ActionItem> getActionItemsOfActionQueue (){
-         String hql = "select DISTINCT ai from ActionItem ai  where ai.shippingOrder.shippingOrderStatus.id in( :actionAwaitingStatus)" ;
-         Query actionItemListQuery = getSession().createQuery(hql.toString()).setParameterList("actionAwaitingStatus", EnumShippingOrderStatus.getStatusIdsForActionQueue());
-         return (List<ActionItem>) actionItemListQuery.list();
+    public List<ActionItem> getActionItemsOfActionQueue() {
+        String hql = "select DISTINCT ai from ActionItem ai  where ai.shippingOrder.shippingOrderStatus.id in( :actionAwaitingStatus)";
+        Query actionItemListQuery = getSession().createQuery(hql.toString()).setParameterList("actionAwaitingStatus", EnumShippingOrderStatus.getStatusIdsForActionQueue());
+        return (List<ActionItem>) actionItemListQuery.list();
 
-     }
+    }
 
 }

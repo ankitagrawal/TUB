@@ -2,6 +2,7 @@ package com.hk.domain.inventory.creditNote;
 // Generated 13 May, 2013 6:34:46 PM by Hibernate Tools 3.2.4.CR1
 
 
+import com.hk.domain.core.Tax;
 import com.hk.domain.sku.Sku;
 
 import javax.persistence.*;
@@ -42,6 +43,10 @@ public class CreditNoteLineItem implements java.io.Serializable {
 
   @Column(name = "remarks", length = 65535)
   private String remarks;
+
+	@ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "tax_id")
+  private Tax tax;
 
   public Long getId() {
     return this.id;
@@ -99,7 +104,13 @@ public class CreditNoteLineItem implements java.io.Serializable {
     this.remarks = remarks;
   }
 
+	public Tax getTax() {
+		return tax;
+	}
 
+	public void setTax(Tax tax) {
+		this.tax = tax;
+	}
 }
 
 

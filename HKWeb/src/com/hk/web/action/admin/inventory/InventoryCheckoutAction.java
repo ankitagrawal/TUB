@@ -1,34 +1,14 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import com.hk.admin.dto.inventory.CycleCountDto;
-import com.hk.admin.pact.service.inventory.CycleCountService;
-import com.hk.admin.util.CycleCountDtoUtil;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.util.HKCollectionUtils;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.CycleCountService;
+import com.hk.admin.util.CycleCountDtoUtil;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
@@ -41,6 +21,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -48,14 +29,26 @@ import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.taglibs.Functions;
+import com.hk.util.HKCollectionUtils;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKOUT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -293,8 +286,8 @@ public class InventoryCheckoutAction extends BaseAction {
                 }
                 if (lineItem != null) {
                     ProductVariant variant = skuGroup.getSku().getProductVariant();
-                    if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
-                        addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
+	                if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
+		                addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
                     } else {
                         Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
                         if (checkedOutItemCount == null) {

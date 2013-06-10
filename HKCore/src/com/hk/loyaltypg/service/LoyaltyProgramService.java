@@ -62,4 +62,8 @@ public interface LoyaltyProgramService {
 	
 	public UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId);
 
+	public String updateCardNumber(UserBadgeInfo info, String cardNumber);
+
+	public List<UserOrderKarmaProfile> getUserLoyaltyProfileHistory(User user);
+
 }

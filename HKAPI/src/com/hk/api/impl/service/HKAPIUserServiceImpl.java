@@ -11,6 +11,7 @@ import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.UserManager;
+import com.hk.manager.LinkManager;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.security.HkAuthService;
 import org.apache.commons.lang.StringUtils;
@@ -19,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.domain.user.User;
+import com.hk.domain.TempToken;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.api.dto.user.HKAPIUserDTO;
 import com.hk.api.pact.service.HKAPIUserService;
 
@@ -47,6 +50,10 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
     RewardPointService rewardPointService;
     @Autowired
     UserManager userManager;
+    @Autowired
+    private TempTokenDao tempTokenDao;
+    @Autowired
+    private LinkManager linkManager;
 
 
     public User getHKUser(HKAPIUserDTO HKAPIUserDTO, Long storeId) {
@@ -154,6 +161,13 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
         user.setStore(storeService.getStoreById(storeId));
         return userService.save(user);
     }
+
+   @Override
+    public String getResetPasswordLink(User user) {
+      TempToken tempToken = tempTokenDao.createNew(user, 1); // 1Day
+      return linkManager.getSSOResetPasswordLink(tempToken);
+    }
+
 
     private boolean userExists(HKAPIUserDTO HKAPIUserDTO, Long storeId) {
         if (HKAPIUserDTO != null) {
