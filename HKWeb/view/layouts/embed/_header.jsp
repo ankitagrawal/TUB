@@ -50,7 +50,11 @@
             <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
               14 day return policy</a> |
               <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us </s:link> | Email : <a href="mailto:info@healthkart.com">info@healthkart.com</a>
-	            <c:if test="${projectEnv != 'prod'}">${projectEnv}</c:if>
+	            <c:if test="${projectEnv != 'prod'}">
+	            <div align="center" style="height:30px; font-size:20px; color:red; font-weight:bold;">
+ 					 Current Environment: ${projectEnv} 
+				</div>
+		</c:if>
           </div>
               <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())){%>
                 <div style="color: red; float: left; ">&nbsp;(not available on 26th Jan 2013)</div>
