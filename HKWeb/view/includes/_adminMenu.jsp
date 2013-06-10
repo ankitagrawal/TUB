@@ -1,8 +1,13 @@
-<%@ page import="com.hk.constants.ticket.EnumTicketStatus" %>
+<%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<%
+String projectEnv = (String) ServiceLocatorFactory.getProperty(Keys.Env.projectEnv);
+pageContext.setAttribute("projectEnv", projectEnv);
+%>
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
     <div class="menuBar adminMenuBar" style="width:100%; margin:0px;">
         <ul class='lvl1'>
@@ -62,7 +67,9 @@
     </div>
     <c:if test="${whAction.setWarehouse != null}">
         <div align="center" class="prom yellow help" style="height:16px; font-size:16px; color:red; font-weight:bold;">
+	          ${projectEnv}
             ${whAction.setWarehouse.identifier}
+	          ${projectEnv}
         </div>
     </c:if>
     <div class="right">

@@ -105,6 +105,7 @@ public class Keys {
 
         public static final String testDataDump                    = "testDataDump";
 
+        public static final String projectEnv                      = "projectEnv";
         public static final String dbHostName                      = "dbHostName";
         public static final String dbName                          = "dbName";
         public static final String dbUser                          = "dbUser";

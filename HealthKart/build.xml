@@ -58,6 +58,7 @@
         <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_NAME" value="${DB_NAME}" />
         <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_USERID" value="${DB_USERID}" />
         <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_PASSWD" value="${DB_PASSWD}" />
+        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="PROJECT_ENV" value="${project.env}" />
 
 		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/StripesResources.properties" />
