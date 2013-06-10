@@ -1020,6 +1020,11 @@ public class AdminEmailManager {
     	HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
         String fromPurchaseEmail = "purchase@healthkart.com";
+        Set<String> categoryAdmins = new HashSet<String>();
+        if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+            Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+            categoryAdmins = emailManager.categoryAdmins(category);
+        }
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
         
         try {
@@ -1028,15 +1033,13 @@ public class AdminEmailManager {
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
             getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
             
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".xls");
             xlsFile.getParentFile().mkdirs();
             xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
         } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); 
         }
-        
-        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, "nihal@healthkart.com", null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
 	}
 
     static enum Product_Status {

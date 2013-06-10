@@ -3,6 +3,7 @@ package com.hk.impl.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -240,7 +241,7 @@ public class EmailServiceImpl implements EmailService {
     }
     
     public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, String addCc, Map<String, String> headerMap, String attachPdf, String attachXl){
+            String replyToName, Set<String> emailSet, Map<String, String> headerMap, String attachPdf, String attachXl){
         // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
     	boolean isSent = true;
         Map<String, MultiPartEmail> htmlEmailMap = createMultiPartHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
@@ -251,7 +252,12 @@ public class EmailServiceImpl implements EmailService {
         for (Map.Entry<String, MultiPartEmail> mapEntry : htmlEmailMap.entrySet()) {
         	MultiPartEmail htmlEmail = mapEntry.getValue();
             try {
-				htmlEmail.addCc(addCc);
+            	if(emailSet!=null && emailSet.size()>0){
+	            	for(String email:emailSet){
+	            		htmlEmail.addCc(email);
+	            	}
+            	}
+				
 				if (StringUtils.isNotBlank(attachPdf)) {
 	                EmailAttachment attachment1 = new EmailAttachment();
 	                attachment1.setPath(attachPdf);
@@ -267,7 +273,7 @@ public class EmailServiceImpl implements EmailService {
 	            }
 				
 			} catch (EmailException e) {
-				logger.error("EmailException in adding CC/attachments ", addCc);
+				logger.error("EmailException in adding CC/attachments ");
 	            isSent = false;
 			}
             
