@@ -64,6 +64,21 @@ public enum EnumPaymentStatus {
         return Arrays.asList(EnumPaymentStatus.SUCCESS.asPaymenStatus(), EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
     }
 
+    public static EnumPaymentStatus getCorrespondingStatus(String hkResponseCode){
+        if(hkResponseCode != null){
+            if(hkResponseCode.equalsIgnoreCase(GatewayResponseKeys.HKConstants.SUCCESS.getKey())){
+                return EnumPaymentStatus.SUCCESS;
+            }else if(hkResponseCode.equalsIgnoreCase(GatewayResponseKeys.HKConstants.FAILED.getKey())){
+                return EnumPaymentStatus.FAILURE;
+            }else if(hkResponseCode.equalsIgnoreCase(GatewayResponseKeys.HKConstants.ERROR.getKey())){
+                return EnumPaymentStatus.ERROR;
+            } else if(hkResponseCode.equalsIgnoreCase(GatewayResponseKeys.HKConstants.AUTH_PEND.getKey())){
+                return EnumPaymentStatus.AUTHORIZATION_PENDING;
+            }
+        }
+        return null;
+    }
+
     public static List<PaymentStatus> getSeekPaymentStatuses() {
         return Arrays.asList(REQUEST.asPaymenStatus(),
                 AUTHORIZATION_PENDING.asPaymenStatus(),

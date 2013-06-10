@@ -26,6 +26,9 @@ public class Tax implements java.io.Serializable {
   @Column(name = "value", nullable = false, precision = 6, scale = 4)
   private Double value;
 
+	@Column(name = "type",  length = 45)
+  private String type;
+
   public Long getId() {
     return this.id;
   }
@@ -50,7 +53,15 @@ public class Tax implements java.io.Serializable {
     this.value = value;
   }
 
-  @Override
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
   public String toString() {
     return id == null ? "" : id.toString();
   }
