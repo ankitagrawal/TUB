@@ -37,12 +37,12 @@ public class RelatedProductXlsParser {
         logger.debug("parsing RelatedProduct info : " + file.getAbsolutePath());
         Set<Product> productSet = new HashSet<Product>();
         ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
-        Iterator<HKRow> rowiterator = excel.parse();
+        Iterator<HKRow> rowIterator = excel.parse();
         int rowCount = 1;
         try {
-            while (rowiterator.hasNext()) {
+            while (rowIterator.hasNext()) {
                 rowCount++;
-                HKRow row = rowiterator.next();
+                HKRow row = rowIterator.next();
                 String productId = row.getColumnValue(XslConstants.PRODUCT_ID);
                 String relatedProductStr = row.getColumnValue(XslConstants.RELATED_PRODUCTS);
                 List<Product> relatedProducts = new ArrayList<Product>();
@@ -62,12 +62,11 @@ public class RelatedProductXlsParser {
                     Product relatedProduct = getProductService().getProductById(relatedProductId);
                     if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !relatedProducts.contains(relatedProduct)) {
                         relatedProducts.add(relatedProduct);
-                        product.setRelatedProducts(relatedProducts);
-                        getProductService().save(product);
-                        productSet.add(product);
                     }
                 }
-                product.setId(productId);
+                product.setRelatedProducts(relatedProducts);
+                getProductService().save(product);
+                productSet.add(product);
                 relatedProducts.add(product);
 
             }
