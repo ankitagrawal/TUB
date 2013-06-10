@@ -13,6 +13,7 @@ import com.hk.api.request.AddRewardPointRequest;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
+import com.hk.domain.TempToken;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.util.json.JSONResponseBuilder;
 import com.shiro.PrincipalImpl;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Component;
 import com.hk.api.APIRegistry;
 import com.hk.api.AuthAPI;
 import com.hk.api.security.annotation.SecureResource;
+import com.hk.pact.service.UserService;
+import net.sourceforge.stripes.validation.LocalizableError;
+import net.sourceforge.stripes.action.JsonResolution;
 
 @Path("/user")
 @Component
@@ -36,6 +40,9 @@ public class UserResource extends BaseAction {
 
     @Autowired
     HKAPIUserService hkapiUserService;
+
+    @Autowired
+    UserService userService;
 
     @GET
     @Path("/all")
@@ -125,6 +132,21 @@ public class UserResource extends BaseAction {
         Double eligibleRewardPoints = getUserAPI().getEligibleRewardPointsForUser(login);
 
         return new JSONResponseBuilder().addField("login", login).addField("rewardPoints", eligibleRewardPoints).addField("rewardPointsAdded", rewardPointsAdded).build();
+    }
+
+   @GET
+    @Path("/{login}/resetPassword")
+    @Produces("application/json")
+    public String getResetPasswordLink(@PathParam("login")
+                                          String login) {
+        User user = userService.findByLogin(login);
+        if (user == null) {
+             return new JSONResponseBuilder().addField("login", login).addField("status", "invalidLogin").build();
+        }
+
+        String resetPasswordLink = hkapiUserService.getResetPasswordLink(user);
+
+        return new JSONResponseBuilder().addField("login", login).addField("resetPasswordLink", resetPasswordLink).build();
     }
 
     public UserAPI getUserAPI() {

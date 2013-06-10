@@ -320,7 +320,7 @@ public class UserManager {
 
     public Long getProcessedOrdersCount(User user) {
         Long count = 0L;
-        List<Long> validOrderStatusIds = Arrays.asList(EnumOrderStatus.Shipped.getId(), EnumOrderStatus.Delivered.getId());
+        List<Long> validOrderStatusIds = Arrays.asList(EnumOrderStatus.Delivered.getId());
         for (Order order : user.getOrders()) {
             if (validOrderStatusIds.contains(order.getOrderStatus().getId())) {
                 count++;

@@ -179,6 +179,8 @@
 <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"/>
 
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}" secondaryLevelCategory="${ca.childCategorySlug}" />
+<!-- BLADE marketing-->
+<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="category" />
 
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>

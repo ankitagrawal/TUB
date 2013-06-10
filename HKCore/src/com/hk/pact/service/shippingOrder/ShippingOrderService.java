@@ -43,7 +43,7 @@ public interface ShippingOrderService {
 	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse);
 
 
-    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
+    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall);
 
     public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder);
 

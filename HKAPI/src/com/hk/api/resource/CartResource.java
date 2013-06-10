@@ -120,9 +120,9 @@ public class CartResource extends BaseAction {
     if (coupon == null) {
       coupon = ihoManager.createIHOCoupon(user, couponCode);
     }
-    if (coupon == null) {
+    /*if (coupon == null) {
       coupon = employeeManager.createEmpCoupon(user, couponCode);
-    }
+    }*/
 
     if (coupon == null) {
       message = "Coupon code is invalid.";
@@ -146,7 +146,7 @@ public class CartResource extends BaseAction {
       } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
         error = error_role;
         Offer offer = coupon.getOffer();
-        if (offer.getOfferEmailDomains().size() > 0) {
+        if (!offerManager.isOfferValidForUserDomain(coupon.getOffer(), user)) {
           message = "The offer is valid for the following domains only:";
           for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
             message += "<br/>" + offerEmailDomain.getEmailDomain();
