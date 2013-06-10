@@ -12,7 +12,6 @@ import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.LowInventory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.EmailManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
@@ -191,7 +190,25 @@ public class InventoryServiceImpl implements InventoryService {
                 updatePvPrice.setNewHkprice(newHkPrice);
                 updatePvPrice.setTxnDate(new Date());
                 updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
-                baseDao.save(updatePvPrice);
+	              baseDao.save(updatePvPrice);
+/*
+                updatePvPrice = (UpdatePvPrice) baseDao.save(updatePvPrice);
+
+                // If price is in range - update it Automatically
+                // Tolerance Limit is 15% either way
+                if (Math.abs((leastMRPSkuGroup.getMrp() - productVariant.getMarkedPrice()) / productVariant.getMarkedPrice() * 100) < 15
+                    || Math.abs((leastMRPSkuGroup.getCostPrice() - productVariant.getCostPrice()) / productVariant.getCostPrice() * 100) < 15) {
+                  productVariant.setCostPrice(updatePvPrice.getNewCostPrice());
+                  productVariant.setMarkedPrice(updatePvPrice.getNewMrp());
+                  productVariant.setHkPrice(updatePvPrice.getNewHkprice());
+                  productVariantService.save(productVariant);
+
+                  updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Updated.getId());
+                  updatePvPrice.setUpdateDate(new Date());
+                  updatePvPrice.setUpdatedBy(userService.getAdminUser());
+                  baseDao.save(updatePvPrice);
+                }
+*/
             }
         }
     }

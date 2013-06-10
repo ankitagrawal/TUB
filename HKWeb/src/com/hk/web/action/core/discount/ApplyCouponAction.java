@@ -30,6 +30,7 @@ import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.manager.OfferManager;
@@ -111,9 +112,9 @@ public class ApplyCouponAction extends BaseAction {
         if (coupon == null) {
             coupon = ihoManager.createIHOCoupon(user, couponCode);
         }
-        if (coupon == null) {
+        /*if (coupon == null) {
             coupon = employeeManager.createEmpCoupon(user, couponCode);
-        }
+        }*/
 
         if (coupon == null) {
             message = new LocalizableMessage("/ApplyCoupon.action.invalid.coupon").getMessage(getContext().getLocale());
@@ -137,10 +138,15 @@ public class ApplyCouponAction extends BaseAction {
             } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
                 error = error_role;
 	            Offer offer = coupon.getOffer();
-	            if (offer.getOfferEmailDomains().size() > 0) {
+	            if (!offerManager.isOfferValidForUserDomain(offer, user)) {
 		            message = "The offer is valid for the following domains only:";
 		            for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
 			            message += "<br/>" + offerEmailDomain.getEmailDomain();
+		            }
+	            }else if (!offerManager.isOfferValidForUserRole(offer, user)) {
+		            message = "The offer is valid for the following roles only:";
+		            for (Role role : offer.getRoles()) {
+			            message += "<br/>" + role.getName();
 		            }
 	            } else {
 		            message = new LocalizableMessage("/ApplyCoupon.action.offer.not.allowed").getMessage(getContext().getLocale());

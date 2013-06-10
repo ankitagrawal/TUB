@@ -1,4 +1,5 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.TaxDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
@@ -101,7 +102,7 @@
           <li>
             <label>Tax ID</label>
             <s:select name="productVariant.tax">
-              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="taxList" label="name" value="id"/>
+              <hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList" label="name" value="id"/>
             </s:select>
           </li>
           <li>

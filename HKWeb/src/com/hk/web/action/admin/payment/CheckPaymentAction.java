@@ -106,7 +106,9 @@ public class CheckPaymentAction extends BaseAction {
             if (gateway != null) {
                 hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
                 try {
-                    paymentResultMap = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                    if(hkPaymentService != null){
+                        paymentResultMap = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                    }
                 } catch (Exception e) {
                     logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
                 }
@@ -131,7 +133,9 @@ public class CheckPaymentAction extends BaseAction {
                     if (gateway != null) {
                         hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
                         try {
-                            paymentResultMap = hkPaymentService.seekHkPaymentResponse(seekPayment.getGatewayOrderId());
+                            if(hkPaymentService != null){
+                                paymentResultMap = hkPaymentService.seekHkPaymentResponse(seekPayment.getGatewayOrderId());
+                            }
                         } catch (Exception e) {
                             logger.info("Payment Seek exception for gateway order id" + seekPayment.getGatewayOrderId(), e);
                         }
@@ -242,31 +246,35 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
-        Gateway gateway = payment.getGateway();
+        /*Gateway gateway = payment.getGateway();
         String gatewayOrderId = payment.getGatewayOrderId();
         Map<String, Object> hkrespObj;
         EnumPaymentStatus hkRespPayStatus;
-        PaymentStatus hkPaymentStatus;
+        PaymentStatus hkPaymentStatus;*/
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
-//        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
 
-        if (gateway != null && gatewayOrderId != null) {
-            hkrespObj = paymentManager.getHkPaymentServiceByGateway(gateway).seekHkPaymentResponse(gatewayOrderId);
-            PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+        /*if (gateway != null && gatewayOrderId != null) {
+            HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
+            if(hkPaymentService != null){
+                hkrespObj = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
 
-            if(hkrespObj != null){
-                hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-                hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
-                boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
-                if (!isValid) {
-                    // send email to admin
-                    paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                if(hkrespObj != null){
+                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus((String)hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
+                    if(hkRespPayStatus != null){
+                        hkPaymentStatus = hkRespPayStatus.asPaymenStatus();
+                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+                        if (!isValid) {
+                            // send email to admin
+                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                        }
+                    }
                 }
             }
-        }
+        }*/
 
         getPaymentManager().success(payment.getGatewayOrderId());
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,

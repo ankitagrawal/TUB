@@ -36,6 +36,7 @@ public class ShippingOrderAction extends BaseAction {
 	private ShippingOrder shippingOrder;
 
     private String cancellationRemark;
+    private boolean firewall;
 	private Warehouse warehouseToUpdate;
 	@Autowired
 	WarehouseService warehouseService;
@@ -124,6 +125,15 @@ public class ShippingOrderAction extends BaseAction {
 		return new JsonResolution(healthkartResponse);
 	}
 
+    @JsonHandler
+    public Resolution autoEscalateShippingOrder() {
+        shippingOrderService.autoEscalateShippingOrder(shippingOrder, firewall);
+        Map<String, Object> data = new HashMap<String, Object>(1);
+        data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
+        return new JsonResolution(healthkartResponse);
+    }
+
     public Resolution bulkEscalateShippingOrder() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria =  new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting)));
@@ -175,4 +185,12 @@ public class ShippingOrderAction extends BaseAction {
   public void setWarehouseToUpdate(Warehouse warehouseToUpdate) {
     this.warehouseToUpdate = warehouseToUpdate;
   }
+
+    public boolean isFirewall() {
+        return firewall;
+    }
+
+    public void setFirewall(boolean firewall) {
+        this.firewall = firewall;
+    }
 }

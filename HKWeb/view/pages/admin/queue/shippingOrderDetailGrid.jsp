@@ -117,7 +117,6 @@
     </tr>
     </thead>
 </c:if>
-${shippingOrder.id}
 <c:forEach items="${shippingOrders}" var="shippingOrder" varStatus="shippingOrderCtr">
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="payment" value="${shippingOrder.baseOrder.payment}"/>
@@ -256,6 +255,12 @@ ${shippingOrder.id}
                 Flip Warehouse
             </s:link>)
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
+                                           event="autoEscalateShippingOrder" class="autoEscalate">
+                <s:param name="shippingOrder" value="${shippingOrder}"/>
+                <s:param name="firewall" value="<%=Boolean.FALSE%>"/>
+                Auto Escalate SO
+            </s:link>)
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
                                      event="manualEscalateShippingOrder" class="manualEscalate">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Manual Escalate SO
@@ -264,12 +269,7 @@ ${shippingOrder.id}
                                      class="splitShippingOrder">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Split SO
-            </s:link>)
-                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
-                                     class="splitShippingOrder" event="view" >
-                <s:param name="actionItem" value="${hk:getActionItem(shippingOrder).id}"/>
-                Edit Action Item
-            </s:link>)
+            </s:link>)               
                 <c:if test="${isSearchShippingOrder == true}">
                     &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
                                          class="pseudoSplitBaseOrder" event="splitOrderPractically">

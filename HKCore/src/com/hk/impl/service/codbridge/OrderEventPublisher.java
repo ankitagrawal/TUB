@@ -1,19 +1,5 @@
 package com.hk.impl.service.codbridge;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.StringUtils;
 import com.google.gson.Gson;
@@ -32,6 +18,18 @@ import com.hk.pact.service.codbridge.UserCallResponseObserver;
 import com.hk.pact.service.codbridge.UserCartDetail;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -146,23 +144,25 @@ public class OrderEventPublisher {
     public boolean publishOrderPlacedEvent(final Order order){
         boolean messagePublished = false;
         try{
-        	final User loggedInUser = userService.getLoggedInUser();
+	        final Long userId = order.getUser().getId();
         	splitExecutorService.submit(new Runnable() {
 				@Override
 				public void run() {
 					try {
+						final User loggedInUser = userService.getUserById(userId);
+						logger.info("Splitting for logged in user " + loggedInUser.getId() + " for thread id " + Thread.currentThread().getId() + " name " + Thread.currentThread().getName());
 						UserThreadLocal.set(loggedInUser);
 						orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 					} catch (Throwable t) {
-						logger.error("Error while Splitting the order", t);
-						orderLoggingService.logOrderActivity(order, loggedInUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), t.getMessage());
+						logger.error("Error while Splitting the order with orderID: " + order.getId(), t);
+						orderLoggingService.logOrderActivity(order, userService.getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), t.getMessage());
 					} finally {
 						UserThreadLocal.unset();
 					}
 				}
 			});
         }catch (Exception ex){
-            logger.error("SPLIT EVENT: Error while publishing event for Order " + order.getId() );
+            logger.error("SPLIT EVENT: Error while publishing event for Order " + order.getId(), ex );
         }
         return messagePublished;
     }

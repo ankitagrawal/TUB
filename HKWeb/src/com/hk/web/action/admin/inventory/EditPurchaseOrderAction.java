@@ -117,6 +117,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 							dataMap.put("last30DaysSales", Functions.findInventorySoldInGivenNoOfDays(sku, 30));
 							if (sku.getTax() != null) {
 								dataMap.put("tax", sku.getTax().getValue());
+								dataMap.put("tax_id", sku.getTax().getId());
 							}
 							if(poLineItemDao.getPoLineItemCountBySku(sku) == 0) {
 								dataMap.put("newSku", true);
