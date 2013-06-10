@@ -129,7 +129,7 @@
                                     <c:set var="similarProductInventoryList"
                                            value="${hk:similarProductWithUnbookedInventory(notifyMeDto.productVariant)}"/>
                                     <c:choose>
-                                        <c:when test="${similarProductInventoryList != null && fn:length(similarProductInventoryList) > 1}">
+                                        <c:when test="${similarProductInventoryList != null && fn:length(similarProductInventoryList) > 0}">
                                             <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
                                                 ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
                                                 <br/>
