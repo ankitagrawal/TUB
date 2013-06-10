@@ -67,9 +67,9 @@ pageContext.setAttribute("projectEnv", projectEnv);
     </div>
     <c:if test="${whAction.setWarehouse != null}">
         <div align="center" class="prom yellow help" style="height:16px; font-size:16px; color:red; font-weight:bold;">
-	          ${projectEnv}
+	        <c:if test="${projectEnv != 'prod'}">${projectEnv}</c:if>
             ${whAction.setWarehouse.identifier}
-	          ${projectEnv}
+	        <c:if test="${projectEnv != 'prod'}">${projectEnv}</c:if>
         </div>
     </c:if>
     <div class="right">
