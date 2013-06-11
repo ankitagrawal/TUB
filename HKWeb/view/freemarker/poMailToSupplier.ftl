@@ -31,13 +31,16 @@ Purchase Order Approval Mail
 
 <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">7. Please share any unique codes for the products that you may be using in your system, so we can include the same in the PO next time for easy identification of the products while you are sending the goods and while we receive them at our warehouse.</p>
 
-<#if purchaseOrder.warehouse.state=="HARYANA">
+<#list stateList as listOfStates>
+<#if purchaseOrder.warehouse.state==listOfStates&&listOfStates=="HARYANA">
 <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">8. Kindly ship the goods to our warehouse address as follows - <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;font-weight: bold;">Bright Lifecare Private Limited, Gurgaon Warehouse:</p>Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036</p>
 </#if>
-<#if purchaseOrder.warehouse.state=="MAHARASHTRA">
+</#list>
+<#list stateList as listOfStates>
+<#if purchaseOrder.warehouse.state==listOfStates&&listOfStates=="MAHARASHTRA">
 <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">8. Kindly ship the goods to our warehouse address as follows - <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;font-weight: bold;">Bright Lifecare Private Limited, Mumbai Warehouse:</p>Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra</p>
 </#if>
-
+</#list>
 <br/>
 <br/>
 <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;font-weight: bold;">Kindly confirm the receipt of PO via email. </p>

@@ -12,6 +12,7 @@ import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
+import com.hk.constants.courier.StateList;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.catalog.category.Category;
@@ -56,7 +57,6 @@ import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
-import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
@@ -1019,6 +1019,7 @@ public class AdminEmailManager {
     	//TODO
     	HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
+        valuesMap.put("stateList", StateList.stateList);
         String fromPurchaseEmail = "purchase@healthkart.com";
         Set<String> categoryAdmins = new HashSet<String>();
         if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
@@ -1026,7 +1027,6 @@ public class AdminEmailManager {
             categoryAdmins = emailManager.categoryAdmins(category);
         }
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        
         try {
             pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
             pdfFile.getParentFile().mkdirs();

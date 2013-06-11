@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang.StringUtils;

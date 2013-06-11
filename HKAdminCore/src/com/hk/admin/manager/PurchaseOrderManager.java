@@ -6,6 +6,7 @@ import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.TaxUtil;
+import com.hk.constants.courier.StateList;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -257,7 +258,7 @@ public class PurchaseOrderManager {
 		cell.setCellStyle(style);
 		setCellValue(row2, 0, CLAUSE_7);
 		
-		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase("HARYANA")){
+		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)){
 			addEmptyLine(row2, sheet1, ++rowCounter, cell);
 			row2 = sheet1.createRow(++rowCounter);
 			cell = row2.createCell(0);
@@ -265,7 +266,7 @@ public class PurchaseOrderManager {
 			setCellValue(row2, 0, CLAUSE_8_GURGAON);
 		}
 		
-		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase("MAHARASHTRA")){
+		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase(StateList.MAHARASHTRA)){
 			addEmptyLine(row2, sheet1, ++rowCounter, cell);
 			row2 = sheet1.createRow(++rowCounter);
 			cell = row2.createCell(0);
