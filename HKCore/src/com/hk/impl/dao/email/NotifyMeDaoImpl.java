@@ -95,7 +95,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
         notifyMeCriteria.add(Restrictions.isNull("notifiedDate"));
         notifyMeCriteria.add(Restrictions.isNull("notifiedByUser"));
-        notifyMeCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+        notifyMeCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
 
         return notifyMeCriteria;
     }
