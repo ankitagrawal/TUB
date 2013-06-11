@@ -1029,7 +1029,7 @@ public class AdminEmailManager {
         	warehouseName = "Bright Lifecare Private Limited, Mumbai Warehouse";
         	warehouseAddress = "Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
         }
-        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Punjabi_Bagh_Store.getName())){
+        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Punjabi_Bagh_Aqua_Store.getName())){
         	warehouseName = "Aquamarine Healthcare Private Limited, Delhi Punjabi Bagh Warehouse";
         	warehouseAddress = "Shop No 15, Ground Floor, North west Avenue, Club road, Punjabi Bagh Extn, Delhi- 110026, Delhi";
         }
