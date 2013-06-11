@@ -43,11 +43,11 @@ public interface PaymentService {
 
     public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment parentPayment);
 
-    public List<HkPaymentResponse> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;// returns a non-persistable Payment object, created by what we get from gateway
+    public List<HkPaymentResponse> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;
 
-    public HkPaymentService getHkPaymentService(Gateway gateway);
+    public void updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;
 
-    public HkPaymentResponse refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException;
+    public void refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException;
     /**
      * Send payment emails and return true if emails sent successfully
      *
@@ -56,22 +56,6 @@ public interface PaymentService {
      */
     public boolean sendPaymentEmailForOrder(Order order);
 
-    public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException;
-
-    public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderId);
-
-    public boolean updatePaymentBasedOnResponse(HkPaymentResponse gatewayPayment, Payment actualPayment);
-
     public List<Payment> listPaymentFamily(String gatewayOrderId);
-
-    public List<Map<String,Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList);
-
-    public void verifyRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
-
-    public void verifyRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
-
-    public Map<String,Object> verifyAmountOfRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
-
-    public Map<String,Object> verifyAmountOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
 
 }

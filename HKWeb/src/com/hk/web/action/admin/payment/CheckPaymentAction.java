@@ -112,10 +112,10 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     public Resolution seekPayment() {
         try{
-            hkPaymentResponseList = paymentManager.seekPayment(gatewayOrderId);
+            hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
 
         } catch (HealthkartPaymentGatewayException e){
-            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
         }
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
@@ -123,20 +123,17 @@ public class CheckPaymentAction extends BaseAction {
 
     @DontValidate
     public Resolution bulkSeekPayment() {
-        //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         try {
-            //Date startDate = sdf.parse(txnStartDate);
-            //Date endDate = sdf.parse(txnEndDate);
+
             bulkHkPaymentResponseList = new HashMap<String, List<HkPaymentResponse>>();
             List orderStatuses = Arrays.asList(EnumOrderStatus.Placed.asOrderStatus(), EnumOrderStatus.InProcess.asOrderStatus());
             paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null, Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses,null);
-            HkPaymentService hkPaymentService;
             for (Payment seekPayment : paymentList) {
                 if (seekPayment != null) {
                     String gatewayOrderId = seekPayment.getGatewayOrderId();
                     if(gatewayOrderId != null){
                         try{
-                            hkPaymentResponseList = paymentManager.seekPayment(gatewayOrderId);
+                            hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
                             bulkHkPaymentResponseList.put(gatewayOrderId,hkPaymentResponseList);
                         } catch (HealthkartPaymentGatewayException e){
                             logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
@@ -146,7 +143,7 @@ public class CheckPaymentAction extends BaseAction {
             }
 
         } catch (Exception e) {
-            logger.info("Payment Seek Date conversion exception", e);
+            logger.debug("Payment Seek Date conversion exception", e);
         }
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
@@ -169,10 +166,10 @@ public class CheckPaymentAction extends BaseAction {
     //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         try{
-            hkPaymentResponse = paymentManager.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+            paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
 
         } catch (HealthkartPaymentGatewayException e){
-            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
             // redirect to error page
         }
 
@@ -183,10 +180,10 @@ public class CheckPaymentAction extends BaseAction {
     //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updatePayment() {
         try{
-            updatedPayment =  paymentManager.updatePayment(gatewayOrderId);
+            paymentService.updatePayment(gatewayOrderId);
 
         } catch (HealthkartPaymentGatewayException e){
-            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
             // redirect to error page
         }
 
