@@ -6,8 +6,7 @@
             To place your order by phone, or for any assistance, call us on
           </span>
     <br/>
-    0124 - 4616444 &nbsp;<br/>
-    <span class="small">(24x7)</span>
+    0124 - 4616444 &nbsp;
   </div>
   <div class="tips">
     <img src="<hk:vhostImage/>/images/banners/freeshipping_small.jpg" alt="free shipping"

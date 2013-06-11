@@ -1,3 +1,5 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+            "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="com.hk.constants.catalog.image.EnumImageSize"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
@@ -7,7 +9,7 @@
 </head>
 
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
-<link href="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/css/bootstrap.css" rel="stylesheet">
+<link href="<hk:vhostCss/>/pages/loyalty/LoyaltyFiles/css/bootstrap.css" rel="stylesheet">
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.PlaceOrderAction" var="pla" />
  <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
  <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>

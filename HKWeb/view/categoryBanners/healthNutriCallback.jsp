@@ -14,12 +14,12 @@
   }
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">--%>
-  <a href='${pageContext.request.contextPath}/product/penguin-india-the-diet-doctor/HNUT27?productReferrerId=22'>
-    <img src="${pageContext.request.contextPath}/images/banners/top/health-Nutrition-diet-banner.jpg" alt="DIET DOCTOR">
+  <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
+  <%--<a href='${pageContext.request.contextPath}/product/penguin-india-the-diet-doctor/HNUT27?productReferrerId=22'>--%>
+    <img src="${pageContext.request.contextPath}/images/banners/top/health-nutrition-strip-banner.jpg" alt="DIET DOCTOR">
   </a>
-  <%--</s:link>  --%>
-  <%-- <script type="text/javascript">
+  </s:link>
+  <script type="text/javascript">
      var params = {};
      params['srcUrl'] = document.location.href;
      params['topLevelCategory'] = $('#topCategoryContainer').html();
@@ -27,5 +27,5 @@
 
      $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
 
-   </script>--%>
+   </script>
 </div>

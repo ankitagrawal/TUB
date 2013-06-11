@@ -13,10 +13,12 @@ public class TaxSeedData extends BaseSeedData {
   @Autowired
   TaxDao taxDao;
 
-    public void insert(java.lang.String name, java.lang.Double value) {
+    public void insert(Long id, java.lang.String name, java.lang.Double value, String type) {
         Tax tax = new Tax();
         tax.setName(name);
         tax.setValue(value);
+	    tax.setId(id);
+	    tax.setType(type);
         save(tax);
     }
 
@@ -25,9 +27,12 @@ public class TaxSeedData extends BaseSeedData {
 
             Tax tax = taxDao.findByName(enumTax.getName());
             if (tax == null) {
-                insert(enumTax.getName(), enumTax.getValue());
+                insert(enumTax.getId(), enumTax.getName(), enumTax.getValue(), enumTax.getType());
             } else {
+	            tax.setName(enumTax.getName());
                 tax.setValue(enumTax.getValue());
+	            tax.setId(enumTax.getId());
+	            tax.setType(enumTax.getType());
                 save(tax);
             }
         }

@@ -2,6 +2,7 @@ package com.hk.pact.service.catalog;
 
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.ProductVariantServiceType;
@@ -16,6 +17,8 @@ import java.util.Set;
 public interface ProductVariantService {
 
     public ProductVariant getVariantById(String variantId);
+
+    public ProductVariant getVariantByTryOn(String variantId);
     
     public List<ProductVariant> getAllNonDeletedProductVariants(String category, String brand, boolean isPrimaryCategory) ;
     
@@ -62,5 +65,9 @@ public interface ProductVariantService {
 	public boolean isAnySiblingVariantInStock(ProductVariant productVariant);
 	
 	public void markProductVariantsAsDeleted(Product product);
+
+    public ProductOption getProductOptionById(Long productOptionId);
+
+    public boolean isImageType(String variantId);
 
 }

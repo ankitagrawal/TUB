@@ -12,6 +12,9 @@
 
         <!--OZONE marketing-->
         <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
+        <!--Blade marketing-->
+        <s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="purchase"/>
+
         <title>
             <c:choose>
                 <c:when test="${hk:isNotBlank(pageTitle)}">
