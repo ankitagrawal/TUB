@@ -154,6 +154,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         projectionList.add(Projections.alias(Projections.count("id"), "userCount"));
         notifyMeDetachedCriteria.setProjection(projectionList);
         List totalResultsList = getHibernateTemplate().findByCriteria(notifyMeDetachedCriteria);
+        /* ToDo will find better way so that every time, need not to evaluate total result query */
         int totalResults =  totalResultsList.size();
         notifyMeDetachedCriteria.setResultTransformer(Transformers.aliasToBean(NotifyMeDto.class));
         int firstResult = (pageNo - 1) * perPage;
