@@ -58,18 +58,18 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     /*send mails for product which are deleted or hidden or out of stock*/
     public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate) {
         Date monthBackDate = DateUtils.startOfMonthBack(new DateTime()).toDate();
-        List<NotifyMe> notifyMeList = new ArrayList<NotifyMe>();
-        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMe(null, monthBackDate, null, null, null, true, false, null);
+        int totalMailSent = 0;
+        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMeForSimilarProducts(monthBackDate ,true , false);
         if (nonDeletedOOSList != null && nonDeletedOOSList.size() > 0) {
-            notifyMeList.addAll(nonDeletedOOSList);
+            Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, nonDeletedOOSList);
+            totalMailSent = adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
         }
-        List<NotifyMe> deletedList = notifyMeDao.searchNotifyMe(null, null, null, null, null, null, true, null);
+        List<NotifyMe> deletedList = notifyMeDao.searchNotifyMeForSimilarProducts(null ,  null ,true);
         if (deletedList != null && deletedList.size() > 0) {
-            notifyMeList.addAll(deletedList);
+            Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, deletedList);
+            totalMailSent = totalMailSent + adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
         }
-
-        Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, notifyMeList);
-        return adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
+        return totalMailSent;
     }
 
 

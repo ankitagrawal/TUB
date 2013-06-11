@@ -251,7 +251,9 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
             }
 
         }
-        totalProductVariant = notifyMeDtoList.size();
+        if (notifyMeDtoList != null) {
+            totalProductVariant = notifyMeDtoList.size();
+        }
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 

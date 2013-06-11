@@ -15,11 +15,11 @@ public interface NotifyMeDao extends BaseDao {
 
     public NotifyMe save(NotifyMe notifyMe);
 
-    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted);
+    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted);
 
-    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted);
+    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted);
 
-    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted, Boolean productHidden);
+    public List<NotifyMe> searchNotifyMeForSimilarProducts(Date endDate, Boolean productInStock, Boolean productDeleted);
 
     public List<String> getPendingNotifyMeProductVariant();
 
@@ -33,7 +33,7 @@ public interface NotifyMeDao extends BaseDao {
 
     public List<NotifyMe> getPendingNotifyMeListByVariant(String notifyMeEmail, List<ProductVariant> productVariantList);
 
-    public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted, Boolean productHidden);
+    public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted, Boolean productHidden);
 
 
 }

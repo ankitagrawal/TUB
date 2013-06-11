@@ -140,8 +140,8 @@
                         <s:text name="bufferRate"/>
                     </li>
                 </ol>
+                <s:submit name="sendAllNotifyMailsForAvailableProductVariant" value="SendAllNotifyMailsForInstockProducts"/>
             </shiro:hasPermission>
-            <s:submit name="sendAllNotifyMailsForAvailableProductVariant" value="SendAllNotifyMailsForInstockProducts"/>
         </s:form>
 
     </fieldset>

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 
+import org.hibernate.Query;
 import org.hibernate.criterion.*;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
@@ -48,10 +49,33 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         return findByCriteria(notifyMeCriteria);
     }
 
-    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted, Boolean productHidden) {
-        DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                productVariantOutOfStock, productDeleted, productHidden);
-        return findByCriteria(notifyMeCriteria);
+    public List<NotifyMe> searchNotifyMeForSimilarProducts(Date endDate, Boolean productVariantOutOfStock, Boolean productVariantDeleted) {
+        String hql = "select distinct(nm) from NotifyMe as nm join nm.productVariant as  pv join pv.product as  p where p.similarProducts.size > :size" ;
+        if (endDate != null) {
+            hql = hql + " and nm.createdDate < :endDate ";
+        }
+
+        if (productVariantOutOfStock != null) {
+            hql = hql + "and pv.outOfStock = :productVariantOutOfStock";
+        }
+
+        if (productVariantDeleted != null) {
+            hql = hql + "  and pv.deleted = :productVariantDeleted ";
+        }
+        Query query = getSession().createQuery(hql).setParameter("size",0);
+
+        if (endDate != null) {
+            query.setDate("endDate", endDate);
+        }
+
+        if (productVariantOutOfStock != null) {
+            query.setParameter("productVariantOutOfStock", productVariantOutOfStock);
+        }
+
+        if (productVariantDeleted != null) {
+            query.setParameter("productVariantDeleted", productVariantDeleted);
+        }
+        return query.list();
     }
 
     private DetachedCriteria getNotifyMeListSearchCriteria(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
@@ -110,7 +134,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     public List<NotifyMe> getNotifyMeListForProductVariantInStock() {
         return (List<NotifyMe>) getSession().createQuery(
                 "Select nm from NotifyMe nm, ProductVariant pv  where pv =nm.productVariant and nm.notifiedByUser is null "
-                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock and (pv.product.hidden is null or pv.product.hidden = :hidden) order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).setBoolean("hidden",false).list();
+                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock and (pv.product.hidden is null or pv.product.hidden = :hidden) order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).setBoolean("hidden", false).list();
     }
 
     public Page getNotifyMeListForProductVariantInStock(int pageNo, int perPage) {
@@ -155,7 +179,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         notifyMeDetachedCriteria.setProjection(projectionList);
         List totalResultsList = getHibernateTemplate().findByCriteria(notifyMeDetachedCriteria);
         /* ToDo will find better way so that every time, need not to evaluate total result query */
-        int totalResults =  totalResultsList.size();
+        int totalResults = totalResultsList.size();
         notifyMeDetachedCriteria.setResultTransformer(Transformers.aliasToBean(NotifyMeDto.class));
         int firstResult = (pageNo - 1) * perPage;
         List resultList = findByCriteria(notifyMeDetachedCriteria, firstResult, perPage);

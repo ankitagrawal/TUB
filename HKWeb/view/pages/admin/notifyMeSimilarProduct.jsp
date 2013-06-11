@@ -77,6 +77,7 @@
                             <s:text name="bufferRate"/>
                         </li>
                     </ol>
+
                 </shiro:hasPermission>
                 <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
             </fieldset>
@@ -85,6 +86,7 @@
 
         <c:choose>
             <c:when test="${notifyMeBean.notifyMeDtoList!=null}">
+                <label>Total Records : ${notifyMeBean.totalProductVariant}</label>
                 <div id="table_container">
                     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${notifyMeBean}"/>
                     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${notifyMeBean}"/>
