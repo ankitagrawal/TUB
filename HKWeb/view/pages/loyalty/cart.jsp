@@ -31,8 +31,7 @@
 							if(resp.code == "error"){
 								qty_box.val(qty-1);
 								error_message.addClass('errorMessage').slideDown().delay(3000).slideUp();
-							}
-							else{
+							} else {
 								var rowCount = $("#itemRows").val();
 								if (rowCount ==="0") {
 									window.location.reload();
@@ -48,11 +47,13 @@
 					});
 				});
 				
-				$('.removeLink').click(function(){
+				$('.removeLink').click(function() {
 					var lineItemQty =  $(this).parent().find('.lineItemQty');
 					var currentQty = parseInt(lineItemQty.val());
 					lineItemQty.val(0); 
 					$(this).parent().parent().hide();
+					var cartItems = $('#productsInCart').html();
+					$('#productsInCart').html(cartItems-1);
 					lineItemQty.trigger('blur');
 					var rowCount = $("#itemRows").val();
 					$("#itemRows").val(rowCount-1);

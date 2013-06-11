@@ -62,6 +62,7 @@
                 redeemButton.removeClass();
                 redeemButton.disabled =true;
                 //$("#" + form.context.id + ' input').disabled = true;
+	            $('#productsInCart').html(resp.data.itemsInCart);
 
                 $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');

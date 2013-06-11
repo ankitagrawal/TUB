@@ -123,6 +123,7 @@
                 redeemButton.attr('value', 'Added to Cart');
                 redeemButton.removeClass()
                 redeemButton.disabled =true;
+
                 //$("#" + form.context.id + ' input').disabled = true;
 
                 $('#successToolTip').attr('style', 'display:block;');

@@ -75,7 +75,7 @@
 		 String roles = RoleConstants.HK_USER + "," + RoleConstants.HK_UNVERIFIED;
 	%>
   </head>
-
+<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="cartAction" event="getCartItems"/>
 
   <body>
 
@@ -123,13 +123,14 @@
 				</p> 
             </div>
              <div>
-              <p class="section2 font-caps"> <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" rel="noFollow">signout</s:link></p>
+              <p class="section2"> <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" rel="noFollow">signout</s:link></p>
             </div>
 
             <div>
-              <p class="section2 font-caps"> <a href="${pageContext.request.contextPath}/core/loyaltypg/Cart.action">cart</a></p>
+              <p class="section2"> <a href="${pageContext.request.contextPath}/core/loyaltypg/Cart.action">cart
+              	(<span id="productsInCart">${cartAction.itemsInCart}</span>)
+              </a></p>
             </div>
-
         </div>
         
 <!--         <div id="search" class="search">
