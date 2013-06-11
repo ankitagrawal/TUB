@@ -4,6 +4,7 @@ import static com.akube.framework.util.BaseUtils.newline;
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.constants.courier.StateList;
+import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.warehouse.Warehouse;
@@ -179,10 +180,10 @@ public class PurchaseOrderPDFGenerator {
         footerParagraph.add(new Paragraph("5) Physical products should be packaged well and unique codes, product name and MRP should be clearly mentioned as specified in the catalog." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
         footerParagraph.add(new Paragraph("6) Goods with expiry date in the next 6 months or already expired will not be accepted. Goods about to expire will need to be replaced or returned on request." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
         footerParagraph.add(new Paragraph("7) Please share any unique codes for the products that you may be using in your system, so we can include the same in the PO next time for easy identification of the products while you are sending the goods and while we receive them at our warehouse." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        if(purchaseOrderDto.getPurchaseOrder().getWarehouse().getState().equalsIgnoreCase(StateList.MAHARASHTRA)){
+        if(purchaseOrderDto.getPurchaseOrder().getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())){
         	footerParagraph.add(new Paragraph("8) Kindly ship the goods to our warehouse address as follows - Bright Lifecare Private Limited, Mumbai Warehouse: Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra" + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
         }
-        if(purchaseOrderDto.getPurchaseOrder().getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)){
+        if(purchaseOrderDto.getPurchaseOrder().getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
         	footerParagraph.add(new Paragraph("8) Kindly ship the goods to our warehouse address as follows - Bright Lifecare Private Limited, Gurgaon Warehouse: Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036" + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
         }
         document.add(footerParagraph);

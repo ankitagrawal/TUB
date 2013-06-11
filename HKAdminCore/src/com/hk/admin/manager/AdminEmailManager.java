@@ -15,6 +15,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
+import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -1018,8 +1019,19 @@ public class AdminEmailManager {
     public boolean sendPOMailToSupplier(PurchaseOrder purchaseOrder, String supplierEmail) {
     	//TODO
     	HashMap valuesMap = new HashMap();
+    	String warehouseName = "" , warehouseAddress = "";
         valuesMap.put("purchaseOrder", purchaseOrder);
-        valuesMap.put("stateList", StateList.stateList);
+        if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
+        	warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
+        	warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
+        }
+        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())){
+        	warehouseName = "Bright Lifecare Private Limited, Mumbai Warehouse";
+        	warehouseAddress = "Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
+        }
+        valuesMap.put("warehouseName", warehouseName);
+        valuesMap.put("warehouseAddress", warehouseAddress);
+        
         String fromPurchaseEmail = "purchase@healthkart.com";
         Set<String> categoryAdmins = new HashSet<String>();
         if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
@@ -1027,6 +1039,7 @@ public class AdminEmailManager {
             categoryAdmins = emailManager.categoryAdmins(category);
         }
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
+        
         try {
             pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
             pdfFile.getParentFile().mkdirs();

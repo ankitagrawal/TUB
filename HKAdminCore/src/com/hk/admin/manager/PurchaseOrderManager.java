@@ -7,6 +7,7 @@ import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.courier.StateList;
+import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -258,7 +259,7 @@ public class PurchaseOrderManager {
 		cell.setCellStyle(style);
 		setCellValue(row2, 0, CLAUSE_7);
 		
-		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)){
+		if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
 			addEmptyLine(row2, sheet1, ++rowCounter, cell);
 			row2 = sheet1.createRow(++rowCounter);
 			cell = row2.createCell(0);
@@ -266,7 +267,7 @@ public class PurchaseOrderManager {
 			setCellValue(row2, 0, CLAUSE_8_GURGAON);
 		}
 		
-		if(purchaseOrder.getWarehouse().getState().equalsIgnoreCase(StateList.MAHARASHTRA)){
+		if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())){
 			addEmptyLine(row2, sheet1, ++rowCounter, cell);
 			row2 = sheet1.createRow(++rowCounter);
 			cell = row2.createCell(0);
