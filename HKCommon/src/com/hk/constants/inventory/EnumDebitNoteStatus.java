@@ -11,6 +11,7 @@ public enum EnumDebitNoteStatus {
   CheckedInAsDamageInventory(30L, "CheckedIn As Damage Inventory"),
   Reconciled(40L, "Reconciled"),
   PaymentSettled(50L, "PaymentSettled"),
+  CLosed(100L, "Closed"),
   Deleted(1000L, "Deleted"),;
 
   private String name;
