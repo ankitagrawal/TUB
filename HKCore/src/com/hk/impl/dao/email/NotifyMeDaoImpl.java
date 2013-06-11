@@ -145,7 +145,6 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productVariantOutOfStock, Boolean productDeleted, Boolean productHidden) {
         DetachedCriteria notifyMeDetachedCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory, productVariantOutOfStock, productDeleted, productHidden);
-        int totalResults = count(notifyMeDetachedCriteria,false);
         ProjectionList projectionList = Projections.projectionList();
         projectionList.add(Projections.alias(Projections.property("id"), "id"));
         projectionList.add(Projections.alias(Projections.property("name"), "name"));
@@ -154,6 +153,8 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         projectionList.add(Projections.groupProperty("productVariant"));
         projectionList.add(Projections.alias(Projections.count("id"), "userCount"));
         notifyMeDetachedCriteria.setProjection(projectionList);
+        List totalResultsList = getHibernateTemplate().findByCriteria(notifyMeDetachedCriteria);
+        int totalResults =  totalResultsList.size();
         notifyMeDetachedCriteria.setResultTransformer(Transformers.aliasToBean(NotifyMeDto.class));
         int firstResult = (pageNo - 1) * perPage;
         List resultList = findByCriteria(notifyMeDetachedCriteria, firstResult, perPage);

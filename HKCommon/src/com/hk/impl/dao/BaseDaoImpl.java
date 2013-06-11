@@ -409,7 +409,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
 
     @SuppressWarnings("unchecked")
-    public int count(DetachedCriteria criteria, boolean hasDistinctRootEntity) {
+    private int count(DetachedCriteria criteria, boolean hasDistinctRootEntity) {
         int totalResults = 0;
         //DetachedCriteria countCriteria = copy(criteria);
         if (hasDistinctRootEntity) {
