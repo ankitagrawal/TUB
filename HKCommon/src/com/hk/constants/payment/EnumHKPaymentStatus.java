@@ -1,6 +1,8 @@
 package com.hk.constants.payment;
 
 
+import com.hk.domain.core.PaymentStatus;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +45,19 @@ public enum EnumHKPaymentStatus {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static PaymentStatus getCorrespondingStatus(EnumHKPaymentStatus enumHKPaymentStatus){
+        if(enumHKPaymentStatus != null && EnumHKPaymentStatus.SUCCESS.getId().equals(enumHKPaymentStatus.getId())){
+            return EnumPaymentStatus.SUCCESS.asPaymenStatus();
+        }  else if (enumHKPaymentStatus != null && EnumHKPaymentStatus.AUTHENTICATION_PENDING.getId().equals(enumHKPaymentStatus.getId())) {
+            return EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus();
+        } else if (enumHKPaymentStatus != null && EnumHKPaymentStatus.FAILURE.getId().equals(enumHKPaymentStatus.getId())){
+            return  EnumPaymentStatus.FAILURE.asPaymenStatus();
+        }  else if (enumHKPaymentStatus != null && EnumHKPaymentStatus.REQUESTED.getId().equals(enumHKPaymentStatus.getId())){
+            return  EnumPaymentStatus.REQUEST.asPaymenStatus();
+        }
+        return null;
     }
 
 

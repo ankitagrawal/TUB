@@ -3,6 +3,7 @@ package com.hk.web.action.admin.payment;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hk.constants.payment.EnumHKPaymentStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.GatewayResponseKeys;
 import com.hk.domain.core.PaymentStatus;
@@ -241,35 +242,38 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
-        /*Gateway gateway = payment.getGateway();
-        String gatewayOrderId = payment.getGatewayOrderId();
-        Map<String, Object> hkrespObj;
-        EnumPaymentStatus hkRespPayStatus;
-        PaymentStatus hkPaymentStatus;*/
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
 
-        /*if (gateway != null && gatewayOrderId != null) {
-            HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
-            if(hkPaymentService != null){
-                hkrespObj = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
-                PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+        if (gatewayOrderId != null) {
+            try {
+                List<HkPaymentResponse> hkPaymentResponses = paymentService.seekPayment(gatewayOrderId);
+                HkPaymentResponse saleHkPaymentResponse = null;
+                for (HkPaymentResponse hkPaymentResponse : hkPaymentResponses) {
+                    if (hkPaymentResponse != null && gatewayOrderId.equalsIgnoreCase(hkPaymentResponse.getGatewayOrderId())) {
+                        saleHkPaymentResponse = hkPaymentResponse;
+                        break;
+                    }
+                }
 
-                if(hkrespObj != null){
-                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus((String)hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-                    if(hkRespPayStatus != null){
-                        hkPaymentStatus = hkRespPayStatus.asPaymenStatus();
-                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+                if (saleHkPaymentResponse != null) {
+                    PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+                    PaymentStatus paymentGatewayStatus = EnumHKPaymentStatus.getCorrespondingStatus(saleHkPaymentResponse.getHKPaymentStatus());
+                    if (paymentGatewayStatus != null) {
+                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, paymentGatewayStatus);
                         if (!isValid) {
                             // send email to admin
-                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(paymentGatewayStatus, changedStatus, gatewayOrderId);
                         }
                     }
                 }
+
+            } catch (HealthkartPaymentGatewayException e) {
+                logger.debug("Healthkart payment exception", e);
             }
-        }*/
+        }
 
         getPaymentManager().success(payment.getGatewayOrderId());
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,

@@ -520,13 +520,13 @@ public class PaymentManager {
         }
     }
 
-    public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
+    /*public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
         HkPaymentService hkPaymentService = null;
         if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
             hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
         }
         return hkPaymentService;
-    }
+    }*/
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus){
         return oldStatus.getId().equals(changedStatus.getId());
