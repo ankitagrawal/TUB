@@ -20,7 +20,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 public class GenerateAndSavePdf {
   private static Logger logger = LoggerFactory.getLogger(GenerateAndSavePdf.class);
 
-  /*public static void main(String[] args) {
+  public static void main(String[] args) {
     (new GenerateAndSavePdf()).generatePdf("http://localhost:8080/healthkart/AccountingInvoice.action?accountingInvoice=uCrwhKCUAzI%3D", "C:\\Users\\Ajeet\\IdeaProjects\\HealthKartWork\\adminDownloads\\invoices\\20120221/R-4.html", "C:\\Users\\Ajeet\\IdeaProjects\\HealthKartWork\\adminDownloads\\invoices\\20120221/R-4.pdf");
   }
 
@@ -48,12 +48,12 @@ public class GenerateAndSavePdf {
 
       //  to add custom font we need to specify it in style
 
-      Element style = doc.createElement("style");
+      /*Element style = doc.createElement("style");
        style.setTextContent(
          "body { font-family: \"Arial Unicode MS\"; }" +
        //  and page numbering
          "@page { @bottom-right { content: \"Page \" counter(page);} }"
-       );
+       );*/
 
       //  and add it to <head>
 
@@ -72,7 +72,7 @@ public class GenerateAndSavePdf {
       logger.error("Error while creating pdf - " + outputFileName);
       e.printStackTrace();
     }
-  }*/
+  }
 
 
 }

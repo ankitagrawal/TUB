@@ -1,6 +1,9 @@
 package com.hk.constants.payment;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Shakti Singh
@@ -9,16 +12,12 @@ package com.hk.constants.payment;
  * To change this template use File | Settings | File Templates.
  */
 public enum EnumHKPaymentStatus {
-    SUCCESS(0L,"Success"),
-    FAILURE(1L,"Failure"),
-    AUTHENTICATION_PENDING(2L,"Authentication Pending"),
-    REJECTED_BY_ISSUER(3L, "Rejected By Issuer"),
-    REJECTED_BY_GATEWAY(4L, "Rejected By Gateway"),
-    INVALID_MERCHANT_ID(5L,"Invalid Merchant Id"),
-    AUTHENTICATION_FAILED(6L,"Authentication Failed"),
-    REFUND_INITIATED(7L,"Refund Initiated"),
-    REFUNDED(8L, "Refunded"),
-    REFUND_FAILED(9L,"Refund Failed"),
+
+    REQUESTED(0L, "Requested"),
+    AUTHENTICATION_PENDING(1L,"Authentication Pending"),
+    SUCCESS(2L,"Success"),
+    FAILURE(3L,"Failure"),
+    IN_PROCESS(4L, "In Process"),
     ;
 
     private Long id;
@@ -33,6 +32,7 @@ public enum EnumHKPaymentStatus {
         return id;
     }
 
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -44,4 +44,6 @@ public enum EnumHKPaymentStatus {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

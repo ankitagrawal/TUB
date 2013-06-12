@@ -28,7 +28,9 @@ public class GatewayResponseKeys {
         FAILED("Failure"),
         ERROR("Error"),
         RESPONSE_CODE("respCode"),
-        AUTH_PEND("Authorization Pending");
+        AUTH_PEND("Authorization Pending"),
+        NO_TRANSACTION_FOUND("No Transaction Found"),
+        ;
 
 
         private String key;
@@ -92,6 +94,8 @@ public class GatewayResponseKeys {
         BAD_ENQ_COD("401"),
         INR("INR"),
         REFUND_SEEK_SUCCESS_CODE("11"),
+        REJECTED_BY_ISSUER_MSG("Rejected By Issuer"),
+        REJECTED_BY_GATEWAY_MSG("Rejected By Gateway"),
         ;
 
         private String key;
@@ -246,7 +250,7 @@ public class GatewayResponseKeys {
         public static final String AuthDesc_Fail = "N";
     }
 
-    public enum IciciConstants{
+    public enum IciciConstants {
         MERCHANT_ID("MerchantId"),
         CURR_CODE("CurrCode"),
         REFUND("Refund"),
@@ -276,7 +280,7 @@ public class GatewayResponseKeys {
         }
     }
 
-    public class Icici{
+    public class Icici {
         public static final String merchantId="MerchantId";
         public static final String currCode = "CurrCode";
         public static final String refund = "Refund";
@@ -296,5 +300,6 @@ public class GatewayResponseKeys {
         public static final String rejected_by_gateway = "2";
 
     }
+
 
 }

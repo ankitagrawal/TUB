@@ -366,7 +366,7 @@ public class PaymentFinder {
     public static void main(String[] args) {
 
 
-       Map<String, Object> paymentResultMap = findCitrusPayment("9740539-10761");
+       Map<String, Object> paymentResultMap = findCitrusPayment("100");
 //        Map<String, Object> paymentResultMap = findIciciPayment("1936895-17020", "00007518");
 
 //        List<Map<String, Object>> transactionList = findTransactionListIcici("20130101", "20130102", "00007518");

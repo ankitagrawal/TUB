@@ -2,8 +2,7 @@ package com.hk.impl.service.payment;
 
 import java.util.*;
 
-import com.hk.constants.payment.EnumGateway;
-import com.hk.constants.payment.EnumPaymentTransactionType;
+import com.hk.constants.payment.*;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.payment.Gateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.ProductVariantPaymentType;
@@ -184,8 +181,8 @@ public class PaymentServiceImpl implements PaymentService {
             try{
                 HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
 
-                if(hkRefundPaymentResponse != null && hkRefundPaymentResponse.getPaymentStatus() != null
-                        && EnumPaymentStatus.REFUNDED.getId().equals(hkRefundPaymentResponse.getPaymentStatus().getId())){
+                if(hkRefundPaymentResponse != null && hkRefundPaymentResponse.getHKPaymentStatus() != null
+                        && EnumHKPaymentStatus.SUCCESS.getId().equals(hkRefundPaymentResponse.getHKPaymentStatus().getId())){
                     gatewayAmount = hkRefundPaymentResponse.getAmount();
 
                     if(EnumGateway.ICICI.getId().equals(hkRefundPaymentResponse.getGateway().getId())){
@@ -254,10 +251,10 @@ public class PaymentServiceImpl implements PaymentService {
     private void updatePaymentBasedOnResponse(HkPaymentResponse hkPaymentResponse, Payment hkPaymentRequest) {
         if (hkPaymentResponse != null && hkPaymentRequest != null) {
             //TODO: Change it with HK payment status
-            PaymentStatus paymentStatus = hkPaymentResponse.getPaymentStatus();
-            if (paymentStatus != null && EnumPaymentStatus.REFUNDED.getId().equals(paymentStatus.getId())) {
+            EnumHKPaymentStatus paymentStatus = hkPaymentResponse.getHKPaymentStatus();
+            if (paymentStatus != null && EnumHKPaymentStatus.SUCCESS.getId().equals(paymentStatus.getId())) {
                 success(hkPaymentRequest.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg());
-            } else if (paymentStatus != null && EnumPaymentStatus.ERROR.getId().equals(paymentStatus.getId())) {
+            } else if (paymentStatus != null && EnumHKPaymentStatus.FAILURE.getId().equals(paymentStatus.getId())) {
                 error(hkPaymentRequest.getGatewayOrderId(), hkPaymentResponse.getErrorLog());
             }
         }
@@ -435,12 +432,12 @@ public class PaymentServiceImpl implements PaymentService {
     private void updateRequestResponseMap(Payment requestPayment, HkPaymentResponse hkPaymentResponse) throws HealthkartPaymentGatewayException {
 
         if(requestPayment != null && hkPaymentResponse != null){
-            PaymentStatus gatewayPaymentStatus = hkPaymentResponse.getPaymentStatus();
-            if(gatewayPaymentStatus != null && EnumPaymentStatus.SUCCESS.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
+            EnumHKPaymentStatus gatewayPaymentStatus = hkPaymentResponse.getHKPaymentStatus();
+            if(gatewayPaymentStatus != null && EnumHKPaymentStatus.SUCCESS.getId().equals(gatewayPaymentStatus.getId())){
                 paymentManager.success(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getResponseMsg(), hkPaymentResponse.getAuthIdCode());
-            } else if (gatewayPaymentStatus != null && EnumPaymentStatus.FAILURE.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
+            } else if (gatewayPaymentStatus != null && EnumHKPaymentStatus.FAILURE.getId().equals(gatewayPaymentStatus.getId())){
                 paymentManager.fail(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getResponseMsg());
-            } else if (gatewayPaymentStatus != null && EnumPaymentStatus.AUTHORIZATION_PENDING.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
+            } else if (gatewayPaymentStatus != null && EnumHKPaymentStatus.AUTHENTICATION_PENDING.getId().equals(gatewayPaymentStatus.getId())){
                 paymentManager.pendingApproval(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId());
             }  else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);

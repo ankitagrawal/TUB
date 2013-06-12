@@ -1,10 +1,7 @@
 package com.hk.impl.service.hkpay;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.payment.EnumGateway;
-import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.payment.EnumPaymentTransactionType;
-import com.hk.constants.payment.GatewayResponseKeys;
+import com.hk.constants.payment.*;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
@@ -179,7 +176,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
                 updateResponseStatus(hkPaymentResponse, transactionType, isFlagged,status, ebsTransactionType);
 
             } else {
-                hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+                hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
                 hkPaymentResponse.setErrorLog(errorMessage);
             }
         }
@@ -197,26 +194,26 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
 
     private void updateRefundPaymentStatus(HkPaymentResponse hkPaymentResponse,String status) {
         if(GatewayResponseKeys.EbsConstants.PROCESSING.getKey().equalsIgnoreCase(status)){
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus());
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.IN_PROCESS);
         } else if (GatewayResponseKeys.EbsConstants.PROCESSED.getKey().equalsIgnoreCase(status)) {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.SUCCESS);
         } else {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
         }
     }
 
     private void updateSalePaymentStatus(HkPaymentResponse hkPaymentResponse,  String isFlagged, String ebsTransactionType) {
         if(GatewayResponseKeys.EbsConstants.Authorized.getKey().equalsIgnoreCase(ebsTransactionType)){
             if (isFlagged!= null && isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_FALSE.getKey())) {
-                hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+                hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.SUCCESS);
             } else if (isFlagged!=null && isFlagged.equalsIgnoreCase(GatewayResponseKeys.EbsConstants.IS_FLAGGED_TRUE.getKey())) {
-                hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
+                hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.AUTHENTICATION_PENDING);
             } else {
-                hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
+                hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
             }
         } else {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
-            hkPaymentResponse.setResponseMsg("Authentication Failed");
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
+            hkPaymentResponse.setResponseMsg(GatewayResponseKeys.HKConstants.NO_TRANSACTION_FOUND.getKey());
         }
 
     }

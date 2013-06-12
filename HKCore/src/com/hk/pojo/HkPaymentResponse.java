@@ -1,6 +1,7 @@
 package com.hk.pojo;
 
 
+import com.hk.constants.payment.EnumHKPaymentStatus;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
 
@@ -18,19 +19,19 @@ public class HkPaymentResponse {
     private String gatewayReferenceId;
     private String responseMsg;
     private Gateway gateway;
-    private PaymentStatus paymentStatus;
+    private EnumHKPaymentStatus enumHKPaymentStatus;
     private String errorLog;
     private String rrn;
     private Double amount;
     private String transactionType;
     private String authIdCode;
 
-    public HkPaymentResponse(String gatewayOrderId, String gatewayReferenceId, String responseMsg, Gateway gateway, PaymentStatus paymentStatus, String errorLog, String rrn,String authIdOCode ,Double amount) {
+    public HkPaymentResponse(String gatewayOrderId, String gatewayReferenceId, String responseMsg, Gateway gateway, EnumHKPaymentStatus enumHKPaymentStatus, String errorLog, String rrn,String authIdOCode ,Double amount) {
         this.gatewayOrderId = gatewayOrderId;
         this.gatewayReferenceId = gatewayReferenceId;
         this.responseMsg = responseMsg;
         this.gateway = gateway;
-        this.paymentStatus = paymentStatus;
+        this.enumHKPaymentStatus = enumHKPaymentStatus;
         this.errorLog = errorLog;
         this.rrn = rrn;
         this.authIdCode = authIdOCode;
@@ -85,12 +86,12 @@ public class HkPaymentResponse {
         this.rrn = rrn;
     }
 
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
+    public EnumHKPaymentStatus getHKPaymentStatus() {
+        return enumHKPaymentStatus;
     }
 
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setHKPaymentStatus(EnumHKPaymentStatus paymentStatus) {
+        this.enumHKPaymentStatus = paymentStatus;
     }
 
     public Double getAmount() {

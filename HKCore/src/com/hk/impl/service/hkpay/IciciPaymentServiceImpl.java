@@ -1,10 +1,7 @@
 package com.hk.impl.service.hkpay;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.payment.EnumGateway;
-import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.payment.EnumPaymentTransactionType;
-import com.hk.constants.payment.GatewayResponseKeys;
+import com.hk.constants.payment.*;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
@@ -245,20 +242,21 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
 
     private void setRefundPaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse) {
         if (GatewayResponseKeys.IciciConstants.TXN_SUCCESSFUL.getKey().equalsIgnoreCase(respCode)) {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.SUCCESS);
         } else {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
         }
     }
 
     private void setSalePaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse) {
         if (GatewayResponseKeys.IciciConstants.TXN_SUCCESSFUL.getKey().equalsIgnoreCase(respCode)) {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
-        } else if (GatewayResponseKeys.IciciConstants.REJECTED_BY_ISSUER.getKey().equalsIgnoreCase(respCode) ||
-                GatewayResponseKeys.IciciConstants.REJECTED_BY_GATEWAY.getKey().equalsIgnoreCase(respCode)) {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
-        } else {
-            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.SUCCESS);
+        } else if (GatewayResponseKeys.IciciConstants.REJECTED_BY_ISSUER.getKey().equalsIgnoreCase(respCode)) {
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
+            hkPaymentResponse.setErrorLog(GatewayResponseKeys.CitrusConstants.REJECTED_BY_ISSUER_MSG.getKey());
+        } else if ( GatewayResponseKeys.IciciConstants.REJECTED_BY_GATEWAY.getKey().equalsIgnoreCase(respCode)) {
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
+            hkPaymentResponse.setErrorLog(GatewayResponseKeys.CitrusConstants.REJECTED_BY_GATEWAY_MSG.getKey());
         }
     }
 
