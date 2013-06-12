@@ -49,7 +49,7 @@
     if(document.getElementsByClassName("crumb")){
     	webengage.render({ ruleData : { "category_name": document.getElementsByClassName("crumb")[1].getAttribute("href") }});	
     }else{
-    	webengage.render({ ruleData : { });
+    	webengage.render({ ruleData : { }});
     }
       
     });
