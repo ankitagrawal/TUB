@@ -48,7 +48,7 @@
 <script id="_webengage_script_tag" type="text/javascript">
   window.webengageWidgetInit = window.webengageWidgetInit || function(){
     webengage.init({
-      licenseCode:"~134105c50"
+      licenseCode:"~2024c219"
     }).onReady(function(){
     	webengage.render({ ruleData : { "topCategory": "${topCategory}", "brand" : "${brand}", "allCategories": "${allCategories}"}});
     });
