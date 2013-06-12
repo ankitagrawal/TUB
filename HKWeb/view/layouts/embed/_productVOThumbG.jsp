@@ -11,6 +11,7 @@
 <c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
 <s:layout-definition>
   <%
+    System.out.println("---Ajeet VO---");
     Product product_productThumb = (Product) pageContext.getAttribute("product");
     ProductVO productVO = null;
     ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
@@ -27,8 +28,6 @@
       ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
       Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
       pageContext.setAttribute("combo", combo);
-    }else{
-
     }
 
   %>
