@@ -59,12 +59,12 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate) {
         Date monthBackDate = DateUtils.startOfMonthBack(new DateTime()).toDate();
         int totalMailSent = 0;
-        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMeForSimilarProducts(monthBackDate ,true , false);
+        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMeForSimilarProducts(monthBackDate, true, false);
         if (nonDeletedOOSList != null && nonDeletedOOSList.size() > 0) {
             Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, nonDeletedOOSList);
             totalMailSent = adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
         }
-        List<NotifyMe> deletedList = notifyMeDao.searchNotifyMeForSimilarProducts(null ,  null ,true);
+        List<NotifyMe> deletedList = notifyMeDao.searchNotifyMeForSimilarProducts(null, null, true);
         if (deletedList != null && deletedList.size() > 0) {
             Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, deletedList);
             totalMailSent = totalMailSent + adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
@@ -89,10 +89,13 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     // get number of eligible user  to be notified for variant by formula
                     if (!(allowedUserPerVariantMap.containsKey(productVariantId))) {
                         /*send mails if unbooked inventory is greater that zero*/
-                        int unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
+                        int unbookedInventory = 0;
                         if (isSimilarProduct) {
-                            /* product is OOS for similar product Notify me */
-                            unbookedInventory = unbookedInventory > 0 ? unbookedInventory : getSumOfSimilarProductInventory(productVariant);
+                            /*  similar product for OOS product */
+                            unbookedInventory = getSumOfSimilarProductInventory(productVariant);
+                        } else {
+                            /* InStock Product*/
+                            unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
                         }
                         /* Calculate number of users eligible for sending mails */
                         if (unbookedInventory > 0) {

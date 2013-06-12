@@ -247,6 +247,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
                         }
                     }
                 }
+
                 notifyMeDtoList = copyOnWriteDtoList;
             }
 
@@ -316,6 +317,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         params.add("productOutOfStock");
         params.add("productDeleted");
         params.add("productHidden");
+        params.add("similarProductAvailable");
         return params;
     }
 

@@ -50,7 +50,8 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     }
 
     public List<NotifyMe> searchNotifyMeForSimilarProducts(Date endDate, Boolean productVariantOutOfStock, Boolean productVariantDeleted) {
-        String hql = "select distinct(nm) from NotifyMe as nm join nm.productVariant as  pv join pv.product as  p where p.similarProducts.size > :size" ;
+        String hql = "select distinct(nm) from NotifyMe as nm join nm.productVariant as  pv join pv.product as  p where p.similarProducts.size > :size " +
+                "  and nm.notifiedDate is null and nm.notifiedByUser is null  " ;
         if (endDate != null) {
             hql = hql + " and nm.createdDate < :endDate ";
         }
@@ -176,6 +177,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         projectionList.add(Projections.alias(Projections.property("productVariant"), "productVariant"));
         projectionList.add(Projections.groupProperty("productVariant"));
         projectionList.add(Projections.alias(Projections.count("id"), "userCount"));
+
         notifyMeDetachedCriteria.setProjection(projectionList);
         List totalResultsList = getHibernateTemplate().findByCriteria(notifyMeDetachedCriteria);
         /* ToDo will find better way so that every time, need not to evaluate total result query */
