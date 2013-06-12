@@ -188,7 +188,7 @@
         <div class="grid_24" style="width: 950px;">
           <c:forEach var="headingProduct" items='${hk:getHeadingProductsSortedByRank(heading.id)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}' productReferrerId="<%=EnumProductReferrer.homePage.getId()%>"/>
+              <s:layout-render name="/layouts/embed/_productVOThumbG.jsp" product='${headingProduct.product}' productReferrerId="<%=EnumProductReferrer.homePage.getId()%>"/>
             </div>
           </c:forEach>
         </div>

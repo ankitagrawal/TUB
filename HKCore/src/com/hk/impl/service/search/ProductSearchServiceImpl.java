@@ -71,9 +71,14 @@ class ProductSearchServiceImpl implements ProductSearchService {
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList) {
                 if (!pr.getDeleted() && !pr.isHidden() && !pr.isGoogleAdDisallowed()) {
+                    System.out.println("Indexing Product = "+pr.getId());
+                  try {
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
                     productIndexService.updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
+                  } catch (Exception e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                  }
                 }
             }
 	          solr.deleteByQuery("*:*");
@@ -267,6 +272,20 @@ class ProductSearchServiceImpl implements ProductSearchService {
             throw e;
         }
         return searchResult;
+    }
+
+    public SolrProduct getProduct(String productId) {
+
+      SolrQuery query = new SolrQuery("*:*");
+      query.addFilterQuery(SolrSchemaConstants.productID + ":" + productId);
+      List<SolrProduct> solrProductList = null;
+      try {
+        QueryResponse response = solr.query(query);
+        solrProductList = response.getBeans(SolrProduct.class);
+      } catch (SolrServerException ex) {
+        logger.error("Exception while getting solr product", ex.getMessage());
+      }
+      return solrProductList != null && !solrProductList.isEmpty() ? solrProductList.get(0) : null;
     }
 
    public boolean isCategoryTerm(String term) throws SearchException {
