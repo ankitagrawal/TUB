@@ -663,10 +663,7 @@ public class ProductServiceImpl implements ProductService {
     ProductVO productVO = new ProductVO();
     productVO.setId(product.getId());
     productVO.setName(product.getName());
-    ProductVariant maxDiscountVariant = product.getMaximumDiscountProducVariant();
-    productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
-    productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice());
-    productVO.setMaxDiscountMRP(maxDiscountVariant.getMarkedPrice());
+
     productVO.setProductURL(linkManager.getProductURL(product, EnumProductReferrer.homePage.getId()));
     productVO.setMainImageId(product.getMainImageId());
     productVO.setGoogleAdDisallowed(product.isGoogleAdDisallowed());
@@ -675,8 +672,13 @@ public class ProductServiceImpl implements ProductService {
     productVO.setOutOfStock(product.isOutOfStock());
     if (product instanceof Combo)
       productVO.setCombo(true);
-    else
+    else {
       productVO.setCombo(false);
+      ProductVariant maxDiscountVariant = product.getMaximumDiscountProducVariant();
+      productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
+      productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice());
+      productVO.setMaxDiscountMRP(maxDiscountVariant.getMarkedPrice());
+    }
     productVO.setService(product.getService());
 
     return productVO;

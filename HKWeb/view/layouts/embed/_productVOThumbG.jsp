@@ -27,6 +27,8 @@
       ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
       Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
       pageContext.setAttribute("combo", combo);
+    }else{
+
     }
 
   %>
