@@ -334,9 +334,8 @@ public class AdminEmailManager {
 
     public int sendNotifyUserMailsForDeletedOOSHiddenProducts(Map<String, List<NotifyMe>> userNotifyMeListMap) {
         HashMap valuesMap = new HashMap();
-        User notifedByuser = userService.getAdminUser();
+        User notifedByuser = userService.getLoggedInUser();
         int countOfSentMail = 0;
-
         for (String emailId : userNotifyMeListMap.keySet()) {
             Boolean mailSentSuccessfully = false;
             List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);

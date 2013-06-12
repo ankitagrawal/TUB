@@ -64,9 +64,9 @@
 
             </fieldset>
 
-            <fieldset>
-                <legend>Send All Mails for Similar Product By Above Filled Filter</legend>
-                <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
+            <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
+                <fieldset>
+                    <legend>Send All Mails for Similar Product By Above Filled Filter</legend>
                     <ol>
                         <li>
                             <label>Conversion Rate</label>
@@ -78,14 +78,15 @@
                         </li>
                     </ol>
                     <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
-                </shiro:hasPermission>
-            </fieldset>
+                </fieldset>
+            </shiro:hasPermission>
         </s:form>
 
 
         <c:choose>
             <c:when test="${notifyMeBean.notifyMeDtoList!=null}">
                 <label>Total Records : ${notifyMeBean.totalProductVariant}</label>
+
                 <div id="table_container">
                     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${notifyMeBean}"/>
                     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${notifyMeBean}"/>
