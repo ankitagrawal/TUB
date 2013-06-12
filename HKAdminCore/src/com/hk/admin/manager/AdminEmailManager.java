@@ -356,21 +356,21 @@ public class AdminEmailManager {
             valuesMap.put("notifiedUser", notifyMeObject);
             if (notifyMeListPerUser.size() > 1) {
                 /*User has asked for multiple variant notification  */
-                valuesMap.put("productNotifyList", notifyMeListPerUser);
                 Map<String, List<Product>> productSimilarProductMap = new HashMap<String, List<Product>>();
+                List<NotifyMe> notifyMeListFinal = new ArrayList<NotifyMe>();
                 for (NotifyMe notifyMe : notifyMeListPerUser) {
                     List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMe.getProductVariant(), 3);
                     if (similarProductList != null && similarProductList.size() > 0) {
+                        notifyMeListFinal.add(notifyMe);
                         productSimilarProductMap.put(notifyMe.getProductVariant().getProduct().getId(), similarProductList);
                         for (Product product : similarProductList) {
                             productPriceRangeMap.put(product.getId(), product.getMaximumDiscountProducVariant());
                             valuesMap.put("productPriceMap", productPriceRangeMap);
                         }
 
-                    } else {
-                        notifyMeListPerUser.remove(notifyMe);
                     }
                 }
+                valuesMap.put("productNotifyList", notifyMeListFinal);
                 /*similarProductMap  KEY: OOS product user asked for notification   VALUE: list of  3 similar products(first three max inv products) */
                 if (productSimilarProductMap.size() > 0) {
                     valuesMap.put("similarProductMap", productSimilarProductMap);
