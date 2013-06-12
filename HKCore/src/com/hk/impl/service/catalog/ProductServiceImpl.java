@@ -675,9 +675,11 @@ public class ProductServiceImpl implements ProductService {
     else {
       productVO.setCombo(false);
       ProductVariant maxDiscountVariant = product.getMaximumDiscountProducVariant();
-      productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
-      productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice());
-      productVO.setMaxDiscountMRP(maxDiscountVariant.getMarkedPrice());
+      if (maxDiscountVariant != null && maxDiscountVariant.getId() != null) {
+        productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
+        productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice());
+        productVO.setMaxDiscountMRP(maxDiscountVariant.getMarkedPrice());
+      }
     }
     productVO.setService(product.getService());
 
