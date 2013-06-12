@@ -78,6 +78,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         Map<String, Integer> allowedUserPerVariantMap = new HashMap<String, Integer>();
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
         Map<String, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<String, Integer>();
+        Set<String> productIdWhoseSimilarInventoryIsZero = new HashSet<String>();
 
         try {
             if (notifyMeList != null) {
@@ -92,7 +93,13 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                         int unbookedInventory = 0;
                         if (isSimilarProduct) {
                             /*  similar product for OOS product */
+                            if (productIdWhoseSimilarInventoryIsZero.contains(productVariant.getProduct().getId())) {
+                                continue;
+                            }
                             unbookedInventory = getSumOfSimilarProductInventory(productVariant);
+                            if (unbookedInventory == 0) {
+                                productIdWhoseSimilarInventoryIsZero.add(productVariant.getProduct().getId());
+                            }
                         } else {
                             /* InStock Product*/
                             unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
