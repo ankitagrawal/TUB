@@ -96,7 +96,7 @@
     <script type="text/javascript">
       $(document).ready(function() {
 
-    	  $(".jspDrag").css("height","30px");
+    	  $(".jspDrag").css("height","80px");
         $('#successToolTipBtn').click(function (resp) {
         	
           $('#successToolTip').attr('style', 'display: none;');
