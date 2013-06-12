@@ -256,8 +256,20 @@ function validateSubmitForm() {
 			returnFalse = true;
 			return false;
 		}
+		
 	});
-
+	
+	if(parseFloat($('#poStatus :selected').val())==30 && ${actionBean.purchaseOrder.supplier.email_id==null}){
+		var email = prompt("Please enter a valid Supplier EmailId: ", "");
+		if(email==null || email==""){
+			alert("You did not enter any emailId.");
+			return false;
+		}
+		else{
+			$("#supplierEmail").val(email);
+			return true;
+		}
+	}
 
 	var statusSelected = $('.status').find('option:selected');
 	var approver = $('.approver').find('option:selected');
@@ -296,6 +308,7 @@ function temp() {
 <s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" onsubmit="return validateSubmitForm();">
 <s:hidden name="purchaseOrder" value="${pa.purchaseOrder}"/>
 <s:hidden name="previousPurchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus}"/>
+<input type="hidden" id="supplierEmail" name="supplierEmail"/>
 <table>
 	<tr>
         <td>Supplier Name</td>
@@ -371,7 +384,7 @@ function temp() {
 
 	<tr>
 		<td>Status</td>
-		<td class="status">
+		<td class="status" id="poStatus">
 			<c:choose>
 				<c:when test="${pa.purchaseOrder.purchaseOrderStatus.id == poCancelled}">
 					${pa.purchaseOrder.purchaseOrderStatus.name}
