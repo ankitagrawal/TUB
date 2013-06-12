@@ -77,9 +77,8 @@
                             <s:text name="bufferRate"/>
                         </li>
                     </ol>
-
+                    <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
                 </shiro:hasPermission>
-                <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
             </fieldset>
         </s:form>
 

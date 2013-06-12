@@ -19,7 +19,7 @@ public interface NotifyMeDao extends BaseDao {
 
     public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted);
 
-    public List<NotifyMe> searchNotifyMeForSimilarProducts(Date endDate, Boolean productInStock, Boolean productDeleted);
+    public List<NotifyMe> searchNotifyMeForSimilarProducts(Date endDate, Boolean productVariantOutOfStock, Boolean productDeleted);
 
     public List<String> getPendingNotifyMeProductVariant();
 
