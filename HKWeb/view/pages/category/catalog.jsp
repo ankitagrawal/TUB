@@ -11,6 +11,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="com.hk.cache.CategoryCache" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -27,18 +28,16 @@
   <meta name="keywords" content="${ca.seoData.metaKeyword}"/>
   <meta name="description" content="${ca.seoData.metaDescription}"/>
   <%
-    CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     List<Category> applicableCategories = new ArrayList<Category>();
-    applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
+    applicableCategories.add(CategoryCache.getInstance().getCategoryByName("bp-monitor").getCategory());
     pageContext.setAttribute("applicableCategories", applicableCategories);
-	boolean renderNewCatalogUI = Functions.renderNewCatalogFilter(ca.getChildCategorySlug(), ca.getSecondaryChildCategorySlug());
-	pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
+    boolean renderNewCatalogUI = Functions.renderNewCatalogFilter(ca.getChildCategorySlug(), ca.getSecondaryChildCategorySlug());
+    pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
 
-	  boolean isSecure = WebContext.isSecure();
+    boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
-    
-    Category services = categoryDao.getCategoryByName("services");
-    pageContext.setAttribute("services", services);
+
+    pageContext.setAttribute("services", CategoryCache.getInstance().getCategoryByName("services").getCategory());
     if (ca.getRootCategorySlug().equals("services")) {
       MapIndiaDao mapIndiaDao = ServiceLocatorFactory.getService(MapIndiaDao.class);
       Cookie preferredZoneCookie = BaseUtils.getCookie(request, HealthkartConstants.Cookie.preferredZone);
@@ -50,66 +49,6 @@
       }
     }
   %>
-
-  <script type="text/javascript" src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-        $('#selectCityWindow').jqm();
-        $('#selectCityWindow').jqmShow();
-
-        $('.jqmOverlay').click(function() {
-            //        alert("Cliking w/o selecting" + $('#topLevelCategory').val());
-            if ($('#topLevelCategory').val() == 'services') {
-                //          alert("Inside");
-                $.getJSON(
-                        $('#setDefaultZoneLink').attr('href')
-                );
-            }
-        });
-      var perPage = $('.perPage-span').html();
-      if (perPage) {
-        $('.per_page').removeClass('active');
-        $('.per_page').each(function(index) {
-          if ($(this).text() == perPage) {
-            //$(this).addClass('active');
-          }
-        });
-      }
-      else {
-        $('.per_page').first().addClass('active');
-      }
-
-
-      $('.compare_checkbox').click(function() {
-        var selected = $('.compare_checkbox').filter(':checked').length;
-        if (selected > 4) {
-          alert("You can't select more than 4 products at a time.");
-          return false;
-        }
-      });
-      $('.checkSubmit').click(function() {
-        var selected = $('.compare_checkbox').filter(':checked').length;
-        if (selected < 2) {
-          alert("Select at least 2 products for comparison.");
-          return false;
-        }
-      });
-
-      $('.sortBy').change(function() {
-        $('#sorter').submit();
-      });
-
-      var sortOrderDeterminer = 0;
-      $('.sortBy').click(function() {
-        sortOrderDeterminer++;
-        function DescIfEven(sortOrderDeterminer) {
-          return (sortOrderDeterminer % 2) ? "desc" : "asc";
-        }
-      });
-
-    });
-
-  </script>
 </s:layout-component>
 
 <s:layout-component name="breadcrumb">
@@ -179,6 +118,8 @@
 <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"/>
 
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}" secondaryLevelCategory="${ca.childCategorySlug}" />
+<!-- BLADE marketing-->
+<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="category" />
 
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
@@ -210,14 +151,14 @@
 <div class="catalog">
 
 <div class='controls grid_18 alpha'>
-  <a class='control' title='switch to grid view' id="grid-control" href="#">
+  <%--<a class='control' title='switch to grid view' id="grid-control" href="#">
     <div class="icon"></div>
     Grid View
   </a>
   <a class='control' href='#' title='switch to list view' id="list-control">
     <div class="icon"></div>
     List View
-  </a>
+  </a>--%>
 
   <div class='per grid_10'>
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" id="sort-popularity" class='active control'
@@ -316,7 +257,7 @@
   </div>
 </div>
 
-<div id="prod_grid" class="grid_19" style="${ca.rootCategorySlug == "services"?"display:none":""}">
+<div id="prod_grid" class="grid_19">
   <s:form beanclass="com.hk.web.action.core.catalog.CompareAction" target="_blank">
     <c:forEach items="${ca.productList}" var="product" varStatus="ctr">
       <c:if test="${!product.googleAdDisallowed}">
@@ -343,16 +284,6 @@
   </s:form>
   <div class="floatfix"></div>
 </div>
-<div id="prod_list" class="grid_18" style="${ca.rootCategorySlug == "services"?"":"display:none"}">
-  <c:forEach items="${ca.productList}" var="product">
-    <c:if test="${!product.googleAdDisallowed}">
-      <div class="product_list_box">
-        <s:layout-render name="/layouts/embed/_productListG.jsp" productId="${product.id}"></s:layout-render>
-      </div>
-      <div class="floatfix"></div>
-    </c:if>
-  </c:forEach>
-</div>
 
 <div class='catalog_header'>
   <div class="content">
@@ -362,7 +293,65 @@
     </p>
   </div>
 </div>
+<script type="text/javascript" src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#selectCityWindow').jqm();
+        $('#selectCityWindow').jqmShow();
 
+        $('.jqmOverlay').click(function() {
+            //        alert("Cliking w/o selecting" + $('#topLevelCategory').val());
+            if ($('#topLevelCategory').val() == 'services') {
+                //          alert("Inside");
+                $.getJSON(
+                        $('#setDefaultZoneLink').attr('href')
+                );
+            }
+        });
+      var perPage = $('.perPage-span').html();
+      if (perPage) {
+        $('.per_page').removeClass('active');
+        $('.per_page').each(function(index) {
+          if ($(this).text() == perPage) {
+            //$(this).addClass('active');
+          }
+        });
+      }
+      else {
+        $('.per_page').first().addClass('active');
+      }
+
+
+      $('.compare_checkbox').click(function() {
+        var selected = $('.compare_checkbox').filter(':checked').length;
+        if (selected > 4) {
+          alert("You can't select more than 4 products at a time.");
+          return false;
+        }
+      });
+      $('.checkSubmit').click(function() {
+        var selected = $('.compare_checkbox').filter(':checked').length;
+        if (selected < 2) {
+          alert("Select at least 2 products for comparison.");
+          return false;
+        }
+      });
+
+      $('.sortBy').change(function() {
+        $('#sorter').submit();
+      });
+
+      var sortOrderDeterminer = 0;
+      $('.sortBy').click(function() {
+        sortOrderDeterminer++;
+        function DescIfEven(sortOrderDeterminer) {
+          return (sortOrderDeterminer % 2) ? "desc" : "asc";
+        }
+      });
+
+    });
+
+  </script>
 <script type="text/javascript">
   $(document).ready(function() {
     if ($('#topLevelCategory').val() == 'services') {

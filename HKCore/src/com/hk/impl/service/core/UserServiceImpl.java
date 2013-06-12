@@ -16,6 +16,7 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.user.UserDaoImpl;
+import com.hk.impl.service.codbridge.UserThreadLocal;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
@@ -74,7 +75,17 @@ public class UserServiceImpl implements UserService {
             }
         } catch (UnavailableSecurityManagerException unavailableSecurityManagerException) {
             //just in case this is called out of web context, hence giving db from user, //todo rewrite
-            loggedOnUser = getAdminUser();
+        	if(UserThreadLocal.get() != null) {
+        		return getUserDao().getUserById(UserThreadLocal.get().getId());
+        	} else {
+        		loggedOnUser = getAdminUser();
+        	}
+        } catch (Exception e) {
+        	if(UserThreadLocal.get() != null) {
+        		return getUserDao().getUserById(UserThreadLocal.get().getId());
+        	} else {
+        		throw new RuntimeException(e);
+        	}
         }
         return loggedOnUser;
     }

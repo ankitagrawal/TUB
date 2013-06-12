@@ -57,10 +57,6 @@ public class CheckPaymentAction extends BaseAction {
 
     private Map<String,List<HkPaymentResponse>> bulkHkPaymentResponseList;
 
-    private HkPaymentResponse hkPaymentResponse;
-
-    private Payment updatedPayment;
-
     @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful"})
     private Payment payment;
 
@@ -111,6 +107,7 @@ public class CheckPaymentAction extends BaseAction {
 
     @DontValidate
     public Resolution seekPayment() {
+
         try{
             hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
 
@@ -127,15 +124,16 @@ public class CheckPaymentAction extends BaseAction {
 
             bulkHkPaymentResponseList = new HashMap<String, List<HkPaymentResponse>>();
             List orderStatuses = Arrays.asList(EnumOrderStatus.Placed.asOrderStatus(), EnumOrderStatus.InProcess.asOrderStatus());
-            paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null, Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses,null);
+            paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null,
+                    Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses, null);
             for (Payment seekPayment : paymentList) {
                 if (seekPayment != null) {
                     String gatewayOrderId = seekPayment.getGatewayOrderId();
-                    if(gatewayOrderId != null){
-                        try{
+                    if (gatewayOrderId != null) {
+                        try {
                             hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
-                            bulkHkPaymentResponseList.put(gatewayOrderId,hkPaymentResponseList);
-                        } catch (HealthkartPaymentGatewayException e){
+                            bulkHkPaymentResponseList.put(gatewayOrderId, hkPaymentResponseList);
+                        } catch (HealthkartPaymentGatewayException e) {
                             logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
                         }
                     }
@@ -163,7 +161,7 @@ public class CheckPaymentAction extends BaseAction {
 
 
     @DontValidate
-    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         try{
             paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
@@ -243,31 +241,35 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
-        Gateway gateway = payment.getGateway();
+        /*Gateway gateway = payment.getGateway();
         String gatewayOrderId = payment.getGatewayOrderId();
         Map<String, Object> hkrespObj;
         EnumPaymentStatus hkRespPayStatus;
-        PaymentStatus hkPaymentStatus;
+        PaymentStatus hkPaymentStatus;*/
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
-//        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
 
-        if (gateway != null && gatewayOrderId != null) {
-            hkrespObj = paymentManager.getHkPaymentServiceByGateway(gateway).seekHkPaymentResponse(gatewayOrderId);
-            PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+        /*if (gateway != null && gatewayOrderId != null) {
+            HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
+            if(hkPaymentService != null){
+                hkrespObj = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
 
-            if(hkrespObj != null){
-                hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-                hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
-                boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
-                if (!isValid) {
-                    // send email to admin
-                    paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                if(hkrespObj != null){
+                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus((String)hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
+                    if(hkRespPayStatus != null){
+                        hkPaymentStatus = hkRespPayStatus.asPaymenStatus();
+                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+                        if (!isValid) {
+                            // send email to admin
+                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                        }
+                    }
                 }
             }
-        }
+        }*/
 
         getPaymentManager().success(payment.getGatewayOrderId());
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
@@ -476,22 +478,6 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setHkPaymentResponseList(List<HkPaymentResponse> hkPaymentResponseList) {
         this.hkPaymentResponseList = hkPaymentResponseList;
-    }
-
-    public HkPaymentResponse getHkPaymentResponse() {
-        return hkPaymentResponse;
-    }
-
-    public void setHkPaymentResponse(HkPaymentResponse hkPaymentResponse) {
-        this.hkPaymentResponse = hkPaymentResponse;
-    }
-
-    public Payment getUpdatedPayment() {
-        return updatedPayment;
-    }
-
-    public void setUpdatedPayment(Payment updatedPayment) {
-        this.updatedPayment = updatedPayment;
     }
 
     public Map<String, List<HkPaymentResponse>> getBulkHkPaymentResponseList() {

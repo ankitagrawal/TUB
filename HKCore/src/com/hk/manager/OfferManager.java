@@ -44,23 +44,31 @@ public class OfferManager {
     private RoleService   roleService;
 
     public boolean isOfferValidForUser(Offer offer, User user) {
-        if (offer.getOfferEmailDomains().size() > 0) {
-            for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
-                if (user.getLogin().toLowerCase().endsWith(offerEmailDomain.getEmailDomain().toLowerCase())) {
-                    return true;
-                }
-            }
-        } else {
-            if (offer.getRoles().size() == 0) {
-                return true;
-            }
-            for (Role role : user.getRoles()) {
-                if (offer.getRoles().contains(role)) {
-                    return true;
-                }
-            }
+      return isOfferValidForUserDomain(offer,  user) && isOfferValidForUserRole(offer,  user);      
+    }
+
+    public boolean isOfferValidForUserRole(Offer offer, User user) {
+      if (!offer.getRoles().isEmpty()) {
+        for (Role role : user.getRoles()) {
+          if (offer.getRoles().contains(role)) {
+            return true;
+          }
         }
         return false;
+      }
+      return true;
+    }
+
+    public boolean isOfferValidForUserDomain(Offer offer, User user) {
+      if (!offer.getOfferEmailDomains().isEmpty()) {
+        for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
+          if (user.getLogin().toLowerCase().endsWith(offerEmailDomain.getEmailDomain().toLowerCase())) {
+            return true;
+          }
+        }
+        return false;
+      }
+      return true;
     }
 
     @Transactional

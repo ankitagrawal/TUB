@@ -120,7 +120,7 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution resolveCase(){
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,"Case Resolved");
-        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());
+        shippingOrderService.autoEscalateShippingOrder(shippingOrder, false);
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 

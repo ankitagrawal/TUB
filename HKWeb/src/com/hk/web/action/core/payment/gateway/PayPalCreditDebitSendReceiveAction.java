@@ -225,7 +225,7 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (ack != null && ack.equals(PayPalPaymentGatewayWrapper.Success_Ack) && paymentStatus.equals(PayPalPaymentGatewayWrapper.Payment_Pending_Status) && pendingReason.equals(PayPalPaymentGatewayWrapper.Payment_Pending_Reason)) {
                 paymentManager.pendingApproval(gatewayOrderId);
-                resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else {
                 paymentManager.fail(gatewayOrderId);
                 logger.error("sending to payment gateway paypal for gateway order id " + gatewayOrderId + "and amount " + amount_in_rupee + "and correlation id" + CORRELATIONID);

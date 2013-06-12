@@ -144,6 +144,7 @@
             <h2>Eye Category Config</h2>
 
             <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction">Add Eye Config</s:link></h3>
+            <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.AddVirtualTryOnAction">Add Virtual Try on Filter</s:link></h3>
             <h3><s:link beanclass="com.hk.web.action.admin.catalog.TryOnXmlsUploadAction" event="pre">Generate Update Eye Try On</s:link></h3>
 
 

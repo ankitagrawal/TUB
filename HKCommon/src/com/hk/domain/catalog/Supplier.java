@@ -85,6 +85,24 @@ public class Supplier implements java.io.Serializable {
 
 	@Column (name = "comments")
 	private String comments;
+	
+	@Column (name = "contact_person_2")
+	private String contactPerson2;
+
+	@Column (name = "contact_number_2")
+	private String contactNumber2;
+	
+	@Column (name = "email_id_2")
+	private String email_id2;
+	
+	@Column (name = "contact_person_3")
+	private String contactPerson3;
+
+	@Column (name = "contact_number_3")
+	private String contactNumber3;
+	
+	@Column (name = "email_id_3")
+	private String email_id3;
 
 	public Long getId() {
 		return id;
@@ -275,6 +293,54 @@ public class Supplier implements java.io.Serializable {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+	
+	public String getContactPerson2() {
+		return contactPerson2;
+	}
+
+	public void setContactPerson2(String contactPerson2) {
+		this.contactPerson2 = contactPerson2;
+	}
+
+	public String getContactNumber2() {
+		return contactNumber2;
+	}
+
+	public void setContactNumber2(String contactNumber2) {
+		this.contactNumber2 = contactNumber2;
+	}
+
+	public String getEmail_id2() {
+		return email_id2;
+	}
+
+	public void setEmail_id2(String email_id2) {
+		this.email_id2 = email_id2;
+	}
+
+	public String getContactPerson3() {
+		return contactPerson3;
+	}
+
+	public void setContactPerson3(String contactPerson3) {
+		this.contactPerson3 = contactPerson3;
+	}
+
+	public String getContactNumber3() {
+		return contactNumber3;
+	}
+
+	public void setContactNumber3(String contactNumber3) {
+		this.contactNumber3 = contactNumber3;
+	}
+
+	public String getEmail_id3() {
+		return email_id3;
+	}
+
+	public void setEmail_id3(String email_id3) {
+		this.email_id3 = email_id3;
 	}
 
 	@Override

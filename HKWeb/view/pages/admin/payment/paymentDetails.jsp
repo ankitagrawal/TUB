@@ -51,7 +51,7 @@
             Gateway Reference Id --> ${response.gatewayReferenceId} <br/>
             Transaction Type --> ${response.transactionType}<br/>
             Amount --> ${response.amount} <br/>
-            Payment Status --> ${response.paymentStatus.name}<br/>
+            Payment Status --> ${response.HKPaymentStatus.name}<br/>
             Response Message --> ${response.responseMsg}  <br/>
             Root Reference No --> ${response.rrn}<br/>
             Gateway --> ${response.gateway.name}<br/>
@@ -59,7 +59,7 @@
             <br/>
         </c:forEach>
 
-        <c:if test="${not empty cpa.hkPaymentResponse}">
+        <%--<c:if test="${not empty cpa.hkPaymentResponse}">
             Gateway Order Id --> ${cpa.hkPaymentResponse.gatewayOrderId}  <br/>
             Gateway Reference Id --> ${cpa.hkPaymentResponse.gatewayReferenceId} <br/>
             Transaction Type --> ${cpa.hkPaymentResponse.transactionType}<br/>
@@ -84,7 +84,7 @@
             Payment Date --> ${cpa.updatedPayment.createDate}<br/>
             Error Log --> ${cpa.updatedPayment.errorLog}<br/>
             <br/>
-        </c:if>
+        </c:if>--%>
 
         <c:forEach items="${cpa.bulkHkPaymentResponseList}" var="responseList">
             <c:forEach items="${responseList.value}" var="response">
@@ -92,7 +92,7 @@
                 Gateway Reference Id --> ${response.gatewayReferenceId} <br/>
                 Transaction Type --> ${response.transactionType}<br/>
                 Amount --> ${response.amount} <br/>
-                Payment Status --> ${response.paymentStatus.name}<br/>
+                Payment Status --> ${response.HKPaymentStatus.name}<br/>
                 Response Message --> ${response.responseMsg}  <br/>
                 Root Reference No --> ${response.rrn}<br/>
                 Gateway --> ${response.gateway.name}<br/>

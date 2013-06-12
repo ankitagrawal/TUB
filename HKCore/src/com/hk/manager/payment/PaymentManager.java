@@ -4,14 +4,12 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.payment.EnumPaymentTransactionType;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
@@ -27,8 +25,6 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.pojo.HkPaymentResponse;
 import com.hk.service.ServiceLocatorFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -41,8 +37,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -75,8 +69,6 @@ public class PaymentManager {
     OrderEventPublisher orderEventPublisher;
     @Autowired
     EmailManager emailManager;
-    @Autowired
-    private ShippingOrderService shippingOrderService;
 
     @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
     private Double cashBackLimit;
@@ -311,7 +303,7 @@ public class PaymentManager {
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             payment.setGatewayReferenceId(null);
             Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
-            if (orderCount != null && orderCount >= 3) {
+            if (orderCount != null && orderCount >= 2) {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
             } else {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
@@ -529,7 +521,11 @@ public class PaymentManager {
     }
 
     public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
-        return ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        HkPaymentService hkPaymentService = null;
+        if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
+            hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        }
+        return hkPaymentService;
     }
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus){
@@ -539,8 +535,6 @@ public class PaymentManager {
     public boolean sendUnVerifiedPaymentStatusChangeToAdmin(PaymentStatus actualStatus, PaymentStatus changedStatus,String gatewayOrderId){
         return emailManager.sendAdminPaymentStatusChangeEmail(actualStatus.getName(),changedStatus.getName(),gatewayOrderId);
     }
-
-
 
     public OrderManager getOrderManager() {
         return orderManager;
