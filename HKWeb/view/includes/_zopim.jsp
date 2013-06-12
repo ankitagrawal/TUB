@@ -7,6 +7,10 @@
 <%
     String topCategory = (String) pageContext.getAttribute("topCategory");
     pageContext.setAttribute("topCategory", topCategory);
+    String brand = (String) pageContext.getAttribute("brand");
+    pageContext.setAttribute("brand", brand);
+    String allCategories = (String) pageContext.getAttribute("allCategories");
+    pageContext.setAttribute("allCategories", allCategories);
     if (AnalyticsConstants.analytics) {
 %>
 
@@ -44,14 +48,9 @@
 <script id="_webengage_script_tag" type="text/javascript">
   window.webengageWidgetInit = window.webengageWidgetInit || function(){
     webengage.init({
-      licenseCode:"~2024c219"
+      licenseCode:"~134105c50"
     }).onReady(function(){
-    if(document.getElementsByClassName("crumb")){
-    	webengage.render({ ruleData : { "category_name": document.getElementsByClassName("crumb")[1].getAttribute("href") }});	
-    }else{
-    	webengage.render({ ruleData : { }});
-    }
-      
+    	webengage.render({ ruleData : { "topCategory": "${topCategory}", "brand" : "${brand}", "allCategories": "${allCategories}"}});
     });
   };
 
