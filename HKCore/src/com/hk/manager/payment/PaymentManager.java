@@ -4,7 +4,6 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -23,17 +22,14 @@ import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
-import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.service.ServiceLocatorFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-
 import com.hk.util.TokenUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

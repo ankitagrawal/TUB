@@ -1,34 +1,33 @@
 package com.hk.impl.service.payment;
 
-import java.util.*;
-
+import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.payment.*;
 import com.hk.domain.core.OrderStatus;
-import com.hk.domain.payment.Gateway;
-import com.hk.exception.HealthkartPaymentGatewayException;
-import com.hk.manager.SMSManager;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.service.payment.HkPaymentService;
-import com.hk.pojo.HkPaymentResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.order.Order;
+import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
+import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
+import com.hk.manager.SMSManager;
+import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pojo.HkPaymentResponse;
 import com.hk.service.ServiceLocatorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -47,7 +46,6 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	SMSManager smsManager;
 
-    @Autowired
     private PaymentManager paymentManager;
 
     public List<Payment> listByOrderId(Long orderId) {
@@ -485,6 +483,13 @@ public class PaymentServiceImpl implements PaymentService {
             this.orderService = ServiceLocatorFactory.getService(OrderService.class);
         }
         return orderService;
+    }
+
+    public PaymentManager getPaymentManager() {
+        if(paymentManager == null){
+            this.paymentManager = ServiceLocatorFactory.getService(PaymentManager.class);
+        }
+        return paymentManager;
     }
 
     public void setOrderService(OrderService orderService) {
