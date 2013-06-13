@@ -645,7 +645,7 @@ public class ProductServiceImpl implements ProductService {
     productVO.setId(solrProduct.getId());
     productVO.setName(solrProduct.getName());
     productVO.setMaxDiscount(solrProduct.getMaximumDiscountProductVariantDiscountPercentage());
-    productVO.setMaxDiscountHKPrice(solrProduct.getMaximumDiscountProductVariantHKPrice());
+    productVO.setMaxDiscountHKPrice(solrProduct.getMaximumDiscountProductVariantHKPrice() + (solrProduct.getService() ? solrProduct.getPostpaidPrice() : 0.0));
     productVO.setMaxDiscountMRP(solrProduct.getMaximumDiscountProductVariantMRP());
     productVO.setProductURL(solrProduct.getProductUrl());
     productVO.setMainImageId(solrProduct.getMainImageId());
@@ -677,7 +677,7 @@ public class ProductServiceImpl implements ProductService {
       ProductVariant maxDiscountVariant = product.getMaximumDiscountProducVariant();
       if (maxDiscountVariant != null && maxDiscountVariant.getId() != null) {
         productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
-        productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice());
+        productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice() + (product.getService() ? maxDiscountVariant.getPostpaidAmount() : 0.0));
         productVO.setMaxDiscountMRP(maxDiscountVariant.getMarkedPrice());
       }
     }
