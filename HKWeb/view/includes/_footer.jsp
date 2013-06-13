@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.service.UserService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.user.User" %>
+<%@ page import="java.util.Arrays" %>
 
 <s:layout-definition>
 
@@ -13,7 +14,8 @@
   if (loggedInUser != null) {
     pageContext.setAttribute("user", loggedInUser);
     pageContext.setAttribute("userRoles", loggedInUser.getRoleStrings());
-  } 
+  }
+  pageContext.setAttribute("tempUser", RoleConstants.TEMP_USER);
   %>
 
   <div class='footer'>
@@ -61,7 +63,7 @@
           Your Account
         </h5>
         <ul>
-          <c:if test="${hk:collectionContains(userRoles, 'TEMP_USER')}">
+          <c:if test="${hk:collectionContains(userRoles, tempUser)}">
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Login</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Signup</s:link></li>
           </c:if>
@@ -72,7 +74,7 @@
           <shiro:authenticated>
               <li><s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
           </shiro:authenticated>
-          <c:if test="${!hk:collectionContains(userRoles, 'TEMP_USER')}">
+          <c:if test="${!hk:collectionContains(userRoles, tempUser)}">
             <li>
             <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">Order History</s:link></li>
