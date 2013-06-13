@@ -47,19 +47,19 @@
     <div class='grid_6 product' style="width:240px;height:300px;">
       <c:set var="urlParameter" value="<%=HealthkartConstants.URL.productPosition%>"/>
       <div class='img180 ${productVO.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
-        <s:link href="${hk:getAppendedURL(productVO.productURL, urlParameter, position)}" class="prod_link"
+        <a href="${hk:getAppendedURL(productVO.productURL, urlParameter, position)}" class="prod_link"
                 title="${productVO.name}">
           <img style="max-height:180px;max-width:180px;"
                src="${hk:getS3ImageUrl(imageMediumSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
-        </s:link>
+        </a>
       </div>
       <div>
 					<span style="height:20px;max-width:240px;">
-						<s:link href="${hk:getAppendedURL(productVO.productURL, urlParameter, position)}" title="${productVO.name}"
+						<a href="${hk:getAppendedURL(productVO.productURL, urlParameter, position)}" title="${productVO.name}"
                     class="prod_link">
               ${productVO.name}
-            </s:link>
+            </a>
 					</span>
       </div>
       <c:choose>
@@ -119,7 +119,6 @@
           </div>
           <c:if test="${productVO.maxDiscount > 0}">
             <div class="special green">
-              upto
               <fmt:formatNumber
                   value="${productVO.maxDiscount*100}"
                   maxFractionDigits="0"/>%

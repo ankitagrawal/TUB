@@ -11,7 +11,6 @@
 <c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
 <s:layout-definition>
   <%
-    System.out.println("---Ajeet VO---");
     Product product_productThumb = (Product) pageContext.getAttribute("product");
     ProductVO productVO = null;
     ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
@@ -46,18 +45,18 @@
   <c:if test="${!productVO.googleAdDisallowed && !productVO.deleted && !productVO.hidden}">
     <div class='grid_4 product'>
       <div class='img128 ${productVO.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
-        <s:link href="${productVO.productURL}?productReferrerId=${productReferrerId}" class="prod_link"
+        <a href="${productVO.productURL}?productReferrerId=${productReferrerId}" class="prod_link"
                 title="${productVO.name}">
           <img src="${hk:getS3ImageUrl(imageSmallSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
-        </s:link>
+        </a>
       </div>
       <div>
 					<span style="height:20px;max-width:190px;">
-						<s:link href="${productVO.productURL}?productReferrerId=${productReferrerId}" title="${productVO.name}"
+						<a href="${productVO.productURL}?productReferrerId=${productReferrerId}" title="${productVO.name}"
                     class="prod_link">
               ${productVO.name}
-            </s:link>
+            </a>
 					</span>
       </div>
       <c:choose>
@@ -117,7 +116,6 @@
           </div>
           <c:if test="${productVO.maxDiscount > 0}">
             <div class="special green">
-              upto
               <fmt:formatNumber
                   value="${productVO.maxDiscount*100}"
                   maxFractionDigits="0"/>%

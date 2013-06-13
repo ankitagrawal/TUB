@@ -39,7 +39,7 @@
   pageContext.setAttribute("b2bUser", RoleConstants.B2B_USER);
   pageContext.setAttribute("loyaltyUser", RoleConstants.HK_LOYALTY_USER);
   pageContext.setAttribute("hkRoles", Arrays.asList(RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER));
-  pageContext.setAttribute("groupAdminRoles", Arrays.asList(RoleConstants.ROLE_GROUP_ADMINS));
+  pageContext.setAttribute("groupAdminRoles", RoleConstants.ROLE_GROUP_ADMINS_LIST);
 %>
 
 <s:layout-definition>
