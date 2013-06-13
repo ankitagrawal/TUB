@@ -3,13 +3,16 @@ package com.hk.web.action.admin.catalog.product;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.util.RelatedProductXlsParser;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.User;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +27,7 @@ import java.util.Set;
  * Time: 10:46 PM
  * To change this template use File | Settings | File Templates.
  */
+@Secure(hasAnyPermissions = {PermissionConstants.BULK_CATALOG_UPDATE}, authActionBean = AdminPermissionAction.class)
 public class BulkUploadRelatedProductAction extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(BulkUploadRelatedProductAction.class);
