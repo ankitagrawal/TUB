@@ -935,47 +935,24 @@
 --/parenting/toys-more/misc
 
 /services
+-/services/organ-specific-tests :Organ Specific Tests
+--/services/organ-specific-tests/eye
+--/services/organ-specific-tests/liver
+--/services/organ-specific-tests/brain
+--/services/organ-specific-tests/heart
+--/services/organ-specific-tests/kidney
+-/services/disease-specific-tests :Disease Specific Tests
+--/services/disease-specific-tests/hiv :HIV
+--/services/disease-specific-tests/dengue
+--/services/disease-specific-tests/diabetes
+--/services/disease-specific-tests/thyroid
+--/services/disease-specific-tests/arthritis
+--/services/disease-specific-tests/hepatitis
+--/services/disease-specific-tests/tuberculosis
+--/services/disease-specific-tests/vitamin-profile :Vitamin Profile
+--/services/disease-specific-tests/lipid-profile :Lipid Profile/Cholestrol
 -/services/health-checkups
---/services/health-checkups/diabetes
---/services/health-checkups/thyroid
----/services/health-checkups/thyroid/combos
---/services/health-checkups/complete-health-checkups :Complete Health Checkups
----/services/health-checkups/complete-health-checkups/men
----/services/health-checkups/complete-health-checkups/women
---/services/health-checkups/heart-checkup :Heart Checkup
---/services/health-checkups/lipid-profile :Lipid Profile
---/services/health-checkups/liver-function-test :Liver Function Test
---/services/health-checkups/kidney-function-test :Kidney Function Test
---/services/health-checkups/hiv-test :HIV Test
---/services/health-checkups/tuberculosis
---/services/health-checkups/hepatitis
---/services/health-checkups/arthritis
---/services/health-checkups/mri-scan :MRI Scan
---/services/health-checkups/ecg :ECG
---/services/health-checkups/pathology
 --/services/health-checkups/radiology
---/services/health-checkups/miscellaneous
--/services/health-programs  :Health Programs
---/services/health-programs/physiotherapy
---/services/health-programs/eye
---/services/health-programs/dental
---/services/health-programs/diabetes-management  :Diabetes Management
---/services/health-programs/elderly-care :Elderly Care
---/services/health-programs/health-management :Health Management
----/services/health-programs/health-management/men
----/services/health-programs/health-management/women
--/services/gyms-health-centres
---/services/gyms-health-centres/gym-membership  :Gym Membership
---/services/gyms-health-centres/exercise-yoga-classes  :Exercise & Yoga Classes
--/services/weight-management
---/services/weight-management/centre-specific-programs  :Centre Specific Programs
---/services/weight-management/online-programs  :Online Programs
--/services/health-cards
---/services/health-cards/indian-health-organisation
---/services/health-cards/others
--/services/hair-spa-beauty : Hair,Spa & Beauty
---/services/hair-spa-beauty/massages-spa  : Massages & Spa
---/services/hair-spa-beauty/beauty-care  :Beauty Care
---/services/hair-spa-beauty/skin-care :Skin Care
---/services/hair-spa-beauty/hair-treatment  :Hair Treatment
---/services/hair-spa-beauty/bridal-packages  :Bridal Packages
+--/services/health-checkups/pathology
+--/services/health-checkups/pre-marital
+--/services/health-checkups/complete-health-checkups :Complete Health Checkups
