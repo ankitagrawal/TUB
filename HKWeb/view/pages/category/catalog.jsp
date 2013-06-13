@@ -354,7 +354,7 @@
   </script>
 <script type="text/javascript">
   $(document).ready(function() {
-    if ($('#topLevelCategory').val() == 'services') {
+    /*if ($('#topLevelCategory').val() == 'services') {
       $('#prod_grid').hide();
       $('#prod_list').show();
       $("#list-control").addClass("active");
@@ -362,7 +362,9 @@
       $('#prod_list').hide();
       $('#prod_grid').show();
       $("#grid-control").addClass("active");
-    }
+    }*/
+
+    $('#prod_grid').show();
 
     $('#grid-control').click(function() {
       $('#grid-control, #list-control').removeClass("active");
