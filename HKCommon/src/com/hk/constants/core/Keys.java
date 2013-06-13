@@ -48,6 +48,7 @@ public class Keys {
 
         public static final String analytics                       = "analytics";
         public static final String gaCode                          = "gaCode";
+        public static final String uaCode                          = "uaCode";
 
         public static final String defaultGateway                  = "defaultGateway";
 
