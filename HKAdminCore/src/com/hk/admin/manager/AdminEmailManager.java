@@ -412,7 +412,7 @@ public class AdminEmailManager {
     public void sendNotifyUsersMails(Map<String, List<NotifyMe>> userNotifyMeListMap) {
 
         HashMap valuesMap = new HashMap();
-        User notifedByuser = userService.getAdminUser();
+        User notifedByuser = userService.getLoggedInUser();
 
         for (String emailId : userNotifyMeListMap.keySet()) {
 
