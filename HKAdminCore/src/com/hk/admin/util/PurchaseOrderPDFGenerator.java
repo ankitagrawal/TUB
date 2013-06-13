@@ -3,6 +3,8 @@ package com.hk.admin.util;
 import static com.akube.framework.util.BaseUtils.newline;
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
+import com.hk.constants.courier.StateList;
+import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.warehouse.Warehouse;
@@ -34,7 +36,7 @@ public class PurchaseOrderPDFGenerator {
   @Autowired
   WarehouseService warehouseService;
 
-    public void generatePurchaseOrderPdf(String pdfFilePath, PurchaseOrderDto purchaseOrderDto, String logoImagePath) throws Exception {
+    public void generatePurchaseOrderPdf(String pdfFilePath, PurchaseOrderDto purchaseOrderDto) throws Exception {
         PurchaseOrder purchaseOrder = purchaseOrderDto.getPurchaseOrder();
         Document purchaseOrderDocument = new Document();
         try {
@@ -54,16 +56,12 @@ public class PurchaseOrderPDFGenerator {
               Paragraph header = new Paragraph("PURCHASE ORDER " + newline + newline , new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
                 header.setAlignment(Element.ALIGN_CENTER);
 
-                Image image = Image.getInstance(logoImagePath);
-                image.setAlignment(Element.ALIGN_RIGHT);
-
                 purchaseOrderDocument.add(addressParagraph);
-                purchaseOrderDocument.add(image);
                 purchaseOrderDocument.add(header);
                 createSupplierDetailTable(purchaseOrderDocument, purchaseOrder);
                 purchaseOrderDocument.add(new Paragraph(newline));
                 createPODetails(purchaseOrderDocument, purchaseOrderDto);
-                createFooter(purchaseOrderDocument);
+                createFooter(purchaseOrderDocument, purchaseOrderDto);
             }
         } catch (Exception e) {
 	        e.printStackTrace();
@@ -173,12 +171,21 @@ public class PurchaseOrderPDFGenerator {
         document.add(poDetailTable);
     }
 
-    private void createFooter(Document document) throws Exception{
+    private void createFooter(Document document, PurchaseOrderDto purchaseOrderDto) throws Exception{
         Paragraph footerParagraph = new Paragraph();
-        footerParagraph.add(new Paragraph("1) Please indicate Purchase Order number on all invoice and challan and correspondence." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        footerParagraph.add(new Paragraph("2) The item supplied will be subject to our approval and all rejections will be to your account." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        footerParagraph.add(new Paragraph("3) No excess supply will be accepted, unless agreed in writing by us." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-
+        footerParagraph.add(new Paragraph("1) Any Cost Price or MRP changes should be highlighted in advance for acceptance of goods at the warehouse by sending the updated catalog." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("2) No excess/damaged/without MRP goods will be accepted against the purchase order raised. The courier charges in case of return of any goods will need to be borne by you." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("3) Please ensure that all details like TIN No, Address, Product Names, Company Name are correct in the invoice sent. Goods will not be accepted at the warehouse if any of the invoice details are incorrect." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("4) PO number and any special schemes should be mentioned on all invoices." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("5) Physical products should be packaged well and unique codes, product name and MRP should be clearly mentioned as specified in the catalog." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("6) Goods with expiry date in the next 6 months or already expired will not be accepted. Goods about to expire will need to be replaced or returned on request." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        footerParagraph.add(new Paragraph("7) Please share any unique codes for the products that you may be using in your system, so we can include the same in the PO next time for easy identification of the products while you are sending the goods and while we receive them at our warehouse." + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        if(purchaseOrderDto.getPurchaseOrder().getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())){
+        	footerParagraph.add(new Paragraph("8) Kindly ship the goods to our warehouse address as follows - Bright Lifecare Private Limited, Mumbai Warehouse: Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra" + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        }
+        if(purchaseOrderDto.getPurchaseOrder().getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
+        	footerParagraph.add(new Paragraph("8) Kindly ship the goods to our warehouse address as follows - Bright Lifecare Private Limited, Gurgaon Warehouse: Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036" + newline, new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
+        }
         document.add(footerParagraph);
     }
 
