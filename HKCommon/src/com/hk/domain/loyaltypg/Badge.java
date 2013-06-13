@@ -91,9 +91,6 @@ public class Badge implements Serializable, Comparable<Badge>{
 
 	@Override
 	public int compareTo(Badge o) {
-		return Double.valueOf(this.minScore).compareTo(Double.valueOf(o.minScore));
-		/*if(o.maxScore == -1) return -1;
-		if(this.maxScore == -1) return +1;
-		return Double.valueOf(this.maxScore).compareTo(Double.valueOf(o.maxScore));*/
+		return Double.valueOf(this.getMinScore()).compareTo(Double.valueOf(o.getMinScore()));
 	}
 }
