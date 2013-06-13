@@ -24,7 +24,7 @@ public class ReviewDaoImpl extends BaseDaoImpl implements ReviewDao {
             criteria.add(Restrictions.eq("product", product));
         }
         criteria.add(Restrictions.in("reviewStatus.id", reviewStatusList));
-        criteria.addOrder(org.hibernate.criterion.Order.desc("starRating"));
+        criteria.addOrder(org.hibernate.criterion.Order.desc("reviewDate"));
         return list(criteria, page, perPage);
     }
 

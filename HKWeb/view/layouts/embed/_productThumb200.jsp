@@ -7,7 +7,7 @@
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
+<c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <s:layout-definition>
 	<%
 		Product product_productThumb = (Product) pageContext.getAttribute("product");
@@ -41,7 +41,7 @@
         <c:set var="urlParameter" value="<%=HealthkartConstants.URL.productPosition%>"/>
 				<div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
 					<s:link href="${hk:getAppendedURL(product.productURL, urlParameter, position)}" class="prod_link" title="${product.name}">
-						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId)}" alt="${product.name}"
+						<img style="max-height:180px;max-width:180px;" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 					</s:link>
 				</div>
