@@ -278,6 +278,7 @@ public class POAction extends BasePaginatedAction {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".xls");
+            xlsFile.getParentFile().mkdirs();
             xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
         } catch (Exception e) {
@@ -291,9 +292,9 @@ public class POAction extends BasePaginatedAction {
     public Resolution poInPdf() {
         try {
             xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
-            String logoImagePath = getContext().getServletContext().getRealPath("/") + "/images/logo/HealthKartLogo.png";
+            xlsFile.getParentFile().mkdirs();
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
-            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto, logoImagePath);
+            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.

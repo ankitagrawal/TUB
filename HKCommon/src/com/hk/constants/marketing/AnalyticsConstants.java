@@ -12,6 +12,7 @@ import com.hk.constants.core.Keys;
 public class AnalyticsConstants {
 
   public static String gaCode;
+  public static String uaCode;
 
   public static boolean analytics;
 
@@ -21,6 +22,9 @@ public class AnalyticsConstants {
   @Value("#{hkEnvProps['" + Keys.Env.gaCode + "']}")
   private String analyticsCode;
 
+  @Value("#{hkEnvProps['" + Keys.Env.uaCode + "']}")
+  private String universalAnalyticsCode;
+
   @PostConstruct
   public void postConstruction() {
     // String anaylticsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.analytics);
@@ -28,6 +32,7 @@ public class AnalyticsConstants {
     analytics = StringUtils.isNotBlank(analyticsString) && Boolean.parseBoolean(analyticsString);
 
     gaCode = analyticsCode;
+    uaCode = universalAnalyticsCode;
 
   }
 
