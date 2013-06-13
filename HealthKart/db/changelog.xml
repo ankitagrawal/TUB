@@ -13212,4 +13212,24 @@
             <column name="email_id_3" type="VARCHAR(50)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="1371116638901-1">
+        <addColumn tableName="payment">
+            <column name="parent_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="1371116638901-2">
+        <addColumn tableName="payment">
+            <column name="transaction_type" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="1371116638901-3">
+        <addForeignKeyConstraint baseColumnNames="parent_id" baseTableName="payment"  constraintName="fk_parent_id_payment_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="1371116638901-4">
+        <sql>
+            insert into payment_status values (8,'Refund Request Initiated');
+            insert into payment_status values (9,'Refunded');
+        </sql>
+
+    </changeSet>
 </databaseChangeLog>
