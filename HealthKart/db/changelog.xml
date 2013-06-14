@@ -13255,4 +13255,12 @@
     <changeSet author="Nihal (generated)" id="1371032589311-10">
         <addForeignKeyConstraint baseColumnNames="reconciliation_voucher_id" baseTableName="debit_note" constraintName="fk_debit_note_reconciliation_voucher1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_voucher" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1371202029098-7">
+        <addColumn tableName="debit_note_line_item">
+            <column name="product_name" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371202029098-9">
+        <modifyDataType columnName="product_name" newDataType="VARCHAR(100)" tableName="extra_inventory_line_item"/>
+    </changeSet>
 </databaseChangeLog>
