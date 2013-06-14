@@ -102,7 +102,7 @@ public class DebitNoteAction extends BasePaginatedAction {
         } else {
             debitNote = new DebitNote();
             debitNote.setDebitNoteStatus(EnumDebitNoteStatus.Created.asDebitNoteStatus());
-            debitNote.setDebitNoteType(EnumDebitNoteType.PreCheckin.asEnumDebitNoteType());
+            debitNote.setDebitNoteType(EnumDebitNoteType.PostCheckin.asEnumDebitNoteType());
             debitNote.setSupplier(supplier);
             debitNote.setGoodsReceivedNote(grn);
         }
@@ -120,8 +120,6 @@ public class DebitNoteAction extends BasePaginatedAction {
     			}
     		}
     		debitNote = new DebitNote();
-    		
-    		
     		debitNote.setPurchaseInvoice(purchaseInvoice);
     		debitNote = debitNoteManager.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
     		

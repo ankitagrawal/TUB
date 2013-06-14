@@ -53,6 +53,7 @@
 #finalPayableDiv{
 	float: right;
 	position: relative;
+	 margin-top: 30px;
 }
 
 #closeButtonDiv{
@@ -1235,6 +1236,20 @@ width: 80px;
 </s:form>
 
 <hr>
+
+<div id="closeButtonDiv">
+<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="close" Value="Close" class="button_green addToCartButton" > Close </s:link>
+</div>
+<div id="closeButtonDiv">
+<c:if test="${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled }">
+<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
+<s:param name="purchaseInvoice" value="${pia.purchaseInvoice}" />
+ Create Debit Note </s:link>
+</c:if>
+</div>
+
+<br/>
+
 <div id = "finalPayableDiv">
 <fieldset>
 <legend><br/><em>Final Totals</em></legend>
@@ -1291,15 +1306,5 @@ width: 80px;
 </fieldset>
 </div>
 
-<div id="closeButtonDiv">
-<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="close" Value="Close" class="button_green addToCartButton" > Close </s:link>
-</div>
-<div id="closeButtonDiv">
-<c:if test="${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled }">
-<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
-<s:param name="purchaseInvoice" value="${pia.purchaseInvoice}" />
- Create Debit Note </s:link>
-</c:if>
-</div>
 </s:layout-component>
 </s:layout-render>
