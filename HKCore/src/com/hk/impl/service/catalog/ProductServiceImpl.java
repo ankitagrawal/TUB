@@ -640,7 +640,7 @@ public class ProductServiceImpl implements ProductService {
     return productVO;
   }
 
-  private ProductVO createProductVO(SolrProduct solrProduct) {
+  public ProductVO createProductVO(SolrProduct solrProduct) {
     ProductVO productVO = new ProductVO();
     productVO.setId(solrProduct.getId());
     productVO.setName(solrProduct.getName());
@@ -659,7 +659,7 @@ public class ProductServiceImpl implements ProductService {
     return productVO;
   }
 
-  private ProductVO createProductVO(Product product) {
+  public ProductVO createProductVO(Product product) {
     ProductVO productVO = new ProductVO();
     productVO.setId(product.getId());
     productVO.setName(product.getName());

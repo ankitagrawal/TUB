@@ -121,4 +121,8 @@ public interface ProductService {
 
     public ProductVO getProductVO(String productId);
 
+    public ProductVO createProductVO(SolrProduct solrProduct);
+
+    public ProductVO createProductVO(Product product);
+
 }

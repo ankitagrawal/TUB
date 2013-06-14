@@ -21,7 +21,7 @@
     }else{
        Product product_productThumb = (Product) pageContext.getAttribute("product");
       if(product_productThumb !=  null){
-         productVO = productService.getProductVO(product_productThumb.getId());
+         productVO = productService.createProductVO(product_productThumb);
       }
     }
     pageContext.setAttribute("productVO", productVO);
