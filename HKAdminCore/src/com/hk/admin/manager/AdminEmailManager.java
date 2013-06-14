@@ -1023,7 +1023,7 @@ public class AdminEmailManager {
     	String warehouseName = "" , warehouseAddress = "";
     	DateTime dt = new DateTime();
 		LocalDate ld = dt.toLocalDate();
-		String date = ld.toString();
+		String date = ld.getDayOfMonth()+"-"+ld.getMonthOfYear()+"-"+ld.getYear();;
         valuesMap.put("purchaseOrder", purchaseOrder);
         valuesMap.put("date", date);
         if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
@@ -1055,12 +1055,12 @@ public class AdminEmailManager {
         
         try {
         	
-            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+ld.toString()+ ".pdf");
+            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".pdf");
             pdfFile.getParentFile().mkdirs();
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
             getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
             
-            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+ld.toString()+ ".xls");
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".xls");
             xlsFile.getParentFile().mkdirs();
             xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
         } catch (Exception e) {
