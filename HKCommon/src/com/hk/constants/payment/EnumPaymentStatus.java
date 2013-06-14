@@ -103,5 +103,9 @@ public enum EnumPaymentStatus {
       return getEnumIDs(Arrays.asList(EnumPaymentStatus.SUCCESS,EnumPaymentStatus.ON_DELIVERY, EnumPaymentStatus.AUTHORIZATION_PENDING));
   }
 
+    public static List<Long> getUpdatePaymentStatusesIds(){
+        return getEnumIDs(Arrays.asList(AUTHORIZATION_PENDING, ERROR,FAILURE, REFUND_REQUEST_IN_PROCESS));
+    }
+
 }
 

@@ -46,7 +46,6 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	SMSManager smsManager;
 
-    private PaymentManager paymentManager;
 
     public List<Payment> listByOrderId(Long orderId) {
         return getPaymentDao().listByOrderId(orderId);
@@ -146,16 +145,17 @@ public class PaymentServiceImpl implements PaymentService {
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
             try {
-
-                List<HkPaymentResponse> hkPaymentResponseList = seekPayment(gatewayOrderId);
-                List<Payment> hkPaymentRequestList = listPaymentFamily(gatewayOrderId);
-                List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
-                verifyRequestAndResponseList(requestResponseMappedList);
-                updateRequestResponseList(requestResponseMappedList);
+                if(EnumPaymentStatus.getUpdatePaymentStatusesIds().contains(basePayment.getPaymentStatus().getId())) {
+                    List<HkPaymentResponse> hkPaymentResponseList = seekPayment(gatewayOrderId);
+                    List<Payment> hkPaymentRequestList = listPaymentFamily(gatewayOrderId);
+                    List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
+                    verifyRequestAndResponseList(requestResponseMappedList);
+                    updateRequestResponseList(requestResponseMappedList);
+                }
 
             } catch (HealthkartPaymentGatewayException e) {
                 logger.debug("Healthkart Payment Exception : " + e);
-                paymentManager.error(gatewayOrderId, e);
+                getPaymentManager().error(gatewayOrderId, e);
             }
         }
     }
@@ -173,28 +173,31 @@ public class PaymentServiceImpl implements PaymentService {
     public void refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
         Double gatewayAmount=null;
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
+
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
-            HkPaymentService hkPaymentService = getHkPaymentService(basePayment.getGateway());
-            Payment refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
-            try{
-                HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
+            if(EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
+                HkPaymentService hkPaymentService = getHkPaymentService(basePayment.getGateway());
+                Payment refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
+                try{
+                    HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
 
-                if(hkRefundPaymentResponse != null && hkRefundPaymentResponse.getHKPaymentStatus() != null
-                        && EnumHKPaymentStatus.SUCCESS.getId().equals(hkRefundPaymentResponse.getHKPaymentStatus().getId())){
-                    gatewayAmount = hkRefundPaymentResponse.getAmount();
+                    if(hkRefundPaymentResponse != null && hkRefundPaymentResponse.getHKPaymentStatus() != null
+                            && EnumHKPaymentStatus.SUCCESS.getId().equals(hkRefundPaymentResponse.getHKPaymentStatus().getId())){
+                        gatewayAmount = hkRefundPaymentResponse.getAmount();
 
-                    if(EnumGateway.ICICI.getId().equals(hkRefundPaymentResponse.getGateway().getId())){
-                        gatewayAmount = amount;
+                        if(EnumGateway.ICICI.getId().equals(hkRefundPaymentResponse.getGateway().getId())){
+                            gatewayAmount = amount;
+                        }
+                        verifyPaymentAmount(gatewayAmount, amount);
                     }
-                    verifyPaymentAmount(gatewayAmount, amount);
-                }
-                updatePaymentBasedOnResponse(hkRefundPaymentResponse,refundRequestPayment);
+                    updatePaymentBasedOnResponse(hkRefundPaymentResponse,refundRequestPayment);
 
-            } catch (HealthkartPaymentGatewayException e){
-                if(e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)){
-                    emailManager.sendPaymentMisMatchMailToAdmin(amount, gatewayAmount, gatewayOrderId);
+                } catch (HealthkartPaymentGatewayException e){
+                    if(e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)){
+                        emailManager.sendPaymentMisMatchMailToAdmin(amount, gatewayAmount, gatewayOrderId);
+                    }
+                    error(refundRequestPayment.getGatewayOrderId(),e);
                 }
-                error(refundRequestPayment.getGatewayOrderId(),e);
             }
         }
     }
@@ -422,7 +425,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
         } catch (HealthkartPaymentGatewayException e){
-            paymentManager.error(requestPayment.getGatewayOrderId(), e);
+            getPaymentManager().error(requestPayment.getGatewayOrderId(), e);
         }
 
     }
@@ -432,11 +435,11 @@ public class PaymentServiceImpl implements PaymentService {
         if(requestPayment != null && hkPaymentResponse != null){
             EnumHKPaymentStatus gatewayPaymentStatus = hkPaymentResponse.getHKPaymentStatus();
             if(gatewayPaymentStatus != null && EnumHKPaymentStatus.SUCCESS.getId().equals(gatewayPaymentStatus.getId())){
-                paymentManager.success(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getResponseMsg(), hkPaymentResponse.getAuthIdCode());
+                getPaymentManager().success(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getResponseMsg(), hkPaymentResponse.getAuthIdCode());
             } else if (gatewayPaymentStatus != null && EnumHKPaymentStatus.FAILURE.getId().equals(gatewayPaymentStatus.getId())){
-                paymentManager.fail(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getResponseMsg());
+                getPaymentManager().fail(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getResponseMsg());
             } else if (gatewayPaymentStatus != null && EnumHKPaymentStatus.AUTHENTICATION_PENDING.getId().equals(gatewayPaymentStatus.getId())){
-                paymentManager.pendingApproval(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId());
+                getPaymentManager().pendingApproval(requestPayment.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId());
             }  else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
             }
@@ -446,7 +449,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional
     private Payment createNewRefundPayment(Payment basePayment, PaymentStatus paymentStatus, Double amount, PaymentMode paymentMode){
-        Payment refundPayment = paymentManager.createNewPayment(basePayment.getOrder(), paymentMode,
+        Payment refundPayment = getPaymentManager().createNewPayment(basePayment.getOrder(), paymentMode,
                 basePayment.getIp(), basePayment.getGateway(), basePayment.getIssuer(), basePayment.getBillingAddress());
 
         refundPayment.setPaymentStatus(paymentStatus);
@@ -486,10 +489,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public PaymentManager getPaymentManager() {
-        if(paymentManager == null){
-            this.paymentManager = ServiceLocatorFactory.getService(PaymentManager.class);
-        }
-        return paymentManager;
+        return ServiceLocatorFactory.getBean(PaymentManager.class);
     }
 
     public void setOrderService(OrderService orderService) {
