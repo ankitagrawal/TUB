@@ -271,39 +271,117 @@
   <li class='tab'><a href="#design">Design</a></li>
   <li class='tab'><a href="#category">Category</a></li>
   <li class='tab'><a href="#cs">Customer Support</a></li>
+  <li class='tab'><a href="#analytics">Analytics</a></li>
+  <li class='tab'><a href="#sales">Sales</a></li>
 </ul>
 <div class='panel-container'>
+
+<div id="analytics">
+  <h3>Position: Analytics Manager</h3>
+
+  <p>
+    Seeking a result oriented individual to lead and drive analytics infrastructure and roadmap of HealthKart. Exciting
+    opportunity to develop and groom a unique skillset which intersects Technology, Product management and Marketing
+    functions
+  </p>
+
+  <p><strong>Responsibilities:</strong></p>
+
+  <p>Setup Analytics infrastructure</p>
+  <ul>
+    <li>Identification of OLTP datasources and ETL strategy </li>
+    <li>Datawarehousing strategy and OLAP modeling          </li>
+    <li>BI reporting platform setup and management          </li>
+    <li>Organization setup and team management              </li>
+  </ul>
+
+  <p>Coordination with departments to define and execute analytics projects</p>
+  <ul>
+    <li>Marketing optimization               </li>
+    <li>Consumer behavior and web analytics  </li>
+    <li>Merchandizing and pricing automation </li>
+    <li>Inventory automation                 </li>
+    <li>Web personalization                  </li>
+    <li>Social media analytics               </li>
+  </ul>
+
+  <p><strong>Skills/Experience:</strong></p>
+  <ul>
+    <li>5+ years of experience spanning product management, engineering / technology  and online marketing / analytics roles </li>
+    <li>Experience with leading travel sites or eCommerce companies a big +                                                  </li>
+    <li>Undergraduate from top tier engineering institute (IIT preferred)                                                    </li>
+    <li>Very strong analytical skills                                                                                        </li>
+    <li>Entrepreneurial spirit and extreme result orientation                                                                </li>
+    <li>Ability to lead teams                                                                                                </li>
+    <li>Good written, verbal and presentation skills                                                                         </li>
+  </ul>
+  <p><strong>Compensation:</strong></p>
+  <ul>
+    <li>Would be commensurate with experience</li>
+    <li>Range between Rs 12 LPA to 18 LPA</li>
+  </ul>
+</div>
+
 <div id="cs">
   <h3>Position: Customer Development Executive
   </h3>
 
-  <p>Responsibilities:</p>
+  <p><strong>Responsibilities:</strong></p>
   <ul>
     <li>To answer customer queries related to products, health issues and the process of online ordering
       Internet and phone based counseling
     </li>
   </ul>
-  <p>Skills required:</p>
+  <p><strong>Skills required:</strong></p>
   <ul>
     <li>Excellent English communication skills, both verbal and written</li>
     <li>Good knowledge of computers, especially internet</li>
     <li>Willingness to learn about health issues and products</li>
     <li>Positive attitude and customer oriented approach</li>
   </ul>
-  <p>Experience:</p>
+  <p><strong>Experience:</strong></p>
   <ul>
     <li>1-2 years of relevant experience in customer service</li>
   </ul>
-  <p>Compensation:</p>
+  <p><strong>Compensation:</strong></p>
   <ul>
     <li>Rs 1.2 to 2 L per annum</li>
     <li>High performers would be promoted fast</li>
   </ul>
 </div>
 
+
+<div id="sales">
+  <h3>Position: Direct Sales Manager</h3>
+
+  <p>Seeking a result oriented driven individual to build direct sales channel for the company. The role provides fast pace learning environment for grooming general management skills.</p>
+  <p><strong>Responsibilities:</strong></p>
+  <p>Build, grow and manage direct sales channel, which includes</p>
+  <ul>
+    <li>Creating business plan for direct channel development and growth – team required, team organization and target setting  </li>
+    <li>Strategy for driving growth – Lead generation, driving conversion and managing customer relationships                   </li>
+    <li>Identification of adjoining growth opportunities                                                                        </li>
+  </ul>
+  <p>Managing a team of 15-20 to deliver targets</p>
+  <p><strong>Skills/Experience:</strong></p>
+  <ul>
+    <li>MBA and undergraduate from top tier institution with good academic performance        </li>
+    <li>2-3 years of work experience in entrepreneurial / consulting / analytical roles       </li>
+    <li>Strategy and analytical skills                                                        </li>
+    <li>Hunger to learn quickly and achieve fast paced growth in general management career    </li>
+    <li>Entrepreneurial spirit and extreme result orientation                                 </li>
+    <li>Ability to lead teams                                                                 </li>
+  </ul>
+  <p><strong>Compensation:</strong></p>
+  <ul>
+    <li>Between 9 LPA to 15 LPA</li>
+    <li>High performers would be promoted fast</li>
+  </ul>
+</div>
+
+
 <div id="design">
-  <h3>Position: Graphic Design Lead
-  </h3>
+  <h3>Position: Graphic Design Lead</h3>
 
   <p><strong>Job description:</strong></p>
   <p>Healthkart is looking for a graphic design lead. Maybe two. Apart from raising the titanic, your job involves</p>
@@ -336,10 +414,7 @@
 
 <div id="tech">
 
-  <label style="font-size:14px; font-weight:bold">Position: Software Engineer(Java/J2EE)</label>
-  <br/>
-  <br/>
-
+  <h3>Position: Software Engineer(Java/J2EE)</h3>
   <p>
     <b>Responsibilities:</b>
   <ul style="list-style:circle; padding-left:20px">
@@ -384,9 +459,7 @@
   <hr>
   <br/>
 
-  <label style="font-size:14px; font-weight:bold">Position: UI/UX and Creative Lead</label>
-  <br/>
-  <br/>
+  <h3>Position: UI/UX and Creative Lead</h3>
 
 
   <p><b>Job description </b>:<br/>
@@ -444,9 +517,7 @@
   <br/>
 
 
-  <label style="font-size:14px; font-weight:bold">Position: QA Engineer (Manual, Automation, Performace)</label>
-  <br/>
-  <br/>
+  <h3>Position: QA Engineer (Manual, Automation, Performace)</h3>
 
   <p>
     <b>Responsibilities:</b>
@@ -491,33 +562,39 @@
 </div>
 
 <div id="category">
-  <label style="font-size:14px; font-weight:bold">Position: Category Manager</label>
-  <br/>
-  <br/>
+  <h3>Position: Multi-channel Category Manager</h3>
+  <p>
+    Seeking a result oriented individual to drive one of the core categories of the platform, across online and offline
+    distribution channels. The role will provide fast pace learning environment for grooming general management skills.
+  </p>
 
   <p>
     <b>Responsibilities:</b>
   <ul style="list-style:circle; padding-left:20px">
-    <li>Business role as leader of a category</li>
-    <li>Responsible for end-to-end business management</li>
-    <li>Delivering on financial/ operational targets</li>
-    <li>Procurement/stock/catalog of products</li>
-    <li>Merchandizing/Promotions of products</li>
-    <li>Customer acquisition plans</li>
-    <li>Partnership strategy with brands</li>
-    <li>Build the category and the team</li>
-    <li>Need to be entrepreneurial and self motivated: Candidates must be willing to put in efforts to grow
-      fast
-    </li>
+
+  	<li>Manage P&L of one of the core categories on the platform, which includes     </li>
+    <li> - Multi-channel coordination – online, offline and direct                      </li>
+    <li> - Management of sales, growth, margins                                         </li>
+    <li> - Procurement and vendor management                                            </li>
+    <li> - Inventory Management                                                         </li>
+    <li> - Merchandising                                                                </li>
+    <li> - Promotions and Marketing coordination                                        </li>
+    <li>Management of team for smooth operations                                     </li>
+
   </ul>
   </p>
 
   <p>
-    <b>Experience:</b>
+    <b>Skills/Experience:</b>
   <ul style="list-style:circle; padding-left:20px">
-    <li>2-5 years of relevant experience</li>
-    <li>Experience required in Online Category management or retail operations in healthcare</li>
-    <li>Have worked at a Manager/ Assistant Manager level</li>
+    <li>MBA and undergraduate from top tier institution with good academic performance       </li>
+    <li>2-3 years of work experience in entrepreneurial / consulting / analytical roles      </li>
+    <li>Comfort with technology / online space                                               </li>
+    <li>Hunger to learn quickly and achieve fast paced growth in general management career   </li>
+    <li>Entrepreneurial spirit and extreme result orientation                                </li>
+    <li>Strategy and analytical skills                                                       </li>
+    <li>Ability to lead teams                                                                </li>
+    <li>Good written, verbal and presentation skills                                         </li>
   </ul>
   </p>
 
@@ -525,10 +602,47 @@
     <b>Compensation:</b>
   <ul style="list-style:circle; padding-left:20px">
     <li>Would be commensurate with experience</li>
-    <li>Range between Rs 6 LPA to 12 LPA</li>
+    <li>Range between Rs 9 LPA to 15 LPA</li>
     <li>Variable pay would be structured to give more opportunity for target based achievement</li>
   </ul>
   </p>
+
+  <hr/>
+
+  <h3>Position: Merchandising Manager</h3>
+  <p>
+    Seeking an analytically sharp individual who could manage online growth of core categories on the platform.
+  </p>
+
+  <p>
+    <b>Responsibilities:</b>
+  <ul style="list-style:circle; padding-left:20px">
+    <li>Merchandizing and product placement to optimize conversions                  </li>
+    <li>Pricing, promotion and marketing strategy of products                        </li>
+    <li>Promotion and marketing execution via coordination with marketing department </li>
+    <li>Cateloging and content of catalogued products                                </li>
+  </ul>
+  </p>
+
+  <p>
+    <b>Skills/Experience:</b>
+  <ul style="list-style:circle; padding-left:20px">
+    <li>Undergraduate from top tier engineering institute (IIT preferred) </li>
+    <li>Strong analytical skills and data orientation                     </li>
+    <li>Comfort with technology / online space                            </li>
+    <li>Good team skills                                                  </li>
+    <li>Good written, verbal and presentation skills                      </li>
+  </ul>
+  </p>
+
+  <p>
+    <b>Compensation:</b>
+  <ul style="list-style:circle; padding-left:20px">
+    <li>Would be commensurate with experience</li>
+    <li>Range between Rs 7 LPA to 10 LPA</li>
+  </ul>
+  </p>
+
 
 </div>
 </div>

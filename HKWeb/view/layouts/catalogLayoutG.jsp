@@ -69,7 +69,7 @@
     <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>
     </s:layout-component>--%>
-    <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}"/>
+    <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}" brand="${brand}" allCategories="${allCategories}"/>
 
     </body>
 </s:layout-definition>
