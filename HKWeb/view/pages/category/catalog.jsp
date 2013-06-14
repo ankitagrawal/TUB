@@ -12,12 +12,12 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="com.hk.cache.CategoryCache" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
-<s:useActionBean beanclass="com.hk.web.action.core.catalog.CompareAction" var="compareBean"/>
 
 <s:layout-render name="/layouts/catalogLayoutG.jsp"
                  pageTitle="${ca.seoData.title}">
@@ -258,30 +258,28 @@
 </div>
 
 <div id="prod_grid" class="grid_19">
-  <s:form beanclass="com.hk.web.action.core.catalog.CompareAction" target="_blank">
-    <c:forEach items="${ca.productList}" var="product" varStatus="ctr">
-      <c:if test="${!product.googleAdDisallowed}">
-	      <div class="product_box grid_6">
-				<s:layout-render name="/layouts/embed/_productVOThumb200.jsp" product="${product}" position="${ca.pageNo}/${ctr.index+1}"/>
-          <div class="clear"></div>
-
-          <%--<div class="compareDiv">
-            <c:if test="${hk:collectionContainsCollection(product.categories, applicableCategories)}">
-              <s:checkbox name="products[]" value="${product.id}" class="compare_checkbox"/>
-              <s:submit name="createTable" value="Compare" class="checkSubmit"
-                        style="display:inline;padding:0;margin:0;font-size:10px;"/>
-            </c:if>
-          </div>--%>
-        </div>
-      </c:if>
-    </c:forEach>
-    <script type="text/javascript">
-      $('.compare_checkbox').each(function(i, el) {
-        var x = $(this).siblings('.product');
-        $(el).appendTo(x)
-      });
-    </script>
-  </s:form>
+    <c:choose>
+      <c:when test="${!empty ca.productIDList}">
+        <c:forEach items="${ca.productIDList}" var="productId" varStatus="ctr">
+          <div class="product_box grid_6">
+            <s:layout-render name="/layouts/embed/_productVOThumb200.jsp" productId="${productId}"
+                             productReferrerId="<%=EnumProductReferrer.getProductReferrerId(ca.getRootCategorySlug())%>"
+                             position="${ca.pageNo}/${ctr.index+1}"/>
+            <div class="clear"></div>
+          </div>
+        </c:forEach>
+      </c:when>
+      <c:otherwise>
+        <c:forEach items="${ca.productList}" var="product" varStatus="ctr">
+          <div class="product_box grid_6">
+            <s:layout-render name="/layouts/embed/_productVOThumb200.jsp" product="${product}"
+                             productReferrerId="<%=EnumProductReferrer.getProductReferrerId(ca.getRootCategorySlug())%>"
+                             position="${ca.pageNo}/${ctr.index+1}"/>
+            <div class="clear"></div>
+          </div>
+        </c:forEach>
+      </c:otherwise>
+    </c:choose>
   <div class="floatfix"></div>
 </div>
 

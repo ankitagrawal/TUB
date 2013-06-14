@@ -11,7 +11,6 @@ import com.hk.domain.analytics.TrafficTracking;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.analytics.SearchLogDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
@@ -328,7 +327,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
                 sortedProducts.set(index, product);
             }
         }
-        return new SearchResult(sortedProducts, totalResultCount);
+        return new SearchResult(sortedProducts, productIds, totalResultCount);
     }
 
   private SpellCheckResponse getSpellCheckResponse(String userQuery) throws SolrServerException {

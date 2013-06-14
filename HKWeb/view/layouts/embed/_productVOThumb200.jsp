@@ -7,26 +7,28 @@
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page import="com.hk.cache.vo.ProductVO" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <s:layout-definition>
   <%
-    Product product_productThumb = (Product) pageContext.getAttribute("product");
     ProductVO productVO = null;
     ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-    if (product_productThumb == null) {
-      String product_productThumbId = (String) pageContext.getAttribute("productId");
-      productVO = productService.getProductVO(product_productThumbId);
-    } else {
-      productVO = productService.getProductVO(product_productThumb.getId());
+    String product_productThumbId = (String) pageContext.getAttribute("productId");
+    if(product_productThumbId != null){
+       productVO = productService.getProductVO(product_productThumbId);
+    }else{
+       Product product_productThumb = (Product) pageContext.getAttribute("product");
+      if(product_productThumb !=  null){
+         productVO = productService.getProductVO(product_productThumb.getId());
+      }
     }
-
     pageContext.setAttribute("productVO", productVO);
 
-    if (product_productThumb instanceof Combo) {
+    if (productVO != null && productVO.isCombo()) {
       ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-      Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
+      Combo combo = comboDao.get(Combo.class, productVO.getId());
       pageContext.setAttribute("combo", combo);
     }
 
@@ -44,10 +46,15 @@
     }
   </style>
   <c:if test="${!productVO.googleAdDisallowed && !productVO.deleted && !productVO.hidden}">
+
     <div class='grid_6 product' style="width:240px;height:300px;">
-      <c:set var="urlParameter" value="<%=HealthkartConstants.URL.productPosition%>"/>
+      <c:set var="param_ref" value="<%=HealthkartConstants.URL.productReferrerId%>"/>
+      <c:set var="productURL" value="${hk:getAppendedURL(productVO.productURL, param_ref, productReferrerId)}"/>
+      <c:set var="param_pos" value="<%=HealthkartConstants.URL.productPosition%>"/>
+      <c:set var="productURL" value="${hk:getAppendedURL(productURL, param_pos, position)}"/>
+
       <div class='img180 ${productVO.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
-        <a href="${hk:getAppendedURL(productVO.productURL, urlParameter, position)}" class="prod_link"
+        <a href="${productURL}" class="prod_link"
                 title="${productVO.name}">
           <img style="max-height:180px;max-width:180px;"
                src="${hk:getS3ImageUrl(imageMediumSize, productVO.mainImageId)}" alt="${productVO.name}"
@@ -56,7 +63,7 @@
       </div>
       <div>
 					<span style="height:20px;max-width:240px;">
-						<a href="${hk:getAppendedURL(productVO.productURL, urlParameter, position)}" title="${productVO.name}"
+						<a href="${productURL}" title="${productVO.name}"
                     class="prod_link">
               ${productVO.name}
             </a>
