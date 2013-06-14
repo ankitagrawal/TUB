@@ -1,4 +1,4 @@
-Purchase Order # ${purchaseOrder.id} Dt. <${.now?date}> for C/o ${purchaseOrder.supplier.name} from Bright Lifecare Pvt. Ltd.
+Purchase Order # ${purchaseOrder.id} Dt. <${date}> for C/o ${purchaseOrder.supplier.name} from Bright Lifecare Pvt. Ltd.
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>

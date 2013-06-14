@@ -1021,7 +1021,11 @@ public class AdminEmailManager {
     	//TODO
     	HashMap valuesMap = new HashMap();
     	String warehouseName = "" , warehouseAddress = "";
+    	DateTime dt = new DateTime();
+		LocalDate ld = dt.toLocalDate();
+		String date = ld.toString();
         valuesMap.put("purchaseOrder", purchaseOrder);
+        valuesMap.put("date", date);
         if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
         	warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
         	warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
@@ -1050,8 +1054,7 @@ public class AdminEmailManager {
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
         
         try {
-        	DateTime dt = new DateTime();
-    		LocalDate ld = dt.toLocalDate();
+        	
             pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+ld.toString()+ ".pdf");
             pdfFile.getParentFile().mkdirs();
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
