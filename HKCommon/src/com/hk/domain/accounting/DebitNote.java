@@ -16,12 +16,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.po.PurchaseInvoice;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.warehouse.Warehouse;
 
 @SuppressWarnings("serial")
@@ -62,6 +65,18 @@ public class DebitNote implements java.io.Serializable {
 
     @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "debitNote")
     private Set<DebitNoteLineItem> debitNoteLineItems = new HashSet<DebitNoteLineItem>(0);
+    
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "debit_note_type_id", nullable = false)
+    private DebitNoteType debitNoteType;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="purchase_invoice_id")
+    private PurchaseInvoice purchaseInvoice;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="reconciliation_voucher_id")
+    private ReconciliationVoucher reconciliationVoucher;
 
     public Long getId() {
         return this.id;
@@ -134,6 +149,30 @@ public class DebitNote implements java.io.Serializable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+	public DebitNoteType getDebitNoteType() {
+		return debitNoteType;
+	}
+
+	public void setDebitNoteType(DebitNoteType debitNoteType) {
+		this.debitNoteType = debitNoteType;
+	}
+
+	public PurchaseInvoice getPurchaseInvoice() {
+		return purchaseInvoice;
+	}
+
+	public void setPurchaseInvoice(PurchaseInvoice purchaseInvoice) {
+		this.purchaseInvoice = purchaseInvoice;
+	}
+
+	public ReconciliationVoucher getReconciliationVoucher() {
+		return reconciliationVoucher;
+	}
+
+	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
+		this.reconciliationVoucher = reconciliationVoucher;
+	}
 }
 
 

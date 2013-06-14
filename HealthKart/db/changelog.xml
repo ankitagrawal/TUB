@@ -13212,4 +13212,47 @@
             <column name="email_id_3" type="VARCHAR(50)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-2">
+			<createTable tableName="debit_note_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-3">
+        <addColumn tableName="debit_note">
+            <column name="debit_note_number" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-4">
+        <addColumn tableName="debit_note">
+            <column name="debit_note_type_id" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-6">
+        <dropNotNullConstraint columnDataType="INT" columnName="sku_id" tableName="debit_note_line_item"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-10">
+        <addForeignKeyConstraint baseColumnNames="debit_note_type_id" baseTableName="debit_note" constraintName="fk_debit_note_debit_note_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="debit_note_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-2">
+        <addColumn tableName="debit_note">
+            <column name="purchase_invoice_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-3">
+        <addColumn tableName="debit_note">
+            <column name="reconciliation_voucher_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-9">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="debit_note" constraintName="fk_debit_note_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-10">
+        <addForeignKeyConstraint baseColumnNames="reconciliation_voucher_id" baseTableName="debit_note" constraintName="fk_debit_note_reconciliation_voucher1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_voucher" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
