@@ -63,6 +63,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1049,12 +1050,14 @@ public class AdminEmailManager {
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
         
         try {
-            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
+        	DateTime dt = new DateTime();
+    		LocalDate ld = dt.toLocalDate();
+            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+ld.toString()+ ".pdf");
             pdfFile.getParentFile().mkdirs();
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
             getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
             
-            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".xls");
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+ld.toString()+ ".xls");
             xlsFile.getParentFile().mkdirs();
             xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
         } catch (Exception e) {
