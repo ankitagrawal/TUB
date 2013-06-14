@@ -5,11 +5,7 @@ Purchase Order Approval Mail
 </head>
 <body>
 <#include "header.ftl">
-<#if purchaseOrder.supplier.contactPerson??>
-  	Dear ${purchaseOrder.supplier.contactPerson}, 
-  	<#else>
-  	Dear ${purchaseOrder.supplier.name}, 
-  	</#if>
+Dear Sir/Madam,
 <br/>
 <br/>
 <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">Please find the PO attached below. Kindly send across the goods at the earliest.</p>

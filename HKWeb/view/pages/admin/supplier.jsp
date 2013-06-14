@@ -3,25 +3,8 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <html>
 <head>
-
-<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.7.2.min.js"></script>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
-  <script type="text/javascript">
-
-  $(document).ready(function() {
-	  
-	  $("#saveButton").click(function () {
-		  if(($.trim($("#contactPerson").val())==null||$.trim($("#contactPerson").val())=="")||
-				  ($.trim($("#contactEmailId").val())==null||$.trim($("#contactEmailId").val())=="")){
-			  alert("Contact Person and Email Id are mandatory, please fill them");
-			  return false;
-		  }
-	  });
-	 
-	  
-  });
-  </script>
-</head><body>
+</head>
+<body>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" var="sma"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add/Edit Supplier">
 
