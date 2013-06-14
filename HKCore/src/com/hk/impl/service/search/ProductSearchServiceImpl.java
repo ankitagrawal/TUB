@@ -70,13 +70,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList) {
                 if (!pr.getDeleted() && !pr.isHidden() && !pr.isGoogleAdDisallowed()) {
-                    System.out.println("Indexing Product = "+pr.getId());
                   try {
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
                     productIndexService.updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
                   } catch (Exception e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error("exception while adding solr product:" + pr.getId() , e.getMessage());
                   }
                 }
             }
