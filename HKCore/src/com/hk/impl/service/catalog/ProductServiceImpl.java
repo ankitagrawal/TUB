@@ -527,12 +527,7 @@ public class ProductServiceImpl implements ProductService {
         if (productVariant.getDiscountPercent() != null) {
             solrProduct.setMaximumMRPProducVariantDiscount(productVariant.getDiscountPercent());
         }
-        productVariant = product.getMaximumDiscountProducVariant();
-        if (productVariant.getDiscountPercent() != null) {
-            solrProduct.setMaximumDiscountProductVariantDiscountPercentage(productVariant.getDiscountPercent());
-            solrProduct.setMaximumDiscountProductVariantHKPrice(productVariant.getHkPrice());
-            solrProduct.setMaximumDiscountProductVariantMRP(productVariant.getMarkedPrice());
-        }
+        
         productVariant = product.getMaximumMRPProducVariant();
         if (productVariant.getPostpaidAmount() != null) {
             solrProduct.setPostpaidPrice(productVariant.getPostpaidAmount());
@@ -562,19 +557,21 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setSmallImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId()));
         }
 
-        Double price = null;
-        productVariant = product.getMinimumHKPriceProductVariant();
-        if (productVariant.getHkPrice() != null) {
+        if (isCombo(product)) {
+          Combo combo = comboDao.getComboById(product.getId());
+          solrProduct.setCombo(true);
+          solrProduct.setMarkedPrice(combo.getMarkedPrice());
+          solrProduct.setHkPrice(combo.getHkPrice());
+          solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+        } else {
+          productVariant = product.getMaximumDiscountProducVariant();
+          if (productVariant.getDiscountPercent() != null) {
             solrProduct.setHkPrice(productVariant.getHkPrice());
             solrProduct.setMarkedPrice(productVariant.getMarkedPrice());
-        }
-
-        if (isCombo(product)) {
-            Combo combo = comboDao.getComboById(product.getId());
-            solrProduct.setCombo(true);
-            solrProduct.setMarkedPrice(combo.getMarkedPrice());
-            solrProduct.setHkPrice(combo.getHkPrice());
-            solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+            solrProduct.setMaximumDiscountProductVariantDiscountPercentage(productVariant.getDiscountPercent());
+            solrProduct.setMaximumDiscountProductVariantHKPrice(productVariant.getHkPrice());
+            solrProduct.setMaximumDiscountProductVariantMRP(productVariant.getMarkedPrice());
+          }
         }
 
         if (product.getService() != null) {
