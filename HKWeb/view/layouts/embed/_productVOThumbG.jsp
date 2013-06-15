@@ -18,14 +18,14 @@
       String product_productThumbId = (String) pageContext.getAttribute("productId");
       productVO = productService.getProductVO(product_productThumbId);
     } else {
-      productVO = productService.getProductVO(product_productThumb.getId());
+      productVO = productService.createProductVO(product_productThumb);
     }
 
     pageContext.setAttribute("productVO", productVO);
 
     if (productVO != null && productVO.isCombo()) {
       ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-      Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
+      Combo combo = comboDao.get(Combo.class, productVO.getId());
       pageContext.setAttribute("combo", combo);
     }
 
