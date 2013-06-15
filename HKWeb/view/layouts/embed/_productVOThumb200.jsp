@@ -82,7 +82,7 @@
                       value="${combo.hkPrice}"
                       maxFractionDigits="0"/>
                   </span>
-							</span>>
+							</span>
           </div>
           <div class="special green">
             <c:if test="${combo.discountPercent >= .33}">

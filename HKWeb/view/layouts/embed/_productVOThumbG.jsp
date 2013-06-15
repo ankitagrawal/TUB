@@ -23,7 +23,7 @@
 
     pageContext.setAttribute("productVO", productVO);
 
-    if (product_productThumb instanceof Combo) {
+    if (productVO != null && productVO.isCombo()) {
       ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
       Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
       pageContext.setAttribute("combo", combo);
