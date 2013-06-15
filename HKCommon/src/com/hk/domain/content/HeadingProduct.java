@@ -38,6 +38,9 @@ public class HeadingProduct implements Serializable{
   @Column(name = "rank", nullable = true)
   private Integer rank;
 
+  @Column(name = "product_id", insertable = false, updatable = false)
+  private String productId;
+
   public Long getId() {
     return id;
   }
@@ -68,5 +71,13 @@ public class HeadingProduct implements Serializable{
 
   public void setRank(Integer rank) {
     this.rank = rank;
+  }
+
+  public String getProductId() {
+    return productId;
+  }
+
+  public void setProductId(String productId) {
+    this.productId = productId;
   }
 }
