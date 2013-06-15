@@ -45,7 +45,7 @@ public class ProductIndexServiceImpl implements ProductIndexService {
                 deleteProduct(product);
             }
         } catch (Exception ex) {
-            logger.error(String.format("Unable to build Solr index for Product %s", product.getId()));
+            logger.error(String.format("Unable to build Solr index for Product %s", product.getId()), ex);
         }
     }
 
