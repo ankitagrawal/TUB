@@ -248,19 +248,23 @@ public class GRNManager {
 			// GoodsReceivedNote grn = debitNoteLineItem.getDebitNote().getGoodsReceivedNote();
 			@SuppressWarnings("unused")
 			Warehouse warehouse = debitNote.getWarehouse();
-			// Sku sku = skuService.getSKU(productVariant, warehouse);
-			ProductVariant productVariant = sku.getProductVariant();
+			if (sku != null) {
+				ProductVariant productVariant = sku.getProductVariant();
 
-			if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null && productVariant != null && sku.getTax() != null) {
-				/*
-												 * Tax skuTax = sku.getTax(); if
-												 * (grn.getPurchaseOrder().getSupplier().getState().equals(sku.getWarehouse().getState())) { tax =
-												 * skuTax.getValue() * taxable; surcharge = tax * StateList.SURCHARGE; } else { if (skuTax.getValue() !=
-												 * 0.0) { tax = StateList.CST * taxable; //surcharge = tax * StateList.SURCHARGE; } }
-												 */
-				TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(debitNote.getSupplier(), sku, taxable);
+				if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null
+						&& productVariant != null && sku.getTax() != null) {
+					TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(debitNote.getSupplier(), sku, taxable);
+					tax = taxComponent.getTax();
+					surcharge = taxComponent.getSurcharge();
+				}
+			} else {
+				if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null
+						&& debitNote.getWarehouse()!=null) {
+				TaxComponent taxComponent = TaxUtil.getSupplierTaxForExtraInventory(debitNote.getSupplier(),
+						debitNote.getWarehouse().getState(), debitNoteLineItem.getTax(), taxable);
 				tax = taxComponent.getTax();
 				surcharge = taxComponent.getSurcharge();
+				}
 			}
 			payable = taxable + tax + surcharge;
 			debitNoteLineItemDto.setTaxable(taxable);

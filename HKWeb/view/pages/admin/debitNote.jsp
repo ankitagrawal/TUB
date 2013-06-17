@@ -127,6 +127,10 @@
                         }
                 );
             });
+            
+            if(${pa.debitNote.purchaseInvoice!=null}){
+            	$(".addRowButton").hide();
+            }
 
 
         });
@@ -143,6 +147,9 @@
     <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
         <s:hidden name="debitNote" value="${pa.debitNote.id}" id="debitNoteId"  />
         <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}" />
+        <s:hidden name="debitNote.purchaseInvoice" value="${pa.debitNote.purchaseInvoice.id}" />
+        <s:hidden name="debitNote.reconciliationVoucher" value="${pa.debitNote.reconciliationVoucher.id}" />
+        <s:hidden name="debitNote.debitNotetype" value="${pa.debitNote.debitNoteType}"/>
         <table>
             <tr>
                 <td>Supplier Name</td>
@@ -212,6 +219,7 @@
                 <c:set var="productVariant" value="${debitNoteLineItemDto.debitNoteLineItem.sku.productVariant}"/>
                 <c:set var="debitNote" value="${debitNoteLineItemDto.debitNoteLineItem.debitNote}" />
                 <s:hidden name="debitNoteLineItems[${ctr.index}].id" value="${debitNoteLineItemDto.debitNoteLineItem.id}"/>
+                <s:hidden name="debitNoteLineItems[${ctr.index}].productName" value="${debitNoteLineItemDto.debitNoteLineItem.productName}"/>
                 <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                     <td class="sNo">${ctr.index+1}.</td>
 
@@ -224,16 +232,36 @@
                                   value="${productVariant.id}"/>
                     </td>
                     <td>${productVariant.upc}</td>
-                    <td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
-                    </td>
+                    <c:choose>
+                    <c:when test="${productVariant!=null }"><td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
+                    </td></c:when>
+                    <c:otherwise><td>${debitNoteLineItemDto.debitNoteLineItem.productName}</td>
+                    </c:otherwise>
+                    </c:choose>
                     <td>
                         <fmt:formatNumber value="${tax.value * 100}"
                                           maxFractionDigits="2"/>
                     </td>
                     <td>
-                        <s:text class="qty" name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
+                    	<c:choose>
+                    		<c:when test="${pa.debitNote.purchaseInvoice!=null }">
+                    		${debitNoteLineItemDto.debitNoteLineItem.qty}
+                    		<s:hidden name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
+                    		</c:when>
+                    	<c:otherwise>
+                    		<s:text class="qty" name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
+                    		</c:otherwise>
+                    	</c:choose>
+                        
                     </td>
                     <td>
+                    <c:choose>
+                    		<c:when test="${pa.debitNote.purchaseInvoice!=null }">
+                    		 ${debitNoteLineItemDto.debitNoteLineItem.costPrice}
+                            	<s:hidden name="debitNoteLineItems[${ctr.index}].costPrice"
+                                      value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
+                    		</c:when>
+                    		<c:otherwise>
                         <shiro:hasRole name="<%=RoleConstants.FINANCE%>">
                             <s:text name="debitNoteLineItems[${ctr.index}].costPrice"
                                    class="costPrice" value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
@@ -243,9 +271,18 @@
                             <s:hidden name="debitNoteLineItems[${ctr.index}].costPrice"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
                         </shiro:lacksRole>
+                        </c:otherwise>
+                    </c:choose>
                     </td>
                     <td>
-                        <shiro:hasRole name="<%=RoleConstants.FINANCE%>">
+                    <c:choose>
+                    		<c:when test="${pa.debitNote.purchaseInvoice!=null }">
+                    		 ${debitNoteLineItemDto.debitNoteLineItem.mrp}
+                            <s:hidden class="mrp" name="debitNoteLineItems[${ctr.index}].mrp"
+                                      value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
+                    		</c:when>
+                    		<c:otherwise>
+                    		<shiro:hasRole name="<%=RoleConstants.FINANCE%>">
                             <s:text class="mrp" name="debitNoteLineItems[${ctr.index}].mrp"
                                     value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
                         </shiro:hasRole>
@@ -254,6 +291,9 @@
                             <s:hidden class="mrp" name="debitNoteLineItems[${ctr.index}].mrp"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
                         </shiro:lacksRole>
+                        </c:otherwise>
+                    		</c:choose>
+                        
                     </td>
                     <td>
                         <fmt:formatNumber value="${debitNoteLineItemDto.taxable}" maxFractionDigits="2"/>
@@ -285,6 +325,10 @@
         <a href="debitNote.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
         <s:submit name="save" id="save" value="Save" />
+        <shiro:hasRole name="<%=RoleConstants.GOD%>">
+			<s:submit name="delete" value="Delete"/>
+		</shiro:hasRole>
+        
     </s:form>
 
 </s:layout-component>

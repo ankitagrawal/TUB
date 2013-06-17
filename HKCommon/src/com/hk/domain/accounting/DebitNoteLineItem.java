@@ -48,7 +48,7 @@ public class DebitNoteLineItem implements java.io.Serializable {
   private ProductVariant productVariant;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "sku_id", nullable = false)
+  @JoinColumn(name = "sku_id")
   private Sku sku;
 
 	@Column(name = "remarks")
@@ -57,6 +57,9 @@ public class DebitNoteLineItem implements java.io.Serializable {
 	@ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name = "tax_id")
     private Tax tax;
+	
+	@Column(name = "product_name")
+	  private String productName;
 
   public Long getId() {
     return this.id;
@@ -128,6 +131,14 @@ public class DebitNoteLineItem implements java.io.Serializable {
 
 	public void setTax(Tax tax) {
 		this.tax = tax;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 }
 
