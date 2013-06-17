@@ -25,10 +25,10 @@ public class HKImageUtils {
     String downloadBucket;
 
     @Value("#{hkEnvProps['" + Keys.Env.imageDistributionDomain_prefix + "']}")
-    private static String imageDistributionDomain_prefix;
+    String imageDistributionDomain_prefix;
 
-    @Value("#{hkEnvProps['" + Keys.Env.imageDistributionDomain_sufffix + "']}")
-    private static String imageDistributionDomain_sufffix;
+    @Value("#{hkEnvProps['" + Keys.Env.imageDistributionDomain_suffix + "']}")
+    String imageDistributionDomain_suffix;
 
     @Value("#{hkEnvProps['" + Keys.Env.imageUploads + "']}")
     String imageUploads;
@@ -41,6 +41,8 @@ public class HKImageUtils {
 
     static String awsBucket;
     static String awsReadBucket;
+    static String awsImageDistributionDomain_prefix;
+    static String awsImageDistributionDomain_suffix;
     static String imageUploadsPath;
     static Long noOfImagesInRepositorySubDir;
 
@@ -48,6 +50,8 @@ public class HKImageUtils {
     public void postConstruction() {
         awsBucket = StringUtils.isNotBlank(awsBucketStr) ? awsBucketStr : "";
         awsReadBucket = StringUtils.isNotBlank(downloadBucket) ? downloadBucket : "";
+        awsImageDistributionDomain_prefix = StringUtils.isNotBlank(imageDistributionDomain_prefix) ? imageDistributionDomain_prefix : "";
+        awsImageDistributionDomain_suffix = StringUtils.isNotBlank(imageDistributionDomain_suffix) ? imageDistributionDomain_suffix : "";
         imageUploadsPath = StringUtils.isNotBlank(imageUploads) ? imageUploads : "";
         noOfImagesInRepositorySubDir = (noOfImagesInRepositoryDir != null) ? noOfImagesInRepositoryDir : 0;
     }
@@ -79,7 +83,7 @@ public class HKImageUtils {
             prefix = "https://";
         }
         Long urlInt = imageId%5; // Assuming FIVE CDNs for images
-        String imageDistributionUrl = imageDistributionDomain_prefix + urlInt.intValue() + "." + imageDistributionDomain_sufffix + "/";
+        String imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
 
         return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
         //return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";

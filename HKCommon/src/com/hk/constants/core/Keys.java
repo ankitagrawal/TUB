@@ -61,7 +61,7 @@ public class Keys {
         public static final String readBucket                      = "readBucket";
 
         public static final String imageDistributionDomain_prefix  = "imageDistributionDomain_prefix";
-        public static final String imageDistributionDomain_sufffix = "imageDistributionDomain_sufffix";
+        public static final String imageDistributionDomain_suffix  = "imageDistributionDomain_suffix";
 
         public static final String fbFanPageId                     = "fbFanPageId";
         public static final String fbFanAppId                      = "fbFanAppId";
