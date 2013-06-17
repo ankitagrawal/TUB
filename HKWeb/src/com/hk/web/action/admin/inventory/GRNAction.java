@@ -231,6 +231,20 @@ public class GRNAction extends BasePaginatedAction {
 				if(saveValue == 2){
 					if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
 							(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
+						grnLineItem = (GrnLineItem) grnLineItemDao.save(grnLineItem);
+						if(grn.getPurchaseInvoices()!=null && grn.getPurchaseInvoices().size()>0){
+							for(PurchaseInvoice invoice: grn.getPurchaseInvoices()){
+								List<PurchaseInvoiceLineItem> items = invoice.getPurchaseInvoiceLineItems();
+								if(items!=null&&items.size()>0){
+									for(PurchaseInvoiceLineItem pili :items){
+										if(pili.getGrnLineItem().equals(grnLineItem)){
+										pili.setGrnLineItem(null);
+										purchaseInvoiceDao.save(pili);
+										}
+									}
+								}
+							}
+						}
 						grnLineItemDao.delete(grnLineItem);
 				}
 				
