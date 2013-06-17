@@ -55,7 +55,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
     @Autowired
     private PaymentDao paymentDao;
 
-    @Override
+    /*@Override
     public Map<String, Object> seekHkPaymentResponse(String gatewayOrderId) {
 
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
@@ -75,9 +75,9 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         }
 
         return paymentResultMap;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Payment updatePayment(String gatewayOrderId) {
         // hit gateway and get updated HK Response Object
         Map<String, Object> hkrespObj = seekHkPaymentResponse(gatewayOrderId);
@@ -114,7 +114,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
             }
         }
         return paymentService.findByGatewayOrderId(gatewayOrderId);
-    }
+    }*/
 
     @Override
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {

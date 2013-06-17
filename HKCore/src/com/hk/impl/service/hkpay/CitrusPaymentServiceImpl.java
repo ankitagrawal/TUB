@@ -47,7 +47,7 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
     @Autowired
     private UserService userService;
 
-    public Map<String, Object> seekHkPaymentResponse(String gatewayOrderId) {
+    /*public Map<String, Object> seekHkPaymentResponse(String gatewayOrderId) {
 
         Map<String, Object> hkrespObject = new HashMap<String, Object>();
 
@@ -66,9 +66,9 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
             logger.debug("There was an exception while trying to search for payment details for payment " + gatewayOrderId, e);
         }
         return hkrespObject;
-    }
+    }*/
 
-    public Payment updatePayment(String gatewayOrderId) {
+    /*public Payment updatePayment(String gatewayOrderId) {
         // hit gateway and get updated HK Response Object
         Map<String, Object> hkrespObj = seekHkPaymentResponse(gatewayOrderId);
         if (hkrespObj != null && !hkrespObj.isEmpty()) {
@@ -102,7 +102,7 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
             }
         }
         return paymentService.findByGatewayOrderId(gatewayOrderId);
-    }
+    }*/
 
     @Override
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {

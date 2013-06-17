@@ -45,7 +45,7 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
     @Autowired
     private UserService userService;
 
-    @Override
+    /*@Override
     public Map<String, Object> seekHkPaymentResponse(String gatewayOrderId) {
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
         try {
@@ -60,9 +60,9 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
             logger.debug("There was an exception while trying to search for payment details for payment " + gatewayOrderId, e);
         }
         return paymentResultMap;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Payment updatePayment(String gatewayOrderId) {
         Map<String, Object> hkrespObj = seekHkPaymentResponse(gatewayOrderId);
         if (hkrespObj != null && !hkrespObj.isEmpty()) {
@@ -96,7 +96,7 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
             }
         }
         return paymentService.findByGatewayOrderId(gatewayOrderId);
-    }
+    }*/
 
     @Override
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) {
