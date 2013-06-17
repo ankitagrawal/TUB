@@ -14,7 +14,7 @@
 		 <li><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction" event="populateServiceSales">Populate Service Sales from Aqua</s:link> </li>
 		 <li><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction" event="populateB2BSales">Populate B2B Sales</s:link> </li>
 		 <li><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction" event="populateRto">Populate Sales return from Aqua</s:link> </li>
-		<%-- <li><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction" event="populatePurchases">Populate Purchases</s:link> </li>--%>
+		 <%--<li><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction" event="populatePurchases">Populate Purchases</s:link> </li>--%>
 	 </ul>
 	</s:layout-component>
 </s:layout-render>
