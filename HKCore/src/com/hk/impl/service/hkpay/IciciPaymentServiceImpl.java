@@ -125,8 +125,8 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
         com.opus.epg.sfa.java.Merchant oMerchant = new com.opus.epg.sfa.java.Merchant();
         try {
             PostLib oPostLib = new PostLib();
-            oMerchant.setMerchantRelatedTxnDetails(merchantId, merchantId, merchantId, basePayment.getGatewayOrderId(), null,
-                    basePayment.getRrn(), basePayment.getAuthIdCode(), null, null, "INR", "enq.Refund", amount.toString(),
+            oMerchant.setMerchantRelatedTxnDetails(merchantId, merchantId, merchantId, basePayment.getGatewayOrderId(), basePayment.getGatewayReferenceId(),
+                    basePayment.getRrn(), basePayment.getAuthIdCode(),null,null  ,"INR", "enq.Refund", amount.toString(),
                     null, null, null, null, null, null);
 
             PGResponse oPgResp = oPostLib.postRelatedTxn(oMerchant);

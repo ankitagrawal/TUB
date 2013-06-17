@@ -346,7 +346,7 @@ public class PaymentServiceImpl implements PaymentService {
                 for (Payment hkPaymentRequest : hkPaymentRequestList){
 
                     if(EnumPaymentTransactionType.SALE.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())){
-                        if(hkPaymentRequest.getGatewayOrderId() == hkPaymentResponse.getGatewayOrderId()){
+                        if(hkPaymentRequest.getGatewayOrderId().equalsIgnoreCase(hkPaymentResponse.getGatewayOrderId())){
                             Map<String,Object> respRequestMap = new HashMap<String,Object>();
                             respRequestMap.put("Request",hkPaymentRequest);
                             respRequestMap.put("Response",hkPaymentResponse);
