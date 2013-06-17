@@ -46,6 +46,8 @@ public class HKImageUtils {
     static String imageUploadsPath;
     static Long noOfImagesInRepositorySubDir;
 
+    private static int CDN_NETWORKS = 10;
+
     @PostConstruct
     public void postConstruction() {
         awsBucket = StringUtils.isNotBlank(awsBucketStr) ? awsBucketStr : "";
@@ -73,7 +75,7 @@ public class HKImageUtils {
         if (WebContext.isSecure()) {
             prefix = "https://";
         }
-        Long urlInt = imageId%5+1; // Assuming FIVE CDNs for images
+        Long urlInt = (imageId % CDN_NETWORKS) + 1;
         String imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
 
       return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
@@ -86,7 +88,7 @@ public class HKImageUtils {
         if (WebContext.isSecure()) {
             prefix = "https://";
         }
-        Long urlInt = imageId%5+1; // Assuming FIVE CDNs for images
+        Long urlInt = (imageId % CDN_NETWORKS) + 1;
         String imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
 
         return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
@@ -98,7 +100,7 @@ public class HKImageUtils {
         if (WebContext.isSecure()) {
             prefix = "https://";
         }
-        Long urlInt = imageId%5+1; // Assuming FIVE CDNs for images
+        Long urlInt = (imageId % CDN_NETWORKS) + 1;
         String imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
 
         return prefix + imageDistributionUrl + getS3SuperSaverImageKey(imageSize, imageId);
