@@ -786,7 +786,7 @@
 		<div>
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editRelatedProducts" class="popup">
-				Edit Related Products
+				Edit Recommended Products
 				<s:param name="productId" value="${product.id}"/>
 			</s:link>
 		</div>
