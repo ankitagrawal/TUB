@@ -11,7 +11,7 @@
 		<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction" var="joinAction" />  
 		
 		<div class="container_16 clearfix">
-			<div class="welcomeTitle" style="width: 650px; margin-left:180px;">Welcome to healthkart stellar !!</div>
+			<div class="welcomeTitle" style="width: 650px; margin-left:180px;">Welcome to healthkart loyalty !!</div>
 	    <div class="grid_10 innerContent">
 			<s:form beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction">
 		      
@@ -39,9 +39,9 @@
           <s:text size="12" id="inputField" class="welcomeSelect" name="dob" placeholder="yyyy-mm-dd" autocomplete="off"/>
         	</div>
         </div>
-		<div>By joining stellar program you agree to the
-		 <a href="${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" class="blue makeCursor" target="_blank" >Terms and Conditions</a>
-		  for the stellar.</div>
+		<div>By joining loyalty program you agree to the
+		 <a href="${pageContext.request.contextPath}/pages/loyalty/info/loyaltyTerms.jsp" class="blue makeCursor" target="_blank" >Terms and Conditions</a>
+		  for the loyalty.</div>
 		<div><br><br><s:submit name="continueProgram" value="JOIN NOW" class="btn joinNowButton"/></div>
 		</s:form>
 	</div>
