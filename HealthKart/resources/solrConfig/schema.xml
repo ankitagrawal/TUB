@@ -549,7 +549,8 @@ any data added to them will be ignored outright.  -->
         <field name="maximumMRPProducVariantDiscount" type="float" indexed="true" stored="true"/>
         <field name="maximumDiscountProductVariantDiscountPercentage" type="float" indexed="true" stored="true"/>
         <field name="minimumMRPProductVariantMarkedPrice" type="float" indexed="true" stored="true"/>
-        <field name="maximumDiscountProductVariantPrice" type="float" indexed="true" stored="true"/>
+        <field name="maximumDiscountProductVariantHKPrice" type="float" indexed="true" stored="true"/>
+        <field name="maximumDiscountProductVariantMRP" type="float" indexed="true" stored="true"/>
         <field name="maxMRPProductVariantPrice" type="float" indexed="true" stored="true"/>
         <field name="markedPrice" type="float" indexed="true" stored="true"/>
         <field name="postpaidPrice" type="float" indexed="true" stored="true"/>

@@ -9,25 +9,37 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.taglibs.Functions" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.domain.user.User" %>
+<%@ page import="com.hk.pact.service.UserService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="java.util.Arrays" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
 
 <%
-  PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
-		if(principal != null){
-	        pageContext.setAttribute("userId", principal.getId());
-		}
-		else{
-			pageContext.setAttribute("userId", null);
-		}
 
-  String roles = RoleConstants.HK_USER + "," + RoleConstants.HK_UNVERIFIED;
+  PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
+  UserService userService = ServiceLocatorFactory.getService(UserService.class);
+  User loggedInUser = userService.getLoggedInUser();
+  if (loggedInUser != null) {
+    pageContext.setAttribute("user", loggedInUser);
+    pageContext.setAttribute("userId", loggedInUser.getId());
+    pageContext.setAttribute("userRoles", loggedInUser.getRoleStrings());
+  } else {
+    pageContext.setAttribute("userId", null);
+  }
 
   String originalUrlHeader = (String) request.getAttribute("javax.servlet.forward.request_uri");
   if (originalUrlHeader == null) {
     originalUrlHeader = request.getRequestURI();
   }
+
+  pageContext.setAttribute("tempUser", RoleConstants.TEMP_USER);
+  pageContext.setAttribute("b2bUser", RoleConstants.B2B_USER);
+  pageContext.setAttribute("loyaltyUser", RoleConstants.HK_LOYALTY_USER);
+  pageContext.setAttribute("hkRoles", Arrays.asList(RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER));
+  pageContext.setAttribute("groupAdminRoles", RoleConstants.ROLE_GROUP_ADMINS_LIST);
 %>
 
 <s:layout-definition>
@@ -95,18 +107,18 @@
            </a>
           Welcome,
             <span class='name'>
-              <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
-                Guest
-              </shiro:hasRole>
-              <shiro:guest>
-                Guest
-              </shiro:guest>
+              <c:if test="${hk:collectionContains(userRoles, tempUser)}">
+              Guest
+             </c:if>
+             <shiro:guest>
+               Guest
+             </shiro:guest>
                 <strong>
-                  <shiro:hasAnyRoles name="<%=roles%>">
-                    <shiro:principal property="firstName"/>
-                  </shiro:hasAnyRoles>
+                  <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
+                    ${user.firstName}
+                  </c:if>
                 </strong>
-              	<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+              	<c:if test="${hk:collectionContains(userRoles, loyaltyUser)}">
                 <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}"/>
           		 <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
                   <c:choose>
@@ -129,7 +141,7 @@
                     
                   </c:choose>
                   </a>
-                  </shiro:hasRole>
+                  </c:if>
               </span>
           <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
             <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction"
@@ -141,7 +153,7 @@
 
           <span class='links'>
             |
-            <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
+            <c:if test="${hk:collectionContains(userRoles, tempUser)}">
               <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
                       rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
                                                                             value="<%=originalUrlHeader%>"/><%}%>
@@ -149,7 +161,7 @@
               <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
                       rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
                                                                             value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
-            </shiro:hasRole>
+            </c:if>
             <shiro:guest>
               <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
                       rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
@@ -159,34 +171,28 @@
                       rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
                                                                             value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
             </shiro:guest>
-            <shiro:user>
-              <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
+            <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
                 <s:link beanclass="com.hk.web.action.core.user.MyAccountAction"
                         title='view past orders / edit personal details' rel="noFollow">Your Account</s:link> |
-                <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
+                <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, groupAdminRoles)}">
                   <s:link beanclass="com.hk.web.action.admin.AdminHomeAction" class="sml" rel="noFollow">Admin</s:link>
                   |
-                </shiro:hasAnyRoles>
+                </c:if>
                 <%
                   if (principal != null && principal.isAssumed()) {
                 %>
                 <s:link beanclass="com.hk.web.action.admin.user.AssumedLogoutAction" class="sml" rel="noFollow">(Release
                   assumed
                   identity)</s:link> |
-                 <shiro:hasAnyRoles name="<%=RoleConstants.B2B_USER%>">
+                 <c:if test="${hk:collectionContains(userRoles, b2bUser)}">
                   <s:link beanclass = "com.hk.web.action.core.b2b.B2BCartAction" class="sml" rel="noFollow">B2B Cart</s:link> |
-                </shiro:hasAnyRoles>
+                </c:if>
                 <%
                   }
                 %>
-
-               
-                
                 <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
                         rel="noFollow">Logout</s:link>
-              </shiro:lacksRole>
-	            |
-            </shiro:user>
+              </c:if>
           </span>
         </div>
 

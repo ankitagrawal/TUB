@@ -9,6 +9,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.search.SolrProduct;
+import com.hk.cache.vo.ProductVO;
 
 public interface ProductService {
 
@@ -117,5 +118,11 @@ public interface ProductService {
     boolean isComboInStock(Product product);
 
     public List<Product> getOOSHiddenDeletedProducts();
+
+    public ProductVO getProductVO(String productId);
+
+    public ProductVO createProductVO(SolrProduct solrProduct);
+
+    public ProductVO createProductVO(Product product);
 
 }

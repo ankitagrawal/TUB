@@ -4,10 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.hk.domain.search.PaginationFilter;
-import com.hk.domain.search.RangeFilter;
-import com.hk.domain.search.SearchFilter;
-import com.hk.domain.search.SortFilter;
+import com.hk.domain.search.*;
 import com.hk.domain.catalog.category.Category;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
@@ -21,6 +18,7 @@ import com.hk.exception.SearchException;
  */
 @Service
 public interface ProductSearchService {
+
     void refreshDataIndexes() throws SearchException;
 
     SearchResult getCatalogResults(List<SearchFilter> categories,
@@ -36,4 +34,6 @@ public interface ProductSearchService {
     public void logSearchResult(String keyword, Long results, String category);
 
     public void updatePositionInSearchLog(String position);
+
+    public SolrProduct getProduct(String productId);
 }
