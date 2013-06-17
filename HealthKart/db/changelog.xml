@@ -13270,4 +13270,14 @@
     <changeSet author="Nihal (generated)" id="1371202029098-9">
         <modifyDataType columnName="product_name" newDataType="VARCHAR(100)" tableName="extra_inventory_line_item"/>
     </changeSet>
+    <changeSet author="Tarun (written)" id="20130617-01">
+        <sql>
+            INSERT INTO  `seek_invoice_num` (`id` ,`warehouse_id` ,`invoice_num` ,`prefix` ,`description`)
+            VALUES  (NULL ,  '1',  '1',  'DN',  'Debit Note 2013'),
+            (NULL ,  '2',  '1',  'DN',  'Debit Note 2013'),
+            (NULL ,  '301',  '1',  'DN',  'Debit Note 2013'),
+            (NULL ,  '401',  '1',  'DN',  'Debit Note 2013');
+
+        </sql>
+    </changeSet>
 </databaseChangeLog>

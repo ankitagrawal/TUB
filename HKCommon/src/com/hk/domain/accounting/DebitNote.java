@@ -78,6 +78,9 @@ public class DebitNote implements java.io.Serializable {
     @JoinColumn(name="reconciliation_voucher_id")
     private ReconciliationVoucher reconciliationVoucher;
 
+    @Column(name = "debit_note_number")
+    private String debitNoteNumber;
+
     public Long getId() {
         return this.id;
     }
@@ -173,6 +176,14 @@ public class DebitNote implements java.io.Serializable {
 	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
 		this.reconciliationVoucher = reconciliationVoucher;
 	}
+
+    public String getDebitNoteNumber() {
+        return debitNoteNumber;
+    }
+
+    public void setDebitNoteNumber(String debitNoteNumber) {
+        this.debitNoteNumber = debitNoteNumber;
+    }
 }
 
 

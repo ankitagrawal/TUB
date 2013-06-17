@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.pact.service.accounting.DebitNoteService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -20,7 +21,6 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.DebitNoteDto;
-import com.hk.admin.manager.DebitNoteManager;
 import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
@@ -59,7 +59,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     @Autowired
     RtvNoteLineItemService rtvNoteLineItemService;
     @Autowired
-    DebitNoteManager debitNoteManager;
+    DebitNoteService             debitNoteService;
 
     Page                            debitNotePage;
     private List<DebitNote>         debitNoteList      = new ArrayList<DebitNote>();
@@ -98,7 +98,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     public Resolution view() {
         if (debitNote != null) {
             logger.debug("debitNote@view: " + debitNote.getId());
-            debitNoteDto = debitNoteManager.generateDebitNoteDto(debitNote);
+            debitNoteDto = debitNoteService.generateDebitNoteDto(debitNote);
         } else {
             debitNote = new DebitNote();
             debitNote.setDebitNoteStatus(EnumDebitNoteStatus.Created.asDebitNoteStatus());
@@ -121,7 +121,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     		}
     		debitNote = new DebitNote();
     		debitNote.setPurchaseInvoice(purchaseInvoice);
-    		debitNote = debitNoteManager.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
+    		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
     		
     	}
     	//return new ForwardResolution("/pages/admin/debitNote.jsp");
@@ -130,7 +130,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     
     public Resolution editDebitNote(){
     	debitNoteDto = new DebitNoteDto();
-    	debitNoteDto = debitNoteManager.generateDebitNoteDto(debitNote);
+    	debitNoteDto = debitNoteService.generateDebitNoteDto(debitNote);
     	return new ForwardResolution("/pages/admin/debitNote.jsp");
     }
     
@@ -147,17 +147,8 @@ public class DebitNoteAction extends BasePaginatedAction {
 		} else {
 			debitNote.setDebitNoteType(EnumDebitNoteType.PreCheckin.asEnumDebitNoteType());
 		}
-		debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
-		for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
-			if (debitNoteLineItem.getDebitNote() == null) {
-				debitNoteLineItem.setDebitNote(debitNote);
-			}
-			if (debitNoteLineItem.getQty() != null && debitNoteLineItem.getQty() <= 0) {
-				getBaseDao().delete(debitNoteLineItem);
-			} else {
-				getDebitNoteDao().save(debitNoteLineItem);
-			}
-		}
+		debitNote = (DebitNote) debitNoteService.save(debitNote, debitNoteLineItems);
+
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(DebitNoteAction.class);
     }

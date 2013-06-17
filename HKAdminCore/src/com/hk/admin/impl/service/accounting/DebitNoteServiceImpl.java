@@ -1,17 +1,10 @@
-package com.hk.admin.manager;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package com.hk.admin.impl.service.accounting;
 
 import com.hk.admin.dto.inventory.DebitNoteDto;
 import com.hk.admin.dto.inventory.DebitNoteLineItemDto;
 import com.hk.admin.pact.dao.inventory.DebitNoteDao;
+import com.hk.admin.pact.service.accounting.DebitNoteService;
+import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.inventory.EnumDebitNoteStatus;
 import com.hk.constants.inventory.EnumDebitNoteType;
@@ -24,11 +17,19 @@ import com.hk.domain.inventory.rtv.RtvNoteLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
+import com.hk.helper.InvoiceNumHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Component
-public class DebitNoteManager {
+public class DebitNoteServiceImpl implements DebitNoteService {
 	@Autowired
 	DebitNoteDao debitNoteDao;
+
+    @Autowired
+    SeekInvoiceNumService seekInvoiceNumService;
 
 	public DebitNoteDto generateDebitNoteDto(DebitNote debitNote) {
 		DebitNoteDto debitNoteDto = new DebitNoteDto();
@@ -159,12 +160,32 @@ public class DebitNoteManager {
 
 	}
 
-	public DebitNoteDao getDebitNoteDao() {
-		return debitNoteDao;
-	}
+    @Override
+    public DebitNote save(DebitNote debitNote) {
+        String invoiceNumType = InvoiceNumHelper.PREFIX_FOR_DEBIT_NOTE;
+        if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId())){
+            debitNote.setDebitNoteNumber(seekInvoiceNumService.getInvoiceNum(invoiceNumType, debitNote.getWarehouse()));
+        }
+        return (DebitNote)getDebitNoteDao().save(debitNote);
+    }
 
-	public void setDebitNoteDao(DebitNoteDao debitNoteDao) {
-		this.debitNoteDao = debitNoteDao;
+    @Override
+    public DebitNote save(DebitNote debitNote, List<DebitNoteLineItem> debitNoteLineItems) {
+        for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
+            if (debitNoteLineItem.getDebitNote() == null) {
+                debitNoteLineItem.setDebitNote(debitNote);
+            }
+            if (debitNoteLineItem.getQty() != null && debitNoteLineItem.getQty() <= 0) {
+                getDebitNoteDao().delete(debitNoteLineItem);
+            } else {
+                getDebitNoteDao().save(debitNoteLineItem);
+            }
+        }
+        return save(debitNote);
+    }
+
+    public DebitNoteDao getDebitNoteDao() {
+		return debitNoteDao;
 	}
 
 }
