@@ -20,9 +20,11 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.pact.service.search.ProductIndexService;
+import com.hk.pact.service.search.ProductSearchService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKImageUtils;
 import com.hk.web.filter.WebContext;
+import com.hk.cache.vo.ProductVO;
 import net.sourceforge.stripes.controller.StripesFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -49,6 +51,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductIndexService               productIndexService;
+
+    @Autowired
+    ProductSearchService productSearchService;
 
     @Autowired
     ProductImageService               productImageService;
@@ -522,10 +527,7 @@ public class ProductServiceImpl implements ProductService {
         if (productVariant.getDiscountPercent() != null) {
             solrProduct.setMaximumMRPProducVariantDiscount(productVariant.getDiscountPercent());
         }
-        productVariant = product.getMaximumDiscountProducVariant();
-        if (productVariant.getDiscountPercent() != null) {
-            solrProduct.setMaximumDiscountProductVariantDiscountPercentage(productVariant.getDiscountPercent());
-        }
+        
         productVariant = product.getMaximumMRPProducVariant();
         if (productVariant.getPostpaidAmount() != null) {
             solrProduct.setPostpaidPrice(productVariant.getPostpaidAmount());
@@ -555,21 +557,21 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setSmallImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId()));
         }
 
-        Double price = null;
-        productVariant = product.getMinimumHKPriceProductVariant();
-        if (productVariant.getHkPrice() != null) {
-            price = productVariant.getHkPrice();
-            solrProduct.setHkPrice(price);
-        }
-
         if (isCombo(product)) {
-            Combo combo = comboDao.getComboById(product.getId());
-            solrProduct.setCombo(true);
-            solrProduct.setMarkedPrice(combo.getMarkedPrice());
-            if (price == null) {
-                solrProduct.setHkPrice(combo.getHkPrice());
-            }
-            solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+          Combo combo = comboDao.getComboById(product.getId());
+          solrProduct.setCombo(true);
+          solrProduct.setMarkedPrice(combo.getMarkedPrice());
+          solrProduct.setHkPrice(combo.getHkPrice());
+          solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
+        } else {
+          productVariant = product.getMaximumDiscountProducVariant();
+          if (productVariant.getDiscountPercent() != null) {
+            solrProduct.setHkPrice(productVariant.getHkPrice());
+            solrProduct.setMarkedPrice(productVariant.getMarkedPrice());
+            solrProduct.setMaximumDiscountProductVariantDiscountPercentage(productVariant.getDiscountPercent());
+            solrProduct.setMaximumDiscountProductVariantHKPrice(productVariant.getHkPrice());
+            solrProduct.setMaximumDiscountProductVariantMRP(productVariant.getMarkedPrice());
+          }
         }
 
         if (product.getService() != null) {
@@ -620,4 +622,64 @@ public class ProductServiceImpl implements ProductService {
         return userService;
     }
 
+
+  @Override
+  public ProductVO getProductVO(String productId) {
+    ProductVO productVO = null;
+    SolrProduct solrProduct = productSearchService.getProduct(productId);
+    if (solrProduct != null) {
+      productVO = this.createProductVO(solrProduct);
+    } else {
+      Product product = this.getProductById(productId);
+      productVO = this.createProductVO(product);
+    }
+
+    return productVO;
+  }
+
+  public ProductVO createProductVO(SolrProduct solrProduct) {
+    ProductVO productVO = new ProductVO();
+    productVO.setId(solrProduct.getId());
+    productVO.setName(solrProduct.getName());
+    productVO.setMaxDiscount(solrProduct.getMaximumDiscountProductVariantDiscountPercentage());
+    productVO.setMaxDiscountHKPrice(solrProduct.getMaximumDiscountProductVariantHKPrice() + (solrProduct.getService() ? solrProduct.getPostpaidPrice() : 0.0));
+    productVO.setMaxDiscountMRP(solrProduct.getMaximumDiscountProductVariantMRP());
+    productVO.setProductURL(solrProduct.getProductUrl());
+    productVO.setMainImageId(solrProduct.getMainImageId());
+    productVO.setGoogleAdDisallowed(solrProduct.getGoogleAdDisallowed());
+    productVO.setDeleted(solrProduct.getDeleted());
+    productVO.setHidden(solrProduct.isHidden());
+    productVO.setOutOfStock(solrProduct.getOutOfStock());
+    productVO.setCombo(solrProduct.getCombo());
+    productVO.setService(solrProduct.getService());
+    
+    return productVO;
+  }
+
+  public ProductVO createProductVO(Product product) {
+    ProductVO productVO = new ProductVO();
+    productVO.setId(product.getId());
+    productVO.setName(product.getName());
+
+    productVO.setProductURL(linkManager.getProductURL(product, EnumProductReferrer.homePage.getId()));
+    productVO.setMainImageId(product.getMainImageId());
+    productVO.setGoogleAdDisallowed(product.isGoogleAdDisallowed());
+    productVO.setDeleted(product.isDeleted());
+    productVO.setHidden(product.isHidden());
+    productVO.setOutOfStock(product.isOutOfStock());
+    if (product instanceof Combo)
+      productVO.setCombo(true);
+    else {
+      productVO.setCombo(false);
+      ProductVariant maxDiscountVariant = product.getMaximumDiscountProducVariant();
+      if (maxDiscountVariant != null && maxDiscountVariant.getId() != null) {
+        productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
+        productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice() + (product.getService() ? maxDiscountVariant.getPostpaidAmount() : 0.0));
+        productVO.setMaxDiscountMRP(maxDiscountVariant.getMarkedPrice());
+      }
+    }
+    productVO.setService(product.getService());
+
+    return productVO;
+  }
 }
