@@ -241,7 +241,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 				}
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-				emailManager.sendPOPlacedEmail(purchaseOrder);
+				//emailManager.sendPOPlacedEmail(purchaseOrder);
 				if (purchaseOrder.getSupplier().getCreditDays() < 0 && purchaseOrder.getAdvPayment() > 0) {
 					try {
 						PaymentHistory paymentHistoryNew = new PaymentHistory();
