@@ -82,7 +82,7 @@ public class HKImageUtils {
         if (WebContext.isSecure()) {
             prefix = "https://";
         }
-        Long urlInt = imageId%5; // Assuming FIVE CDNs for images
+        Long urlInt = imageId%5+1; // Assuming FIVE CDNs for images
         String imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
 
         return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
