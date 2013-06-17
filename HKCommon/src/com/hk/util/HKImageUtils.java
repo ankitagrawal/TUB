@@ -73,7 +73,11 @@ public class HKImageUtils {
         if (WebContext.isSecure()) {
             prefix = "https://";
         }
-        return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
+        Long urlInt = imageId%5+1; // Assuming FIVE CDNs for images
+        String imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
+
+      return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
+        //return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
     public static String getS3ImageUrl(EnumImageSize imageSize, Long imageId) {
@@ -94,7 +98,11 @@ public class HKImageUtils {
         if (WebContext.isSecure()) {
             prefix = "https://";
         }
-        return prefix + awsReadBucket + ".s3.amazonaws.com/" + getS3SuperSaverImageKey(imageSize, imageId);
+        Long urlInt = imageId%5+1; // Assuming FIVE CDNs for images
+        String imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
+
+        return prefix + imageDistributionUrl + getS3SuperSaverImageKey(imageSize, imageId);
+        //return prefix + awsReadBucket + ".s3.amazonaws.com/" + getS3SuperSaverImageKey(imageSize, imageId);
     }
 
     public static String getRepositoryImagePath(EnumImageSize imageSize, Long imageId) {
