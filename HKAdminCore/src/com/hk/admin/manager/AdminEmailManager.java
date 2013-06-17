@@ -65,6 +65,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1106,7 +1107,11 @@ public class AdminEmailManager {
     	//TODO
     	HashMap valuesMap = new HashMap();
     	String warehouseName = "" , warehouseAddress = "";
+    	DateTime dt = new DateTime();
+		LocalDate ld = dt.toLocalDate();
+		String date = ld.getDayOfMonth()+"-"+ld.getMonthOfYear()+"-"+ld.getYear();;
         valuesMap.put("purchaseOrder", purchaseOrder);
+        valuesMap.put("date", date);
         if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
         	warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
         	warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
@@ -1135,12 +1140,13 @@ public class AdminEmailManager {
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
         
         try {
-            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
+        	
+            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".pdf");
             pdfFile.getParentFile().mkdirs();
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
             getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
             
-            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".xls");
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".xls");
             xlsFile.getParentFile().mkdirs();
             xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
         } catch (Exception e) {

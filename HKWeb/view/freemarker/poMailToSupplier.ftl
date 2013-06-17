@@ -1,15 +1,11 @@
-Purchase Order Approval Mail
+Purchase Order # ${purchaseOrder.id} Dt. ${date} for C/o ${purchaseOrder.supplier.name} from Bright Lifecare Pvt. Ltd.
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>
 </head>
 <body>
 <#include "header.ftl">
-<#if purchaseOrder.supplier.contactPerson??>
-  	Dear ${purchaseOrder.supplier.contactPerson}, 
-  	<#else>
-  	Dear ${purchaseOrder.supplier.name}, 
-  	</#if>
+Dear Sir/Madam,
 <br/>
 <br/>
 <p style="margin-top: 2px;margin-bottom: 2px;margin-left: 2px;">Please find the PO attached below. Kindly send across the goods at the earliest.</p>
