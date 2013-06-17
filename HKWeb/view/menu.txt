@@ -37,6 +37,7 @@
 --/sports-nutrition/accessories/storage
 --/sports-nutrition/accessories/support-gear: Gloves/Straps/Belts
 --/sports-nutrition/accessories/apparel: Apparel
+--/sports-nutrition/accessories/gym-essential-kits
 --/sports-nutrition/accessories/tanning-creams-lotions : Tanning Creams/Lotions
 -/sports-nutrition/popular-brands: Popular Brands
 --/brand/sports-nutrition/ON: ON
@@ -51,7 +52,6 @@
 --/brand/sports-nutrition/Nature%27s+Best: Nature's Best
 --/brand/sports-nutrition/Weider: Weider
 --/brand/sports-nutrition/BSN : BSN
-
 
 /health-nutrition
 -/health-nutrition/shop-by-concern: Shop by Condition
@@ -138,6 +138,7 @@
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/rehabilitation-supports
 --/sports/fitness-accessories/gym-clothing
+--/sports/fitness-accessories/gym-essential-kits
 --/sports/fitness-accessories/fitness-watches
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
