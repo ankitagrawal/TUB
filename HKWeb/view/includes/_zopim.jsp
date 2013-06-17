@@ -50,7 +50,9 @@
     webengage.init({
       licenseCode:"~2024c219"
     }).onReady(function(){
-    	webengage.render({ ruleData : { topCategory: "${topCategory}", brand : "${brand}", allCategories: "${allCategories}"}});
+    	<%--webengage.render({ ruleData : { topCategory: "${topCategory}", brand : "${brand}", allCategories: "${allCategories}"}});--%>
+      webengage.notification.render({ruleData : {topCategory: "${topCategory}", brand : "${brand}", allCategories: "${allCategories}"}});
+      webengage.survey.render({ruleData : {topCategory: "${topCategory}", brand : "${brand}", allCategories: "${allCategories}"}});
     });
   };
 

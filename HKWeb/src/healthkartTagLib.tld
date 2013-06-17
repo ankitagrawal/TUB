@@ -299,6 +299,17 @@
     </function>
     <function>
         <description>
+            contains for any of the collection items in another collection
+        </description>
+        <name>collectionContainsAnyCollectionItem</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean collectionContainsAnyCollectionItem(java.util.Collection,java.util.Collection)</function-signature>
+        <example>
+            ${hk:collectionContainsAnyCollectionItem(${coll}, ${col2})}
+        </example>
+    </function>
+    <function>
+        <description>
             contains for collections for two objects
         </description>
         <name>collectionContainsBoth</name>

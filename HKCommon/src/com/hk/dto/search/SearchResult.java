@@ -14,6 +14,7 @@ import com.hk.domain.catalog.product.Product;
  */
 public class SearchResult {
     private List<Product> solrProducts = new ArrayList<Product>();
+    private List<String> solrProductIds = new ArrayList<String>();
     private int resultSize;
     private String searchSuggestions = "";
     private String primarySuggestion;
@@ -23,8 +24,9 @@ public class SearchResult {
     public SearchResult(){
 
     }
-    public SearchResult(List<Product> solrProducts, int resultSize){
+    public SearchResult(List<Product> solrProducts, List<String> solrProductIds, int resultSize){
         this.solrProducts = solrProducts;
+        this.solrProductIds= solrProductIds;
         this.resultSize = resultSize;
     }
 
@@ -36,7 +38,15 @@ public class SearchResult {
         this.solrProducts = solrProducts;
     }
 
-    public int getResultSize() {
+  public List<String> getSolrProductIds() {
+    return solrProductIds;
+  }
+
+  public void setSolrProductIds(List<String> solrProductIds) {
+    this.solrProductIds = solrProductIds;
+  }
+
+  public int getResultSize() {
         return resultSize;
     }
 
