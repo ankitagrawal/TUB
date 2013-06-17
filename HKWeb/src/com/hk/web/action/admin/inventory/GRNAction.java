@@ -132,6 +132,7 @@ public class GRNAction extends BasePaginatedAction {
 	private Map<Sku, Boolean> skuIsNew = new HashMap<Sku, Boolean>();
 	private Integer defaultPerPage = 20;
     private GrnLineItem grnLineItem;
+    private long saveValue;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -226,12 +227,20 @@ public class GRNAction extends BasePaginatedAction {
 				if (grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null) {
 					grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
 				}
-				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
-						(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
-					grnLineItemDao.delete(grnLineItem);
-				} else if (grnLineItem.getQty() > 0) {
+				
+				if(saveValue == 2){
+					if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
+							(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
+						grnLineItemDao.delete(grnLineItem);
+				}
+				
+				} else{
 					if (grnLineItem.getPayableAmount() != null) {
+						if(grnLineItem.getQty()>0){
 						grnLineItem.setProcurementPrice((grnLineItem.getPayableAmount() / grnLineItem.getQty()) - (grnLineItem.getPayableAmount() / grnLineItem.getQty() * discountRatio));
+						}
+						else
+							grnLineItem.setProcurementPrice(0.0);
 					}
 
 					if (grnLineItem.getId() != null) {
@@ -765,6 +774,14 @@ public Set<String> getParamSet() {
 
 	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
 		this.adminEmailManager = adminEmailManager;
+	}
+
+	public long getSaveValue() {
+		return saveValue;
+	}
+
+	public void setSaveValue(long saveValue) {
+		this.saveValue = saveValue;
 	}
     
 }
