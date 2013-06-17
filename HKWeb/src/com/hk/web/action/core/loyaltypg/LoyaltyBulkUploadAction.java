@@ -4,18 +4,24 @@
 package com.hk.web.action.core.loyaltypg;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.apache.commons.collections.map.HashedMap;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.hk.constants.core.PermissionConstants;
+import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.user.User;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -37,6 +43,9 @@ public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
     private String successMessage;
     private FileBean csvFileBean;
     private FileBean badgeCsvFileBean;
+    private String variantId;
+    private String productId;
+    private List<LoyaltyProduct> loyaltyProducts;
     
     @DefaultHandler
     public Resolution pre() {
@@ -72,6 +81,32 @@ public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
         	return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
         }
         this.successMessage = "Database succesfully Updated.";
+        return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
+    }
+    
+    public Resolution searchLoyaltyProducts() {
+    	this.errorMessages = new ArrayList<String>();
+    	Map<String, String> searchKeywordsMap = new HashMap<String, String>();
+    	
+    	// Add search parameters
+    	if(variantId != null && !variantId.isEmpty()) {
+    		searchKeywordsMap.put("variantId", variantId);
+    	}
+    	if(productId != null && !productId.isEmpty()) {
+    		searchKeywordsMap.put("productId", productId);
+    	}   	
+    	
+    	// If no parameters added return without any db call
+    	if (searchKeywordsMap.size() > 0) {
+    		loyaltyProducts = loyaltyProgramService.searchLoyaltyProducts(searchKeywordsMap);
+        } else {
+        	this.errorMessages.add("Invalid or no search parameters given.");
+        }
+    	
+    	if (loyaltyProducts != null && !(loyaltyProducts.size() > 0)) {
+    		this.errorMessages.add("No Products Found for the given productId and variant Id.");
+    	}
+ 
         return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
     }
 
@@ -129,6 +164,48 @@ public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
 	 */
 	public void setBadgeCsvFileBean(FileBean badgeCsvFileBean) {
 		this.badgeCsvFileBean = badgeCsvFileBean;
+	}
+
+	/**
+	 * @return the variantId
+	 */
+	public String getVariantId() {
+		return variantId;
+	}
+
+	/**
+	 * @param variantId the variantId to set
+	 */
+	public void setVariantId(String variantId) {
+		this.variantId = variantId;
+	}
+
+	/**
+	 * @return the productId
+	 */
+	public String getProductId() {
+		return productId;
+	}
+
+	/**
+	 * @param productId the productId to set
+	 */
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+
+	/**
+	 * @return the loyaltyProducts
+	 */
+	public List<LoyaltyProduct> getLoyaltyProducts() {
+		return loyaltyProducts;
+	}
+
+	/**
+	 * @param loyaltyProducts the loyaltyProducts to set
+	 */
+	public void setLoyaltyProducts(List<LoyaltyProduct> loyaltyProducts) {
+		this.loyaltyProducts = loyaltyProducts;
 	}
 
 

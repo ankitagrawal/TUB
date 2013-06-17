@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.stripes.action.FileBean;
@@ -707,6 +708,23 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 		return false;
 	}
+	
+	@Override
+	public List<LoyaltyProduct> searchLoyaltyProducts (Map<String, String> keywordsMap) {
+    	DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+    	if(keywordsMap.containsKey("variantId"))  {
+    		criteria.add(Restrictions.like("variant.id", keywordsMap.get("variantId")));
+    	}
+    	if(keywordsMap.containsKey("productId")) {
+    		criteria.add(Restrictions.like("variant.product.id", keywordsMap.get("productId")));
+    	}   	
+    	
+		@SuppressWarnings("unchecked")
+		List<LoyaltyProduct> loyaltyProducts = this.loyaltyProductDao.findByCriteria(criteria);
+    	return loyaltyProducts; 
+
+	}
+	
 	/**
 	 * 
 	 * Setters and getters start from here.
