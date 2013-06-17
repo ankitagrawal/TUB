@@ -24,6 +24,12 @@ public class HKImageUtils {
     @Value("#{hkEnvProps['" + Keys.Env.readBucket + "']}")
     String downloadBucket;
 
+    @Value("#{hkEnvProps['" + Keys.Env.imageDistributionDomain_prefix + "']}")
+    private static String imageDistributionDomain_prefix;
+
+    @Value("#{hkEnvProps['" + Keys.Env.imageDistributionDomain_sufffix + "']}")
+    private static String imageDistributionDomain_sufffix;
+
     @Value("#{hkEnvProps['" + Keys.Env.imageUploads + "']}")
     String imageUploads;
 
@@ -72,17 +78,11 @@ public class HKImageUtils {
         if (WebContext.isSecure()) {
             prefix = "https://";
         }
+        Long urlInt = imageId%5; // Assuming FIVE CDNs for images
+        String imageDistributionUrl = imageDistributionDomain_prefix + urlInt.intValue() + "." + imageDistributionDomain_sufffix + "/";
 
-        return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
-    }
-
-    public static String getS3ImageUrl(String imageSize, Object imgId) {
-        Long imageId = Long.parseLong(imgId.toString());
-        String prefix = "http://";
-        if (WebContext.isSecure()) {
-            prefix = "https://";
-        }
-        return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize + ".jpg";
+        return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
+        //return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
     public static String getS3SuperSaverImageUrl(EnumImageSize imageSize, Long imageId) {
