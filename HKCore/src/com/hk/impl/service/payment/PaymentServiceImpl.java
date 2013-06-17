@@ -108,25 +108,25 @@ public class PaymentServiceImpl implements PaymentService {
             if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
                 HkPaymentService hkPaymentService = getHkPaymentService(gateway);
                 if (hkPaymentService != null) {
-                    try{
+                    try {
 
                         hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
                         List<Payment> hkPaymentRequestList = listPaymentFamily(gatewayOrderId);
 
                         //TODO: remove it later, stuffing gateway Order Id in refund objects
-                        if(hkPaymentResponseList != null && hkPaymentRequestList != null){
-                            for(HkPaymentResponse resp : hkPaymentResponseList){
-                                for (Payment req : hkPaymentRequestList){
-                                    stuffGatewayOrderIdInRespObj(resp,req);
+                        if (hkPaymentResponseList != null && hkPaymentRequestList != null) {
+                            for (HkPaymentResponse resp : hkPaymentResponseList) {
+                                for (Payment req : hkPaymentRequestList) {
+                                    stuffGatewayOrderIdInRespObj(resp, req);
                                 }
                             }
                         }
 
                         List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
                         verifyRequestAndResponseList(requestResponseMappedList);
-                        verifyAmountOfRequestAndResponseList(requestResponseMappedList,faultyAmountMap);
+                        verifyAmountOfRequestAndResponseList(requestResponseMappedList, faultyAmountMap);
 
-                    } catch (HealthkartPaymentGatewayException e){
+                    } catch (HealthkartPaymentGatewayException e) {
                         if (e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)) {
                             emailManager.sendPaymentMisMatchMailToAdmin((Double) faultyAmountMap.get("RequestAmount"), (Double) faultyAmountMap.get("ResponseAmount"), (String) faultyAmountMap.get("GatewayOrderId"));
                         }
@@ -171,32 +171,32 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public void refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
-        Double gatewayAmount=null;
+        Double gatewayAmount = null;
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
 
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
-            if(EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
+            if (EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
                 HkPaymentService hkPaymentService = getHkPaymentService(basePayment.getGateway());
                 Payment refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
-                try{
+                try {
                     HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
 
-                    if(hkRefundPaymentResponse != null && hkRefundPaymentResponse.getHKPaymentStatus() != null
-                            && EnumHKPaymentStatus.SUCCESS.getId().equals(hkRefundPaymentResponse.getHKPaymentStatus().getId())){
+                    if (hkRefundPaymentResponse != null && hkRefundPaymentResponse.getHKPaymentStatus() != null
+                            && EnumHKPaymentStatus.SUCCESS.getId().equals(hkRefundPaymentResponse.getHKPaymentStatus().getId())) {
                         gatewayAmount = hkRefundPaymentResponse.getAmount();
 
-                        if(EnumGateway.ICICI.getId().equals(hkRefundPaymentResponse.getGateway().getId())){
+                        if (EnumGateway.ICICI.getId().equals(hkRefundPaymentResponse.getGateway().getId())) {
                             gatewayAmount = amount;
                         }
                         verifyPaymentAmount(gatewayAmount, amount);
                     }
-                    updatePaymentBasedOnResponse(hkRefundPaymentResponse,refundRequestPayment);
+                    updatePaymentBasedOnResponse(hkRefundPaymentResponse, refundRequestPayment);
 
-                } catch (HealthkartPaymentGatewayException e){
-                    if(e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)){
+                } catch (HealthkartPaymentGatewayException e) {
+                    if (e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)) {
                         emailManager.sendPaymentMisMatchMailToAdmin(amount, gatewayAmount, gatewayOrderId);
                     }
-                    error(refundRequestPayment.getGatewayOrderId(),e);
+                    error(refundRequestPayment.getGatewayOrderId(), e);
                 }
             }
         }
@@ -257,6 +257,8 @@ public class PaymentServiceImpl implements PaymentService {
                 success(hkPaymentRequest.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg());
             } else if (paymentStatus != null && EnumHKPaymentStatus.FAILURE.getId().equals(paymentStatus.getId())) {
                 error(hkPaymentRequest.getGatewayOrderId(), hkPaymentResponse.getErrorLog());
+            } else {
+                inProcess(hkPaymentRequest.getGatewayOrderId(), hkPaymentResponse.getGatewayReferenceId(), hkPaymentResponse.getRrn(), hkPaymentResponse.getAuthIdCode(), hkPaymentResponse.getResponseMsg());
             }
         }
     }
@@ -284,6 +286,19 @@ public class PaymentServiceImpl implements PaymentService {
         if(payment != null){
             payment.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
             payment.setErrorLog(errorLog);
+            save(payment);
+        }
+    }
+
+    @Transactional
+    public void inProcess(String gatewayOrderId, String gatewayReferenceId, String rrn, String authIdCode, String respMsg) {
+        Payment payment = findByGatewayOrderId(gatewayOrderId);
+        if(payment != null){
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setRrn(rrn);
+            payment.setAuthIdCode(authIdCode);
+            payment.setResponseMessage(respMsg);
+            payment.setPaymentStatus(EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus());
             save(payment);
         }
     }
@@ -383,7 +398,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     private void verifyAmountOfRequestAndResponse(Payment request, HkPaymentResponse response,Map<String,Object> faultyAmountMap ) throws HealthkartPaymentGatewayException {
-        if(request != null && response != null){
+        if(request != null && response != null && EnumHKPaymentStatus.SUCCESS.getId().equals(response.getHKPaymentStatus().getId())){
             faultyAmountMap.put("RequestAmount", request.getAmount());
             faultyAmountMap.put("ResponseAmount",response.getAmount());
             faultyAmountMap.put("GatewayOrderId",request.getGatewayOrderId());
