@@ -236,9 +236,10 @@ public class CatalogAction extends BasePaginatedAction {
             productPage = new Page(filteredProducts, getPerPage(), getPageNo(), (int) totalResultSize);
             if (productPage != null) {
                 productList = productPage.getList();
-                for (Product product : productList) {
+                productIDList = searchResult.getSolrProductIds();
+                /*for (Product product : productList) {
                     product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.getProductReferrerId(rootCategorySlug)));
-                }
+                }*/
             }
             category = categoryDao.getCategoryByName(smallestCategory);
         } catch (Exception e) {
@@ -282,9 +283,9 @@ public class CatalogAction extends BasePaginatedAction {
                         getPageNo(), getPerPage());
                 if (productPage != null) {
                     productList = productPage.getList();
-                    for (Product product : productList) {
+                    /*for (Product product : productList) {
                         product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.getProductReferrerId(rootCategorySlug)));
-                    }
+                    }*/
                 }
                 productList = trimListByCategory(productList, secondaryCategory);
             } else {
@@ -295,9 +296,9 @@ public class CatalogAction extends BasePaginatedAction {
                 }
                 if (productPage != null) {
                     productList = productPage.getList();
-                    for (Product product : productList) {
+                    /*for (Product product : productList) {
                         product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.getProductReferrerId(rootCategorySlug)));
-                    }
+                    }*/
                 }
                 trimListByCategory(productList, secondaryCategory);
                 if (rootCategorySlug.equals("services")) {
