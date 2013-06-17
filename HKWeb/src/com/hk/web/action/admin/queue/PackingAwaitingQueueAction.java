@@ -130,7 +130,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
                        adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
                    }
                }
-               if (shippingOrdersWithoutReason.size() > 1) {
+               if (shippingOrdersWithoutReason.size() > 0) {
                    addRedirectAlertMessage(new SimpleMessage("Reasons must be slected for shipping order -> " + shippingOrderIds));
                     return new RedirectResolution(PackingAwaitingQueueAction.class);
                }
