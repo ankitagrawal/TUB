@@ -35,7 +35,7 @@
             $('html, body').animate({scrollTop: $element.offset().top}, 1500);
           };
 
-          $("#aboutStellar").click(function(){
+          $("#aboutLoyalty").click(function(){
             moveTo("about");
           });
 
@@ -70,8 +70,8 @@
           <div class="priceFilterContainerOne">
             <div id="top" class="sorting makeCursor">TOP</div>
               <div class="brandsContainer1">
-                <div id="aboutStellar" class="priceRange">
-                  <span >About stellar</span>
+                <div id="aboutLoyalty" class="priceRange">
+                  <span >About loyalty</span>
                 </div>
                 <div id="hwItWorks" class="priceRange">
                   <span >Program Structure</span>
@@ -90,7 +90,7 @@
           <div id="productCategory" class="grid_12 embedMarginBottom40">
             <div class="dottedLine"></div>
             <div class="productCategoryText">
-              <img alt="1" class="stellarLogo" src="${pageContext.request.contextPath}/pages/loyalty/resources/images/stellarLogo.png"/>
+              <img alt="1" class="loyaltyLogo" src="${pageContext.request.contextPath}/pages/loyalty/resources/images/loyaltyLogo.png"/>
             </div>
             <div class="dottedLine"></div>
           </div>
@@ -112,7 +112,7 @@
             <h1 id="howItWorks" class="embedMarginTop50">PROGRAM STRUCTURE</h1>
 				
 			<p class="embedMarginTop40">•	For existing HealthKart customers</p>
-			<p>After signing up for healthkartstellar, depending upon your order history of last 12 months, you will be assigned a particular benefit tier,
+			<p>After signing up for healthkartloyalty, depending upon your order history of last 12 months, you will be assigned a particular benefit tier,
 			 that is, either Bronze or Silver or Gold or Platinum (or none of the above). To show our profuse love you will begin with 15 points as bonus!</p>
 			 
             <p class="embedMargin5">•	New HealthKart customers</p>
@@ -199,7 +199,7 @@
            <div class="qAndA">
               <p>Q: Where can I find my current level status?</p>
               A: Your current level status is displayed on the top of the HealthKart home page. 
-              As well as, on healthkartstellar home page under “My Accounts”. 
+              As well as, on healthkartloyalty home page under “My Accounts”. 
               This page also carries information about total points accumulated, date of expiry and order history.
             </div>
 	
@@ -260,9 +260,15 @@
                be evaluated. You will then either upgrade, stay at the same level or regress to the respective levels, depending on your expenditure trend. 
             </div>
               
+           <div class="qAndA">
+           	<p>Q:  Can I cancel my order made from Loyalty Store?</p>
+           	A:  No. Once placed, order can not be cancelled.
+
+           	</div>
+
             <div class="qAndA removeBorderBottom">
               <p>Q: I have more questions. Who can help? </p>
-              A: Call the HealthKart Customer Support for general questions about the healthkartstellar program, as well as for questions regarding your membership.
+              A: Call the HealthKart Customer Support for general questions about the healthkartloyalty program, as well as for questions regarding your membership.
 				Contact us at
 				0124-4616444 or mail us your query at info@healthkart.com.
 				You can also find us on Facebook and Twitter. We love connecting with you and are here to answer any questions or just enjoy hearing about how your day is going. 
