@@ -402,7 +402,7 @@
 		</c:if>
 		<c:if test="${!empty product.relatedProducts}">
 			<a class='top_link' id="related_product_link" href='#related_products'>
-				Related Products &darr;
+				Recommended Products &darr;
 			</a>
 		</c:if>
 <%--
