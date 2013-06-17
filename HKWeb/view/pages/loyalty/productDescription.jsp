@@ -78,6 +78,10 @@
             }            
           });
         });
+        
+        $('.productImage-small').click(function () {
+        	$('.productImage-large').attr('src', '');
+        });
       });
     </script>
     <div id="successToolTip" class="row" style="display: none;">
@@ -110,12 +114,12 @@
 					    	    , ${prodVariant.variantName}
 		        		     </c:if>
     					
-    					<c:forEach items="${prodVariant.productOptions}" var="prodOption">
+<%--     					<c:forEach items="${prodVariant.productOptions}" var="prodOption">
     						<c:if test = "${not empty prodOption.value}">
 		        		      , ${prodOption.value}
 		        		     </c:if>
 		    	        </c:forEach>
-		    	     </div>
+ --%>		    	     </div>
     			</c:when>
     			<c:otherwise>
     				<div class="titleLineText">
@@ -145,16 +149,14 @@
     				</c:otherwise>
     			</c:choose>
 				<div class="productImageLarge">
-    				<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}" title="${product.name}" class="productImage-Large" >
+    				<img src="${hk:getS3ImageUrl(imageLargeSize, imageId)}" alt="${product.name}" title="${product.name}" class="productImage-Large" >
 
     			</div>
     			<div class="smallImages">
             		<c:forEach items="${prodVariant.productImages}" var="productImage">
-					 <a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',
-								largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}"> 
-              		<img src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id)}' class="productImage-small">
-              		 </a>
-            		
+              			<a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}">
+              				<img src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id)}' class="productImage-small">
+            			</a>
 					</c:forEach>
             		
             		
@@ -173,12 +175,12 @@
     			</c:if> --%>
     				${product.overview}
     			</div>
-    			<div class="productAttrs grid_8">
+    			<div class="productAttrs grid_8 ">
     				<div class="grid_4">
 		    			<c:if test = "${not empty prodVariant.productOptions }" >
     						<c:forEach items="${prodVariant.productOptions}" var="prodOption">
-		    	    		  <label><strong>${prodOption.name}</strong></label>
-							  <label>${prodOption.value}</label>
+		    	    		  <label class="font-small"><strong>${prodOption.name}</strong></label>
+							  <label class="font-caps">${prodOption.value}</label>
 							  <br>
 			    	        </c:forEach>
 						</c:if>

@@ -21,7 +21,6 @@
 		  
           <div class="topText">
             <s:form beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction"  event="convertPoints" id="conversionForm">
-            <s:hidden name="convertPoints" value="convertPoints"></s:hidden>
             <span class="blue makeCursor" id="rewardLink">Click here</span> to convert your points to Reward points!</s:form>
             
           </div>

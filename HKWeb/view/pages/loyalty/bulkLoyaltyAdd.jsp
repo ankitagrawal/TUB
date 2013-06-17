@@ -20,23 +20,33 @@
   	<div style="color: green;">
   	${bulkAction.successMessage}
   	</div>
-  	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">
-      <h2>File to Upload for Loyalty Products
-        <s:file name="csvFileBean" size="30"/></h2>
-      <div class="buttons">
-        <s:submit name="uploadPorducts" value="Upload"/>
-      </div>
-    </s:form>
-    <p>Columns in CSV - PRODUCT_VARIANT_ID, LOYALTY_POINTS </p>
-<br>
-    <s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">
-      <h2>File to Upload for User card numbers
-        <s:file name="badgeCsvFileBean" size="30"/></h2>
-      <div class="buttons">
-        <s:submit name="uploadBadges" value="Upload"/>
-      </div>
-    </s:form>
-	<p>Columns in CSV - USER_ID, USER_CARD_NUMBER </p>
+  	<div style="float: left; clear:both; width:30%;">
+	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" id="searchForm">
+  		<h2>Search Loyalty Products </h2>
+  		<br>Enter variantID  <s:text name="variantID" placeholder="Variant ID"></s:text>
+  		<s:submit name="searchLoyaltyProduct"  value="Search Loyalty Product"/>
+  	</s:form>
+  	</div>
+  	<div style="float: right; clear:both; width:70%;">
+  	
+  		<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">
+      	<h2>File to Upload for Loyalty Products
+        	<s:file name="csvFileBean" size="30"/></h2>
+     		 <div class="buttons">
+        		<s:submit name="uploadPorducts" value="Upload"/>
+      		</div>
+    	</s:form>
+    	<p>Columns in CSV - PRODUCT_VARIANT_ID, LOYALTY_POINTS </p>
+		<br>
+    	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">
+      	<h2>File to Upload for User card numbers
+        	<s:file name="badgeCsvFileBean" size="30"/></h2>
+      		<div class="buttons">
+        		<s:submit name="uploadBadges" value="Upload"/>
+      		</div>
+    	</s:form>
+		<p>Columns in CSV - USER_ID, USER_CARD_NUMBER </p>
+		</div>
 	</div>
   </s:layout-component>
 </s:layout-render>
