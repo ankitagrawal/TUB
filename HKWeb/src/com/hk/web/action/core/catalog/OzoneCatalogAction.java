@@ -33,6 +33,8 @@ public class OzoneCatalogAction extends BaseAction {
 
     private List<Product> products = new ArrayList<Product>();
 
+
+
     @PostConstruct
     void init(){
 
@@ -41,6 +43,7 @@ public class OzoneCatalogAction extends BaseAction {
     public Resolution pre() {
         Category category = categoryService.getCategoryByName(CategoryConstants.DIABETES);
         List<Product> diabetesProducts = new ArrayList<Product>();
+        List<Product> finalProductList = new ArrayList<Product>();
         if (category != null){
             diabetesProducts = category.getProducts();
         }
@@ -50,7 +53,19 @@ public class OzoneCatalogAction extends BaseAction {
             healthDevicesProduct = category.getProducts();
         }
 
-        diabetesProducts.addAll(healthDevicesProduct);
+        //Only products with MRP > 5 will get added.
+        for (Product product : diabetesProducts){
+            if (product.getMinimumHKPriceProductVariant().getHkPrice() > 5.0){
+                diabetesProducts.add(product);
+            }
+        }
+        for (Product product : healthDevicesProduct){
+            if (product.getMinimumHKPriceProductVariant().getHkPrice() > 5.0){
+                diabetesProducts.add(product);
+            }
+        }
+
+        //diabetesProducts.addAll(healthDevicesProduct);
         products = diabetesProducts;
         return new ForwardResolution("/pages/ozoneCatalog.jsp");
     }

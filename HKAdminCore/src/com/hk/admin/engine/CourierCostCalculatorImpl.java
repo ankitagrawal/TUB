@@ -54,9 +54,6 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
     @Autowired
     ShippingOrderDao shippingOrderDao;
 
-    List<Courier> applicableCourierList;
-
-    Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
 
     public Courier getCheapestCourier(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
         Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
@@ -76,7 +73,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
     @SuppressWarnings("unchecked")
     public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-        applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
+	    List<Courier> applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
         Double totalCost = 0D;
 
         if(pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()){
@@ -85,7 +82,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         }
 
         List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
-
+	      Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
         for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
             Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
             for (Courier courier : couriers) {
