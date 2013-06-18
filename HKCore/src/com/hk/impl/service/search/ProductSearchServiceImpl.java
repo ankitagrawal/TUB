@@ -11,7 +11,6 @@ import com.hk.domain.analytics.TrafficTracking;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.analytics.SearchLogDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
@@ -71,9 +70,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList) {
                 if (!pr.getDeleted() && !pr.isHidden() && !pr.isGoogleAdDisallowed()) {
+                  try {
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
                     productIndexService.updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
+                  } catch (Exception e) {
+                    logger.error("exception while adding solr product:" + pr.getId() , e.getMessage());
+                  }
                 }
             }
 	          solr.deleteByQuery("*:*");
@@ -269,6 +272,20 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return searchResult;
     }
 
+    public SolrProduct getProduct(String productId) {
+
+      SolrQuery query = new SolrQuery("*:*");
+      query.addFilterQuery(SolrSchemaConstants.productID + ":" + productId);
+      List<SolrProduct> solrProductList = null;
+      try {
+        QueryResponse response = solr.query(query);
+        solrProductList = response.getBeans(SolrProduct.class);
+      } catch (SolrServerException ex) {
+        logger.error("Exception while getting solr product", ex.getMessage());
+      }
+      return solrProductList != null && !solrProductList.isEmpty() ? solrProductList.get(0) : null;
+    }
+
    public boolean isCategoryTerm(String term) throws SearchException {
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + term+"\"");
@@ -309,7 +326,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
                 sortedProducts.set(index, product);
             }
         }
-        return new SearchResult(sortedProducts, totalResultCount);
+        return new SearchResult(sortedProducts, productIds, totalResultCount);
     }
 
   private SpellCheckResponse getSpellCheckResponse(String userQuery) throws SolrServerException {

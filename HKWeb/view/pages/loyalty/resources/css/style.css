@@ -498,7 +498,7 @@ border-top: 5px solid #5c9dff;
 
 /*Search menu css ends*/
 
-.stellarLogo{
+.loyaltyLogo{
 	width: 210px;
 	height: 65px;
 }
@@ -532,7 +532,7 @@ border-top: 5px solid #5c9dff;
 	position: relative;
 }
 
-.stellarPoints{
+.loyaltyPoints{
 	position: relative;
 	float: left;
 	width: 100%;
@@ -841,7 +841,7 @@ border-top: 5px solid #5c9dff;
 	cursor: pointer;
 }
 
-.earnStellar{
+.earnloyalty{
 	position: relative;
 	float: left;
 	border-right: 2px solid #ddd;
@@ -850,7 +850,7 @@ border-top: 5px solid #5c9dff;
 	text-align: center;
 }
 
-.exploreStellar{
+.exploreloyalty{
 	position: relative;
 	float: left;
 	border-left: 2px solid #ddd;
