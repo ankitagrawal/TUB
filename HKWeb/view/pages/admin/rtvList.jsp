@@ -9,7 +9,7 @@
 <%@ page import="com.hk.constants.rtv.EnumRtvNoteStatus" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="RTV Note List">
     <s:useActionBean beanclass="com.hk.web.action.admin.rtv.RTVAction" var="rtv"/>
     <s:layout-component name="htmlHead">
         <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>

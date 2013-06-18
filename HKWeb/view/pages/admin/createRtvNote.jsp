@@ -137,6 +137,8 @@
                   <th>PickUp Status</th>
                   <th>Pickup Date</th>
                   <th>Destination Address</th>
+                  <th>Shipping Charge On Vendor</th>
+                  <th>Shipping Charge On HK</th>
               </tr>
             </thead>
             <tbody>
@@ -171,6 +173,12 @@
                   <td><s:text class="date_input" id="pickupDate" formatPattern="yyyy-MM-dd" name="courierPickupDetail.pickupDate" value="${rtvNote.courierPickupDetail.pickupDate}"/></td>
                   <td>
                       <s:text name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" id="destinationAddress" />
+                  </td>
+                  <td>
+                      <s:text name="shippingChargeVendor" value="${rtvNote.shippingChargeVendor}" id="shippingCharge" />
+                  </td>
+                  <td>
+                      <s:text name="shippingChargeHk" value="${rtvNote.shippingChargeHk}" id="shippingCharge" />
                   </td>
               </tr>
             </tbody>

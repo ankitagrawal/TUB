@@ -13286,4 +13286,19 @@
     <changeSet author="Nihal (generated)" id="1371202029098-9">
         <modifyDataType columnName="product_name" newDataType="VARCHAR(100)" tableName="extra_inventory_line_item"/>
     </changeSet>
-</databaseChangeLog>
+    <changeSet author="Nihal (generated)" id="1371571434761-2">
+        <addColumn tableName="rtv_note">
+            <column defaultValue="0" name="email_sent_to_vendor" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371571434761-3">
+        <addColumn tableName="rtv_note">
+            <column name="shipping_charge_hk" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371571434761-4">
+        <addColumn tableName="rtv_note">
+            <column name="shipping_charge_vendor" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    </databaseChangeLog>
