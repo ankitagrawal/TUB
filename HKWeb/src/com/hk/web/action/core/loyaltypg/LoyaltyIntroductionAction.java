@@ -31,7 +31,7 @@ public class LoyaltyIntroductionAction  extends AbstractLoyaltyAction {
 		if (user!=null && user.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
 			return new ForwardResolution(LoyaltyCatalogAction.class);
 		}
-		return new ForwardResolution("/pages/loyalty/info/stellarIntroduction.jsp");
+		return new ForwardResolution("/pages/loyalty/info/loyaltyIntroduction.jsp");
 	}
 	
 	public Resolution aboutLoyaltyProgram() {

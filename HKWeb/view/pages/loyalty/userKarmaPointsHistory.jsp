@@ -84,7 +84,7 @@
        <c:otherwise>
                 <br/>
                 <br/>
-                You haven't ordered anything from healthkart yet as a stellar member.   <s:link beanclass="com.hk.web.action.HomeAction" event="pre" class="buttons blue" >
+                You haven't ordered anything from healthkart yet as a loyalty member.   <s:link beanclass="com.hk.web.action.HomeAction" event="pre" class="buttons blue" >
                 Continue Shopping
             </s:link>
             </c:otherwise>
