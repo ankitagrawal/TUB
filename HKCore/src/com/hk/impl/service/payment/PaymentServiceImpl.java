@@ -112,7 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
 
                         hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
                         // handle the case of citrus here
-                        if(!isCitrusResponseSuccessful(hkPaymentResponseList)){
+                        if(EnumGateway.CITRUS.getId().equals(basePayment.getGateway().getId()) && !isCitrusResponseSuccessful(hkPaymentResponseList)){
                            hkPaymentService = getHkPaymentService(EnumGateway.ICICI.asGateway());
                            if(hkPaymentService != null){
                                hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
@@ -188,7 +188,7 @@ public class PaymentServiceImpl implements PaymentService {
                 try {
                     HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
                     // handle the case of citrus
-                    if (!isCitrusResponseSuccessful(hkRefundPaymentResponse)) {
+                    if (EnumGateway.CITRUS.getId().equals(basePayment.getGateway().getId()) && !isCitrusResponseSuccessful(hkRefundPaymentResponse)) {
                         hkPaymentService = getHkPaymentService(EnumGateway.ICICI.asGateway());
                         if (hkPaymentService != null) {
                             hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
