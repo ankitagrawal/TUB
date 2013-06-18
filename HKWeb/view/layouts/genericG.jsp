@@ -19,6 +19,9 @@
     </title>
     <s:layout-component name="htmlHead"/>
     <jsp:include page="/includes/_static_css.jsp"/>
+    <jsp:include page="/includes/_static_js.jsp"/>
+    <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+
     <s:layout-component name="analytics">
       <jsp:include page="/includes/_analytics.jsp"/>
     </s:layout-component>
@@ -50,9 +53,6 @@
     <s:layout-render name="/includes/_footer.jsp"/>
 
   </div>
-
-  <jsp:include page="/includes/_static_js.jsp"/>
-  <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
 
   </body>
   </html>

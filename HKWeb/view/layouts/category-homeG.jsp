@@ -23,6 +23,10 @@
     <meta name="Description" content="<s:layout-component name="metaDescription"/>"/>
     <s:layout-component name="htmlHead"/>
     <jsp:include page="/includes/_static_css.jsp"/>
+    <jsp:include page="/includes/_static_js.jsp"/>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.bxSlider.min.js"></script>
+    <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+    
     <s:layout-component name="analytics">
       <jsp:include page="/includes/_analytics.jsp"/>
     </s:layout-component>
@@ -47,9 +51,6 @@
       <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" categories="${topCategory}" topCategories="${topCategory}"/>
     </s:layout-component>
 
-    <jsp:include page="/includes/_static_js.jsp"/>
-    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.bxSlider.min.js"></script>
-
     <div class="main_container">
       <s:layout-component name="mainBanner"/>
       <script type="text/javascript">
@@ -73,9 +74,7 @@
     <s:layout-render name="/includes/_footer.jsp"/>
 
     <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${topCategory}"/>
-    
-    <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
-    
+
     <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}"/>
     
   </div>

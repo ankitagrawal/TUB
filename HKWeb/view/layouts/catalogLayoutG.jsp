@@ -18,8 +18,11 @@
             </c:choose>
             | HealthKart.com
         </title>
-        <s:layout-component name="htmlHead"/>
-         <jsp:include page="/includes/_static_css.jsp"/>
+      <s:layout-component name="htmlHead"/>
+      <jsp:include page="/includes/_static_css.jsp"/>
+      <jsp:include page="/includes/_static_js.jsp"/>
+      <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+
       <s:layout-component name="analytics">
         <jsp:include page="/includes/_analytics.jsp"/>
       </s:layout-component>
@@ -56,9 +59,6 @@
     </div>
 
     <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${allCategories}" brandLabel="${brand}"/>
-
-    <jsp:include page="/includes/_static_js.jsp"/>
-    <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
     
     <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>
