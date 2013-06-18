@@ -72,8 +72,9 @@
 
     <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${topCategory}"/>
 
-    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.bxSlider.min.js"></script>
     <jsp:include page="/includes/_static_js.jsp"/>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.bxSlider.min.js"></script>
+    
     <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
     
     <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}"/>
