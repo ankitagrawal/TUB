@@ -23,6 +23,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
@@ -31,6 +32,7 @@ import com.hk.pact.service.inventory.InventoryHealthService;
 public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 	@Autowired ProductVariantService productVariantService;
+	@Autowired ProductService productService;
 	@Autowired WarehouseService warehouseService;
 	@Autowired BaseDao baseDao;
 
@@ -81,9 +83,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		if(selectedInfo != null && selectedInfo.getQty() > 0 && netInventory > 0) {
-			markProductInStock(variant, selectedInfo.getQty(), netInventory, selectedInfo.getMrp());
+			updateVariant(variant, selectedInfo.getQty(), netInventory, selectedInfo.getMrp(), false);
 		} else {
-			markProductOutOfStock(variant);
+			updateVariant(variant, 0l, netInventory, null, true);
 		}
 	}
 	
@@ -99,20 +101,24 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		return productVariant.getMrpQty();
 	}
 
-	private void markProductInStock(ProductVariant variant, long mrpQty, long netQty, double mrp) {
-		variant.setMarkedPrice(mrp);
+	private void updateVariant(ProductVariant variant, Long mrpQty, Long netQty, Double mrp, boolean outOfStock) {
+		if(mrp != null) {
+			variant.setMarkedPrice(mrp);
+		}
 		variant.setNetQty(netQty);
 		variant.setMrpQty(mrpQty);
 		
-		variant.setOutOfStock(false);
-		
+		variant.setOutOfStock(outOfStock);
 		productVariantService.save(variant);
 		
-	}
-
-	private void markProductOutOfStock(ProductVariant variant) {
-		variant.setOutOfStock(true);
-		productVariantService.save(variant);
+		if(outOfStock) {
+			Product product = variant.getProduct();
+			List<ProductVariant> inStockVariants = product.getInStockVariants();
+			if (inStockVariants != null && inStockVariants.isEmpty()) {
+				product.setOutOfStock(true);
+				productService.save(product);
+			}
+		}
 	}
 
 	private static final String bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty" +
@@ -291,6 +297,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Override
 	public List<InventoryInfo> getAvailableInventory(ProductVariant productVariant, Double preferredMrp) {
 		return getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses()).get(preferredMrp);
-	} 
+	}
 
 }
