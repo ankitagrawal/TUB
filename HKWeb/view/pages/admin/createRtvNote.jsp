@@ -175,10 +175,10 @@
                       <s:text name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" id="destinationAddress" />
                   </td>
                   <td>
-                      <s:text name="shippingChargeVendor" value="${rtvNote.shippingChargeVendor}" id="shippingCharge" />
+                      <s:text name="shippingChargeVendor" value="${rtvNote.rtvNote.shippingChargeVendor}" id="shippingCharge" />
                   </td>
                   <td>
-                      <s:text name="shippingChargeHk" value="${rtvNote.shippingChargeHk}" id="shippingCharge" />
+                      <s:text name="shippingChargeHk" value="${rtvNote.rtvNote.shippingChargeHk}" id="shippingCharge" />
                   </td>
               </tr>
             </tbody>
