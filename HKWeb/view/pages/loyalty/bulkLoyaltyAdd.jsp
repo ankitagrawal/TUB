@@ -114,7 +114,7 @@
 					<td>${lp.variant.product.id}</td>
 					<td>${lp.variant.product.name}</td>
 					<td><input type="text" name="points" class="points" value="${lp.points}" /></td>
-					<td style="font-size: 12px;"><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" event="saveLoyaltyProduct" class="save">Save</s:link> / 
+					<td style="font-size: 16px;"><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" event="saveLoyaltyProduct" class="save">Save</s:link> / 
 					<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" event="removeLoyaltyProduct" class="remove">Remove</s:link></td>
 					</tr></tbody>
 				</c:forEach>

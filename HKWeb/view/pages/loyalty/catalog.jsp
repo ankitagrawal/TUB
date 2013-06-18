@@ -59,14 +59,13 @@
 			</div>
 			
 		<div class="priceFilterContainerOne">
-			<div class="sorting">SORT BY CATEGORY</div>
-              <div class="brandsContainer " style ="height: 245px;">
-               <div class="priceRange">
-			   <span  id= "categoryNameSpan" >
+			<div class="sorting">SORT BY CATEGORY
+			<div class="priceRange">
+			   <strong><span  id= "categoryNameSpan" style="float: right;">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
-                  clear all </s:link></span>
-			     </div>
-			 
+                  clear all </s:link></span></strong>
+			 </div></div>
+              <div class="brandsContainer " style ="height: 245px;">
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
 			   <span  id= "categoryNameSpan" class="font-small">

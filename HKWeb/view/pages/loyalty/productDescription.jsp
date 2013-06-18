@@ -80,9 +80,8 @@
         });
         
         $('.productImage-small').click(function () {
-        	var largeImgUrl =  $(this).parent().find('largeImageRef').text();
-        	var image_id = 
-        	$('.productImage-large').attr('src', largeImgUrl);
+        	var largeImgUrl =  $(this).parent().find('.largeImageRef').val();
+        	$('.productImage-Large').attr('src', largeImgUrl);
         });
       });
     </script>
@@ -151,8 +150,8 @@
     			</div>
     			<div class="smallImages">
             		<c:forEach items="${prodVariant.productImages}" var="productImage">
-            			<div>
-            				<input type="hidden" value="${hk:getS3ImageUrl(imageLargeSize, productImage.id)}" name="largeImageRef" />
+            			<div class="smallImg-div">
+            				<input type="hidden" value="${hk:getS3ImageUrl(imageLargeSize, productImage.id)}" name="largeImageRef" class="largeImageRef" />
               				<img src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id)}' class="productImage-small">
             			</div>
 					</c:forEach>
