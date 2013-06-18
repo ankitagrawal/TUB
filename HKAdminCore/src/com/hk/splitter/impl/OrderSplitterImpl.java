@@ -1,11 +1,25 @@
 package com.hk.splitter.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.core.fliter.OrderSplitterFilter;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -17,9 +31,11 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.core.WarehouseService;
-import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryHealthService.InventoryInfo;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -33,12 +49,6 @@ import com.hk.splitter.LineItemClassification.UniqueWhCombination;
 import com.hk.splitter.LineItemContainer;
 import com.hk.splitter.LineItemContainer.Classification;
 import com.hk.splitter.WarehouseBucket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 public class OrderSplitterImpl implements OrderSplitter {
@@ -48,13 +58,14 @@ public class OrderSplitterImpl implements OrderSplitter {
 	@Autowired private OrderLoggingService orderLoggingService;
 	@Autowired private SkuDao skuDao;
 	@Autowired private WarehouseService warehouseService;
-	@Autowired private InventoryService inventoryService;
 	@Autowired private OrderSplitterHelper orderSplitterHelper;
 	@Autowired private ShippingOrderService shippingOrderService;
 	@Autowired private SkuService skuService;
+	@Autowired private BaseDao baseDao;
+	
+	@Autowired private InventoryHealthService inventoryHealthService;
 
 	@Override
-	//@Transactional
 	public Set<ShippingOrder> split(long orderId) {
 		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
@@ -66,7 +77,6 @@ public class OrderSplitterImpl implements OrderSplitter {
 
 		validate(order);
 
-		Warehouse defaultWareHouse = warehouseService.getDefaultWarehouse();
 		Collection<Warehouse> whs = warehouseService.getAllActiveWarehouses();
 		List<Warehouse> filteredWarehoues = new ArrayList<Warehouse>();
 		for (Warehouse warehouse : whs) {
@@ -85,19 +95,13 @@ public class OrderSplitterImpl implements OrderSplitter {
 		LineItemContainer container = new LineItemContainer();
 		for (CartLineItem cartLineItem : order.getCartLineItems()) {
 			if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
-				boolean isAdded = false;
-				List<Sku> skuList = skuDao.getSkus(cartLineItem.getProductVariant(), filteredWarehoues);
-				if (skuList != null && !skuList.isEmpty()) {
-					for (Sku sku : skuList) {
-						if(inventoryService.getAvailableUnbookedInventory(sku) >= 0) {
-							container.addLineItem(sku.getWarehouse(), cartLineItem);
-							isAdded = true;
-						}
+				List<Sku> skuList = getPreferredSkus(cartLineItem.getProductVariant(), cartLineItem.getMarkedPrice(), cartLineItem.getQty());
+				for (Sku sku : skuList) {
+					if(filteredWarehoues.contains(sku.getWarehouse())) {
+						container.addLineItem(sku.getWarehouse(), cartLineItem);
 					}
 				}
-				if(!isAdded) {
-					container.addLineItem(defaultWareHouse, cartLineItem);
-				}
+				
 			}
 		}
 
@@ -226,6 +230,22 @@ public class OrderSplitterImpl implements OrderSplitter {
 			}
 		}
 		return orderSplitterHelper.calculateShippingPlusTax(dummyOrders);
+	}
+	
+	private List<Sku> getPreferredSkus(ProductVariant variant, Double preferredMrp, Long qty) {
+		List<Sku> skus = new ArrayList<Sku>();
+		
+		List<InventoryInfo> availableInvList = inventoryHealthService.getAvailableInventory(variant, preferredMrp);
+		if(availableInvList != null) {
+			for (InventoryInfo inventoryInfo : availableInvList) {
+				long inventory = inventoryInfo.getQty() + qty;
+				if(inventory >= 0) {
+					Sku sku = baseDao.get(Sku.class, inventoryInfo.getSkuId());
+					skus.add(sku);
+				}
+			}
+		}
+		return skus;
 	}
 	
 	public OrderService getOrderService() {

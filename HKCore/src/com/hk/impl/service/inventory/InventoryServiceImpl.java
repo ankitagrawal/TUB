@@ -24,6 +24,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.combo.ComboService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
@@ -69,27 +70,12 @@ public class InventoryServiceImpl implements InventoryService {
     SkuGroupService skuGroupService;
     @Autowired
     UserService userService;
-
+    
+    @Autowired InventoryHealthService inventoryHealthService;
 
     @Override
     public void checkInventoryHealth(ProductVariant productVariant) {
-        List<Sku> skuList = getSkuService().getSKUsForMarkingProductOOS(productVariant);
-        if (skuList != null && !skuList.isEmpty()) {
-            checkInventoryHealth(skuList, productVariant);
-        } else {
-            // No SKU - Mark PV/P OOS
-            if (!productVariant.isOutOfStock()) {
-                productVariant.setOutOfStock(true);
-                getProductVariantService().save(productVariant);
-            }
-
-            Product product = productVariant.getProduct();
-            if (!product.isOutOfStock()) {
-                product.setOutOfStock(true);
-                productService.save(product);
-            }
-
-        }
+    	inventoryHealthService.checkInventoryHealth(productVariant);
     }
 
     @Override
@@ -246,19 +232,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Long getAvailableUnbookedInventory(List<Sku> skuList) {
-        Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
-        logger.debug("net inventory " + netInventory);
-
-        Long bookedInventory = 0L;
-        if (!skuList.isEmpty()) {
-            ProductVariant productVariant = skuList.get(0).getProductVariant();
-            bookedInventory = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
-            logger.debug("booked inventory " + bookedInventory);
-        }
-
-        long availableUnbookedInventory = netInventory - bookedInventory;
-        logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
-        return availableUnbookedInventory;
+    	return inventoryHealthService.getAvailableUnbookedInventory(skuList.get(0).getProductVariant());
     }
 
     @Override
