@@ -51,7 +51,7 @@
 
   </div>
 
-  <s:layout-render name="/includes/_static_js.jsp"/>
+  <jsp:include page="/includes/_static_js.jsp"/>
   <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
 
   </body>
