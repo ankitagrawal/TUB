@@ -372,11 +372,8 @@
 ---/health-devices/medical-care/walking-aids/walking-sticks
 ---/health-devices/medical-care/walking-aids/crutches
 ---/health-devices/medical-care/walking-aids/walkers
---/health-devices/medical-care/winter-care
----/health-devices/medical-care/winter-care/blankets
----/health-devices/medical-care/winter-care/vaporiser : Steamer
----/health-devices/medical-care/winter-care/hot-water-bottles
 --/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
+---/health-devices/medical-care/heat-treatment/blankets
 ---/health-devices/medical-care/heat-treatment/hot-water-bottles
 ---/health-devices/medical-care/heat-treatment/heating-pads
 ---/health-devices/medical-care/heat-treatment/hot-cold-pack
