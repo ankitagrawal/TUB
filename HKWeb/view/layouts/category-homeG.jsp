@@ -26,7 +26,6 @@
     <s:layout-component name="analytics">
       <jsp:include page="/includes/_analytics.jsp"/>
     </s:layout-component>
-    <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
 
   </head>
   <body id="${bodyId}">
