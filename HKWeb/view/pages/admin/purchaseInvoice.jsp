@@ -1241,7 +1241,7 @@ width: 80px;
 <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="close" Value="Close" class="button_green addToCartButton" > Close </s:link>
 </div>
 <div id="closeButtonDiv">
-<c:if test="${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled }">
+<c:if test="${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled &&(pia.piHasRtv||pia.piHasShortEiLi)}">
 <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
 <s:param name="purchaseInvoice" value="${pia.purchaseInvoice}" />
  Create Debit Note </s:link>
