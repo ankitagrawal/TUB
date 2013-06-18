@@ -20,6 +20,7 @@
     <s:layout-component name="htmlHead"/>
     <jsp:include page="/includes/_static_css.jsp"/>
     <jsp:include page="/includes/_static_js.jsp"/>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
     <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
 
     <s:layout-component name="analytics">
