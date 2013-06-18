@@ -145,8 +145,9 @@ public class DebitNoteAction extends BasePaginatedAction {
 			EnumDebitNoteType debitNoteType = EnumDebitNoteType.getById(id);
 			debitNote.setDebitNoteType(debitNoteType.asEnumDebitNoteType());
 		} else {
-			debitNote.setDebitNoteType(EnumDebitNoteType.PreCheckin.asEnumDebitNoteType());
+			debitNote.setDebitNoteType(EnumDebitNoteType.PostCheckin.asEnumDebitNoteType());
 		}
+		debitNote = (DebitNote) debitNoteService.save(debitNote);
 		debitNote = (DebitNote) debitNoteService.save(debitNote, debitNoteLineItems);
 
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));

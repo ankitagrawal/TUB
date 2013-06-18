@@ -330,7 +330,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public Resolution save() {
 		if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceLineItems.size());
+			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoice.getId());
 
 			if (StringUtils.isBlank(purchaseInvoice.getInvoiceNumber()) || purchaseInvoice.getInvoiceDate() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
