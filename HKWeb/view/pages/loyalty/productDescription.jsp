@@ -80,7 +80,9 @@
         });
         
         $('.productImage-small').click(function () {
-        	$('.productImage-large').attr('src', '');
+        	var largeImgUrl =  $(this).parent().find('largeImageRef').text();
+        	var image_id = 
+        	$('.productImage-large').attr('src', largeImgUrl);
         });
       });
     </script>
@@ -114,12 +116,7 @@
 					    	    , ${prodVariant.variantName}
 		        		     </c:if>
     					
-<%--     					<c:forEach items="${prodVariant.productOptions}" var="prodOption">
-    						<c:if test = "${not empty prodOption.value}">
-		        		      , ${prodOption.value}
-		        		     </c:if>
-		    	        </c:forEach>
- --%>		    	     </div>
+		    	     </div>
     			</c:when>
     			<c:otherwise>
     				<div class="titleLineText">
@@ -154,9 +151,10 @@
     			</div>
     			<div class="smallImages">
             		<c:forEach items="${prodVariant.productImages}" var="productImage">
-              			<a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}">
+            			<div>
+            				<input type="hidden" value="${hk:getS3ImageUrl(imageLargeSize, productImage.id)}" name="largeImageRef" />
               				<img src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id)}' class="productImage-small">
-            			</a>
+            			</div>
 					</c:forEach>
             		
             		

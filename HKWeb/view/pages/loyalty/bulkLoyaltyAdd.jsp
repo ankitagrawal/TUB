@@ -1,10 +1,56 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" var="bulkAction"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
+  <script type="text/javascript">
+	$(document).ready(function(e) {
+		
+		$('.save').click(function(e) {
+			e.preventDefault();
+			var variant_id = $(this).parent().parent().find('.variant').text();
+			var productPoints = parseFloat($(this).parent().parent().find('.points').val());
+			var url = $(this).attr("href");
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {points:productPoints, variantId:variant_id},
+				dataType: "json",
+				success: function(resp) {
+					if (resp.code == '<%=HealthkartResponse.STATUS_OK%>') {
+						alert(resp.message);
+					} else {
+						alert(resp.message);
+					}
+				}
+			});
+		});
+		
+		$('.remove').click(function(e) {
+			e.preventDefault();
+			var variant_id = $(this).parent().parent().find('.variant').text();
+			var url = $(this).attr("href");
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {variantId:variant_id},
+				dataType: "json",
+				success: function(resp) {
+					if (resp.code == '<%=HealthkartResponse.STATUS_OK%>') {
+						alert(resp.message);
+					} else {
+						alert(resp.message);
+					}
+				}
+			});
+			$(this).parent().parent().hide();
+		});
+		
+	});
+  </script>
   <div style="background: #FAFAEE;">
   	<c:if test="${! empty bulkAction.errorMessages}">
   	<div style="color: red;">Upload Failed! Following errors were found in the file :
@@ -51,25 +97,26 @@
 	<div>
 		<c:if test="${not empty bulkAction.loyaltyProducts}">
 			<div id="productsTable">
-				<table class="cont">
-					<tr>
+				<table style="width:100%;">
+					<thead><tr>
 					<th>S No.</th>
 					<th>Variant ID</th>
 					<th>Product ID</th>
 					<th style="width:200px;">Product Name</th>
 					<th>Loyalty Points</th>
 					<th> &nbsp;</th>
-					</tr>
+					</tr></thead>
 				<%int count=0; %>
 				<c:forEach items="${bulkAction.loyaltyProducts}" var="lp">
-					<tr>
+					<tbody><tr>
 					<td><%=++count %></td>
-					<td>${lp.variant.id}</td>
+					<td class="variant">${lp.variant.id}</td>
 					<td>${lp.variant.product.id}</td>
 					<td>${lp.variant.product.name}</td>
-					<td>${lp.points}</td>
-					<td>Save | Delete</td>
-					</tr>
+					<td><input type="text" name="points" class="points" value="${lp.points}" /></td>
+					<td style="font-size: 12px;"><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" event="saveLoyaltyProduct" class="save">Save</s:link> / 
+					<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" event="removeLoyaltyProduct" class="remove">Remove</s:link></td>
+					</tr></tbody>
 				</c:forEach>
 				</table>
 			</div>

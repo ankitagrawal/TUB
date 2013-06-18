@@ -716,7 +716,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
     		criteria.add(Restrictions.like("variant.id", keywordsMap.get("variantId")));
     	}
     	if(keywordsMap.containsKey("productId")) {
-    		criteria.add(Restrictions.like("variant.product.id", keywordsMap.get("productId")));
+    		criteria.createAlias("variant", LoyaltyProductAlias.VARIANT.alias, CriteriaSpecification.INNER_JOIN);
+    		criteria.add(Restrictions.like(LoyaltyProductAlias.VARIANT.alias + ".product.id", keywordsMap.get("productId")));
     	}   	
     	
 		@SuppressWarnings("unchecked")
