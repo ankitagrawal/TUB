@@ -2445,7 +2445,7 @@ b {
 }
 
 a.modal_close {
-    background: url(../images/modal_close.png) no-repeat top left;
+    background: url(../../images/modal_close.png) no-repeat top left;
     width: 21px;
     height: 21px;
     display: block;
@@ -2932,7 +2932,7 @@ i{
 #home_header02 h1{color:#adadad; padding:15px 0; text-align:center;}
 .banner01 {width:303px; float:left; margin-right:25px;}
 .strip_banner01 {padding:15px 0; float:right;}
-.happy_customer01 {height:46px; width:960px; background:url(../images/banners/home/happy_customer.png) no-repeat; float:left;}
+.happy_customer01 {height:46px; width:960px; background:url(../../images/banners/home/happy_customer.png) no-repeat; float:left;}
 .customer_feedback { margin-left:190px; height:42px; width:750px; font-size:12px; vertical-align:middle; float:left; margin-top:4px; font-family:Arial, Helvetica, sans-serif;}
 .customer_seemore { width:80px; margin:25px 0 0 20px; float:left; color:#FFFFFF; font-family:Arial, Helvetica, sans-serif; font-size:12px; }
 .customer_seemore a{ color:#FFFFFF; text-decoration:none; border:0;}
@@ -3049,7 +3049,7 @@ a.more:hover {
 }
 
 a.close {
-    background: transparent url(../images/GOSF/closeSliderPager.gif) no-repeat top left;
+    background: transparent url(../../images/GOSF/closeSliderPager.gif) no-repeat top left;
     width: 13px;
     height: 13px;
     position: absolute;
