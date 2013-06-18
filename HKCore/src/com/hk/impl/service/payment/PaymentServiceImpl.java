@@ -111,8 +111,15 @@ public class PaymentServiceImpl implements PaymentService {
                     try {
 
                         hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
-                        List<Payment> hkPaymentRequestList = listPaymentFamily(gatewayOrderId);
+                        // handle the case of citrus here
+                        if(!isCitrusResponseSuccessful(hkPaymentResponseList)){
+                           hkPaymentService = getHkPaymentService(EnumGateway.ICICI.asGateway());
+                           if(hkPaymentService != null){
+                               hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
+                           }
+                        }
 
+                        List<Payment> hkPaymentRequestList = listPaymentFamily(gatewayOrderId);
                         //TODO: remove it later, stuffing gateway Order Id in refund objects
                         if (hkPaymentResponseList != null && hkPaymentRequestList != null) {
                             for (HkPaymentResponse resp : hkPaymentResponseList) {
@@ -180,6 +187,13 @@ public class PaymentServiceImpl implements PaymentService {
                 Payment refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
                 try {
                     HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
+                    // handle the case of citrus
+                    if (!isCitrusResponseSuccessful(hkRefundPaymentResponse)) {
+                        hkPaymentService = getHkPaymentService(EnumGateway.ICICI.asGateway());
+                        if (hkPaymentService != null) {
+                            hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
+                        }
+                    }
 
                     if (hkRefundPaymentResponse != null && hkRefundPaymentResponse.getHKPaymentStatus() != null
                             && EnumHKPaymentStatus.SUCCESS.getId().equals(hkRefundPaymentResponse.getHKPaymentStatus().getId())) {
@@ -474,6 +488,22 @@ public class PaymentServiceImpl implements PaymentService {
         refundPayment = paymentDao.save(refundPayment);
 
         return refundPayment;
+    }
+
+    private boolean isCitrusResponseSuccessful(List<HkPaymentResponse> hkPaymentResponseList) {
+        for (HkPaymentResponse hkPaymentResponse : hkPaymentResponseList) {
+            if (EnumPaymentTransactionType.SALE.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())) {
+                return isCitrusResponseSuccessful(hkPaymentResponse);
+            }
+        }
+        return false;
+    }
+
+    private boolean isCitrusResponseSuccessful(HkPaymentResponse hkPaymentResponse) {
+        if(hkPaymentResponse != null && EnumHKPaymentStatus.SUCCESS.getId().equals(hkPaymentResponse.getHKPaymentStatus().getId())){
+            return true;
+        }
+        return false;
     }
 
     public void setEmailManager(EmailManager emailManager) {

@@ -2,6 +2,7 @@ package com.hk.impl.service.hkpay;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.payment.*;
+import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
@@ -35,6 +36,7 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
     private static Logger logger = LoggerFactory.getLogger(IciciPaymentServiceImpl.class);
 
     private static final String ICICI_LIVE_PROPERTIES = "/icici.live.properties";
+    private static final String ICICI_MOTO_LIVE_PROPERTIES = "/icicimoto.live.properties";
 
     @Autowired
     private PaymentManager paymentManager;
@@ -104,7 +106,7 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
         try {
             if(basePayment != null){
                 String gatewayOrderId = basePayment.getGatewayOrderId();
-                ArrayList responseList = callIciciPaymentGateway(gatewayOrderId);
+                ArrayList responseList = callIciciPaymentGateway(gatewayOrderId, basePayment.getGateway());
                 hkPaymentResponseList = createHkPaymentResponse(responseList, gatewayOrderId);
             }
 
@@ -119,13 +121,17 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
     @Override
     public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
         HkPaymentResponse hkPaymentResponse = null;
+        Gateway gateway = basePayment.getGateway();
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ICICI_LIVE_PROPERTIES;
+        if(gateway != null && EnumGateway.CITRUS.getId().equals(gateway.getId())){
+            propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ICICI_MOTO_LIVE_PROPERTIES;
+        }
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
         String merchantId = (String) properties.get(GatewayResponseKeys.Icici.merchantId);
         com.opus.epg.sfa.java.Merchant oMerchant = new com.opus.epg.sfa.java.Merchant();
         try {
             PostLib oPostLib = new PostLib();
-            oMerchant.setMerchantRelatedTxnDetails(merchantId, merchantId, merchantId, basePayment.getGatewayOrderId(), basePayment.getGatewayReferenceId(),
+            oMerchant.setMerchantRelatedTxnDetails(merchantId, null, null, basePayment.getGatewayOrderId(), basePayment.getGatewayReferenceId(),
                     basePayment.getRrn(), basePayment.getAuthIdCode(),null,null  ,"INR", "enq.Refund", amount.toString(),
                     null, null, null, null, null, null);
 
@@ -182,11 +188,13 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
         return response;
     }
 
-    private ArrayList callIciciPaymentGateway(String gatewayOrderId) throws Exception {
+    private ArrayList callIciciPaymentGateway(String gatewayOrderId, Gateway gateway) throws Exception {
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ICICI_LIVE_PROPERTIES;
+        if(gateway != null && EnumGateway.CITRUS.getId().equals(gateway.getId())){
+            propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ICICI_MOTO_LIVE_PROPERTIES;
+        }
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
         String merchantId = (String) properties.get(GatewayResponseKeys.Icici.merchantId);
-        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
         com.opus.epg.sfa.java.Merchant oMerchant = new com.opus.epg.sfa.java.Merchant();
 
         PostLib oPostLib = new PostLib();
