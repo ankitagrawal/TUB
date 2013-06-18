@@ -85,7 +85,7 @@
 	</table>
 	</c:when>
 	<c:otherwise>
-	      You haven't ordered anything from healthkart yet as a stellar member. 
+	      You haven't ordered anything from healthkart yet as a loyalty member. 
 	</c:otherwise>
 </c:choose>
 	

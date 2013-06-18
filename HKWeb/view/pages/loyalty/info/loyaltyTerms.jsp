@@ -32,7 +32,7 @@
 		<div class="container_16 clearfix">
 			<div class="mainTermHeading embedMargin119">Terms and Conditions</div>
 			<div class="topText termsContent" id="message1">
-				This ‘HealthKartStellar Loyalty Program’ (hereinafter referred to as <strong>“Loyalty Program”</strong>) is brought to you (<strong>“Customers”</strong> or <strong>“you”</strong> or <strong>“your”</strong>)
+				This ‘HealthKart Loyalty Program’ (hereinafter referred to as <strong>“Loyalty Program”</strong>) is brought to you (<strong>“Customers”</strong> or <strong>“you”</strong> or <strong>“your”</strong>)
 				by Aquamarine Healthcare Private Limited, a company registered under the provisions of the Companies Act, 1956 and having its registered
 				office at C3/3, 3rd Floor, Janak Puri, New Delhi-110058 (hereinafter referred to as <strong>“Healthkart”</strong> or <strong>“we”</strong> or <strong>“us”</strong> or <strong>“our”</strong>), to reward its
 				eligible Customers and to allow them to earn and redeem their points for the purchase products (<strong>“Healthkart Products”</strong>) on
