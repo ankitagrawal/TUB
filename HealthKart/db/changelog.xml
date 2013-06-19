@@ -13219,4 +13219,10 @@
 			INSERT INTO seek_invoice_num (warehouse_id, invoice_num, prefix, description) VALUES ('1000', '1', 'R', 'Retail Invoice 2013');
 		</sql>
 	</changeSet>
+    <changeSet author="Rajesh" id="20130617-01">
+    		<sql>
+    			INSERT INTO ad_networks (id,name) values(40,'Ozone'),(50,'Yahoo');
+    		</sql>
+    	</changeSet>
+
 </databaseChangeLog>
