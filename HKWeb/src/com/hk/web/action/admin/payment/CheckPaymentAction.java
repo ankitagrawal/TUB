@@ -249,22 +249,20 @@ public class CheckPaymentAction extends BaseAction {
         if (gatewayOrderId != null) {
             try {
                 List<HkPaymentResponse> hkPaymentResponses = paymentService.seekPayment(gatewayOrderId);
-                HkPaymentResponse saleHkPaymentResponse = null;
-                for (HkPaymentResponse hkPaymentResponse : hkPaymentResponses) {
-                    if (hkPaymentResponse != null && gatewayOrderId.equalsIgnoreCase(hkPaymentResponse.getGatewayOrderId())) {
-                        saleHkPaymentResponse = hkPaymentResponse;
-                        break;
-                    }
-                }
+                if (hkPaymentResponses != null && !hkPaymentResponses.isEmpty()) {
+                    for (HkPaymentResponse hkPaymentResponse : hkPaymentResponses) {
+                        if (hkPaymentResponse != null && gatewayOrderId.equalsIgnoreCase(hkPaymentResponse.getGatewayOrderId())) {
+                            PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+                            PaymentStatus paymentGatewayStatus = EnumHKPaymentStatus.getCorrespondingStatus(hkPaymentResponse.getHKPaymentStatus());
+                            if (paymentGatewayStatus != null) {
+                                boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, paymentGatewayStatus);
+                                if (!isValid) {
+                                    // send email to admin
+                                    paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(paymentGatewayStatus, changedStatus, gatewayOrderId);
+                                }
+                            }
 
-                if (saleHkPaymentResponse != null) {
-                    PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
-                    PaymentStatus paymentGatewayStatus = EnumHKPaymentStatus.getCorrespondingStatus(saleHkPaymentResponse.getHKPaymentStatus());
-                    if (paymentGatewayStatus != null) {
-                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, paymentGatewayStatus);
-                        if (!isValid) {
-                            // send email to admin
-                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(paymentGatewayStatus, changedStatus, gatewayOrderId);
+                            break;
                         }
                     }
                 }
