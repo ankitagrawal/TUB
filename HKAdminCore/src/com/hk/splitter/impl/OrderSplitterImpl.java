@@ -235,12 +235,12 @@ public class OrderSplitterImpl implements OrderSplitter {
 	private List<Sku> getPreferredSkus(ProductVariant variant, Double preferredMrp, Long qty) {
 		List<Sku> skus = new ArrayList<Sku>();
 		
-		List<InventoryInfo> availableInvList = inventoryHealthService.getAvailableInventory(variant, preferredMrp);
-		if(availableInvList != null) {
-			for (InventoryInfo inventoryInfo : availableInvList) {
-				long inventory = inventoryInfo.getQty() + qty;
-				if(inventory >= 0) {
-					Sku sku = baseDao.get(Sku.class, inventoryInfo.getSkuId());
+		InventoryInfo invInfo = inventoryHealthService.getAvailableInventory(variant, preferredMrp);
+		if(invInfo != null) {
+			long inventory = invInfo.getQty() + qty;
+			if(inventory > 0) {
+				for (long skuId : invInfo.getSkuIds()) {
+					Sku sku = baseDao.get(Sku.class, skuId);
 					skus.add(sku);
 				}
 			}

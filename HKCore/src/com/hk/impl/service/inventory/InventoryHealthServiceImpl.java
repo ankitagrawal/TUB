@@ -52,38 +52,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			return;
 		}
 		
-		Map<Double, List<InventoryInfo>> availableInvMap = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
-		long netInventory = 0l;
-		for(List<InventoryInfo> list : availableInvMap.values()) {
-			for (InventoryInfo inventoryInfo : list) {
-				netInventory+=inventoryInfo.getQty();
-			}
-		}
-		
-		List<InventoryInfo> availableInvList = availableInvMap.remove(variant.getMarkedPrice());
-		
-		InventoryInfo selectedInfo = null;
-		if(availableInvList != null && !availableInvList.isEmpty()) {
-			selectedInfo = availableInvList.get(0);
-			for (InventoryInfo info : availableInvList) {
-				if(selectedInfo.getQty() < info.getQty()) {
-					if(selectedInfo.getQty() <= 0) {
-						selectedInfo = info;
-					} 
-				}
-			}
-		}
-		
-		if(selectedInfo == null || selectedInfo.getQty() <= 0) {
-			for(Map.Entry<Double, List<InventoryInfo>>  entry : availableInvMap.entrySet()) {
-				availableInvList = entry.getValue();
-				selectedInfo = availableInvList.get(0);
-				for (InventoryInfo info : availableInvList) {
-					if(selectedInfo.getQty() < info.getQty()) {
-						selectedInfo = info;
-						break;
-					}
-				}
+		Queue<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
+		InventoryInfo selectedInfo = infos.poll();
+		long netInventory = selectedInfo.getQty();
+		for (InventoryInfo inventoryInfo : infos) {
+			netInventory+=inventoryInfo.getQty();
+			if(selectedInfo.getQty() <= 0) {
+				selectedInfo = inventoryInfo;
 			}
 		}
 		
@@ -92,6 +67,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		} else {
 			updateVariant(variant, 0l, netInventory, null, true);
 		}
+		
 	}
 	
 	@Override
@@ -182,7 +158,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			" and b.shipping_order_status_id in (:sosIds)" +
 			" group by a.marked_price, a.sku_id";
 	
-	private Map<Double, List<InventoryInfo>> getInProcessInventory(ProductVariant productVariant, List<Warehouse> whs) {
+	private List<SkuInfo> getInProcessInventory(ProductVariant productVariant, List<Warehouse> whs) {
 		String sql = inProcessInventorySql;
 		SQLQuery query = baseDao.createSqlQuery(sql);
 		query.addScalar("mrp", Hibernate.DOUBLE);
@@ -194,21 +170,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId()));
 		query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
 		
-		query.setResultTransformer(Transformers.aliasToBean(InventoryInfo.class));
-		
-		Map<Double, List<InventoryInfo>> map = new LinkedHashMap<Double, List<InventoryInfo>>();
+		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
 		
 		@SuppressWarnings("unchecked")
-		List<InventoryInfo> list = query.list();
-		for (InventoryInfo info : list) {
-			List<InventoryInfo> infos = map.get(info.getMrp());
-			if(infos == null) {
-				infos = new ArrayList<InventoryInfo>();
-				map.put(info.getMrp(), infos);
-			}
-			infos.add(info);
-		}
-		return map;
+		List<SkuInfo> list = query.list();
+		return list;
 	}
 
 
@@ -223,7 +189,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			" group by b.id" +
 			" order by checkinDate asc";
 	
-	private Collection<InventoryInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
+	private Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
 		String sql = checkedInInvSql;
 		SQLQuery query = baseDao.createSqlQuery(sql);
 		
@@ -236,14 +202,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		query.setParameterList("whIds", toWarehouseIds(whs));
 		query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
 		
-		query.setResultTransformer(Transformers.aliasToBean(InventoryInfo.class));
+		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
 		
 		@SuppressWarnings("unchecked")
-		List<InventoryInfo> list = query.list();
+		List<SkuInfo> list = query.list();
 		
-		Queue<InventoryInfo> queue = new LinkedList<InventoryInfo>();
-		for (InventoryInfo inventoryInfo : list) {
-			InventoryInfo info = queue.peek();
+		Queue<SkuInfo> queue = new LinkedList<SkuInfo>();
+		for (SkuInfo inventoryInfo : list) {
+			SkuInfo info = queue.peek();
 			if(info != null && inventoryInfo.getSkuId() == info.getSkuId() && inventoryInfo.getMrp() == info.getMrp()) {
 				info.setQty(info.getQty() + inventoryInfo.getQty());
 			} else {
@@ -263,64 +229,62 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		return list;
 	}
 	
-	private Map<Double,List<InventoryInfo>> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
-
-		Map<Double, List<InventoryInfo>> availableInvMap = new LinkedHashMap<Double, List<InventoryInfo>>();
+	private Queue<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
+		Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 		
-		Collection<InventoryInfo> availableInvList = getCheckedInInventory(productVariant, whs);
-		for (InventoryInfo inventoryInfo : availableInvList) {
-			List<InventoryInfo> infos = availableInvMap.get(inventoryInfo.getMrp());
-			if(infos == null) {
-				infos = new ArrayList<InventoryInfo>();
-				availableInvMap.put(inventoryInfo.getMrp(), infos);
-			}
-			infos.add(inventoryInfo);
-		}
-		
-		Map<Double, List<InventoryInfo>> inProcessMap = getInProcessInventory(productVariant, whs);
 		Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
 		
-		for(Map.Entry<Double, List<InventoryInfo>> entry : availableInvMap.entrySet()) {
-			Double mrp = entry.getKey();
-			
-			List<InventoryInfo> inProcessList = inProcessMap.get(mrp);
-			if(inProcessList != null) {
-				for (InventoryInfo inProcessInfo : inProcessList) {
-					for (InventoryInfo info : availableInvList) {
-						if(info.getSkuId() == inProcessInfo.getSkuId() && info.getMrp() == inProcessInfo.getMrp()) {
-							info.setQty(info.getQty() - inProcessInfo.getQty());
-							break;
-						}
-					}
-				}
-			}
-			
-			if(bookedQtyMap.get(mrp) != null) {
-				long bookedQty = bookedQtyMap.get(mrp);
-				long leftQty = bookedQty;
-				
-				for (InventoryInfo info : availableInvList) {
-					long netQty = 0l;
-					if(leftQty == bookedQty) {
-						netQty = info.getQty() - bookedQty;
-						leftQty = netQty;
-					} else if(leftQty < 0) {
-						netQty = info.getQty() + leftQty;
-						leftQty = netQty;
-					} else if (leftQty >= 0) {
-						netQty = info.getQty();
-						leftQty = netQty;
-					}
-					info.setQty(netQty);
+		List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
+		if(inProcessList !=null) {
+			for (SkuInfo inProcessInfo : inProcessList) {
+				SkuInfo info = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
+				if(info != null) {
+					info.setQty(info.getQty() - inProcessInfo.getQty());
 				}
 			}
 		}
-		return availableInvMap;
+		
+		Queue<InventoryInfo> queue = new LinkedList<InventoryInfo>();
+		for (SkuInfo skuInfo : checkedInInvList) {
+			InventoryInfo info = queue.peek();
+			if(info != null && skuInfo.getMrp() == info.getMrp()) {
+				info.setQty(info.getQty() + skuInfo.getQty());
+			} else {
+				info = new InventoryInfo();
+				info.setMrp(skuInfo.getMrp());
+				info.setQty(skuInfo.getQty());
+				info.addSkuId(skuInfo.getSkuId());
+				queue.add(info);
+			}
+		}
+		
+		for (InventoryInfo inventoryInfo : queue) {
+			Long bookedQty = bookedQtyMap.get(inventoryInfo.getMrp());
+			if(bookedQty != null) {
+				inventoryInfo.setQty(inventoryInfo.getQty() - bookedQty);
+				bookedQtyMap.remove(inventoryInfo.getMrp());
+			}
+		}
+		return queue;
+	}
+	
+	private SkuInfo searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
+		for (SkuInfo info : list) {
+			if(info.getSkuId() == skuId && info.getMrp() == mrp) {
+				return info;
+			}
+		}
+		return null;
 	}
 	
 	@Override
-	public List<InventoryInfo> getAvailableInventory(ProductVariant productVariant, Double preferredMrp) {
-		return getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses()).get(preferredMrp);
+	public InventoryInfo getAvailableInventory(ProductVariant productVariant, Double preferredMrp) {
+		Collection<InventoryInfo> infos = getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses());
+		for (InventoryInfo inventoryInfo : infos) {
+			if(inventoryInfo.getMrp() == preferredMrp) {
+				return inventoryInfo;
+			}
+		}
+		return null;
 	}
-
 }

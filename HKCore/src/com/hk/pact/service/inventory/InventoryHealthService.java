@@ -1,7 +1,8 @@
 package com.hk.pact.service.inventory;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 
 import com.hk.domain.catalog.product.ProductVariant;
 
@@ -11,13 +12,43 @@ public interface InventoryHealthService {
 	
 	long getAvailableUnbookedInventory(ProductVariant productVariant);
 
-	List<InventoryInfo> getAvailableInventory(ProductVariant productVariant, Double preferredMrp);
-
+	InventoryInfo getAvailableInventory(ProductVariant productVariant, Double preferredMrp);
+	
 	public static class InventoryInfo {
-		long skuId;
-		double mrp;
-		long qty;
-		Date checkinDate;
+		private Collection<Long> skuIds = new HashSet<Long>();
+		private double mrp;
+		private long qty;
+
+		public Collection<Long> getSkuIds() {
+			return skuIds;
+		}
+
+		public void addSkuId(long id) {
+			skuIds.add(id);
+		}
+		
+		public double getMrp() {
+			return mrp;
+		}
+
+		public void setMrp(double mrp) {
+			this.mrp = mrp;
+		}
+
+		public long getQty() {
+			return qty;
+		}
+
+		public void setQty(long qty) {
+			this.qty = qty;
+		}
+	}
+	
+	public static class SkuInfo {
+		private long skuId;
+		private double mrp;
+		private long qty;
+		private Date checkinDate;
 
 		public long getSkuId() {
 			return skuId;
