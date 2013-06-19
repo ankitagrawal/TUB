@@ -15,7 +15,7 @@
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
     <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">--%>
-    <a href='${pageContext.request.contextPath}/pages/offers/personal-care-page/personal-care.html'>
+    <a href='${pageContext.request.contextPath}/pages/offers/personal-care-page/personal-care.jsp'>
         <img src="${pageContext.request.contextPath}/images/banners/top/personal-care-strip-banner.jpg"
              alt="persona-care"></a>
     </a>

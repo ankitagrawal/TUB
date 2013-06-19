@@ -1,15 +1,34 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Healthkart Eye Page</title>
-<link href="css/style.css" rel="stylesheet" type="text/css" />
-<script src="js/jquery.js" type="text/javascript" ></script>
-<script src="js/jquery.easing.1.3.js" type="text/javascript" ></script>
-<script src="js/jqajax.js" type="text/javascript" ></script>
-</head>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/includes/_taglibInclude.jsp" %>
 
-<body>
+
+<%
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
+%>
+<s:layout-render name="/layouts/categoryBlankLanding.jsp"
+                 pageTitle="personal-care Offer">
+
+<s:layout-component name="htmlHead">
+	<link href="${pageContext.request.contextPath}/css/eye-style.css"
+	      rel="stylesheet" type="text/css"/>
+</s:layout-component>
+
+<s:layout-component name="breadcrumbs">
+	<div class='crumb_outer'><s:link
+			beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
+		&gt; <span class="crumb last" style="font-size: 12px;">eye Offers</span>
+
+		<h1 class="title">Beauty Offers</h1>
+	</div>
+
+</s:layout-component>
+
+<s:layout-component name="metaDescription">Eye Offers</s:layout-component>
+<s:layout-component name="metaKeywords">Eye Offers</s:layout-component>
+
+
+<s:layout-component name="content">
 <div id="container">
 	<div class="nRow"><img src="images/eye-page-banner1.jpg" alt=""/></div>
     <div class="nRow dHeight1"></div>
@@ -20,28 +39,28 @@
         </div>
         <div class="nRow eyePgOffers"><img src="images/eye-page-offers.jpg" usemap="#Map" border="0" /></div>
         <div class="nRow eyePgLastBrdr">
-            <p>Choice for all occasions; while you are at work or when you have to put on your dancing shoes</p>        
+            <p>Choice for all occasions; while you are at work or when you have to put on your dancing shoes</p>
       </div>
         <div class="nRow">&nbsp;</div>
-  </div> 	
+  </div>
   	<div class="nRow">&nbsp;</div>
 </div>
 <map name="Map" id="Map">
             <area shape="poly" coords="84,119,67,122,47,118,41,99,32,33,37,2,62,6,141,27,163,33,168,97,171,122,113,127,100,137" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'380'} )" title="" contentID="myCotentDiv1" />
-            
+
             <area shape="poly" coords="101,363,71,286,11,288,1,126,184,150,186,272,109,282" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'400'} )" title="" contentID="myCotentDiv4" />
-            
+
             <area shape="poly" coords="255,252,227,183,187,178,176,62,307,85,313,179,257,178" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'400'} )" title="" contentID="myCotentDiv2" />
-      
+
       		<area shape="poly" coords="371,228,374,146,314,146,324,39,463,23,451,130,393,140" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'380'} )" title="" contentID="myCotentDiv5" />
-            
+
             <area shape="poly" coords="475,351,472,276,386,270,396,140,576,118,560,281,509,281" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'400'} )" title="" contentID="myCotentDiv3" />
-            
+
           </map>
 
 <div id="myCotentDiv1" class="hideOffers">
 	<div class="ppBxInr">
-    	<div class="nRow">       
+    	<div class="nRow">
             <div class="eyePopUpImgBox">
                 <p><img src="images/199/pic-1.jpg" alt="" /></p>
                 <p class="eyeOfferProNames">12 Black/Blue, Teenager Wayfarer Eyeglasses</p>
@@ -71,7 +90,7 @@
         <div class="eyeVDashedBrdr1">&nbsp;</div>
 		<div class="nRow">
          	<div class="eyeRightBx"><a href="http://www.healthkart.com/eye/eyeglasses?filterOptions[0]=11244&minPrice=199&maxPrice=2299"><img src="images/view-all.jpg" alt="View All" /></a></div>
-        </div>		 
+        </div>
    	</div>
     <div class="cl"></div>
 </div>
@@ -79,7 +98,7 @@
 
 <div id="myCotentDiv2" class="hideOffers">
 	<div class="ppBxInr">
-    	<div class="nRow">       
+    	<div class="nRow">
             <div class="eyePopUpImgBox">
                 <p><img src="images/349/pic-1.jpg" alt="" /></p>
                 <p class="eyeOfferProNames">XH 0290/0291 Silver/Red, Fidato Aviator Sunglasses</p>
@@ -104,13 +123,13 @@
                 <p class="eyeProPrice">Rs.349 <span>| 65% Off</span></p>
                 <p align="center"><a href="http://www.healthkart.com/product/xh-1728-brown-fidato-aviator-sunglasses/EYE2052" class="eyeBuyNowBtn">BUY NOW</a></p>
             </div>
-            
+
             <div class="cl"></div>
    		</div>
         <div class="eyeVDashedBrdr1">&nbsp;</div>
 		<div class="nRow">
          	<div class="eyeRightBx"><a href="http://www.healthkart.com/eye/sunglasses?filterOptions[0]=15472&minPrice=60&maxPrice=5000"><img src="images/view-all.jpg" alt="View All" /></a></div>
-        </div>		 
+        </div>
    	</div>
     <div class="cl"></div>
 </div>
@@ -118,7 +137,7 @@
 
 <div id="myCotentDiv3" class="hideOffers">
 	<div class="ppBxInr">
-    	<div class="nRow">       
+    	<div class="nRow">
             <div class="eyePopUpImgBox">
                 <p><img src="images/599/pic-1.jpg" alt="" /></p>
                 <p class="eyeOfferProNames">UV 3025 Black/Green, Urban Verve Aviator Sunglasses</p>
@@ -148,7 +167,7 @@
         <div class="eyeVDashedBrdr1">&nbsp;</div>
 		<div class="nRow">
          	<div class="eyeRightBx"><a href="http://www.healthkart.com/eye/sunglasses?filterOptions[0]=14419&minPrice=60&maxPrice=5000&productReferrerId=21&camp=urban_verve_599"><img src="images/view-all.jpg" alt="View All" /></a></div>
-        </div>		 
+        </div>
    	</div>
     <div class="cl"></div>
 </div>
@@ -156,7 +175,7 @@
 
 <div id="myCotentDiv4" class="hideOffers">
 	<div class="ppBxInr">
-    	<div class="nRow">       
+    	<div class="nRow">
             <div class="eyePopUpImgBox">
                 <p><img src="images/750/pic-1.jpg" alt="" /></p>
                 <p class="eyeOfferProNames">Titanium 3113 Black, Odysey Rectangular Eyeglasses</p>
@@ -186,7 +205,7 @@
         <div class="eyeVDashedBrdr1">&nbsp;</div>
 		<div class="nRow">
          	<div class="eyeRightBx"><a href="http://www.healthkart.com/eye/eyeglasses?filterOptions[0]=11146&filterOptions[1]=10082&minPrice=199&maxPrice=2299"><img src="images/view-all.jpg" alt="View All" /></a></div>
-        </div>		 
+        </div>
    	</div>
     <div class="cl"></div>
 </div>
@@ -194,7 +213,7 @@
 
 <div id="myCotentDiv5" class="hideOffers">
 	<div class="ppBxInr">
-    	<div class="nRow">       
+    	<div class="nRow">
             <div class="eyePopUpImgBox">
                 <p><img src="images/combo/pic-1.jpg" alt="" /></p>
                 <p class="eyeOfferProNames">1+1 free combo 1</p>
@@ -224,7 +243,7 @@
         <div class="eyeVDashedBrdr1">&nbsp;</div>
 		<div class="nRow">
          	<div class="eyeRightBx"><a href="eye-combo-page.html"><img src="images/view-all.jpg" alt="View All" /></a></div>
-        </div>		 
+        </div>
    	</div>
     <div class="cl"></div>
 </div>
@@ -232,5 +251,14 @@
 
 
 <script src="js/cquery_customlightbox.js" type="text/javascript"></script>
-</body>
-</html>
+
+
+<c:if test="${not isSecure }">
+	<iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=2"
+	        scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+</c:if>
+
+
+</s:layout-component>
+
+</s:layout-render>
