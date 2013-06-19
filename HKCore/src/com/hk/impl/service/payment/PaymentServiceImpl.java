@@ -428,7 +428,8 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     private void verifyAmountOfRequestAndResponse(Payment request, HkPaymentResponse response,Map<String,Object> faultyAmountMap ) throws HealthkartPaymentGatewayException {
-        if(request != null && response != null && EnumHKPaymentStatus.SUCCESS.getId().equals(response.getHKPaymentStatus().getId())){
+        if(request != null && response != null && response.getHKPaymentStatus() != null
+                && EnumHKPaymentStatus.SUCCESS.getId().equals(response.getHKPaymentStatus().getId())){
             faultyAmountMap.put("RequestAmount", request.getAmount());
             faultyAmountMap.put("ResponseAmount",response.getAmount());
             faultyAmountMap.put("GatewayOrderId",request.getGatewayOrderId());

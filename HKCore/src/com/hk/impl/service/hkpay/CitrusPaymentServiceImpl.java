@@ -164,6 +164,8 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
         } else if (respCode != null && respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REJECTED_BY_GATEWAY.getKey())) {
             hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
             hkPaymentResponse.setErrorLog(GatewayResponseKeys.CitrusConstants.REJECTED_BY_GATEWAY_MSG.getKey());
+        } else {
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
         }
     }
 
