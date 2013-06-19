@@ -402,7 +402,7 @@
 		</c:if>
 		<c:if test="${!empty product.relatedProducts}">
 			<a class='top_link' id="related_product_link" href='#related_products'>
-				Related Products &darr;
+				Recommended Products &darr;
 			</a>
 		</c:if>
 <%--
@@ -786,7 +786,7 @@
 		<div>
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editRelatedProducts" class="popup">
-				Edit Related Products
+				Edit Recommended Products
 				<s:param name="productId" value="${product.id}"/>
 			</s:link>
 		</div>
