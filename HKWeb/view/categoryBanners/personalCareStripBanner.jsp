@@ -8,7 +8,7 @@
   if (dateTime.isBefore(endOfOfferDate.getTime())) {
 %>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-<a href='${pageContext.request.contextPath}/pages/offers/personal-care-page/index.html'>
+<a href='${pageContext.request.contextPath}/pages/offers/personal-care-page/personal-care.html'>
     <img src="${pageContext.request.contextPath}/images/banners/top/personal-care-strip-banner.jpg" alt="Beauty Discount - 10% cashback on prepaid orders"></a>
 </div>
 <div style="margin-left: auto; margin-right: auto; width:960px;">

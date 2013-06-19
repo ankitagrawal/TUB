@@ -15,7 +15,7 @@
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
   <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">--%>
-  <a href='${pageContext.request.contextPath}/pages/offers/health-nutrition-page/index.html'>
+  <a href='${pageContext.request.contextPath}/pages/offers/health-nutrition-page/health-nutrition.html'>
     <img src="${pageContext.request.contextPath}/images/banners/top/health-nutrition-strip-banner.jpg" alt="DIET DOCTOR">
   </a>
   <%--</s:link>--%>
