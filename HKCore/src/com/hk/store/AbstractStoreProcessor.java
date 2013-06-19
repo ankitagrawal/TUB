@@ -9,7 +9,6 @@ import java.util.Map;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
@@ -138,7 +137,6 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	}
 
 	@Override
-	@Transactional
 	public Payment makePayment(Long orderId, String remoteIp) throws InvalidOrderException {
 		Order order = this.orderService.find(orderId);
 		List<CartLineItem> cartLineItems = order.getProductCartLineItems();
