@@ -46,7 +46,9 @@ public interface InventoryHealthService {
 		public SkuInfo getMaxQtySkuInfo() {
 			SkuInfo info = null;
 			for (SkuInfo skuInfo : skuList) {
-				if(info != null && info.getQty() < skuInfo.getQty()) {
+				if(info == null) {
+					info = skuInfo;
+				} else if(info != null && info.getQty() < skuInfo.getQty()) {
 					info = skuInfo;
 				}
 			}
