@@ -130,6 +130,11 @@ public class PaymentServiceImpl implements PaymentService {
                         }
 
                         List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
+                        //TODO: in case of ICICI stuff amount in response code
+                        if(EnumGateway.ICICI.getId().equals(gateway.getId())){
+                            stuffAmountInRespObj(requestResponseMappedList) ;
+                        }
+
                         verifyRequestAndResponseList(requestResponseMappedList);
                         verifyAmountOfRequestAndResponseList(requestResponseMappedList, faultyAmountMap);
 
@@ -144,6 +149,14 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         return hkPaymentResponseList;
+    }
+
+    private void stuffAmountInRespObj(List<Map<String, Object>> requestResponseMappedList) {
+        for(Map<String,Object> requestResponseMap : requestResponseMappedList){
+            Payment request = (Payment) requestResponseMap.get("Request");
+            HkPaymentResponse response = (HkPaymentResponse) requestResponseMap.get("Response");
+            response.setAmount(request.getAmount());
+        }
     }
 
     @Override

@@ -54,6 +54,7 @@
             Payment Status --> ${response.HKPaymentStatus.name}<br/>
             Response Message --> ${response.responseMsg}  <br/>
             Root Reference No --> ${response.rrn}<br/>
+            Authentication Code --> ${response.authIdCode}<br/>
             Gateway --> ${response.gateway.name}<br/>
             Error Log --> ${response.errorLog}<br/>
             <br/>
