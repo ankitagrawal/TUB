@@ -62,16 +62,23 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			}
 		}
 		
+		VariantUpdateInfo vInfo = new VariantUpdateInfo();
+		vInfo.variant = variant;
+		vInfo.netQty = netInventory;
+
 		if(selectedInfo != null && selectedInfo.getQty() > 0 && netInventory > 0) {
 			long mxQty = selectedInfo.getMaxQtySkuInfo().getQty();
 			if(selectedInfo.getQty() < mxQty) {
 				mxQty = selectedInfo.getQty();
 			}
-			updateVariant(variant, selectedInfo.getMaxQtySkuInfo().getQty(), netInventory, selectedInfo.getMrp(), false);
-		} else {
-			updateVariant(variant, 0l, netInventory, null, true);
+			
+			SkuInfo mxQtyInfo = selectedInfo.getMaxQtySkuInfo();
+			vInfo.mrp = selectedInfo.getMrp();
+			vInfo.mrpQty = mxQtyInfo.getQty();
+			vInfo.costPrice = mxQtyInfo.getCostPrice();
+			vInfo.inStock = true;
 		}
-		
+		updateVariant(vInfo);
 	}
 	
 	@Override
@@ -86,37 +93,46 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		return productVariant.getMrpQty();
 	}
 
-	private void updateVariant(ProductVariant variant, Long mrpQty, Long netQty, Double mrp, boolean outOfStock) {
+	private static class VariantUpdateInfo {
+		ProductVariant variant;
+		long mrpQty;
+		long netQty;
+		double mrp;
+		double costPrice;
+		boolean inStock;
 		
-		if(mrp != null && !variant.getMarkedPrice().equals(Double.valueOf(mrp))) {
-			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
+	}
+	
+	private void updateVariant(VariantUpdateInfo vInfo) {
+		if(vInfo.mrp != 0l && !vInfo.variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
+			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(vInfo.variant, EnumUpdatePVPriceStatus.Pending.getId());
             if (updatePvPrice == null) {
                 updatePvPrice = new UpdatePvPrice();
             }
-            updatePvPrice.setProductVariant(variant);
-            updatePvPrice.setOldCostPrice(variant.getCostPrice());
-            updatePvPrice.setNewCostPrice(variant.getCostPrice());
-            updatePvPrice.setOldMrp(variant.getMarkedPrice());
-            updatePvPrice.setNewMrp(mrp);
-            updatePvPrice.setOldHkprice(variant.getHkPrice());
-            Double newHkPrice = mrp * (1 - variant.getDiscountPercent());
+            updatePvPrice.setProductVariant(vInfo.variant);
+            updatePvPrice.setOldCostPrice(vInfo.variant.getCostPrice());
+            updatePvPrice.setNewCostPrice(vInfo.costPrice);
+            updatePvPrice.setOldMrp(vInfo.variant.getMarkedPrice());
+            updatePvPrice.setNewMrp(vInfo.mrp);
+            updatePvPrice.setOldHkprice(vInfo.variant.getHkPrice());
+            Double newHkPrice = vInfo.mrp * (1 - vInfo.variant.getDiscountPercent());
             updatePvPrice.setNewHkprice(newHkPrice);
             updatePvPrice.setTxnDate(new Date());
             updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
             baseDao.save(updatePvPrice);
 		}
 		
-		if(mrp != null) {
-			variant.setMarkedPrice(mrp);
+		if(vInfo.inStock) {
+			vInfo.variant.setMarkedPrice(vInfo.mrp);
 		}
-		variant.setNetQty(netQty);
-		variant.setMrpQty(mrpQty);
+		vInfo.variant.setNetQty(vInfo.netQty);
+		vInfo.variant.setMrpQty(vInfo.mrpQty);
+		vInfo.variant.setOutOfStock(!vInfo.inStock);
 		
-		variant.setOutOfStock(outOfStock);
-		productVariantService.save(variant);
+		productVariantService.save(vInfo.variant);
 		
-		Product product = productService.getProductById(variant.getProduct().getId());
-		if(outOfStock) {
+		Product product = productService.getProductById(vInfo.variant.getProduct().getId());
+		if(!vInfo.inStock) {
 			List<ProductVariant> inStockVariants = product.getInStockVariants();
 			if (inStockVariants != null && inStockVariants.isEmpty()) {
 				product.setOutOfStock(true);
@@ -185,7 +201,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	}
 
 
-	private static final String checkedInInvSql = "select c.id as skuId, b.mrp as mrp, count(a.id) as qty, b.create_date as checkinDate" +
+	private static final String checkedInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
+			" count(a.id) as qty, b.create_date as checkinDate" +
 			" from sku_item as a" +
 			" inner join sku_group as b on a.sku_group_id = b.id" +
 			" inner join sku as c on b.sku_id = c.id" +
@@ -224,7 +241,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				queue.add(inventoryInfo);
 			}
 		}
-		
 		return queue;
 	}
 	

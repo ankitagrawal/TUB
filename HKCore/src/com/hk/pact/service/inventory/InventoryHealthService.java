@@ -59,10 +59,11 @@ public interface InventoryHealthService {
 	public static class SkuInfo {
 		private long skuId;
 		private double mrp;
+		private double costPrice;
 		private long qty;
-		private long unbookedQty;
+		private long unbookedQty; //checkedIn + inQueue
 		private Date checkinDate;
-
+		
 		public long getSkuId() {
 			return skuId;
 		}
@@ -101,6 +102,14 @@ public interface InventoryHealthService {
 		
 		public void setUnbookedQty(long unbookedQty) {
 			this.unbookedQty = unbookedQty;
+		}
+		
+		public double getCostPrice() {
+			return costPrice;
+		}
+		
+		public void setCostPrice(double costPrice) {
+			this.costPrice = costPrice;
 		}
 	}
 }
