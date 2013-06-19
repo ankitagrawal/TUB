@@ -88,7 +88,7 @@ public class DebitNote implements java.io.Serializable {
     private Double freightForwardingCharges;
     
     @Temporal (TemporalType.TIMESTAMP)
-    @Column (name = "close_date", nullable = false, length = 19)
+    @Column (name = "close_date", length = 19)
     private Date closeDate;
 
     public Long getId() {
