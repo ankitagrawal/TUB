@@ -1338,7 +1338,7 @@ span.error {
 
 /* line 352, ../sass/main.scss */
 .lvl2Bar li.lvl2 a:after {
-    content: "▼";
+    /*content: "▼";*/
     color: #ccc;
 }
 
@@ -1349,7 +1349,7 @@ span.error {
 
 /* line 358, ../sass/main.scss */
 .lvl2Bar li.lvl2 a:hover:after {
-    content: "▼";
+    /*content: "▼";*/
     color: #df6900;
 }
 
@@ -1360,7 +1360,7 @@ span.error {
 
 /* line 369, ../sass/main.scss */
 .lvl2Bar li.lvl2:hover .head2 a:after {
-    content: "▼";
+    /*content: "▼";*/
     color: #df6900;
 }
 
