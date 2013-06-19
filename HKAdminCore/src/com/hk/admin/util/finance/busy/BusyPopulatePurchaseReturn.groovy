@@ -38,7 +38,7 @@ public class BusyPopulatePurchaseReturn {
 //  private static org.slf4j.Logger Logger = LoggerFactory.getLogger(BusyTableTransactionGenerator.class);
 
 
-  public void populatePurchaseData() {
+  public void populatePurchaseReturnData() {
 
     // create_date is date on which record is created in DB.
 
@@ -154,8 +154,8 @@ public class BusyPopulatePurchaseReturn {
 
         //RECURSE EVERY ROW
             Long vch_code=keys[0][0];
-  //          transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
-    //        transactionFooterForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
+  //          transactionBodyForPurchaseReturn(vch_code, hk_ref_no);
+    //        transactionFooterForPurchaseReturn(vch_code, hk_ref_no);
 
 
 
@@ -165,6 +165,83 @@ public class BusyPopulatePurchaseReturn {
 
 
   }
+
+    public void transactionBodyForPurchaseReturn(Long vch_code, Long debit_note_id) {
+        int s_no = 0;
+        sql.eachRow("""
+                      select li.id, li.sku_id, li.qty, li.mrp, li.cost_price, li. li.
+                      t.value as tax_value,
+                      from debit_note_line_item li
+                      inner join tax t on li.tax_id = t.id
+                      where li.debit_note_id = ${debit_note_id}
+                   """) {
+            debitNoteItem ->
+
+                Long lineItemId = debitNoteItem.id;
+                Long item_code = debitNoteItem.sku_id;
+                int qty = debitNoteItem.qty;
+                if(qty <= 0){
+                    qty = 1;
+                }
+
+                String unit = "pcs";
+                Double mrp = debitNoteItem.mrp;
+                Double rate = debitNoteItem.cost_price;
+                Double vat = debitNoteItem.tax_value;
+                Double amount = rate*qty;
+                s_no++;
+                try{
+                    busySql.executeInsert("""
+        INSERT INTO transaction_body
+          (
+            vch_code, s_no, item_code, qty, unit, mrp, rate, discount, vat, amount, create_date, hk_ref_no, cost_price
+          )
+
+          VALUES (${vch_code}, ${s_no}, ${item_code}, ${qty}, ${unit}, ${mrp}, ${rate}, 0, ${vat}, ${amount}, NOW(), ${lineItemId}, NULL
+          )
+          ON DUPLICATE KEY UPDATE
+          vch_code = ${vch_code}, s_no = ${s_no}, item_code = ${item_code}, qty = ${qty}, unit = ${unit}, mrp = ${mrp}, rate = ${rate}, discount = NULL,
+          vat = ${vat}, amount = ${amount}, create_date = NOW(), hk_ref_no = ${lineItemId}, cost_price = NULL
+         """)
+                }
+                catch (Exception e) {
+                    logger.info("Unable to insert in  transaction body: ",e);
+                }
+        }
+    }
+
+
+    public void transactionFooterForPurchaseReturn(Long vch_code, Long debit_note_id) {
+        sql.eachRow("""
+                    select freight_forwarding_charges as shipping_charge FROM debit_note dn
+                    where dn.id = ${debit_note_id}
+                 """) {
+            footerItems ->
+
+                Double shipping_charge = footerItems.shipping_charge;
+                try{
+                    busySql.executeInsert("""
+      INSERT INTO transaction_footer
+        (
+          vch_code, s_no, type, bill_sundry_name, percent, amount, create_date
+        )
+
+        VALUES (${vch_code}, 1, 0, 'shipping charge',0 , ${shipping_charge}, NOW()
+        )
+         ON DUPLICATE KEY UPDATE
+        vch_code = ${vch_code}, s_no = 1, type = 0, bill_sundry_name = 'shipping charge',
+        percent = 0, amount = ${shipping_charge}, create_date = NOW()
+       """)
+
+
+
+                }
+                catch (Exception e) {
+                    logger.info("Unable to insert in  transaction footer: ", e);
+                }
+        }
+    }
+
 }
 
 
