@@ -245,7 +245,7 @@ public class CheckPaymentAction extends BaseAction {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
-
+        String gatewayOrderId = payment.getGatewayOrderId();
         if (gatewayOrderId != null) {
             try {
                 List<HkPaymentResponse> hkPaymentResponses = paymentService.seekPayment(gatewayOrderId);
