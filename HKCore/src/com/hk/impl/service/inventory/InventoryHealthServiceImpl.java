@@ -108,7 +108,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 	private void updateVariant(ProductVariant variant, Long mrpQty, Long netQty, Double mrp, boolean outOfStock) {
 		
-		if(!variant.getMarkedPrice().equals(Double.valueOf(mrpQty))) {
+		if(!variant.getMarkedPrice().equals(Double.valueOf(mrp))) {
 			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
             if (updatePvPrice == null) {
                 updatePvPrice = new UpdatePvPrice();
