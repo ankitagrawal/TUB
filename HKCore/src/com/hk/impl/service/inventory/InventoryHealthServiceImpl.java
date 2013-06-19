@@ -265,8 +265,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		
 		for (InventoryInfo inventoryInfo : queue) {
 			Long bookedQty = bookedQtyMap.get(inventoryInfo.getMrp());
-			long leftQty = bookedQty;
 			if(bookedQty != null) {
+				long leftQty = bookedQty;
 				for (SkuInfo info : inventoryInfo.getSkuInfoList()) {
 					long netQty = 0l;
 					if(leftQty == bookedQty) {
