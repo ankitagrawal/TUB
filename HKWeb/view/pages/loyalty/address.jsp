@@ -21,15 +21,8 @@
             <s:link beanclass="com.hk.web.action.core.autocomplete.AutoCompleteAction" event="populateAddress" id="populateaddress">
             </s:link>
      </div>
-		<s:useActionBean
-			beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
-			var="asa" />
-
-		<s:useActionBean
-			beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
-		<s:form
-			beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
-			id="selectAddress" name="selectAddress">
+		<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction" var="asa" />
+		<s:form beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction" id="selectAddress" name="selectAddress">
 			<div class="row">
 				<div class="span6">
 					<table class="table table-bordered">

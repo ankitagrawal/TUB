@@ -33,7 +33,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.UPLOAD_PRODUCT_CATALOG }, authActionBean = AdminPermissionAction.class)
 @Component
-public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
+public class LoyaltyAdminAction extends AbstractLoyaltyAction {
 
     
     @Autowired
@@ -52,7 +52,7 @@ public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
     
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
+        return new ForwardResolution("/pages/loyalty/loyaltyAdmin.jsp");
     }
 
     public Resolution uploadPorducts() {
@@ -66,10 +66,10 @@ public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
         this.loyaltyProgramService.uploadLoyaltyProductsCSV(this.csvFileBean, this.errorMessages);
 
         if (this.errorMessages.size()> 0) {
-        	return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
+        	return new ForwardResolution("/pages/loyalty/loyaltyAdmin.jsp");
         }
         this.successMessage = "Database succesfully Updated";
-        return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
+        return new ForwardResolution("/pages/loyalty/loyaltyAdmin.jsp");
     }
 
     public Resolution uploadBadges() throws Exception {
@@ -81,10 +81,10 @@ public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
         this.loyaltyProgramService.uploadBadgeInfoCSV(this.badgeCsvFileBean, this.errorMessages);
 
         if (this.errorMessages.size()> 0) {
-        	return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
+        	return new ForwardResolution("/pages/loyalty/loyaltyAdmin.jsp");
         }
         this.successMessage = "Database succesfully Updated.";
-        return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
+        return new ForwardResolution("/pages/loyalty/loyaltyAdmin.jsp");
     }
     
     public Resolution searchLoyaltyProducts() {
@@ -110,7 +110,7 @@ public class LoyaltyBulkUploadAction extends AbstractLoyaltyAction {
     		this.errorMessages.add("No Products Found for the given productId and variant Id.");
     	}
  
-        return new ForwardResolution("/pages/loyalty/bulkLoyaltyAdd.jsp");
+        return new ForwardResolution("/pages/loyalty/loyaltyAdmin.jsp");
     }
 
     public Resolution saveLoyaltyProduct() {

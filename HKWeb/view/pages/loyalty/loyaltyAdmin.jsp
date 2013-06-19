@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" var="loyaltyAdminAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction" var="loyaltyAdminAction"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -67,7 +67,7 @@
   	${loyaltyAdminAction.successMessage}
   	</div>
   	<div style="float: left; clear:both; width:100%;">
-	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" id="searchForm">
+	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction" id="searchForm">
   		<h2>Search Loyalty Products </h2>
   		<br>Enter Product ID  <s:text name="productId" placeholder="Product Id"></s:text>
   		Enter variantID  <s:text name="variantId" placeholder="Variant Id"></s:text>
@@ -77,7 +77,7 @@
   	</div>
   	<div style="clear:both;">
   	
-  		<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">
+  		<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction">
       	<h2>File to Upload for Loyalty Products</h2>
      		 <div style="margin-left: 20px;">
      			 <s:file name="csvFileBean" size="30"/> &nbsp;&nbsp;&nbsp;&nbsp; <s:submit name="uploadPorducts" value="Upload"/>
@@ -85,7 +85,7 @@
     	</s:form>
     	<p>Columns in CSV - PRODUCT_VARIANT_ID, LOYALTY_POINTS </p>
 		<br>
-    	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">
+    	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction">
       	<h2>File to Upload for User card numbers </h2>
       		<div >
         		<s:file name="badgeCsvFileBean" size="30"/> &nbsp;&nbsp;&nbsp;&nbsp; <s:submit name="uploadBadges" value="Upload"/>
@@ -114,8 +114,8 @@
 					<td>${lp.variant.product.id}</td>
 					<td>${lp.variant.product.name}</td>
 					<td><input type="text" name="points" class="points" value="${lp.points}" /></td>
-					<td style="font-size: 16px;"><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" event="saveLoyaltyProduct" class="save">Save</s:link> / 
-					<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" event="removeLoyaltyProduct" class="remove">Remove</s:link></td>
+					<td style="font-size: 16px;"><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction" event="saveLoyaltyProduct" class="save">Save</s:link> / 
+					<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction" event="removeLoyaltyProduct" class="remove">Remove</s:link></td>
 					</tr></tbody>
 				</c:forEach>
 				</table>
