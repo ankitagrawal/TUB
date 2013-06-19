@@ -237,7 +237,7 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
         paymentSearchMap.put(GatewayResponseKeys.CitrusConstants.TXN_ID.getKey(), gatewayOrderId);
 
         EnquiryCollection enquiryResult = com.citruspay.pg.model.Enquiry.create(paymentSearchMap);
-        logger.info("PGSearchResponse received from payment gateway " + enquiryResult.getRespMsg());
+        logger.debug("PGSearchResponse received from payment gateway " + enquiryResult.getRespMsg());
         /*List<Enquiry> enqList = enquiryResult.getEnquiry();
         if (enqList != null && !enqList.isEmpty()) {
             enq = enqList.get(0);//TODO: double check whether only one element gets returned all the time
