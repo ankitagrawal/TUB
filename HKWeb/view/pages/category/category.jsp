@@ -157,7 +157,7 @@
     <c:set var="sportsNutrition" value="<%=CategoryConstants.SPORTS_NUTRITION%>"/>
     <c:set var="healthNutrition" value="<%=CategoryConstants.HEALTH_NUTRITION%>"/>
     <c:set var="homeLiving" value="<%=CategoryConstants.HOME_LIVING%>"/>
-      <c:set var="beauty" value="<%=CategoryConstants.BEAUTY%>"/>
+      <%--<c:set var="beauty" value="<%=CategoryConstants.BEAUTY%>"/>--%>
     <c:choose>
       <c:when test="${categoryBean.category.name eq sportsNutrition}">
         <%-- <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
@@ -187,16 +187,16 @@
              class="small_banner"/>
         </a>
       </c:when>
-        <c:when test="${categoryBean.category.name eq beauty}">
-            <a href="${pageContext.request.contextPath}/beauty/what-s-new/gift-ideas/for-him">
-                 <img src="<hk:vhostImage/>/images/banners/Father's-Day-Special_1.jpg" alt="Fathers day"
-                      class="small_banner"/>
-               </a>
-               <a href="${pageContext.request.contextPath}/beauty/what-s-new/gift-ideas/for-him">
-               <img src="<hk:vhostImage/>/images/banners/Father's-Day-Special_2.jpg" alt="Fathers day special"
-                    class="small_banner"/>
-               </a>
-             </c:when>
+        <%--<c:when test="${categoryBean.category.name eq beauty}">--%>
+            <%--<a href="${pageContext.request.contextPath}/beauty/what-s-new/gift-ideas/for-him">--%>
+                 <%--<img src="<hk:vhostImage/>/images/banners/Father's-Day-Special_1.jpg" alt="Fathers day"--%>
+                      <%--class="small_banner"/>--%>
+               <%--</a>--%>
+               <%--<a href="${pageContext.request.contextPath}/beauty/what-s-new/gift-ideas/for-him">--%>
+               <%--<img src="<hk:vhostImage/>/images/banners/Father's-Day-Special_2.jpg" alt="Fathers day special"--%>
+                    <%--class="small_banner"/>--%>
+               <%--</a>--%>
+             <%--</c:when>--%>
       <c:otherwise>
         <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
