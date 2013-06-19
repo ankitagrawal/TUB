@@ -1340,7 +1340,6 @@ span.error {
 .lvl2Bar li.lvl2 a:after {
     content: "▼";
     color: #ccc;
-    font-size: 8px;
 }
 
 /* line 356, ../sass/main.scss */
