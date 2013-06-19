@@ -137,7 +137,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		query.addScalar("qty", Hibernate.LONG);
 		
 		query.setParameter("pvId", productVariant.getId());
-		query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId()));
+		query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.Placed.getId()));
 		
 		Map<Double, Long> map = new LinkedHashMap<Double, Long>();
 		@SuppressWarnings("unchecked")
