@@ -61,29 +61,26 @@ public class BusyPopulatePurchaseReturn {
       }
 
       // get  all records from healthkart_dev   to healthkart_busy  where  healthkart_dev.create_date > healthkart_busy.create_date.
+    }
+
+      sqlProd.eachRow(""" SELECT dn.debit_note_number as vch_no, dn.create_date as date, s.name as account_name,
+                            s.line1 as address_1, s.line2 as address_2, s.state as address_3, s.pincode as address_4,
+                            s.tin_numbner as tin_number, dn.id as hk_ref_no, w.id as warehouseId, w.state as warehouseState, s.id as supplierId
+
+                            FROM debit_note dn
+                            INNER JOIN supplier s on s.id=dn.supplier_id
+                            INNER JOIN warehouse w on w.id=dn.warehouse_id
+                            WHERE dn.debit_note_status_id = 100
+                            AND dn.closing_date > ${lastUpdateDate}  """) {
+
+        debitNote ->
 
 
-      sqlProd.eachRow(""" SELECT  pv.create_dt as createDate ,pv.invoice_number as invoiceNumber,  s.name supName,  s.line1 as supAddress1, s.line2 as supAddress2
-                       ,s.state as supState, s.pincode as supPincode , s.tin_number as supTin
-                        ,w.name  as warehouseName ,w.state as warehouseState  , pv.final_payable_amount as finalPayable , pv.warehouse_id  as warehouseId
-                          ,pv.id  as purchaseInvoiceId, pv.freight_forwarding_charges  as freight_forwarding_charges ,s.id as suppId, pv.invoice_date as purInvoiceDate
-                          ,pv.discount as purchaseleveldiscount, min(grn.grn_date) as grn_date
-                           FROM purchase_invoice pv  INNER JOIN  supplier s ON  pv.supplier_id = s.id
-      	                    INNER JOIN purchase_invoice_has_grn pigrn ON pigrn.purchase_invoice_id = pv.id
-      	                    INNER JOIN goods_received_note grn ON grn.id = pigrn.goods_received_note_id
-                            INNER JOIN  warehouse w ON  w.id=pv.warehouse_id  WHERE
-                           pv.reconcilation_date > ${lastUpdateDate}
-                           and pv.reconciled = 1
-                           and pv.create_dt > '2011-11-08 16:10:50'
-                           GROUP BY pv.id  """) {
-
-        purchaseRow ->
-
-        String supplierState = purchaseRow.supState;
-        String warehouseState = purchaseRow.warehouseState;
-        String supplierName = purchaseRow.supName;
-
-	      Long warehouseId = purchaseRow.warehouseId;
+          String date = debitNote.date;
+	      Long warehouseId = debitNote.warehouseId;
+          String supplierState = debitNote.address_3;
+          String warehouseState = debitNote.warehouseState;
+          byte out_of_state;
 	      String warehouseName;
 	      if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           warehouseName = "Gurgaon Warehouse";
@@ -102,8 +99,6 @@ public class BusyPopulatePurchaseReturn {
 		    }
 
         String series = '';
-	      String invoiceDate = purchaseRow.purInvoiceDate;
-	      String invoiceNumber =  purchaseRow.invoiceNumber;
 
 
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
@@ -122,111 +117,51 @@ public class BusyPopulatePurchaseReturn {
 			      series = "DL";
 		    }
 
-	      int sameState = 0;
         if (supplierState.equalsIgnoreCase(warehouseState)) {
-          sameState = 0;
+          out_of_state = 0;
         }
         else {
-          sameState = 1;
+            out_of_state = 1;
         }
-
+        String material_centre = substring(warehouseName, 1, 40);
+        String address_1 = substring(debitNote.address_1, 1, 40);
+        String address_2 = substring(debitNote.address_2, 1, 40);
+        String address_3 = substring(debitNote.address_3, 1, 40);
+        String address_4 = substring(debitNote.address_4, 1, 40);
+        String tin_number = substring(debitNote.tin_number, 1, 30);
+        String account_name = substring(debitNote.account_name, 1, 40);
+        String debtors = debitNote.supplierId;
+        int vch_type=10;
+        String vch_no = substring(debitNote.vch_no, 1 ,25);
+        String sale_type = "VAT TAX INC";
+        double net_amount;
+        byte imported = 0;
+        long hk_ref_no  = debitNote.hk_ref_no;
         //Generate  Transaction Header
 
 
-        def key = sqlReport.executeInsert(""" INSERT INTO transaction_header (  series,
+            def keys = sqlReport.executeInsert(""" INSERT INTO transaction_header (  series,
       date ,vch_no  ,  vch_type,   sale_type ,   account_name, debtors ,  address_1,   address_2,   address_3 ,   address_4  ,
-      tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no, goods_receiving_date
+      tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no
     )
-        VALUES(   ${series} , ${invoiceDate} , substring(${invoiceNumber} ,1,25) ,  2 , 'VAT TAX INC'  , substring(${supplierName},1,40)
-     , substring(${purchaseRow.suppId },1,40)  , substring(${purchaseRow.supAddress1 },1,40) ,  substring(${purchaseRow.supAddress2 },1,40) , ${supplierState}
-          , substring(${purchaseRow.supPincode },1,40),${purchaseRow.supTin} ,substring(${warehouseName},1,40)  , ${sameState} , ${purchaseRow.finalPayable}
-         ,0 , NOW() , ${purchaseRow.purchaseInvoiceId}, ${purchaseRow.grn_date} )
+        VALUES(   ${series} , ${date} , ${vch_no} ,  ${vch_type} , ${sale_type}  , ${account_name}
+     , ${debtors}  , ${address_1} ,  ${address_2} , ${address_3}
+          , ${address_4}, ${tin_number} , ${material_centre}  , ${out_of_state} , ${net_amount}
+         , ${imported} , NOW() , ${hk_ref_no})
 
 
  """);
 
         //RECURSE EVERY ROW
-        def arr = (Integer[][]) key;
-        int auto_id = arr[0][0];
-
-        // Generate Transaction Body
-        //For each purchase id  get all the items corresponds to it
-        int count = 0;
-
-        sqlProd.eachRow(""" SELECT t.id , t.value as taxValue, pil. purchase_invoice_id, pil.cost_price as costPrice, pil.sku_id ,pil.qty ,pil.mrp ,pil.discount_percent
-                            ,pil.id as purchaseLineItemId, pil.tax_id  as taxId, pil.payable_amount as payableAmount
-
-                    FROM  purchase_invoice_line_item  pil LEFT OUTER JOIN tax t ON t.id = pil.tax_id
-                    WHERE  pil.purchase_invoice_id =${purchaseRow.purchaseInvoiceId}
-                    """) {
-
-          pilRow ->
-          count = count + 1;
+            Long vch_code=keys[0][0];
+  //          transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
+    //        transactionFooterForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
 
 
 
-          try {
 
-            Float finalVat = 0.0;
-            Float rate = pilRow.costPrice;
-            Float costPriceFinal = pilRow.payableAmount;
-            Float discount = pilRow.discount_percent;
-            int quantity = pilRow.qty;
-            if (quantity == 0) {
-              quantity = 1;
-            }
-            if (rate == null) {
-              rate = 0.0;
-            }
-
-            if (costPriceFinal == null) {
-              costPriceFinal = 0.0;
-            }
-
-            finalVat = pilRow.taxValue;
-
-            sqlReport.execute("""
-
-      INSERT INTO transaction_body ( vch_code , s_no, item_code , qty , unit , mrp , rate , discount , vat  , amount , create_date , hk_ref_no)
-
-      VALUES( ${auto_id} , ${count}  , ${ pilRow.sku_id} , ${quantity} ,  'Pcs' ,${ pilRow.mrp} ,${rate}, ${discount} , ${finalVat}
-          , ${costPriceFinal} ,NOW() , ${ pilRow.purchaseLineItemId}  )  """);
-
-
-          } catch (Exception e1) {
-            Logger.info("insertion into transaction_body is failed",e1);
-          }
-
-
-        }
-
-        // Generate Transaction  Footer
-        try {
-
-          sqlReport.execute("""
-
-            INSERT INTO transaction_footer ( vch_code ,s_no, type , bill_sundry_name , percent ,amount ,create_date )
-
-       VALUES( ${auto_id} ,1, 0,  'freight_forwarding_charges' ,null ,  ifnull( ${purchaseRow.freight_forwarding_charges},0)
-       , NOW() )
-
-     """);
-
-          sqlReport.execute("""
-
-            INSERT INTO transaction_footer ( vch_code ,s_no, type , bill_sundry_name , percent ,amount ,create_date )
-
-       VALUES( ${auto_id} ,2, 1,  'discount' ,null ,  ifnull( ${purchaseRow.purchaseleveldiscount},0)
-       , NOW() )
-
-     """);
-
-
-        } catch (Exception e2) {
-          logger.info("Unable to insert in  supplier: ", e);
-        }
       }
-    }
+
 
 
   }
