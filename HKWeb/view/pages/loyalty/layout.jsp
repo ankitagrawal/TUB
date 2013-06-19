@@ -79,7 +79,7 @@
 
   <body>
 
-    <div class="embedMargin" id="header">
+    <div id="header">
         <div class="container_16 clearfix">
 	<c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" />
         

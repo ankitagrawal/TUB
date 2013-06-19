@@ -24,7 +24,7 @@
 
   <body>
 
-    <div class="embedMargin" id="header">
+    <div id="header">
         <div class="container_16 clearfix">
         
 		<div id="logo" class="grid_6">

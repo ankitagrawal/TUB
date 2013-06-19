@@ -31,26 +31,26 @@
             <div class="sorting">SORT BY POINTS</div>
                    <div class="brandsContainer" >
 					<div class="priceRange">
-                  <span  id= "pointRange">
+                  <span  class="pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="0"/>
                   <s:param name="maxPoints" value="100"/>
                   less than 100</s:link>
                   </span></div>
 				<div class="priceRange">
-                  <span  id= "pointRange">
+                  <span   class="pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="101"/>
                   <s:param name="maxPoints" value="200"/>
                   101-200</s:link></span></div>
 				<div class="priceRange">
-                  <span  id= "pointRange">
+                  <span  class= "pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="201"/>
                   <s:param name="maxPoints" value="300"/>
                   201-300</s:link></span></div>
 				<div class="priceRange">
-                  <span  id= "pointRange">
+                  <span  class= "pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="301"/>
                   <s:param name="maxPoints" value="10000"/>
@@ -59,25 +59,25 @@
 			</div>
 			
 		<div class="priceFilterContainerOne">
-			<div class="sorting">SORT BY CATEGORY
-			<div class="priceRange">
-			   <strong><span  id= "categoryNameSpan" style="float: right;">
+			<div class="sorting">SORT BY CATEGORY</div>
+              <div class="priceRange">
+			   <strong><span class="categoryNameSpan">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
                   clear all </s:link></span></strong>
-			 </div></div>
+			 </div>
               <div class="brandsContainer " style ="height: 245px;">
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
-			   <span  id= "categoryNameSpan" class="font-small">
+			   <span class="categoryNameSpan font-small">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
                   <s:param name="categoryName" value="${loyaltyCategory.name}"/>
                     <c:choose>
                       <c:when test="${lca.categoryName == loyaltyCategory.name}">
-                        <strong>
-                            ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} )</strong>
+                        <span class="selectedCategory">
+                            ${loyaltyCategory.displayName} (${loyaltyCategory.prodCount})</span>
                       </c:when>
                       <c:otherwise>
-                        ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} )
+                        ${loyaltyCategory.displayName} (${loyaltyCategory.prodCount})
                       </c:otherwise>
                     </c:choose>
                    </s:link></span>
@@ -122,9 +122,7 @@
                 redeemButton.attr('value', 'Added to Cart');
                 redeemButton.removeClass()
                 redeemButton.disabled =true;
-
-                //$("#" + form.context.id + ' input').disabled = true;
-
+                $('#productsInCart').html(resp.data.itemsInCart);
                 $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');
        		    $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
@@ -189,7 +187,9 @@
 						<s:param name ="prodVariantId" value="${variant.id}" />
 					</div>
 				</s:link>
-                <div class="productDescription embedMargin">${product.name}</div>
+                <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction"><div class="productDescription embedMargin">
+                ${product.name}<s:param name ="prodVariantId" value="${variant.id}" />
+                </div></s:link>
                 <div class="loyaltyPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>
                 <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
 				<input type="hidden" value="${variant.id}" name="productVariantId">

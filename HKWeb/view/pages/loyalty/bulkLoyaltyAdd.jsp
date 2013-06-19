@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" var="bulkAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" var="loyaltyAdminAction"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -52,10 +52,10 @@
 	});
   </script>
   <div style="background: #FAFAEE;">
-  	<c:if test="${! empty bulkAction.errorMessages}">
+  	<c:if test="${! empty loyaltyAdminAction.errorMessages}">
   	<div style="color: red;">Upload Failed! Following errors were found in the file :
   	<br><br>
-  	    <c:forEach items="${bulkAction.errorMessages}" var="message">
+  	    <c:forEach items="${loyaltyAdminAction.errorMessages}" var="message">
        		<div style="color: red; font-size: 12px;">
        			 ${message}.
         	</div>
@@ -64,7 +64,7 @@
   	</c:if>
   	
   	<div style="color: green;">
-  	${bulkAction.successMessage}
+  	${loyaltyAdminAction.successMessage}
   	</div>
   	<div style="float: left; clear:both; width:100%;">
 	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction" id="searchForm">
@@ -95,7 +95,7 @@
 		</div>
 	</div>
 	<div>
-		<c:if test="${not empty bulkAction.loyaltyProducts}">
+		<c:if test="${not empty loyaltyAdminAction.loyaltyProducts}">
 			<div id="productsTable">
 				<table style="width:100%;">
 					<thead><tr>
@@ -107,7 +107,7 @@
 					<th> &nbsp;</th>
 					</tr></thead>
 				<%int count=0; %>
-				<c:forEach items="${bulkAction.loyaltyProducts}" var="lp">
+				<c:forEach items="${loyaltyAdminAction.loyaltyProducts}" var="lp">
 					<tbody><tr>
 					<td><%=++count %></td>
 					<td class="variant">${lp.variant.id}</td>

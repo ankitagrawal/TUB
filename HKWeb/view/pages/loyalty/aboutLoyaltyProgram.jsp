@@ -69,16 +69,16 @@
             <div id="top" class="sorting makeCursor">TOP</div>
               <div class="brandsContainer1">
                 <div id="aboutLoyalty" class="priceRange">
-                  <span >About loyalty</span>
+                  <span class="optionSpan">About loyalty</span>
                 </div>
                 <div id="hwItWorks" class="priceRange">
-                  <span >Program Structure</span>
+                  <span class="optionSpan">Program Structure</span>
                 </div>
                 <div id="benefitsLevel" class="priceRange">
-                  <span >Benefits levels</span>
+                  <span class="optionSpan">Benefits levels</span>
                 </div>
                 <div id="faqs" class="priceRange">
-                  <span >FAQs</span>
+                  <span class="optionSpan">FAQs</span>
                 </div>
               </div>
  			<div id="bottom" class="bottomText makeCursor">BOTTOM</div>

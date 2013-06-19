@@ -2,10 +2,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes"	uri="http://stripes.sourceforge.net/stripes.tld"%>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-</head>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 

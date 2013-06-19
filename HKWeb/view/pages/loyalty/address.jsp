@@ -56,7 +56,7 @@
 											</s:link>
 										</address>
 									</td>
-									<td><span class="edit">Edit</span> |
+									<td style="width:25%;"><span class="edit">Edit</span> |
 									<s:link beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction" event="remove" class="delete">
                             		<s:param name="deleteAddress" value="${address.id}"/> Delete </s:link> </td>
 								</tr>

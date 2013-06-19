@@ -63,7 +63,6 @@
                 redeemButton.disabled =true;
                 //$("#" + form.context.id + ' input').disabled = true;
 	            $('#productsInCart').html(resp.data.itemsInCart);
-
                 $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');
        		    $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
@@ -86,7 +85,7 @@
       });
     </script>
     <div id="successToolTip" class="row" style="display: none;">
-      <div class="span7">
+      <div class="toolDiv">
         <div class="alert alert-success">
           <button id="successToolTipBtn" type="button" class="close">x</button>
           Product added to Cart!&nbsp;&nbsp;&nbsp;<strong><a href="${pageContext.request.contextPath}/core/loyaltypg/Cart.action">View
@@ -95,7 +94,7 @@
       </div>
     </div>
     <div id="errorToolTip" class="row" style="display: none;">
-      <div class="span7">
+      <div class="toolDiv">
         <div class="alert alert-error">
           <button id="errorToolTipBtn1" type="button" class="close" >x</button>
           <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg" ></span>
