@@ -104,7 +104,7 @@ public class SearchAction extends BasePaginatedAction {
       }
       productSearchService.logSearchResult(query, Long.valueOf(productPage != null ? productPage.getTotalResults() : 0), category);
     }
-    if (productList != null && !productList.isEmpty() && productList.size() == 1) {
+    if (productList != null && !productList.isEmpty() && productList.size() == 1 && getPageNo() == 1) {
         Product product = productList.get(0);
         return new RedirectResolution(ProductAction.class).addParameter("productId", product.getId()).addParameter("productSlug", product.getSlug());
     }
