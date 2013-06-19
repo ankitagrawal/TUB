@@ -137,6 +137,7 @@
 ---/sports/fitness-accessories/support-gear/thighs
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/rehabilitation-supports
+--/sports/fitness-accessories/gym-clothing
 --/sports/fitness-accessories/fitness-watches
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
@@ -193,7 +194,7 @@
 ----/sports/sports-equipment/cricket/bats/english-willow: English Willow
 ---/sports/sports-equipment/cricket/balls
 ---/sports/sports-equipment/cricket/gloves
----/sports/sports-eqipment/cricket/helmets
+---/sports/sports-equipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
 ---/sports/sports-equipment/cricket/guards
 ---/sports/sports-equipment/cricket/bags
@@ -239,6 +240,7 @@
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
+--/sports/apparel/gym-clothing
 --/sports/apparel/sports-wear
 --/sports/apparel/bags
 --/sports/apparel/caps

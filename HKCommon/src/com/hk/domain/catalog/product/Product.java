@@ -29,6 +29,7 @@ import com.akube.framework.gson.JsonSkip;
 import com.google.gson.annotations.Expose;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.category.Category;
 import com.hk.pact.service.Trackable;
 import com.hk.pact.service.audit.Auditable;
@@ -744,5 +745,9 @@ public class Product  implements java.io.Serializable {
      public Boolean getInstallable() {
 		return installable!=null ? installable : false;
 	}
+
+    public boolean isCombo() {
+      return this instanceof Combo;
+    }
 
 }

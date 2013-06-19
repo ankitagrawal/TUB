@@ -402,7 +402,7 @@
 		</c:if>
 		<c:if test="${!empty product.relatedProducts}">
 			<a class='top_link' id="related_product_link" href='#related_products'>
-				Related Products &darr;
+				Recommended Products &darr;
 			</a>
 		</c:if>
 <%--
@@ -604,7 +604,7 @@
 			</h4>
 			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
                 <c:if test="${!relatedCombo.outOfStock and !relatedCombo.deleted and !relatedCombo.hidden and !relatedCombo.googleAdDisallowed}">
-				<s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${relatedCombo.id}"/>
+				<s:layout-render name="/layouts/embed/_productVOThumbG.jsp" productId="${relatedCombo.id}"/>
                 <c:set var="check_related_combos" value="1"/>
                 </c:if>
 			</c:forEach>
@@ -786,7 +786,7 @@
 		<div>
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editRelatedProducts" class="popup">
-				Edit Related Products
+				Edit Recommended Products
 				<s:param name="productId" value="${product.id}"/>
 			</s:link>
 		</div>
@@ -802,7 +802,7 @@
 
 			<c:forEach items="${relatedProducts}" var="relatedProduct">
                  <c:if test="${!relatedProduct.outOfStock and !relatedProduct.deleted and !relatedProduct.hidden and !relatedProduct.googleAdDisallowed}">
-				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
+				<s:layout-render name="/layouts/embed/_productVOThumbG.jsp" product="${relatedProduct}"/>
                      <c:set var="check_related_products" value="1"/>
                 </c:if>
 			</c:forEach>

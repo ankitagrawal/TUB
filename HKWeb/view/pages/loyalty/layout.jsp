@@ -88,8 +88,8 @@
               <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home' target='_blank'>Go back to <strong>HealthKart.com</strong></s:link></span>
 			  </p>
               <div class="logoSubblock">
-			  <a title="go to stellar home" href="${pageContext.request.contextPath}/loyaltypg">
-                <img width="283" height="83" alt="healthkart logo" src="<hk:vhostImage/>/pages/loyalty/resources/images/hkStellar.png">
+			  <a title="go to loyalty home" href="${pageContext.request.contextPath}/loyaltypg">
+                <img width="283" height="83" alt="healthkart logo" src="<hk:vhostImage/>/pages/loyalty/resources/images/hkLoyalty.png">
               </a>
               </div>
   
@@ -118,7 +118,7 @@
             <div>
               <p class="section2">
 				<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram">
-				about <span class="boldfont">  stellar </span>
+				about <span class="boldfont">  loyalty </span>
 				</s:link>
 				</p> 
             </div>
@@ -155,7 +155,7 @@
           <div class="grid_12">
             <div class="footerRight">
             <div class="footerLeft" >
-              info@healthkart.com | <a href= "${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" target="_blank">Terms and Conditions </a> | Connect with Us:
+              info@healthkart.com | <a href= "${pageContext.request.contextPath}/pages/loyalty/info/loyaltyTerms.jsp" target="_blank">Terms and Conditions </a> | Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img
