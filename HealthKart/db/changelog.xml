@@ -13219,6 +13219,11 @@
 			INSERT INTO seek_invoice_num (warehouse_id, invoice_num, prefix, description) VALUES ('1000', '1', 'R', 'Retail Invoice 2013');
 		</sql>
 	</changeSet>
+    <changeSet author="Rajesh" id="20130617-01">
+    		<sql>
+    			INSERT INTO ad_networks (id,name) values(40,'Ozone'),(50,'Yahoo');
+    		</sql>
+    </changeSet>
     <changeSet author="Shakti Singh (generated)" id="1371116638901-1">
         <addColumn tableName="payment">
             <column name="parent_id" type="INT"/>
@@ -13237,6 +13242,5 @@
             insert into payment_status values (8,'Refund Request Initiated');
             insert into payment_status values (9,'Refunded');
         </sql>
-
     </changeSet>
 </databaseChangeLog>

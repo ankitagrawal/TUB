@@ -194,7 +194,7 @@
 ----/sports/sports-equipment/cricket/bats/english-willow: English Willow
 ---/sports/sports-equipment/cricket/balls
 ---/sports/sports-equipment/cricket/gloves
----/sports/sports-eqipment/cricket/helmets
+---/sports/sports-equipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
 ---/sports/sports-equipment/cricket/guards
 ---/sports/sports-equipment/cricket/bags
