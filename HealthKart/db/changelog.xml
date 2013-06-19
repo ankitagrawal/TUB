@@ -13224,5 +13224,81 @@
     			INSERT INTO ad_networks (id,name) values(40,'Ozone'),(50,'Yahoo');
     		</sql>
     	</changeSet>
+    
+    <changeSet author="Tarun (written)" id="20130617-01">
+        <sql>
+            INSERT INTO  `seek_invoice_num` (`id` ,`warehouse_id` ,`invoice_num` ,`prefix` ,`description`)
+            VALUES  (NULL ,  '1',  '1',  'DN',  'Debit Note 2013'),
+            (NULL ,  '2',  '1',  'DN',  'Debit Note 2013'),
+            (NULL ,  '301',  '1',  'DN',  'Debit Note 2013'),
+            (NULL ,  '401',  '1',  'DN',  'Debit Note 2013');
 
-</databaseChangeLog>
+        </sql>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-2">
+        <createTable tableName="debit_note_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-3">
+        <addColumn tableName="debit_note">
+            <column name="debit_note_number" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-4">
+        <addColumn tableName="debit_note">
+            <column name="debit_note_type_id" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-6">
+        <dropNotNullConstraint columnDataType="INT" columnName="sku_id" tableName="debit_note_line_item"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371030978772-10">
+        <addForeignKeyConstraint baseColumnNames="debit_note_type_id" baseTableName="debit_note" constraintName="fk_debit_note_debit_note_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="debit_note_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-2">
+        <addColumn tableName="debit_note">
+            <column name="purchase_invoice_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-3">
+        <addColumn tableName="debit_note">
+            <column name="reconciliation_voucher_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-9">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="debit_note" constraintName="fk_debit_note_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371032589311-10">
+        <addForeignKeyConstraint baseColumnNames="reconciliation_voucher_id" baseTableName="debit_note" constraintName="fk_debit_note_reconciliation_voucher1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_voucher" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371202029098-7">
+        <addColumn tableName="debit_note_line_item">
+            <column name="product_name" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371202029098-9">
+        <modifyDataType columnName="product_name" newDataType="VARCHAR(100)" tableName="extra_inventory_line_item"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371571434761-2">
+        <addColumn tableName="rtv_note">
+            <column defaultValue="0" name="email_sent_to_vendor" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371571434761-3">
+        <addColumn tableName="rtv_note">
+            <column name="shipping_charge_hk" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1371571434761-4">
+        <addColumn tableName="rtv_note">
+            <column name="shipping_charge_vendor" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    </databaseChangeLog>

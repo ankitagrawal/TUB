@@ -144,6 +144,8 @@ public class MasterDataService {
 	StockTransferStatusSeed stockTransferStatusSeed;
 	@Autowired
 	ExtraInventoryLineItemTypeSeedData extraInventoryLineItemTypeSeedData;
+	@Autowired
+	DebitNoteTypeSeedData debitNoteTypeSeedData;
 
 	public void insert() {
 
@@ -316,5 +318,8 @@ public class MasterDataService {
 		
 		logger.debug("inserting Extra Inventory Line Item Type");
 		extraInventoryLineItemTypeSeedData.invokeInsert();
+		
+		logger.debug("inserting Debit Note Type");
+		debitNoteTypeSeedData.invokeInsert();
 	}
 }

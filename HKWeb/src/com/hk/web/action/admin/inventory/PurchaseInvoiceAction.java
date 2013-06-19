@@ -114,6 +114,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private Double rtvTotalPayable;
 	private Long extraInventoryId;
 	private Double piFinalPayable;
+	private Boolean isDebitNoteCreated;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -163,6 +164,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					purchaseInvoiceLineItems.add(purchaseInvoiceLineItem);
 			}
 			
+			isDebitNoteCreated = purchaseInvoiceService.getDebitNote(purchaseInvoice)!=null?Boolean.TRUE:Boolean.FALSE;
 			//fetch all existing RTV
 			piHasRtv = Boolean.FALSE;
 			if (purchaseInvoice.getRtvNotes() != null && purchaseInvoice.getRtvNotes().size() > 0) {
@@ -328,7 +330,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public Resolution save() {
 		if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceLineItems.size());
+			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoice.getId());
 
 			if (StringUtils.isBlank(purchaseInvoice.getInvoiceNumber()) || purchaseInvoice.getInvoiceDate() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
@@ -424,6 +426,10 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				}
 			}
 		}
+	}
+	
+	public Resolution createDebitNote(){
+		return new RedirectResolution(DebitNoteAction.class).addParameter("debitNoteFromPi").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -798,6 +804,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setIsRtvReconciled(Boolean isRtvReconciled) {
 		this.isRtvReconciled = isRtvReconciled;
+	}
+	
+	public Boolean getIsDebitNoteCreated() {
+		return isDebitNoteCreated;
+	}
+
+	public void setIsDebitNoteCreated(Boolean isDebitNoteCreated) {
+		this.isDebitNoteCreated = isDebitNoteCreated;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)

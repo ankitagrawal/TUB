@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.accounting;
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
@@ -49,8 +50,14 @@ public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService {
 	public PurchaseInvoice getPurchaseInvoiceById(Long purchaseInvoiceId) {
 		return (PurchaseInvoice) getPurchaseInvoiceDao().get(PurchaseInvoice.class, purchaseInvoiceId);
 	}
+	
 
 	public PurchaseInvoiceDao getPurchaseInvoiceDao() {
 		return purchaseInvoiceDao;
+	}
+
+	@Override
+	public DebitNote getDebitNote(PurchaseInvoice purchaseInvoice) {
+		return (DebitNote) getPurchaseInvoiceDao().getDebitNote(purchaseInvoice);
 	}
 }

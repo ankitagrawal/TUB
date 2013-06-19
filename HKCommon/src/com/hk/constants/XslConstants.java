@@ -160,4 +160,14 @@ public class XslConstants {
     public static final String RECON_REASON = "RECON REASON";
 
     public static final String SHIPMENT_STATUS = "SHIPMENT STATUS";
+    
+    public static final String EMAIL_ID_1 = "EMAIL ID 1";
+    public static final String CONTACT_PERSON_2 = "CONTACT PERSON 2";
+    public static final String CONTACT_NUMBER_2 = "CONTACT NUMBER 2";
+    public static final String EMAIL_ID_2 = "EMAIL ID 2";
+    public static final String CONTACT_PERSON_3 = "CONTACT PERSON 3";
+    public static final String CONTACT_NUMBER_3 = "CONTACT NUMBER 3";
+    public static final String EMAIL_ID_3 = "EMAIL ID 3";
+    
+    
 }

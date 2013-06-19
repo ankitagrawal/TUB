@@ -81,6 +81,15 @@ public class RtvNote implements Serializable{
   )
   private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
   
+  @Column(name="shipping_charge_hk")
+  private Double shippingChargeHk;
+  
+  @Column(name="shipping_charge_vendor")
+  private Double shippingChargeVendor;
+  
+  @Column(name="email_sent_to_vendor")
+  private Boolean emailSentToVendor;
+  
   public Long getId() {
     return id;
   }
@@ -184,6 +193,29 @@ public class RtvNote implements Serializable{
   public void setPurchaseInvoices(List<PurchaseInvoice> purchaseInvoices) {
 	this.purchaseInvoices = purchaseInvoices;
   }
-  
+
+	public Double getShippingChargeHk() {
+		return shippingChargeHk;
+	}
+	
+	public void setShippingChargeHk(Double shippingChargeHk) {
+		this.shippingChargeHk = shippingChargeHk;
+	}
+	
+	public Double getShippingChargeVendor() {
+		return shippingChargeVendor;
+	}
+	
+	public void setShippingChargeVendor(Double shippingChargeVendor) {
+		this.shippingChargeVendor = shippingChargeVendor;
+	}
+	
+	public Boolean getEmailSentToVendor() {
+		return emailSentToVendor;
+	}
+	
+	public void setEmailSentToVendor(Boolean emailSentToVendor) {
+		this.emailSentToVendor = emailSentToVendor;
+	}
   	
 }

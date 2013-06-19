@@ -6,7 +6,7 @@
 <head>
   <title>Debit Note</title>
   <style type="text/css">
-    table {
+    /* table {
       border-collapse: collapse;
       width: 100%;
       font-size: .8em;
@@ -32,7 +32,41 @@
       margin: 0;
       padding: 0;
     }
+ */
+  table {
+    width: 100%;
+    font-size: .8em;
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    border-collapse: separate;
+    border-color: black;
+  }
 
+  table tr td {
+    text-align: left;
+    font-size: small;
+    border-width: 1px 1px 0 0;
+    border-style: solid;
+    border-color: black;
+  }
+
+  table tr th {
+    border-width: 1px 1px 0 0;
+    border-style: solid;
+    border-color: black;
+  }
+  
+  table th {
+  text-align: center;
+  }
+
+  p {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+  }
+ 
+ 
     table.header tr td {
       border: none;
       vertical-align: top;
@@ -51,9 +85,9 @@
 <body>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="debitNoteSummary"/>
-<table class="header">
-  <tr>
-    <td>
+<div class="grid_12">
+	<div class="grid_4 alpha omega">
+		<div class="column">
       <c:set var="warehouse" value="${debitNoteSummary.debitNote.warehouse}"/>
       ${warehouse.name}<br/>
       ${warehouse.line1}<br/>
@@ -62,15 +96,11 @@
       -${warehouse.pincode} <br/>
       ${warehouse.state}<br/>
       TIN# ${warehouse.tin}
-    </td>
-    <td align="right">
-      <%--<img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>--%>
-    </td>
-  </tr>
-</table>
-
+</div></div></div>
 <h3 align="center">Debit Note</h3>
 <br/>
+		<div class="clear"></div>
+<div style="margin-top: 20px;"></div>
 <table style="font-size:.9em">
   <tr>
     <td><b>Supplier</b></td>
@@ -94,6 +124,7 @@
     <tr>
         <td><b>Tin</b></td>
         <td>${debitNoteSummary.debitNote.supplier.tinNumber}</td>
+        <td colspan="2"></td>
     </tr>
 </table>
 
@@ -121,7 +152,10 @@
   <c:forEach var="debitNoteDto" items="${debitNoteSummary.debitNoteDto.debitNoteLineItemDtoList}" varStatus="ctr">
     <tr>
       <td>${ctr.index+1}.</td>
-      <td>
+      
+      <c:choose>
+      <c:when test="${debitNoteDto.debitNoteLineItem.sku!=null }">
+       <td>
           ${debitNoteDto.debitNoteLineItem.sku.productVariant.id}
       </td>
       <td>
@@ -129,6 +163,13 @@
       </td>
       <td>${debitNoteDto.debitNoteLineItem.sku.productVariant.product.name}<br/>${debitNoteDto.debitNoteLineItem.sku.productVariant.optionsCommaSeparated}
       </td>
+      </c:when>
+      <c:otherwise>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>${debitNoteDto.debitNoteLineItem.productName}</td>
+      </c:otherwise>
+      </c:choose>
       <td>${debitNoteDto.debitNoteLineItem.qty}
       </td>
       <td>${debitNoteDto.debitNoteLineItem.costPrice}

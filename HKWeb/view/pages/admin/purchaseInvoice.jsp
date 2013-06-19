@@ -53,12 +53,15 @@
 #finalPayableDiv{
 	float: right;
 	position: relative;
+	 margin-top: 30px;
 }
 
 #closeButtonDiv{
 	float: left;
 	position: relative;
 	left: 40%;
+	margin-bottom: 2px;
+	margin-top: 2px;
 }
 #finalPayableDiv input{
 float: left;
@@ -472,6 +475,10 @@ width: 80px;
 			$("#rtvForm .taxValues").each(function(){
 				$(this).prop('disabled', true);
 	    		});
+		}
+		
+		if(${pia.isDebitNoteCreated}){
+			$("#createDebitNoteButton").hide();
 		}
 		
 	});
@@ -1229,6 +1236,20 @@ width: 80px;
 </s:form>
 
 <hr>
+
+<div id="closeButtonDiv">
+<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="close" Value="Close" class="button_green addToCartButton" > Close </s:link>
+</div>
+<div id="closeButtonDiv">
+<c:if test="${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled &&(pia.piHasRtv||pia.piHasShortEiLi)}">
+<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
+<s:param name="purchaseInvoice" value="${pia.purchaseInvoice}" />
+ Create Debit Note </s:link>
+</c:if>
+</div>
+
+<br/>
+
 <div id = "finalPayableDiv">
 <fieldset>
 <legend><br/><em>Final Totals</em></legend>
@@ -1285,8 +1306,5 @@ width: 80px;
 </fieldset>
 </div>
 
-<div id="closeButtonDiv">
-<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="close" Value="Close" class="button_green addToCartButton" > Close </s:link>
-</div>
 </s:layout-component>
 </s:layout-render>
