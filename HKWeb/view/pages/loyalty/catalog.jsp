@@ -60,8 +60,8 @@
 			
 		<div class="priceFilterContainerOne">
 			<div class="sorting">SORT BY CATEGORY</div>
-              <div class="priceRange">
-			   <strong><span class="categoryNameSpan">
+              <div class="priceRange optionBottom">
+			   <strong><span class="categoryNameSpan" style="font-size: 16px;">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
                   clear all </s:link></span></strong>
 			 </div>

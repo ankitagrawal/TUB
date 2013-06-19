@@ -79,7 +79,7 @@
         });
         
         $('.productImage-small').click(function () {
-        	var largeImgUrl =  $(this).parent().find('.largeImageRef').val();
+        	var largeImgUrl =  $(this).parent().find('.mediumImageRef').val();
         	$('.productImage-Large').attr('src', largeImgUrl);
         });
       });
@@ -144,13 +144,13 @@
     				</c:otherwise>
     			</c:choose>
 				<div class="productImageLarge">
-    				<img src="${hk:getS3ImageUrl(imageLargeSize, imageId)}" alt="${product.name}" title="${product.name}" class="productImage-Large" >
+    				<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}" title="${product.name}" class="productImage-Large" >
 
     			</div>
     			<div class="smallImages">
             		<c:forEach items="${prodVariant.productImages}" var="productImage">
             			<div class="smallImg-div">
-            				<input type="hidden" value="${hk:getS3ImageUrl(imageLargeSize, productImage.id)}" name="largeImageRef" class="largeImageRef" />
+            				<input type="hidden" value="${hk:getS3ImageUrl(imageMediumSize, productImage.id)}" name="mediumImageRef" class="mediumImageRef" />
               				<img src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id)}' class="productImage-small">
             			</div>
 					</c:forEach>
@@ -181,7 +181,7 @@
 			    	        </c:forEach>
 						</c:if>
     				</div>
-    		<div class="grid_3">
+    		<div class="grid_3" style="position:absolute;top:570px;right:180px;">
              	<div class="points">${hk:roundNumberForDisplay(lp.points)} POINTS</div>
 				<s:form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${prodVariant.id}-cartForm" class="cartFormm">
 					<s:hidden value="${prodVariant.id}" name="productVariantId" />
