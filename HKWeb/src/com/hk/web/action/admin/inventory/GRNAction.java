@@ -228,7 +228,7 @@ public class GRNAction extends BasePaginatedAction {
 					grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
 				}
 				
-				if(saveValue == 2){
+				if((saveValue == 2 || grn.getGrnStatus().getId()>=EnumGrnStatus.Closed.getId())){
 					if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
 							(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
 						grnLineItem = (GrnLineItem) grnLineItemDao.save(grnLineItem);
@@ -237,7 +237,7 @@ public class GRNAction extends BasePaginatedAction {
 								List<PurchaseInvoiceLineItem> items = invoice.getPurchaseInvoiceLineItems();
 								if(items!=null&&items.size()>0){
 									for(PurchaseInvoiceLineItem pili :items){
-										if(pili.getGrnLineItem().equals(grnLineItem)){
+										if(pili.getGrnLineItem()!=null && pili.getGrnLineItem().equals(grnLineItem)){
 										pili.setGrnLineItem(null);
 										purchaseInvoiceDao.save(pili);
 										}
@@ -301,7 +301,9 @@ public class GRNAction extends BasePaginatedAction {
                 	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
                 	po.setExtraInventoryId(id);
                 }
+				if(grn.getGrnLineItems()!=null && grn.getGrnLineItems().size()>0){
 				getAdminEmailManager().sendGRNEmail(grn);
+				}
 			}
 
 		}
