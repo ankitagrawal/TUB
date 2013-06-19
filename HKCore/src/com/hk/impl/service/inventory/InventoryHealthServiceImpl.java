@@ -215,6 +215,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			SkuInfo info = queue.peek();
 			if(info != null && inventoryInfo.getSkuId() == info.getSkuId() && inventoryInfo.getMrp() == info.getMrp()) {
 				info.setQty(info.getQty() + inventoryInfo.getQty());
+				info.setUnbookedQty(info.getQty());
 			} else {
 				queue.add(inventoryInfo);
 			}
@@ -243,6 +244,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				SkuInfo info = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
 				if(info != null) {
 					info.setQty(info.getQty() - inProcessInfo.getQty());
+					info.setUnbookedQty(info.getQty());
 				}
 			}
 		}

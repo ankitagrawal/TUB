@@ -239,8 +239,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 		InventoryInfo invInfo = inventoryHealthService.getAvailableInventory(variant, preferredMrp);
 		if(invInfo != null) {
 			for (SkuInfo skuInfo : invInfo.getSkuInfoList()) {
-				long inventory = skuInfo.getQty() + qty;
-				if(inventory > 0) {
+				if(skuInfo.getUnbookedQty() >= qty) {
 					Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
 					skus.add(sku);
 				}

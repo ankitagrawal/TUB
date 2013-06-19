@@ -58,6 +58,7 @@ public interface InventoryHealthService {
 		private long skuId;
 		private double mrp;
 		private long qty;
+		private long unbookedQty;
 		private Date checkinDate;
 
 		public long getSkuId() {
@@ -90,6 +91,14 @@ public interface InventoryHealthService {
 		
 		public void setQty(long qty) {
 			this.qty = qty;
+		}
+		
+		public long getUnbookedQty() {
+			return unbookedQty;
+		}
+		
+		public void setUnbookedQty(long unbookedQty) {
+			this.unbookedQty = unbookedQty;
 		}
 	}
 }
