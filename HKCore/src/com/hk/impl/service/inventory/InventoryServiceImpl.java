@@ -1,6 +1,5 @@
 package com.hk.impl.service.inventory;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -111,12 +110,8 @@ public class InventoryServiceImpl implements InventoryService {
             try {
                 //Calling Async method to set all out of stock combos to in stock
                 getComboService().markRelatedCombosOutOfStock(productVariant);
-
                 //Update Low Inventory Record
                 updateLowInventory(productVariant, availableUnbookedInventory, aggCutOffInv);
-
-                //Now lets check for MRP dynamism
-                updatePvPriceRecord(productVariant);
             } catch (Exception e) {
                 logger.error("Error while marking LowInv and UpdatePv: ", e);
             }
@@ -124,6 +119,7 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
     @Transactional
+    @Deprecated
     private void updatePvPriceRecord(ProductVariant productVariant) {
         //Warehouse warehouse = userService.getWarehouseForLoggedInUser();
         boolean isAuditClosed = updatePvPriceDao.isAuditClosed(productVariant);
@@ -240,7 +236,8 @@ public class InventoryServiceImpl implements InventoryService {
         return bookedInventory;
     }
 
-    @Deprecated
+    @SuppressWarnings("unused")
+	@Deprecated
     private Long getBookedQty(List<Sku> skuList) {
         Long bookedInventory = 0L;
         if (skuList != null && !skuList.isEmpty()) {

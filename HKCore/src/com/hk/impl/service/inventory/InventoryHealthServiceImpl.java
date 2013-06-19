@@ -3,6 +3,7 @@ package com.hk.impl.service.inventory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,13 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
@@ -35,6 +39,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Autowired ProductService productService;
 	@Autowired WarehouseService warehouseService;
 	@Autowired BaseDao baseDao;
+	@Autowired UpdatePvPriceDao updatePvPriceDao;
 
 	@Override
 	@Transactional
@@ -102,6 +107,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	}
 
 	private void updateVariant(ProductVariant variant, Long mrpQty, Long netQty, Double mrp, boolean outOfStock) {
+		
+		if(!variant.getMarkedPrice().equals(Double.valueOf(mrpQty))) {
+			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
+            if (updatePvPrice == null) {
+                updatePvPrice = new UpdatePvPrice();
+            }
+            updatePvPrice.setProductVariant(variant);
+            updatePvPrice.setOldCostPrice(variant.getCostPrice());
+            updatePvPrice.setNewCostPrice(variant.getCostPrice());
+            updatePvPrice.setOldMrp(variant.getMarkedPrice());
+            updatePvPrice.setNewMrp(mrp);
+            updatePvPrice.setOldHkprice(variant.getHkPrice());
+            Double newHkPrice = mrp * (1 - variant.getDiscountPercent());
+            updatePvPrice.setNewHkprice(newHkPrice);
+            updatePvPrice.setTxnDate(new Date());
+            updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
+            baseDao.save(updatePvPrice);
+		}
+		
 		if(mrp != null) {
 			variant.setMarkedPrice(mrp);
 		}
