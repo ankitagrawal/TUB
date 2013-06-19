@@ -275,6 +275,19 @@ public class Functions {
     }
 
     @SuppressWarnings("unchecked")
+    public static boolean collectionContainsAnyCollectionItem(Collection c1, Collection c2) {
+      if (c1 == null || c2 == null) {
+        return false;
+      }
+      for (Object o : c2) {
+        if (c1.contains(o)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    @SuppressWarnings("unchecked")
     public static boolean urlContainsAnyCategory(String url, String categoryPipeSeparatedList) {
         String[] categories = null;
         if (categoryPipeSeparatedList.contains(",")) {

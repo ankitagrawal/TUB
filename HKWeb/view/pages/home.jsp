@@ -3,6 +3,9 @@
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="com.hk.domain.user.User" %>
+<%@ page import="com.hk.pact.service.UserService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -11,6 +14,12 @@
 <%
 	boolean isSecure = WebContext.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
+  UserService userService = ServiceLocatorFactory.getService(UserService.class);
+  User loggedInUser = userService.getLoggedInUser();
+  if (loggedInUser != null) {
+    pageContext.setAttribute("userRoles", loggedInUser.getRoleStrings());
+  }
+  pageContext.setAttribute("role_god", RoleConstants.GOD);
 %>
 
 <s:layout-render name="/layouts/genericG.jsp"
@@ -106,7 +115,7 @@
 
 <s:layout-component name="content">
   <div class="container_24">
-    <shiro:hasRole name="<%=RoleConstants.GOD%>">
+    <c:if test="${hk:collectionContains(userRoles, role_god)}">
       <div class="grid_24 alpha omega">
         <s:link beanclass="com.hk.web.action.core.catalog.image.UploadCategoryImageAction" event="pre" target="_blank"
                 class="popup"> Upload
@@ -132,7 +141,7 @@
 
 
       <div class="clear"></div>
-    </shiro:hasRole>
+    </c:if>
 
 
     <c:forEach var="heading" items="${homeBean.headingsWithRankingSetSortedByRanking}">
@@ -170,7 +179,7 @@
         <div class="clear"></div>
 
 
-        <shiro:hasRole name="<%=RoleConstants.GOD%>">
+        <c:if test="${hk:collectionContains(userRoles, role_god)}">
           <div class="grid_24 alpha omega" style="width: 950px;">
             <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                     event="editPrimaryCategoryHeadingProducts"
@@ -182,13 +191,13 @@
 
 
           <div class="clear"></div>
-        </shiro:hasRole>
+        </c:if>
 
 
         <div class="grid_24" style="width: 950px;">
           <c:forEach var="headingProduct" items='${hk:getHeadingProductsSortedByRank(heading.id)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}' productReferrerId="<%=EnumProductReferrer.homePage.getId()%>"/>
+              <s:layout-render name="/layouts/embed/_productVOThumbG.jsp" productId='${headingProduct.productId}' productReferrerId="<%=EnumProductReferrer.homePage.getId()%>"/>
             </div>
           </c:forEach>
         </div>
@@ -196,7 +205,7 @@
       </c:if>
 
 
-      <shiro:hasRole name="<%=RoleConstants.GOD%>">
+      <c:if test="${hk:collectionContains(userRoles, role_god)}">
         <c:if test="${empty hk:getHeadingProductsSortedByRank(heading.id)}">
           <div class="grid_24 alpha omega" style="width: 950px;">
             <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
@@ -212,7 +221,7 @@
 
 
         <div class="clear"></div>
-      </shiro:hasRole>
+      </c:if>
 
 
     </c:forEach>
