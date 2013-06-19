@@ -364,7 +364,7 @@ public class Product  implements java.io.Serializable {
         ProductVariant maxDiscountPV = new ProductVariant();
         maxDiscountPV.setDiscountPercent(0.0);
         for (ProductVariant productVariant : this.getProductVariants()) {
-            if (productVariant.getDiscountPercent() >= maxDiscountPV.getDiscountPercent()) {
+            if (!productVariant.isDeleted() && productVariant.getDiscountPercent() >= maxDiscountPV.getDiscountPercent()) {
                 maxDiscountPV = productVariant;
                 maxDiscountPV.setDiscountPercent(productVariant.getDiscountPercent());
             }
@@ -375,13 +375,11 @@ public class Product  implements java.io.Serializable {
     public ProductVariant getInStockMaximumDiscountProductVariant() {
         ProductVariant inStockMaxDiscountPV = null;
         Double maxDiscountPercent = 0D;
-        for (ProductVariant productVariant : this.getProductVariants()) {
-            if (!productVariant.isOutOfStock() && !productVariant.isDeleted()) {
-                if (productVariant.getDiscountPercent() >= maxDiscountPercent) {
-                    inStockMaxDiscountPV = productVariant;
-                    maxDiscountPercent = productVariant.getDiscountPercent();
-                }
-            }
+        for (ProductVariant productVariant : this.getInStockVariants()) {
+          if (productVariant.getDiscountPercent() >= maxDiscountPercent) {
+            inStockMaxDiscountPV = productVariant;
+            maxDiscountPercent = productVariant.getDiscountPercent();
+          }
         }
         return inStockMaxDiscountPV;
     }
