@@ -21,6 +21,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.DebitNoteDto;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
@@ -60,6 +61,8 @@ public class DebitNoteAction extends BasePaginatedAction {
     RtvNoteLineItemService rtvNoteLineItemService;
     @Autowired
     DebitNoteService             debitNoteService;
+    @Autowired
+	AdminEmailManager adminEmailManager;
 
     Page                            debitNotePage;
     private List<DebitNote>         debitNoteList      = new ArrayList<DebitNote>();
@@ -110,18 +113,28 @@ public class DebitNoteAction extends BasePaginatedAction {
     }
 
     public Resolution debitNoteFromPi(){
+    	Double shippingChargesOnHk= 0.0;
+		Double shippingChargesOnVendor = 0.0;
     	if (purchaseInvoice != null) {
     		rtvList = purchaseInvoice.getRtvNotes();
     		eiLineItem = purchaseInvoice.getEiLineItems();
     		for(RtvNote rtv:rtvList){
+    			if(rtv.getShippingChargeHk()!=null){
+    				shippingChargesOnHk+=rtv.getShippingChargeHk();
+    			}
+    			if(rtv.getShippingChargeVendor()!=null){
+    				shippingChargesOnVendor+=rtv.getShippingChargeVendor();
+    			}
     		List<RtvNoteLineItem> rtvNoteLineItemsList = rtvNoteLineItemService.getRtvNoteLineItemsByRtvNote(rtv);
     		if(rtvNoteLineItemsList!=null && rtvNoteLineItemsList.size()>0){
     			rtvNoteLineItems.addAll(rtvNoteLineItemsList);
     			}
     		}
-    		debitNote = new DebitNote();
-    		debitNote.setPurchaseInvoice(purchaseInvoice);
-    		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
+		debitNote = new DebitNote();
+		debitNote.setPurchaseInvoice(purchaseInvoice);
+		debitNote.setShippingChargeHk(shippingChargesOnHk);
+		debitNote.setShippingChargeVendor(shippingChargesOnVendor);
+		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
     		
     	}
     	//return new ForwardResolution("/pages/admin/debitNote.jsp");
@@ -158,6 +171,12 @@ public class DebitNoteAction extends BasePaginatedAction {
     	getBaseDao().delete(debitNote);
     	addRedirectAlertMessage(new SimpleMessage("Debit Note Deleted."));
     	return new RedirectResolution(DebitNoteAction.class);
+    }
+    
+    public Resolution sendDebitNoteEmail(){
+    	adminEmailManager.sendDebitNoteMail(debitNote);
+    	addRedirectAlertMessage(new SimpleMessage("Email Sent To Supplier"));
+		return new RedirectResolution(DebitNoteAction.class);
     }
 
     public List<DebitNote> getDebitNoteList() {

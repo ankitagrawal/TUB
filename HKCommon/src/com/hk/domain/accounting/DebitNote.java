@@ -80,6 +80,15 @@ public class DebitNote implements java.io.Serializable {
 
     @Column(name = "debit_note_number")
     private String debitNoteNumber;
+    
+    @Column(name="email_sent_to_vendor")
+    private Boolean emailSentToVendor;
+    
+    @Column(name="shipping_charge_hk")
+    private Double shippingChargeHk;
+    
+    @Column(name="shipping_charge_vendor")
+    private Double shippingChargeVendor;
 
     public Long getId() {
         return this.id;
@@ -184,6 +193,29 @@ public class DebitNote implements java.io.Serializable {
     public void setDebitNoteNumber(String debitNoteNumber) {
         this.debitNoteNumber = debitNoteNumber;
     }
+    public Boolean getEmailSentToVendor() {
+		return emailSentToVendor;
+	}
+	
+	public void setEmailSentToVendor(Boolean emailSentToVendor) {
+		this.emailSentToVendor = emailSentToVendor;
+	}
+
+	public Double getShippingChargeHk() {
+		return shippingChargeHk;
+	}
+
+	public void setShippingChargeHk(Double shippingChargeHk) {
+		this.shippingChargeHk = shippingChargeHk;
+	}
+
+	public Double getShippingChargeVendor() {
+		return shippingChargeVendor;
+	}
+
+	public void setShippingChargeVendor(Double shippingChargeVendor) {
+		this.shippingChargeVendor = shippingChargeVendor;
+	}
 }
 
 
