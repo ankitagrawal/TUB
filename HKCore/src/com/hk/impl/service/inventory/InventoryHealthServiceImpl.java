@@ -24,6 +24,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
@@ -326,5 +327,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public Collection<InventoryInfo> getAvailableInventory(List<Sku> skus) {
+		List<Warehouse> whs = new ArrayList<Warehouse>();
+		for (Sku sku : skus) {
+			whs.add(sku.getWarehouse());
+		}
+		return getAvailableInventory(skus.get(0).getProductVariant(), whs);
 	}
 }

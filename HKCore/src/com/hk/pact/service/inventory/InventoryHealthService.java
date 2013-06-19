@@ -3,8 +3,10 @@ package com.hk.pact.service.inventory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.sku.Sku;
 
 public interface InventoryHealthService {
 
@@ -13,6 +15,8 @@ public interface InventoryHealthService {
 	long getAvailableUnbookedInventory(ProductVariant productVariant);
 
 	InventoryInfo getAvailableInventory(ProductVariant productVariant, Double preferredMrp);
+	
+	Collection<InventoryInfo> getAvailableInventory(List<Sku> skus);
 	
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

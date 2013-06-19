@@ -1,5 +1,6 @@
 package com.hk.impl.service.inventory;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,8 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.combo.ComboService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryHealthService.InventoryInfo;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
@@ -217,9 +220,14 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList) {
-        Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
-        Long bookedInventory = this.getBookedQtyOfSkuInProcessingQueue(skuList);
-        return netInventory - bookedInventory;
+    	long qty = 0l;
+    	Collection<InventoryInfo> infos = inventoryHealthService.getAvailableInventory(skuList);
+    	for (InventoryInfo inventoryInfo : infos) {
+			for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+				qty+=skuInfo.getUnbookedQty();
+			}
+		}
+        return qty;
     }
 
     @Deprecated
