@@ -63,7 +63,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		if(selectedInfo != null && selectedInfo.getQty() > 0 && netInventory > 0) {
-			updateVariant(variant, selectedInfo.getQty(), netInventory, selectedInfo.getMrp(), false);
+			updateVariant(variant, selectedInfo.getMaxQtySkuInfo().getQty(), netInventory, selectedInfo.getMrp(), false);
 		} else {
 			updateVariant(variant, 0l, netInventory, null, true);
 		}
@@ -157,7 +157,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			" inner join sku as e on a.sku_id = e.id" +
 			" where e.product_variant_id = :pvId" +
 			" and e.warehouse_id in (:whIds)" +
-			" and c.order_status_id not in (:statusIds)" +
+			" and c.order_status_id in (:statusIds)" +
 			" and b.shipping_order_status_id in (:sosIds)" +
 			" group by a.marked_price, a.sku_id";
 	
@@ -170,7 +170,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		
 		query.setParameter("pvId", productVariant.getId());
 		query.setParameterList("whIds", toWarehouseIds(whs));
-		query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId()));
+		query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
 		query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
 		
 		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));

@@ -42,6 +42,16 @@ public interface InventoryHealthService {
 		public void setQty(long qty) {
 			this.qty = qty;
 		}
+		
+		public SkuInfo getMaxQtySkuInfo() {
+			SkuInfo info = null;
+			for (SkuInfo skuInfo : skuList) {
+				if(info != null && info.getQty() < skuInfo.getQty()) {
+					info = skuInfo;
+				}
+			}
+			return info;
+		}
 	}
 	
 	public static class SkuInfo {
