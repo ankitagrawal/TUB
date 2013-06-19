@@ -36,6 +36,7 @@ import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryHealthService.InventoryInfo;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -237,10 +238,10 @@ public class OrderSplitterImpl implements OrderSplitter {
 		
 		InventoryInfo invInfo = inventoryHealthService.getAvailableInventory(variant, preferredMrp);
 		if(invInfo != null) {
-			long inventory = invInfo.getQty() + qty;
-			if(inventory > 0) {
-				for (long skuId : invInfo.getSkuIds()) {
-					Sku sku = baseDao.get(Sku.class, skuId);
+			for (SkuInfo skuInfo : invInfo.getSkuInfoList()) {
+				long inventory = skuInfo.getQty() + qty;
+				if(inventory > 0) {
+					Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
 					skus.add(sku);
 				}
 			}

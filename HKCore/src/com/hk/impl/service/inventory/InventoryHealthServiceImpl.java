@@ -111,13 +111,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		variant.setOutOfStock(outOfStock);
 		productVariantService.save(variant);
 		
+		Product product = variant.getProduct();
 		if(outOfStock) {
-			Product product = variant.getProduct();
 			List<ProductVariant> inStockVariants = product.getInStockVariants();
 			if (inStockVariants != null && inStockVariants.isEmpty()) {
 				product.setOutOfStock(true);
 				productService.save(product);
 			}
+		} else {
+			product.setOutOfStock(false);
+			productService.save(product);
 		}
 	}
 
@@ -253,14 +256,29 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				info = new InventoryInfo();
 				info.setMrp(skuInfo.getMrp());
 				info.setQty(skuInfo.getQty());
-				info.addSkuId(skuInfo.getSkuId());
 				queue.add(info);
 			}
+			info.addSkuInfo(skuInfo);
 		}
 		
 		for (InventoryInfo inventoryInfo : queue) {
 			Long bookedQty = bookedQtyMap.get(inventoryInfo.getMrp());
+			long leftQty = bookedQty;
 			if(bookedQty != null) {
+				for (SkuInfo info : inventoryInfo.getSkuInfoList()) {
+					long netQty = 0l;
+					if(leftQty == bookedQty) {
+						netQty = info.getQty() - bookedQty;
+						leftQty = netQty;
+					} else if(leftQty < 0) {
+						netQty = info.getQty() + leftQty;
+						leftQty = netQty;
+					} else if (leftQty >= 0) {
+						netQty = info.getQty();
+						leftQty = netQty;
+					}
+					info.setQty(netQty);
+				}
 				inventoryInfo.setQty(inventoryInfo.getQty() - bookedQty);
 				bookedQtyMap.remove(inventoryInfo.getMrp());
 			}

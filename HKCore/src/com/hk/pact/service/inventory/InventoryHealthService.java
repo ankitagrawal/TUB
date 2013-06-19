@@ -1,8 +1,8 @@
 package com.hk.pact.service.inventory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 
 import com.hk.domain.catalog.product.ProductVariant;
 
@@ -15,16 +15,16 @@ public interface InventoryHealthService {
 	InventoryInfo getAvailableInventory(ProductVariant productVariant, Double preferredMrp);
 	
 	public static class InventoryInfo {
-		private Collection<Long> skuIds = new HashSet<Long>();
+		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
 		private double mrp;
 		private long qty;
 
-		public Collection<Long> getSkuIds() {
-			return skuIds;
+		public Collection<SkuInfo> getSkuInfoList() {
+			return skuList;
 		}
-
-		public void addSkuId(long id) {
-			skuIds.add(id);
+		
+		public void addSkuInfo(SkuInfo skuInfo) {
+			skuList.add(skuInfo);
 		}
 		
 		public double getMrp() {
