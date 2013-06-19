@@ -111,7 +111,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		variant.setOutOfStock(outOfStock);
 		productVariantService.save(variant);
 		
-		Product product = variant.getProduct();
+		Product product = productService.getProductById(variant.getProduct().getId());
 		if(outOfStock) {
 			List<ProductVariant> inStockVariants = product.getInStockVariants();
 			if (inStockVariants != null && inStockVariants.isEmpty()) {
