@@ -2,21 +2,31 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.taglibs.Functions" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<%--<%--%>
-  <%--DateTime dateTime = new DateTime();--%>
-  <%--Date endOfOfferDate = new Date(new DateTime(2012, 11, 21, 23, 59, 59, 59).getMillis());--%>
-  <%--if (dateTime.isBefore(endOfOfferDate.getTime())) {--%>
-<%--%>--%>
+<style type="text/css">
+    #sendCouponLink {
+        text-decoration: none;
+        border-bottom: 0;
+    }
+
+    #sendCouponLink :hover {
+        text-decoration: none;
+        border-bottom: 0;
+    }
+</style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-<a href='${pageContext.request.contextPath}/pages/offers/personal-care-page/personal-care.html'>
-    <img src="${pageContext.request.contextPath}/images/banners/top/personal-care-strip-banner.jpg" alt="Beauty Discount - 10% cashback on prepaid orders"></a>
+    <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">--%>
+    <a href='${pageContext.request.contextPath}/pages/offers/personal-care-page/personal-care.html'>
+        <img src="${pageContext.request.contextPath}/images/banners/top/personal-care-strip-banner.jpg"
+             alt="persona-care"></a>
+    </a>
+    <%--</s:link>--%>
+    <script type="text/javascript">
+        var params = {};
+        params['srcUrl'] = document.location.href;
+        params['topLevelCategory'] = $('#topCategoryContainer').html();
+        $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href') + '?' + $.param(params));
+
+        $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
+
+    </script>
 </div>
-<%--<div style="margin-left: auto; margin-right: auto; width:960px;">--%>
-  <%--<div style="height: 48px; padding-top: 6px; font-size: 1em; color: black; background-color: #ccffcc;text-align: center;">--%>
-      <%--<strong>10% Off on personal care products*</strong> (only on prepaid orders above Rs 1000, TnC apply), Use Coupon Code <strong>HK10PCARENOV</strong><br/>--%>
-      <%--<span style="font-size: 1.2em;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>--%>
-  <%--</div>--%>
-<%--</div>--%>
-  <%--<%--%>
-    <%--}--%>
-  <%--%>--%>
