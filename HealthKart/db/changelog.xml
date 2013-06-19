@@ -13298,7 +13298,7 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1371622841603-2">
         <addColumn tableName="debit_note">
-            <column name="closing_date" type="DATETIME"/>
+            <column name="close_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1371622841603-3">
@@ -13308,12 +13308,7 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1371622841603-4">
         <addColumn tableName="debit_note">
-            <column name="shipping_charge_hk" type="DECIMAL(12,2)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Nihal (generated)" id="1371622841603-5">
-        <addColumn tableName="debit_note">
-            <column name="shipping_charge_vendor" type="DECIMAL(12,2)"/>
+            <column name="freight_forwarding_charges" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1371622841603-6">

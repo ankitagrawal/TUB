@@ -84,11 +84,12 @@ public class DebitNote implements java.io.Serializable {
     @Column(name="email_sent_to_vendor")
     private Boolean emailSentToVendor;
     
-    @Column(name="shipping_charge_hk")
-    private Double shippingChargeHk;
+    @Column(name="freight_forwarding_charges")
+    private Double freightForwardingCharges;
     
-    @Column(name="shipping_charge_vendor")
-    private Double shippingChargeVendor;
+    @Temporal (TemporalType.TIMESTAMP)
+    @Column (name = "close_date", nullable = false, length = 19)
+    private Date closeDate;
 
     public Long getId() {
         return this.id;
@@ -201,20 +202,20 @@ public class DebitNote implements java.io.Serializable {
 		this.emailSentToVendor = emailSentToVendor;
 	}
 
-	public Double getShippingChargeHk() {
-		return shippingChargeHk;
+	public Double getFreightForwardingCharges() {
+		return freightForwardingCharges;
 	}
 
-	public void setShippingChargeHk(Double shippingChargeHk) {
-		this.shippingChargeHk = shippingChargeHk;
+	public void setFreightForwardingCharges(Double freightForwardingCharges) {
+		this.freightForwardingCharges = freightForwardingCharges;
 	}
 
-	public Double getShippingChargeVendor() {
-		return shippingChargeVendor;
+	public Date getCloseDate() {
+		return closeDate;
 	}
 
-	public void setShippingChargeVendor(Double shippingChargeVendor) {
-		this.shippingChargeVendor = shippingChargeVendor;
+	public void setCloseDate(Date closeDate) {
+		this.closeDate = closeDate;
 	}
 }
 

@@ -132,8 +132,8 @@ public class DebitNoteAction extends BasePaginatedAction {
     		}
 		debitNote = new DebitNote();
 		debitNote.setPurchaseInvoice(purchaseInvoice);
-		debitNote.setShippingChargeHk(shippingChargesOnHk);
-		debitNote.setShippingChargeVendor(shippingChargesOnVendor);
+		//TODO : Shipping Charges
+		debitNote.setFreightForwardingCharges(shippingChargesOnVendor);
 		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
     		
     	}
