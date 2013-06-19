@@ -376,7 +376,7 @@ public class Product  implements java.io.Serializable {
         ProductVariant inStockMaxDiscountPV = null;
         Double maxDiscountPercent = 0D;
         for (ProductVariant productVariant : this.getProductVariants()) {
-            if (!productVariant.isOutOfStock()) {
+            if (!productVariant.isOutOfStock() && !productVariant.isDeleted()) {
                 if (productVariant.getDiscountPercent() >= maxDiscountPercent) {
                     inStockMaxDiscountPV = productVariant;
                     maxDiscountPercent = productVariant.getDiscountPercent();
