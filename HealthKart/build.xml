@@ -186,7 +186,7 @@
         <copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.api.dir}/dist/hk-api.jar" />
 	</target>
 
-	<target name="collect-web">
+	<target name="collect-web" depends="compress">
 		<copy todir="${project.dist.dir}">
 			<fileset dir="${project.web.dir}/${project.view.dir}">
 				<include name="**/**" />
