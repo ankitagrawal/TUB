@@ -57,7 +57,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
             // call payment gateway and get the base payment object
             Element element = callPaymentGateway(gatewayOrderId,null, null, null, EbsPaymentGatewayWrapper.TXN_ACTION_STATUS);
             HkPaymentResponse baseGatewayPayment = verifyAndCreateHkResponsePayment(element, gatewayOrderId,EnumPaymentTransactionType.SALE.getName());
-            List<Payment> paymentList = paymentDao.searchPayments(null, null, null, null, null, null,null,basePayment);
+            List<Payment> paymentList = paymentDao.searchPayments(null, null, null, null, null, null,null,basePayment,null);
 
             gatewayPaymentList.add(baseGatewayPayment);
 

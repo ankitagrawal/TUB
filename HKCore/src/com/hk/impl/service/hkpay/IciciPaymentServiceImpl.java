@@ -42,17 +42,30 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
     @Override
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) {
         List<HkPaymentResponse> hkPaymentResponseList = null;
+        String gatewayOrderId = basePayment.getGatewayOrderId();
         try {
-            if(basePayment != null){
-                String gatewayOrderId = basePayment.getGatewayOrderId();
-                ArrayList responseList = callIciciPaymentGateway(gatewayOrderId, basePayment.getGateway());
-                hkPaymentResponseList = createHkPaymentResponse(responseList, gatewayOrderId);
+            PGSearchResponse pgSearchResponse = callIciciPaymentGateway(gatewayOrderId, basePayment.getGateway());
+            if (pgSearchResponse != null) {
+                ArrayList arrayList = pgSearchResponse.getPGResponseObjects();
+                if (arrayList != null) {
+                    hkPaymentResponseList = createHkPaymentResponse(arrayList, gatewayOrderId);
+                } else {
+                    hkPaymentResponseList = new ArrayList<HkPaymentResponse>();
+                    HkPaymentResponse hkPaymentResponse = createPayment(gatewayOrderId, null, null, pgSearchResponse.getRespMessage(), "Sale", null, null);
+                    hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
+                    hkPaymentResponseList.add(hkPaymentResponse);
+                }
             }
 
-        } catch (Exception e){
-            logger.debug("Icici gateway exception occurred ",e);
+        } catch (Exception e) {
+            logger.debug("Icici gateway exception occurred ", e);
+            if (hkPaymentResponseList == null) {
+                hkPaymentResponseList = new ArrayList<HkPaymentResponse>();
+            }
+            HkPaymentResponse hkPaymentResponse = createPayment(gatewayOrderId, null, null, e.getMessage(), "Sale", null, null);
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
+            hkPaymentResponseList.add(hkPaymentResponse);
         }
-
         return hkPaymentResponseList;
     }
 
@@ -127,7 +140,7 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
         return response;
     }
 
-    private ArrayList callIciciPaymentGateway(String gatewayOrderId, Gateway gateway) throws Exception {
+    private PGSearchResponse callIciciPaymentGateway(String gatewayOrderId, Gateway gateway) throws Exception {
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ICICI_LIVE_PROPERTIES;
         if(gateway != null && EnumGateway.CITRUS.getId().equals(gateway.getId())){
             propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ICICI_MOTO_LIVE_PROPERTIES;
@@ -138,9 +151,9 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
 
         PostLib oPostLib = new PostLib();
         oMerchant.setMerchantOnlineInquiry(merchantId, gatewayOrderId);
-        PGSearchResponse oPgSearchResp = oPostLib.postStatusInquiry(oMerchant);
-        ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
-        return oPgRespArr;
+        return oPostLib.postStatusInquiry(oMerchant);
+        /*ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
+        return oPgRespArr;*/
     }
 
     private List<HkPaymentResponse> createHkPaymentResponse(ArrayList responseList, String gatewayOrderId) {

@@ -41,7 +41,9 @@ public interface PaymentService {
 
     public List<PaymentMode> listWorkingPaymentModes();
 
-    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment parentPayment);
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId,
+                                        List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate,
+                                        List<OrderStatus> orderStatuses, Payment parentPayment, List<Gateway> gatewayList);
 
     public List<HkPaymentResponse> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;
 

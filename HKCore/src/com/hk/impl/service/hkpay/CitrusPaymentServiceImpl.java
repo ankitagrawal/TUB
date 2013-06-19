@@ -43,15 +43,19 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {
         String gatewayOrderId = basePayment.getGatewayOrderId();
         List<HkPaymentResponse> hkPaymentResponseList = null;
+        EnquiryCollection enquiryCollection = null;
         try{
-            EnquiryCollection enquiryCollection = callPaymentGateway(gatewayOrderId);
+            enquiryCollection = callPaymentGateway(gatewayOrderId);
             List<Enquiry> enquiryList = verifyGatewayAndReturnListOfEnquiryObject(enquiryCollection);
             hkPaymentResponseList = createHkPaymentResponse(enquiryList, gatewayOrderId);
         }  catch (Exception e){
             logger.debug("Citrus Payment gateway exception :",e);
+            hkPaymentResponseList = createHkPaymentResponse(enquiryCollection, gatewayOrderId);
         }
         return hkPaymentResponseList;
     }
+
+
 
     @Override
     public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
@@ -106,10 +110,20 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.MANDATORY_FIELD_MISSING);
             } else {
                 logger.debug("Unknown error from citrus end "+ enquiryCollection.getRespCode() + ":" + enquiryCollection.getRespMsg());
-                //new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
+                throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
             }
         }
         return enquiryList;
+    }
+
+    private List<HkPaymentResponse> createHkPaymentResponse(EnquiryCollection enquiryCollection, String gatewayOrderId) {
+        List<HkPaymentResponse> hkPaymentResponseList = new ArrayList<HkPaymentResponse>();
+        if(enquiryCollection != null && gatewayOrderId != null){
+            HkPaymentResponse hkPaymentResponse = createPayment(gatewayOrderId, null, null, enquiryCollection.getRespMsg(), "Sale",null,null);
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
+            hkPaymentResponseList.add(hkPaymentResponse);
+        }
+        return hkPaymentResponseList;
     }
 
     private List<HkPaymentResponse> createHkPaymentResponse(List<Enquiry> enquiryList, String gatewayOrderId) throws HealthkartPaymentGatewayException {

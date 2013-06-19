@@ -83,6 +83,10 @@ public enum EnumGateway {
         return Arrays.asList(CITRUS.asGateway().getId(), EBS.asGateway().getId(), ICICI.asGateway().getId());
     }
 
+    public static List<Gateway> getSeekGateways(){
+        return Arrays.asList(CITRUS.asGateway(),EBS.asGateway(),ICICI.asGateway());
+    }
+
 }
 
 

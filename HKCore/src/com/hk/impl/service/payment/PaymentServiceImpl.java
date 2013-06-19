@@ -93,8 +93,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment parentPayment) {
-        return getPaymentDao().searchPayments(order, paymentStatuses, gatewayOrderId, paymentModes, startCreateDate, endCreateDate, orderStatuses,parentPayment);
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId,
+                                        List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate,
+                                        List<OrderStatus> orderStatuses, Payment parentPayment,List<Gateway> gatewayList) {
+        return getPaymentDao().searchPayments(order, paymentStatuses, gatewayOrderId, paymentModes, startCreateDate, endCreateDate, orderStatuses,parentPayment,gatewayList);
     }
 
     @Override
@@ -111,13 +113,6 @@ public class PaymentServiceImpl implements PaymentService {
                     try {
 
                         hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
-                        // handle the case of citrus here
-                        if(EnumGateway.CITRUS.getId().equals(basePayment.getGateway().getId()) && !isCitrusResponseSuccessful(hkPaymentResponseList)){
-                           hkPaymentService = getHkPaymentService(EnumGateway.ICICI.asGateway());
-                           if(hkPaymentService != null){
-                               hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
-                           }
-                        }
 
                         List<Payment> hkPaymentRequestList = listPaymentFamily(gatewayOrderId);
                         //TODO: remove it later, stuffing gateway Order Id in refund objects
@@ -167,6 +162,14 @@ public class PaymentServiceImpl implements PaymentService {
             try {
                 if(EnumPaymentStatus.getUpdatePaymentStatusesIds().contains(basePayment.getPaymentStatus().getId())) {
                     List<HkPaymentResponse> hkPaymentResponseList = seekPayment(gatewayOrderId);
+                    // handle the case of citrus here
+                    if(EnumGateway.CITRUS.getId().equals(basePayment.getGateway().getId()) && !isCitrusResponseSuccessful(hkPaymentResponseList)){
+                        HkPaymentService  hkPaymentService = getHkPaymentService(EnumGateway.ICICI.asGateway());
+                        if(hkPaymentService != null){
+                            hkPaymentResponseList = hkPaymentService.seekPaymentFromGateway(basePayment);
+                        }
+                    }
+
                     List<Payment> hkPaymentRequestList = listPaymentFamily(gatewayOrderId);
                     List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
                     verifyRequestAndResponseList(requestResponseMappedList);
@@ -357,7 +360,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentFamilyList.add(basePayment);
 
             // get all brothers related to base Payment
-            List<Payment> listOfBrotherPayments = getPaymentDao().searchPayments(null, null, null, null, null, null,null,basePayment);
+            List<Payment> listOfBrotherPayments = getPaymentDao().searchPayments(null, null, null, null, null, null,null,basePayment,null);
             if(listOfBrotherPayments != null && !listOfBrotherPayments.isEmpty()){
                 paymentFamilyList.addAll(listOfBrotherPayments);
             }
@@ -504,9 +507,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private boolean isCitrusResponseSuccessful(List<HkPaymentResponse> hkPaymentResponseList) {
-        for (HkPaymentResponse hkPaymentResponse : hkPaymentResponseList) {
-            if (EnumPaymentTransactionType.SALE.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())) {
-                return isCitrusResponseSuccessful(hkPaymentResponse);
+        if (hkPaymentResponseList != null && !hkPaymentResponseList.isEmpty()) {
+            for (HkPaymentResponse hkPaymentResponse : hkPaymentResponseList) {
+                if (EnumPaymentTransactionType.SALE.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())) {
+                    return isCitrusResponseSuccessful(hkPaymentResponse);
+                }
             }
         }
         return false;

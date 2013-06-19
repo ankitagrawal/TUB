@@ -3,9 +3,7 @@ package com.hk.web.action.admin.payment;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.hk.constants.payment.EnumHKPaymentStatus;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.GatewayResponseKeys;
+import com.hk.constants.payment.*;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
@@ -28,7 +26,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
@@ -56,7 +53,7 @@ public class CheckPaymentAction extends BaseAction {
 
     private List<HkPaymentResponse> hkPaymentResponseList;
 
-    private Map<String,List<HkPaymentResponse>> bulkHkPaymentResponseList;
+    private List<Map<String,List<HkPaymentResponse>>> bulkHkPaymentResponseList;
 
     @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful"})
     private Payment payment;
@@ -123,17 +120,19 @@ public class CheckPaymentAction extends BaseAction {
     public Resolution bulkSeekPayment() {
         try {
 
-            bulkHkPaymentResponseList = new HashMap<String, List<HkPaymentResponse>>();
+            bulkHkPaymentResponseList = new ArrayList<Map<String, List<HkPaymentResponse>>>();
             List orderStatuses = Arrays.asList(EnumOrderStatus.Placed.asOrderStatus(), EnumOrderStatus.InProcess.asOrderStatus());
             paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null,
-                    Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses, null);
+                    Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses, null, EnumGateway.getSeekGateways());
             for (Payment seekPayment : paymentList) {
                 if (seekPayment != null) {
                     String gatewayOrderId = seekPayment.getGatewayOrderId();
                     if (gatewayOrderId != null) {
                         try {
                             hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
-                            bulkHkPaymentResponseList.put(gatewayOrderId, hkPaymentResponseList);
+                            Map<String,List<HkPaymentResponse>> tempMap = new HashMap<String, List<HkPaymentResponse>>();
+                            tempMap.put(gatewayOrderId,hkPaymentResponseList);
+                            bulkHkPaymentResponseList.add(tempMap);
                         } catch (HealthkartPaymentGatewayException e) {
                             logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
                         }
@@ -484,11 +483,11 @@ public class CheckPaymentAction extends BaseAction {
         this.hkPaymentResponseList = hkPaymentResponseList;
     }
 
-    public Map<String, List<HkPaymentResponse>> getBulkHkPaymentResponseList() {
+    public List<Map<String, List<HkPaymentResponse>>> getBulkHkPaymentResponseList() {
         return bulkHkPaymentResponseList;
     }
 
-    public void setBulkHkPaymentResponseList(Map<String, List<HkPaymentResponse>> bulkHkPaymentResponseList) {
+    public void setBulkHkPaymentResponseList(List<Map<String, List<HkPaymentResponse>>> bulkHkPaymentResponseList) {
         this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
     }
 }

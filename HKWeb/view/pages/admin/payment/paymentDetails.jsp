@@ -87,20 +87,24 @@
             <br/>
         </c:if>--%>
 
-        <c:forEach items="${cpa.bulkHkPaymentResponseList}" var="responseList">
-            <c:forEach items="${responseList.value}" var="response">
-                Gateway Order Id --> ${response.gatewayOrderId}  <br/>
-                Gateway Reference Id --> ${response.gatewayReferenceId} <br/>
-                Transaction Type --> ${response.transactionType}<br/>
-                Amount --> ${response.amount} <br/>
-                Payment Status --> ${response.HKPaymentStatus.name}<br/>
-                Response Message --> ${response.responseMsg}  <br/>
-                Root Reference No --> ${response.rrn}<br/>
-                Gateway --> ${response.gateway.name}<br/>
-                Error Log --> ${response.errorLog}<br/>
+        <c:forEach items="${cpa.bulkHkPaymentResponseList}" var="responseMap">
+            <c:forEach items="${responseMap}" var="content">
+                For : ${content.key}  <br/>
+                <c:forEach items="${content.value}" var="response">
+                    Gateway Order Id --> ${response.gatewayOrderId}  <br/>
+                    Gateway Reference Id --> ${response.gatewayReferenceId} <br/>
+                    Transaction Type --> ${response.transactionType}<br/>
+                    Amount --> ${response.amount} <br/>
+                    Payment Status --> ${response.HKPaymentStatus.name}<br/>
+                    Response Message --> ${response.responseMsg}  <br/>
+                    Root Reference No --> ${response.rrn}<br/>
+                    Gateway --> ${response.gateway.name}<br/>
+                    Error Log --> ${response.errorLog}<br/>
+                    <br/>
+                </c:forEach>
                 <br/>
             </c:forEach>
-            ---------------------------------------------------------------
+
         </c:forEach>
 
 

@@ -7,6 +7,7 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
+import com.hk.domain.payment.Gateway;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -54,7 +55,9 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
     }
 
     @Override
-    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment salePayment) {
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId,
+                                        List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate,
+                                        List<OrderStatus> orderStatuses, Payment salePayment,List<Gateway> gatewayList) {
         DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
         if(paymentModes != null && !paymentModes.isEmpty()){
             paymentCriteria.add(Restrictions.in("paymentMode", paymentModes));
@@ -77,6 +80,9 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
         }
         if(salePayment != null){
             paymentCriteria.add(Restrictions.eq("parent",salePayment));
+        }
+        if(gatewayList != null){
+            paymentCriteria.add(Restrictions.in("gateway",gatewayList));
         }
         return findByCriteria(paymentCriteria);
     }
