@@ -667,7 +667,7 @@ public class ProductServiceImpl implements ProductService {
     productVO.setDeleted(product.isDeleted());
     productVO.setHidden(product.isHidden());
     productVO.setOutOfStock(product.isOutOfStock());
-    if (product instanceof Combo)
+    if (product.isCombo())
       productVO.setCombo(true);
     else {
       productVO.setCombo(false);
