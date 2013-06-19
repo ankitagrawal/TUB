@@ -16,10 +16,6 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public interface HkPaymentService {
-    /*public Map<String, Object> seekHkPaymentResponse(String gatewayOrderId);*/
-
-    /*public Payment updatePayment(String gatewayOrderId);*/
-
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException;
 
     public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException;

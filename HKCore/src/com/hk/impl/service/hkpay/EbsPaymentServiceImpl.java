@@ -45,76 +45,7 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
     private static final String EBS_LIVE_PROPERTIES = "/ebs.live.properties";
 
     @Autowired
-    private PaymentManager paymentManager;
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private EmailManager emailManager;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private PaymentDao paymentDao;
-
-    /*@Override
-    public Map<String, Object> seekHkPaymentResponse(String gatewayOrderId) {
-
-        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
-
-        try {
-            // hit payment gateway and get a response
-            Element element = callPaymentGateway(gatewayOrderId,null, null, null, EbsPaymentGatewayWrapper.TXN_ACTION_STATUS);
-            // create a HK response object
-            paymentResultMap = createHKPaymentResponseObject(paymentResultMap, element);
-            // filter and mail if status has been changed
-            //filterAndSendMail(gatewayOrderId, paymentResultMap);
-
-        } catch (IOException e) {
-            logger.debug(" Exception  while sending the request to Ebs Gateway " + gatewayOrderId, e);
-        } catch (Exception e) {
-            logger.debug(" Exception  while trying to search for payment details for EBS  payment " + gatewayOrderId, e);
-        }
-
-        return paymentResultMap;
-    }*/
-
-    /*@Override
-    public Payment updatePayment(String gatewayOrderId) {
-        // hit gateway and get updated HK Response Object
-        Map<String, Object> hkrespObj = seekHkPaymentResponse(gatewayOrderId);
-        if (hkrespObj != null && !hkrespObj.isEmpty()) {
-            String amtStr = (String) hkrespObj.get(GatewayResponseKeys.HKConstants.Amount.getKey());
-            Double amount = NumberUtils.toDouble(amtStr);
-            String resp_code = (String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey());
-            String resp_msg = (String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_MSG.getKey());
-            String rrn = (String) hkrespObj.get(GatewayResponseKeys.HKConstants.ROOT_REFER_NO.getKey());
-            String authIdCode = (String) hkrespObj.get(GatewayResponseKeys.HKConstants.AUTH_ID_CODE.getKey());
-            String gateway_refer_id = (String) hkrespObj.get(GatewayResponseKeys.HKConstants.GATEWAY_REFERENCE_ID.getKey());
-            String merchantParam = null;
-            try {
-
-                // our own validations
-                paymentManager.verifyPayment(gatewayOrderId, amount, merchantParam);
-
-                // payment callback has been verified. now see if it is successful or failed from the gateway response
-                if (resp_code.equals(GatewayResponseKeys.HKConstants.SUCCESS.getKey())) {
-                    paymentManager.success(gatewayOrderId, gateway_refer_id, rrn, resp_msg, authIdCode);
-                } else if (resp_code.equals(GatewayResponseKeys.HKConstants.AUTH_PEND.getKey())) {
-                    paymentManager.pendingApproval(gatewayOrderId, gateway_refer_id);
-                } else if (resp_code.equals(GatewayResponseKeys.HKConstants.FAILED.getKey())) {
-                    paymentManager.fail(gatewayOrderId, gateway_refer_id, resp_msg);
-                    //emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
-
-                } else {
-                    throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
-                }
-            } catch (HealthkartPaymentGatewayException e) {
-                //emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
-                paymentManager.error(gatewayOrderId, e);
-
-            }
-        }
-        return paymentService.findByGatewayOrderId(gatewayOrderId);
-    }*/
 
     @Override
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {

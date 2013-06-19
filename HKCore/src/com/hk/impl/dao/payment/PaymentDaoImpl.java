@@ -54,21 +54,6 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
     }
 
     @Override
-    public List<Payment> listByRRN(String rrn) {
-        return (List<Payment>) getSession().createQuery("from Payment p where p.rrn = :rrn").setString("rrn",rrn);
-    }
-
-    @Override
-    public List<Payment> listByGatewayReferenceOrderId(String gatewayReferenceOrderId) {
-        return (List<Payment>) getSession().createQuery("from Payment p where p.gatewayReferenceId = :gatewayReferenceOrderId").setString("gatewayReferenceOrderId",gatewayReferenceOrderId);
-    }
-
-    @Override
-    public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn) {
-        return (Payment)getSession().createQuery("from Payment p where p.gatewayReferenceId = gatewayReferenceId and p.rrn = rrn").uniqueResult();
-    }
-
-    @Override
     public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses, Payment salePayment) {
         DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
         if(paymentModes != null && !paymentModes.isEmpty()){
