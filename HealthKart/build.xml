@@ -186,7 +186,7 @@
         <copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.api.dir}/dist/hk-api.jar" />
 	</target>
 
-	<target name="collect-web">
+	<target name="collect-web" depends="compress">
 		<copy todir="${project.dist.dir}">
 			<fileset dir="${project.web.dir}/${project.view.dir}">
 				<include name="**/**" />
@@ -200,7 +200,7 @@
 		</copy>
 	</target>
 
-	<target name="web">
+	<target name="web" depends="compress">
 		<copy todir="${project.dist.dir}">
 			<fileset dir="${project.web.dir}/${project.view.dir}" />
 		</copy>
@@ -257,31 +257,69 @@
 		<tstamp />
 	</target>
 
-	<!--<target name="db-master" depends="build">
-		<java  classname="com.hk.core.LoadData" fork="yes">
-			<classpath>
-				<pathelement path="${project.dist.dir}/WEB-INF/lib/hk-common.jar"/>
-			    <pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.context-3.0.2.RELEASE.jar"/>
-				<pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.beans-3.0.2.RELEASE.jar"/>
-				<pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.core-3.0.2.RELEASE.jar"/>
-				<pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.asm-3.0.2.RELEASE.jar"/>
-				<pathelement path="${lib.root.dir}/thirdParty/jcl-over-slf4j-1.5.10.jar"/>
-				<pathelement path="${lib.root.dir}/thirdParty/lambdaj-2.0-with-dependencies.jar"/>
-				<pathelement path="${lib.root.dir}/logger/slf4j-api-1.5.10.jar"/>
-				<pathelement path="${lib.root.dir}/logger/slf4j-log4j12-1.5.10.jar"/>
-				<pathelement path="${lib.root.dir}/logger/log4j-1.2.13.jar"/>
-				<pathelement path="${project.dist.dir}/WEB-INF/classes"/>
-			  </classpath>
-		</java>
-	</target> -->
+    <!-- YUI Compressor to Compress CSS and JS files -->
 
-	<!--<target name="db">
-		<updateDatabase changelogfile="db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
+	<!-- defines temp output directory -->
+	<property name="temp.dir" value="temp" />
+
+	<!-- output files, one for JS one for CSS -->
+	<property name="final_js" value="${project.dist.dir}/static/js/hk-min.js" />
+	<property name="final_css" value="${project.dist.dir}/static/css/hk-min.css" />
+
+	<!-- adds libraries to the classpath -->
+	<path id="yui.classpath">
+		<pathelement location="${lib.root.dir}/yui-compressor/yuicompressor-2.4.2.jar" />
+		<pathelement location="${lib.root.dir}/yui-compressor/yui-compressor-ant-task-0.5.jar" />
+	</path>
+
+	<!-- define tasks -->
+	<taskdef name="yui-compressor" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
+		<classpath refid="yui.classpath" />
+	</taskdef>
+    
+    <!-- targets -->
+	<target name="concat">
+
+		<!-- concatenates all compressed JS files into one -->
+		<concat destfile="${final_js}" force="true" fixlastline="true">
+			<fileset dir="${temp.dir}" includes="**/*.js" />
+		</concat>
+
+		<!-- concatenates all compressed CSS files into one -->
+		<concat destfile="${final_css}" force="true" fixlastline="true">
+			<fileset dir="${temp.dir}" includes="**/*.css" />
+		</concat>
+
 	</target>
 
-	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
-		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
-		</diffDatabaseToChangeLog>
-	</target>-->
+	<target name="compress-js">
+
+		<!-- compresses each JavaScript and CSS file -->
+		<!-- and saved as {original_name}-min.{extension} -->
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/view/static/js" todir="${temp.dir}"/>
+
+	</target>
+
+	<target name="compress-css">
+
+		<!-- compresses each JavaScript and CSS file -->
+		<!-- and saved as {original_name}-min.{extension} -->
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/view/static/css" todir="${temp.dir}" />
+
+	</target>
+
+	<!-- deletes the temporary directory and all its contents -->
+	<target name="temp-clean">
+		<delete dir="${temp.dir}" />
+	</target>
+
+	<!-- creates the temporary directory -->
+	<target name="comp-start">
+		<mkdir dir="${temp.dir}" />
+		<delete file="${final_js}" />
+		<delete file="${final_css}" />
+	</target>
+
+	<target name="compress" depends="comp-start,compress-js,compress-css,concat,temp-clean" />
 
 </project>
