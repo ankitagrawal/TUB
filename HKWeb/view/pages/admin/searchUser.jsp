@@ -1,5 +1,6 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -89,6 +90,14 @@
               <s:param name="user" value="${user}"/>
                 [Edit Bucket]
             </s:link>
+                  <c:set var="HKEMPLOYEE" value="<%=EnumRole.HK_EMPLOYEE.getRoleName()%>" />
+                 <c:if test="${!fn:contains(user.roles,HKEMPLOYEE)}">
+                  <s:link beanclass="com.hk.web.action.admin.user.EditUserAction" event="ActivateHKRocks">
+                    <s:param name="user" value="${user}"/>
+                      [Activate HKROCKS]
+                  </s:link>
+                 </c:if>
+
             <s:link beanclass="com.hk.web.action.admin.user.CustomerLifeCycleAction">
                <s:param name="user" value="${user}"/>
                [View Customer LifeCycle]
