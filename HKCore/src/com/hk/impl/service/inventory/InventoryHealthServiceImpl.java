@@ -63,6 +63,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		if(selectedInfo != null && selectedInfo.getQty() > 0 && netInventory > 0) {
+			long mxQty = selectedInfo.getMaxQtySkuInfo().getQty();
+			if(selectedInfo.getQty() < mxQty) {
+				mxQty = selectedInfo.getQty();
+			}
 			updateVariant(variant, selectedInfo.getMaxQtySkuInfo().getQty(), netInventory, selectedInfo.getMrp(), false);
 		} else {
 			updateVariant(variant, 0l, netInventory, null, true);
