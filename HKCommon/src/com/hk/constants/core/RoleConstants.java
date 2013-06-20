@@ -86,4 +86,5 @@ public class RoleConstants {
     public static final String STORE_MANAGER                 = "STORE_MANAGER";
     public static final String HK_LOYALTY_USER               = "HK_LOYALTY_USER";
     public static final String NOTIFY_ME_EMAIL               ="NOTIFY_ME_EMAIL";
+    public static final String B2B_ROLE               ="B2B_ROLE";
 }
