@@ -53,6 +53,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
+		Map<Double, Long> bookedQtyMap = getBookedInventoryQty(variant);
 		
 		InventoryInfo selectedInfo = null;
 		long netInventory = 0l;
@@ -68,13 +69,17 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 					selectedInfo = inventoryInfo;
 				}
 			}
+			Long bookedQty = bookedQtyMap.get(selectedInfo.getMrp());
+			if(bookedQty != null) {
+				netInventory-=bookedQty;
+			}
 		}
 		
 		VariantUpdateInfo vInfo = new VariantUpdateInfo();
 		vInfo.variant = variant;
 		vInfo.netQty = netInventory;
 
-		if(selectedInfo != null && selectedInfo.getQty() > 0 && netInventory > 0) {
+		if(selectedInfo != null && selectedInfo.getQty() > 0) {
 			SkuInfo mxQtyInfo = selectedInfo.getMaxQtySkuInfo();
 			vInfo.mrp = selectedInfo.getMrp();
 			vInfo.mrpQty = mxQtyInfo.getQty();
@@ -237,14 +242,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		List<SkuInfo> list = query.list();
 		
 		LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
-		for (SkuInfo inventoryInfo : list) {
+		for (SkuInfo skuInfo : list) {
 			SkuInfo info = getLast(skuList);
-			if(info != null && inventoryInfo.getSkuId() == info.getSkuId() && inventoryInfo.getMrp() == info.getMrp()) {
-				info.setQty(info.getQty() + inventoryInfo.getQty());
+			if(info != null && skuInfo.getSkuId() == info.getSkuId() && skuInfo.getMrp() == info.getMrp()) {
+				info.setQty(info.getQty() + skuInfo.getQty());
 				info.setUnbookedQty(info.getQty());
 			} else {
-				inventoryInfo.setUnbookedQty(inventoryInfo.getQty());
-				skuList.add(inventoryInfo);
+				skuInfo.setUnbookedQty(skuInfo.getQty());
+				skuList.add(skuInfo);
 			}
 		}
 		return skuList;
@@ -323,9 +328,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 							leftQty = 0;
 							skuInfo.setQty(qty);
 						}
-					}
-					if(leftQty != bookedQty) {
-						inventoryInfo.setQty(inventoryInfo.getQty() - bookedQty);
 					}
 				}
 			}
