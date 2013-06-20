@@ -429,6 +429,11 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	}
 	
 	public Resolution createDebitNote(){
+		if(purchaseInvoiceService.getDebitNote(purchaseInvoice)!=null){
+			addRedirectAlertMessage(new SimpleMessage("Debit Note Number - "+purchaseInvoiceService.getDebitNote(purchaseInvoice).getId()+"has already been created against the PI"));
+			return new RedirectResolution(DebitNoteAction.class);
+		}
+		
 		return new RedirectResolution(DebitNoteAction.class).addParameter("debitNoteFromPi").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
 	
