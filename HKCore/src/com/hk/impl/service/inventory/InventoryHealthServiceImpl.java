@@ -270,10 +270,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
 		if(inProcessList !=null) {
 			for (SkuInfo inProcessInfo : inProcessList) {
-				SkuInfo info = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
-				if(info != null) {
-					info.setQty(info.getQty() - inProcessInfo.getQty());
-					info.setUnbookedQty(info.getQty());
+				List<SkuInfo> infos = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
+				long leftQty = inProcessInfo.getQty();
+				for (SkuInfo skuInfo : infos) {
+					long qty = skuInfo.getQty() - leftQty;
+					if(qty < 0) {
+						leftQty = -qty;
+						skuInfo.setQty(0);
+					} else {
+						skuInfo.setQty(qty);
+					}
 				}
 			}
 		}
@@ -317,13 +323,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		return invList;
 	}
 	
-	private SkuInfo searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
+	private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
+		List<SkuInfo> infos = new ArrayList<SkuInfo>();
 		for (SkuInfo info : list) {
 			if(info.getSkuId() == skuId && info.getMrp() == mrp) {
-				return info;
+				infos.add(info);
 			}
 		}
-		return null;
+		return infos;
 	}
 	
 	@Override
