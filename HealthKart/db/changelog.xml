@@ -13223,6 +13223,15 @@
     		<sql>
     			INSERT INTO ad_networks (id,name) values(40,'Ozone'),(50,'Yahoo');
     		</sql>
-    	</changeSet>
+    </changeSet>
 
+	<changeSet author="deepakC" id="1370601362351-11234">
+        <addColumn tableName="product_variant">
+            <column name="mrp_qty" type="INT"/>
+        </addColumn>
+        <addColumn tableName="product_variant">
+            <column name="net_qty" type="INT"/>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>

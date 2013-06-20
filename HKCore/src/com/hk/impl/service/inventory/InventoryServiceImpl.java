@@ -1,9 +1,18 @@
 package com.hk.impl.service.inventory;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.Supplier;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.core.InvTxnType;
@@ -24,18 +33,12 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.combo.ComboService;
+import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryHealthService.InventoryInfo;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -69,27 +72,14 @@ public class InventoryServiceImpl implements InventoryService {
     SkuGroupService skuGroupService;
     @Autowired
     UserService userService;
-
+    
+    @Autowired InventoryHealthService inventoryHealthService;
 
     @Override
+    @Transactional
     public void checkInventoryHealth(ProductVariant productVariant) {
-        List<Sku> skuList = getSkuService().getSKUsForMarkingProductOOS(productVariant);
-        if (skuList != null && !skuList.isEmpty()) {
-            checkInventoryHealth(skuList, productVariant);
-        } else {
-            // No SKU - Mark PV/P OOS
-            if (!productVariant.isOutOfStock()) {
-                productVariant.setOutOfStock(true);
-                getProductVariantService().save(productVariant);
-            }
-
-            Product product = productVariant.getProduct();
-            if (!product.isOutOfStock()) {
-                product.setOutOfStock(true);
-                productService.save(product);
-            }
-
-        }
+    	inventoryHealthService.checkInventoryHealth(productVariant);
+    	lowInventoryAction(productVariant);
     }
 
     @Override
@@ -115,59 +105,24 @@ public class InventoryServiceImpl implements InventoryService {
         return baseDao.get(InvTxnType.class, enumInvTxnType.getId());
     }
 
-    @Transactional
-    private void checkInventoryHealth(List<Sku> skuList, ProductVariant productVariant) {
-
-        Long availableUnbookedInventory = this.getAvailableUnbookedInventory(skuList);
-        Product product = productVariant.getProduct();
-        boolean nonJitValidProduct = product.isJit() != null && !product.isJit()
-                && product.isService() != null && !product.isService()
-                && !product.getDropShipping();
-        logger.debug("nonJitValidProduct: " + nonJitValidProduct);
-        Long aggCutOffInv = getAggregateCutoffInventory(skuList);
-        if (nonJitValidProduct) {
-            if (availableUnbookedInventory <= 0 && !productVariant.isOutOfStock()) {
-                logger.debug("Inventory status is negative now. Setting OUT of stock.");
-                //First product variant goes out of stock
-                productVariant.setOutOfStock(true);
-                productVariant = getProductVariantService().save(productVariant);
-
-                //Checking if Product needs to be OOS
-                List<ProductVariant> inStockVariants = product.getInStockVariants();
-                if (inStockVariants != null && inStockVariants.isEmpty()) {
-                    product.setOutOfStock(true);
-                    productService.save(product);
-                }
-
-            } else if (availableUnbookedInventory > 0 && productVariant.isOutOfStock()) {
-                logger.debug("Inventory status is positive now. Setting IN stock.");
-                productVariant.setOutOfStock(false);
-                productVariant = getProductVariantService().save(productVariant);
-
-                //Mark Product InStock
-                if (product.isOutOfStock()) {
-                    product.setOutOfStock(false);
-                    productService.save(product);
-                }
-            }
-
+	private void lowInventoryAction(ProductVariant productVariant) {
+		productVariant = productVariantService.getVariantById(productVariant.getId());
+    	if(productVariant.getNetQty() != null) {
+    		Long availableUnbookedInventory = productVariant.getNetQty();
+    		Long aggCutOffInv = getAggregateCutoffInventory(productVariant);
             try {
                 //Calling Async method to set all out of stock combos to in stock
                 getComboService().markRelatedCombosOutOfStock(productVariant);
-
                 //Update Low Inventory Record
                 updateLowInventory(productVariant, availableUnbookedInventory, aggCutOffInv);
-
-                //Now lets check for MRP dynamism
-                updatePvPriceRecord(productVariant);
             } catch (Exception e) {
                 logger.error("Error while marking LowInv and UpdatePv: ", e);
             }
-
-        }
-    }
+    	}
+	}
 
     @Transactional
+    @Deprecated
     private void updatePvPriceRecord(ProductVariant productVariant) {
         //Warehouse warehouse = userService.getWarehouseForLoggedInUser();
         boolean isAuditClosed = updatePvPriceDao.isAuditClosed(productVariant);
@@ -240,39 +195,42 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Deprecated
     public Long getAvailableUnbookedInventory(Sku sku) {
-        return getAvailableUnbookedInventory(Arrays.asList(sku));
+        return getAvailableUnbookedInventory(sku.getProductVariant());
     }
 
     @Override
+    @Deprecated
     public Long getAvailableUnbookedInventory(List<Sku> skuList) {
-        Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
-        logger.debug("net inventory " + netInventory);
-
-        Long bookedInventory = 0L;
-        if (!skuList.isEmpty()) {
-            ProductVariant productVariant = skuList.get(0).getProductVariant();
-            bookedInventory = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
-            logger.debug("booked inventory " + bookedInventory);
-        }
-
-        long availableUnbookedInventory = netInventory - bookedInventory;
-        logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
-        return availableUnbookedInventory;
+    	return getAvailableUnbookedInventory(skuList.get(0).getProductVariant());
     }
 
     @Override
     public Long getAvailableUnbookedInventory(ProductVariant productVariant) {
-        return this.getAvailableUnbookedInventory(getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant));
+    	if(productVariant.getMrpQty() == null) {
+    		inventoryHealthService.checkInventoryHealth(productVariant);
+    	}
+        productVariant = productVariantService.getVariantById(productVariant.getId());
+        if(productVariant.getMrpQty() == null) {
+        	return 0l;
+        }
+        return productVariant.getMrpQty();
     }
 
     @Override
     public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList) {
-        Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
-        Long bookedInventory = this.getBookedQtyOfSkuInProcessingQueue(skuList);
-        return netInventory - bookedInventory;
+    	long qty = 0l;
+    	Collection<InventoryInfo> infos = inventoryHealthService.getAvailableInventory(skuList);
+    	for (InventoryInfo inventoryInfo : infos) {
+			for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+				qty+=skuInfo.getUnbookedQty();
+			}
+		}
+        return qty;
     }
 
+    @Deprecated
     private Long getBookedQty(ProductVariant productVariant) {
         Long bookedInventory = 0L;
         if (productVariant != null) {
@@ -286,6 +244,8 @@ public class InventoryServiceImpl implements InventoryService {
         return bookedInventory;
     }
 
+    @SuppressWarnings("unused")
+	@Deprecated
     private Long getBookedQty(List<Sku> skuList) {
         Long bookedInventory = 0L;
         if (skuList != null && !skuList.isEmpty()) {
