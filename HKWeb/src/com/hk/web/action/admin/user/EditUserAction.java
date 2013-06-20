@@ -64,7 +64,9 @@ public class EditUserAction extends BaseAction {
         addRedirectAlertMessage(new LocalizableMessage("/EditUser.action.user.saved.successfully", user.getLogin()));
         return new RedirectResolution(SearchUserAction.class, "search");
     }
-    @Secure(hasAnyPermissions = RoleConstants.GOD, authActionBean = AdminPermissionAction.class)
+
+
+    @Secure(hasAnyRoles = RoleConstants.GOD, authActionBean = AdminPermissionAction.class)
     public Resolution activateHKRocks() {
         user.getRoles().add(EnumRole.HK_EMPLOYEE.toRole());
         getUserService().save(user);
