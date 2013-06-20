@@ -281,6 +281,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 						skuInfo.setQty(0);
 						skuInfo.setUnbookedQty(0);
 					} else {
+						leftQty = 0;
 						skuInfo.setQty(qty);
 						skuInfo.setUnbookedQty(qty);
 					}
