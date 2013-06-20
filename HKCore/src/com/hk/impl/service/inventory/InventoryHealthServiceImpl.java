@@ -53,7 +53,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
-		Map<Double, Long> bookedQtyMap = getBookedInventoryQty(variant);
 		
 		InventoryInfo selectedInfo = null;
 		long netInventory = 0l;
@@ -68,10 +67,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				if(selectedInfo.getQty() <= 0) {
 					selectedInfo = inventoryInfo;
 				}
-			}
-			Long bookedQty = bookedQtyMap.get(selectedInfo.getMrp());
-			if(bookedQty != null) {
-				netInventory-=bookedQty;
 			}
 		}
 		
