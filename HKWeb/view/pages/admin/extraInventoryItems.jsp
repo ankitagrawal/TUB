@@ -299,7 +299,7 @@ $(document).ready(function () {
                 '</td>' +
                 '<input type="hidden" name="extraInventoryLineItems[' + nextIndex + '].id" />' +
                 '  <td class="proName">' +
-                '    <input type="text" class="productName" maxlength="45" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
+                '    <input type="text" class="productName" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
                 '  </td>' +
                 '  <td>' +
                 '    <input class="mrp valueChange" type="text" name="extraInventoryLineItems[' + nextIndex + '].mrp" />' +
