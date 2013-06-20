@@ -175,7 +175,7 @@ public class CheckPaymentAction extends BaseAction {
     }
 
     @DontValidate
-    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updatePayment() {
         try{
             paymentService.updatePayment(gatewayOrderId);
