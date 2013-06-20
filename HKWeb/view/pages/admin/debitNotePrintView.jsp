@@ -6,33 +6,6 @@
 <head>
   <title>Debit Note</title>
   <style type="text/css">
-    /* table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: .8em;
-    }
-
-    table tr td {
-      padding: 1px;
-      border: 1px solid #CCC;
-    }
-
-    table tr th {
-      padding: 1px;
-      border: 1px solid #CCC;
-      text-align: left;
-    }
-
-    h2 {
-      margin: 0;
-      padding: 0;
-    }
-
-    h1 {
-      margin: 0;
-      padding: 0;
-    }
- */
   table {
     width: 100%;
     font-size: .8em;
@@ -113,7 +86,16 @@
     <td>${debitNoteSummary.debitNote.supplier.line1}<br/>${debitNoteSummary.debitNote.supplier.line2}<br/>${debitNoteSummary.debitNote.supplier.city}<br/>${debitNoteSummary.debitNote.supplier.state}
     </td>
     <td><b>Debit Note Number:</b></td>
-    <td>${debitNoteSummary.debitNote.id}</td>
+    <c:choose>
+      <c:when test="${debitNoteSummary.debitNote.debitNoteNumber!=null }">
+       <td>
+          ${debitNoteSummary.debitNote.debitNoteNumber}
+      </td>
+      </c:when>
+      <c:otherwise>
+    <td></td>
+    </c:otherwise>
+    </c:choose>
   </tr>
   <tr>
     <td><b>Contact Name</b></td>
@@ -201,6 +183,16 @@
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalTax}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalSurcharge}" maxFractionDigits="2"/></td>
     <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalPayable}" maxFractionDigits="2"/></Strong>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="10">Freight And Forwarding</td>
+    <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.freightForwardingCharges}" maxFractionDigits="2"/></Strong>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="10">Final Debit Amount</td>
+    <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.finalDebitAmount}" maxFractionDigits="2"/></Strong>
     </td>
   </tr>
   </tfoot>

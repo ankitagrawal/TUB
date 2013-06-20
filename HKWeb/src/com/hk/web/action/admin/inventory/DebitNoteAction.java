@@ -92,7 +92,7 @@ public class DebitNoteAction extends BasePaginatedAction {
 
     public Resolution print() {
         if (debitNote != null) {
-            debitNoteDto = grnManager.generateDebitNoteDto(debitNote);
+            debitNoteDto = debitNoteService.generateDebitNoteDto(debitNote);
             return new ForwardResolution("/pages/admin/debitNotePrintView.jsp");
         } else
             return new ForwardResolution("/pages/admin/debitNoteList.jsp");

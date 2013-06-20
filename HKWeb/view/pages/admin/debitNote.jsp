@@ -163,6 +163,8 @@
 </s:layout-component>
 <s:layout-component name="heading">
     Edit Debit Note # ${pa.debitNote.id}
+    <c:if test="${pa.debitNote.purchaseInvoice!=null }"></c:if> 
+    (Against PI # ${pa.debitNote.purchaseInvoice.id})
 </s:layout-component>
 <s:layout-component name="content">
     <div style="display: none;">
@@ -199,8 +201,8 @@
             <tr>
                 <td>Create Date</td>
                 <td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="debitNote.createDate"/></td>
-                <td>Debit to Supplier</td>
-                <td><s:checkbox name="debitNote.isDebitToSupplier"/></td>
+                <!-- <td>Debit to Supplier</td>
+                <td><s:checkbox name="debitNote.isDebitToSupplier"/></td> -->
                 <td>Status</td>
                 <td><s:select name="debitNote.debitNoteStatus" id="debitNoteStatusId" value="${pa.debitNote.debitNoteStatus.id}">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList"
