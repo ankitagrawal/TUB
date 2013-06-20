@@ -53,7 +53,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
-		InventoryInfo selectedInfo = removeFirst(infos);
+		
+		InventoryInfo selectedInfo = null;
+		if(infos != null && infos.size() != 0) {
+			selectedInfo = removeFirst((List<InventoryInfo>)infos);
+		}
+		
 		long netInventory = selectedInfo.getQty();
 		for (InventoryInfo inventoryInfo : infos) {
 			netInventory+=inventoryInfo.getQty();
@@ -337,37 +342,27 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		return getAvailableInventory(skus.get(0).getProductVariant(), whs);
 	}
 	
-	private static <T> T removeFirst(Collection<T> list) {
-		if(list == null) return null;
+	private static <T> T removeFirst(List<T> list) {
+		if(list == null || list.size() == 0) return null;
 		if(list instanceof LinkedList) {
 			try {
 				return ((LinkedList<T>) list).removeFirst();
 			} catch (Exception e) {
-				return null;
-			}
-		} else {
-			try {
-				return ((List<T>) list).remove(0);
-			} catch (Exception e) {
-				return null;
+				
 			}
 		}
+		return list.remove(0);
 	}
 	
-	private static <T> T getLast(Collection<T> list) {
-		if(list == null) return null;
+	private static <T> T getLast(List<T> list) {
+		if(list == null || list.size() == 0) return null;
 		if(list instanceof LinkedList) {
 			try {
 				return ((LinkedList<T>) list).getLast();
 			} catch (Exception e) {
-				return null;
-			}
-		} else {
-			try {
-				return ((List<T>) list).get(list.size() -1);
-			} catch (Exception e) {
-				return null;
+				
 			}
 		}
+		return list.get(list.size() -1);
 	}
 }
