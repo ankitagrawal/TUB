@@ -93,7 +93,7 @@
       </td>
       </c:when>
       <c:otherwise>
-    <td>${debitNoteSummary.debitNote.id}</td>
+    <td></td>
     </c:otherwise>
     </c:choose>
   </tr>
