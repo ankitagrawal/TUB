@@ -169,7 +169,7 @@ public class BusyPopulatePurchaseReturn {
     public void transactionBodyForPurchaseReturn(Long vch_code, Long debit_note_id) {
         int s_no = 0;
         sql.eachRow("""
-                      select li.id, li.sku_id, li.qty, li.mrp, li.cost_price, li. li.
+                      select li.id, li.sku_id, li.qty, li.mrp, li.cost_price, li.product_name,
                       t.value as tax_value,
                       from debit_note_line_item li
                       inner join tax t on li.tax_id = t.id
@@ -179,6 +179,7 @@ public class BusyPopulatePurchaseReturn {
 
                 Long lineItemId = debitNoteItem.id;
                 Long item_code = debitNoteItem.sku_id;
+                String description = debitNoteItem.product_name;
                 int qty = debitNoteItem.qty;
                 if(qty <= 0){
                     qty = 1;
@@ -194,14 +195,14 @@ public class BusyPopulatePurchaseReturn {
                     busySql.executeInsert("""
         INSERT INTO transaction_body
           (
-            vch_code, s_no, item_code, qty, unit, mrp, rate, discount, vat, amount, create_date, hk_ref_no, cost_price
+            vch_code, s_no, item_code, qty, unit, mrp, rate, discount, vat, amount, create_date, hk_ref_no, cost_price, description
           )
 
-          VALUES (${vch_code}, ${s_no}, ${item_code}, ${qty}, ${unit}, ${mrp}, ${rate}, 0, ${vat}, ${amount}, NOW(), ${lineItemId}, NULL
+          VALUES (${vch_code}, ${s_no}, ${item_code}, ${qty}, ${unit}, ${mrp}, ${rate}, 0, ${vat}, ${amount}, NOW(), ${lineItemId}, NULL, ${description}
           )
           ON DUPLICATE KEY UPDATE
           vch_code = ${vch_code}, s_no = ${s_no}, item_code = ${item_code}, qty = ${qty}, unit = ${unit}, mrp = ${mrp}, rate = ${rate}, discount = NULL,
-          vat = ${vat}, amount = ${amount}, create_date = NOW(), hk_ref_no = ${lineItemId}, cost_price = NULL
+          vat = ${vat}, amount = ${amount}, create_date = NOW(), hk_ref_no = ${lineItemId}, cost_price = NULL, description=${description}
          """)
                 }
                 catch (Exception e) {
