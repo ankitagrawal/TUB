@@ -239,6 +239,11 @@
               <td>${lineItem.qty}</td>
               <td>${hk:netInventory(lineItem.sku)}</td>
               <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>
+              <td>  <s:link beanclass=" com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="pre">
+                Review  <s:param name="lineItem" value="${lineItem.id}"/>
+                  <input type="hidden" name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>
+              </s:link>
+              </td>             
             </c:when>
               <c:otherwise>
                 <td colspan="5">${icBean.shippingOrder.orderStatus.name}</td>
