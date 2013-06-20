@@ -209,7 +209,7 @@ public class BusyTableTransactionGenerator {
         // Generate Transaction  Footer
 
         sql.eachRow("""
-                    select freight_forwarding_charges, purchaseleveldiscount FROM purchase_invoice pi
+                    select freight_forwarding_charges, discount as purchaseleveldiscount FROM purchase_invoice pi
                     where pi.id = ${purchase_invoice_id}
                  """) {
             footerItems ->
