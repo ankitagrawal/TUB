@@ -6,10 +6,12 @@ body			{
 				
 p				{ 
 				margin:0px;
+                padding:0px;
 				}
 				
 p.paraGp1		{ 
 				margin:0px 0px 20px 0px;
+                padding:0px;
 				}
 				
 .nRow			
@@ -71,7 +73,10 @@ p.paraGp1		{
 					}														
 				
 .eyePgBlueBx p	{ 
-				line-height:21px; color:#fff; font-family:Arial, Helvetica, sans-serif;	
+				line-height:21px;
+                color:#fff;
+                font-family:Arial, Helvetica, sans-serif;
+                padding:0px;
 				}				
 				
 
@@ -104,6 +109,8 @@ p.paraGp1		{
 				 font-family:Arial, Helvetica, sans-serif; 
 				 font-size:20px;
 				 font-weight:normal;
+                 margin:0px;
+                 padding:0px;
 				}				
 				
 
@@ -178,6 +185,8 @@ a.CP__lightbox:hover	{
 						
 .eyePopUpImgBox p,div	{ 
 						font-family:Arial, Helvetica, sans-serif;
+                        padding:0px;
+                        margin:0px;
 						}
 						
 .eyeOfferProNames		{ 
