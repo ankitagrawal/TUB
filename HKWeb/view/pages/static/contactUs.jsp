@@ -63,10 +63,10 @@
 
       <p style="font-size: 1.2em;">0124-4616444 <br/> <span style="font-size: 10px;">9 AM to 12 AM (midnight)</span></p>
 
-      <div
+      <%--<div
           style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 25px; padding-top: 3px; font-size: 9px;">
         Our customer care phone lines are down due to technical issues. Sincere apologies for the inconvenience caused.
-      </div>
+      </div>--%>
 
       <br/>
 
