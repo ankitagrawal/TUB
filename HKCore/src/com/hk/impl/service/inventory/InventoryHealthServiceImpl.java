@@ -238,7 +238,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		
 		LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
 		for (SkuInfo inventoryInfo : list) {
-			SkuInfo info = getLast(list);
+			SkuInfo info = getLast(skuList);
 			if(info != null && inventoryInfo.getSkuId() == info.getSkuId() && inventoryInfo.getMrp() == info.getMrp()) {
 				info.setQty(info.getQty() + inventoryInfo.getQty());
 				info.setUnbookedQty(info.getQty());
