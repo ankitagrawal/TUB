@@ -87,6 +87,9 @@ public class DebitNote implements java.io.Serializable {
     @Column(name="freight_forwarding_charges")
     private Double freightForwardingCharges;
     
+    @Column(name="final_debit_amount")
+    private Double finalDebitAmount;
+    
     @Temporal (TemporalType.TIMESTAMP)
     @Column (name = "close_date", length = 19)
     private Date closeDate;
@@ -216,6 +219,14 @@ public class DebitNote implements java.io.Serializable {
 
 	public void setCloseDate(Date closeDate) {
 		this.closeDate = closeDate;
+	}
+
+	public Double getFinalDebitAmount() {
+		return finalDebitAmount;
+	}
+
+	public void setFinalDebitAmount(Double finalDebitAmount) {
+		this.finalDebitAmount = finalDebitAmount;
 	}
 }
 

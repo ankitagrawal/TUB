@@ -63,15 +63,15 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 				ProductVariant productVariant = sku.getProductVariant();
 
 				if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null
-						&& productVariant != null && sku.getTax() != null) {
-					TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(debitNote.getSupplier(), sku, taxable);
+						&& productVariant != null && debitNoteLineItem.getTax() != null) {
+					TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithSku(debitNote.getSupplier(),sku, debitNoteLineItem.getTax(), taxable);
 					tax = taxComponent.getTax();
 					surcharge = taxComponent.getSurcharge();
 				}
 			} else {
 				if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null
 						&& debitNote.getWarehouse()!=null) {
-				TaxComponent taxComponent = TaxUtil.getSupplierTaxForExtraInventory(debitNote.getSupplier(),
+				TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(debitNote.getSupplier(),
 						debitNote.getWarehouse().getState(), debitNoteLineItem.getTax(), taxable);
 				tax = taxComponent.getTax();
 				surcharge = taxComponent.getSurcharge();
@@ -102,6 +102,8 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 
 	public DebitNote createDebitNoteLineItem(DebitNote debitNote, List<RtvNoteLineItem> rtvNoteLineItems,
 			List<ExtraInventoryLineItem> extraInventoryLineItems) {
+		
+		Double finalDebitAmount = 0.0;
 		List<ExtraInventoryLineItem> eiLineItems = new ArrayList<ExtraInventoryLineItem>();
 
 		if (rtvNoteLineItems != null && rtvNoteLineItems.size() > 0) {
@@ -145,8 +147,11 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 			if (eili.getTax() != null) {
 				debitNoteLineItem.setTax(eili.getTax());
 			}
+			finalDebitAmount+=eili.getPayableAmount();
 			debitNoteLineItems.add(debitNoteLineItem);
 		}
+		finalDebitAmount+=debitNote.getFreightForwardingCharges();
+		debitNote.setFinalDebitAmount(finalDebitAmount);
 		debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
 		Set<DebitNoteLineItem> debitNoteLineItemSet = new HashSet<DebitNoteLineItem>();
 		for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
@@ -171,6 +176,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 
     @Override
     public DebitNote save(DebitNote debitNote, List<DebitNoteLineItem> debitNoteLineItems) {
+    	Double finalDebitAmount = 0.0;
         for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
             if (debitNoteLineItem.getDebitNote() == null) {
                 debitNoteLineItem.setDebitNote(debitNote);

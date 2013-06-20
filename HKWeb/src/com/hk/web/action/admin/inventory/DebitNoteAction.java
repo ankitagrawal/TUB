@@ -115,6 +115,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     public Resolution debitNoteFromPi(){
     	Double shippingChargesOnHk= 0.0;
 		Double shippingChargesOnVendor = 0.0;
+		Double finalDebitAmount = 0.0;
     	if (purchaseInvoice != null) {
     		rtvList = purchaseInvoice.getRtvNotes();
     		eiLineItem = purchaseInvoice.getEiLineItems();
@@ -132,7 +133,6 @@ public class DebitNoteAction extends BasePaginatedAction {
     		}
 		debitNote = new DebitNote();
 		debitNote.setPurchaseInvoice(purchaseInvoice);
-		//TODO : Shipping Charges
 		debitNote.setFreightForwardingCharges(shippingChargesOnVendor);
 		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
     		
@@ -160,6 +160,9 @@ public class DebitNoteAction extends BasePaginatedAction {
 		} else {
 			debitNote.setDebitNoteType(EnumDebitNoteType.PostCheckin.asEnumDebitNoteType());
 		}
+		if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId())){
+			debitNote.setCloseDate(new Date());
+		}
 		debitNote = (DebitNote) debitNoteService.save(debitNote);
 		debitNote = (DebitNote) debitNoteService.save(debitNote, debitNoteLineItems);
 
@@ -173,12 +176,6 @@ public class DebitNoteAction extends BasePaginatedAction {
     	return new RedirectResolution(DebitNoteAction.class);
     }
     
-    public Resolution sendDebitNoteEmail(){
-    	adminEmailManager.sendDebitNoteMail(debitNote);
-    	addRedirectAlertMessage(new SimpleMessage("Email Sent To Supplier"));
-		return new RedirectResolution(DebitNoteAction.class);
-    }
-
     public List<DebitNote> getDebitNoteList() {
         return debitNoteList;
     }
