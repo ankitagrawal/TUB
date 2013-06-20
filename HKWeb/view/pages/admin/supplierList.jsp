@@ -15,7 +15,7 @@
                 &nbsp; &nbsp;
                 <label>Name:</label><s:text name="supplierName" style="width:150px"/>
 	            &nbsp; &nbsp;
-                <label>Status:</label><label>Status:</label><s:select name="status">
+                <label>Status:</label><s:select name="status">
 			        <s:option value="">-ALL-</s:option>
 			        <s:option value="true">Active</s:option>
 			        <s:option value="false">Inactive</s:option>
