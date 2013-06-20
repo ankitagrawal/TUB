@@ -64,7 +64,7 @@ public class BusyPopulatePurchaseReturn {
 
       sql.eachRow(""" SELECT dn.debit_note_number as vch_no, dn.create_date as date, s.name as account_name,
                             s.line1 as address_1, s.line2 as address_2, s.state as address_3, s.pincode as address_4,
-                            s.tin_numbner as tin_number, dn.id as hk_ref_no, w.id as warehouseId, w.state as warehouseState, s.id as supplierId,
+                            s.tin_number as tin_number, dn.id as hk_ref_no, w.id as warehouseId, w.state as warehouseState, s.id as supplierId,
                             dn.final_debit_amount as net_amount
                             FROM debit_note dn
                             INNER JOIN supplier s on s.id=dn.supplier_id
