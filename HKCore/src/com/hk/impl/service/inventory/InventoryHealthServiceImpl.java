@@ -75,11 +75,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		vInfo.netQty = netInventory;
 
 		if(selectedInfo != null && selectedInfo.getQty() > 0 && netInventory > 0) {
-			long mxQty = selectedInfo.getMaxQtySkuInfo().getQty();
-			if(selectedInfo.getQty() < mxQty) {
-				mxQty = selectedInfo.getQty();
-			}
-			
 			SkuInfo mxQtyInfo = selectedInfo.getMaxQtySkuInfo();
 			vInfo.mrp = selectedInfo.getMrp();
 			vInfo.mrpQty = mxQtyInfo.getQty();
@@ -319,21 +314,19 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			if(bookedQty != null) {
 				long leftQty = bookedQty;
 				for (InventoryInfo inventoryInfo : entry.getValue()) {
-					for (SkuInfo info : inventoryInfo.getSkuInfoList()) {
-						long netQty = 0l;
-						if(leftQty == bookedQty) {
-							netQty = info.getQty() - bookedQty;
-							leftQty = netQty;
-						} else if(leftQty < 0) {
-							netQty = info.getQty() + leftQty;
-							leftQty = netQty;
-						} else if (leftQty >= 0) {
-							netQty = info.getQty();
-							leftQty = netQty;
+					for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+						long qty = skuInfo.getQty() - leftQty;
+						if(qty < 0) {
+							leftQty = -qty;
+							skuInfo.setQty(0);
+						} else {
+							leftQty = 0;
+							skuInfo.setQty(qty);
 						}
-						info.setQty(netQty);
 					}
-					inventoryInfo.setQty(inventoryInfo.getQty() - bookedQty);
+					if(leftQty != bookedQty) {
+						inventoryInfo.setQty(inventoryInfo.getQty() - bookedQty);
+					}
 				}
 			}
 		}
