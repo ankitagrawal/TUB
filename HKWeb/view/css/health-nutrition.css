@@ -150,6 +150,9 @@
 								cursor:pointer; 
 								font-size:10px; 
 								line-height:10px;
+                                border:none;
+                                text-decoration:none;
+                                outline:none;
 								}
 								
 
@@ -157,12 +160,18 @@
 									background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0px no-repeat;
 									*background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0 no-repeat;
 									_background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0 no-repeat;
+                                    border:none;
+                                    text-decoration:none;
+                                    outline:none;
 									}
 								
 .controllButton-ALL-5 a.setActive	{  
 									background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0px no-repeat;
 									*background:#000; 
 									_background:#000;
+                                    border:none;
+                                    text-decoration:none;
+                                    outline:none;
 									}
 									
 .previous-ALL-5						{
