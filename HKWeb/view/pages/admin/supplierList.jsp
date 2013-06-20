@@ -72,9 +72,9 @@
 		                    <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
 			                    <s:param name="supplier" value="${supplier.id}"/></s:link>
 		                    <br/>
-		                    <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
+		                    <%-- <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
 			                    Raise Debit Note
-			                    <s:param name="supplier" value="${supplier.id}"/></s:link>
+			                    <s:param name="supplier" value="${supplier.id}"/></s:link> --%>
 	                    </c:if>
                     </td>
                 </tr>
