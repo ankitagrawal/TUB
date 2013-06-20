@@ -17,16 +17,15 @@
 <s:layout-component name="breadcrumbs">
 	<div class='crumb_outer'><s:link
 			beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
-		&gt; <span class="crumb last" style="font-size: 12px;">eye Offers</span>
+		&gt; <span class="crumb last" style="font-size: 12px;">health-nutrition Offers</span>
 
-		<h1 class="title">Beauty Offers</h1>
+		<h1 class="title">health-nutrition Offers</h1>
 	</div>
 
 </s:layout-component>
 
-<s:layout-component name="metaDescription">Eye Offers</s:layout-component>
-<s:layout-component name="metaKeywords">Eye Offers</s:layout-component>
-
+<s:layout-component name="metaDescription">health-nutrition Offers</s:layout-component>
+<s:layout-component name="metaKeywords">health-nutrition Offers</s:layout-component>
 
 <s:layout-component name="content">
     <div class="container">
@@ -62,6 +61,10 @@
         </div>
     </div>
 
+        <script src="js/jquery.js" type="text/javascript" ></script>
+        <script src="js/jquery.easing.1.3.js" type="text/javascript" ></script>
+        <script src="js/cquery_all_slide.js" type="text/javascript"></script>
+
 
     <script>
     	$.fn.cquery_allslide({
@@ -80,7 +83,5 @@
     	        scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
     </c:if>
 
-
     </s:layout-component>
-
     </s:layout-render>
