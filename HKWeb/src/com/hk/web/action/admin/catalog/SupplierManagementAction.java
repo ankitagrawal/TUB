@@ -265,6 +265,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
         HashSet<String> params = new HashSet<String>();
         params.add("supplierTin");
         params.add("supplierName");
+        params.add("status");
         return params;
     }
 
