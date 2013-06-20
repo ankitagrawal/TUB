@@ -92,13 +92,38 @@
                    }
                 });
                 }
+                var debitNoteStatus = parseFloat($('#debitNoteStatusId').val());
+                var debitNoteStatusDB = parseFloat(${pa.debitNote.debitNoteStatus});
+                if (debitNoteStatusDB > debitNoteStatus) {
+                    alert("Invalid Debit Note Status");
+                    obj.show();
+                    bool=false;
+                    return false;
+                }
+                
                 if(!bool){
                     obj.show();
                    return false;
                     }
             });
-
-
+			
+            
+            var debitNoteStatusDB = parseFloat(${pa.debitNote.debitNoteStatus});
+            if (debitNoteStatusDB >=50){
+            	$("#debitNoteLineItems :input").each(function(){
+   	    		 $(this).attr('readonly', true);
+   	    		});
+            }
+            
+            $('#freightForwardingCharges').live("change", function(){
+            	var table = $(this).parent().parent().parent();
+            	var totalPayableRow = table.find('#totalPayable');
+            	var totalPayable =  parseFloat(totalPayableRow.text().replace(",",""));
+            	var freightForwardingCharges = parseFloat($(this).val());
+            	var finalDebitAmount = totalPayable+freightForwardingCharges;
+            	table.find('#finalDebitAmount').val(finalDebitAmount.toFixed(2));
+            });
+            		
             $('.variant').live("change", function() {
                 var variantRow = $(this).parents('.lineItemRow');
                 var productVariantId = variantRow.find('.variant').val();
@@ -177,7 +202,7 @@
                 <td>Debit to Supplier</td>
                 <td><s:checkbox name="debitNote.isDebitToSupplier"/></td>
                 <td>Status</td>
-                <td><s:select name="debitNote.debitNoteStatus" value="${pa.debitNote.debitNoteStatus.id}">
+                <td><s:select name="debitNote.debitNoteStatus" id="debitNoteStatusId" value="${pa.debitNote.debitNoteStatus.id}">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList"
                                                value="id" label="name"/>
                 </s:select></td>
@@ -194,7 +219,7 @@
             </tr>
         </table>
 
-        <table border="1">
+        <table border="1" id="debitNoteLineItems">
             <thead>
             <tr>
                 <th>S.No.</th>
@@ -316,7 +341,18 @@
                 <td><fmt:formatNumber value="${pa.debitNoteDto.totalTaxable}" maxFractionDigits="2"/></td>
                 <td><fmt:formatNumber value="${pa.debitNoteDto.totalTax}" maxFractionDigits="2"/></td>
                 <td><fmt:formatNumber value="${pa.debitNoteDto.totalSurcharge}" maxFractionDigits="2"/></td>
-                <td><fmt:formatNumber value="${pa.debitNoteDto.totalPayable}" maxFractionDigits="2"/></td>
+                <td id="totalPayable"><fmt:formatNumber value="${pa.debitNoteDto.totalPayable}" maxFractionDigits="2"/></td>
+            </tr>
+            <tr></tr>
+            <tr>
+            <td colspan="8"></td>
+            <td colspan="3">Freight And Forwarding</td>
+            <td><s:text name="debitNote.freightForwardingCharges" value="${debitNote.freightForwardingCharges}" id="freightForwardingCharges"/></td>
+            </tr>
+            <tr>
+            <td colspan="8"></td>
+            <td colspan="3">Final Debit Amount</td>
+            <td><s:text name="debitNote.finalDebitAmount" value="${debitNote.finalDebitAmount}" id="finalDebitAmount"/></td>
             </tr>
             </tfoot>
         </table>

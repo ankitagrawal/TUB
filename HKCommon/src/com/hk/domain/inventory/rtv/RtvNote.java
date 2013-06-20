@@ -87,9 +87,6 @@ public class RtvNote implements Serializable{
   @Column(name="shipping_charge_vendor")
   private Double shippingChargeVendor;
   
-  @Column(name="email_sent_to_vendor")
-  private Boolean emailSentToVendor;
-  
   public Long getId() {
     return id;
   }
@@ -210,12 +207,4 @@ public class RtvNote implements Serializable{
 		this.shippingChargeVendor = shippingChargeVendor;
 	}
 	
-	public Boolean getEmailSentToVendor() {
-		return emailSentToVendor;
-	}
-	
-	public void setEmailSentToVendor(Boolean emailSentToVendor) {
-		this.emailSentToVendor = emailSentToVendor;
-	}
-  	
 }
