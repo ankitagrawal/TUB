@@ -17,15 +17,15 @@
 <s:layout-component name="breadcrumbs">
 	<div class='crumb_outer'><s:link
 			beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
-		&gt; <span class="crumb last" style="font-size: 12px;">Beauty Offers</span>
+		&gt; <span class="crumb last" style="font-size: 12px;">Personal-care Offers</span>
 
-		<h1 class="title">Beauty Offers</h1>
+		<h1 class="title">Personal-care Offers</h1>
 	</div>
 
 </s:layout-component>
 
-<s:layout-component name="metaDescription">Beauty Offers</s:layout-component>
-<s:layout-component name="metaKeywords">Beauty Offers</s:layout-component>
+<s:layout-component name="metaDescription">Personal-care Offers</s:layout-component>
+<s:layout-component name="metaKeywords">Personal-care Offers</s:layout-component>
 
 
 <s:layout-component name="content">

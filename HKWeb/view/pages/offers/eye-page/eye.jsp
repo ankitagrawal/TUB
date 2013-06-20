@@ -46,7 +46,7 @@
   	<div class="nRow">&nbsp;</div>
 </div>
 <map name="Map" id="Map">
-            <area shape="poly" coords="84,119,67,122,47,118,41,99,32,33,37,2,62,6,141,27,163,33,168,97,171,122,113,127,100,137" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'380'} )" title="" contentID="myCotentDiv1" />
+            <area shape="poly" coords="84,119,67,122,47,118,41,99,32,33,37,2,62,6,141,27,163,33,168,97,171,122,113,127,100,137" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'400'} )" title="" contentID="myCotentDiv1" />
 
             <area shape="poly" coords="101,363,71,286,11,288,1,126,184,150,186,272,109,282" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'820', height:'400'} )" title="" contentID="myCotentDiv4" />
 
@@ -242,7 +242,7 @@
    		</div>
         <div class="eyeVDashedBrdr1">&nbsp;</div>
 		<div class="nRow">
-         	<div class="eyeRightBx"><a href="eye-combo-page.html"><img src="images/view-all.jpg" alt="View All" /></a></div>
+         	<div class="eyeRightBx"><a href="${pageContext.request.contextPath}/pages/offers/eye-page/eye-combo-page.jsp"><img src="images/view-all.jpg" alt="View All" /></a></div>
         </div>
    	</div>
     <div class="cl"></div>

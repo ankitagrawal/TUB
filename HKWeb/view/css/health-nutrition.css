@@ -20,7 +20,7 @@
 					height:395px; 
 					margin:0 auto; 
 					text-align:left; 
-					background:url(images/first-three-categories.jpg) top left no-repeat; 
+					background:url(../pages/offers/health-nutrition-page/images/first-three-categories.jpg) top left no-repeat;
 					}
 					
 .secondThreeBanners	{ 
@@ -28,7 +28,7 @@
 					height:390px; 
 					margin:0 auto; 
 					text-align:left; 
-					background:url(images/second-three-categories.jpg) top left no-repeat; 
+					background:url(../pages/offers/health-nutrition-page/images/second-three-categories.jpg) top left no-repeat;
 					}
 
 .lastThreeBanners	{ 
@@ -36,7 +36,7 @@
 					height:390px; 
 					margin:0 auto; 
 					text-align:left; 
-					background:url(images/last-three-categories.jpg) top left no-repeat; 
+					background:url(../pages/offers/health-nutrition-page/images/last-three-categories.jpg) top left no-repeat;
 					}
 					
 
@@ -142,7 +142,7 @@
 								padding:0px; 
 								width:11px; 
 								height:11px; 
-								background: url(images/r-btn.png) 0 0 no-repeat; 
+								background: url(../pages/offers/health-nutrition-page/images/r-btn.png) 0 0 no-repeat;
 								*background:#ccc; 
 								_background: #ccc; 
 								float:left; 
@@ -154,13 +154,13 @@
 								
 
 .controllButton-ALL-5 a:hover		{ 
-									background:url(images/r-btn.png) -11px 0px no-repeat; 
-									*background:url(images/r-btn.gif) -11px 0 no-repeat; 
-									_background:url(images/r-btn.gif) -11px 0 no-repeat;
+									background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0px no-repeat;
+									*background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0 no-repeat;
+									_background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0 no-repeat;
 									}
 								
 .controllButton-ALL-5 a.setActive	{  
-									background:url(images/r-btn.png) -11px 0px no-repeat; 
+									background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0px no-repeat;
 									*background:#000; 
 									_background:#000;
 									}
