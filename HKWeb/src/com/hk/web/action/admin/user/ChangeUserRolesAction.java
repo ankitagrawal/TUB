@@ -76,7 +76,7 @@ public class ChangeUserRolesAction extends BaseAction {
             }
             userRoles.add(role);
         }
-        return new ForwardResolution("/pages/admin/.jsp");
+        return new ForwardResolution("/pages/admin/changeUserRoles.jsp");
     }
 
     @ValidationMethod(on = "change")
