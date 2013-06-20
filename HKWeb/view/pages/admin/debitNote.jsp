@@ -359,7 +359,7 @@
         </table>
         <div class="variantDetails info"></div>
         <br/>
-        <a href="debitNote.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
+        <!-- <a href="debitNote.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a> -->
 
         <s:submit name="save" id="save" value="Save" />
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
