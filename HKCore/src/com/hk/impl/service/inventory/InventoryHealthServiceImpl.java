@@ -290,6 +290,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
+		Map<Double, List<InventoryInfo>> mrpMap = new LinkedHashMap<Double, List<InventoryInfo>>();
+		
 		for (SkuInfo skuInfo : checkedInInvList) {
 			InventoryInfo info = getLast(invList);
 			if(info != null && skuInfo.getMrp() == info.getMrp()) {
@@ -299,30 +301,40 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				info.setMrp(skuInfo.getMrp());
 				info.setQty(skuInfo.getQty());
 				invList.add(info);
+				
+				List<InventoryInfo> infos = mrpMap.get(skuInfo.getMrp());
+				if(infos == null) {
+					infos = new ArrayList<InventoryInfo>();
+					mrpMap.put(Double.valueOf(skuInfo.getMrp()), infos);
+				}
+				infos.add(info);
 			}
 			info.addSkuInfo(skuInfo);
 		}
 		
-		for (InventoryInfo inventoryInfo : invList) {
-			Long bookedQty = bookedQtyMap.get(inventoryInfo.getMrp());
+		for(Map.Entry<Double, List<InventoryInfo>> entry: mrpMap.entrySet()) {
+			Double mrp = entry.getKey();
+			Long bookedQty = bookedQtyMap.get(mrp);
+
 			if(bookedQty != null) {
 				long leftQty = bookedQty;
-				for (SkuInfo info : inventoryInfo.getSkuInfoList()) {
-					long netQty = 0l;
-					if(leftQty == bookedQty) {
-						netQty = info.getQty() - bookedQty;
-						leftQty = netQty;
-					} else if(leftQty < 0) {
-						netQty = info.getQty() + leftQty;
-						leftQty = netQty;
-					} else if (leftQty >= 0) {
-						netQty = info.getQty();
-						leftQty = netQty;
+				for (InventoryInfo inventoryInfo : entry.getValue()) {
+					for (SkuInfo info : inventoryInfo.getSkuInfoList()) {
+						long netQty = 0l;
+						if(leftQty == bookedQty) {
+							netQty = info.getQty() - bookedQty;
+							leftQty = netQty;
+						} else if(leftQty < 0) {
+							netQty = info.getQty() + leftQty;
+							leftQty = netQty;
+						} else if (leftQty >= 0) {
+							netQty = info.getQty();
+							leftQty = netQty;
+						}
+						info.setQty(netQty);
 					}
-					info.setQty(netQty);
+					inventoryInfo.setQty(inventoryInfo.getQty() - bookedQty);
 				}
-				inventoryInfo.setQty(inventoryInfo.getQty() - bookedQty);
-				bookedQtyMap.remove(inventoryInfo.getMrp());
 			}
 		}
 		return invList;
