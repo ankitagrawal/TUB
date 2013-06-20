@@ -14,9 +14,9 @@ public interface InventoryHealthService {
 	
 	long getAvailableUnbookedInventory(ProductVariant productVariant);
 
-	InventoryInfo getAvailableInventory(ProductVariant productVariant, Double preferredMrp);
-	
 	Collection<InventoryInfo> getAvailableInventory(List<Sku> skus);
+
+	Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant);
 	
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

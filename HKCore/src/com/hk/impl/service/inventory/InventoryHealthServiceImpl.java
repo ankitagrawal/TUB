@@ -339,14 +339,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	}
 	
 	@Override
-	public InventoryInfo getAvailableInventory(ProductVariant productVariant, Double preferredMrp) {
-		Collection<InventoryInfo> infos = getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses());
-		for (InventoryInfo inventoryInfo : infos) {
-			if(inventoryInfo.getMrp() == preferredMrp) {
-				return inventoryInfo;
-			}
-		}
-		return null;
+	public Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant) {
+		return getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses());
 	}
 	
 	@Override
