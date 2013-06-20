@@ -55,15 +55,18 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
 		
 		InventoryInfo selectedInfo = null;
+		long netInventory = 0l;
 		if(infos != null && infos.size() != 0) {
 			selectedInfo = removeFirst((List<InventoryInfo>)infos);
 		}
 		
-		long netInventory = selectedInfo.getQty();
-		for (InventoryInfo inventoryInfo : infos) {
-			netInventory+=inventoryInfo.getQty();
-			if(selectedInfo.getQty() <= 0) {
-				selectedInfo = inventoryInfo;
+		if(selectedInfo != null) {
+			netInventory = selectedInfo.getQty();
+			for (InventoryInfo inventoryInfo : infos) {
+				netInventory+=inventoryInfo.getQty();
+				if(selectedInfo.getQty() <= 0) {
+					selectedInfo = inventoryInfo;
+				}
 			}
 		}
 		
