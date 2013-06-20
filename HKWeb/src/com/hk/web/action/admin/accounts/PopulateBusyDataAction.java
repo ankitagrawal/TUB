@@ -112,10 +112,10 @@ public class PopulateBusyDataAction extends BaseAction {
 	@Secure(hasAnyPermissions = {PermissionConstants.POPULATE_BUSY_DATA}, authActionBean = AdminPermissionAction.class)
 	public Resolution populatePurchases() {
 		try {
-			BusyTableTransactionGenerator busyTableTransactionGenerator = new BusyTableTransactionGenerator(dbHostName, dbName, dbUser, dbPassword);
+			BusyPopulatePurchaseData busyPopulatePurchaseData = new BusyPopulatePurchaseData(dbHostName, dbName, dbUser, dbPassword);
 
 			logger.info("Populating Purchases ");
-			busyTableTransactionGenerator.populatePurchaseData();
+			busyPopulatePurchaseData.populatePurchaseData();
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}

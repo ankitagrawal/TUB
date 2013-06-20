@@ -65,12 +65,13 @@ public class BusyPopulatePurchaseReturn {
       sql.eachRow(""" SELECT dn.debit_note_number as vch_no, dn.create_date as date, s.name as account_name,
                             s.line1 as address_1, s.line2 as address_2, s.state as address_3, s.pincode as address_4,
                             s.tin_number as tin_number, dn.id as hk_ref_no, w.id as warehouseId, w.state as warehouseState, s.id as supplierId,
-                            dn.final_debit_amount as net_amount
+                            dn.final_debit_amount as net_amount, pi.invoice_number as supplier_invoice
                             FROM debit_note dn
                             INNER JOIN supplier s on s.id=dn.supplier_id
                             INNER JOIN warehouse w on w.id=dn.warehouse_id
+                            LEFT JOIN purchase_invoice pi on pi.id=dn.purchase_invoice_id
                             WHERE dn.debit_note_status_id = 100
-                            AND dn.closing_date > ${lastUpdateDate}  """) {
+                            AND dn.close_date > ${lastUpdateDate}  """) {
 
         debitNote ->
 
@@ -122,30 +123,32 @@ public class BusyPopulatePurchaseReturn {
         else {
             out_of_state = 1;
         }
-        String material_centre = substring(warehouseName, 1, 40);
-        String address_1 = substring(debitNote.address_1, 1, 40);
-        String address_2 = substring(debitNote.address_2, 1, 40);
-        String address_3 = substring(debitNote.address_3, 1, 40);
-        String address_4 = substring(debitNote.address_4, 1, 40);
-        String tin_number = substring(debitNote.tin_number, 1, 30);
-        String account_name = substring(debitNote.account_name, 1, 40);
+        String material_centre = warehouseName;
+        String address_1 = debitNote.address_1;
+        String address_2 = debitNote.address_2;
+        String address_3 = debitNote.address_3;
+        String address_4 = debitNote.address_4;
+        String tin_number = debitNote.tin_number;
+        String account_name = debitNote.account_name;
         String debtors = debitNote.supplierId;
         int vch_type=10;
-        String vch_no = substring(debitNote.vch_no, 1 ,25);
+        String vch_no = debitNote.vch_no;
         String sale_type = "VAT TAX INC";
         double net_amount = debitNote.net_amount;
         byte imported = 0;
         long hk_ref_no  = debitNote.hk_ref_no;
+        String narration = debitNote.supplier_invoice;;
+
         //Generate  Transaction Header
 
 
             def keys = busySql.executeInsert(""" INSERT INTO transaction_header (  series,
-                      date ,vch_no  ,  vch_type,   sale_type ,   account_name, debtors ,  address_1,   address_2,   address_3 ,   address_4  ,
-                      tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no
+                      date ,vch_no  ,  vch_type,   sale_type ,   account_name, debtors ,  address_1, address_2,  address_3 , address_4  ,
+                      tin_number ,  material_centre  , narration, out_of_state, net_amount, imported, create_date , hk_ref_no
                     )
-                    VALUES(   ${series} , ${date} , ${vch_no} ,  ${vch_type} , ${sale_type}  , ${account_name}
-                 , ${debtors}  , ${address_1} ,  ${address_2} , ${address_3}
-                      , ${address_4}, ${tin_number} , ${material_centre}  , ${out_of_state} , ${net_amount}
+                    VALUES(   ${series} , ${date} , ${vch_no} ,  ${vch_type} , ${sale_type}  , substring(${account_name}, 1, 40)
+                 , substring(${debtors}, 1,40)  , substring(${address_1}, 1, 40) ,  substring(${address_2}, 1, 40) , substring(${address_3}, 1, 40)
+                      , substring(${address_4}, 1, 40), substring(${tin_number}, 1, 30) , substring(${material_centre}, 1, 40)  ,${narration}, ${out_of_state} , ${net_amount}
                      , ${imported} , NOW() , ${hk_ref_no})
 
 
@@ -168,7 +171,7 @@ public class BusyPopulatePurchaseReturn {
         int s_no = 0;
         sql.eachRow("""
                       select li.id, li.sku_id, li.qty, li.mrp, li.cost_price, li.product_name,
-                      t.value as tax_value,
+                      t.value as tax_value
                       from debit_note_line_item li
                       inner join tax t on li.tax_id = t.id
                       where li.debit_note_id = ${debit_note_id}
