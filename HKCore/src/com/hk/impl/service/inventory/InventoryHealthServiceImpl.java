@@ -229,6 +229,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		query.addScalar("skuId", Hibernate.LONG);
 		query.addScalar("mrp", Hibernate.DOUBLE);
 		query.addScalar("qty", Hibernate.LONG);
+		query.addScalar("costPrice", Hibernate.DOUBLE);
 		query.addScalar("checkinDate", Hibernate.DATE);
 		
 		query.setParameter("pvId", productVariant.getId());
