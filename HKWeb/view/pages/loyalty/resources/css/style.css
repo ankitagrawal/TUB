@@ -91,7 +91,7 @@ margin-top: 20px;
 }
 
 
-.logo-block{float:left;width:auto;margin-bottom:20px;}
+.logo-block{float:left;width:auto;margin-bottom:5px;}
 .logoSubblock{width: 283px;height:83px;float: left;}
 .hkpolicy{font-size:12px;float:left;margin-bottom:10px;margin-left:10px;}
 .boldfont{font-size:16px; font-weight:bold;}
@@ -162,6 +162,7 @@ text-transform: lowercase;
 .leftBlock{
 position: relative;
 float: left;
+margin-top: 15px;
 height: auto;
 }
 
@@ -1489,7 +1490,7 @@ strong {
 }
 
 .productImageLarge {
-	width:380px;height:380px;border:1px solid #ddd; padding:5px; text-align:center;margin-bottom:10px;
+	width:380px;height:380px; padding:5px; text-align:left;margin-bottom:10px;
 }
 
 .titleLineText{
@@ -1516,7 +1517,8 @@ strong {
 .productAttrs {
 	width: 100%;
 	background: transparent;
-	padding: 5px;
+	position: absolute;
+	top: 430px;
 	margin-bottom: 15px;
 	line-height: 4px;
 }
@@ -1540,6 +1542,7 @@ strong {
 	float: left;
 	color: #005000;
 	margin-bottom: 10px;
+	margin-top: 60px;
 	left: 20px;
 }
 
@@ -1555,8 +1558,10 @@ strong {
 	font-family: sans-serif;
 }
 
-.productInformation{
+.productInformation {
 	width: 550px;
+	height: 190px;
+    overflow-x: auto;
 }
 
 .productInformation p {

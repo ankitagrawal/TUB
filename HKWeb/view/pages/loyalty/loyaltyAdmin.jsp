@@ -53,7 +53,7 @@
   </script>
   <div style="background: #FAFAEE;">
   	<c:if test="${! empty loyaltyAdminAction.errorMessages}">
-  	<div style="color: red;">Upload Failed! Following errors were found in the file :
+  	<div style="color: red;">Following errors were found while performing the operation :
   	<br><br>
   	    <c:forEach items="${loyaltyAdminAction.errorMessages}" var="message">
        		<div style="color: red; font-size: 12px;">

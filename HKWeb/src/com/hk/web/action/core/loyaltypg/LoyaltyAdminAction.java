@@ -107,7 +107,7 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
         }
     	
     	if (loyaltyProducts != null && !(loyaltyProducts.size() > 0)) {
-    		this.errorMessages.add("No Products Found for the given productId and variant Id.");
+    		this.errorMessages.add("No Products Found for the given productId and variant Id");
     	}
  
         return new ForwardResolution("/pages/loyalty/loyaltyAdmin.jsp");
