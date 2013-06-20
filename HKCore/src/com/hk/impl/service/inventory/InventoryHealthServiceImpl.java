@@ -319,6 +319,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			if(bookedQty != null) {
 				long leftQty = bookedQty;
 				for (InventoryInfo inventoryInfo : entry.getValue()) {
+					long netInveQty = 0l;
 					for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
 						long qty = skuInfo.getQty() - leftQty;
 						if(qty < 0) {
@@ -328,7 +329,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 							leftQty = 0;
 							skuInfo.setQty(qty);
 						}
+						netInveQty+=skuInfo.getQty();
 					}
+					inventoryInfo.setQty(netInveQty);
 				}
 			}
 		}
