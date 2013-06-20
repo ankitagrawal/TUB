@@ -14,28 +14,27 @@ import org.slf4j.LoggerFactory
  */
 
 public class BusyPopulatePurchaseReturn {
-  private String dbName;
-  private String serverUser;
-  private String serverPassword;
-  private String hostName;
-  Sql sqlProd;
-  Sql sqlReport;
-   private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulatePurchaseReturn.class);
+    private String hostName;
+    private String dbName;
+    private String serverUser;
+    private String serverPassword;
+    Sql sql;
+    Sql busySql;
 
     BusyPopulatePurchaseReturn(String hostName, String dbName, String serverUser, String serverPassword){
-    this.hostName = hostName;
-    this.dbName = dbName;
-    this.serverUser = serverUser;
-    this.serverPassword = serverPassword;
+        this.hostName = hostName;
+        this.dbName = dbName;
+        this.serverUser = serverUser;
+        this.serverPassword = serverPassword;
 
-    sqlProd = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
-            serverPassword, "com.mysql.jdbc.Driver");
+        sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
+                serverPassword, "com.mysql.jdbc.Driver");
 
-    sqlReport = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
-            serverPassword, "com.mysql.jdbc.Driver");
-  }
+        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+                serverPassword, "com.mysql.jdbc.Driver");
+    }
 
-//  private static org.slf4j.Logger Logger = LoggerFactory.getLogger(BusyTableTransactionGenerator.class);
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulateRtoData.class);
 
 
   public void populatePurchaseReturnData() {
@@ -45,7 +44,7 @@ public class BusyPopulatePurchaseReturn {
     String lastUpdateDate;
 
 
-    sqlReport.eachRow("""  SELECT  max(create_date) as lastDate FROM  transaction_header where vch_type = 10  """)   {
+    busySql.eachRow("""  SELECT  max(create_date) as lastDate FROM  transaction_header where vch_type = 10  """)   {
 
       updateRow ->
 
@@ -63,10 +62,10 @@ public class BusyPopulatePurchaseReturn {
       // get  all records from healthkart_dev   to healthkart_busy  where  healthkart_dev.create_date > healthkart_busy.create_date.
     }
 
-      sqlProd.eachRow(""" SELECT dn.debit_note_number as vch_no, dn.create_date as date, s.name as account_name,
+      sql.eachRow(""" SELECT dn.debit_note_number as vch_no, dn.create_date as date, s.name as account_name,
                             s.line1 as address_1, s.line2 as address_2, s.state as address_3, s.pincode as address_4,
-                            s.tin_numbner as tin_number, dn.id as hk_ref_no, w.id as warehouseId, w.state as warehouseState, s.id as supplierId
-
+                            s.tin_numbner as tin_number, dn.id as hk_ref_no, w.id as warehouseId, w.state as warehouseState, s.id as supplierId,
+                            dn.final_debit_amount as net_amount
                             FROM debit_note dn
                             INNER JOIN supplier s on s.id=dn.supplier_id
                             INNER JOIN warehouse w on w.id=dn.warehouse_id
@@ -134,28 +133,27 @@ public class BusyPopulatePurchaseReturn {
         int vch_type=10;
         String vch_no = substring(debitNote.vch_no, 1 ,25);
         String sale_type = "VAT TAX INC";
-        double net_amount;
+        double net_amount = debitNote.net_amount;
         byte imported = 0;
         long hk_ref_no  = debitNote.hk_ref_no;
         //Generate  Transaction Header
 
 
-            def keys = sqlReport.executeInsert(""" INSERT INTO transaction_header (  series,
-      date ,vch_no  ,  vch_type,   sale_type ,   account_name, debtors ,  address_1,   address_2,   address_3 ,   address_4  ,
-      tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no
-    )
-        VALUES(   ${series} , ${date} , ${vch_no} ,  ${vch_type} , ${sale_type}  , ${account_name}
-     , ${debtors}  , ${address_1} ,  ${address_2} , ${address_3}
-          , ${address_4}, ${tin_number} , ${material_centre}  , ${out_of_state} , ${net_amount}
-         , ${imported} , NOW() , ${hk_ref_no})
+            def keys = busySql.executeInsert(""" INSERT INTO transaction_header (  series,
+                      date ,vch_no  ,  vch_type,   sale_type ,   account_name, debtors ,  address_1,   address_2,   address_3 ,   address_4  ,
+                      tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no
+                    )
+                    VALUES(   ${series} , ${date} , ${vch_no} ,  ${vch_type} , ${sale_type}  , ${account_name}
+                 , ${debtors}  , ${address_1} ,  ${address_2} , ${address_3}
+                      , ${address_4}, ${tin_number} , ${material_centre}  , ${out_of_state} , ${net_amount}
+                     , ${imported} , NOW() , ${hk_ref_no})
 
 
- """);
+                """);
 
-        //RECURSE EVERY ROW
-            Long vch_code=keys[0][0];
-  //          transactionBodyForPurchaseReturn(vch_code, hk_ref_no);
-    //        transactionFooterForPurchaseReturn(vch_code, hk_ref_no);
+        Long vch_code=keys[0][0];
+        transactionBodyForPurchaseReturn(vch_code, hk_ref_no);
+        transactionFooterForPurchaseReturn(vch_code, hk_ref_no);
 
 
 
