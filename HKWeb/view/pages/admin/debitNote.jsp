@@ -163,8 +163,7 @@
 </s:layout-component>
 <s:layout-component name="heading">
     Edit Debit Note # ${pa.debitNote.id}
-    <c:if test="${pa.debitNote.purchaseInvoice!=null }"></c:if> 
-    (Against PI # ${pa.debitNote.purchaseInvoice.id})
+    <c:if test="${pa.debitNote.purchaseInvoice!=null }">(Against PI # ${pa.debitNote.purchaseInvoice.id})</c:if> 
 </s:layout-component>
 <s:layout-component name="content">
     <div style="display: none;">
