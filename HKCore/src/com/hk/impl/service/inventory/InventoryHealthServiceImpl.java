@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
@@ -53,8 +52,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			return;
 		}
 		
-		Queue<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
-		InventoryInfo selectedInfo = infos.poll();
+		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
+		InventoryInfo selectedInfo = removeFirst(infos);
 		long netInventory = selectedInfo.getQty();
 		for (InventoryInfo inventoryInfo : infos) {
 			netInventory+=inventoryInfo.getQty();
@@ -232,17 +231,17 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		@SuppressWarnings("unchecked")
 		List<SkuInfo> list = query.list();
 		
-		Queue<SkuInfo> queue = new LinkedList<SkuInfo>();
+		LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
 		for (SkuInfo inventoryInfo : list) {
-			SkuInfo info = queue.peek();
+			SkuInfo info = getLast(list);
 			if(info != null && inventoryInfo.getSkuId() == info.getSkuId() && inventoryInfo.getMrp() == info.getMrp()) {
 				info.setQty(info.getQty() + inventoryInfo.getQty());
 				info.setUnbookedQty(info.getQty());
 			} else {
-				queue.add(inventoryInfo);
+				skuList.add(inventoryInfo);
 			}
 		}
-		return queue;
+		return skuList;
 	}
 	
 	private List<Long> toWarehouseIds(List<Warehouse> whs) {
@@ -254,7 +253,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		return list;
 	}
 	
-	private Queue<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
+	private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
 		Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 		
 		Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
@@ -270,21 +269,21 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			}
 		}
 		
-		Queue<InventoryInfo> queue = new LinkedList<InventoryInfo>();
+		List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
 		for (SkuInfo skuInfo : checkedInInvList) {
-			InventoryInfo info = queue.peek();
+			InventoryInfo info = getLast(invList);
 			if(info != null && skuInfo.getMrp() == info.getMrp()) {
 				info.setQty(info.getQty() + skuInfo.getQty());
 			} else {
 				info = new InventoryInfo();
 				info.setMrp(skuInfo.getMrp());
 				info.setQty(skuInfo.getQty());
-				queue.add(info);
+				invList.add(info);
 			}
 			info.addSkuInfo(skuInfo);
 		}
 		
-		for (InventoryInfo inventoryInfo : queue) {
+		for (InventoryInfo inventoryInfo : invList) {
 			Long bookedQty = bookedQtyMap.get(inventoryInfo.getMrp());
 			if(bookedQty != null) {
 				long leftQty = bookedQty;
@@ -306,7 +305,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				bookedQtyMap.remove(inventoryInfo.getMrp());
 			}
 		}
-		return queue;
+		return invList;
 	}
 	
 	private SkuInfo searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
@@ -336,5 +335,39 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			whs.add(sku.getWarehouse());
 		}
 		return getAvailableInventory(skus.get(0).getProductVariant(), whs);
+	}
+	
+	private static <T> T removeFirst(Collection<T> list) {
+		if(list == null) return null;
+		if(list instanceof LinkedList) {
+			try {
+				return ((LinkedList<T>) list).removeFirst();
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
+			try {
+				return ((List<T>) list).remove(0);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+	
+	private static <T> T getLast(Collection<T> list) {
+		if(list == null) return null;
+		if(list instanceof LinkedList) {
+			try {
+				return ((LinkedList<T>) list).getLast();
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
+			try {
+				return ((List<T>) list).get(list.size() -1);
+			} catch (Exception e) {
+				return null;
+			}
+		}
 	}
 }
