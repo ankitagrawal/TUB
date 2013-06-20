@@ -109,6 +109,12 @@
                             [Activate B2bUser]
                         </s:link>
                     </c:if>
+                    <c:if test="${fn:contains(user.roles,B2bUser)}">
+                        <s:link beanclass="com.hk.web.action.admin.user.EditUserAction" event="deActivateB2bUser">
+                            <s:param name="user" value="${user}"/>
+                            [DeActivate B2bUser]
+                        </s:link>
+                    </c:if>
 
                     <s:link beanclass="com.hk.web.action.admin.user.CustomerLifeCycleAction">
                         <s:param name="user" value="${user}"/>

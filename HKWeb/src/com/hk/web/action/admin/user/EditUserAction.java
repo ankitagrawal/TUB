@@ -71,12 +71,18 @@ public class EditUserAction extends BaseAction {
         return new RedirectResolution(SearchUserAction.class, "search");
     }
 
-    @Secure(hasAnyPermissions = RoleConstants.B2B_ROLE, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyRoles = RoleConstants.B2B_ROLE, authActionBean = AdminPermissionAction.class)
     public Resolution activateB2bUser() {
         user.getRoles().add(EnumRole.B2B_USER.toRole());
             getUserService().save(user);
             return new RedirectResolution(SearchUserAction.class, "search");
         }
+    @Secure(hasAnyRoles = RoleConstants.B2B_ROLE, authActionBean = AdminPermissionAction.class)
+        public Resolution deActivateB2bUser() {
+            user.getRoles().remove(EnumRole.B2B_USER.toRole());
+                getUserService().save(user);
+                return new RedirectResolution(SearchUserAction.class, "search");
+            }
 
     public User getUser() {
         return user;
