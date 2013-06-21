@@ -14,6 +14,8 @@
         <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
         <!--Blade marketing-->
         <s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="purchase"/>
+        <!--Tyroo marketing-->
+        <s:layout-render name="/layouts/embed/_tyrooMarketing.jsp" pageType="purchase"/>
 
         <title>
             <c:choose>
