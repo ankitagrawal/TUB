@@ -24,7 +24,7 @@
 	        pageContext.setAttribute("lineItemString", lineItemString);
 	        pageContext.setAttribute("transactionId", order.getGatewayOrderId());
 	        pageContext.setAttribute("city", order.getAddress().getCity());
-	        pageContext.setAttribute("saleAmount", order.getAddress().getCity());
+	        pageContext.setAttribute("saleAmount", order.getAmount());
 	        pageContext.setAttribute("modeOfPayment", order.getPayment().getPaymentMode().getName());
 	    }
 	%>
