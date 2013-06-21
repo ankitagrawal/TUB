@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -60,13 +59,11 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 		}
 		if(this.order != null) {
 			this.loyaltyProductList = new ArrayList<LoyaltyProduct>();
-			List<CartLineItem> cartLineItems = this.order.getLineItemsOfType(EnumCartLineItemType.Product);
+			List<CartLineItem> cartLineItems = this.order.getProductCartLineItems();
 			for (CartLineItem cartLineItem : cartLineItems) {
 				LoyaltyProduct loyaltyProduct  = this.loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
-				if (loyaltyProduct!=null ) {
-					loyaltyProduct.setQty(cartLineItem.getQty());
-					this.loyaltyProductList.add(loyaltyProduct);
-				}
+				loyaltyProduct.setQty(cartLineItem.getQty());
+				this.loyaltyProductList.add(loyaltyProduct);
 			}
 			this.totalShoppingPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.order);
 		}
