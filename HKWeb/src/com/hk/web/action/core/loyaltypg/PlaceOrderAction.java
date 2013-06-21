@@ -63,8 +63,10 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 			List<CartLineItem> cartLineItems = this.order.getLineItemsOfType(EnumCartLineItemType.Product);
 			for (CartLineItem cartLineItem : cartLineItems) {
 				LoyaltyProduct loyaltyProduct  = this.loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
-				loyaltyProduct.setQty(cartLineItem.getQty());
-				this.loyaltyProductList.add(loyaltyProduct);
+				if (loyaltyProduct!=null ) {
+					loyaltyProduct.setQty(cartLineItem.getQty());
+					this.loyaltyProductList.add(loyaltyProduct);
+				}
 			}
 			this.totalShoppingPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.order);
 		}
