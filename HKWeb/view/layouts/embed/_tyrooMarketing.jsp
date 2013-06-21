@@ -15,7 +15,10 @@
 
 	        String lineItemString = "";
 	        for (CartLineItem cartLineItem : order.getExclusivelyProductCartLineItems()) {
-	            lineItemString = lineItemString.concat("prod:").concat(cartLineItem.getProductVariant().getId()).concat(":qty:").concat(cartLineItem.getQty());
+	            if (cartLineItem.getProductVariant() != null && cartLineItem.getProductVariant().getId() != null && cartLineItem.getQty() != null) {
+	                lineItemString = lineItemString.concat("prod:").concat(cartLineItem.getProductVariant().getId()).concat(":qty:").concat(cartLineItem.getQty().toString());
+	            }
+
 	        }
 
 	        pageContext.setAttribute("lineItemString", lineItemString);
@@ -29,5 +32,6 @@
 	<script type="text/javascript"
 		src="https://affiliates.tyroodr.com/i_sale_third/10960/${lineItemString}/${transactionId}/${city},${saleAmount},${modeOfPayment}"
 		class="tyroo_track"></script>
-	<noscript><img src="https://affiliates.tyroodr.com/i_track_sale/10960/${lineItemString}/${transactionId}/${city},${saleAmount},${modeOfPayment}"></noscript>	
+	<noscript><img
+		src="https://affiliates.tyroodr.com/i_track_sale/10960/${lineItemString}/${transactionId}/${city},${saleAmount},${modeOfPayment}"></noscript>
 </s:layout-definition>
