@@ -27,7 +27,7 @@
           <div class="congratsText">
             Congratulations. Your order has been placed.
             <div class="floatRight"><a title="Redeem more points" href="${pageContext.request.contextPath}/loyaltypg" class="blue">
-             Shop more from stellar store. 
+             Shop more from loyalty store. 
             </a></div>
           </div>
 
@@ -105,7 +105,7 @@
                             - The time taken for delivery after dispatch from our warehouse varies with location.
                         </li>
                         <li>
-                            - For Metroes: 1-3 business days
+                            - For Metros: 1-3 business days
                         </li>
                         <li>
                             - For Major Cities: 2-4 business days

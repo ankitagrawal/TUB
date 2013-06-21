@@ -257,7 +257,7 @@ Pass an attribute called pricingDto to render a table with pricing details
             - The time taken for delivery after dispatch from our warehouse varies with location.
         </li>
         <li>
-            - For Metroes: 1-3 business days
+            - For Metros: 1-3 business days
         </li>
         <li>
             - For Major Cities: 2-4 business days
