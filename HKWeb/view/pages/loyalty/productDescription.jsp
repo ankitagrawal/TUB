@@ -68,7 +68,6 @@
        		    $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
               } else {
 			  $('#successToolTip').attr('style', 'display: none;');
-			  //  $("#errorMsg").attr('style', 'display:block;');
 	            $("#errorMsg").text(resp.message);
                 $('#errorToolTip').attr('style', 'display:block;');
 	      		$('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
