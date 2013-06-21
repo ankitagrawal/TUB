@@ -163,8 +163,7 @@
 </s:layout-component>
 <s:layout-component name="heading">
     Edit Debit Note # ${pa.debitNote.id}
-    <c:if test="${pa.debitNote.purchaseInvoice!=null }"></c:if> 
-    (Against PI # ${pa.debitNote.purchaseInvoice.id})
+    <c:if test="${pa.debitNote.purchaseInvoice!=null }">(Against PI # ${pa.debitNote.purchaseInvoice.id})</c:if> 
 </s:layout-component>
 <s:layout-component name="content">
     <div style="display: none;">
@@ -360,7 +359,7 @@
         </table>
         <div class="variantDetails info"></div>
         <br/>
-        <a href="debitNote.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
+        <!-- <a href="debitNote.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a> -->
 
         <s:submit name="save" id="save" value="Save" />
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
