@@ -231,7 +231,7 @@
                 <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
 				<input type="hidden" value="${variant.id}" name="productVariantId">
 				<input type="hidden" value="1" name="qty">
-				<input type="submit" class="addToCompare font-caps embedMargin5 redeemBtn" name="addToCart" value="REDEEM">
+				<input type="submit" class="buyNowButton font-caps embedMargin5 redeemBtn" name="addToCart" value="REDEEM">
 				</form>
 				</div>
 			<% if (colCount %3==0) { %>

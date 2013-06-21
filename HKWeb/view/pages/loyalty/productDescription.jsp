@@ -59,9 +59,9 @@
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
                 $("#" + form.context.id + ' input').attr('class', 'btnDisabled');
                 redeemButton.attr('value', 'Added to Cart');
-                redeemButton.removeClass();
-                redeemButton.disabled =true;
-                //$("#" + form.context.id + ' input').disabled = true;
+                redeemButton.removeAttr('href');
+                redeemButton.removeClass('redeemBtn');
+                redeemButton.attr('disabled','disabled');
 	            $('#productsInCart').html(resp.data.itemsInCart);
                 $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');
