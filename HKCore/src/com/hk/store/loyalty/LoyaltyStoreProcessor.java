@@ -8,7 +8,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
@@ -57,7 +56,6 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	}
 
 	@Override
-	@Transactional
 	protected Payment doPayment(Long orderId, String remoteIp) {
 		Order order = this.orderService.find(orderId);
 		

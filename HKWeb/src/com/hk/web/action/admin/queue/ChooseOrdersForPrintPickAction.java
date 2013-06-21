@@ -157,22 +157,28 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         if (custom) {
             if (baseGatewayOrderId != null) {
                 shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
-            } else if (gatewayOrderId != null) {
+            } 
+            if (gatewayOrderId != null) {
                 shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
-            } else if (startDate != null && endDate != null) {
+            } 
+            if (startDate != null && endDate != null) {
                 shippingOrderSearchCriteria.setLastEscStartDate(startDate);
                 shippingOrderSearchCriteria.setLastEscEndDate(endDate);
-            } else if (paymentStartDate != null && paymentEndDate != null) {
+            } 
+            if (paymentStartDate != null && paymentEndDate != null) {
                 shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate);
                 shippingOrderSearchCriteria.setPaymentEndDate(paymentEndDate);
-            } else if (startTargetDispatchDate != null && endTargetDispatchDate != null) {
+            } 
+            if (startTargetDispatchDate != null && endTargetDispatchDate != null) {
                 shippingOrderSearchCriteria.setStartTargetDispatchDate(startTargetDispatchDate);
                 shippingOrderSearchCriteria.setEndTargetDispatchDate(endTargetDispatchDate);
-            } else if (courier != null) {
+            } 
+            if (courier != null) {
                 List<Courier> couriers = new ArrayList<Courier>();
                 couriers.add(courier);
                 shippingOrderSearchCriteria.setCourierList(couriers);
-            } else if (category != null) {
+            } 
+            if (category != null) {
                 shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
             }
         }
