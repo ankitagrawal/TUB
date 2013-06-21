@@ -14,19 +14,23 @@
 			var variant_id = $(this).parent().parent().find('.variant').text();
 			var productPoints = parseFloat($(this).parent().parent().find('.points').val());
 			var url = $(this).attr("href");
-			$.ajax({
-				type: 'POST',
-				url: url,
-				data: {points:productPoints, variantId:variant_id},
-				dataType: "json",
-				success: function(resp) {
-					if (resp.code == '<%=HealthkartResponse.STATUS_OK%>') {
-						alert(resp.message);
-					} else {
-						alert(resp.message);
+			if (productPoints > 0) {
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: {points:productPoints, variantId:variant_id},
+					dataType: "json",
+					success: function(resp) {
+						if (resp.code == '<%=HealthkartResponse.STATUS_OK%>') {
+							alert(resp.message);
+						} else {
+							alert(resp.message);
+						}
 					}
-				}
-			});
+				});
+			} else {
+				alert ("Invalid value given as points for Product Variant " + variant_id);
+			}
 		});
 		
 		$('.remove').click(function(e) {
