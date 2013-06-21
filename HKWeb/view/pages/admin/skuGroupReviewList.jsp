@@ -46,7 +46,7 @@
                           <td> <s:link
                                 beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
                                 event="ChangeStatus">
-                              Change Status
+                              Mark Reviewed
                             <s:param name="searchSkuGroup" value="${skuGroup.id}"/>
                         </s:link>  </td>
 

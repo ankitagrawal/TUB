@@ -63,7 +63,7 @@ public class SkuBatchesReviewAction extends BaseAction {
         }
          searchSkuGroup.setStatus(EnumSkuGroupStatus.REVIEW_DONE);
          getBaseDao().save(searchSkuGroup);
-         addRedirectAlertMessage(new SimpleMessage("Sku Group :" + searchSkuGroup.getId() + "has been updated successfully"));
+         addRedirectAlertMessage(new SimpleMessage("Sku Group : " + searchSkuGroup.getId() + " has been reviewed successfully"));
         return new RedirectResolution(SkuBatchesReviewAction.class, "reviewBatches");
     }
 
