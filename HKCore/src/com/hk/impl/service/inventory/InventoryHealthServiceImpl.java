@@ -131,7 +131,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		vInfo.variant.setNetQty(vInfo.netQty);
 		vInfo.variant.setMrpQty(vInfo.mrpQty);
 		vInfo.variant.setOutOfStock(!vInfo.inStock);
-		vInfo.variant.setCostPrice(vInfo.costPrice);
+		if(vInfo.costPrice != 0l) {
+			vInfo.variant.setCostPrice(vInfo.costPrice);
+		}
 		
 		productVariantService.save(vInfo.variant);
 		
