@@ -13313,7 +13313,7 @@
             <column defaultValue="0" name="email_sent_to_vendor" type="TINYINT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1371719409676-2">
+    <changeSet author="Nihal (generated)" id="1371792994340-2">
         <modifyDataType columnName="product_name" newDataType="TEXT" tableName="extra_inventory_line_item"/>
     </changeSet>
-    </databaseChangeLog>
+</databaseChangeLog>

@@ -26,6 +26,7 @@ import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.inventory.EnumDebitNoteStatus;
 import com.hk.constants.inventory.EnumDebitNoteType;
 import com.hk.domain.accounting.DebitNote;
@@ -112,6 +113,7 @@ public class DebitNoteAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/debitNote.jsp");
     }
 
+    @Secure(hasAnyRoles = { RoleConstants.FINANCE }, authActionBean = AdminPermissionAction.class)
     public Resolution debitNoteFromPi(){
     	Double shippingChargesOnHk= 0.0;
 		Double shippingChargesOnVendor = 0.0;
