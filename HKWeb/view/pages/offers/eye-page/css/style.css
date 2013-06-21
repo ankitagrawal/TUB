@@ -1,0 +1,254 @@
+body			{ 
+				margin:15px 0px 0px 0px;
+				font-size:15px; 
+				line-height:23px; 
+				}
+				
+p				{ 
+				margin:0px;
+				}
+				
+p.paraGp1		{ 
+				margin:0px 0px 20px 0px;
+				}
+				
+.nRow			
+				{ 
+				width:100%; 
+				clear:both;
+				}
+
+.dHeight1		
+				{ 
+				height:10px;
+				}
+				
+.cl				{ 
+				clear:both;
+				}
+
+#container		{ 
+				clear:both; 
+				width:930px; 
+				margin:0 auto; 
+				text-align:left;
+				}
+				
+.eyePgBlueBx	{ 
+				background:#3599c1;
+				padding:15px 25px 10px 25px;
+				}				
+				
+				
+.eyePgBlueBx h1		{ 
+				margin:0px 0px 5px 0px; 
+				padding:0px; 
+				font-family:Arial, Helvetica, sans-serif; 
+			  	font-size:26px; 
+				line-height:26px; 
+				font-weight:normal;
+				color:#fff;
+				}
+					
+.eyeBlueBoxData h1	{  
+					font-family:Arial, Helvetica, sans-serif; 
+					font-size:64px; 
+					line-height:64px; 
+					font-weight:normal; 
+					color:#fff; 
+					margin:0px; 
+					padding:0px 0px 5px 0px;
+					}	
+
+.eyeBlueBoxData h2	{ 
+					font-family:Arial, Helvetica, sans-serif; 
+					font-size:24px; 
+					line-height:24px; 
+					font-weight:normal; 
+					color:#fff; 
+					margin:0px; 
+					padding:0px 0px 10px 0px;
+					}														
+				
+.eyePgBlueBx p	{ 
+				line-height:21px; color:#fff; font-family:Arial, Helvetica, sans-serif;	
+				}				
+				
+
+.eyePgOffers	{
+				 text-align:center; padding:0px 0px 25px 0px;
+				}
+
+
+.eyePgBtmColmn1	{ 
+				width:350px; height:110px;
+				float:left; 
+				padding-right:10px; 
+				border-right:1px solid #53a8ca; border-bottom:1px solid #53a8ca;
+				}
+				
+.eyePgBtmColmn2	{ 
+				width:350px; height:80px; 
+				float:left; 
+				padding:30px 0px 0px 30px;
+				border-bottom:1px solid #53a8ca;
+				}
+				
+
+.eyePgLastBrdr	{
+				padding:10px 0px 20px 0px;
+				border-bottom:1px solid #53a8ca;
+				}
+
+.eyePgLastBrdr p{
+				 font-family:Arial, Helvetica, sans-serif; 
+				 font-size:20px;
+				 font-weight:normal;
+				}				
+				
+
+						
+a.CP__link				{ 
+						background:#000 url(../images/arrow-right.gif) 50% 50% no-repeat; 
+						transition: all .30s ease-in-out;	
+						-moz-transition: all .30s ease-in-out;	
+						-webkit-transition: all .30s ease-in-out;
+						}
+						
+a.CP__link:hover		{ 
+						background:#00ccd9 url(../images/arrow-right.gif) 50% 50% no-repeat;
+						}
+
+a.CP__lightbox			{ 
+						background:#000 url(../images/plus-icon.gif) 50% 50% no-repeat; 
+						transition: all .30s ease-in-out; 
+						-moz-transition: all .30s ease-in-out;
+						-webkit-transition: all .30s ease-in-out;
+						}
+						
+a.CP__lightbox:hover	{ 
+						background:#00ccd9 url(../images/plus-icon.gif) 50% 50% no-repeat;
+						}
+						
+#CP__altText			{ 
+						height:50px; 
+						overflow:hidden; 
+						padding:0px 0px 0px 20px; 
+						line-height:50px;
+						}
+						
+#CP__clsBtn				{ 
+						float:right;  
+						overflow:hidden; 
+						margin-left:0px; 
+						}
+						
+#CP__clsBtn a			{ 
+						height:50px; 
+						width:50px; 
+						display:block; 
+						background:url(../images/lightbox_close.gif) 0px 0px no-repeat;
+						}
+						
+#CP__clsBtn a:hover 	{
+						display:block; 
+						background:url(../images/lightbox_close.gif) -50px 0px no-repeat;
+						}
+						
+.CP__pad				{ 
+						padding:12px 0px 12px 0px;
+						}
+							
+.hideOffers				{ 
+						display:none;
+						}
+						
+.ppBxInr				{ 
+						width:800px; 
+						margin:0 auto; 
+						clear:both;
+						}
+						
+.eyePopUpImgBox			{ 
+						width:165px; 
+						float:left; 
+						padding:0px 15px 20px 15px; 
+						border-right:1px dashed #ccc;
+						}
+						
+.eyePopUpImgBox p,div	{ 
+						font-family:Arial, Helvetica, sans-serif;
+						}
+						
+.eyeOfferProNames		{ 
+						font-size:14px; 
+						line-height:17px; 
+						margin:5px 0px 0px 0px; 
+						color:#000; 
+						text-align:center;
+						}
+						
+.eyeProPrice			{ 
+						font-size:18px; 
+						font-weight:bold; 
+						color:#c92c0d; 
+						text-align:center; 
+						margin:3px 0px 3px 0px;
+						}
+						
+.eyeProPrice span		{ 
+						font-size:14px; 
+						color:#000; 
+						font-weight:normal;
+						}
+						
+a.eyeBuyNowBtn			{ 
+						padding:3px 6px 2px 6px; 
+						width:90px; 
+						background:#000; 
+						color:#fff;  
+						display:block; 
+						font-size:15px; 
+						font-weight:normal; 
+						text-decoration:none; 
+						text-align:center; 
+						opacity:0.6; 
+						-webkit-transition:opacity 0.6s; 
+						-moz-transition:opacity 0.6s; 
+						-o-transition:opacity 0.6s;
+						}
+						
+a.eyeBuyNowBtn:hover	{ 
+						display:block; 
+						text-decoration:none; 
+						opacity:1; 
+						background:#c92c0d;
+						}
+
+.eyeVDashedBrdr1		{ 
+						border-top:1px dashed #ccc; 
+						width:785px; 
+						margin:0 auto; 
+						clear:both; 
+						height:20px; 
+						line-height:20px;
+						}
+
+.eyeLeftBx				{ 
+						width:500px; 
+						float:right; 
+						padding:3px 10px 15px 0px; 
+						font-size:15px; 
+						font-weight:normal; 
+						text-align:right; 
+						color:#666;
+						}
+						
+.eyeRightBx				{ 
+						width:210px; 
+						float:right; 
+						font-size:17px; 
+						font-weight:normal; 
+						text-align:center; 
+						margin-right:7px;
+						}
