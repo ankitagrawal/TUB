@@ -3,11 +3,7 @@ package com.hk.web.action.admin.user;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.user.Role;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
@@ -77,12 +73,14 @@ public class EditUserAction extends BaseAction {
     public Resolution activateB2bUser() {
         user.getRoles().add(EnumRole.B2B_USER.toRole());
             getUserService().save(user);
+            addRedirectAlertMessage(new SimpleMessage("Role successfully activated"));
             return new RedirectResolution(SearchUserAction.class, "search");
         }
     @Secure(hasAnyRoles = RoleConstants.B2B_ROLE, authActionBean = AdminPermissionAction.class)
         public Resolution deActivateB2bUser() {
             user.getRoles().remove(EnumRole.B2B_USER.toRole());
                 getUserService().save(user);
+                addRedirectAlertMessage(new SimpleMessage("Role successfully deActivated"));
                 return new RedirectResolution(SearchUserAction.class, "search");
             }
 
