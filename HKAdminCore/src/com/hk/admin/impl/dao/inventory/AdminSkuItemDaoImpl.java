@@ -2,6 +2,7 @@ package com.hk.admin.impl.dao.inventory;
 
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
@@ -64,6 +65,15 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         return skuGroupList;
     }
 
+
+     public List<SkuGroup> getSkuGroupsInReviewState(){
+       String query = "select sg from SkuGroup sg  where sg.status = :status";
+        List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("status", (EnumSkuGroupStatus.UNDER_REVIEW)).list();
+         if (skuGroupList == null) {
+            skuGroupList = new ArrayList<SkuGroup>(0);
+        }
+        return skuGroupList;
+     }
 
     /*public List<SkuGroup> getInStockSkuGroups(Sku sku) {
         List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();

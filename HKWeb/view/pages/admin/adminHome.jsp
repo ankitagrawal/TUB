@@ -165,6 +165,8 @@
 
     <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
 
+     <h3><s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="reviewBatches">Batches To Review</s:link></h3>
+
     <h3><s:link
             beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Replacement Order</s:link></h3>
 

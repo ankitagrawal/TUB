@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ import java.util.List;
 public class SkuBatchesReviewAction extends BaseAction {
 
     private List<SkuGroup> skuGroups;
-     private String   variantId;
+     private String   barcode;
      private LineItem lineItem;
      private SkuItem skuItemBarcode;
      private SkuGroup searchSkuGroup;
@@ -37,9 +38,12 @@ public class SkuBatchesReviewAction extends BaseAction {
 
     @DefaultHandler
        public Resolution pre() {
-           searchSkuGroup = skuItemBarcode.getSkuGroup();           
+        if ( skuGroups != null && skuGroups.size() < 1) {
+           return new RedirectResolution("/pages/admin/skuGroupReview.jsp");
+        }
+//           searchSkuGroup = skuItemBarcode.getSkuGroup();
            skuGroups = adminInventoryService.getInStockSkuGroupsForReview(lineItem);
-           return new ForwardResolution("/pages/admin/skuGroupReview.jsp");
+           return new ForwardResolution("/pages/admin/skuGroupReview.jsp").addParameter("lineItem",lineItem);
        }
 
 
@@ -47,12 +51,24 @@ public class SkuBatchesReviewAction extends BaseAction {
          if (searchSkuGroup  != null){
              searchSkuGroup.setStatus(EnumSkuGroupStatus.UNDER_REVIEW);
              getBaseDao().save(searchSkuGroup);
-
          }
-
-        return new ForwardResolution("/pages/admin/searchSkuBatches.jsp");
+        return new RedirectResolution(SkuBatchesReviewAction.class).addParameter("lineItem",lineItem);
     }
 
+
+     public Resolution reviewBatches(){
+         skuGroups = adminInventoryService.getSkuGroupsInReviewState();
+         return new ForwardResolution("/pages/admin/skuGroupReview.jsp");
+     }
+
+
+      public Resolution ChangeStatus() {
+         if (searchSkuGroup  != null){
+             searchSkuGroup.setStatus(EnumSkuGroupStatus.REVIEW_DONE);                           
+             getBaseDao().save(searchSkuGroup);
+         }
+        return new RedirectResolution(SkuBatchesReviewAction.class,"reviewBatches");
+    }
 
     public List<SkuGroup> getSkuGroups() {
         return skuGroups;
@@ -62,12 +78,13 @@ public class SkuBatchesReviewAction extends BaseAction {
         this.skuGroups = skuGroups;
     }
 
-    public String getVariantId() {
-        return variantId;
+
+    public String getBarcode() {
+        return barcode;
     }
 
-    public void setVariantId(String variantId) {
-        this.variantId = variantId;
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 
     public LineItem getLineItem() {

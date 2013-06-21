@@ -95,6 +95,12 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         return getAdminSkuItemDao().getInStockSkuGroupsForReview(lineItem);
     }
 
+
+
+    public List<SkuGroup> getSkuGroupsInReviewState() {
+           return getAdminSkuItemDao().getSkuGroupsInReviewState();
+       }
+
     /**
      * @param sku
      * @return Inventory count of all action awaiting and in process orders

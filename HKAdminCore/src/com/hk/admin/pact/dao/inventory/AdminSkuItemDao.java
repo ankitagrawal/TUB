@@ -28,6 +28,8 @@ public interface AdminSkuItemDao extends BaseDao {
 
     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem);
 
+     public List<SkuGroup> getSkuGroupsInReviewState();
+
     public SkuItem getSkuItemToValidateDayZeroInventory(ProductVariant productVariant, String batchNumber);
 
     public List<Warehouse> getWarehousesForSkuAndQty(List<Sku> skuList, Long qty);

@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" var="sbr"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="reviewBatches" var="sbr"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Sku Group Review">
     <s:layout-component name="htmlHead">
     </s:layout-component>
 
-    <s:layout-component name="heading">SKU Group Review</s:layout-component>
+    <s:layout-component name="heading">SKU Group Review List</s:layout-component>
     <s:layout-component name="content">
         <div style="display:inline;float:left;">
 
@@ -25,7 +25,7 @@
                     <th>Checked in units</th>
                     <th>Net Inv</th>
                     <th> Status</th>
-                    <th> Action</th>
+                    <th> Change Status</th>
 
                 </tr>
                 </thead>
@@ -42,33 +42,13 @@
                         <td> ${skuGroup.costPrice} </td>
                         <td>${fn:length(skuGroup.skuItems)}</td>
                         <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
-                        <td> ${skuGroup.status}</td>
-
-                       <td> <s:link
+                        <td>${skuGroup.status}</td>
+                          <td> <s:link
                                 beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
-                                event="markSkuGroupAsUnderReview">
-                            Mark Review
-                            <s:param name="searchSkuGroup" value="${skuGroup.id}"/>
-                           <s:param name="lineItem" value="${sbr.lineItem}"/>
+                                event="ChangeStatus">
+                              Change Status
+                            <s:param name="searchSkuGroup" value="${sbr.searchSkuGroup }"/>
                         </s:link>  </td>
-
-                        <%--<td><c:if test="${skuGroup ==  sbr.searchSkuGroup }">--%>
-                            <%--<c:choose>--%>
-                                <%--<c:when test="${skuGroup.status == 'UNDER_REVIEW'}">--%>
-                                    <%--${skuGroup.status}--%>
-                                <%--</c:when>--%>
-                                <%--<c:otherwise>--%>
-                                    <%--<s:link--%>
-                                            <%--beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"--%>
-                                            <%--event="markSkuGroupAsUnderReview">--%>
-                                        <%--Mark Review--%>
-                                        <%--<s:param name="searchSkuGroup" value="${sbr.searchSkuGroup }"/>--%>
-                                    <%--</s:link>--%>
-                                <%--</c:otherwise>--%>
-
-                            <%--</c:choose>--%>
-
-                        <%--</c:if></td>--%>
 
                     </tr>
 

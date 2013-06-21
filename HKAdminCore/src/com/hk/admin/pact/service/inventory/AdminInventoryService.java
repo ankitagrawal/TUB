@@ -90,4 +90,6 @@ public interface AdminInventoryService {
     public void deleteInventory(GrnLineItem grnLineItem);
 
     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem);
+
+    public List<SkuGroup> getSkuGroupsInReviewState();
 }
