@@ -9,11 +9,8 @@ import com.hk.constants.sku.EnumSkuGroupStatus;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.sourceforge.stripes.action.DefaultHandler;
 
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.*;
 
 import java.util.List;
 
@@ -28,46 +25,46 @@ import java.util.List;
 public class SkuBatchesReviewAction extends BaseAction {
 
     private List<SkuGroup> skuGroups;
-     private String   barcode;
-     private LineItem lineItem;
-     private SkuItem skuItemBarcode;
-     private SkuGroup searchSkuGroup;
-     @Autowired
-     private AdminInventoryService adminInventoryService;
+    private LineItem lineItem;
+    private SkuGroup searchSkuGroup;
+    @Autowired
+    private AdminInventoryService adminInventoryService;
 
 
     @DefaultHandler
-       public Resolution pre() {
-        if ( skuGroups != null && skuGroups.size() < 1) {
-           return new RedirectResolution("/pages/admin/skuGroupReview.jsp");
+    public Resolution pre() {
+        if (skuGroups != null && skuGroups.size() < 1) {
+            return new RedirectResolution("/pages/admin/skuGroupReview.jsp");
         }
-//           searchSkuGroup = skuItemBarcode.getSkuGroup();
-           skuGroups = adminInventoryService.getInStockSkuGroupsForReview(lineItem);
-           return new ForwardResolution("/pages/admin/skuGroupReview.jsp").addParameter("lineItem",lineItem);
-       }
-
-
-    public Resolution markSkuGroupAsUnderReview() {
-         if (searchSkuGroup  != null){
-             searchSkuGroup.setStatus(EnumSkuGroupStatus.UNDER_REVIEW);
-             getBaseDao().save(searchSkuGroup);
-         }
-        return new RedirectResolution(SkuBatchesReviewAction.class).addParameter("lineItem",lineItem);
+        skuGroups = adminInventoryService.getInStockSkuGroupsForReview(lineItem);
+        return new ForwardResolution("/pages/admin/skuGroupReview.jsp").addParameter("lineItem", lineItem);
     }
 
 
-     public Resolution reviewBatches(){
-         skuGroups = adminInventoryService.getSkuGroupsInReviewState();
-         return new ForwardResolution("/pages/admin/skuGroupReview.jsp");
-     }
+    public Resolution markSkuGroupAsUnderReview() {
+        if (searchSkuGroup != null) {
+            searchSkuGroup.setStatus(EnumSkuGroupStatus.UNDER_REVIEW);
+            getBaseDao().save(searchSkuGroup);
+        }
+        return new RedirectResolution(SkuBatchesReviewAction.class).addParameter("lineItem", lineItem);
+    }
 
 
-      public Resolution ChangeStatus() {
-         if (searchSkuGroup  != null){
-             searchSkuGroup.setStatus(EnumSkuGroupStatus.REVIEW_DONE);                           
-             getBaseDao().save(searchSkuGroup);
-         }
-        return new RedirectResolution(SkuBatchesReviewAction.class,"reviewBatches");
+    public Resolution reviewBatches() {
+        skuGroups = adminInventoryService.getSkuGroupsInReviewState();
+        return new ForwardResolution("/pages/admin/skuGroupReviewList.jsp");
+    }
+
+
+    public Resolution ChangeStatus() {
+        if (searchSkuGroup == null) {
+            addRedirectAlertMessage(new SimpleMessage("Please select Sku group "));
+            return new RedirectResolution(SkuBatchesReviewAction.class, "reviewBatches");
+        }
+         searchSkuGroup.setStatus(EnumSkuGroupStatus.REVIEW_DONE);
+         getBaseDao().save(searchSkuGroup);
+         addRedirectAlertMessage(new SimpleMessage("Sku Group :" + searchSkuGroup.getId() + "has been updated successfully"));
+        return new RedirectResolution(SkuBatchesReviewAction.class, "reviewBatches");
     }
 
     public List<SkuGroup> getSkuGroups() {
@@ -79,28 +76,12 @@ public class SkuBatchesReviewAction extends BaseAction {
     }
 
 
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
     public LineItem getLineItem() {
         return lineItem;
     }
 
     public void setLineItem(LineItem lineItem) {
         this.lineItem = lineItem;
-    }
-
-    public SkuItem getSkuItemBarcode() {
-        return skuItemBarcode;
-    }
-
-    public void setSkuItemBarcode(SkuItem skuItemBarcode) {
-        this.skuItemBarcode = skuItemBarcode;
     }
 
     public SkuGroup getSearchSkuGroup() {

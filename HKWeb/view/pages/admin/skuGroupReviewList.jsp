@@ -47,7 +47,7 @@
                                 beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
                                 event="ChangeStatus">
                               Change Status
-                            <s:param name="searchSkuGroup" value="${sbr.searchSkuGroup }"/>
+                            <s:param name="searchSkuGroup" value="${skuGroup.id}"/>
                         </s:link>  </td>
 
                     </tr>
