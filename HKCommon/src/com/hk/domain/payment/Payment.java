@@ -111,6 +111,13 @@ public class Payment implements java.io.Serializable {
 	@Column(name = "last_four_digit_card_no")
 	private Long lastFourDigitCardNo;
 
+    @Column(name = "transaction_type")
+    private String transactionType;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="parent_id")
+    private Payment parent;
+
 	@Transient
 	private boolean selected;
 
@@ -340,7 +347,23 @@ public class Payment implements java.io.Serializable {
 		this.lastFourDigitCardNo = lastFourDigitCardNo;
 	}
 
-	public String getPaymentDetails() {
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public Payment getParent() {
+        return parent;
+    }
+
+    public void setParent(Payment parent) {
+        this.parent = parent;
+    }
+
+    public String getPaymentDetails() {
 		String paymentStatusString = paymentStatus != null ? paymentStatus.getName() : "";
 		String paymentModeString = paymentMode != null ? paymentMode.getName() : "";
 		return "Payment Details{" + "id=" + id + ", paymentAmount=" + amount + ", paymentGatewayOrderId=" + gatewayOrderId + ", paymentStatus=" + paymentStatusString

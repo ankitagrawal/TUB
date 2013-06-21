@@ -1,6 +1,7 @@
 package com.hk.util;
 
 import com.akube.framework.util.BaseUtils;
+import com.akube.framework.util.DateUtils;
 import com.citruspay.pg.exception.CitruspayException;
 import com.citruspay.pg.model.Enquiry;
 import com.citruspay.pg.model.EnquiryCollection;
@@ -251,7 +252,7 @@ public class PaymentFinder {
 
     }
 
-    public static List<Map<String, Object>> findTransactionListIcici(String startDate, String endDate, String merchantId) {
+    public static List<Map<String, Object>> findTransactionListIcici(Date startDate, Date endDate, String merchantId) {
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
         List<Map<String, Object>> paymentResultMapList = new ArrayList<Map<String, Object>>();
         Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
@@ -260,7 +261,7 @@ public class PaymentFinder {
 
         try {
             com.opus.epg.sfa.java.PostLib oPostLib = new PostLib();
-            oMerchant.setMerchantTxnSearch(merchantId, startDate, endDate);
+            oMerchant.setMerchantTxnSearch(merchantId, DateUtils.getStringFromDate(startDate), DateUtils.getStringFromDate(endDate));
             PGSearchResponse oPgSearchResp = oPostLib.postTxnSearch(oMerchant);
             ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
             System.out.println("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
@@ -290,14 +291,14 @@ public class PaymentFinder {
     }
 
 
-    public static List<Map<String, Object>> findTransactionListCitrus(String startDate, String endDate) {
+    public static List<Map<String, Object>> findTransactionListCitrus(Date startDate, Date endDate) {
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
         List<Map<String, Object>> paymentResultMapList = new ArrayList<Map<String, Object>>();
         Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
         com.citruspay.pg.util.CitruspayConstant.merchantKey = "26635c9f27d46c139c7feb3e2960ee1b1780ac28";
         paymentSearchMap.put("merchantAccessKey", "6Z1PA7WZEVIRHMGKG1VG");
-        paymentSearchMap.put("txnStartDate", startDate);
-        paymentSearchMap.put("txnEndDate", endDate);
+        paymentSearchMap.put("txnStartDate", DateUtils.getStringFromDate(startDate));
+        paymentSearchMap.put("txnEndDate", DateUtils.getStringFromDate(endDate));
         paymentSearchMap.put("bankName", "ABC BANK");
 
         try {
@@ -365,19 +366,19 @@ public class PaymentFinder {
     public static void main(String[] args) {
 
 
-//        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691");
+       Map<String, Object> paymentResultMap = findCitrusPayment("100");
 //        Map<String, Object> paymentResultMap = findIciciPayment("1936895-17020", "00007518");
 
-        List<Map<String, Object>> transactionList = findTransactionListIcici("20130101", "20130102", "00007518");
+//        List<Map<String, Object>> transactionList = findTransactionListIcici("20130101", "20130102", "00007518");
 //        List<Map<String, Object>> transactionList = findTransactionListCitrus("20130101", "20130102");
 
-        for (Map<String, Object> paymentResultMap : transactionList) {
-            for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
-                System.out.println(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
-                logger.error(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
-            }
-
-        }
+//        for (Map<String, Object> paymentResultMap : transactionList) {
+//            for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
+//                System.out.println(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
+//                logger.error(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
+//            }
+//
+//        }
 
 
     }
