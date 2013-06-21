@@ -9,7 +9,7 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 
-<link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
+<link href="<hk:vhostCss/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
 <script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/bootbox.js"></script>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
@@ -130,16 +130,16 @@
 
 								</td>
 								<td width="30%" style="text-align:center;">
-									<span class="minus" style="cursor:pointer;"><img src="<hk:vhostJs/>/pages/loyalty/resources/images/minus.png" style="height: 20px; width:20px;"></span>
+									<span class="minus" style="cursor:pointer;"><img src="<hk:vhostImage/>/pages/loyalty/resources/images/minus.png" style="height: 20px; width:20px;"></span>
 									&nbsp;&nbsp;
 									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}" maxlength="3"
 								           style="width:30px;height:24px;" disabled="disabled"/>
 								     &nbsp;&nbsp;
-								     <span class="plus" style="cursor:pointer;"><img src="<hk:vhostJs/>/pages/loyalty/resources/images/plus.png" style="height: 20px; width:20px;"></span>
+								     <span class="plus" style="cursor:pointer;"><img src="<hk:vhostImage/>/pages/loyalty/resources/images/plus.png" style="height: 20px; width:20px;"></span>
 								        <p class="removeLink">(Remove)</p>
 									<br/>
 									<span class="error-message" style="display:none">
-										Not enough stellar points to increase the quantity.
+										Not enough loyalty points to increase the quantity.
 									</span>
 								</td>
 								<td>${hk:roundNumberForDisplay(lp.points)}</td>
@@ -170,7 +170,7 @@
 			<c:otherwise>
 				<div class="row">
 					<div class="span12">
-						<h4>Cart is Empty! </h4> <a title="stellar" class="blue" href="${pageContext.request.contextPath}/loyaltypg"> Click here</a> to go back to shop something.
+						<h4>Cart is Empty! </h4> <a title="loyalty" class="blue" href="${pageContext.request.contextPath}/loyaltypg"> Click here</a> to go back to shop something.
 					</div>
 				</div>
 			</c:otherwise>

@@ -11,14 +11,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>HealthKart | Stellar Program</title>
+    <title>HealthKart | Loyalty Program</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Deepak Chauhan">
 
-    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/grid.css" rel="stylesheet">
-    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/style.css" rel="stylesheet">
-    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/jquery.jscrollpane.css" rel="stylesheet">
+    <link href="<hk:vhostCss/>/pages/loyalty/resources/css/grid.css" rel="stylesheet">
+    <link href="<hk:vhostCss/>/pages/loyalty/resources/css/style.css" rel="stylesheet">
+    <link href="<hk:vhostCss/>/pages/loyalty/resources/css/jquery.jscrollpane.css" rel="stylesheet">
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-1.9.0.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery.jscrollpane.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery.jcarousel.min.js"></script>
@@ -88,8 +88,8 @@
               <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home' target='_blank'>Go back to <strong>HealthKart.com</strong></s:link></span>
 			  </p>
               <div class="logoSubblock">
-			  <a title="go to stellar home" href="${pageContext.request.contextPath}/loyaltypg">
-                <img width="283" height="83" alt="healthkart logo" src="<hk:vhostJs/>/pages/loyalty/resources/images/hkStellar.png">
+			  <a title="go to loyalty home" href="${pageContext.request.contextPath}/loyaltypg">
+                <img width="283" height="83" alt="healthkart logo" src="<hk:vhostImage/>/pages/loyalty/resources/images/hkLoyalty.png">
               </a>
               </div>
   
@@ -118,7 +118,7 @@
             <div>
               <p class="section2">
 				<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram">
-				about <span class="boldfont">  stellar </span>
+				about <span class="boldfont">  loyalty </span>
 				</s:link>
 				</p> 
             </div>
@@ -155,7 +155,7 @@
           <div class="grid_12">
             <div class="footerRight">
             <div class="footerLeft" >
-              info@healthkart.com | <a href= "${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" target="_blank">Terms and Conditions </a> | Connect with Us:
+              info@healthkart.com | <a href= "${pageContext.request.contextPath}/pages/loyalty/info/loyaltyTerms.jsp" target="_blank">Terms and Conditions </a> | Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img

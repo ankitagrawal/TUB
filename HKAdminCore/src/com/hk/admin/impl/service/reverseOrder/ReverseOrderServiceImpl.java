@@ -1,6 +1,7 @@
 package com.hk.admin.impl.service.reverseOrder;
 
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,9 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
     ReverseOrderDao reverseOrderDao;
     @Autowired
     ShippingOrderService shippingOrderService;
-
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
+    
     public ReverseOrder createReverseOrder(ShippingOrder shippingOrder, String returnOrderReason, String reverseOrderType) {
         User loggedOnUser = userService.getLoggedInUser();
         ReverseOrder reverseOrder = new ReverseOrder();
@@ -52,6 +55,9 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
         reverseOrder.setUser(loggedOnUser);
         reverseOrder.setReconciliationStatus(EnumReconciliationStatus.PENDING.asReconciliationStatus());
         reverseOrder.setActionProposed(null);
+        
+        // Loyalty Program- cancel loyalty points for the shipped order
+        loyaltyProgramService.cancelLoyaltyPoints(shippingOrder.getBaseOrder());
         return save(reverseOrder);
     }
 

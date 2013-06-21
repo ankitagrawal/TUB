@@ -1,8 +1,22 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.pact.service.UserService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.user.User" %>
+<%@ page import="java.util.Arrays" %>
 
 <s:layout-definition>
+
+  <%
+  UserService userService = ServiceLocatorFactory.getService(UserService.class);
+  User loggedInUser = userService.getLoggedInUser();
+  if (loggedInUser != null) {
+    pageContext.setAttribute("user", loggedInUser);
+    pageContext.setAttribute("userRoles", loggedInUser.getRoleStrings());
+  }
+  pageContext.setAttribute("tempUser", RoleConstants.TEMP_USER);
+  %>
 
   <div class='footer'>
     <div class='contents'>
@@ -16,7 +30,7 @@
             <s:link href="/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></s:link>
           </li>
           
-          <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" target="_blank"><span class="txt-white">Stellar</span></s:link></li>
+          <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" target="_blank"><span class="txt-white">Loyalty</span></s:link></li>
           <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAction"><span class="txt-white">Affiliate</span></s:link></li>
           <%--<li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>--%>
           <li><s:link beanclass="com.hk.web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
@@ -49,10 +63,10 @@
           Your Account
         </h5>
         <ul>
-          <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
+          <c:if test="${hk:collectionContains(userRoles, tempUser)}">
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Login</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Signup</s:link></li>
-          </shiro:hasRole>
+          </c:if>
           <shiro:notAuthenticated>
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Login</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Signup</s:link></li>
@@ -60,13 +74,13 @@
           <shiro:authenticated>
               <li><s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
           </shiro:authenticated>
-          <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
+          <c:if test="${!hk:collectionContains(userRoles, tempUser)}">
             <li>
             <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">Order History</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.user.CustomerSubscriptionHistoryAction">Subscription History</s:link> </li>
             <%--<li><s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link></li>--%>
-          </shiro:lacksRole>
+          </c:if>
         </ul>
       </div>
         <div class='column'>

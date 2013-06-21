@@ -24,10 +24,10 @@ $(document).ready(function(){
 		<div class="container_16 clearfix">
 			<div
 				style="width: 100%; font-size: 38px; padding-bottom: 15px; margin-left: 100px;"
-				class="embedMargin119">Welcome to healthkart stellar !!</div>
+				class="embedMargin119">Welcome to healthkart loyalty !!</div>
 			<div class="topText" id="message1"
 				style="float: left; margin-left: 100px; width: 680px;">
-				Hi! <br> Stellar is healthkart’s own loyalty program <br>
+				Hi!
 				Shop with us, get rewarded with points that you can later redeem
 				here. <br> What more, you can convert these points into store
 				credits and use them <br> to buy things off healthkart.com <br>
@@ -40,10 +40,10 @@ $(document).ready(function(){
 			<div class="topText" id="message2"
 				style="float: left; margin-left: 100px; width: 680px; display:none;">
 				So how does this work? <br>Once you have registered on healthkart.com ,
-				<br>all you have to do is register on stellar. The more you spend henceforth, the more <br> 
+				<br>all you have to do is register on loyalty. The more you spend henceforth, the more <br> 
 				points you gather. To understand our slab structure better, may we suggest <br>
 				you take a look at our <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" event="aboutLoyaltyProgram" class="blue makeCursor" target="_blank">about us</s:link> page
-				<br>There’s more. Our catalog on stellar is tailor-made to the way you’ve always<br>shopped with us <br>
+				<br>There’s more. Our catalog on loyalty is tailor-made to the way you’ve always<br>shopped with us <br>
 				<br>
 				<br>
 <!-- 				<div class="addToCompare font-caps embedMargin5" id="button2">Continue</div>

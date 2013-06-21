@@ -34,7 +34,7 @@
             $('html, body').animate({scrollTop: $element.offset().top}, 1500);
           };
 
-          $("#aboutStellar").click(function(){
+          $("#aboutLoyalty").click(function(){
             moveTo("about");
           });
 
@@ -68,8 +68,8 @@
           <div class="priceFilterContainerOne">
             <div id="top" class="sorting makeCursor">TOP</div>
               <div class="brandsContainer1">
-                <div id="aboutStellar" class="priceRange">
-                  <span >About stellar</span>
+                <div id="aboutLoyalty" class="priceRange">
+                  <span >About loyalty</span>
                 </div>
                 <div id="hwItWorks" class="priceRange">
                   <span >Program Structure</span>
@@ -88,7 +88,7 @@
           <div id="productCategory" class="grid_12 embedMarginBottom40">
             <div class="dottedLine"></div>
             <div class="productCategoryText">
-              <img alt="1" class="stellarLogo" src="<hk:vhostJs/>/pages/loyalty/resources/images/stellarLogo.png"/>
+              <img alt="1" class="loyaltyLogo" src="<hk:vhostImage/>/pages/loyalty/resources/images/loyaltyLogo.png"/>
             </div>
             <div class="dottedLine"></div>
           </div>
@@ -98,8 +98,8 @@
 		<c:set var="platinum" value="${lca.badgeList[4]}" />
 	
           <div class="aboutContent">
-            <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Stellar Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
-            <p>Here’s how it works- you’ll earn certain Loyalty points (depending upon your tier) every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Stellar features four reward levels namely (in ascending order)</p>
+            <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Loyalty Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
+            <p>Here’s how it works- you’ll earn certain Loyalty points (depending upon your tier) every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Loyalty features four reward levels namely (in ascending order)</p>
             <p class="embedMargin5">-${bronze.badgeName}</p>
             <p class="embedMargin5">-${silver.badgeName}</p>
             <p class="embedMargin5">-${gold.badgeName}</p>
@@ -110,7 +110,7 @@
             <h1 id="howItWorks" class="embedMarginTop50">PROGRAM STRUCTURE</h1>
 				
 			<p class="embedMarginTop40">•	For existing HealthKart customers</p>
-			<p>After signing up for healthkartstellar, depending upon your order history of last 12 months, you will be assigned a particular benefit tier,
+			<p>After signing up for healthkartloyalty, depending upon your order history of last 12 months, you will be assigned a particular benefit tier,
 			 that is, either Bronze or Silver or Gold or Platinum (or none of the above). To show our profuse love you will begin with 15 points as bonus!</p>
 			 
             <p class="embedMargin5">•	New HealthKart customers</p>
@@ -174,8 +174,8 @@
             <h2 class="genQues">GENERAL QUESTIONS ABOUT THE PROGRAM</h2>
             
             <div class="qAndA">
-              <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. 
+              <p>Q: First things first. What is HealthKart Loyalty?</p>
+              A: HealthKart Loyalty is our loyalty program. You get great benefits. Oh, yes, there are some goodies too.
               <a href="${pageContext.request.contextPath}/loyaltypg" class="blue">Click here</a> to find out
               more.
             </div>
@@ -193,7 +193,7 @@
            <div class="qAndA">
               <p>Q: Where can I find my current level status?</p>
               A: Your current level status is displayed on the top of the HealthKart home page. 
-              As well as, on healthkartstellar home page under “My Accounts”. 
+              As well as, on healthkartloyalty home page under “My Accounts”. 
               This page also carries information about total points accumulated, date of expiry and order history.
             </div>
 	
@@ -234,13 +234,13 @@
             <div class="qAndA">
               <p>Q: How can I redeem my points?</p>
               A: As soon as you make any purchase and it gets successfully delivered, your information will be automatically updated. 
-              Stellar Store is one shop store which has products ranging from all categories at HealthKart. The currency here is only loyalty points.
+              Loyalty Store is one shop store which has products ranging from all categories at HealthKart. The currency here is only loyalty points.
                For your favorite goodie, click on add to my cart and check out. During check out, the points will be deducted from the total.
             </div>            
            
             <div class="qAndA">
-              <p>Q: I am interested to pick a product from the Stellar Store but I am short of points? What should I do? </p>
-              A: The only currency at the Stellar Store is points. Unfortunately you can’t exchange them in lieu of money.
+              <p>Q: I am interested to pick a product from the Loyalty Store but I am short of points? What should I do? </p>
+              A: The only currency at the Loyalty Store is points. Unfortunately you can’t exchange them in lieu of money.
                If you are interested in a purchase but short of them, you need to shop further on HealthKart and earn more points. 
             </div>
            
@@ -253,11 +253,17 @@
               from the date of upgrade.<br/>At the end of the said 12 months, cumulative value of your shopping amount from the last 12 months will
                be evaluated. You will then either upgrade, stay at the same level or regress to the respective levels, depending on your expenditure trend. 
             </div>
+		
+			<div class="qAndA">
+           		<p>Q:  Can I cancel my order made from Loyalty Store?</p>
+           		A:  No. Once placed, order can not be cancelled.
+
+           	</div>
               
             <div class="qAndA removeBorderBottom">
               <p>Q: I have more questions. Who can help? </p>
-              A: Call the HealthKart Customer Support for general questions about the healthkartstellar program, as well as for questions regarding your membership.
-				Contact us 24X 7 at
+              A: Call the HealthKart Customer Support for general questions about the healthkartloyalty program, as well as for questions regarding your membership.
+				Contact us at
 				0124-4616444 or mail us your query at info@healthkart.com.
 				You can also find us on Facebook and Twitter. We love connecting with you and are here to answer any questions or just enjoy hearing about how your day is going. 
 

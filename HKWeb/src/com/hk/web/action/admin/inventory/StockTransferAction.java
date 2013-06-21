@@ -147,6 +147,12 @@ public class StockTransferAction extends BasePaginatedAction {
                 stockTransferLineItem.setStockTransfer(stockTransfer);
                 stockTransferLineItem.setSku(sku);
                 stockTransferLineItem.setCheckedOutSkuGroup(skuGroup);
+	              stockTransferLineItem.setBatchNumber(skuGroup.getBatchNumber());
+	              stockTransferLineItem.setMrp(skuGroup.getMrp());
+	              stockTransferLineItem.setCostPrice(skuGroup.getCostPrice());
+	              stockTransferLineItem.setTax(sku.getTax());
+	              stockTransferLineItem.setMfgDate(skuGroup.getMfgDate());
+	              stockTransferLineItem.setExpiryDate(skuGroup.getExpiryDate());
             }
 
             if (stockTransferLineItem.getCheckedoutQty() != null) {

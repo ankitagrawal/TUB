@@ -598,6 +598,8 @@
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+<!--BLADe marketing-->
+<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="cart"/>
 
 <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
@@ -778,7 +780,7 @@
             - The time taken for delivery after dispatch from our warehouse varies with location.
         </li>
         <li>
-            - For Metroes: 1-3 business days
+            - For Metros: 1-3 business days
         </li>
         <li>
             - For Major Cities: 2-4 business days
@@ -957,25 +959,6 @@
        </table>
    </div>
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
-<!-- BLADE pseudo conversion code -->
-<script type="text/javascript">
-<!--
-var blade_co_account_id='4184';
-var blade_group_id='convtrack14700';
-
-(function() {
-var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
-var path = '/js/bl_track_others.js';
-
-var bs = document.createElement('script');
-bs.type = 'text/javascript'; bs.async = true;
-bs.charset = 'utf-8'; bs.src = host + path;
-
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(bs, s);
-})();
--->
-</script>
 
 <style type="text/css">
 

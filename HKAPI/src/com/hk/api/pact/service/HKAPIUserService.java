@@ -25,4 +25,7 @@ public interface HKAPIUserService {
     public HKAPIBaseDTO getUserRewardPointDetails(String userAccessToken);
 
     public HKAPIBaseDTO createSSOUser(HKAPIUserDTO userDetailDto);
+
+    public String getResetPasswordLink(User user);
+
 }

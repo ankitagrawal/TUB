@@ -59,7 +59,7 @@ public class BusyPopulateRtoData {
 									a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 									w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 									c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-									so.shipping_order_status_id , ship.return_date as return_date
+									so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
 									from line_item li
 									inner join shipping_order so on li.shipping_order_id=so.id
 									inner join base_order bo on so.base_order_id = bo.id
@@ -103,7 +103,9 @@ public class BusyPopulateRtoData {
       Double net_amount;
       byte imported_flag;
 
-
+	  String gateway_order_id;
+	  String awb_number;
+	    
       shippingOrderId = accountingInvoice.shipping_order_id
 	     Long warehouseId =  accountingInvoice.warehouse_id;
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
@@ -220,15 +222,18 @@ public class BusyPopulateRtoData {
       against_form  = " "
       narration = " ";
 
+	  gateway_order_id = accountingInvoice.gateway_order_id;
+	  awb_number = accountingInvoice.awb_number;
+	    
      try{
       def keys= busySql.executeInsert("""
     INSERT INTO transaction_header
       (
         series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
-        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no)
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number)
 
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
-        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}
       )
       ON DUPLICATE KEY UPDATE
       series = ${series},
@@ -250,7 +255,9 @@ public class BusyPopulateRtoData {
       net_amount = ${net_amount},
       imported = ${imported_flag},
       create_date = NOW(),
-      hk_ref_no = ${shippingOrderId}
+      hk_ref_no = ${shippingOrderId},
+      gateway_order_id = ${gateway_order_id},
+      awb_number = ${awb_number}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);

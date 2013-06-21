@@ -163,7 +163,7 @@
             <div class="grid_12 embedMarginBottom40" id="productCategory">
               <div class="dottedLine"></div>
               <div class="productCategoryText">
-                <img src="<hk:vhostJs/>/pages/loyalty/resources/images/stellarLogo.png" class="stellarLogo" alt="1">
+                <img src="<hk:vhostImage/>/pages/loyalty/resources/images/loyaltyLogo.png" class="loyaltyLogo" alt="1">
               </div>
               <div class="dottedLine"></div>
             </div>        
@@ -187,7 +187,7 @@
 					     title="${product.name}" class="productImage" >
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
-                <div class="stellarPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>
+                <div class="loyaltyPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>
                 <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
 				<input type="hidden" value="${variant.id}" name="productVariantId">
 				<input type="hidden" value="1" name="qty">

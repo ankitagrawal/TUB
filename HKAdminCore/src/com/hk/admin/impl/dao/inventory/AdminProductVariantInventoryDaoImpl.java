@@ -89,16 +89,16 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem) {
         boolean isCheckedForSkuItem = false;
         List<ProductVariantInventory> checkedOutPVI = new ArrayList<ProductVariantInventory>();
-        Long netInvForSkuItem = (Long) getSession().createQuery("select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku = :sku and pvi.shippingOrder = :shippingOrder").setParameter(
-                "sku", lineItem.getSku()).setParameter("shippingOrder", shippingOrder).uniqueResult();
+        Long netInvForSkuItem = (Long) getSession().createQuery("select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku = :sku and pvi.shippingOrder = :shippingOrder and pvi.lineItem = :lineItem").setParameter(
+                "sku", lineItem.getSku()).setParameter("shippingOrder", shippingOrder).setParameter("lineItem",lineItem).uniqueResult();
         if (netInvForSkuItem != null && netInvForSkuItem <= -1L) {
             isCheckedForSkuItem = true;
         }
 
         if (isCheckedForSkuItem) {
             checkedOutPVI = (List<ProductVariantInventory>) getSession().createQuery(
-                    "from ProductVariantInventory pvi where pvi.sku = :sku and pvi.qty = :qty and pvi.shippingOrder = :shippingOrder order by pvi.id desc").setParameter("sku",
-                    lineItem.getSku()).setParameter("qty", -1L).setParameter("shippingOrder", shippingOrder).setMaxResults(lineItem.getQty().intValue()).list();
+                    "from ProductVariantInventory pvi where pvi.sku = :sku and pvi.qty = :qty and pvi.shippingOrder = :shippingOrder and pvi.lineItem = :lineItem order by pvi.id desc").setParameter("sku",
+                    lineItem.getSku()).setParameter("qty", -1L).setParameter("shippingOrder", shippingOrder).setParameter("lineItem",lineItem).setMaxResults(lineItem.getQty().intValue()).list();
         }
 
         return checkedOutPVI;
@@ -266,11 +266,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
 
     }
 
-
     public List<VariantConfig> getAllVariantConfig() {
         return getAll(VariantConfig.class);
     }
-
 
     public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty) {
         DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantInventory.class);

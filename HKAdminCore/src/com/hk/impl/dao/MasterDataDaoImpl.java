@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -133,7 +134,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<CancellationType> getCancellationTypeList() {
-        return getBaseDao().getAll(CancellationType.class);
+        return EnumCancellationType.getValidCancellationReasons();
     }
 
     public List<RewardPointStatus> getRewardPointStatusList() {

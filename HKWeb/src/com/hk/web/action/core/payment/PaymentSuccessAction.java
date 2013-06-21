@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.dto.pricing.PricingDto;
@@ -25,6 +27,7 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
@@ -69,6 +72,8 @@ public class PaymentSuccessAction extends BaseAction {
 	LoyaltyProgramService loyaltyProgramService;
     @Autowired
     OrderEventPublisher orderEventPublisher;
+    
+    @Autowired InventoryService inventoryService;
 
     public Resolution pre() {
         this.payment = this.paymentDao.findByGatewayOrderId(this.gatewayOrderId);
@@ -93,67 +98,6 @@ public class PaymentSuccessAction extends BaseAction {
                 }
                 this.couponAmount = this.pricingDto.getTotalPromoDiscount().intValue();
             }
-            //moved to orderManager, orderPaymentReceived
-//            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-            this.orderEventPublisher.publishOrderPlacedEvent(this.order);
-
-            //todo disabling, cod conversion and repay prepaid order as for now, need to do qa if the functionality still works or not
-/*
-            RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
-            RewardPoint prepayRewardPoints;
-            EnumRewardPointStatus rewardPointStatus;
-
-            HttpServletRequest httpRequest = WebContext.getRequest();
-            HttpServletResponse httpResponse = WebContext.getResponse();
-            if (httpRequest.getCookies() != null) {
-                for (Cookie cookie : httpRequest.getCookies()) {
-                    if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.codConverterID)) {
-                        if (cookie.getValue() != null && CryptoUtil.decrypt(cookie.getValue()).equalsIgnoreCase(order.getId().toString())) {
-                            if (rewardPointService.findByReferredOrderAndRewardMode(order, prepayOfferRewardPoint) == null) {
-                                if (EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())) {
-                                    rewardPointStatus = EnumRewardPointStatus.APPROVED;
-                                } else {
-                                    rewardPointStatus = EnumRewardPointStatus.PENDING;
-                                }
-                                DecimalFormat df = new DecimalFormat("#.##");
-                                Double cashBack = Double.valueOf(df.format(order.getPayment().getAmount() * cashBackPercentage));
-                                prepayRewardPoints = rewardPointService.addRewardPoints(order.getUser(), null, order, cashBack, "Prepay Offer", rewardPointStatus,
-                                        prepayOfferRewardPoint);
-                                rewardPointService.approveRewardPoints(Arrays.asList(prepayRewardPoints), new DateTime().plusMonths(3).toDate());
-                            }
-                            Set<CartLineItem> codCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.CodCharges).filter();
-                            CartLineItem codCartLineItem = codCartLineItems != null && !codCartLineItems.isEmpty() ? codCartLineItems.iterator().next() : null;
-                            if (codCartLineItems != null && !codCartLineItems.isEmpty() && codCartLineItem != null) {
-                                Double applicableCodCharges = 0D;
-                                applicableCodCharges = codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice();
-                                order.setAmount(order.getAmount() - (applicableCodCharges));
-                                Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-                                if (shippingOrders != null) {
-                                    for (ShippingOrder shippingOrder : shippingOrders) {
-                                        shippingOrderService.nullifyCodCharges(shippingOrder);
-                                        shipmentService.recreateShipment(shippingOrder);
-                                        shippingOrderService.autoEscalateShippingOrder(shippingOrder);                          
-                                    }
-                                }
-
-                                Set<CartLineItem> cartLineItems = order.getCartLineItems();
-                                cartLineItems.removeAll(codCartLineItems);
-                                getBaseDao().deleteAll(codCartLineItems);
-                                order.getCartLineItems().addAll(cartLineItems);
-                                order = getOrderService().save(order);
-                                orderLoggingService.logOrderActivity(order, EnumOrderLifecycleActivity.Cod_Conversion);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            // Resetting value and expiring cookie
-            Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, "false");
-            wantedCODCookie.setPath("/");
-            wantedCODCookie.setMaxAge(0);
-            httpResponse.addCookie(wantedCODCookie);
-*/
         }
 
 	    //Loyalty program

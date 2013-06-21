@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -38,6 +39,11 @@ public class UserOrderKarmaProfile {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable=false)
 	private User user;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "badge_id")
+	private Badge badge;
+
 
 	@Column(name = "creation_time", updatable = false)
 	private Date creationTime = new Date();
@@ -119,6 +125,21 @@ public class UserOrderKarmaProfile {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+
+	/**
+	 * @return the badge
+	 */
+	public Badge getBadge() {
+		return badge;
+	}
+
+	/**
+	 * @param badge the badge to set
+	 */
+	public void setBadge(Badge badge) {
+		this.badge = badge;
 	}
 
 

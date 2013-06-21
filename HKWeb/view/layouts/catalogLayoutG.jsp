@@ -18,22 +18,16 @@
             </c:choose>
             | HealthKart.com
         </title>
-        <s:layout-component name="htmlHead"/>
-        <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
-        <link href="<hk:vhostCss/>/css/new.dev.css?v=1.1" rel="stylesheet" type="text/css"/>
-        <!--[if IE 8]>
-            <link href="<hk:vhostCss/>/css/ie8.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if IE 7]>
-            <link href="<hk:vhostCss/>/css/ie7.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
+      <s:layout-component name="htmlHead"/>
+      <jsp:include page="/includes/_static_css.jsp"/>
+      <jsp:include page="/includes/_static_js.jsp"/>
+      <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+
       <s:layout-component name="analytics">
         <jsp:include page="/includes/_analytics.jsp"/>
       </s:layout-component>
-        <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
-        <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
 
-        <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+
 
     </head>
     <body id="${bodyId}">
@@ -65,11 +59,11 @@
     </div>
 
     <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${allCategories}" brandLabel="${brand}"/>
-
+    
     <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>
     </s:layout-component>--%>
-    <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}"/>
+    <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}" brand="${brand}" allCategories="${allCategories}"/>
 
     </body>
 </s:layout-definition>

@@ -11,7 +11,7 @@
 
 
     <!-- Le styles -->
-    <link href="<hk:vhostJs/>/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="<hk:vhostCss/>/bootstrap/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 40px;
@@ -54,7 +54,7 @@
     <div class="container" >
       <s:form class="form-signin" beanclass="com.hk.web.action.core.loyaltypg.SignInAction" method="post">
       	<div style="text-align: center;">
-      	<h5 class="form-signin-heading"><img src="<hk:vhostJs/>/images/logo.png" alt="healthkart logo"><br/>Loyalty Program</h5>
+      	<h5 class="form-signin-heading"><img src="<hk:vhostImage/>/images/logo.png" alt="healthkart logo"><br/>Loyalty Program</h5>
       	</div>
         <input name="email" type="text" class="input-block-level" placeholder="Email address">
         <input name="password" type="password" class="input-block-level" placeholder="Password">

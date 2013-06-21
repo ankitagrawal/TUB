@@ -2,16 +2,20 @@ package com.hk.admin.manager;
 
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
+import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.cache.RoleCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
+import com.hk.constants.courier.StateList;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
+import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -54,10 +58,12 @@ import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +94,8 @@ public class AdminEmailManager {
     private String marketingAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
     private String logisticsOpsEmails;
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String                                    adminDownloads;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -122,8 +130,14 @@ public class AdminEmailManager {
     private EmailManager emailManager;
     @Autowired
     SkuGroupService skuGroupService;
+    @Autowired
+    private PurchaseOrderManager purchaseOrderManager;
+    @Autowired
+    PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
 
-
+    private File  pdfFile;
+    private File  xlsFile;
+    private PurchaseOrderDto purchaseOrderDto;
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
 
@@ -1003,6 +1017,57 @@ public class AdminEmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
     }
 
+    public boolean sendPOMailToSupplier(PurchaseOrder purchaseOrder, String supplierEmail) {
+    	//TODO
+    	HashMap valuesMap = new HashMap();
+    	String warehouseName = "" , warehouseAddress = "";
+    	DateTime dt = new DateTime();
+		LocalDate ld = dt.toLocalDate();
+		String date = ld.getDayOfMonth()+"-"+ld.getMonthOfYear()+"-"+ld.getYear();;
+        valuesMap.put("purchaseOrder", purchaseOrder);
+        valuesMap.put("date", date);
+        if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
+        	warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
+        	warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
+        }
+        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())){
+        	warehouseName = "Bright Lifecare Private Limited, Mumbai Warehouse";
+        	warehouseAddress = "Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
+        }
+        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Punjabi_Bagh_Aqua_Store.getName())){
+        	warehouseName = "Aquamarine Healthcare Private Limited, Delhi Punjabi Bagh Warehouse";
+        	warehouseAddress = "Shop No 15, Ground Floor, North west Avenue, Club road, Punjabi Bagh Extn, Delhi- 110026, Delhi";
+        }
+        else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Kapashera_Bright_Warehouse.getName())){
+        	warehouseName = "Bright Lifecare Private Limited, Delhi Kapashera Warehouse";
+        	warehouseAddress = "2nd Floor, Safexpress Cargo Complex , 971/1, Opposite Fun and Food Village, Kapashera, New Delhi, Delhi- 110037, Delhi";
+        }
+        valuesMap.put("warehouseName", warehouseName);
+        valuesMap.put("warehouseAddress", warehouseAddress);
+        
+        String fromPurchaseEmail = "purchase@healthkart.com";
+        Set<String> categoryAdmins = new HashSet<String>();
+        if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+            Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+            categoryAdmins = emailManager.categoryAdmins(category);
+        }
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
+        
+        try {
+        	
+            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".pdf");
+            pdfFile.getParentFile().mkdirs();
+            purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
+            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
+            
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".xls");
+            xlsFile.getParentFile().mkdirs();
+            xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        }
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+	}
 
     static enum Product_Status {
 
@@ -1097,4 +1162,20 @@ public class AdminEmailManager {
         this.adminEmailService = adminEmailService;
 
     }
+
+	public PurchaseOrderManager getPurchaseOrderManager() {
+		return purchaseOrderManager;
+	}
+
+	public void setPurchaseOrderManager(PurchaseOrderManager purchaseOrderManager) {
+		this.purchaseOrderManager = purchaseOrderManager;
+	}
+
+	public PurchaseOrderPDFGenerator getPurchaseOrderPDFGenerator() {
+		return purchaseOrderPDFGenerator;
+	}
+
+	public void setPurchaseOrderPDFGenerator(PurchaseOrderPDFGenerator purchaseOrderPDFGenerator) {
+		this.purchaseOrderPDFGenerator = purchaseOrderPDFGenerator;
+	}
 }

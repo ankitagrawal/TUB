@@ -19,7 +19,7 @@
       | HealthKart.com
     </title>
     <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
-    <link href="<hk:vhostCss/>/css/new.dev.css?v=1.1" rel="stylesheet" type="text/css"/>
+    <link href="<hk:vhostCss/>/css/new.dev.css" rel="stylesheet" type="text/css"/>
     <s:layout-component name="analytics">
       <jsp:include page="/includes/_analytics.jsp"/>
     </s:layout-component>
@@ -79,7 +79,7 @@
   <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>
     </s:layout-component>--%>
-    <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}"/>
+    <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}" brand="${brand}" allCategories="${allCategories}"/>
 
   <s:layout-component name="endScripts"/>
   </body>

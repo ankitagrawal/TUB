@@ -8,7 +8,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>HealthKart | Stellar Program</title>
+    <title>HealthKart | Loyalty Program</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Deepak Chauhan">
@@ -32,8 +32,8 @@
               <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home' target="_blank">Go back to <strong>HealthKart.com</strong></s:link></span>
 			 </p>
               <div class="logoSubblock">
-			  <a title="go to stellar home" href="${pageContext.request.contextPath}/loyaltypg">
-                <img width="283" height="83" alt="healthkart logo" src="${pageContext.request.contextPath}/pages/loyalty/resources/images/hkStellar.png">
+			  <a title="go to loyalty home" href="${pageContext.request.contextPath}/loyaltypg">
+                <img width="283" height="83" alt="healthkart logo" src="${pageContext.request.contextPath}/pages/loyalty/resources/images/hkLoyalty.png">
               </a>
               </div>
   
@@ -58,7 +58,7 @@
             <div class="footerRight">
             <div class="footerLeft" >
               info@healthkart.com |
-               <a href= "${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" target="_blank">Terms and Conditions </a>| Connect with Us:
+               <a href= "${pageContext.request.contextPath}/pages/loyalty/info/loyaltyTerms.jsp" target="_blank">Terms and Conditions </a>| Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img

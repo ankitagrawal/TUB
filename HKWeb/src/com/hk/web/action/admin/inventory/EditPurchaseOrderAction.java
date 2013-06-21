@@ -82,6 +82,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 	private PurchaseOrderStatus previousPurchaseOrderStatus;
 	private List<Long> newSkuIdList = new ArrayList<Long>();
     private List<Supplier> suppliers = new ArrayList<Supplier>();
+    public String supplierEmail=null;
 
 
     private boolean isPiCreated;
@@ -117,6 +118,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 							dataMap.put("last30DaysSales", Functions.findInventorySoldInGivenNoOfDays(sku, 30));
 							if (sku.getTax() != null) {
 								dataMap.put("tax", sku.getTax().getValue());
+								dataMap.put("tax_id", sku.getTax().getId());
 							}
 							if(poLineItemDao.getPoLineItemCountBySku(sku) == 0) {
 								dataMap.put("newSku", true);
@@ -219,7 +221,13 @@ public class EditPurchaseOrderAction extends BaseAction {
 				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
 				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
-			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentToSupplier.getId())) {
+				if(purchaseOrder.getSupplier().getEmail_id()!=null){
+				adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
+				}
+				else{
+					adminEmailManager.sendPOMailToSupplier(purchaseOrder, supplierEmail);
+				}
+				purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
 				purchaseOrder.setPoPlaceDate(new Date());
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(new Date());
@@ -233,7 +241,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 				}
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-				emailManager.sendPOPlacedEmail(purchaseOrder);
+				//emailManager.sendPOPlacedEmail(purchaseOrder);
 				if (purchaseOrder.getSupplier().getCreditDays() < 0 && purchaseOrder.getAdvPayment() > 0) {
 					try {
 						PaymentHistory paymentHistoryNew = new PaymentHistory();

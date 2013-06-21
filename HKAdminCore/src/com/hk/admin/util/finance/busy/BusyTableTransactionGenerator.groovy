@@ -154,10 +154,10 @@ public class BusyTableTransactionGenerator {
         int count = 0;
 
         sqlProd.eachRow(""" SELECT t.id , t.value as taxValue, pil. purchase_invoice_id, pil.cost_price as costPrice, pil.sku_id ,pil.qty ,pil.mrp ,pil.discount_percent
-                            ,pil.id as purchaseLineItemId, sur.value as surchargeValue, pil.tax_id  as taxId, pil.payable_amount as payableAmount
+                            ,pil.id as purchaseLineItemId, pil.tax_id  as taxId, pil.payable_amount as payableAmount
 
                     FROM  purchase_invoice_line_item  pil LEFT OUTER JOIN tax t ON t.id = pil.tax_id
-                    LEFT OUTER JOIN surcharge sur  ON pil.surcharge_id = sur.id  WHERE  pil.purchase_invoice_id =${purchaseRow.purchaseInvoiceId}
+                    WHERE  pil.purchase_invoice_id =${purchaseRow.purchaseInvoiceId}
                     """) {
 
           pilRow ->
@@ -183,25 +183,7 @@ public class BusyTableTransactionGenerator {
               costPriceFinal = 0.0;
             }
 
-            if (sameState == 1) {
-              if (pilRow.surchargeValue != null) {
-                finalVat = pilRow.surchargeValue;
-              }
-              else {
-                finalVat = 0.0;
-              }
-            }
-            else if (sameState == 0) {
-
-              if (pilRow.taxId != null) {
-                finalVat = pilRow.taxValue;
-              }
-              else {
-                finalVat = pilRow.surchargeValue;
-              }
-
-
-            }
+            finalVat = pilRow.taxValue;
 
             sqlReport.execute("""
 
