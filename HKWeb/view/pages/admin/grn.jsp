@@ -243,8 +243,21 @@ $(document).ready(function() {
         }
     };
 
-    $('.validateWeight').click(function() {
+    $('.validateWeight').click(function(event) {
        // console.log(checkvariantWeightonSubmit());
+       
+       var id = event.target.id;
+       var value;
+       $("#saveValue").val("");
+       if(id == "saveAndContinue"){
+    	   var el = document.getElementById('saveValue');
+    	   el.value = 1;
+    	   //<c:set var="saveValue" scope="page" value="1"/>;
+       }else if(id=="saveAndClose"){
+    	   var el = document.getElementById('saveValue');
+    	   el.value = 2;
+    	   //<c:set var="saveValue" scope="page" value="2"/>;
+       }
         if(checkvariantWeightonSubmit()){
             $('.requiredFieldValidator').click();
         }else{
@@ -580,7 +593,9 @@ $(document).ready(function() {
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
 	<s:submit name="save" value="Save" class="requiredFieldValidator" style="display:none;"/>
-    <s:button name="validateWeight" value="Save" class="validateWeight" />
+    <s:button name="validateWeight" id="saveAndContinue" value="Save And Continue" class="validateWeight" />
+    <s:button name="validateWeight" id="saveAndClose" value="Save And Close" class="validateWeight" />
+    <s:hidden name="saveValue" id="saveValue"/>
 
     <c:if test='${itemCheckedin && pa.grn.grnStatus.id == GrnCloseId}' >
         <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Get All Barcodes
