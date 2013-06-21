@@ -29,6 +29,7 @@ import com.akube.framework.gson.JsonSkip;
 import com.google.gson.annotations.Expose;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.category.Category;
 import com.hk.pact.service.Trackable;
 import com.hk.pact.service.audit.Auditable;
@@ -363,7 +364,7 @@ public class Product  implements java.io.Serializable {
         ProductVariant maxDiscountPV = new ProductVariant();
         maxDiscountPV.setDiscountPercent(0.0);
         for (ProductVariant productVariant : this.getProductVariants()) {
-            if (productVariant.getDiscountPercent() >= maxDiscountPV.getDiscountPercent()) {
+            if (!productVariant.isDeleted() && productVariant.getDiscountPercent() >= maxDiscountPV.getDiscountPercent()) {
                 maxDiscountPV = productVariant;
                 maxDiscountPV.setDiscountPercent(productVariant.getDiscountPercent());
             }
@@ -372,17 +373,19 @@ public class Product  implements java.io.Serializable {
     }
 
     public ProductVariant getInStockMaximumDiscountProductVariant() {
-        ProductVariant inStockMaxDiscountPV = null;
-        Double maxDiscountPercent = 0D;
-        for (ProductVariant productVariant : this.getProductVariants()) {
-            if (!productVariant.isOutOfStock()) {
-                if (productVariant.getDiscountPercent() >= maxDiscountPercent) {
-                    inStockMaxDiscountPV = productVariant;
-                    maxDiscountPercent = productVariant.getDiscountPercent();
-                }
-            }
+      ProductVariant inStockMaxDiscountPV = null;
+      Double maxDiscountPercent = 0D;
+      for (ProductVariant productVariant : this.getInStockVariants()) {
+        if (productVariant.getDiscountPercent() >= maxDiscountPercent) {
+          inStockMaxDiscountPV = productVariant;
+          maxDiscountPercent = productVariant.getDiscountPercent();
         }
-        return inStockMaxDiscountPV;
+      }
+      //If it is null return max discount PV irrespective of stock
+      if (inStockMaxDiscountPV == null) {
+        inStockMaxDiscountPV = getMaximumDiscountProducVariant();
+      }
+      return inStockMaxDiscountPV;
     }
 
     public ProductVariant getMaximumMRPProducVariant() {
@@ -744,5 +747,9 @@ public class Product  implements java.io.Serializable {
      public Boolean getInstallable() {
 		return installable!=null ? installable : false;
 	}
+
+    public boolean isCombo() {
+      return this instanceof Combo;
+    }
 
 }
