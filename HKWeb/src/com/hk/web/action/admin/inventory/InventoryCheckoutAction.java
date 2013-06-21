@@ -287,9 +287,9 @@ public class InventoryCheckoutAction extends BaseAction {
                 }
                 if (lineItem != null) {
                     ProductVariant variant = skuGroup.getSku().getProductVariant();
-	                if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
-		                addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
-                    } else {
+//	                if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
+//		                addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
+//                    } else {
                         Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
                         if (checkedOutItemCount == null) {
                             checkedOutItemCount = 0L;
@@ -310,8 +310,8 @@ public class InventoryCheckoutAction extends BaseAction {
 //                            if (inStockSkuItems != null && inStockSkuItems.size() > 0)
                             if (skuItem != null) {
                                  // Mrp check --starts
-                                 if ( (checkMrpPreCheckOut(variant) && skuItem.getSkuGroup().getMrp() != null && skuItem.getSkuGroup().getMrp() != lineItem.getMarkedPrice())  || skuItem.getSkuGroup().getStatus().equals(EnumSkuGroupStatus.UNDER_REVIEW)) {
-		                              addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout Wrong MRP variant.Please put the Batch under Review :  " + skuItem.getSkuGroup().getBatchNumber() ));
+                                 if ( (checkMrpPreCheckOut(variant) && skuItem.getSkuGroup().getMrp() != null && !skuItem.getSkuGroup().getMrp().equals(lineItem.getMarkedPrice()))  || (skuItem.getSkuGroup().getStatus()!=null && skuItem.getSkuGroup().getStatus().equals(EnumSkuGroupStatus.UNDER_REVIEW))) {
+		                              addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout Either Wrong MRP variant or Under Review batch.Please put the Batch no : " + skuItem.getSkuGroup().getBatchNumber() + " under Review   "  ));
                                       return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
                                 }
                                 // MRP check ends --
@@ -342,7 +342,7 @@ public class InventoryCheckoutAction extends BaseAction {
                         } else {
                             addRedirectAlertMessage(new SimpleMessage("Oops!! All SkuItem Units for the In-process LineItem are already checked out."));
                         }
-                    }
+//                    }
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout wrong variant. Plz check."));
                 }

@@ -22,6 +22,7 @@
                     <th>Expiry Date</th>
                     <th> Sku</th>
                     <th>Cost Price</th>
+                    <th>MRP</th>
                     <th>Checked in units</th>
                     <th>Net Inv</th>
                     <th> Status</th>
@@ -40,6 +41,7 @@
                         <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>
                         <td>${skuGroup.sku}</td>
                         <td> ${skuGroup.costPrice} </td>
+                        <td>${skuGroup.mrp}</td>
                         <td>${fn:length(skuGroup.skuItems)}</td>
                         <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
                         <td>${skuGroup.status}</td>
