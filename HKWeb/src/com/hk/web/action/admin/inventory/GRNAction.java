@@ -132,6 +132,7 @@ public class GRNAction extends BasePaginatedAction {
 	private Map<Sku, Boolean> skuIsNew = new HashMap<Sku, Boolean>();
 	private Integer defaultPerPage = 20;
     private GrnLineItem grnLineItem;
+    private long saveValue;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -226,12 +227,34 @@ public class GRNAction extends BasePaginatedAction {
 				if (grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null) {
 					grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
 				}
-				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
-						(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
-					grnLineItemDao.delete(grnLineItem);
-				} else if (grnLineItem.getQty() > 0) {
+				
+				if((saveValue == 2 || grn.getGrnStatus().getId()>=EnumGrnStatus.Closed.getId())){
+					if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
+							(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
+						grnLineItem = (GrnLineItem) grnLineItemDao.save(grnLineItem);
+						if(grn.getPurchaseInvoices()!=null && grn.getPurchaseInvoices().size()>0){
+							for(PurchaseInvoice invoice: grn.getPurchaseInvoices()){
+								List<PurchaseInvoiceLineItem> items = invoice.getPurchaseInvoiceLineItems();
+								if(items!=null&&items.size()>0){
+									for(PurchaseInvoiceLineItem pili :items){
+										if(pili.getGrnLineItem()!=null && pili.getGrnLineItem().equals(grnLineItem)){
+										pili.setGrnLineItem(null);
+										purchaseInvoiceDao.save(pili);
+										}
+									}
+								}
+							}
+						}
+						grnLineItemDao.delete(grnLineItem);
+				}
+				
+				} else{
 					if (grnLineItem.getPayableAmount() != null) {
+						if(grnLineItem.getQty()>0){
 						grnLineItem.setProcurementPrice((grnLineItem.getPayableAmount() / grnLineItem.getQty()) - (grnLineItem.getPayableAmount() / grnLineItem.getQty() * discountRatio));
+						}
+						else
+							grnLineItem.setProcurementPrice(0.0);
 					}
 
 					if (grnLineItem.getId() != null) {
@@ -263,7 +286,7 @@ public class GRNAction extends BasePaginatedAction {
 			grn.setEstPaymentDate(calendar.getTime());
 
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
-			goodsReceivedNoteDao.save(grn);
+			grn = (GoodsReceivedNote) goodsReceivedNoteDao.save(grn);
 			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
 			if(grn.getGrnStatus().getId().equals(EnumGrnStatus.Closed.getId())){
@@ -278,7 +301,9 @@ public class GRNAction extends BasePaginatedAction {
                 	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
                 	po.setExtraInventoryId(id);
                 }
+				if(grn.getGrnLineItems()!=null && grn.getGrnLineItems().size()>0){
 				getAdminEmailManager().sendGRNEmail(grn);
+				}
 			}
 
 		}
@@ -765,6 +790,14 @@ public Set<String> getParamSet() {
 
 	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
 		this.adminEmailManager = adminEmailManager;
+	}
+
+	public long getSaveValue() {
+		return saveValue;
+	}
+
+	public void setSaveValue(long saveValue) {
+		this.saveValue = saveValue;
 	}
     
 }
