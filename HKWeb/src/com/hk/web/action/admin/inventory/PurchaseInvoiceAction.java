@@ -14,6 +14,7 @@ import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.constants.rtv.EnumExtraInventoryLineItemType;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -373,6 +374,11 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	public Resolution delete() {
 		Boolean deleteStatus = false;
 		if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
+			if(purchaseInvoiceService.getDebitNote(purchaseInvoice)!=null){
+				DebitNote dn = purchaseInvoiceService.getDebitNote(purchaseInvoice);
+				addRedirectAlertMessage(new SimpleMessage("Debit Note # "+dn.getId()+" is attached to this PI. Please delete that first"));
+				return new RedirectResolution(PurchaseInvoiceAction.class);
+			}
 			deleteStatus = procurementService.deletePurchaseInvoice(purchaseInvoice);
 		}
 		if (deleteStatus == false) {
