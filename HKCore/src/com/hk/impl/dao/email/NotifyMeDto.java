@@ -20,7 +20,7 @@ public class NotifyMeDto {
     private String name;
     private String email;
     private ProductVariant productVariant;
-    int userCount;
+    private Long userCount;
 
 
     public Long getId() {
@@ -56,12 +56,11 @@ public class NotifyMeDto {
         this.productVariant = productVariant;
     }
 
-
-    public int getUserCount() {
+    public Long getUserCount() {
         return userCount;
     }
 
-    public void setUserCount(int userCount) {
+    public void setUserCount(Long userCount) {
         this.userCount = userCount;
     }
 }

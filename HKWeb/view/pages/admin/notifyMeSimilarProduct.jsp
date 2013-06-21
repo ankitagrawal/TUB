@@ -19,74 +19,94 @@
 
     <s:layout-component name="content">
 
+        <c:if test="${notifyMeBean.productOutOfStock != null}">
+            <c:choose>
+                <c:when test="${notifyMeBean.productOutOfStock}">
+                    <c:set var="similarproduct" value="true"/>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="similarproduct" value="false"/>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+
         <fieldset>
-        <legend>Search Similar Products</legend>
-        <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
-            <s:errors/>
-            <br/>
-            <label>Start
-                Date:</label><s:text class="date_input startDate" style="width:150px"
-                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-            &nbsp; &nbsp;
-            <label>End
-                Date:</label><s:text class="date_input endDate" style="width:150px"
-                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-            <label>Product Id</label><s:text style="width:150px" name="product"/>
-            <label>Primary Category</label><s:select name="primaryCategory">
-            <s:option value="">-ALL-</s:option>
-            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
-                                       value="name" label="displayName"/>
-        </s:select>
-            <label>Product Out of stock:</label>
-            <s:select name="productOutOfStock">
-                <s:option value="">--All--</s:option>
-                <s:option value="true">True</s:option>
-                <s:option value="false">False</s:option>
+            <legend> Search Notify Request</legend>
+            <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+                <s:errors/>
+                <br/>
+                <label>Product Id</label><s:text style="width:150px" name="product"/>
+                <label>Primary Category</label><s:select name="primaryCategory">
+                <s:option value="">-ALL-</s:option>
+                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
+                                           value="name" label="displayName"/>
             </s:select>
-            <label>Product Deleted:</label>
-            <s:select name="productDeleted">
-                <s:option value="true">True</s:option>
-                <s:option value="false">False</s:option>
-            </s:select>
-            <label>Product Hidden:</label>
-            <s:select name="productHidden">
-                <s:option value="">--All--</s:option>
-                <s:option value="true">True</s:option>
-                <s:option value="false">False</s:option>
-            </s:select>
-            <label>Similar Product Available:</label>
-            <s:select name="similarProductAvailable">
-                <s:option value="">--All--</s:option>
-                <s:option value="true">True</s:option>
-                <s:option value="false">False</s:option>
-            </s:select>
-            <s:submit name="notifyMeListForDeletedHiddenOOSProduct" value="Search"/>
+                <label>Product Out of stock:</label>
+                <s:select name="productOutOfStock">
+                    <s:option value="">--All--</s:option>
+                    <s:option value="true">True</s:option>
+                    <s:option value="false">False</s:option>
+                </s:select>
+                <c:if test="${similarproduct != null && similarproduct}">
+                <label>Similar Product Available:</label>
+                <s:select name="similarProductAvailable">
+                    <s:option value="">--All--</s:option>
+                    <s:option value="true">True</s:option>
+                    <s:option value="false">False</s:option>
+                </s:select>
+                </c:if>
+                <s:submit name="showNotifyMeList" value="Search"/>
+            </s:form>
+        </fieldset>
 
-            </fieldset>
+        <!--  button for similar products !-->
+        <c:if test = "${notifyMeBean.productOutOfStock != null && notifyMeBean.productOutOfStock == true}">
+                <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+                    <%--<shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">--%>
+                        <fieldset>
+                            <legend> Send All Mails For Similar Products</legend>
+                            <ol>
+                                <li>
+                                    <label>Conversion Rate</label>
+                                    <s:text name="conversionRate"/>
+                                </li>
+                                <li>
+                                    <label>Buffer Rate</label>
+                                    <s:text name="bufferRate"/>
+                                </li>
+                            </ol>
+                            <s:submit name="sendMailsForSimilarProductsAutomation" value="SendMailsForDeletedHiddenOOS"/>
+                        </fieldset>
+                    <%--</shiro:hasPermission>--%>
+                </s:form>
+        </c:if>
 
-            <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
+            <!--  button for InStock Product !-->
+            <c:if test="${notifyMeBean.productOutOfStock != null && notifyMeBean.productOutOfStock == false}">
                 <fieldset>
-                    <legend>Send All Mails for Similar Product By Above Filled Filter</legend>
-                    <ol>
-                        <li>
-                            <label>Conversion Rate</label>
-                            <s:text name="conversionRate"/>
-                        </li>
-                        <li>
-                            <label>Buffer Rate</label>
-                            <s:text name="bufferRate"/>
-                        </li>
-                    </ol>
-                    <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
+                    <legend>Send All Mails For InStock Products</legend>
+                    <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+                        <%--<shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">--%>
+                            <ol>
+                                <li>
+                                    <label>Conversion Rate</label>
+                                    <s:text name="conversionRate"/>
+                                </li>
+                                <li>
+                                    <label>Buffer Rate</label>
+                                    <s:text name="bufferRate"/>
+                                </li>
+                            </ol>
+                            <s:submit name="sendMailsForInStockProductsAutomation"
+                                      value="SendAllNotifyMailsForInstockProducts"/>
+                        <%--</shiro:hasPermission>--%>
+                    </s:form>
                 </fieldset>
-            </shiro:hasPermission>
-        </s:form>
+        </c:if>
 
 
         <c:choose>
             <c:when test="${notifyMeBean.notifyMeDtoList!=null}">
-                <label>Total Records : ${notifyMeBean.totalProductVariant}</label>
-
                 <div id="table_container">
                     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${notifyMeBean}"/>
                     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${notifyMeBean}"/>
@@ -99,7 +119,9 @@
                             <th>Current Stock Status</th>
                             <th>Variant</th>
                             <th>Primary Category</th>
-                            <th>Similar Product</th>
+                            <c:if test="${similarproduct}">
+                                <th>Similar Product</th>
+                            </c:if>
                             <th>Pending Request</th>
                         </tr>
                         </thead>
@@ -116,7 +138,6 @@
                                         ${notifyMeDto.productVariant.deleted ? "Deleted": "Non-Deleted"}<br/>
                                         ${notifyMeDto.productVariant.outOfStock ? "Out of Stock": "In-Stock"}<br/>
                                         ${notifyMeDto.productVariant.product.hidden ? "Hidden" : "Not Hidden"}<br/>
-                                    unbooked inventory: ${hk:netAvailableUnbookedInventory(notifyMeDto.productVariant)}
                                 </td>
                                 <td>
                                     <s:link href="/product/${notifyMeDto.productVariant.product.slug}/${notifyMeDto.productVariant.product.id}"
@@ -133,21 +154,27 @@
                                     </em>
                                 </td>
                                 <td class="primaryCategory"> ${notifyMeDto.productVariant.product.primaryCategory}</td>
-                                <td>
-                                    <c:set var="similarProductInventoryList"
-                                           value="${hk:similarProductWithUnbookedInventory(notifyMeDto.productVariant)}"/>
-                                    <c:choose>
-                                        <c:when test="${similarProductInventoryList != null && fn:length(similarProductInventoryList) > 0}">
-                                            <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
-                                                ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
-                                                <br/>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            No similar products.
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
+                                <c:if test="${similarproduct != null && similarproduct}">
+                                    <td>
+                                        <c:set var="similarProductInventoryList"
+                                               value="${hk:similarProductWithUnbookedInventory(notifyMeDto.productVariant)}"/>
+                                        <c:choose>
+                                            <c:when test="${similarProductInventoryList != null && fn:length(similarProductInventoryList) > 0}">
+                                                <c:forEach items="${similarProductInventoryList}"
+                                                           var="productInventoryDto">
+                                                    ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
+                                                    <br/>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">Add Similar Products
+                                                    <s:param name="productId"
+                                                             value="${notifyMeDto.productVariant.product.id}"/>
+                                                </s:link>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </c:if>
                                 <td>
                                         ${notifyMeDto.userCount}
                                 </td>

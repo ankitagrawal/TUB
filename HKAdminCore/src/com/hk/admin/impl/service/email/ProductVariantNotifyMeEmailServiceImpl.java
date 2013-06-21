@@ -4,7 +4,6 @@ import com.akube.framework.util.DateUtils;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.SimilarProduct;
@@ -48,23 +47,23 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     EmailRecepientDao emailRecepientDao;
 
     /*send mail for in stock products*/
-    public void sendNotifyMeEmailForInStockProducts(final float notifyConversionRate, final int bufferRate) {
+    public int sendNotifyMeEmailForInStockProducts(final float notifyConversionRate, final int bufferRate) {
         List<NotifyMe> notifyMeListForInStockProduct = notifyMeDao.getNotifyMeListForProductVariantInStock();
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, false, notifyMeListForInStockProduct);
-        adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
+       return adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
     }
 
 
     /*send mails for product which are deleted or hidden or out of stock*/
-    public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate) {
+    public int sendNotifyMeEmailForSimilarProducts(final float notifyConversionRate, final int bufferRate) {
         Date monthBackDate = DateUtils.startOfMonthBack(new DateTime()).toDate();
         int totalMailSent = 0;
-        List<NotifyMe> nonDeletedOOSList = notifyMeDao.searchNotifyMeForSimilarProducts(monthBackDate, true, false);
+        List<NotifyMe> nonDeletedOOSList = notifyMeDao.notifyMeForSimilarProductsMails(monthBackDate, true, false);
         if (nonDeletedOOSList != null && nonDeletedOOSList.size() > 0) {
             Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, nonDeletedOOSList);
             totalMailSent = adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
         }
-        List<NotifyMe> deletedList = notifyMeDao.searchNotifyMeForSimilarProducts(null, null, true);
+        List<NotifyMe> deletedList = notifyMeDao.notifyMeForSimilarProductsMails(null, null, true);
         if (deletedList != null && deletedList.size() > 0) {
             Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, deletedList);
             totalMailSent = totalMailSent + adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
@@ -101,10 +100,10 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                                 productIdWhoseSimilarInventoryIsZero.add(productVariant.getProduct().getId());
                             }
                         } else {
-                            /* InStock Product*/
+                            /* inStock product*/
                             unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
                         }
-                        /* Calculate number of users eligible for sending mails */
+                        /* calculate number of users eligible for sending mails */
                         if (unbookedInventory > 0) {
                             allowedUserNumber = (int) (unbookedInventory / (notifyConversionRate * bufferRate));
                             allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
@@ -119,7 +118,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                         }
                         Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
                         if (alreadyNotified != null && alreadyNotified < allowedUserNumber) {
-                            /*  List of Notify request per users*/
+                            /*  list of notify request per users*/
                             List<NotifyMe> notifyMeListPerUser;
                             if ((finalUserListForNotificationMap.containsKey(email))) {
                                 notifyMeListPerUser = finalUserListForNotificationMap.get(email);

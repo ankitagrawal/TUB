@@ -19,8 +19,6 @@ public interface NotifyMeDao extends BaseDao {
 
     public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted);
 
-    public List<NotifyMe> searchNotifyMeForSimilarProducts(Date endDate, Boolean productVariantOutOfStock, Boolean productDeleted);
-
     public List<String> getPendingNotifyMeProductVariant();
 
     public List<NotifyMe> getNotifyMeListForProductVariantInStock();
@@ -33,7 +31,13 @@ public interface NotifyMeDao extends BaseDao {
 
     public List<NotifyMe> getPendingNotifyMeListByVariant(String notifyMeEmail, List<ProductVariant> productVariantList);
 
-    public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted, Boolean productHidden);
+    public List<NotifyMe> notifyMeForSimilarProductsMails(Date endDate, Boolean productVariantOutOfStock, Boolean productDeleted);
+
+    public Page getAllNotifyMeList(int pageNo, int perPage, Product product, Category primaryCategory);
+
+    public Page getNotifyMeListForSimilarProducts(int pageNo, int perPage, Product product, Category primaryCategory, Boolean productVariantOutOfStock, Boolean similarProduct);
+
+    public Page notifyMeListForInStockProduct(int pageNo, int perPage ,Product product, Category primaryCategory);
 
 
 }

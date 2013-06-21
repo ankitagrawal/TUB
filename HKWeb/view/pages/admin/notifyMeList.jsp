@@ -143,7 +143,6 @@
                 <s:submit name="sendAllNotifyMailsForAvailableProductVariant" value="SendAllNotifyMailsForInstockProducts"/>
             </shiro:hasPermission>
         </s:form>
-
     </fieldset>
 
     <fieldset>

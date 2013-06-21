@@ -425,8 +425,8 @@ public class AdminEmailManager {
     }
 
 
-    public void sendNotifyUsersMails(Map<String, List<NotifyMe>> userNotifyMeListMap) {
-
+    public int sendNotifyUsersMails(Map<String, List<NotifyMe>> userNotifyMeListMap) {
+        int countOfSentMail = 0;
         HashMap valuesMap = new HashMap();
         User notifedByuser = userService.getLoggedInUser();
 
@@ -460,6 +460,7 @@ public class AdminEmailManager {
                 mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
             }
             if (mailSentSuccessfully) {
+                countOfSentMail++;
                 for (NotifyMe notifyMe : notifyMeListPerUser) {
                     {
                         notifyMe.setNotifiedByUser(notifedByuser);
@@ -470,6 +471,7 @@ public class AdminEmailManager {
             }
 
         }
+        return countOfSentMail;
     }
 
 

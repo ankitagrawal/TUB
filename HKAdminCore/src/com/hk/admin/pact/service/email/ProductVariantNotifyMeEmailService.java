@@ -16,9 +16,9 @@ import java.util.List;
  */
 public interface ProductVariantNotifyMeEmailService {
 
-    public void sendNotifyMeEmailForInStockProducts(final float notifyConversionRate, final int bufferRate);
+    public int sendNotifyMeEmailForInStockProducts(final float notifyConversionRate, final int bufferRate);
 
-    public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate);
+    public int sendNotifyMeEmailForSimilarProducts(final float notifyConversionRate, final int bufferRate);
 
     public List<ProductInventoryDto> getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(ProductVariant productVariant);
 

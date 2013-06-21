@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -101,9 +100,9 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productOutOfStock, productDeleted);
-        notifyMeList = notifyMePage.getList();
-        return new ForwardResolution("/pages/admin/notifyMeList.jsp");
+        notifyMePage = notifyMeDao.getAllNotifyMeList(getPageNo(), getPerPage(), product, primaryCategory);
+        notifyMeDtoList = notifyMePage.getList();
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 
     @ValidationMethod(on = "sendMailToNotifiedUsers")
@@ -210,59 +209,43 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         addRedirectAlertMessage(new SimpleMessage("Sending Emails to  In Stock PV  Notified Users"));
         return new RedirectResolution(NotifyMeListAction.class);
     }
+    /*Above methods are not used*/
 
-    /*According to conversion logic for Automation*/
-    public Resolution sendAllNotifyMailsForAvailableProductVariant() {
+
+    /*pre method for similar product screen*/
+    public Resolution showNotifyMeList() {
+        if (productOutOfStock != null) {
+            if (productOutOfStock) {
+                /*similar products*/
+                notifyMePage = notifyMeDao.getNotifyMeListForSimilarProducts(getPageNo(), getPerPage(), product, primaryCategory, productOutOfStock, similarProductAvailable);
+            } else {
+                /*inStock */
+                notifyMePage = notifyMeDao.notifyMeListForInStockProduct(getPageNo(), getPerPage(), product, primaryCategory);
+            }
+        } else {
+            /*all notify request*/
+            notifyMePage = notifyMeDao.getAllNotifyMeList(getPageNo(), getPerPage(), product, primaryCategory);
+        }
+        notifyMeDtoList = notifyMePage.getList();
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
+    }
+
+    /*Send Mails For In Stock Products*/
+    public Resolution sendMailsForInStockProductsAutomation() {
         if (conversionRate > 1) {
             addRedirectAlertMessage(new SimpleMessage("enter conversion rate less than 1"));
             return new RedirectResolution(NotifyMeListAction.class);
         }
-        productVariantNotifyMeEmailService.sendNotifyMeEmailForInStockProducts(conversionRate, bufferRate);
-        return new RedirectResolution(NotifyMeListAction.class);
-    }
-
-    /*pre method for similar product screen*/
-    public Resolution notifyMeListForDeletedHiddenOOSProduct() {
-        if (productDeleted == null) {
-            productDeleted = true;
-        }
-        if (!productDeleted && (productOutOfStock == null || !productOutOfStock) && (productHidden == null || !productHidden)) {
-            addRedirectAlertMessage(new SimpleMessage("Please mark product as deleted/OOS/Hidden value , to qualify for similar product mails"));
-            return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
-        }
-        notifyMePage = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productOutOfStock, productDeleted, productHidden);
-        notifyMeDtoList = notifyMePage.getList();
-        /*HardCording filter of similar product , ToDo will find from criteria*/
-        if (similarProductAvailable != null) {
-            if (notifyMeDtoList != null && notifyMeDtoList.size() > 0) {
-                List<NotifyMeDto> copyOnWriteDtoList = new CopyOnWriteArrayList<NotifyMeDto>(notifyMeDtoList);
-                for (NotifyMeDto notifyMeDto : copyOnWriteDtoList) {
-                    if (similarProductAvailable) {
-                        if (notifyMeDto.getProductVariant().getProduct().getSimilarProducts().size() == 0) {
-                            copyOnWriteDtoList.remove(notifyMeDto);
-                        }
-                    } else {
-                        if (notifyMeDto.getProductVariant().getProduct().getSimilarProducts().size() > 0) {
-                            copyOnWriteDtoList.remove(notifyMeDto);
-                        }
-                    }
-                }
-
-                notifyMeDtoList = copyOnWriteDtoList;
-            }
-
-        }
-        if (notifyMeDtoList != null) {
-            totalProductVariant = notifyMeDtoList.size();
-        }
+        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForInStockProducts(conversionRate, bufferRate);
+        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent For InStock Products    " + countOfSentMail));
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 
 
-    /*For Similar Products*/
-    public Resolution sendAllMailsForDeletedProducts() {
-        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForDeletedOOSHidden(conversionRate, bufferRate);
-        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent     " + countOfSentMail));
+    /*Send Mails  For Similar Products*/
+    public Resolution sendMailsForSimilarProductsAutomation() {
+        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForSimilarProducts(conversionRate, bufferRate);
+        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent For Similar Products     " + countOfSentMail));
         return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 
@@ -309,14 +292,10 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     public Set<String> getParamSet() {
 
         HashSet<String> params = new HashSet<String>();
-        params.add("productVariant");
         params.add("product");
-        params.add("startDate");
-        params.add("endDate");
         params.add("primaryCategory");
         params.add("productOutOfStock");
         params.add("productDeleted");
-        params.add("productHidden");
         params.add("similarProductAvailable");
         return params;
     }
