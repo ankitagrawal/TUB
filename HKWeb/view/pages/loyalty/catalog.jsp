@@ -29,32 +29,67 @@
           <div class="embedMarginTop119"></div>
           <div class="priceFilterContainerOne" style="margin-bottom:30px;">
             <div class="sorting">SORT BY POINTS</div>
-                   <div class="brandsContainer" >
-					<div class="priceRange">
-                  <span  class="pointRange">
+                  <div class="priceRange optionBottom">
+			   		<strong><span class="categoryNameSpan" style="font-size: 16px;">
+                  		<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
+                  		clear all </s:link></span></strong>
+			 	  </div> 
+                  <c:set var="rangeSelected" value="${lca.rangeSelected}"/>
+                  <div class="brandsContainer" >
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+	   			  <div class="priceRange">
                   <s:param name="minPoints" value="0"/>
                   <s:param name="maxPoints" value="100"/>
-                  less than 100</s:link>
-                  </span></div>
-				<div class="priceRange">
-                  <span   class="pointRange">
+                    <c:choose>
+                      <c:when test="${rangeSelected == 1}">
+		                  <span class="pointRange selectedCategory">less than 100</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">less than 100</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </div>
+                  </s:link>
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+				  <div class="priceRange">
                   <s:param name="minPoints" value="101"/>
                   <s:param name="maxPoints" value="200"/>
-                  101-200</s:link></span></div>
-				<div class="priceRange">
-                  <span  class= "pointRange">
+                    <c:choose>
+                      <c:when test="${rangeSelected == 2}">
+		                  <span class="pointRange selectedCategory">101-200</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">101-200</span>
+                      </c:otherwise>
+                    </c:choose>
+				  </div>
+                  </s:link>
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+				<div class="priceRange">
                   <s:param name="minPoints" value="201"/>
                   <s:param name="maxPoints" value="300"/>
-                  201-300</s:link></span></div>
-				<div class="priceRange">
-                  <span  class= "pointRange">
+                  <c:choose>
+                      <c:when test="${rangeSelected == 3}">
+		                  <span class="pointRange selectedCategory">201-300</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">201-300</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </div></s:link>
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+				<div class="priceRange">
                   <s:param name="minPoints" value="301"/>
                   <s:param name="maxPoints" value="10000"/>
-                  301 and above</s:link></span></div>
+                  <c:choose>
+                      <c:when test="${rangeSelected == 4}">
+		                  <span class="pointRange selectedCategory">301 and above</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">301 and above</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </div></s:link>
 				  </div>
 			</div>
 			
@@ -67,10 +102,10 @@
 			 </div>
               <div class="brandsContainer " style ="height: 245px;">
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
+            <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
 			 <div class="priceRange">
 			   <span class="categoryNameSpan font-small">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
-                  <s:param name="categoryName" value="${loyaltyCategory.name}"/>
+        	       <s:param name="categoryName" value="${loyaltyCategory.name}"/>
                     <c:choose>
                       <c:when test="${lca.categoryName == loyaltyCategory.name}">
                         <span class="selectedCategory">
@@ -80,8 +115,9 @@
                         ${loyaltyCategory.displayName} (${loyaltyCategory.prodCount})
                       </c:otherwise>
                     </c:choose>
-                   </s:link></span>
+                   </span>
 			     </div>
+			   </s:link>
 			 </c:forEach>
 			</div>
 			</div>
@@ -120,8 +156,9 @@
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
                 $("#" + form.context.id + ' input').attr('class', 'btnDisabled');
                 redeemButton.attr('value', 'Added to Cart');
-                redeemButton.removeClass()
-                redeemButton.disabled =true;
+                redeemButton.removeAttr('href');
+                redeemButton.removeClass('redeemBtn');
+                redeemButton.attr('disabled','disabled');
                 $('#productsInCart').html(resp.data.itemsInCart);
                 $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');
