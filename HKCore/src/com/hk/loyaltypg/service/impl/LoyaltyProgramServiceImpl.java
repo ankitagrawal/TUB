@@ -562,9 +562,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public void uploadLoyaltyProductsCSV(FileBean csvFileReader, List<String> errorMessages) {
 		Set<LoyaltyProduct> uploadedProducts = new HashSet<LoyaltyProduct>();
-		if (this.validateLoyaltyCsvFile(csvFileReader, uploadedProducts, errorMessages)) {
-			this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
-		}
+		this.validateLoyaltyCsvFile(csvFileReader, uploadedProducts, errorMessages);
+		this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
 	}
 
 	private boolean validateLoyaltyCsvFile(FileBean csvFileReader, Set<LoyaltyProduct> uploadedProducts,
@@ -633,9 +632,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public void uploadBadgeInfoCSV(FileBean csvFileReader, List<String> errorMessages) {
 		Set<UserBadgeInfo> uploadedBadges = new HashSet<UserBadgeInfo>();
-		if (this.validateBadgeCsvFile(csvFileReader, uploadedBadges, errorMessages)) {
-			this.loyaltyProductDao.saveOrUpdate(uploadedBadges);
-		}
+		this.validateBadgeCsvFile(csvFileReader, uploadedBadges, errorMessages);
+		this.loyaltyProductDao.saveOrUpdate(uploadedBadges);
 	}
 
 	private boolean validateBadgeCsvFile(FileBean csvFileReader, Set<UserBadgeInfo> uploadedBadges,
