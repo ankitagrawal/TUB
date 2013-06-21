@@ -286,7 +286,7 @@ public class GRNAction extends BasePaginatedAction {
 			grn.setEstPaymentDate(calendar.getTime());
 
 			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
-			goodsReceivedNoteDao.save(grn);
+			grn = (GoodsReceivedNote) goodsReceivedNoteDao.save(grn);
 			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
 			if(grn.getGrnStatus().getId().equals(EnumGrnStatus.Closed.getId())){
