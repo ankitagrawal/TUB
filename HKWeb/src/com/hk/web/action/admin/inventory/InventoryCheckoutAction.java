@@ -15,6 +15,7 @@ import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -308,6 +309,12 @@ public class InventoryCheckoutAction extends BaseAction {
 //                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
 //                            if (inStockSkuItems != null && inStockSkuItems.size() > 0)
                             if (skuItem != null) {
+                                 // Mrp check --starts
+                                 if ( (checkMrpPreCheckOut(variant) && skuItem.getSkuGroup().getMrp() != null && skuItem.getSkuGroup().getMrp() != lineItem.getMarkedPrice())  || skuItem.getSkuGroup().getStatus().equals(EnumSkuGroupStatus.UNDER_REVIEW)) {
+		                              addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout Wrong MRP variant.Please put the Batch under Review :  " + skuItem.getSkuGroup().getBatchNumber() ));
+                                      return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+                                }
+                                // MRP check ends --
                                 getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
                                         getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
                                 binManager.removeBinAllocated(skuItem);
