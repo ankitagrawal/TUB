@@ -373,15 +373,19 @@ public class Product  implements java.io.Serializable {
     }
 
     public ProductVariant getInStockMaximumDiscountProductVariant() {
-        ProductVariant inStockMaxDiscountPV = null;
-        Double maxDiscountPercent = 0D;
-        for (ProductVariant productVariant : this.getInStockVariants()) {
-          if (productVariant.getDiscountPercent() >= maxDiscountPercent) {
-            inStockMaxDiscountPV = productVariant;
-            maxDiscountPercent = productVariant.getDiscountPercent();
-          }
+      ProductVariant inStockMaxDiscountPV = null;
+      Double maxDiscountPercent = 0D;
+      for (ProductVariant productVariant : this.getInStockVariants()) {
+        if (productVariant.getDiscountPercent() >= maxDiscountPercent) {
+          inStockMaxDiscountPV = productVariant;
+          maxDiscountPercent = productVariant.getDiscountPercent();
         }
-        return inStockMaxDiscountPV;
+      }
+      //If it is null return max discount PV irrespective of stock
+      if (inStockMaxDiscountPV == null) {
+        inStockMaxDiscountPV = getMaximumDiscountProducVariant();
+      }
+      return inStockMaxDiscountPV;
     }
 
     public ProductVariant getMaximumMRPProducVariant() {
