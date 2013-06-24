@@ -102,8 +102,8 @@
 			 </div></s:link>
               <div class="brandsContainer " style ="height: 245px;">
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
-            <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
 			 <div class="priceRange">
+            <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory"  style="width:100%; float:left;">
 			   <span class="categoryNameSpan font-small">
                     <c:choose>
                       <c:when test="${lca.categoryName == loyaltyCategory.name}">
@@ -115,9 +115,9 @@
                       </c:otherwise>
                     </c:choose>
                    </span>
-			     </div>
         	     <s:param name="categoryName" value="${loyaltyCategory.name}"/>
 			   </s:link>
+			     </div>
 			 </c:forEach>
 			</div>
 			</div>
