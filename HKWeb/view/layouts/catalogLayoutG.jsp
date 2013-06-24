@@ -28,12 +28,12 @@
             <link href="<hk:vhostCss/>/css/ie7.css" rel="stylesheet" type="text/css" />
         <![endif]-->
       <s:layout-component name="analytics">
-        <jsp:include page="/includes/_analytics.jsp"/>
+        <s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="${topCategory}" allCategories="${allCategories}" brand="${brand}" isProd="<%=false%>"/>
       </s:layout-component>
         <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
 
-        <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+        <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${allCategories}"/>
 
     </head>
     <body id="${bodyId}">

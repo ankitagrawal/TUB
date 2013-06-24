@@ -148,14 +148,6 @@
 
   _gaq.push(['_trackTrans']); //submits transaction to the Analytics servers
 
-  //track order count
-  _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.orderCount.getSlot()%>,
-    "<%=AnalyticsConstants.CustomVarSlot.orderCount.getName()%>",
-    "${fn:length(actionBean.order.user.orders)}",
-    <%=AnalyticsConstants.CustomVarSlot.orderCount.getScope().getLevel()%>
-  ]);
-
   <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
   _gaq.push(['_setCustomVar',
     <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate.getSlot()%>,

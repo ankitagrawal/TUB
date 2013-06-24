@@ -36,7 +36,7 @@
  <c:set var="product" value="${pa.product}"/>
  <c:set var="seoData" value="${pa.seoData}"/>
  <c:set var="subscriptionProduct" value="${pa.subscriptionProduct}"/>
- <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}">
+ <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}" isOutOfStockPage="${pa.outOfStockPage}">
 <%--<s:layout-render name="/layouts/default.jsp" pageTitle="${seoData.title}">--%>
 
 
@@ -194,6 +194,7 @@
 <s:layout-component name="allCategories">${pa.allCategories}</s:layout-component>
 <s:layout-component name="brand">${product.brand}</s:layout-component>
 <s:layout-component name="productNameLabel">${product.name}</s:layout-component>
+<s:layout-component name="urlFragment">${pa.menuNodeUrlFragment}</s:layout-component>
 
 <s:layout-component name="topBanner">
 	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}"/>
