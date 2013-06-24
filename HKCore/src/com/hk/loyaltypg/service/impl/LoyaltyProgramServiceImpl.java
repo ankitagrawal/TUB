@@ -457,6 +457,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		criteria.createAlias("variant", LoyaltyProductAlias.VARIANT.alias, CriteriaSpecification.INNER_JOIN);
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.VARIANT.alias + ".outOfStock", Boolean.FALSE));
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.VARIANT.alias + ".deleted", Boolean.FALSE));
+		criteria.add(Restrictions.isNull(LoyaltyProductAlias.VARIANT.alias + ".freeProductVariant"));
 		criteria.createAlias(LoyaltyProductAlias.VARIANT.alias + ".product", LoyaltyProductAlias.PRODUCT.alias,
 				CriteriaSpecification.INNER_JOIN);
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".outOfStock", Boolean.FALSE));
