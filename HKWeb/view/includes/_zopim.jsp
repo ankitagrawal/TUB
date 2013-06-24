@@ -7,6 +7,10 @@
 <%
     String topCategory = (String) pageContext.getAttribute("topCategory");
     pageContext.setAttribute("topCategory", topCategory);
+    String brand = (String) pageContext.getAttribute("brand");
+    pageContext.setAttribute("brand", brand);
+    String allCategories = (String) pageContext.getAttribute("allCategories");
+    pageContext.setAttribute("allCategories", allCategories);
     if (AnalyticsConstants.analytics) {
 %>
 
@@ -46,7 +50,9 @@
     webengage.init({
       licenseCode:"~2024c219"
     }).onReady(function(){
-      webengage.render({ ruleData : {}});
+    	<%--webengage.render({ ruleData : { topCategory: "${topCategory}", brand : "${brand}", allCategories: "${allCategories}"}});--%>
+      webengage.notification.render({ruleData : {topCategory: "${topCategory}", brand : "${brand}", allCategories: "${allCategories}"}});
+      webengage.survey.render({ruleData : {topCategory: "${topCategory}", brand : "${brand}", allCategories: "${allCategories}"}});
     });
   };
 

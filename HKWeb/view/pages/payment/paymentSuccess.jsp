@@ -185,6 +185,35 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', '<%=AnalyticsConstants.uaCode%>', 'healthkart.com');
+  ga('send', 'pageview');
+  ga('require', 'ecommerce', 'ecommerce.js');
+  ga('ecommerce:addTransaction', {
+    'id': '${actionBean.payment.gatewayOrderId}',                     <%-- Transaction ID. Required. --%>
+    'affiliation': 'HealthKart.com',                                  <%-- Affiliation or store name. --%>
+    'revenue': '${hk:decimal2(actionBean.pricingDto.grandTotal)}',    <%-- Grand Total. --%>
+    'shipping': '${hk:decimal2(actionBean.pricingDto.shippingSubTotal - actionBean.pricingDto.shippingDiscount)}',                  <%-- Shipping. --%>
+    'tax': '0.0'                                                      <%-- Tax. --%>
+  });
+
+  <c:forEach items="${actionBean.pricingDto.aggregateProductLineItems}" var="productLineItem">
+  ga('ecommerce:addItem', {
+    'id': '${actionBean.payment.gatewayOrderId}',                     <%-- Transaction ID. Required.   --%>
+    'name': '${productLineItem.productVariant.product.name}',         <%-- Product name. Required.     --%>
+    'sku': '${productLineItem.productVariant.id}',                    <%-- SKU/code.                   --%>
+    'category': '<c:forEach items="${productLineItem.productVariant.product.categories}" var="category" varStatus="optionCtr">${category.name}${!optionCtr.last?',':''}</c:forEach>',         <%-- Category or variation.      --%>
+    'price': '${hk:decimal2(productLineItem.hkPrice)}',               <%-- Unit price.                 --%>
+    'quantity': '${productLineItem.qty}'                              <%-- Quantity.                   --%>
+  });
+  </c:forEach>
+
+  ga('ecommerce:send');
+
 </script>
 
     <div id="sdt-js"></div>
@@ -386,7 +415,7 @@
   				<div class='loyaltyMessage' >
   				<p>
   				<c:if test="${actionBean.loyaltyPointsEarned > 0}">
-  				You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your stellar account once your order has been delivered.
+  				You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your loyalty account once your order has been delivered.
   				</c:if>
                 
   				<c:if test="${actionBean.loyaltyPointsEarned <= 0}">

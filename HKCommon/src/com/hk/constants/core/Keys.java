@@ -48,6 +48,7 @@ public class Keys {
 
         public static final String analytics                       = "analytics";
         public static final String gaCode                          = "gaCode";
+        public static final String uaCode                          = "uaCode";
 
         public static final String defaultGateway                  = "defaultGateway";
 
@@ -58,6 +59,9 @@ public class Keys {
         public static final String secretKey                       = "secretKey";
         public static final String bucket                          = "bucket";
         public static final String readBucket                      = "readBucket";
+
+        public static final String imageDistributionDomain_prefix  = "imageDistributionDomain_prefix";
+        public static final String imageDistributionDomain_suffix  = "imageDistributionDomain_suffix";
 
         public static final String fbFanPageId                     = "fbFanPageId";
         public static final String fbFanAppId                      = "fbFanAppId";

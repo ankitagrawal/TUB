@@ -2,6 +2,7 @@ package com.hk.pact.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.mail.HtmlEmail;
 
@@ -32,5 +33,8 @@ String replyToName, Map<String, String> headerMap, Template template);*/
   public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails, EmailCampaign emailCampaign);
 
   public boolean sendHtmlEmail(String subject, String message, String toEmail, String toName, String attachementPath);
+  
+  public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+          String replyToName, Set<String> emailSet, Map<String, String> headerMap, String attachPdf, String attachXl);
 
 }

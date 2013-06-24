@@ -2,6 +2,7 @@ package com.hk.constants.inventory;
 
 
 import com.hk.domain.core.PurchaseOrderStatus;
+import com.hk.domain.inventory.rtv.ExtraInventoryLineItemType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,5 +89,12 @@ public enum EnumPurchaseOrderStatus {
 		}
 
 		return allowedPurchaseOrderStatusList;
+	}
+	
+	public PurchaseOrderStatus asEnumPurchaseOrderStatus(){
+		PurchaseOrderStatus purchaseOrderStatus = new PurchaseOrderStatus();
+		purchaseOrderStatus.setId(this.id);
+		purchaseOrderStatus.setName(this.name);
+		return purchaseOrderStatus;
 	}
 }

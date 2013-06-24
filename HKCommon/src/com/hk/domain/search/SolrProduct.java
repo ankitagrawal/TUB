@@ -15,489 +15,479 @@ import java.util.List;
  */
 public class SolrProduct {
 
-    @Field
-    private
-    String id;
+  @Field
+  private
+  String id;
 
-    @Field
-    private
-    List<String> brand;
+  @Field
+  private
+  List<String> brand;
 
-    @Field
-    private
-    String name;
+  @Field
+  private
+  String name;
 
-    @Field
-    private
-    String overview;
+  @Field
+  private
+  String overview;
 
-    @Field
-    private
-    boolean isGoogleAdDisallowed;
-
-    @Field
-    private
-    boolean hidden;
-
-
-    @Field
-    private
-    double ranking;
+  @Field
+  private
+  boolean isGoogleAdDisallowed;
 
-    @Field
-    private
-    long mainImageId;
+  @Field
+  private
+  boolean hidden;
 
-    @Field
-    private
-    String description;
 
-    @Field
-    private
-    double hkPrice;
+  @Field
+  private
+  double ranking;
 
-    @Field
-    private
-    List<String> category;
+  @Field
+  private
+  long mainImageId;
 
-    @Field
-    private
-    List<String> categoryDisplayName;
+  @Field
+  private
+  String description;
 
-    @Field
-    private
-    List<String> variantNames = new ArrayList<String>();
+  @Field
+  private
+  double hkPrice;
 
-    @Field
-    private
-    List<String> variantCommaNames = new ArrayList<String>();
+  @Field
+  private
+  List<String> category;
 
-    @Field
-    private
-    String h1;
+  @Field
+  private
+  List<String> categoryDisplayName;
 
-    @Field
-    private
-    String title;
+  @Field
+  private
+  List<String> variantNames = new ArrayList<String>();
 
-    @Field
-    private
-    String metaKeyword;
+  @Field
+  private
+  List<String> variantCommaNames = new ArrayList<String>();
 
-    @Field
-    private
-    String metaDescription;
+  @Field
+  private
+  String h1;
 
-    @Field
-    private
-    String descriptionTitle;
+  @Field
+  private
+  String title;
 
-    @Field
-    private
-    String seoDescription;
+  @Field
+  private
+  String metaKeyword;
 
-    @Field
-    private
-    String keywords;
+  @Field
+  private
+  String metaDescription;
 
-    @Field
-    private
-    String slug;
+  @Field
+  private
+  String descriptionTitle;
 
-    @Field
-    private
-    double minimumMRPProducVariantDiscount;
+  @Field
+  private
+  String seoDescription;
 
-    @Field
-    private
-    double maximumMRPProducVariantDiscount;
+  @Field
+  private
+  String keywords;
 
-    @Field
-    private
-    Long minMRPProducVariant;
+  @Field
+  private
+  String slug;
 
-    @Field
-    private
-    Long maximumMRPProductVariant;
+  @Field
+  private
+  double minimumMRPProducVariantDiscount;
 
-    @Field
-    private
-    double maximumDiscountProductVariantDiscountPercentage;
+  @Field
+  private
+  double maximumMRPProducVariantDiscount;
 
-    @Field
-    private
-    double minimumMRPProductVariantMarkedPrice;
+  @Field
+  private
+  double maximumDiscountProductVariantDiscountPercentage;
 
-    @Field
-    private
-    Long minMRPProductVariant;
-    
-    @Field
-    private
-    double maximumDiscountProductVariantPrice;
+  @Field
+  private
+  double minimumMRPProductVariantMarkedPrice;
 
-    @Field
-    private
-    Long maxDiscountProductVariant;
+  @Field
+  private
+  double maximumDiscountProductVariantHKPrice;
 
+  @Field
+  private
+  double maximumDiscountProductVariantMRP;
 
-    @Field
-    private
-    double maxMRPProductVariantPrice;
+  @Field
+  private
+  double maxMRPProductVariantPrice;
 
-    @Field
-    private
-    Long maxMRPProductVariant;
+  @Field
+  private
+  double markedPrice;
 
-    @Field
-    private
-    double markedPrice;
+  @Field
+  private
+  double postpaidPrice;
 
-    @Field
-    private
-    double postpaidPrice;
+  @Field
+  private
+  boolean deleted;
 
-    @Field
-    private
-    boolean deleted;
+  @Field
+  private
+  boolean isCombo;
 
-    @Field
-    private
-    boolean isCombo;
+  @Field
+  private
+  boolean isService;
 
-    @Field
-    private
-    boolean isService;
+  @Field
+  private
+  boolean outOfStock;
 
-    @Field
-    private
-    boolean outOfStock;
+  @Field
+  private
+  double comboDiscountPercent;
 
-    @Field
-    private
-    double comboDiscountPercent;
+  @Field
+  private
+  boolean isCODAllowed;
 
-    @Field
-    private
-    boolean isCODAllowed;
+  @Field
+  private
+  String productUrl;
 
-    @Field
-    private
-    String productUrl;
+  @Field
+  private
+  String smallImageUrl;
 
-    @Field
-    private
-    String smallImageUrl;
 
+  public String getName() {
+    return name;
+  }
 
-    public
-    String getName() {
-        return name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getKeywords() {
+    return keywords;
+  }
 
-    public String getKeywords() {
-        return keywords;
-    }
+  public void setKeywords(String keywords) {
+    this.keywords = keywords;
+  }
 
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
 
+  public String getId() {
+    return id;
+  }
 
-    public String getId(){
-        return id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public void setId(String id){
-        this.id = id;
-    }
+  public List<String> getBrand() {
+    return brand;
+  }
 
-    public List<String> getBrand() {
-        return brand;
-    }
+  public void setBrand(List<String> brand) {
+    this.brand = brand;
+  }
 
-    public void setBrand(List<String> brand) {
-        this.brand = brand;
-    }
+  public String getOverview() {
+    return overview;
+  }
 
-    public String getOverview() {
-        return overview;
-    }
+  public void setOverview(String overview) {
+    this.overview = overview;
+  }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
+  public boolean getGoogleAdDisallowed() {
+    return isGoogleAdDisallowed;
+  }
 
-    public boolean getGoogleAdDisallowed() {
-        return isGoogleAdDisallowed;
-    }
+  public void setGoogleAdDisallowed(Boolean googleAdDisallowed) {
+    isGoogleAdDisallowed = googleAdDisallowed;
+  }
 
-    public void setGoogleAdDisallowed(Boolean googleAdDisallowed) {
-        isGoogleAdDisallowed = googleAdDisallowed;
-    }
+  public double getOrderRanking() {
+    return ranking;
+  }
 
-    public double getOrderRanking() {
-        return ranking;
-    }
+  public void setOrderRanking(double orderRanking) {
+    this.ranking = orderRanking;
+  }
 
-    public void setOrderRanking(double orderRanking) {
-        this.ranking = orderRanking;
-    }
+  public long getMainImageId() {
+    return mainImageId;
+  }
 
-    public long getMainImageId() {
-        return mainImageId;
-    }
+  public void setMainImageId(long mainImageId) {
+    this.mainImageId = mainImageId;
+  }
 
-    public void setMainImageId(long mainImageId) {
-        this.mainImageId = mainImageId;
-    }
+  public double getHkPrice() {
+    return hkPrice;
+  }
 
-    public double getHkPrice() {
-        return hkPrice;
-    }
+  public void setHkPrice(double hkPrice) {
+    this.hkPrice = hkPrice;
+  }
 
-    public void setHkPrice(double hkPrice) {
-        this.hkPrice = hkPrice;
-    }
+  public List<String> getCategory() {
+    return category;
+  }
 
-    public List<String> getCategory() {
-        return category;
-    }
+  public void setCategory(List<String> category) {
+    this.category = category;
+  }
 
-    public void setCategory(List<String> category) {
-        this.category = category;
-    }
+  public List<String> getCategoryDisplayName() {
+    return categoryDisplayName;
+  }
 
-    public List<String> getCategoryDisplayName() {
-      return categoryDisplayName;
-    }
-
-    public void setCategoryDisplayName(List<String> categoryDisplayName) {
-      this.categoryDisplayName = categoryDisplayName;
-    }
+  public void setCategoryDisplayName(List<String> categoryDisplayName) {
+    this.categoryDisplayName = categoryDisplayName;
+  }
 
   public String getH1() {
-        return h1;
-    }
+    return h1;
+  }
 
-    public void setH1(String h1) {
-        this.h1 = h1;
-    }
+  public void setH1(String h1) {
+    this.h1 = h1;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public String getMetaKeyword() {
-        return metaKeyword;
-    }
+  public String getMetaKeyword() {
+    return metaKeyword;
+  }
 
-    public void setMetaKeyword(String metaKeyword) {
-        this.metaKeyword = metaKeyword;
-    }
+  public void setMetaKeyword(String metaKeyword) {
+    this.metaKeyword = metaKeyword;
+  }
 
-    public String getMetaDescription() {
-        return metaDescription;
-    }
+  public String getMetaDescription() {
+    return metaDescription;
+  }
 
-    public void setMetaDescription(String metaDescription) {
-        this.metaDescription = metaDescription;
-    }
+  public void setMetaDescription(String metaDescription) {
+    this.metaDescription = metaDescription;
+  }
 
-    public String getDescriptionTitle() {
-        return descriptionTitle;
-    }
+  public String getDescriptionTitle() {
+    return descriptionTitle;
+  }
 
-    public void setDescriptionTitle(String descriptionTitle) {
-        this.descriptionTitle = descriptionTitle;
-    }
+  public void setDescriptionTitle(String descriptionTitle) {
+    this.descriptionTitle = descriptionTitle;
+  }
 
-    public String getSeoDescription() {
-        return seoDescription;
-    }
+  public String getSeoDescription() {
+    return seoDescription;
+  }
 
-    public void setSeoDescription(String seoDescription) {
-        this.seoDescription = seoDescription;
-    }
+  public void setSeoDescription(String seoDescription) {
+    this.seoDescription = seoDescription;
+  }
 
-    public String getSlug() {
-        return slug;
-    }
+  public String getSlug() {
+    return slug;
+  }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
+  public void setSlug(String slug) {
+    this.slug = slug;
+  }
 
-    public double getMaximumDiscountProductVariantPrice() {
-        return maximumDiscountProductVariantPrice;
-    }
+  public double getMaximumDiscountProductVariantHKPrice() {
+    return maximumDiscountProductVariantHKPrice;
+  }
 
-    public void setMaximumDiscountProductVariantPrice(double maximumDiscountProductVariantPrice) {
-        this.maximumDiscountProductVariantPrice = maximumDiscountProductVariantPrice;
-    }
+  public void setMaximumDiscountProductVariantHKPrice(double maximumDiscountProductVariantHKPrice) {
+    this.maximumDiscountProductVariantHKPrice = maximumDiscountProductVariantHKPrice;
+  }
 
-    public double getMaxMRPProductVariantPrice() {
-        return maxMRPProductVariantPrice;
-    }
+  public double getMaximumDiscountProductVariantMRP() {
+    return maximumDiscountProductVariantMRP;
+  }
 
-    public void setMaxMRPProductVariantPrice(double maxMRPProductVariantPrice) {
-        this.maxMRPProductVariantPrice = maxMRPProductVariantPrice;
-    }
+  public void setMaximumDiscountProductVariantMRP(double maximumDiscountProductVariantMRP) {
+    this.maximumDiscountProductVariantMRP = maximumDiscountProductVariantMRP;
+  }
 
-    public double getMarkedPrice() {
-        return markedPrice;
-    }
+  public double getMaxMRPProductVariantPrice() {
+    return maxMRPProductVariantPrice;
+  }
 
-    public void setMarkedPrice(double markedPrice) {
-        this.markedPrice = markedPrice;
-    }
+  public void setMaxMRPProductVariantPrice(double maxMRPProductVariantPrice) {
+    this.maxMRPProductVariantPrice = maxMRPProductVariantPrice;
+  }
 
-    public double getMinimumMRPProducVariantDiscount() {
-        return minimumMRPProducVariantDiscount;
-    }
+  public double getMarkedPrice() {
+    return markedPrice;
+  }
 
-    public void setMinimumMRPProducVariantDiscount(double minimumMRPProducVariantDiscount) {
-        this.minimumMRPProducVariantDiscount = minimumMRPProducVariantDiscount;
-    }
+  public void setMarkedPrice(double markedPrice) {
+    this.markedPrice = markedPrice;
+  }
 
-    public double getMaximumMRPProducVariantDiscount() {
-        return maximumMRPProducVariantDiscount;
-    }
+  public double getMinimumMRPProducVariantDiscount() {
+    return minimumMRPProducVariantDiscount;
+  }
 
-    public void setMaximumMRPProducVariantDiscount(double maximumMRPProducVariantDiscount) {
-        this.maximumMRPProducVariantDiscount = maximumMRPProducVariantDiscount;
-    }
+  public void setMinimumMRPProducVariantDiscount(double minimumMRPProducVariantDiscount) {
+    this.minimumMRPProducVariantDiscount = minimumMRPProducVariantDiscount;
+  }
 
-    public double getMaximumDiscountProductVariantDiscountPercentage() {
-        return maximumDiscountProductVariantDiscountPercentage;
-    }
+  public double getMaximumMRPProducVariantDiscount() {
+    return maximumMRPProducVariantDiscount;
+  }
 
-    public void setMaximumDiscountProductVariantDiscountPercentage(double maximumDiscountProductVariantDiscountPercentage) {
-        this.maximumDiscountProductVariantDiscountPercentage = maximumDiscountProductVariantDiscountPercentage;
-    }
+  public void setMaximumMRPProducVariantDiscount(double maximumMRPProducVariantDiscount) {
+    this.maximumMRPProducVariantDiscount = maximumMRPProducVariantDiscount;
+  }
 
-    public double getMinimumMRPProductVariantMarkedPrice() {
-        return minimumMRPProductVariantMarkedPrice;
-    }
+  public double getMaximumDiscountProductVariantDiscountPercentage() {
+    return maximumDiscountProductVariantDiscountPercentage;
+  }
 
-    public void setMinimumMRPProductVariantMarkedPrice(double minimumMRPProductVariantMarkedPrice) {
-        this.minimumMRPProductVariantMarkedPrice = minimumMRPProductVariantMarkedPrice;
-    }
+  public void setMaximumDiscountProductVariantDiscountPercentage(double maximumDiscountProductVariantDiscountPercentage) {
+    this.maximumDiscountProductVariantDiscountPercentage = maximumDiscountProductVariantDiscountPercentage;
+  }
 
-    public boolean getDeleted() {
-        return deleted;
-    }
+  public double getMinimumMRPProductVariantMarkedPrice() {
+    return minimumMRPProductVariantMarkedPrice;
+  }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+  public void setMinimumMRPProductVariantMarkedPrice(double minimumMRPProductVariantMarkedPrice) {
+    this.minimumMRPProductVariantMarkedPrice = minimumMRPProductVariantMarkedPrice;
+  }
 
-    public boolean getOutOfStock() {
-        return outOfStock;
-    }
+  public boolean getDeleted() {
+    return deleted;
+  }
 
-    public void setOutOfStock(boolean outOfStock) {
-        this.outOfStock = outOfStock;
-    }
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 
-    public double getPostpaidPrice() {
-        return postpaidPrice;
-    }
+  public boolean getOutOfStock() {
+    return outOfStock;
+  }
 
-    public void setPostpaidPrice(double postpaidPrice) {
-        this.postpaidPrice = postpaidPrice;
-    }
+  public void setOutOfStock(boolean outOfStock) {
+    this.outOfStock = outOfStock;
+  }
 
-    public boolean isCODAllowed() {
-        return isCODAllowed;
-    }
+  public double getPostpaidPrice() {
+    return postpaidPrice;
+  }
 
-    public void setCODAllowed(boolean CODAllowed) {
-        isCODAllowed = CODAllowed;
-    }
+  public void setPostpaidPrice(double postpaidPrice) {
+    this.postpaidPrice = postpaidPrice;
+  }
 
-    public boolean getCombo() {
-        return isCombo;
-    }
+  public boolean isCODAllowed() {
+    return isCODAllowed;
+  }
 
-    public void setCombo(boolean combo) {
-        isCombo = combo;
-    }
+  public void setCODAllowed(boolean CODAllowed) {
+    isCODAllowed = CODAllowed;
+  }
 
-    public boolean  getService() {
-        return isService;
-    }
+  public boolean getCombo() {
+    return isCombo;
+  }
 
-    public void setService(boolean service) {
-        isService = service;
-    }
+  public void setCombo(boolean combo) {
+    isCombo = combo;
+  }
 
-    public double getComboDiscountPercent() {
-        return comboDiscountPercent;
-    }
+  public boolean getService() {
+    return isService;
+  }
 
-    public void setComboDiscountPercent(double comboDiscountPercent) {
-        this.comboDiscountPercent = comboDiscountPercent;
-    }
+  public void setService(boolean service) {
+    isService = service;
+  }
 
-    public List<String> getVariantNames() {
-        return variantNames;
-    }
+  public double getComboDiscountPercent() {
+    return comboDiscountPercent;
+  }
 
-    public void setVariantNames(List<String> variantNames) {
-        this.variantNames = variantNames;
-    }
+  public void setComboDiscountPercent(double comboDiscountPercent) {
+    this.comboDiscountPercent = comboDiscountPercent;
+  }
 
-    public boolean isHidden() {
-        return hidden;
-    }
+  public List<String> getVariantNames() {
+    return variantNames;
+  }
 
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
-    }
+  public void setVariantNames(List<String> variantNames) {
+    this.variantNames = variantNames;
+  }
 
-    public String getSmallImageUrl() {
-        return smallImageUrl;
-    }
+  public boolean isHidden() {
+    return hidden;
+  }
 
-    public void setSmallImageUrl(String smallImageUrl) {
-        this.smallImageUrl = smallImageUrl;
-    }
+  public void setHidden(boolean hidden) {
+    this.hidden = hidden;
+  }
 
-    public String getProductUrl() {
-        return productUrl;
-    }
+  public String getSmallImageUrl() {
+    return smallImageUrl;
+  }
 
-    public void setProductUrl(String productUrl) {
-        this.productUrl = productUrl;
-    }
+  public void setSmallImageUrl(String smallImageUrl) {
+    this.smallImageUrl = smallImageUrl;
+  }
 
-    public List<String> getVariantCommaNames() {
-        return variantCommaNames;
-    }
+  public String getProductUrl() {
+    return productUrl;
+  }
 
-    public void setVariantCommaNames(List<String> variantCommaNames) {
-        this.variantCommaNames = variantCommaNames;
-    }
+  public void setProductUrl(String productUrl) {
+    this.productUrl = productUrl;
+  }
 
-    public SolrProduct(){
+  public List<String> getVariantCommaNames() {
+    return variantCommaNames;
+  }
 
-    }
+  public void setVariantCommaNames(List<String> variantCommaNames) {
+    this.variantCommaNames = variantCommaNames;
+  }
+
+  public SolrProduct() {
+
+  }
 
 }

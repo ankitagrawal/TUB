@@ -25,6 +25,7 @@ public enum EnumTax {
 		CST(130L, "TwoPercent", 0.020D, "CST"),
 		VAT_SEC_4(135L, "FourPercent", 0.040D,"VAT_SECONDARY"),
 		VAT_SEC_5(140L, "FivePercent", 0.050D, "VAT_SECONDARY"),
+		VAT_SEC_5_5(145L, "FiveDotFive",0.0550D, "VAT_SECONDARY"),
 		VAT_SEC_12_5(150L, "TwelveDotFivePercent", 0.1250D, "VAT_SECONDARY"),
 		VAT_SEC_13_125(160L, "ThirteenDotOneTwoFivePercent", 0.13125D, "VAT_SECONDARY"),
 		VAT_SEC_14_5(165L, "FourteenDotFive",0.1450D, "VAT_SECONDARY"),

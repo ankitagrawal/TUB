@@ -31,7 +31,7 @@
       <%--<div style="float:left"><s:link href='/super-savers'>Offers&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/super-savers'><img src="<hk:vhostImage/>/images/offer_16.png"></s:link></div>--%>
       <div style="float:left"><a href='http://www.healthkartplus.com?src=hk' target='_blank' style="color:#000;">HealthKartPlus&nbsp;</a></div><div style="float:left;"><a href='http://www.healthkartplus.com?src=hk' title="HealthKartPlus.com"><img src="${pageContext.request.contextPath}/images/hkp-favicon.jpg"></a></div>
       <div style="float:left; margin-right: 15px;">&nbsp;&nbsp;&nbsp;<s:link href='${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action' target="_blank" 
-      style="background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/stellar-bg.png');" >hk<strong>stellar</strong></s:link></div>
+      style="background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/loyalty-bg.png');" >hk<strong>loyalty</strong></s:link></div>
     </div>
 
     <div style="clear:both;"></div>
