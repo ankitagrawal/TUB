@@ -519,7 +519,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private boolean isCitrusResponseSuccessful(HkPaymentResponse hkPaymentResponse) {
-        if(hkPaymentResponse != null && EnumHKPaymentStatus.SUCCESS.getId().equals(hkPaymentResponse.getHKPaymentStatus().getId())){
+        if(hkPaymentResponse != null && hkPaymentResponse.getHKPaymentStatus() != null  &&
+                EnumHKPaymentStatus.SUCCESS.getId().equals(hkPaymentResponse.getHKPaymentStatus().getId())){
             return true;
         }
         return false;
