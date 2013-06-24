@@ -1,23 +1,22 @@
-<%@ page import="com.hk.constants.core.EnumRole" %>
-<%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="org.apache.commons.lang.StringUtils" %>
-<%@ page import="org.apache.shiro.SecurityUtils" %>
-<%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
-<%@ page import="org.joda.time.DateTime" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="com.hk.taglibs.Functions" %>
-<%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.constants.core.Keys" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.domain.user.User" %>
 <%@ page import="com.hk.pact.service.UserService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.shiro.PrincipalImpl" %>
+<%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.Date" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
 
 <%
+
+	String projectEnv = (String) ServiceLocatorFactory.getProperty(Keys.Env.projectEnv);
+	pageContext.setAttribute("projectEnv", projectEnv);
 
   PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
   UserService userService = ServiceLocatorFactory.getService(UserService.class);
@@ -61,7 +60,13 @@
           <div style="font-size: 12px; float: left;">
             <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
               14 day return policy</a> |
-              <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link> | Email : <a href="mailto:info@healthkart.com">info@healthkart.com</a></div>
+              <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link> | Email : <a href="mailto:info@healthkart.com">info@healthkart.com</a>
+	          <c:if test="${projectEnv != 'prod'}">
+		          <div align="center" style="height:30px; font-size:20px; color:red; font-weight:bold;">
+			          Current Environment: ${projectEnv}
+		          </div>
+	          </c:if>
+          </div>
               <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())){%>
                 <div style="color: red; float: left; ">&nbsp;(not available on 26th Jan 2013)</div>
               <%}%>
