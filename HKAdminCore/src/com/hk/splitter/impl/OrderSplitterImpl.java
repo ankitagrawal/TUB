@@ -107,8 +107,12 @@ public class OrderSplitterImpl implements OrderSplitter {
 					}
 				}
 				
-				if(!isAdded && cartLineItem.getProductVariant().getProduct().isService()) {
-					container.addLineItem(corporateWarehouse, cartLineItem);
+				if(!isAdded) {
+					if(cartLineItem.getProductVariant().getProduct().isService()) {
+						container.addLineItem(corporateWarehouse, cartLineItem);
+					} else {
+						throw new OrderSplitException("Inventory is not available for line item: " + cartLineItem.getId(), order); 
+					}
 				}
 			}
 		}
