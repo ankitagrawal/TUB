@@ -40,8 +40,8 @@ import java.util.*;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Value("#{hkEnvProps['" + Keys.Env.deploymentEnvironment + "']}")
-	  private String deploymentEnvironment;
+    @Value("#{hkEnvProps['" + Keys.Env.projectEnv + "']}")
+	  private String projectEnv;
 
     @Autowired
     private ProductDao                productDAO;
@@ -691,7 +691,7 @@ public class ProductServiceImpl implements ProductService {
 
   public String getAppendedProductURL(String baseUrl, String parameter, String value) {
       if (StringUtils.isNotBlank(baseUrl) && StringUtils.isNotBlank(parameter) && StringUtils.isNotBlank(value)) {
-        if (StringUtils.equals(deploymentEnvironment, "admin")) {
+        if (StringUtils.equals(projectEnv, "admin")) {
           baseUrl = baseUrl.replace("www.healthkart.com", "admin.healthkart.com");
         }
         if (baseUrl.contains("?")) {

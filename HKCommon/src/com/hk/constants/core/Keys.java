@@ -117,7 +117,6 @@ public class Keys {
         public static final String dbPort                          = "dbPort";
 
         public static final String healthkartRestUrl               = "healthkartRestUrl";
-        public static final String deploymentEnvironment           = "deploymentEnvironment";
 
         public static final String fedExServerUrl                  = "fedExServerUrl";
         public static final String fedExAuthKey                    = "fedExAuthKey";
@@ -131,7 +130,7 @@ public class Keys {
         public static final String hkApiAccessKey = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls = "eyeTryOnXmls";
 
-		public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
+		    public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
 
         public static final String hkBridgeRestUrl = "hkBridgeRestUrl";
         public static final String userEmailLinksRedirected = "userEmailLinksRedirected";

@@ -62,14 +62,14 @@ pageContext.setAttribute("projectEnv", projectEnv);
             <li class='lvl1 menuItem trimPadding' title="" style="float:right;">
                 <s:link beanclass="com.hk.web.action.HomeAction">Site Home</s:link>
             </li>
+
             <div class="floatfix"></div>
         </ul>
     </div>
+
     <c:if test="${whAction.setWarehouse != null}">
         <div align="center" class="prom yellow help" style="height:16px; font-size:16px; color:red; font-weight:bold;">
-	        <c:if test="${projectEnv != 'prod'}">${projectEnv}</c:if>
             ${whAction.setWarehouse.identifier}
-	        <c:if test="${projectEnv != 'prod'}">${projectEnv}</c:if>
         </div>
     </c:if>
     <div class="right">
