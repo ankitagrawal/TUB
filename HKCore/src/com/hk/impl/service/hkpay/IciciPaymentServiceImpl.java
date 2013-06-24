@@ -96,6 +96,7 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
 
         } catch (Exception e) {
             logger.debug("There is an error while processing refund from Icici " + basePayment.getGatewayOrderId(), e);
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
         }
         return hkPaymentResponse;
     }
