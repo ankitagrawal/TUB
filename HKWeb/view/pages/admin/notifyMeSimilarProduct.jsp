@@ -15,7 +15,7 @@
     </s:layout-component>
 
     <s:layout-component
-            name="heading">Notify Me List Similar Products </s:layout-component>
+            name="heading">Notify Me Request </s:layout-component>
 
     <s:layout-component name="content">
 
@@ -169,8 +169,8 @@
                                                 </c:forEach>
                                             </c:when>
                                             <c:otherwise>
-                                                <s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">Add Similar Products
-                                                    <s:param name="productId"
+                                                <s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction"  event="search">Add Similar Products
+                                                    <s:param name="inputProduct"
                                                              value="${notifyMeDto.productVariant.product.id}"/>
                                                 </s:link>
                                             </c:otherwise>
