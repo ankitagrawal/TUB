@@ -46,14 +46,14 @@
                         <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
                         <td> ${skuGroup.status}</td>
 						<c:if test="${sbr.lineItem.markedPrice == skuGroup.mrp}">
+	                       <td> <s:link
+	                                beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
+	                                event="markSkuGroupAsUnderReview">
+	                            Mark Review
+	                            <s:param name="searchSkuGroup" value="${skuGroup.id}"/>
+	                           <s:param name="lineItem" value="${sbr.lineItem}"/>
+	                        </s:link>  </td>
 						</c:if>
-                       <td> <s:link
-                                beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
-                                event="markSkuGroupAsUnderReview">
-                            Mark Review
-                            <s:param name="searchSkuGroup" value="${skuGroup.id}"/>
-                           <s:param name="lineItem" value="${sbr.lineItem}"/>
-                        </s:link>  </td>
                     </tr>
 
                 </c:forEach>
