@@ -19,6 +19,8 @@ public enum EnumPaymentStatus {
   ERROR(5L, "Error"),
   CANCELLED_OR_REFUNDED(6L, "Cancelled/Refunded"),
   ON_DELIVERY(7L, "On delivery"),
+  REFUND_REQUEST_IN_PROCESS(8L,"Refund Request Initiated"),
+  REFUNDED(9L,"Refunded"),
   ;
 
   private java.lang.String name;
@@ -100,6 +102,10 @@ public enum EnumPaymentStatus {
   public static List<Long> getPaymentSuccessPageStatusIds() {
       return getEnumIDs(Arrays.asList(EnumPaymentStatus.SUCCESS,EnumPaymentStatus.ON_DELIVERY, EnumPaymentStatus.AUTHORIZATION_PENDING));
   }
+
+    public static List<Long> getUpdatePaymentStatusesIds(){
+        return getEnumIDs(Arrays.asList(AUTHORIZATION_PENDING, ERROR,FAILURE, REFUND_REQUEST_IN_PROCESS));
+    }
 
 }
 

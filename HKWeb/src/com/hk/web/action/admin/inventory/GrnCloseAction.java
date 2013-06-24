@@ -3,13 +3,17 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
+import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.po.PurchaseInvoice;
+import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.constants.inventory.EnumGrnStatus;
 import net.sourceforge.stripes.action.Resolution;
@@ -44,6 +48,10 @@ public class GrnCloseAction extends BaseAction {
 	PoLineItemDao poLineItemDao;
     @Autowired
     PurchaseOrderService purchaseOrderService;
+    @Autowired
+	private PurchaseInvoiceDao purchaseInvoiceDao;
+    @Autowired
+    private GrnLineItemDao grnLineItemDao;
 
     public Resolution pre() {
         int dayAgo = 21;
@@ -59,6 +67,22 @@ public class GrnCloseAction extends BaseAction {
 				}
             }
             for (GoodsReceivedNote grn : checkedInGrns) {
+            	List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
+				if (grnLineItems != null && grnLineItems.size() > 0) {
+					for (GrnLineItem item : grnLineItems) {
+					if (item.getQty() != null && item.getQty() == 0) {
+						if (grn.getPurchaseInvoices() != null && grn.getPurchaseInvoices().size() > 0) {
+							for (PurchaseInvoice invoice : grn.getPurchaseInvoices()) {
+								List<PurchaseInvoiceLineItem> items = invoice.getPurchaseInvoiceLineItems();
+								if (items != null && items.size() > 0) {
+								for (PurchaseInvoiceLineItem pili : items) {
+								if (pili.getGrnLineItem().equals(item)) {
+									pili.setGrnLineItem(null);
+									purchaseInvoiceDao.save(pili);
+									}}}}}
+						}
+						grnLineItemDao.delete(item);
+					}}
                 grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
                 getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
                 if(grn.getPurchaseOrder().isExtraInventoryCreated()){

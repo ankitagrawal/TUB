@@ -50,7 +50,7 @@
         <th>Supplier TIN</th>
         <th>Warehouse</th>
         <th>Status</th>
-        <th>Reconciled</th>
+        <!-- <th>Reconciled</th> -->
         <th>Actions</th>
       </tr>
       </thead>
@@ -68,7 +68,7 @@
           <td>${debitNote.supplier.tinNumber}</td>
           <td>${debitNote.warehouse.identifier}</td>
           <td>${debitNote.debitNoteStatus.name}</td>
-          <td>
+          <%-- <td>
             <c:choose>
               <c:when test="${debitNote.isDebitToSupplier}">
                 Yes &#10004;
@@ -77,7 +77,7 @@
                 No
               </c:otherwise>
             </c:choose>
-          </td>
+          </td> --%>
           <td>
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">Edit
               <s:param name="debitNote" value="${debitNote.id}"/>

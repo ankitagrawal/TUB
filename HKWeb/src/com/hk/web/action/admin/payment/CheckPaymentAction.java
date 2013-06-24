@@ -3,15 +3,18 @@ package com.hk.web.action.admin.payment;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.GatewayResponseKeys;
+import com.hk.constants.payment.*;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
+import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.HkPaymentService;
+import com.hk.pojo.HkPaymentResponse;
+import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
@@ -49,6 +51,10 @@ public class CheckPaymentAction extends BaseAction {
 
     private List<Payment> paymentList;
 
+    private List<HkPaymentResponse> hkPaymentResponseList;
+
+    private List<Map<String,List<HkPaymentResponse>>> bulkHkPaymentResponseList;
+
     @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful"})
     private Payment payment;
 
@@ -73,8 +79,8 @@ public class CheckPaymentAction extends BaseAction {
 
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
     private String gatewayOrderId;
-    private String txnStartDate;
-    private String txnEndDate;
+    private Date txnStartDate;
+    private Date txnEndDate;
     private String merchantId;
     private String paymentId;
     private String amount;
@@ -99,53 +105,43 @@ public class CheckPaymentAction extends BaseAction {
 
     @DontValidate
     public Resolution seekPayment() {
-        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
-        HkPaymentService hkPaymentService;
-        if (payment != null) {
-            Gateway gateway = payment.getGateway();
-            if (gateway != null) {
-                hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
-                try {
-                    if(hkPaymentService != null){
-                        paymentResultMap = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
-                    }
-                } catch (Exception e) {
-                    logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
-                }
-            }
+
+        try{
+            hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
+
+        } catch (HealthkartPaymentGatewayException e){
+            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
         }
-        transactionList.add(paymentResultMap);
+
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
     @DontValidate
     public Resolution bulkSeekPayment() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         try {
-            Date startDate = sdf.parse(txnStartDate);
-            Date endDate = sdf.parse(txnEndDate);
+
+            bulkHkPaymentResponseList = new ArrayList<Map<String, List<HkPaymentResponse>>>();
             List orderStatuses = Arrays.asList(EnumOrderStatus.Placed.asOrderStatus(), EnumOrderStatus.InProcess.asOrderStatus());
-            paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null, Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), startDate, endDate, orderStatuses);
-            HkPaymentService hkPaymentService;
+            paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null,
+                    Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), txnStartDate, txnEndDate, orderStatuses, null, EnumGateway.getSeekGateways());
             for (Payment seekPayment : paymentList) {
                 if (seekPayment != null) {
-                    Gateway gateway = seekPayment.getGateway();
-                    if (gateway != null) {
-                        hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
+                    String gatewayOrderId = seekPayment.getGatewayOrderId();
+                    if (gatewayOrderId != null) {
                         try {
-                            if(hkPaymentService != null){
-                                paymentResultMap = hkPaymentService.seekHkPaymentResponse(seekPayment.getGatewayOrderId());
-                            }
-                        } catch (Exception e) {
-                            logger.info("Payment Seek exception for gateway order id" + seekPayment.getGatewayOrderId(), e);
+                            hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
+                            Map<String,List<HkPaymentResponse>> tempMap = new HashMap<String, List<HkPaymentResponse>>();
+                            tempMap.put(gatewayOrderId,hkPaymentResponseList);
+                            bulkHkPaymentResponseList.add(tempMap);
+                        } catch (HealthkartPaymentGatewayException e) {
+                            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
                         }
                     }
                 }
-                transactionList.add(paymentResultMap);
             }
 
         } catch (Exception e) {
-            logger.info("Payment Seek Date conversion exception", e);
+            logger.debug("Payment Seek Date conversion exception", e);
         }
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
@@ -167,29 +163,28 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
-        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
-        if (payment != null) {
-            int gatewayId = payment.getGateway().getId().intValue();
-            switch (gatewayId) {
-                case 80:
-                    paymentResultMap = PaymentFinder.refundCitrusPayment(payment);
-                    if (paymentResultMap.isEmpty()) {
-                        paymentResultMap = PaymentFinder.refundIciciPayment(payment, "00007751");
-                    }
-                    break;
-                case 90:
-                    if (paymentId == null || StringUtils.isEmpty(paymentId) || amount == null || StringUtils.isEmpty(amount)) {
-                        addRedirectAlertMessage(new SimpleMessage("Payment Id and Amount cannot be null"));
-                        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
-                    }
-                    paymentResultMap = PaymentFinder.findEbsTransaction(null, paymentId, amount, EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
-                    break;
-                case 100:
-                    paymentResultMap = PaymentFinder.refundIciciPayment(payment, "00007518");
-            }
+        try{
+            paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
 
+        } catch (HealthkartPaymentGatewayException e){
+            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            // redirect to error page
         }
-        transactionList.add(paymentResultMap);
+
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
+    @DontValidate
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    public Resolution updatePayment() {
+        try{
+            paymentService.updatePayment(gatewayOrderId);
+
+        } catch (HealthkartPaymentGatewayException e){
+            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            // redirect to error page
+        }
+
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
@@ -246,35 +241,36 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
-        /*Gateway gateway = payment.getGateway();
-        String gatewayOrderId = payment.getGatewayOrderId();
-        Map<String, Object> hkrespObj;
-        EnumPaymentStatus hkRespPayStatus;
-        PaymentStatus hkPaymentStatus;*/
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
+        String gatewayOrderId = payment.getGatewayOrderId();
+        if (gatewayOrderId != null) {
+            try {
+                List<HkPaymentResponse> hkPaymentResponses = paymentService.seekPayment(gatewayOrderId);
+                if (hkPaymentResponses != null && !hkPaymentResponses.isEmpty()) {
+                    for (HkPaymentResponse hkPaymentResponse : hkPaymentResponses) {
+                        if (hkPaymentResponse != null && gatewayOrderId.equalsIgnoreCase(hkPaymentResponse.getGatewayOrderId())) {
+                            PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+                            PaymentStatus paymentGatewayStatus = EnumHKPaymentStatus.getCorrespondingStatus(hkPaymentResponse.getHKPaymentStatus());
+                            if (paymentGatewayStatus != null) {
+                                boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, paymentGatewayStatus);
+                                if (!isValid) {
+                                    // send email to admin
+                                    paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(paymentGatewayStatus, changedStatus, gatewayOrderId);
+                                }
+                            }
 
-        /*if (gateway != null && gatewayOrderId != null) {
-            HkPaymentService  hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
-            if(hkPaymentService != null){
-                hkrespObj = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
-                PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
-
-                if(hkrespObj != null){
-                    hkRespPayStatus = EnumPaymentStatus.getCorrespondingStatus((String)hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-                    if(hkRespPayStatus != null){
-                        hkPaymentStatus = hkRespPayStatus.asPaymenStatus();
-                        boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
-                        if (!isValid) {
-                            // send email to admin
-                            paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                            break;
                         }
                     }
                 }
+
+            } catch (HealthkartPaymentGatewayException e) {
+                logger.debug("Healthkart payment exception", e);
             }
-        }*/
+        }
 
         getPaymentManager().success(payment.getGatewayOrderId());
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
@@ -435,19 +431,21 @@ public class CheckPaymentAction extends BaseAction {
         this.transactionList = transactionList;
     }
 
-    public String getTxnStartDate() {
+    public Date getTxnStartDate() {
         return txnStartDate;
     }
 
-    public void setTxnStartDate(String txnStartDate) {
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setTxnStartDate(Date txnStartDate) {
         this.txnStartDate = txnStartDate;
     }
 
-    public String getTxnEndDate() {
+    public Date getTxnEndDate() {
         return txnEndDate;
     }
 
-    public void setTxnEndDate(String txnEndDate) {
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setTxnEndDate(Date txnEndDate) {
         this.txnEndDate = txnEndDate;
     }
 
@@ -473,5 +471,21 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public List<HkPaymentResponse> getHkPaymentResponseList() {
+        return hkPaymentResponseList;
+    }
+
+    public void setHkPaymentResponseList(List<HkPaymentResponse> hkPaymentResponseList) {
+        this.hkPaymentResponseList = hkPaymentResponseList;
+    }
+
+    public List<Map<String, List<HkPaymentResponse>>> getBulkHkPaymentResponseList() {
+        return bulkHkPaymentResponseList;
+    }
+
+    public void setBulkHkPaymentResponseList(List<Map<String, List<HkPaymentResponse>>> bulkHkPaymentResponseList) {
+        this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
     }
 }

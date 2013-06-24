@@ -30,7 +30,7 @@
                     var picker = $('#picker').val();
                     var packer = $('#packer').val();
                     var estimatedWeight = $('#estimatedWeight').attr('value');
-                    var weightDiff = 0.2;
+                    var weightDiff = 0.25; // 25% Tolerance 
                     var minWeight = (1-weightDiff)*estimatedWeight;
                     var maxWeight = (1+weightDiff)*estimatedWeight;
                     if(boxSize == "" || boxSize == null || boxWeight == "" || boxWeight == null){
@@ -41,10 +41,12 @@
                         alert("Box Size can't be Migrate");
                         return false;
                     }
-//                    else if(parseFloat(boxWeight)< minWeight || parseFloat(boxWeight) > maxWeight){
-//                        alert("Box Weight is Out of Range");
-//                        return false;
-//                    }
+                    else if(parseFloat(boxWeight) < minWeight || parseFloat(boxWeight) > maxWeight){
+                        //alert("Box Weight is Out of Range");
+                        //return false;
+                      var proceed = confirm("Box Weight (" + boxWeight + ") is Out of Range [" + minWeight + "-" + maxWeight + "] - Are you sure you want to continue?");
+                      if (!proceed) return false;
+                    }
                     else if(picker == "" || packer == "" || picker == null || packer == null){
                         alert("You must select a Picker and Packer!!");
                         return false;

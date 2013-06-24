@@ -564,7 +564,7 @@ public class ProductServiceImpl implements ProductService {
           solrProduct.setHkPrice(combo.getHkPrice());
           solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
         } else {
-          productVariant = product.getMaximumDiscountProducVariant();
+          productVariant = product.getInStockMaximumDiscountProductVariant();
           if (productVariant.getDiscountPercent() != null) {
             solrProduct.setHkPrice(productVariant.getHkPrice());
             solrProduct.setMarkedPrice(productVariant.getMarkedPrice());
@@ -667,11 +667,11 @@ public class ProductServiceImpl implements ProductService {
     productVO.setDeleted(product.isDeleted());
     productVO.setHidden(product.isHidden());
     productVO.setOutOfStock(product.isOutOfStock());
-    if (product instanceof Combo)
+    if (product.isCombo())
       productVO.setCombo(true);
     else {
       productVO.setCombo(false);
-      ProductVariant maxDiscountVariant = product.getMaximumDiscountProducVariant();
+      ProductVariant maxDiscountVariant = product.getInStockMaximumDiscountProductVariant();
       if (maxDiscountVariant != null && maxDiscountVariant.getId() != null) {
         productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
         productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice() + (product.getService() ? maxDiscountVariant.getPostpaidAmount() : 0.0));

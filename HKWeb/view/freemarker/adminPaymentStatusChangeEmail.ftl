@@ -1,6 +1,7 @@
+Payment Status Change Alert Mail To Admin
 <html>
 <head>
-    <title>Request Sent To HK Payment Admin</title>
+    <title>Payment Status Change Alert Mail To Admin</title>
 </head>
 
 <p style="margin-bottom:1em">Hi Admin,</p>

@@ -15,7 +15,7 @@
                 &nbsp; &nbsp;
                 <label>Name:</label><s:text name="supplierName" style="width:150px"/>
 	            &nbsp; &nbsp;
-                <label>Status:</label><label>Status:</label><s:select name="status">
+                <label>Status:</label><s:select name="status">
 			        <s:option value="">-ALL-</s:option>
 			        <s:option value="true">Active</s:option>
 			        <s:option value="false">Inactive</s:option>
@@ -72,9 +72,9 @@
 		                    <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
 			                    <s:param name="supplier" value="${supplier.id}"/></s:link>
 		                    <br/>
-		                    <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
+		                    <%-- <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
 			                    Raise Debit Note
-			                    <s:param name="supplier" value="${supplier.id}"/></s:link>
+			                    <s:param name="supplier" value="${supplier.id}"/></s:link> --%>
 	                    </c:if>
                     </td>
                 </tr>

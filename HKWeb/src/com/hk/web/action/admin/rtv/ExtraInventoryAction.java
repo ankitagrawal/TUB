@@ -123,6 +123,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	private Boolean sameState;
 	private String supplierState;
 	private String warehouseState;
+	private Double shippingChargeHk;
+	private Double shippingChargeVendor;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -444,6 +446,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 				courierPickupDetail = getCourierPickupService().save(courierPickupDetail);
 				rtvNote.setCourierPickupDetail(courierPickupDetail);
 			}
+			rtvNote.setShippingChargeHk(shippingChargeHk);
+			rtvNote.setShippingChargeVendor(shippingChargeVendor);
 			rtvNote.setDestinationAddress(destinationAddress);
 			rtvNote = getRtvNoteService().save(rtvNote);
 		}
@@ -987,6 +991,22 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 
 	public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
 		this.purchaseOrder = purchaseOrder;
+	}
+
+	public Double getShippingChargeHk() {
+		return shippingChargeHk;
+	}
+
+	public void setShippingChargeHk(Double shippingChargeHk) {
+		this.shippingChargeHk = shippingChargeHk;
+	}
+
+	public Double getShippingChargeVendor() {
+		return shippingChargeVendor;
+	}
+
+	public void setShippingChargeVendor(Double shippingChargeVendor) {
+		this.shippingChargeVendor = shippingChargeVendor;
 	}
 	
 }

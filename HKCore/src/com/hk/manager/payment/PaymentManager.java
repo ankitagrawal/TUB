@@ -4,7 +4,6 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -23,17 +22,14 @@ import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
-import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.service.ServiceLocatorFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-
 import com.hk.util.TokenUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -216,7 +212,6 @@ public class PaymentManager {
         return associateToOrder(gatewayOrderId, null);
     }
 
-    @Transactional
     public Order associateToOrder(String gatewayOrderId, String gatewayReferenceId) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 
@@ -232,10 +227,8 @@ public class PaymentManager {
             // if order already has a payment associated, simply update the association
             if (payment.getOrder().getPayment() != null) {
                 payment.getOrder().setPayment(payment);
-                getOrderService().save(payment.getOrder());
-            } else {
-                order = getOrderManager().orderPaymentReceieved(payment);
             }
+            order = processOrder(payment);
         }
         return order;
     }
@@ -244,7 +237,30 @@ public class PaymentManager {
         return success(gatewayOrderId, null);
     }
 
-    @Transactional
+    public Order success(String gatewayOrderId, String gatewayReferenceId) {
+        return success(gatewayOrderId, gatewayReferenceId, null, null, null);
+    }
+
+    public Order authPending(String gatewayOrderId, String codContactName, String codContactPhone,
+                             String bankName, String bankBranch, String backCity, String chequeNumber){
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        Order order = null;
+        if (payment != null) {
+            payment.setContactName(codContactName);
+            payment.setContactNumber(codContactPhone);
+            if(payment.getPaymentDate() == null){
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            }
+            payment.setBankName(bankName);
+            payment.setBankBranch(bankBranch);
+            payment.setBankCity(backCity);
+            payment.setChequeNumber(chequeNumber);
+            order =  processOrder(payment);
+            orderEventPublisher.publishOrderPlacedEvent(order);
+        }
+        return order;
+    }
+
     public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 
@@ -259,146 +275,101 @@ public class PaymentManager {
             payment.setResponseMessage(responseMessage);
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
-            payment = paymentDao.save(payment);
-            order = getOrderManager().orderPaymentReceieved(payment);
-            /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
-            notifyPaymentSuccess(order);
+            order = processOrder(payment);
         }
+        orderEventPublisher.publishOrderPlacedEvent(order);
         return order;
     }
 
     @Transactional
-    public Order success(String gatewayOrderId, String gatewayReferenceId) {
-        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-
-        Order order = null;
-        // if payment type is full, then send order to processing also, else just accept and update payment status
-        if (payment != null) {
-            if (payment.getPaymentDate() == null) {
-                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-            }
-            if (StringUtils.isBlank(gatewayReferenceId)) {
-                gatewayReferenceId = gatewayOrderId;
-            }
-            payment.setGatewayReferenceId(gatewayReferenceId);
-            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
-            payment = paymentDao.save(payment);
-            order = getOrderManager().orderPaymentReceieved(payment);
-            /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
-            notifyPaymentSuccess(order);
-        }
+    public Order processOrder(Payment payment){
+        payment = paymentDao.save(payment);
+        Order order = getOrderManager().orderPaymentReceieved(payment);
+        /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
+        notifyPaymentSuccess(order);
         return order;
     }
 
-    @Transactional
     public Order codSuccess(String gatewayOrderId, String codContactName, String codContactPhone, boolean shouldCodCall) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         Order order = null;
         if (payment != null) {
-            payment.setContactName(codContactName);
-            payment.setContactNumber(codContactPhone);
-
-            // todo refactor later. currently increasing the payment amount with added COD charge inside order manager
-            // call (depends on whether COD is applicable)
-            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-            payment.setGatewayReferenceId(null);
             Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
             if (orderCount != null && orderCount >= 2) {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
             } else {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
             }
-            payment = paymentDao.save(payment);
-            order = getOrderManager().orderPaymentReceieved(payment);
-            if (shouldCodCall) {
-                if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
-                    /* Make JMS Call For COD Confirmation Only Once*/
-                    Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
-                    if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
-                        try {
-                            boolean messagePublished = orderEventPublisher.publishCODEvent(order);
-                            UserCodCall userCodCall = null;
-
-                            if (order.getUserCodCall() != null) {
-                                userCodCall = order.getUserCodCall();
-                            }
-
-                            if (messagePublished) {
-                                if (userCodCall != null) {
-                                    EnumUserCodCalling thirdPartyPending = EnumUserCodCalling.PENDING_WITH_KNOWLARITY;
-                                    userCodCall.setRemark(thirdPartyPending.getName());
-                                    userCodCall.setCallStatus(thirdPartyPending.getId());
-                                } else {
-                                    userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_KNOWLARITY);
-                                }
-
-                            } else {
-                                if (userCodCall != null) {
-                                    EnumUserCodCalling thirdPartyFailed = EnumUserCodCalling.THIRD_PARTY_FAILED;
-                                    userCodCall.setRemark(thirdPartyFailed.getName());
-                                    userCodCall.setCallStatus(thirdPartyFailed.getId());
-                                } else {
-                                    userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
-                                }
-                            }
-                            if (userCodCall != null) {
-                                orderService.saveUserCodCall(userCodCall);
-                            }
-                        } catch (DataIntegrityViolationException dataInt) {
-                            logger.error("Exception in  inserting  Duplicate UserCodCall by publishing COD : " + dataInt.getMessage());
-                        } catch (Exception ex) {
-                            logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
-                        }
-                    }
-
-                }
-            }
+            order = authPending(gatewayOrderId,codContactName,codContactPhone,null,null,null,null);
+            pushCODToThirdParty(shouldCodCall, payment);
         }
-        /* Call CodPayment Success */
-        notifyPaymentSuccess(order);
         return order;
     }
 
-    @Transactional
+    private void pushCODToThirdParty(boolean shouldCodCall, Payment payment) {
+        Order order = payment.getOrder();
+        if (shouldCodCall) {
+            if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
+                /* Make JMS Call For COD Confirmation Only Once*/
+                Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
+                if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
+                    try {
+                        boolean messagePublished = orderEventPublisher.publishCODEvent(order);
+                        UserCodCall userCodCall = null;
+
+                        if (order.getUserCodCall() != null) {
+                            userCodCall = order.getUserCodCall();
+                        }
+
+                        if (messagePublished) {
+                            if (userCodCall != null) {
+                                EnumUserCodCalling thirdPartyPending = EnumUserCodCalling.PENDING_WITH_KNOWLARITY;
+                                userCodCall.setRemark(thirdPartyPending.getName());
+                                userCodCall.setCallStatus(thirdPartyPending.getId());
+                            } else {
+                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_KNOWLARITY);
+                            }
+
+                        } else {
+                            if (userCodCall != null) {
+                                EnumUserCodCalling thirdPartyFailed = EnumUserCodCalling.THIRD_PARTY_FAILED;
+                                userCodCall.setRemark(thirdPartyFailed.getName());
+                                userCodCall.setCallStatus(thirdPartyFailed.getId());
+                            } else {
+                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                            }
+                        }
+                        if (userCodCall != null) {
+                            orderService.saveUserCodCall(userCodCall);
+                        }
+                    } catch (DataIntegrityViolationException dataInt) {
+                        logger.error("Exception in  inserting  Duplicate UserCodCall by publishing COD : " + dataInt.getMessage());
+                    } catch (Exception ex) {
+                        logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+                    }
+                }
+
+            }
+        }
+    }
+
     public Order chequeCashSuccess(String gatewayOrderId, String bankName, String bankBranch, String backCity, PaymentMode paymentMode, String chequeNumber) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         Order order = null;
         if (payment != null) {
-            payment.setBankName(bankName);
-            payment.setBankBranch(bankBranch);
-            payment.setBankCity(backCity);
-            payment.setPaymentMode(paymentMode);
-            payment.setChequeNumber(chequeNumber);
-
-            // todo refactor later. currently increasing the payment amount with added COD charge inside order manager
-            // call (depends on whether COD is applicable)
-            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-            payment.setGatewayReferenceId(null);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-            paymentDao.save(payment);
-            order = getOrderManager().orderPaymentReceieved(payment);
-            /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
-            notifyPaymentSuccess(order);
-
+            order = authPending(gatewayOrderId,null,null,bankName,bankBranch,backCity,chequeNumber);
         }
         return order;
     }
 
-    @Transactional
     public Order counterCashSuccess(String gatewayOrderId, PaymentMode paymentMode) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         Order order = null;
         if (payment != null) {
             payment.setPaymentMode(paymentMode);
-            // todo refactor later. currently increasing the payment amount with added COD charge inside order manager
-            // call (depends on whether COD is applicable)
-            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-            payment.setGatewayReferenceId(null);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-            paymentDao.save(payment);
-            order = getOrderManager().orderPaymentReceieved(payment);
-            /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
-            notifyPaymentSuccess(order);
+            order = authPending(gatewayOrderId,null,null,null,null,null,null);
         }
         return order;
     }
@@ -407,25 +378,17 @@ public class PaymentManager {
         return pendingApproval(gatewayOrderId, null);
     }
 
-    @Transactional
     public Order pendingApproval(String gatewayOrderId, String gatewayReferenceId) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-
         Order order = null;
-        // if payment type is full, then send order to processing also, else just accept and update payment status
         if (payment != null) {
-            if (payment.getPaymentDate() == null) {
-                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-            }
             if (StringUtils.isBlank(gatewayReferenceId)) {
                 gatewayReferenceId = gatewayOrderId;
             }
             payment.setGatewayReferenceId(gatewayReferenceId);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-            payment = getPaymentService().save(payment);
-            order = getOrderManager().orderPaymentAuthPending(payment);
+            order = authPending(gatewayOrderId,gatewayReferenceId,null,null,null,null,null);
         }
-        initiatePaymentFailureCall(order);
         return order;
     }
 
@@ -520,13 +483,13 @@ public class PaymentManager {
         }
     }
 
-    public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
+    /*public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
         HkPaymentService hkPaymentService = null;
         if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
             hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
         }
         return hkPaymentService;
-    }
+    }*/
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus){
         return oldStatus.getId().equals(changedStatus.getId());

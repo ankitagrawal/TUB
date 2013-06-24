@@ -1,0 +1,70 @@
+.clr				{ 
+					clear:both;
+					}
+			
+.nRow				{
+					width:100%;
+					clear:both;
+					}
+			
+
+.container			{
+					width:960px;
+					clear:both;
+					margin:0 auto;
+					text-align:left;
+					}
+					
+
+.pCarePageSec1 h1	{ margin:0px; padding:20px 0px 10px 0px; color:#c62535; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif;}
+.pCarePageSec1 h2	{ margin:0px; padding:0px; color:#c62535; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif;}
+
+.pCarePageSec1 h1 a			{ text-decoration:none; margin:0px; padding:20px 0px 10px 0px; color:#c62535; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif; outline:none; border:none;}
+.pCarePageSec1 h1 a:hover	{ color:#c62535; text-decoration:none; outline:none; border:none;}
+
+.pCarePageSec1 h2 a			{ text-decoration:none; margin:0px; padding:0px; color:#c62535; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif; outline:none; border:none;}
+.pCarePageSec1 h2 a:hover	{ color:#c62535; text-decoration:none; outline:none; border:none;}
+
+
+
+
+
+.pCarePageSec2 h1	{ margin:0px; padding:20px 0px 10px 0px; color:#963f24; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif;}
+.pCarePageSec2 h2	{ margin:0px; padding:0px; color:#963f24; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif;}
+
+.pCarePageSec2 h1 a			{ text-decoration:none; margin:0px; padding:20px 0px 10px 0px; color:#963f24; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif; border:none; outline:none;}
+.pCarePageSec2 h1 a:hover	{ color:#963f24; text-decoration:none; border:none; outline:none;}
+
+.pCarePageSec2 h2 a			{ color:#963f24; text-decoration:none; margin:0px; padding:0px; color:#963f24; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif; border:none; outline:none;}
+.pCarePageSec2 h2 a:hover	{ text-decoration:none; color:#963f24; border:none; outline:none;}
+
+
+
+
+
+.pCarePageSec3 h1	{ margin:0px; padding:20px 0px 10px 0px; color:#ce9114; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif;}
+.pCarePageSec3 h2	{ margin:0px; padding:0px; color:#ce9114; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif;}
+
+.pCarePageSec3 h1 a			{ text-decoration:none; margin:0px; padding:20px 0px 10px 0px; color:#ce9114; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif; border:none; outline:none;}
+.pCarePageSec3 h1 a:hover	{ color:#ce9114; text-decoration:none; border:none; outline:none;}
+
+.pCarePageSec3 h2 a			{ text-decoration:none; margin:0px; padding:0px; color:#ce9114; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif; border:none; outline:none;}
+.pCarePageSec3 h2 a:hover	{ color:#ce9114; text-decoration:none; border:none; outline:none;}
+
+
+
+
+
+.pCarePageSec4 h1	{ margin:0px; padding:20px 0px 10px 0px; color:#0f90a1; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif;}
+.pCarePageSec4 h2	{ margin:0px; padding:0px; color:#0f90a1; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif;}
+
+.pCarePageSec4 h1 a			{ text-decoration:none; margin:0px; padding:20px 0px 10px 0px; color:#0f90a1; font-size:48px; font-weight:bold; line-height:32px; font-family:Arial, Helvetica, sans-serif; border:none; outline:none;}
+.pCarePageSec4 h1 a:hover	{ color:#0f90a1; text-decoration:none; border:none; outline:none;}
+
+.pCarePageSec4 h2 a			{ text-decoration:none; margin:0px; padding:0px; color:#0f90a1; font-size:21px; font-weight:normal; font-family:Arial, Helvetica, sans-serif; border:none; outline:none;}
+.pCarePageSec4 h2 a:hover	{ color:#0f90a1; text-decoration:none; border:none; outline:none;}
+
+
+
+
+.deviderGLine		{ width:910px; clear:both; height:7px; line-height:7px; background:#bcbcbc; margin:20px 0px 10px 0px;}

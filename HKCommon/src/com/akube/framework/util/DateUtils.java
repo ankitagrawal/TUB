@@ -2,10 +2,12 @@ package com.akube.framework.util;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -138,9 +140,19 @@ public class DateUtils {
         return formatter.parseDateTime(dateString);
     }
 
+    /*
+    * very specific to query transaction List from ICICI and citrus gateway
+    * input gateways want in YYYYMMDD format
+    * */
+    public static String getStringFromDate(Date date){
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = formatter.format(date);
+        return formattedDate.replace("-","");
+    }
+
 
     public static void main(String[] args) {
-    System.out.println(getEndOfDay(BaseUtils.getCurrentTimestamp()));
+    System.out.println(getStringFromDate(BaseUtils.getCurrentTimestamp()));
   }
 
   public static final String timeRegex = "([0-9][0-9]?:[0-5][0-9])( *)(AM|PM|am|pm|aM|Am|Pm|pM)";
