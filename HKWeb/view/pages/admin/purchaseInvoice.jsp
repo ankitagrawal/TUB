@@ -481,6 +481,8 @@ width: 80px;
 			$("#createDebitNoteButton").hide();
 		}
 		
+		$("#difference").text(${(pia.purchaseInvoice.piRtvShortTotal-pia.purchaseInvoice.physicalInvoiceAmount)}.toFixed(2));
+		
 	});
 </script>
 </s:layout-component>
@@ -1295,12 +1297,20 @@ width: 80px;
 
 </tr>
 <tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td colspan="4"></td>
 <td><strong>Overall Total</strong></td>
 <td><strong>${pia.purchaseInvoice.piRtvShortTotal }</strong></td>
+
+<tr>
+<td colspan="4"></td>
+<td><strong>Physical Invoice Amount</strong></td>
+<td><strong>${pia.purchaseInvoice.physicalInvoiceAmount }</strong></td>
+</tr>
+
+<tr>
+<td colspan="4"></td>
+<td><strong><i>Difference</i></strong></td>
+<td id="difference"><strong></strong></td>
 </tr>
 </table>
 </fieldset>

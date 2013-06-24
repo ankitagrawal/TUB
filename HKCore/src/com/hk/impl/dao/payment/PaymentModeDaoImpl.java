@@ -40,29 +40,5 @@ public class PaymentModeDaoImpl extends BaseDaoImpl implements PaymentModeDao {
         return criteria.list();
     }
 
-    @Override
-    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses) {
-        DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
-        if(paymentModes != null && !paymentModes.isEmpty()){
-            paymentCriteria.add(Restrictions.in("paymentMode", paymentModes));
-        }
-        if(paymentStatuses != null && !paymentStatuses.isEmpty()){
-            paymentCriteria.add(Restrictions.in("paymentStatus", paymentStatuses));
-        }
-        if(gatewayOrderId != null){
-            paymentCriteria.add(Restrictions.eq("gatewayOrderId", gatewayOrderId));
-        }
-        if(order != null){
-            paymentCriteria.add(Restrictions.eq("order", order));
-        }
-        if(startCreateDate != null && endCreateDate != null){
-            paymentCriteria.add(Restrictions.between("createDate", startCreateDate, endCreateDate));
-        }
-        if(orderStatuses != null){
-            DetachedCriteria orderCriteria = paymentCriteria.createCriteria("order");
-            orderCriteria.add(Restrictions.in("orderStatus", orderStatuses));
-        }
-        return findByCriteria(paymentCriteria);
-    }
 
 }

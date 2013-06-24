@@ -207,6 +207,8 @@
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList"
                                                value="id" label="name"/>
                 </s:select></td>
+                <td>Supplier Invoice #</td>
+                <td><c:if test="${pa.debitNote.purchaseInvoice!=null }">${pa.debitNote.purchaseInvoice.invoiceNumber}</c:if></td>
 
             </tr>
             <tr>

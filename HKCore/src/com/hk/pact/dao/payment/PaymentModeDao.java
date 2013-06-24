@@ -19,5 +19,4 @@ public interface PaymentModeDao extends BaseDao {
 
     public List<PaymentMode> listWorkingPaymentModes();
 
-    List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes,Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses);
 }
