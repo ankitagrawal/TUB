@@ -234,7 +234,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		query.setParameter("pvId", productVariant.getId());
 		query.setParameterList("whIds", toWarehouseIds(whs));
 		query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
-        query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
+        query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
 		
 		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
 		
