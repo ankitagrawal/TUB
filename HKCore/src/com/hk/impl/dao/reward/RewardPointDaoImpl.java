@@ -27,7 +27,6 @@ import com.hk.pact.dao.reward.RewardPointDao;
 @SuppressWarnings("unchecked")
 @Repository
 public class RewardPointDaoImpl extends BaseDaoImpl implements RewardPointDao {
-    public static final double MAX_REWARD_POINTS = 10000;
     private static Logger      logger            = LoggerFactory.getLogger(RewardPointDao.class);
 
     @Transactional
@@ -54,7 +53,7 @@ public class RewardPointDaoImpl extends BaseDaoImpl implements RewardPointDao {
     public RewardPoint addRewardPoints(User referredBy, User referredUser, Order referredOrder, Double value, String comment, EnumRewardPointStatus rewardPointStatus,
             RewardPointMode rewardPointMode) throws InvalidRewardPointsException {
 
-        if (value >= MAX_REWARD_POINTS) {
+        if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
             throw new InvalidRewardPointsException(value);
         }
         RewardPoint rewardPoint = new RewardPoint();

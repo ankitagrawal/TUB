@@ -27,6 +27,7 @@
 						success: function(resp) {
 							if(resp.code == "error"){
 								qty_box.val(qty-1);
+								error_message.text(resp.message);
 								error_message.addClass('errorMessage').slideDown().delay(3000).slideUp();
 							} else {
 								var rowCount = $("#itemRows").val();

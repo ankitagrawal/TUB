@@ -29,11 +29,11 @@
           <div class="embedMarginTop119"></div>
           <div class="priceFilterContainerOne" style="margin-bottom:30px;">
             <div class="sorting">SORT BY POINTS</div>
+                 <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
                   <div class="priceRange optionBottom">
 			   		<strong><span class="categoryNameSpan" style="font-size: 16px;">
-                  		<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
-                  		clear all </s:link></span></strong>
-			 	  </div> 
+                  		clear all </span></strong>
+			 	  </div></s:link>
                   <c:set var="rangeSelected" value="${lca.rangeSelected}"/>
                   <div class="brandsContainer" >
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
@@ -95,17 +95,16 @@
 			
 		<div class="priceFilterContainerOne">
 			<div class="sorting">SORT BY CATEGORY</div>
+              <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
               <div class="priceRange optionBottom">
 			   <strong><span class="categoryNameSpan" style="font-size: 16px;">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
-                  clear all </s:link></span></strong>
-			 </div>
+                  clear all </span></strong>
+			 </div></s:link>
               <div class="brandsContainer " style ="height: 245px;">
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
             <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
 			 <div class="priceRange">
 			   <span class="categoryNameSpan font-small">
-        	       <s:param name="categoryName" value="${loyaltyCategory.name}"/>
                     <c:choose>
                       <c:when test="${lca.categoryName == loyaltyCategory.name}">
                         <span class="selectedCategory">
@@ -117,6 +116,7 @@
                     </c:choose>
                    </span>
 			     </div>
+        	     <s:param name="categoryName" value="${loyaltyCategory.name}"/>
 			   </s:link>
 			 </c:forEach>
 			</div>
