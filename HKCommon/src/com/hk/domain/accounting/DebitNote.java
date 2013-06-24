@@ -16,12 +16,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.po.PurchaseInvoice;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.warehouse.Warehouse;
 
 @SuppressWarnings("serial")
@@ -62,6 +65,34 @@ public class DebitNote implements java.io.Serializable {
 
     @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "debitNote")
     private Set<DebitNoteLineItem> debitNoteLineItems = new HashSet<DebitNoteLineItem>(0);
+    
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "debit_note_type_id", nullable = false)
+    private DebitNoteType debitNoteType;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="purchase_invoice_id")
+    private PurchaseInvoice purchaseInvoice;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="reconciliation_voucher_id")
+    private ReconciliationVoucher reconciliationVoucher;
+
+    @Column(name = "debit_note_number")
+    private String debitNoteNumber;
+    
+    @Column(name="email_sent_to_vendor")
+    private Boolean emailSentToVendor;
+    
+    @Column(name="freight_forwarding_charges")
+    private Double freightForwardingCharges;
+    
+    @Column(name="final_debit_amount")
+    private Double finalDebitAmount;
+    
+    @Temporal (TemporalType.TIMESTAMP)
+    @Column (name = "close_date", length = 19)
+    private Date closeDate;
 
     public Long getId() {
         return this.id;
@@ -134,6 +165,69 @@ public class DebitNote implements java.io.Serializable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+	public DebitNoteType getDebitNoteType() {
+		return debitNoteType;
+	}
+
+	public void setDebitNoteType(DebitNoteType debitNoteType) {
+		this.debitNoteType = debitNoteType;
+	}
+
+	public PurchaseInvoice getPurchaseInvoice() {
+		return purchaseInvoice;
+	}
+
+	public void setPurchaseInvoice(PurchaseInvoice purchaseInvoice) {
+		this.purchaseInvoice = purchaseInvoice;
+	}
+
+	public ReconciliationVoucher getReconciliationVoucher() {
+		return reconciliationVoucher;
+	}
+
+	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
+		this.reconciliationVoucher = reconciliationVoucher;
+	}
+
+    public String getDebitNoteNumber() {
+        return debitNoteNumber;
+    }
+
+    public void setDebitNoteNumber(String debitNoteNumber) {
+        this.debitNoteNumber = debitNoteNumber;
+    }
+    public Boolean getEmailSentToVendor() {
+		return emailSentToVendor;
+	}
+	
+	public void setEmailSentToVendor(Boolean emailSentToVendor) {
+		this.emailSentToVendor = emailSentToVendor;
+	}
+
+	public Double getFreightForwardingCharges() {
+		return freightForwardingCharges;
+	}
+
+	public void setFreightForwardingCharges(Double freightForwardingCharges) {
+		this.freightForwardingCharges = freightForwardingCharges;
+	}
+
+	public Date getCloseDate() {
+		return closeDate;
+	}
+
+	public void setCloseDate(Date closeDate) {
+		this.closeDate = closeDate;
+	}
+
+	public Double getFinalDebitAmount() {
+		return finalDebitAmount;
+	}
+
+	public void setFinalDebitAmount(Double finalDebitAmount) {
+		this.finalDebitAmount = finalDebitAmount;
+	}
 }
 
 
