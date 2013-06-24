@@ -47,7 +47,7 @@ Label: [brand:Vitamin Shoppe BodyTech]
     }
 
     Boolean newSession = (Boolean) session.getAttribute(HealthkartConstants.Session.newSession);
-//    out.write("new session = "+newSession);
+    out.write("new session = "+newSession);
     if (newSession == null) {
       newSession = false;
 			session.setAttribute(HealthkartConstants.Session.newSession, newSession);
