@@ -72,6 +72,7 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String card = "card";
     public static String issuerRefNo = "issuerRefNo" ;
     public static String signature = "signature";
+    public static String vanityUrl = "vanity_url";
 
 
     public CitrusPaymentGatewayWrapper(String environmemtDir) {

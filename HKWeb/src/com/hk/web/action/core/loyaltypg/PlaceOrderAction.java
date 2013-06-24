@@ -54,7 +54,6 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 		this.shipmentAddress = this.order.getAddress();
 		try {
 			this.getProcessor().makePayment(this.order.getId(), this.getRemoteHostAddr());
-			this.orderEventPublisher.publishOrderPlacedEvent(this.order);
 		} catch (InvalidOrderException e) {
 			this.errorMessage = e.getMessage();
 		}

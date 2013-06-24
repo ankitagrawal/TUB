@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Date;
 
 import com.akube.framework.dao.Page;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
@@ -17,5 +18,7 @@ public interface PurchaseInvoiceDao extends BaseDao {
             String supplierName, int pageNo, int perPage,Boolean isReconciled, Warehouse warehouse, Date startDate, Date endDate);
 
     public List<PurchaseInvoice> listPurchaseInvoiceWithProductVariant(ProductVariant productVariant);
+    
+    public DebitNote getDebitNote(PurchaseInvoice purchaseInvoice);
 
 }

@@ -1,7 +1,10 @@
 package com.hk.pact.service.payment;
 
 import com.hk.domain.payment.Payment;
+import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pojo.HkPaymentResponse;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -13,7 +16,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public interface HkPaymentService {
-    public Map<String, Object> seekHkPaymentResponse(String gatewayOrderId);
+    public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException;
 
-    public Payment updatePayment(String gatewayOrderId);
+    public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException;
 }
