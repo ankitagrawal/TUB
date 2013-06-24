@@ -13232,6 +13232,11 @@
         <addColumn tableName="product_variant">
             <column name="net_qty" type="INT"/>
         </addColumn>
+    </changeSet>     
+    <changeSet author="Ankit (generated)" id="1371733656713-1">
+        <addColumn tableName="sku_group">
+            <column name="status" type="VARCHAR(45)"/>
+        </addColumn>
     </changeSet>
-    
+
 </databaseChangeLog>

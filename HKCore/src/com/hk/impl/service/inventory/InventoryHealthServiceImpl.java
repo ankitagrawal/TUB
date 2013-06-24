@@ -20,6 +20,7 @@ import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
@@ -214,6 +215,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			" inner join sku as c on b.sku_id = c.id" +
 			" where c.product_variant_id = :pvId" +
 			" and c.warehouse_id in (:whIds)" +
+            " and (b.status != :reviewStatus or b.status is null)" +
 			" and a.sku_item_status_id = :itemStatus" +
 			" and b.mrp is not null" +
 			" group by b.id" +
@@ -232,6 +234,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		query.setParameter("pvId", productVariant.getId());
 		query.setParameterList("whIds", toWarehouseIds(whs));
 		query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
+        query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
 		
 		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
 		

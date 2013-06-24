@@ -2,11 +2,13 @@ package com.hk.admin.impl.dao.inventory;
 
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.springframework.stereotype.Repository;
 import org.hibernate.criterion.DetachedCriteria;
@@ -37,20 +39,43 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         return skuGroupList;
     }*/
 
-	public List<SkuGroup> getInStockSkuGroups(List<ProductVariant> productVariantList, Warehouse warehouse) {
-		String query = "select distinct si.skuGroup from SkuItem si where si.skuGroup.sku.productVariant in (:productVariantList) " +
-				" and si.skuGroup.sku.warehouse =:warehouse and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
-				" order by si.skuGroup.expiryDate asc ";
-		List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"productVariantList", "warehouse"}, new Object[]{productVariantList, warehouse});
-		//List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameterList("productVariantList", productVariantList).setParameter("warehouse",warehouse).list();
+    public List<SkuGroup> getInStockSkuGroups(List<ProductVariant> productVariantList, Warehouse warehouse) {
+        String query = "select distinct si.skuGroup from SkuItem si where si.skuGroup.sku.productVariant in (:productVariantList) " +
+                " and si.skuGroup.sku.warehouse =:warehouse and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+                " order by si.skuGroup.expiryDate asc ";
+        List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"productVariantList", "warehouse"}, new Object[]{productVariantList, warehouse});
+        //List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameterList("productVariantList", productVariantList).setParameter("warehouse",warehouse).list();
 
-		if(skuGroupList == null) {
-			skuGroupList = new ArrayList<SkuGroup>(0);
-		}
-		return skuGroupList;
-	}
+        if (skuGroupList == null) {
+            skuGroupList = new ArrayList<SkuGroup>(0);
+        }
+        return skuGroupList;
+    }
 
-	/*public List<SkuGroup> getInStockSkuGroups(Sku sku) {
+
+    public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem) {
+        String query = "select distinct si.skuGroup from SkuItem si where si.skuGroup.sku = :sku " +
+                " and si.skuGroup.mrp =:mrp  and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+                " order by si.skuGroup.expiryDate asc ";
+        List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", lineItem.getSku()).setParameter("mrp", lineItem.getMarkedPrice()).list();
+
+        if (skuGroupList == null) {
+            skuGroupList = new ArrayList<SkuGroup>(0);
+        }
+        return skuGroupList;
+    }
+
+
+     public List<SkuGroup> getSkuGroupsInReviewState(){
+       String query = "select sg from SkuGroup sg  where sg.status = :status";
+        List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("status", (EnumSkuGroupStatus.UNDER_REVIEW)).list();
+         if (skuGroupList == null) {
+            skuGroupList = new ArrayList<SkuGroup>(0);
+        }
+        return skuGroupList;
+     }
+
+    /*public List<SkuGroup> getInStockSkuGroups(Sku sku) {
         List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
         String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null " +
                 "and pvi.sku = :sku group by pvi.skuItem.id having sum(pvi.qty) > 0";
@@ -68,19 +93,19 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         return skuGroupList;
     }*/
 
-	public List<SkuGroup> getInStockSkuGroups(Sku sku) {
-		String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
-				" and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc, si.skuGroup.mfgDate asc, si.skuGroup.createDate asc ";
-		List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
-		//List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
+    public List<SkuGroup> getInStockSkuGroups(Sku sku) {
+        String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+                " and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc, si.skuGroup.mfgDate asc, si.skuGroup.createDate asc ";
+        List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
+        //List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
 
-		if(skuGroupList == null) {
-			skuGroupList = new ArrayList<SkuGroup>(0);
-		}
-		return skuGroupList;
-	}
+        if (skuGroupList == null) {
+            skuGroupList = new ArrayList<SkuGroup>(0);
+        }
+        return skuGroupList;
+    }
 
-	/*public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+    /*public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
         List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
         String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem.skuGroup =:skuGroup group by pvi.skuItem.id having sum(pvi.qty) > 0";
         List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery).setParameter("skuGroup", skuGroup).list();
@@ -91,19 +116,19 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         return inStockSkuItems;
     }*/
 
-	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
-		String query = "select si from SkuItem si where si.skuGroup = :skuGroup and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId();
-		List<SkuItem> inStockSkuItems = findByNamedParams(query, new String[]{"skuGroup"}, new Object[]{skuGroup});
-		//List<SkuItem> inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("skuGroup", skuGroup).list();
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+        String query = "select si from SkuItem si where si.skuGroup = :skuGroup and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId();
+        List<SkuItem> inStockSkuItems = findByNamedParams(query, new String[]{"skuGroup"}, new Object[]{skuGroup});
+        //List<SkuItem> inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("skuGroup", skuGroup).list();
 
-		if(inStockSkuItems == null) {
-			inStockSkuItems = new ArrayList<SkuItem>(0);
-		}
-		return inStockSkuItems;
-	}
+        if (inStockSkuItems == null) {
+            inStockSkuItems = new ArrayList<SkuItem>(0);
+        }
+        return inStockSkuItems;
+    }
 
-	//This seems to be wrong hence deprecating it, please use it at your own risk
-	public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup) {
+    //This seems to be wrong hence deprecating it, please use it at your own risk
+    public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup) {
         List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
         String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem.skuGroup =:skuGroup and pvi.qty = 1";
         List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery).setParameter("skuGroup", skuGroup).list();
@@ -129,18 +154,18 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         return inStockSkuItems;
     }*/
 
-	public List<SkuItem> getInStockSkuItemsBySku(List<Sku> skuList) {
-		String query = "select si from SkuItem si where si.skuGroup.sku in (:skuList) and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId();
-		List<SkuItem> inStockSkuItems = findByNamedParams(query, new String[]{"skuList"}, new Object[]{skuList});
-		//List<SkuItem> inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameterList("skuList", skuList).list();
+    public List<SkuItem> getInStockSkuItemsBySku(List<Sku> skuList) {
+        String query = "select si from SkuItem si where si.skuGroup.sku in (:skuList) and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId();
+        List<SkuItem> inStockSkuItems = findByNamedParams(query, new String[]{"skuList"}, new Object[]{skuList});
+        //List<SkuItem> inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameterList("skuList", skuList).list();
 
-		if(inStockSkuItems == null) {
-			inStockSkuItems = new ArrayList<SkuItem>(0);
-		}
-		return inStockSkuItems;
-	}
+        if (inStockSkuItems == null) {
+            inStockSkuItems = new ArrayList<SkuItem>(0);
+        }
+        return inStockSkuItems;
+    }
 
-	/*public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty) {
+    /*public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty) {
         List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
         String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.sku =:sku " + "group by pvi.skuItem.id having sum(pvi.qty) > 0";
         List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery).setParameter("sku", sku).list();
@@ -155,16 +180,16 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         return inStockSkuItems;
     }*/
 
-	public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty) {
-		String query = "select si from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
-						" and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate ";
-		List<SkuItem> inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("sku", sku).setMaxResults(qty).list();
+    public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty) {
+        String query = "select si from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+                " and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate ";
+        List<SkuItem> inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("sku", sku).setMaxResults(qty).list();
 
-		if(inStockSkuItems == null) {
-			inStockSkuItems = new ArrayList<SkuItem>(0);
-		}
-		return inStockSkuItems;
-	}
+        if (inStockSkuItems == null) {
+            inStockSkuItems = new ArrayList<SkuItem>(0);
+        }
+        return inStockSkuItems;
+    }
 
     public SkuItem getSkuItemToValidateDayZeroInventory(ProductVariant productVariant, String batchNumber) {
         String query = "select si from SkuItem si where si.skuGroup.sku.productVariant = :productVariant and si.skuGroup.batchNumber = :batchNumber";
@@ -187,7 +212,7 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
                 .list();
     }
 
-	public void resetInventoryByBrand(String brand) {
+    public void resetInventoryByBrand(String brand) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().
                 createQuery("select id from SkuItem si where si.skuGroup.sku.productVariant.product.brand = :brand").
                 setParameter("brand", brand).
@@ -231,34 +256,34 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         return skuGroupList;
     }*/
 
-	public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku) {
+    public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku) {
 
-		String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
-				" and si.skuGroup.sku = :sku order by si.skuGroup.createDate asc";
-		List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
-		//List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
+        String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+                " and si.skuGroup.sku = :sku order by si.skuGroup.createDate asc";
+        List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
+        //List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
 
-		if(skuGroupList == null) {
-			skuGroupList = new ArrayList<SkuGroup>(0);
-		}
-		return skuGroupList;
-	}
+        if (skuGroupList == null) {
+            skuGroupList = new ArrayList<SkuGroup>(0);
+        }
+        return skuGroupList;
+    }
 
-	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
-		List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
-		for (SkuGroup skuGroup : skuGroupList) {
-			List<SkuItem> skuItemBykuGroup = getInStockSkuItems(skuGroup);
-			if (skuItemBykuGroup != null && skuItemBykuGroup.size() > 0) {
-				inStockSkuItems.addAll(skuItemBykuGroup);
-			}
-		}
-		return inStockSkuItems;
-	}
+    public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
+        List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
+        for (SkuGroup skuGroup : skuGroupList) {
+            List<SkuItem> skuItemBykuGroup = getInStockSkuItems(skuGroup);
+            if (skuItemBykuGroup != null && skuItemBykuGroup.size() > 0) {
+                inStockSkuItems.addAll(skuItemBykuGroup);
+            }
+        }
+        return inStockSkuItems;
+    }
 
-	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
-		String query = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse " +
-				" and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() + " order by si.id ";
-		return findByNamedParams(query, new String[]{"barcode", "warehouse"}, new Object[]{barcode, warehouse});
-	}
+    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
+        String query = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse " +
+                " and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() + " order by si.id ";
+        return findByNamedParams(query, new String[]{"barcode", "warehouse"}, new Object[]{barcode, warehouse});
+    }
 
 }
