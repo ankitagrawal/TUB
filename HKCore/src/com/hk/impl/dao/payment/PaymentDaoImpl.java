@@ -1,7 +1,15 @@
 package com.hk.impl.dao.payment;
 
+import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.core.OrderStatus;
+import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.PaymentStatus;
+import com.hk.domain.order.Order;
+import com.hk.domain.payment.Gateway;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +52,39 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
 //         String query = "from CurrencyConverter cc where cc.updateDate in ( select max( cc1.updateDate )from CurrencyConverter  cc1 where  cc1.baseCurrencyCode = baseCurrencyCode  and  cc1.foreignCurrencyCode = foreignCurrencyCode) ";
           String query = "from CurrencyConverter cc where  cc.baseCurrencyCode = baseCurrencyCode  and  cc.foreignCurrencyCode = foreignCurrencyCode";
           return (CurrencyConverter) getSession().createQuery(query).uniqueResult();
+    }
+
+    @Override
+    public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId,
+                                        List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate,
+                                        List<OrderStatus> orderStatuses, Payment salePayment,List<Gateway> gatewayList) {
+        DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
+        if(paymentModes != null && !paymentModes.isEmpty()){
+            paymentCriteria.add(Restrictions.in("paymentMode", paymentModes));
+        }
+        if(paymentStatuses != null && !paymentStatuses.isEmpty()){
+            paymentCriteria.add(Restrictions.in("paymentStatus", paymentStatuses));
+        }
+        if(gatewayOrderId != null){
+            paymentCriteria.add(Restrictions.eq("gatewayOrderId", gatewayOrderId));
+        }
+        if(order != null){
+            paymentCriteria.add(Restrictions.eq("order", order));
+        }
+        if(startCreateDate != null && endCreateDate != null){
+            paymentCriteria.add(Restrictions.between("createDate", startCreateDate, endCreateDate));
+        }
+        if(orderStatuses != null){
+            DetachedCriteria orderCriteria = paymentCriteria.createCriteria("order");
+            orderCriteria.add(Restrictions.in("orderStatus", orderStatuses));
+        }
+        if(salePayment != null){
+            paymentCriteria.add(Restrictions.eq("parent",salePayment));
+        }
+        if(gatewayList != null){
+            paymentCriteria.add(Restrictions.in("gateway",gatewayList));
+        }
+        return findByCriteria(paymentCriteria);
     }
 
 }
