@@ -116,6 +116,7 @@ public class Keys {
         public static final String dbPort                          = "dbPort";
 
         public static final String healthkartRestUrl               = "healthkartRestUrl";
+        public static final String deploymentEnvironment           = "deploymentEnvironment";
 
         public static final String fedExServerUrl                  = "fedExServerUrl";
         public static final String fedExAuthKey                    = "fedExAuthKey";
