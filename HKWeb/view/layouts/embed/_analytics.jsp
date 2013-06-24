@@ -23,6 +23,9 @@ Label: [brand:Vitamin Shoppe BodyTech]
     String urlFragment = (String) pageContext.getAttribute("urlFragment");
     pageContext.setAttribute("urlFragment", urlFragment);
 
+	  Boolean isProd = (Boolean) pageContext.getAttribute("isProd");
+	  pageContext.setAttribute("isProd", isProd);
+
     if (AnalyticsConstants.analytics) {
   %>
   <script type="text/javascript">
@@ -44,7 +47,10 @@ Label: [brand:Vitamin Shoppe BodyTech]
     }
 
     Boolean newSession = (Boolean) session.getAttribute(HealthkartConstants.Session.newSession);
+//    out.write("new session = "+newSession);
     if (newSession == null) {
+      newSession = false;
+			session.setAttribute(HealthkartConstants.Session.newSession, newSession);
       // this is a new session!
         String originalUrlHeader = (String) request.getAttribute("javax.servlet.forward.request_uri");
         if (originalUrlHeader == null) {
@@ -53,7 +59,6 @@ Label: [brand:Vitamin Shoppe BodyTech]
         pageContext.setAttribute("originalUrlHeader", originalUrlHeader);
         // the landing page URL gives us info on the context of this page
         // or we can also use the variables passed in
-        if (StringUtils.isBlank(urlFragment)) {
   %>
     _gaq.push(['_setCustomVar',
       <%=AnalyticsConstants.CustomVarSlot.lpBrand.getSlot()%>,
@@ -74,11 +79,15 @@ Label: [brand:Vitamin Shoppe BodyTech]
       <%=AnalyticsConstants.CustomVarSlot.lpCatTree.getScope().getLevel()%>
     ]);
   <%
-        }
     }
   %>
+    <%
+    if (isProd != null && isProd == true) {
+    %>
     _gaq.push(['_trackEvent','brandProdPageView','${isOutOfStockPage?"OOS":"InStock"}','${brand}']);
-
+    <%
+    }
+    %>
     _gaq.push(['_trackPageview']);
     (function() {
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
