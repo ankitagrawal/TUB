@@ -114,6 +114,75 @@ public class TaxUtil {
 		payable = taxable + tax + surcharge;
 		return new TaxComponent(surcharge, tax, payable, taxRate);
 	}
+    
+    /**
+     * In case when varied taxes on line Items and CST 2% not appl.(with SKU)
+     * @param supplier
+     * @param sku
+     * @param taxable
+     * @return
+     */
+    public static TaxComponent getSupplierTaxForVariedTaxRatesWithSku(Supplier supplier, Sku sku, Tax taxValue, Double taxable) {
+		Double tax = 0.0D, surcharge = 0.0D, payable = 0.0D, taxRate = 0.0D;
+	    taxRate = taxValue.getValue();
+		String warehouseState = sku.getWarehouse().getState();
+		if (supplier != null && supplier.getState() != null
+				&& sku != null && sku.getTax() != null) {
+
+			if (supplier.getState().equalsIgnoreCase(warehouseState)) {
+				tax = taxRate * taxable;
+				/**
+				 * Surchage calculated only for Haryana
+				 */
+				if (warehouseState.equalsIgnoreCase(StateList.HARYANA)) {
+					Double surchargeValue = getSurchargeValue(warehouseState, supplier.getState());
+					surcharge = tax * surchargeValue;
+				}
+			} else {
+				if (taxRate != 0.0) {
+					tax = taxRate * taxable;
+					//surcharge = tax * StateList.SURCHARGE;
+				}
+			}
+		}
+		payable = taxable + tax + surcharge;
+		return new TaxComponent(surcharge, tax, payable, taxRate);
+	}
+    
+    /**
+     * In case when varied taxes on line Items and CST 2% not appl.(without SKU)
+     * @param supplier
+     * @param warehouseState
+     * @param taxValue
+     * @param taxable
+     * @return
+     */
+    
+    public static TaxComponent getSupplierTaxForVariedTaxRatesWithoutSku(Supplier supplier, String warehouseState, Tax taxValue, Double taxable) {
+		Double tax = 0.0D, surcharge = 0.0D, payable = 0.0D, taxRate = 0.0D;
+	    taxRate = taxValue.getValue();
+		//String warehouseState = sku.getWarehouse().getState();
+		if (supplier != null && supplier.getState() != null) {
+
+			if (supplier.getState().equalsIgnoreCase(warehouseState)) {
+				tax = taxRate * taxable;
+				/**
+				 * Surchage calculated only for Haryana
+				 */
+				if (warehouseState.equalsIgnoreCase(StateList.HARYANA)) {
+					Double surchargeValue = getSurchargeValue(warehouseState, supplier.getState());
+					surcharge = tax * surchargeValue;
+				}
+			} else {
+				if (taxRate != 0.0) {
+					tax = taxRate * taxable;
+					//surcharge = tax * StateList.SURCHARGE;
+				}
+			}
+		}
+		payable = taxable + tax + surcharge;
+		return new TaxComponent(surcharge, tax, payable, taxRate);
+	}
 
     
     public static Double getSurchargeValue(String warehouseState, String supplierState){

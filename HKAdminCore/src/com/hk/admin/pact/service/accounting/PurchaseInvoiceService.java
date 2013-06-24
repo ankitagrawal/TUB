@@ -1,6 +1,7 @@
 package com.hk.admin.pact.service.accounting;
 
 import com.akube.framework.dao.Page;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
@@ -27,5 +28,7 @@ public interface PurchaseInvoiceService {
 	public List<PurchaseInvoice> listPurchaseInvoiceWithProductVariant(ProductVariant productVariant);
 
 	public PurchaseInvoice getPurchaseInvoiceById(Long purchaseInvoiceId);
+	
+	public DebitNote getDebitNote(PurchaseInvoice purchaseInvoice);
 
 }

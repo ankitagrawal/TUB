@@ -77,7 +77,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentCreditDebitGatewayUrl());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.reqtime, new Date().getTime());
 
-        String vanityURLPart = CitrusPaymentGatewayWrapper.vanityURLPart;
+        String vanityURLPart = properties.getProperty(CitrusPaymentGatewayWrapper.vanityUrl);
         String tdp = vanityURLPart + amountStr + merchantTxnId + currency;
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.secSignature, RequestSignature.generateHMAC(tdp, key));
 

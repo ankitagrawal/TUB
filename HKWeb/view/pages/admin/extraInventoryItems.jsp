@@ -80,9 +80,6 @@ $(document).ready(function () {
                 obj.parent().parent().children('td.skuId').children('.skus').val(res.data.sku.id);
                 var checkLength = res.data.productName;
                 var finalProName = res.data.productName;
-                if (checkLength.length > 45) {
-                    finalProName = finalProName.substring(0, 44);
-                }
                 obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
                 obj.parent().parent().children('td.taxClass').children('.taxValue').val(res.data.taxId);
                 $('#checkRtvStatus').remove();
@@ -302,7 +299,7 @@ $(document).ready(function () {
                 '</td>' +
                 '<input type="hidden" name="extraInventoryLineItems[' + nextIndex + '].id" />' +
                 '  <td class="proName">' +
-                '    <input type="text" class="productName" maxlength="45" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
+                '    <input type="text" class="productName" name="extraInventoryLineItems[' + nextIndex + '].productName" />' +
                 '  </td>' +
                 '  <td>' +
                 '    <input class="mrp valueChange" type="text" name="extraInventoryLineItems[' + nextIndex + '].mrp" />' +
@@ -585,7 +582,7 @@ $(document).ready(function () {
                                       value="${eInLineItems.productName}"/>
                         </c:when>
                         <c:otherwise>
-                            <input type="text" class="productName" maxlength="45"
+                            <input type="text" class="productName"
                                    name="extraInventoryLineItems[${ctr.index}].productName"
                                    value="${eInLineItems.productName}"/>
                         </c:otherwise>
