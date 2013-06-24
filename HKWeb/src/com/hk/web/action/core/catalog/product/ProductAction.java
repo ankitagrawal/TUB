@@ -1,24 +1,5 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import com.shiro.PrincipalImpl;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
@@ -49,11 +30,20 @@ import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.pact.service.image.ProductImageService;
-import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.search.ProductSearchService;
+import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
+import com.shiro.PrincipalImpl;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
+
+import java.util.*;
 
 @UrlBinding("/product/{productSlug}/{productId}")
 @Component
@@ -158,10 +148,10 @@ public class ProductAction extends BaseAction {
       if (!product.isDeleted()) {
         if (product.getProductVariants() != null && product.getProductVariants().size() > 1) {
           // multiple products
+	        isOutOfStockPage = true;
           for (ProductVariant productVariant: product.getProductVariants()) {
-            if (!productVariant.isDeleted() && productVariant.isOutOfStock()) {
-              isOutOfStockPage = true;
-              break;
+            if (!productVariant.isDeleted() && !productVariant.isOutOfStock()) {
+              isOutOfStockPage = false;
             }
           }
         } else if (product.getProductVariants() != null) {
