@@ -21,6 +21,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
@@ -36,6 +37,9 @@ import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryHealthService.InventoryInfo;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
@@ -81,6 +85,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     
     @Autowired
     private LoyaltyProgramService loyaltyProgramService;
+    
+    @Autowired InventoryHealthService inventoryHealthService;
+    
+    @Autowired BaseDao baseDao;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
@@ -110,34 +118,61 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
     }
 
-    public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
-        Map<Long, Sku> lineItemToSkuUpdate = new HashMap<Long, Sku>();
+	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
+		Set<LineItem> lineItems = shippingOrder.getLineItems();
+		boolean shouldUpdate = true;
+		try {
+			for (LineItem lineItem : lineItems) {
+				List<Sku> skus = this.getPreferredSkus(
+						lineItem.getCartLineItem().getProductVariant(), lineItem.getMarkedPrice(), lineItem.getQty());
 
-        boolean shouldUpdate = true;
-        Set<LineItem> lineItems = shippingOrder.getLineItems();
-        try {
-        for (LineItem lineItem : lineItems) {
-            Sku skuInOtherWarehouse = getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse);
-                lineItemToSkuUpdate.put(lineItem.getId(), skuInOtherWarehouse);
-        }
-        }catch(NoSkuException noSku){
-        shouldUpdate = false;
-        }
-        if (shouldUpdate) {
-            for (LineItem lineItem : lineItems) {
-                lineItem.setSku(lineItemToSkuUpdate.get(lineItem.getId()));
-            }
-            shippingOrder.setWarehouse(warehouse);
-	        shipmentService.recreateShipment(shippingOrder);
-            shippingOrder = getShippingOrderService().save(shippingOrder);
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
+				for (Sku sku : skus) {
+					if (sku.getWarehouse().getId() == warehouse.getId()) {
+						lineItem.setSku(sku);
+					}
+				}
+			}
 
-            // Re-checkin checkedout inventory in case of flipping.
-            getAdminInventoryService().reCheckInInventory(shippingOrder);
-        }
+			for (LineItem lineItem : lineItems) {
+				if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
+					shouldUpdate = false;
+				}
+			}
 
-        return shouldUpdate;
-    }
+			if (shouldUpdate) {
+				shippingOrder.setWarehouse(warehouse);
+				shipmentService.recreateShipment(shippingOrder);
+				shippingOrder = getShippingOrderService().save(shippingOrder);
+				getShippingOrderService().logShippingOrderActivity(shippingOrder,
+						EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
+
+				// Re-checkin checkedout inventory in case of flipping.
+				getAdminInventoryService().reCheckInInventory(shippingOrder);
+
+			}
+
+		} catch (NoSkuException noSku) {
+			shouldUpdate = false;
+		}
+		return shouldUpdate;
+	}
+	
+	private List<Sku> getPreferredSkus(ProductVariant variant, Double preferredMrp, Long qty) {
+		List<Sku> skus = new ArrayList<Sku>();
+		
+		Collection<InventoryInfo> infos = inventoryHealthService.getAvailableInventory(variant);
+		for (InventoryInfo inventoryInfo : infos) {
+			if(inventoryInfo.getMrp() == preferredMrp) {
+				for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+					if(skuInfo.getUnbookedQty() >= qty) {
+						Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+						skus.add(sku);
+					}
+				}
+			}
+		}
+		return skus;
+	}
 
     public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse) {
 
