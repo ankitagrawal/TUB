@@ -82,8 +82,8 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 					if (cartLineItem.getProductVariant().getId().equals(productVariantInfo.getProductVariantId())) {
 						cartLineItem.setQty(productVariantInfo.getQuantity());
 						processedVariants.add(productVariantInfo);
-						totalHKPrice += cartLineItem.getHkPrice() * cartLineItem.getQty();
 					}
+					totalHKPrice += cartLineItem.getHkPrice() * cartLineItem.getQty();
 					cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 				}
 			}
