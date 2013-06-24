@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -11,20 +12,28 @@
 <div class="greenBx" id="rMenu"> 
 			<div class="yellowBx" id="ttf"><a href="javascript:void(0)" onclick="beforeCls()"  class="closeBtn">&nbsp;</a>
 				<div class="pad1Form">
-                <form id="sendCouponForm" action="/core/user/RequestCallback.action" method="post">
+                <form id="sendCouponForm" action="/healthkart/core/user/RequestCallback.action"
+                      method="post">
 					<div class="nRow">
                       <h3>Fill the form below and our Experts will get back to you soon</h3>
                    	  <p>Enter your name</p>
-                   	  <p><input type="text" name="name" class="bgFormInputs" /></p>
+                   	  <p><input type="text" name="name" class="bgFormInputs" id="name" /></p>
                       <p>Phone Number</p>
-                      <p><input type="text" name="email" class="bgFormInputs" /></p>
+                      <p><input type="text" name="phone" class="bgFormInputs" id ="phone"/></p>
                       <p>Email address</p>
-                      <p><input type="text" name="email" class="bgFormInputs" /></p>         
+                      <p><input type="text" name="email" class="bgFormInputs" id="email"/></p>
                       <div class="nRow">
                       	<div class="bgFormCBArea"><input name="" type="checkbox" value="" /></div>
                         <div class="bgFormCBMsgArea">I would like to receive updates/ new offers from HealthKart.com in future through Phone/SMS/E-Mails.</div>					<div class="cl"></div>
-                      </div>             
-                      <p style="margin-top:5px;"><img src="images/submit.jpg" alt="Submit" title="Submit" /></p>
+                      </div>
+                      <p style="margin-top:5px;">
+                          <button type="submit" name="getContact" onclick="return _validation()" class="submitBtnRed">
+                              <img src="images/submit.jpg" alt="Submit">
+                          </button>
+                          <!--<input type="submit"  name="getContact" onclick="return _validation()">-->
+                          <!--<img src="images/submit.jpg" alt="Submit" title="Submit" id="submit"/>-->
+                          <!--</input>-->
+                      </p>
                     </div>
                     <div class="nRow">&nbsp;</div>
                 </form>
@@ -32,6 +41,24 @@
 			</div>			
 	<a href="javascript:void(0)" onclick="fixT()" class="one">&nbsp;</a>
 </div>
+    <script type="text/javascript">
+
+          function _validation(){
+              var name = document.getElementById("name").value;
+              var phoneNo = document.getElementById("phone").value;
+              var email = document.getElementById("email").value;
+              if(name == null || name == "" || phoneNo == null || phoneNo == "" || email == null || email ==""){
+                 alert("Please Enter All Fields!!");
+                  return false;
+              } else if(isNaN(phoneNo)){
+                  alert("Please Enter Phone No. in correct Format");
+                  return false;
+              } else if(phoneNo.length!=10){
+                alert("Please Enter 10 digit Phone No");
+                return false;
+              }
+          }
+        </script>
 
 	<div class="nRow pageHeadImg1"><img src="images/the-three-pillars-of-bodybuilding.jpg" alt="THE 3 PILLARS OF BODYBUILDING"/></div>
     <div class="nRow pageHeadImg2"><img src="images/you-should-never-compromise-on.jpg" alt="You shouldnever compromise on" /></div>

@@ -316,4 +316,11 @@ a.closeBtn				{
 						color:#333;
 						text-decoration:none;
 						font-family:Georgia, "Times New Roman", Times, serif;	
-						}						
+						}
+
+.submitBtnRed           {
+                        background:none;
+                        border:none;
+                        outline:none;
+                        cursor:pointer;
+                        }
