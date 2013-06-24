@@ -48,60 +48,62 @@
                     <s:option value="false">False</s:option>
                 </s:select>
                 <c:if test="${similarproduct != null && similarproduct}">
-                <label>Similar Product Available:</label>
-                <s:select name="similarProductAvailable">
-                    <s:option value="">--All--</s:option>
-                    <s:option value="true">True</s:option>
-                    <s:option value="false">False</s:option>
-                </s:select>
+                    <label>Similar Product Available:</label>
+                    <s:select name="similarProductAvailable">
+                        <s:option value="">--All--</s:option>
+                        <s:option value="true">True</s:option>
+                        <s:option value="false">False</s:option>
+                    </s:select>
                 </c:if>
                 <s:submit name="showNotifyMeList" value="Search"/>
             </s:form>
         </fieldset>
 
-        <!--  button for similar products !-->
-        <c:if test = "${notifyMeBean.productOutOfStock != null && notifyMeBean.productOutOfStock == true}">
-                <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
-                    <%--<shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">--%>
-                        <fieldset>
-                            <legend> Send All Mails For Similar Products</legend>
-                            <ol>
-                                <li>
-                                    <label>Conversion Rate</label>
-                                    <s:text name="conversionRate"/>
-                                </li>
-                                <li>
-                                    <label>Buffer Rate</label>
-                                    <s:text name="bufferRate"/>
-                                </li>
-                            </ol>
-                            <s:submit name="sendMailsForSimilarProductsAutomation" value="SendMailsForDeletedHiddenOOS"/>
-                        </fieldset>
-                    <%--</shiro:hasPermission>--%>
-                </s:form>
+        <!-- button for similar products !-->
+        <c:if test="${notifyMeBean.productOutOfStock != null && notifyMeBean.productOutOfStock == true}">
+            <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+                <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
+                <fieldset>
+                    <legend> Send All Mails For Similar Products</legend>
+                    <ol>
+                        <li>
+                            <label>Conversion Rate</label>
+                            <s:text name="conversionRate"/>
+                        </li>
+                        <li>
+                            <label>Buffer Rate</label>
+                            <s:text name="bufferRate"/>
+                        </li>
+                    </ol>
+                    <s:submit name="sendMailsForSimilarProductsAutomation" value="SendMailsForDeletedHiddenOOS"/>
+                </fieldset>
+                </shiro:hasPermission>
+            </s:form>
         </c:if>
 
-            <!--  button for InStock Product !-->
-            <c:if test="${notifyMeBean.productOutOfStock != null && notifyMeBean.productOutOfStock == false}">
-                <fieldset>
+        <!-- button for InStock Product !-->
+        <c:if test="${notifyMeBean.productOutOfStock != null && notifyMeBean.productOutOfStock == false}">
+            <fieldset>
+                <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
                     <legend>Send All Mails For InStock Products</legend>
                     <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
-                        <%--<shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">--%>
-                            <ol>
-                                <li>
-                                    <label>Conversion Rate</label>
-                                    <s:text name="conversionRate"/>
-                                </li>
-                                <li>
-                                    <label>Buffer Rate</label>
-                                    <s:text name="bufferRate"/>
-                                </li>
-                            </ol>
-                            <s:submit name="sendMailsForInStockProductsAutomation"
-                                      value="SendAllNotifyMailsForInstockProducts"/>
-                        <%--</shiro:hasPermission>--%>
+
+                        <ol>
+                            <li>
+                                <label>Conversion Rate</label>
+                                <s:text name="conversionRate"/>
+                            </li>
+                            <li>
+                                <label>Buffer Rate</label>
+                                <s:text name="bufferRate"/>
+                            </li>
+                        </ol>
+                        <s:submit name="sendMailsForInStockProductsAutomation"
+                                  value="SendAllNotifyMailsForInstockProducts"/>
                     </s:form>
-                </fieldset>
+                </shiro:hasPermission>
+
+            </fieldset>
         </c:if>
 
 
