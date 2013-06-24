@@ -78,6 +78,8 @@ public class OrderSplitterImpl implements OrderSplitter {
 
 		validate(order);
 
+		Warehouse corporateWarehouse = warehouseService.getCorporateOffice();
+		
 		Collection<Warehouse> whs = warehouseService.getAllActiveWarehouses();
 		List<Warehouse> filteredWarehoues = new ArrayList<Warehouse>();
 		for (Warehouse warehouse : whs) {
@@ -96,13 +98,18 @@ public class OrderSplitterImpl implements OrderSplitter {
 		LineItemContainer container = new LineItemContainer();
 		for (CartLineItem cartLineItem : order.getCartLineItems()) {
 			if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+				boolean isAdded = false;
 				List<Sku> skuList = getPreferredSkus(cartLineItem.getProductVariant(), cartLineItem.getMarkedPrice(), cartLineItem.getQty());
 				for (Sku sku : skuList) {
 					if(filteredWarehoues.contains(sku.getWarehouse())) {
 						container.addLineItem(sku.getWarehouse(), cartLineItem);
+						isAdded = true;
 					}
 				}
 				
+				if(!isAdded && cartLineItem.getProductVariant().getProduct().isService()) {
+					container.addLineItem(corporateWarehouse, cartLineItem);
+				}
 			}
 		}
 
