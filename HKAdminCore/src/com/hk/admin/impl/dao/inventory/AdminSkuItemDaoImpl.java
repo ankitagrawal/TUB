@@ -55,7 +55,7 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
 
     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem) {
         String query = "select distinct si.skuGroup from SkuItem si where si.skuGroup.sku = :sku " +
-                " and si.skuGroup.mrp =:mrp  and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+                " and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
                 " order by si.skuGroup.expiryDate asc ";
         List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", lineItem.getSku()).setParameter("mrp", lineItem.getMarkedPrice()).list();
 

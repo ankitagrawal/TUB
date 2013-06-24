@@ -45,7 +45,8 @@
                         <td>${fn:length(skuGroup.skuItems)}</td>
                         <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
                         <td> ${skuGroup.status}</td>
-
+						<c:if test="${sbr.lineItem.markedPrice == skuGroup.mrp}">
+						</c:if>
                        <td> <s:link
                                 beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
                                 event="markSkuGroupAsUnderReview">
@@ -53,25 +54,6 @@
                             <s:param name="searchSkuGroup" value="${skuGroup.id}"/>
                            <s:param name="lineItem" value="${sbr.lineItem}"/>
                         </s:link>  </td>
-
-                        <%--<td><c:if test="${skuGroup ==  sbr.searchSkuGroup }">--%>
-                            <%--<c:choose>--%>
-                                <%--<c:when test="${skuGroup.status == 'UNDER_REVIEW'}">--%>
-                                    <%--${skuGroup.status}--%>
-                                <%--</c:when>--%>
-                                <%--<c:otherwise>--%>
-                                    <%--<s:link--%>
-                                            <%--beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"--%>
-                                            <%--event="markSkuGroupAsUnderReview">--%>
-                                        <%--Mark Review--%>
-                                        <%--<s:param name="searchSkuGroup" value="${sbr.searchSkuGroup }"/>--%>
-                                    <%--</s:link>--%>
-                                <%--</c:otherwise>--%>
-
-                            <%--</c:choose>--%>
-
-                        <%--</c:if></td>--%>
-
                     </tr>
 
                 </c:forEach>

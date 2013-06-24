@@ -1,18 +1,22 @@
 package com.hk.web.action.admin.sku;
 
+import java.util.List;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.sku.EnumSkuGroupStatus;
-
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import net.sourceforge.stripes.action.*;
-
-import java.util.List;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuGroup;
+import com.hk.pact.service.inventory.InventoryService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +33,8 @@ public class SkuBatchesReviewAction extends BaseAction {
     private SkuGroup searchSkuGroup;
     @Autowired
     private AdminInventoryService adminInventoryService;
+    
+    @Autowired InventoryService inventoryService;
 
 
     @DefaultHandler
@@ -46,6 +52,7 @@ public class SkuBatchesReviewAction extends BaseAction {
             searchSkuGroup.setStatus(EnumSkuGroupStatus.UNDER_REVIEW);
             getBaseDao().save(searchSkuGroup);
         }
+        inventoryService.checkInventoryHealth(searchSkuGroup.getSku().getProductVariant());
         return new RedirectResolution(SkuBatchesReviewAction.class).addParameter("lineItem", lineItem);
     }
 
