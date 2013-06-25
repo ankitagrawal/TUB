@@ -75,6 +75,9 @@
 		                    <%-- <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
 			                    Raise Debit Note
 			                    <s:param name="supplier" value="${supplier.id}"/></s:link> --%>
+			                    <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="create">
+			                    Create An RV
+			                    <s:param name="supplier" value="${supplier.id}"/></s:link>
 	                    </c:if>
                     </td>
                 </tr>

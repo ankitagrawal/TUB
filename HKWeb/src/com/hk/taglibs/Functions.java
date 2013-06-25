@@ -105,6 +105,7 @@ import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -927,5 +928,14 @@ public class Functions {
         BucketService bucketService = ServiceLocatorFactory.getService(BucketService.class);
         return bucketService.listNextActionTasks(actionItem);
     }
+    
+    public static Supplier getSupplierForProductVariant(String barcode, Long warehouseId){
+    	ProductVariantSupplierInfoService productVariantSupplierInfoService = ServiceLocatorFactory.getService(ProductVariantSupplierInfoService.class);
+    	SkuGroupService skuGroupService = ServiceLocatorFactory.getService(SkuGroupService.class);
+    	SkuGroup  skuGroup =  skuGroupService.getInStockSkuGroup(barcode, warehouseId);
+    	String productVariant = skuGroup.getSku().getProductVariant().getId();
+    	return productVariantSupplierInfoService.getSupplierFromProductVariant(productVariant);
+    }
+    
 
 }

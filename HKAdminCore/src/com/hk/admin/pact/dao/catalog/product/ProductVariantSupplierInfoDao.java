@@ -15,5 +15,7 @@ import com.hk.pact.dao.BaseDao;
 public interface ProductVariantSupplierInfoDao extends BaseDao {
 
 	public ProductVariantSupplierInfo getPVSupplierInfoByVariantAndSupplier(ProductVariant productVariant, Supplier supplier);
+	
+	public Supplier getSupplierFromProductVariant(String productVariant);
 
 }

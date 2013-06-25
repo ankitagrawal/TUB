@@ -19,6 +19,9 @@
         MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
         List<ReconciliationType> reconciliationTypeList = masterDataDao.getReconciliationTypeList();
         pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
+        List<ReconciliationType> debitNoteReconciliationTypeList = masterDataDao.getDebitNoteReconciliationType();
+        pageContext.setAttribute("debitNoteReconciliationTypeList", debitNoteReconciliationTypeList);
+        
     %>
 
 
@@ -49,73 +52,89 @@
     <h2>RV No # ${pa.reconciliationVoucher.id}</h2>
     <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
         <s:hidden class="reconciliationId" name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
-        <table>
-
-            <tr>
-                <td>
-                    <table>
-
-                        <tr>
-                            <td>Reconciliation Date</td>
-                            <td>
-                                    ${pa.reconciliationVoucher.reconciliationDate}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Remarks<br/><span class="sml gry">(eg. XXX)</span></td>
-                            <td>${pa.reconciliationVoucher.remarks}</td>
-                        </tr>
-                        <tr>
-                            <td>For Warehouse</td>
-                            <td>
-                                    ${pa.reconciliationVoucher.warehouse.identifier}
-                            </td>
-                        </tr>
+        
+        <div id="rvInfoDiv">
+        	<div id="rvAndSupplierDiv">
+        	<table>
+                    <tr>
+                        <td><strong>Reconciliation Date</strong></td>
+                        <td>
+                                ${pa.reconciliationVoucher.reconciliationDate}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Remarks</strong><br/><span class="sml gry">(eg. XXX)</span></td>
+                        <td>${pa.reconciliationVoucher.remarks}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>For Warehouse</strong></td>
+                        <td>
+                                ${pa.reconciliationVoucher.warehouse.identifier}
+                        </td>
+                    </tr>
                     </table>
-                </td>
-
-
-                <td>
-                    <table>
-
-                        <tr>
-                            <td colspan="2" style="font-size:20px;"> Scan Barcode:</td>
-                        </tr>
-                        <tr>
-                            <td> UPC (Barcode)</td>
-                            <td><s:text name="upc" id="upc" size="50" style="padding:5px; width:125px;"/></td>
-                            <td>Reconciliation Type</td>
-
-                            <td><s:select name="reconciliationType"
-                                          value="${rvLineItem.reconciliationType.id}" class="valueChange">
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                           serviceProperty="reconciliationTypeList" value="id"
-                                                           label="name"/>
-                            </s:select></td>
-
-
-                        </tr>
-
-                        <tr>
-                            <td> Remarks</td>
-                                <%--<td> <s:textarea style="height:60px;" name="rvLineItem.remarks" value="${rvLineItem.remarks}"> </s:textarea></td>--%>
-                            <td><s:textarea style="height:60px;" name="remarks"> </s:textarea></td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="2">
-                                <div style="float:left;"><s:submit id="SubtractReconciled" name="SubtractReconciled" value="Subtract"/></div>
-                            </td>
-                        </tr>
-
+                    
+                    <c:if test="${pa.reconciliationVoucher.supplier!=null }">
+                    <table id="supplierTable">
+                    <tr>
+                    <td><strong>Supplier Name</strong></td>
+                    <td>${pa.reconciliationVoucher.supplier.name}</td>
+                    </tr>
+                    <tr>
+                    <td><strong>State</strong></td>
+                    <td>${pa.reconciliationVoucher.supplier.state}</td>
+                    </tr>
+                    <tr>
+                    <td><strong>Tin</strong></td>
+                    <td>${pa.reconciliationVoucher.supplier.tinNumber}</td>
+                    </tr>
                     </table>
-                </td>
-            </tr>
-        </table>
+                    </c:if>
+                    </div>
+        	<div id="scanDiv">
+        		<table>
+                     <tr>
+                         <td colspan="2" style="font-size:20px;"> Scan Barcode:</td>
+                     </tr>
+                     <tr>
+                         <td><strong> UPC (Barcode)</strong></td>
+                         <td><s:text name="upc" id="upc" size="50" style="padding:5px; width:125px;"/></td>
+                     </tr>
+                     <tr>
+                         <td><strong> Remarks</strong></td>
+                             <%--<td> <s:textarea style="height:60px;" name="rvLineItem.remarks" value="${rvLineItem.remarks}"> </s:textarea></td>--%>
+                         <td><s:textarea style="height:60px;" name="remarks"> </s:textarea></td>
+                     </tr>
+                     <tr>
+                     <td><strong>Reconciliation Type</strong></td>
+                         
+					<c:choose>
+					<c:when test="${pa.reconciliationVoucher.supplier!=null}">
+					<td><s:select name="reconciliationType"
+	                                       value="${rvLineItem.reconciliationType.id}" class="valueChange">
+	                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
+	                                                        serviceProperty="debitNoteReconciliationType" value="id"
+	                                                        label="name"/> </s:select></td>
+					</c:when>
+					<c:otherwise>
+					<td><s:select name="reconciliationType"
+	                                       value="${rvLineItem.reconciliationType.id}" class="valueChange">
+	                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
+	                                                        serviceProperty="reconciliationTypeList" value="id"
+	                                                        label="name"/></s:select></td>
+					</c:otherwise>
+					</c:choose>
+                         <td colspan="2">
+                             <div style="float:left;"><s:submit id="SubtractReconciled" name="SubtractReconciled" value="Subtract"/></div>
+                         </td>
+                     </tr>
+                    </table>
+        </div>
+        </div>
 
-        <div style="width:550px">
+        <div id="rvDiv">
 
-        <table style="width:1200px;">
+        <table id="rvTable">
             <thead>
             <tr>
                 <th>Barcode</th>
@@ -212,13 +231,30 @@
                         }
                     }
                     if (variant != null && ( (batch == null || batch.trim() == '') || (qty == null || qty.trim() == ''))) {
-                        alert('Enter Batch Number && Qty for varinat :::::: ' + variant);
+                        alert('Enter Batch Number && Qty for variant :::::: ' + variant);
                         result = false;
                         return false;
 
                     }
 
                 });
+                
+                $('.SubtractReconciled').clicked(function(e) {
+                	
+                	var supplier=${pa.reconciliationVoucher.supplier.tinNumber};
+                	var barcode = $('#upc').val();
+                	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
+                	var productSupplier;
+                	if(supplier!=null){
+                		productSupplier = ${hk:getSupplierForProductVariant(barcode, warehouseId)};
+                		if(productSupplier!=null && supplier!=${productSupplier.tinNumber}){
+                			alert('The suppliers for RV(Debit Note Type) and the variant for  scanned barcode do not match. Do you want it to add it to the RV?');
+                			return;
+                		}
+                	}
+                	
+                });
+                
                 if (!result) {
                     return false;
                 }
@@ -243,6 +279,36 @@
 
         });
     </script>
+    
+    <style>
+    
+    #rvInfoDiv{
+    width:700px;
+    float:none;
+    margin:auto;
+    }
+    
+    #rvAndSupplierDiv{
+    float:left;
+    position:relative;
+    width:48%;
+    }
+    #scanDiv{
+    float:right;
+    position:relative;
+    width:48%;
+   
+    }
+    #rvDiv{
+    float: right;
+    position: relative;
+    width: 100%;
+    }
+    #rvTable{
+    width: 100%;
+    }
+    
+    </style>
 </s:layout-component>
 
 </s:layout-render>

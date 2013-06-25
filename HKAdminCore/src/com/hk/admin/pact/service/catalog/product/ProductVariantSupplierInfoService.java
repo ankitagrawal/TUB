@@ -16,5 +16,7 @@ public interface ProductVariantSupplierInfoService {
 	public ProductVariantSupplierInfo updatePVSupplierInfo(ProductVariantSupplierInfo productVariantSupplierInfo, Long askedQty, Long receivedQty);
 
 	public ProductVariantSupplierInfo getOrCreatePVSupplierInfo(ProductVariant productVariant, Supplier supplier);
+	
+	public Supplier getSupplierFromProductVariant(String productVariant);
 
 }

@@ -15,6 +15,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
@@ -26,6 +27,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -62,6 +64,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private ReconciliationVoucherParser rvParser;
     @Autowired
     ReconciliationVoucherService reconciliationVoucherService;
+    @Autowired 
+    SupplierDao supplierDao;
 
     @Autowired
     UserDao userDao;
@@ -100,6 +104,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private RvLineItem rvLineItemSaved;
     private ReconciliationType reconciliationType;
     private String remarks;
+    private Supplier                supplier;
 
 
     @Validate(required = true, on = "parse")
@@ -203,10 +208,18 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
+        
         if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
+        	 if(supplier!=null){
+        		 reconciliationVoucher = new ReconciliationVoucher();
+        		 reconciliationVoucher.setSupplier(supplier);
+        		 reconciliationVoucher.setReconciliationType(EnumReconciliationType.RVForDebitNote.asReconciliationType());
+        		 reconciliationVoucher.setWarehouse(loggedOnUser.getSelectedWarehouse());
+        	 }
             reconciliationVoucher.setCreateDate(new Date());
             reconciliationVoucher.setCreatedBy(loggedOnUser);
         }
+        
         reconciliationVoucher = reconciliationVoucherService.save(reconciliationVoucher);
         return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
     }
@@ -742,4 +755,15 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+
+	public Supplier getSupplier() {
+		return supplier;
+	}
+
+
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
+	}
+    
 }

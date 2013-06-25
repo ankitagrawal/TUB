@@ -13338,5 +13338,12 @@
          insert into payment_status values (9,'Refunded');
      </sql>
  </changeSet>
-
+    <changeSet author="Nihal (generated)" id="1372098072716-2">
+        <addColumn tableName="reconciliation_voucher">
+            <column name="supplier_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372098072716-10">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="reconciliation_voucher" constraintName="fk_reconciliation_voucher_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

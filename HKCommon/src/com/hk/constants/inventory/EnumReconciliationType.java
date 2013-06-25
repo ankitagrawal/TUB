@@ -27,7 +27,8 @@ public enum EnumReconciliationType {
     AddDamage(150L, "Damage-Add"),
     AddExpired(160L, "Expired-Add"),
     AddBatchMismatch(170L, "Batch Mismatch-Add"),
-    AddFreeVariant(180L, "Free Variant-Add"),;
+    AddFreeVariant(180L, "Free Variant-Add"),
+    RVForDebitNote(190L, "RV For Debit Note");
 
 
     private java.lang.String name;
@@ -95,6 +96,10 @@ public enum EnumReconciliationType {
             }
         }
         return null;
+    }
+    
+    public static List<ReconciliationType> getDebitNoteReconciliationType() {
+        return Arrays.asList(SubtractDamage.asReconciliationType(), SubtractExpired.asReconciliationType(), NonMoving.asReconciliationType());
     }
 
 }
