@@ -69,14 +69,14 @@ public class SupplierTransactioDaoImpl extends BaseDaoImpl implements SupplierTr
         }
         else {
             String query = "from SupplierTransaction st where st.id in (231, 227, 226, 225, 224) ORDER BY id DESC";
-            supplierTransactionList = (List<SupplierTransaction>) findByNamedQuery(query);
+            supplierTransactionList = (List<SupplierTransaction>) findByQuery(query);
         }
 
         return supplierTransactionList;
     }
 
     @Override
-    public Page getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate, int pageNo, int perPage){
+    public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate){
         DetachedCriteria supplierTransactionCriteria = DetachedCriteria.forClass(SupplierTransaction.class);
         if(supplier != null){
             supplierTransactionCriteria.add(Restrictions.eq("supplier.id", supplier.getId()));
@@ -87,9 +87,9 @@ public class SupplierTransactioDaoImpl extends BaseDaoImpl implements SupplierTr
         }
 
         if(endDate != null){
-            supplierTransactionCriteria.add(Restrictions.ge("date", endDate));
+            supplierTransactionCriteria.add(Restrictions.le("date", endDate));
         }
 
-        return list(supplierTransactionCriteria, pageNo, perPage);
+        return (List<SupplierTransaction>) findByCriteria(supplierTransactionCriteria);
     }
 }

@@ -6,10 +6,10 @@
 
         <s:form beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction">
 
-            <fieldset>
+            <fieldset style="margin: 0em;">
                 <legend>Search Supplier List</legend>
 
-                <label>Tin Number:</label><s:text name="supplierTin" style="width:150px"/>
+                <label>Tin Number:</label><s:text name="tinNumber" style="width:150px"/>
                 &nbsp; &nbsp;
                 <label>Name:</label><s:text name="supplierName" style="width:150px"/>
 	            &nbsp; &nbsp;
@@ -19,7 +19,7 @@
             </fieldset>
         </s:form>
 
-        <table class="zebra_vert">
+        <table class="zebra_vert" >
             <thead>
             <tr>
                 <th>Name</th>
@@ -39,7 +39,7 @@
                     </td>
                     <td>${supplierTransaction.supplier.creditDays}</td>
                     <td>
-                        ${supplierTransaction.currentBalance}
+                        <fmt:formatNumber value="${supplierTransaction.currentBalance}" type="currency" currencySymbol=" " maxFractionDigits="2"/>
                         <c:choose>
                             <c:when test="${supplierTransaction.currentBalance > 0}">
                                 Cr
@@ -51,7 +51,7 @@
                     </td>
                     <td>
                         <s:link beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction" event="viewDetails">View Details
-                            <s:param name="supplier" value="${supplierTransaction.id}"/>
+                            <s:param name="supplier" value="${supplierTransaction.supplier.id}"/>
                             <s:param name="defaultView" value="1" />
                         </s:link>
 

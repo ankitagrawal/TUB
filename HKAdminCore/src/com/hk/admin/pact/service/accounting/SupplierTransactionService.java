@@ -40,5 +40,5 @@ public interface SupplierTransactionService {
 
     public List<SupplierTransaction> getLastTransactionListForSuppliers(Supplier supplier);
 
-    public Page getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate, int pageNo, int perPage);
+    public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate);
 }

@@ -152,12 +152,12 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
 
     @Override
     public List<SupplierTransaction> getLastTransactionListForSuppliers(Supplier supplier) {
-        return getSupplierTransactionDao().getLastTransactionListForSuppliers();
+        return getSupplierTransactionDao().getLastTransactionListForSuppliers(supplier);
     }
 
     @Override
-    public Page getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate, int pageNo, int perPage) {
-        return getSupplierTransactionDao().getAllTransactionListForSuppliers(supplier, startDate, endDate, pageNo, perPage);
+    public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate) {
+        return getSupplierTransactionDao().getAllTransactionListForSuppliers(supplier, startDate, endDate);
     }
 
     public SupplierTransactionDao getSupplierTransactionDao() {

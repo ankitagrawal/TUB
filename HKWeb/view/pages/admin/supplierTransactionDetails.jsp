@@ -1,22 +1,61 @@
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction" var="supplierTransactionBean"/>
+
+
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Supplier List">
     <s:layout-component name="content">
+        <style type="text/css">
+            .fieldset-margin{
+                margin: 0em;
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#show-search-filter').click(function(){
+                    $('#filter-bar').slideToggle("slow");
+                });
 
+            });
+        </script>
+        <br />
+        <s:layout-component name="heading">
+            <span style="float: left;">Account Details for  ${supplierTransactionBean.supplier.name}</span>
+            <span style="float: right;">Balance:
+                <fmt:formatNumber value="${supplierTransactionBean.lastTransaction.currentBalance}" type="currency" currencySymbol=" " maxFractionDigits="2"/>
+                <c:choose>
+                    <c:when test="${supplierTransactionBean.lastTransaction.currentBalance > 0}">
+                        Cr
+                    </c:when>
+                    <c:otherwise>
+                        Db
+                    </c:otherwise>
+                </c:choose>
+                &nbsp;&nbsp;&nbsp;
+            </span>
+        </s:layout-component>
+         <br />
         <s:form beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction">
 
-            <fieldset>
-                <legend>Filter Search</legend>
-                <label>Supplier: <strong>${supplierTransactionBean.supplier.name}</strong></label>
-                <label>Start Date:</label><s:text name="startDate" style="width:150px"/>
-                &nbsp; &nbsp;
-                <label>End Date:</label><s:text name="endDate" style="width:150px"/>
-	            &nbsp; &nbsp;
+            <fieldset class="fieldset-margin">
+                <strong><a href="#" id="show-search-filter">+</a></strong>
+                <div id="filter-bar">
+                <label>Supplier:</label>  &nbsp;&nbsp; <strong>${supplierTransactionBean.supplier.name}</strong>
+                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                <label>Start Date:</label> &nbsp;&nbsp; <s:text class="date_input startDate" style="width:150px"
+                                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                                name="startDate"/>
+                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                <label>End Date:</label>  &nbsp;&nbsp;<s:text class="date_input startDate" style="width:150px"
+                                                              formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                              name="endDate"/>
+                    &nbsp; &nbsp;&nbsp; &nbsp;
                 <s:hidden name="supplier" value="${supplierTransactionBean.supplier.id}"/>
                 <s:hidden name="defaultView" value="0"/>
 
                 <s:submit name="viewDetails" value="Search"/>
+                </div>
             </fieldset>
         </s:form>
 
@@ -34,7 +73,7 @@
             </thead>
             <c:forEach items="${supplierTransactionBean.supplierTransactionList}" var="supplierTransaction">
                 <tr>
-                    <td>${supplierTransaction.date}</td>
+                    <td><fmt:formatDate value="${supplierTransaction.date}" /></td>
                     <td>${supplierTransaction.supplierTransactionType.name}</td>
                     <td>
                         <c:if test="${supplierTransaction.purchaseInvoice != null}">
@@ -49,16 +88,16 @@
                     </td>
                     <td>
                         <c:if test="${supplierTransaction.debitNote != null || supplierTransaction.busyPaymentId != null}">
-                            ${supplierTransaction.amount}
+                            <fmt:formatNumber value="${supplierTransaction.amount}" type="currency" currencySymbol=" " maxFractionDigits="2"/>
                         </c:if>
                     </td>
                     <td>
                         <c:if test="${supplierTransaction.purchaseInvoice != null}">
-                            ${supplierTransaction.amount}
+                            <fmt:formatNumber value="${supplierTransaction.amount}" type="currency" currencySymbol=" " maxFractionDigits="2"/>
                         </c:if>
                     </td>
                     <td>
-                        ${supplierTransaction.currentBalance}
+                        <fmt:formatNumber value="${supplierTransaction.currentBalance}" type="currency" currencySymbol=" " maxFractionDigits="2"/>
                         <c:choose>
                             <c:when test="${supplierTransaction.currentBalance > 0}">
                                 Cr

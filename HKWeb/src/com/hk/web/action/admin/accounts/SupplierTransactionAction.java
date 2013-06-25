@@ -10,10 +10,7 @@ import com.hk.domain.accounting.SupplierTransaction;
 import com.hk.domain.catalog.Supplier;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,18 +41,19 @@ public class SupplierTransactionAction extends BaseAction {
     private int defaultView;
     private String supplierName;
     private String tinNumber;
+    private SupplierTransaction lastTransaction;
 
 	@DefaultHandler
 	@Secure(hasAnyPermissions = {PermissionConstants.FINANCE_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 	public Resolution pre() {
         if(supplierName != null || tinNumber != null){
-            Page supplierPage = getSupplierDao().getSupplierByTinAndName(tinNumber, supplierName, null, 0, 0);
-            if(supplierPage != null && supplierPage.getList() != null && supplierPage.getList().size() > 0){
-                supplier = (Supplier) supplierPage.getList().get(0);
+            List supplierList = getSupplierDao().getSupplierByTinAndName(tinNumber, supplierName, null);
+            if(supplierList != null && supplierList.size() > 0){
+                supplier = (Supplier) supplierList.get(0);
             }
         }
         supplierTransactionList = getSupplierTransactionService().getLastTransactionListForSuppliers(supplier);
-		return new RedirectResolution("/pages/admin/supplierTransactions.jsp");
+		return new ForwardResolution("/pages/admin/supplierTransactions.jsp");
 	}
 
     @Secure(hasAnyPermissions = {PermissionConstants.FINANCE_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
@@ -65,16 +63,14 @@ public class SupplierTransactionAction extends BaseAction {
             return new RedirectResolution(SupplierTransactionAction.class);
         }
 
-        if(defaultView == 1){
+        if(defaultView == 1 && startDate == null && endDate == null){
             startDate = new Date( new Date().getTime() - 1000L*60L*60L*24L*30L);
             endDate = new Date();
         }
+        lastTransaction = getSupplierTransactionService().getLastTransactionForSupplier(supplier);
+        supplierTransactionList = getSupplierTransactionService().getAllTransactionListForSuppliers(supplier, startDate, endDate);
 
-        supplierTransactionPage = getSupplierTransactionService().getAllTransactionListForSuppliers(supplier, startDate, endDate, 0, 0);
-        if(supplierTransactionPage != null){
-            supplierTransactionList = supplierTransactionPage.getList();
-        }
-        return new RedirectResolution("/pages/admin/supplierTransactionDetails.jsp");
+        return new ForwardResolution("/pages/admin/supplierTransactionDetails.jsp");
     }
 
 
@@ -140,5 +136,13 @@ public class SupplierTransactionAction extends BaseAction {
 
     public void setTinNumber(String tinNumber) {
         this.tinNumber = tinNumber;
+    }
+
+    public SupplierTransaction getLastTransaction() {
+        return lastTransaction;
+    }
+
+    public void setLastTransaction(SupplierTransaction lastTransaction) {
+        this.lastTransaction = lastTransaction;
     }
 }
