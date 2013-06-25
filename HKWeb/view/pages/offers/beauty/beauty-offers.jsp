@@ -33,9 +33,9 @@
 
 <!---- paste all content from here--->
  <div id="wrapper">
-     <a class="banners" href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris"><img src="${pageContext.request.contextPath}/images/bty-offers/banner01.jpg"/></a>
-     <a class="banners" href="http://www.healthkart.com/brand/beauty/maybelline"><img src="${pageContext.request.contextPath}/images/bty-offers/banner02.jpg"/></a>
-     <a class="banners04" href="http://www.healthkart.com/brand/beauty/NYX"><img src="${pageContext.request.contextPath}/images/bty-offers/banner3.jpg"/></a>
+     <%--<a class="banners" href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris"><img src="${pageContext.request.contextPath}/images/bty-offers/banner01.jpg"/></a>--%>
+     <%--<a class="banners" href="http://www.healthkart.com/brand/beauty/maybelline"><img src="${pageContext.request.contextPath}/images/bty-offers/banner02.jpg"/></a>--%>
+     <%--<a class="banners04" href="http://www.healthkart.com/brand/beauty/NYX"><img src="${pageContext.request.contextPath}/images/bty-offers/banner3.jpg"/></a>--%>
 
      <div class="cl"></div>
      <div class="offers">
