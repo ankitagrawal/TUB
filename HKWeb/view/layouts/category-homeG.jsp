@@ -28,7 +28,7 @@
     <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
     
     <s:layout-component name="analytics">
-      <jsp:include page="/includes/_analytics.jsp"/>
+      <s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="${topCategory}" allCategories="${topCategory}" brand="" isProd="<%=false%>"/>
     </s:layout-component>
 
   </head>
