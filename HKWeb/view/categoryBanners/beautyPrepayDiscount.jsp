@@ -19,7 +19,7 @@
 %>--%>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
     <%--<img src="${pageContext.request.contextPath}/images/banners/top/beauty-promotional-strip-banner.jpg" alt="Beauty Discount">--%>
-    <a href="https://www.healthkart.com/pages/offers/beauty/beauty-offers.jsp"> <img
+    <a href="${pageContext.request.contextPath}/pages/offers/beauty/beauty-offers.jsp"> <img
             src="${pageContext.request.contextPath}/images/banners/top/Beauty-strip_banner_offer.jpg"
             alt="Beauty Offers"> </a>
 </div>
