@@ -165,7 +165,7 @@
           <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
         <a href="${pageContext.request.contextPath}/brand/sports-nutrition/TWINLAB">
-          <img src="${pageContext.request.contextPath}/images/banners/Twinlab-home-page--6.5.13.jpg" alt="Brand Of the Week - Gaspari Nutrition!"
+          <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small_sports.jpg" alt="Brand Of the Week - Gaspari Nutrition!"
                class="small_banner"/>
         </a>
       </c:when>
