@@ -1,26 +1,10 @@
 package com.hk.impl.service.inventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
@@ -32,6 +16,14 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -72,7 +64,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		VariantUpdateInfo vInfo = new VariantUpdateInfo();
-		vInfo.variant = variant;
 		vInfo.netQty = netInventory;
 
 		if(selectedInfo != null && selectedInfo.getQty() > 0) {
@@ -82,7 +73,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			vInfo.costPrice = mxQtyInfo.getCostPrice();
 			vInfo.inStock = true;
 		}
-		updateVariant(vInfo);
+		updateVariant(variant, vInfo);
 	}
 	
 	@Override
@@ -98,7 +89,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	}
 
 	private static class VariantUpdateInfo {
-		ProductVariant variant;
 		long mrpQty;
 		long netQty;
 		double mrp;
@@ -107,19 +97,20 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		
 	}
 	
-	private void updateVariant(VariantUpdateInfo vInfo) {
-		if(vInfo.mrp != 0l && !vInfo.variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
-			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(vInfo.variant, EnumUpdatePVPriceStatus.Pending.getId());
+	private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
+		double newHkPrice = 0d;
+		if(vInfo.mrp != 0l && !variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
+			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
             if (updatePvPrice == null) {
                 updatePvPrice = new UpdatePvPrice();
             }
-            updatePvPrice.setProductVariant(vInfo.variant);
-            updatePvPrice.setOldCostPrice(vInfo.variant.getCostPrice());
+            updatePvPrice.setProductVariant(variant);
+            updatePvPrice.setOldCostPrice(variant.getCostPrice());
             updatePvPrice.setNewCostPrice(vInfo.costPrice);
-            updatePvPrice.setOldMrp(vInfo.variant.getMarkedPrice());
+            updatePvPrice.setOldMrp(variant.getMarkedPrice());
             updatePvPrice.setNewMrp(vInfo.mrp);
-            updatePvPrice.setOldHkprice(vInfo.variant.getHkPrice());
-            Double newHkPrice = vInfo.mrp * (1 - vInfo.variant.getDiscountPercent());
+            updatePvPrice.setOldHkprice(variant.getHkPrice());
+            newHkPrice = vInfo.mrp * (1 - variant.getDiscountPercent());
             updatePvPrice.setNewHkprice(newHkPrice);
             updatePvPrice.setTxnDate(new Date());
             updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
@@ -127,18 +118,21 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		if(vInfo.inStock) {
-			vInfo.variant.setMarkedPrice(vInfo.mrp);
+			variant.setMarkedPrice(vInfo.mrp);
 		}
-		vInfo.variant.setNetQty(vInfo.netQty);
-		vInfo.variant.setMrpQty(vInfo.mrpQty);
-		vInfo.variant.setOutOfStock(!vInfo.inStock);
+		variant.setNetQty(vInfo.netQty);
+		variant.setMrpQty(vInfo.mrpQty);
+		variant.setOutOfStock(!vInfo.inStock);
 		if(vInfo.costPrice != 0l) {
-			vInfo.variant.setCostPrice(vInfo.costPrice);
+			variant.setCostPrice(vInfo.costPrice);
+		}
+		if(newHkPrice != 0d){
+			variant.setHkPrice(newHkPrice);
 		}
 		
-		productVariantService.save(vInfo.variant);
+		productVariantService.save(variant);
 		
-		Product product = productService.getProductById(vInfo.variant.getProduct().getId());
+		Product product = productService.getProductById(variant.getProduct().getId());
 		if(!vInfo.inStock) {
 			List<ProductVariant> inStockVariants = product.getInStockVariants();
 			if (inStockVariants != null && inStockVariants.isEmpty()) {
