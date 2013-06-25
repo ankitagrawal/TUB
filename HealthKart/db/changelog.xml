@@ -13280,7 +13280,7 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1371202029098-7">
         <addColumn tableName="debit_note_line_item">
-            <column name="product_name" type="VARCHAR(100)"/>
+            <column name="product_name" type="VARCHAR(200)"/>
         </addColumn>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1371571434761-3">
