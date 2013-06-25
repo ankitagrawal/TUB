@@ -1,5 +1,6 @@
 package com.hk.admin.pact.service.accounting;
 
+import com.akube.framework.dao.Page;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.SupplierTransactionType;
 import com.hk.domain.accounting.SupplierTransaction;
@@ -37,5 +38,7 @@ public interface SupplierTransactionService {
 
     public SupplierTransaction getLastTransactionForSupplier(Supplier supplier);
 
-    public List<SupplierTransaction> getSupplierTransactions(Supplier supplier, SupplierTransactionType supplierTransactionType, Date startDate, Date endDate);
+    public List<SupplierTransaction> getLastTransactionListForSuppliers(Supplier supplier);
+
+    public Page getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate, int pageNo, int perPage);
 }

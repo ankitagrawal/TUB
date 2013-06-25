@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.accounting;
 
+import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.accounting.SupplierTransactionDao;
 import com.hk.admin.pact.service.accounting.SupplierTransactionService;
 import com.hk.constants.inventory.EnumSupplierTransactionType;
@@ -131,11 +132,6 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         return getSupplierTransactionDao().getLastTransactionForSupplier(supplier);
     }
 
-    @Override
-    public List<SupplierTransaction> getSupplierTransactions(Supplier supplier, SupplierTransactionType supplierTransactionType, Date startDate, Date endDate) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public Double getUpdatedSupplierBalance(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount) {
         SupplierTransaction supplierTransaction = getLastTransactionForSupplier(supplier);
         Double netBalance=null;
@@ -151,6 +147,17 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
             netBalance = supplierTransaction.getCurrentBalance() + amount;
         }
         return netBalance;
+    }
+
+
+    @Override
+    public List<SupplierTransaction> getLastTransactionListForSuppliers(Supplier supplier) {
+        return getSupplierTransactionDao().getLastTransactionListForSuppliers();
+    }
+
+    @Override
+    public Page getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate, int pageNo, int perPage) {
+        return getSupplierTransactionDao().getAllTransactionListForSuppliers(supplier, startDate, endDate, pageNo, perPage);
     }
 
     public SupplierTransactionDao getSupplierTransactionDao() {
