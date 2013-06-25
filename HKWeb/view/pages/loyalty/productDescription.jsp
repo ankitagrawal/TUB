@@ -12,7 +12,11 @@
 <%@ page import="com.hk.taglibs.Functions" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
-
+<%
+   response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
+    response.setHeader("pragma", "no-cache");
+    response.setDateHeader("Expires", -1);
+%>
  <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
  <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
  <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
@@ -20,9 +24,6 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="cache-control" content="no-cache">
-<meta http-equiv="expires" content="0">
 </head>
 <link href="<hk:vhostCss/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
 <script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/bootbox.js"></script>
