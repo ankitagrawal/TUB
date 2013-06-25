@@ -1,5 +1,6 @@
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -90,7 +91,7 @@
 				<c:forEach items="${ca.productList}" var="product" varStatus="ctr">
 					<c:if test="${!product.googleAdDisallowed}">
 						<div class="product_box grid_6">
-							<s:layout-render name="/layouts/embed/_productVOThumb200.jsp" product="${product}" position="${ca.pageNo}/${ctr.index+1}"/>
+							<s:layout-render name="/layouts/embed/_productVOThumb200.jsp" product="${product}" productReferrerId="<%=EnumProductReferrer.searchPage.getId()%>"  position="${ca.pageNo}/${ctr.index+1}"/>
 							<div class="clear"></div>
 						</div>
 					</c:if>
