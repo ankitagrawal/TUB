@@ -603,7 +603,6 @@
 --/personal-care/sexual-wellness/combo-offers
 -/personal-care/foot-care-pedicure : Foot Care/Pedicure
 --/personal-care/foot-care-pedicure/fresh-beautiful-feet: Fresh & Beautiful Feet
---/personal-care/foot-care-pedicure/foot-care-devices-podiatry
 --/personal-care/foot-care-pedicure/insoles
 ---/personal-care/foot-care-pedicure/insoles/gel-insoles
 ---/personal-care/foot-care-pedicure/insoles/latex-insoles
