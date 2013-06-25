@@ -6,6 +6,7 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
+import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.util.BarcodeUtil;
@@ -85,6 +86,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     SkuGroupService skuGroupService;
     @Autowired
     UserService userService;
+    @Autowired 
+    ProductVariantSupplierInfoService productVariantSupplierInfoService;
 
     private ReconciliationVoucher reconciliationVoucher;
     private List<ReconciliationVoucher> reconciliationVouchers = new ArrayList<ReconciliationVoucher>();
@@ -105,6 +108,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private ReconciliationType reconciliationType;
     private String remarks;
     private Supplier                supplier;
+    private Long warehouseId;
+    private String barcode;
 
 
     @Validate(required = true, on = "parse")
@@ -608,6 +613,30 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
+	public Resolution getSupplierAgainstBarcode() {
+		Map<Object, Object> dataMap = new HashMap<Object, Object>();
+		HealthkartResponse healthkartResponse = null;
+		if (StringUtils.isNotBlank(barcode) && warehouseId != null) {
+			try {
+				SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(barcode, warehouseId);
+				String productVariant = skuGroup.getSku().getProductVariant().getId();
+				Supplier supplier = productVariantSupplierInfoService.getSupplierFromProductVariant(productVariant);
+				if (supplier != null) {
+					dataMap.put("supplier", supplier);
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Supplier Name",
+							dataMap);
+				}
+
+			} catch (Exception e) {
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
+			}
+		} else {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Input Data", dataMap);
+		}
+		noCache();
+		return new JsonResolution(healthkartResponse);
+	}
+    
     public ReconciliationVoucher getReconciliationVoucher() {
         return reconciliationVoucher;
     }
@@ -756,14 +785,28 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         this.errorMessage = errorMessage;
     }
 
-
 	public Supplier getSupplier() {
 		return supplier;
 	}
 
-
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
+	}
+
+	public Long getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
     
 }

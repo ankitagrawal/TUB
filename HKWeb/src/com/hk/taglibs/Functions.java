@@ -929,13 +929,4 @@ public class Functions {
         return bucketService.listNextActionTasks(actionItem);
     }
     
-    public static Supplier getSupplierForProductVariant(String barcode, Long warehouseId){
-    	ProductVariantSupplierInfoService productVariantSupplierInfoService = ServiceLocatorFactory.getService(ProductVariantSupplierInfoService.class);
-    	SkuGroupService skuGroupService = ServiceLocatorFactory.getService(SkuGroupService.class);
-    	SkuGroup  skuGroup =  skuGroupService.getInStockSkuGroup(barcode, warehouseId);
-    	String productVariant = skuGroup.getSku().getProductVariant().getId();
-    	return productVariantSupplierInfoService.getSupplierFromProductVariant(productVariant);
-    }
-    
-
 }

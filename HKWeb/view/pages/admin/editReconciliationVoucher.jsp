@@ -52,7 +52,10 @@
     <h2>RV No # ${pa.reconciliationVoucher.id}</h2>
     <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
         <s:hidden class="reconciliationId" name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
-        
+        <div style="display: none">
+    <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+            id="supplierInfo" event="getSupplierAgainstBarcode"></s:link>
+  </div>
         <div id="rvInfoDiv">
         	<div id="rvAndSupplierDiv">
         	<table>
@@ -215,8 +218,6 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-
-
             $('.saveButton').click(function(e) {
                 var result = true;
                 $('#poTable tr').each(function() {
@@ -239,22 +240,6 @@
 
                 });
                 
-                $('.SubtractReconciled').clicked(function(e) {
-                	
-                	var supplier=${pa.reconciliationVoucher.supplier.tinNumber};
-                	var barcode = $('#upc').val();
-                	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
-                	var productSupplier;
-                	if(supplier!=null){
-                		productSupplier = ${hk:getSupplierForProductVariant(barcode, warehouseId)};
-                		if(productSupplier!=null && supplier!=${productSupplier.tinNumber}){
-                			alert('The suppliers for RV(Debit Note Type) and the variant for  scanned barcode do not match. Do you want it to add it to the RV?');
-                			return;
-                		}
-                	}
-                	
-                });
-                
                 if (!result) {
                     return false;
                 }
@@ -273,9 +258,29 @@
                   return false;
                 }
               });
-            $("#SubtractReconciled").click(function(){
-            	$(this).hide();
+            
+            
+            $('#SubtractReconciled').click(function() {
+            	var supplier=${pa.reconciliationVoucher.supplier};
+            	var barcode = $('#upc').val();
+            	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
+            	var productSupplier;
+            	
+            	$.getJSON($('#supplierInfo').attr('href'), {
+            		barcode : barcode, warehouseId : warehouseId
+                  },
+                      function(res) {
+                	  if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                		  alert('I am okk');
+                	  }
+                	  else{
+                		  alert('Either Invalid barcode or No Item found.');
+                		  return false;
+                	  }
+                  });
+            	
             });
+            
 
         });
     </script>
