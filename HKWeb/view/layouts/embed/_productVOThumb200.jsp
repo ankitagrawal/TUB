@@ -10,7 +10,7 @@
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+<c:set var="imageMediumSize" value="<%=EnumImageSize.BigThumbSize%>"/>
 <s:layout-definition>
   <%
     ProductVO productVO = null;
@@ -56,7 +56,7 @@
       <div class='img180 ${productVO.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
         <a href="${productURL}" class="prod_link"
                 title="${productVO.name}">
-          <img style="max-height:180px;max-width:180px;"
+          <img
                src="${hk:getS3ImageUrl(imageMediumSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
         </a>
