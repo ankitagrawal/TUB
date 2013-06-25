@@ -65,6 +65,11 @@ public class SupplierTransactionAction extends BaseAction {
             return new RedirectResolution(SupplierTransactionAction.class);
         }
 
+        if(defaultView == 1){
+            startDate = new Date( new Date().getTime() - 1000L*60L*60L*24L*30L);
+            endDate = new Date();
+        }
+
         supplierTransactionPage = getSupplierTransactionService().getAllTransactionListForSuppliers(supplier, startDate, endDate, 0, 0);
         if(supplierTransactionPage != null){
             supplierTransactionList = supplierTransactionPage.getList();
