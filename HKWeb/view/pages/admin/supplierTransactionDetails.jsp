@@ -77,10 +77,17 @@
                     <td>${supplierTransaction.supplierTransactionType.name}</td>
                     <td>
                         <c:if test="${supplierTransaction.purchaseInvoice != null}">
-                            ${supplierTransaction.purchaseInvoice.invoiceNumber}
+                            <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="view" target="_blank">${supplierTransaction.purchaseInvoice.invoiceNumber}
+                                <s:param name="purchaseInvoice" value="${supplierTransaction.purchaseInvoice.id}"/>
+                            </s:link>
+
                         </c:if>
                         <c:if test="${supplierTransaction.debitNote != null}">
-                            ${supplierTransaction.debitNote.debitNoteNumber}
+                            <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view" target="_blank">${supplierTransaction.debitNote.debitNoteNumber}
+                                <s:param name="debitNote" value="${supplierTransaction.debitNote.id}"/>
+                                <s:param name="grn" value="${supplierTransaction.debitNote.goodsReceivedNote.id}"/>
+                            </s:link>
+
                         </c:if>
                         <c:if test="${supplierTransaction.busyPaymentId != null}">
                             ${supplierTransaction.busyPaymentId}

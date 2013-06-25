@@ -50,7 +50,7 @@
                         </c:choose>
                     </td>
                     <td>
-                        <s:link beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction" event="viewDetails">View Details
+                        <s:link beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction" event="viewDetails" target="_blank">View Details
                             <s:param name="supplier" value="${supplierTransaction.supplier.id}"/>
                             <s:param name="defaultView" value="1" />
                         </s:link>
