@@ -13339,4 +13339,64 @@
      </sql>
  </changeSet>
 
+    <changeSet author="tarun (generated)" id="1372146772298-1">
+        <createTable tableName="supplier_transaction_type">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372146772298-2">
+        <createTable tableName="supplier_transactions">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_transaction_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_invoice_id" type="INT"/>
+            <column name="debit_note_id" type="INT"/>
+            <column name="credit_note_id" type="INT"/>
+            <column name="busy_payment_id" type="VARCHAR(45)"/>
+            <column name="busy_supplier_balance" type="DOUBLE"/>
+            <column name="current_balance" type="DOUBLE"/>
+            <column name="narration" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372146772298-3">
+        <addForeignKeyConstraint baseColumnNames="credit_note_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_credit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372146772298-4">
+        <addForeignKeyConstraint baseColumnNames="debit_note_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_debit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="debit_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372146772298-5">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372146772298-6">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372146772298-7">
+        <addForeignKeyConstraint baseColumnNames="supplier_transaction_type_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_supplier_transaction_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier_transaction_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet  author="tarun (written)" id="1372146772298-8">
+        <sql>
+            INSERT INTO `supplier_transaction_type` (`id`, `name`)
+            VALUES ('1', 'CREATE'),
+            ('2', 'PURC'),
+            ('3', 'BP'),
+            ('4', 'PRT');
+        </sql>
+    </changeSet>
 </databaseChangeLog>
