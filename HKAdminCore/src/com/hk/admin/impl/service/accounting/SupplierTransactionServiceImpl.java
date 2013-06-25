@@ -37,67 +37,87 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         return supplierTransaction;
     }
 
+    //from purchase invoice
     @Override
     public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date, PurchaseInvoice purchaseInvoice) {
-        SupplierTransaction supplierTransaction = new SupplierTransaction();
-        supplierTransaction.setSupplier(supplier);
-        supplierTransaction.setSupplierTransactionType(supplierTransactionType);
-        supplierTransaction.setAmount(amount);
-        supplierTransaction.setDate(date);
-        supplierTransaction.setCurrentBalance(amount);
-        supplierTransaction.setPurchaseInvoice(purchaseInvoice);
-        supplierTransaction.setNarration("Supplier invoice no: "+purchaseInvoice.getInvoiceNumber());
-        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
+        SupplierTransaction supplierTransaction;
+        supplierTransaction = getSupplierTransactionDao().getSupplierTransactionFromPurchaseInvoice(purchaseInvoice);
+
+        if(supplierTransaction == null){
+            supplierTransaction = new SupplierTransaction();
+            supplierTransaction.setSupplier(supplier);
+            supplierTransaction.setSupplierTransactionType(supplierTransactionType);
+            supplierTransaction.setAmount(amount);
+            supplierTransaction.setDate(date);
+            supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
+            supplierTransaction.setPurchaseInvoice(purchaseInvoice);
+            supplierTransaction.setNarration("Supplier invoice no: "+purchaseInvoice.getInvoiceNumber());
+            supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
+        }
+
+        return supplierTransaction;
+    }
+
+    //from debit note
+    @Override
+    public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date,
+                                                         DebitNote debitNote) {
+        SupplierTransaction supplierTransaction;
+        supplierTransaction = getSupplierTransactionDao().getSupplierTransactionFromDebitNote(debitNote);
+
+        if(supplierTransaction == null){
+            supplierTransaction = new SupplierTransaction();
+            supplierTransaction.setSupplier(supplier);
+            supplierTransaction.setSupplierTransactionType(supplierTransactionType);
+            supplierTransaction.setAmount(amount);
+            supplierTransaction.setDate(date);
+            supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
+            supplierTransaction.setDebitNote(debitNote);
+            supplierTransaction.setNarration("Debit note no: "+debitNote.getDebitNoteNumber());
+            supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
+        }
+
+        return supplierTransaction;
+    }
+
+    //From credit note
+    @Override
+    public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date,
+                                                         CreditNote creditNote) {
+        SupplierTransaction supplierTransaction;
+        supplierTransaction = getSupplierTransactionDao().getSupplierTransactionFromCreditNote(creditNote);
+
+        if(supplierTransaction == null){
+            supplierTransaction = new SupplierTransaction();
+            supplierTransaction.setSupplier(supplier);
+            supplierTransaction.setSupplierTransactionType(supplierTransactionType);
+            supplierTransaction.setAmount(amount);
+            supplierTransaction.setDate(date);
+            supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
+            supplierTransaction.setCreditNote(creditNote);
+            supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
+        }
 
         return supplierTransaction;
     }
 
     @Override
-    public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date, DebitNote debitNote) {
-        SupplierTransaction supplierTransaction = new SupplierTransaction();
-        supplierTransaction.setSupplier(supplier);
-        supplierTransaction.setSupplierTransactionType(supplierTransactionType);
-        supplierTransaction.setAmount(amount);
-        supplierTransaction.setDate(date);
-        supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
-        supplierTransaction.setDebitNote(debitNote);
-        supplierTransaction.setNarration("Debit note no: "+debitNote.getDebitNoteNumber());
-        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
-
-        return supplierTransaction;
-    }
-
-    @Override
-    public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date, CreditNote creditNote) {
-        SupplierTransaction supplierTransaction = new SupplierTransaction();
-        supplierTransaction.setSupplier(supplier);
-        supplierTransaction.setSupplierTransactionType(supplierTransactionType);
-        supplierTransaction.setAmount(amount);
-        supplierTransaction.setDate(date);
-        supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
-        supplierTransaction.setCreditNote(creditNote);
-        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
-
-        return supplierTransaction;
-    }
-
-    @Override
-    public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date, String busyPaymentId, Double busySupplierBalance, String narration) {
+    public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date,
+                                                         String busyPaymentId, Double busySupplierBalance, String narration) {
         SupplierTransaction supplierTransaction;
         supplierTransaction = getSupplierTransactionFromBusyPaymentId(busyPaymentId);
         if(supplierTransaction == null){
-        supplierTransaction = new SupplierTransaction();
+            supplierTransaction = new SupplierTransaction();
+            supplierTransaction.setSupplier(supplier);
+            supplierTransaction.setSupplierTransactionType(supplierTransactionType);
+            supplierTransaction.setAmount(amount);
+            supplierTransaction.setDate(date);
+            supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
+            supplierTransaction.setBusySupplierBalance(busySupplierBalance);
+            supplierTransaction.setBusyPaymentId(busyPaymentId);
+            supplierTransaction.setNarration(narration);
+            supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
         }
-        supplierTransaction.setSupplier(supplier);
-        supplierTransaction.setSupplierTransactionType(supplierTransactionType);
-        supplierTransaction.setAmount(amount);
-        supplierTransaction.setDate(date);
-        supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
-        supplierTransaction.setBusySupplierBalance(busySupplierBalance);
-        supplierTransaction.setBusyPaymentId(busyPaymentId);
-        supplierTransaction.setNarration(narration);
-        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
-
         return supplierTransaction;
     }
 

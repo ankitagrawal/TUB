@@ -38,11 +38,11 @@ public class SupplierTransaction implements java.io.Serializable {
     private PurchaseInvoice purchaseInvoice;
 
     @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn (name = "debit_note_id", nullable = false)
+    @JoinColumn (name = "debit_note_id")
     private DebitNote debitNote;
 
     @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn (name = "credit_note_id", nullable = false)
+    @JoinColumn (name = "credit_note_id")
     private CreditNote creditNote;
 
     @Column (name = "busy_payment_id", length = 45)
