@@ -224,7 +224,7 @@ public class BusyPopulatePurchaseData {
                 Double mrp = debitNoteItem.mrp;
                 Double rate = debitNoteItem.cost_price;
                 Double vat = debitNoteItem.tax_value;
-                Double amount = rate*qty;
+                Double amount = (rate+(rate*vat))*qty;
                 count++;
                 try{
                     busySql.executeInsert("""
@@ -270,7 +270,7 @@ public class BusyPopulatePurchaseData {
                 Double mrp = debitNoteItem.mrp;
                 Double rate = debitNoteItem.cost_price;
                 Double vat = debitNoteItem.tax_value;
-                Double amount = rate*qty;
+                Double amount = (rate+(rate*vat))*qty;
                 count++;
                 try{
                     busySql.executeInsert("""
