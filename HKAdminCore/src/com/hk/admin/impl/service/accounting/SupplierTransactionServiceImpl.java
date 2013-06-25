@@ -32,7 +32,7 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         supplierTransaction.setAmount(amount);
         supplierTransaction.setDate(date);
         supplierTransaction.setCurrentBalance(amount);
-        supplierTransaction =  getSupplierTransactionDao().save(supplierTransaction);
+        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
 
         return supplierTransaction;
     }
@@ -47,7 +47,7 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         supplierTransaction.setCurrentBalance(amount);
         supplierTransaction.setPurchaseInvoice(purchaseInvoice);
         supplierTransaction.setNarration("Supplier invoice no: "+purchaseInvoice.getInvoiceNumber());
-        supplierTransaction =  getSupplierTransactionDao().save(supplierTransaction);
+        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
 
         return supplierTransaction;
     }
@@ -62,7 +62,7 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
         supplierTransaction.setDebitNote(debitNote);
         supplierTransaction.setNarration("Debit note no: "+debitNote.getDebitNoteNumber());
-        supplierTransaction =  getSupplierTransactionDao().save(supplierTransaction);
+        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
 
         return supplierTransaction;
     }
@@ -76,7 +76,7 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         supplierTransaction.setDate(date);
         supplierTransaction.setCurrentBalance(getUpdatedSupplierBalance(supplier, supplierTransactionType, amount));
         supplierTransaction.setCreditNote(creditNote);
-        supplierTransaction =  getSupplierTransactionDao().save(supplierTransaction);
+        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
 
         return supplierTransaction;
     }
@@ -96,7 +96,7 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         supplierTransaction.setBusySupplierBalance(busySupplierBalance);
         supplierTransaction.setBusyPaymentId(busyPaymentId);
         supplierTransaction.setNarration(narration);
-        supplierTransaction =  getSupplierTransactionDao().save(supplierTransaction);
+        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
 
         return supplierTransaction;
     }

@@ -6,8 +6,6 @@ import com.hk.pact.dao.BaseDao;
 
 public interface SupplierTransactionDao extends BaseDao {
 
-    public SupplierTransaction save(SupplierTransaction supplierTransaction);
-
     public SupplierTransaction getSupplierTransactionFromBusyPaymentId(String busyPaymentId);
 
     public SupplierTransaction getLastTransactionForSupplier(Supplier supplier);
