@@ -7,6 +7,9 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="com.hk.cache.CategoryCache" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -25,13 +28,20 @@
     pageContext.setAttribute("productService", productService);
     pageContext.setAttribute("eyeGlass", eyeGlass);
 
-	boolean isSecure = WebContext.isSecure();
+    boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
     Category stethoscope = categoryDao.getCategoryByName("stethoscope");
     pageContext.setAttribute("stethoscope", stethoscope);
 
-	String gosf = request.getParameter("gosf");
-	pageContext.setAttribute("gosf", gosf);
+    String gosf = request.getParameter("gosf");
+    pageContext.setAttribute("gosf", gosf);
+
+    List<Category> categoryListToHideDesc = new ArrayList<Category>();
+    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("alternative-remedies").getCategory());
+    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("sexual-wellness").getCategory());
+    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("fertility-support").getCategory());
+
+    pageContext.setAttribute("categoryListToHideDesc", categoryListToHideDesc);
 %>
  <c:set var="product" value="${pa.product}"/>
  <c:set var="seoData" value="${pa.seoData}"/>
@@ -472,7 +482,7 @@
 			</s:link>
 		</div>
 	</shiro:hasPermission>
-	<c:if test="${hk:isNotBlank(product.overview)}">
+	<c:if test="${hk:isNotBlank(product.overview) && !hk:collectionContainsAnyCollectionItem(product.categories, categoryListToHideDesc)}">
 		<p class="overview">
 				${product.overview}
 		</p>
@@ -707,7 +717,7 @@
 		</div>
 	</c:if>
 
-	<c:if test="${hk:isNotBlank(product.description)}">
+	<c:if test="${hk:isNotBlank(product.description) && !hk:collectionContainsAnyCollectionItem(product.categories, categoryListToHideDesc)}">
 		<div class="content" id="description">
 			<h4>
 				Description
