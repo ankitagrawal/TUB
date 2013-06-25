@@ -109,6 +109,7 @@ public class Keys {
 
         public static final String testDataDump                    = "testDataDump";
 
+        public static final String projectEnv                      = "projectEnv";
         public static final String dbHostName                      = "dbHostName";
         public static final String dbName                          = "dbName";
         public static final String dbUser                          = "dbUser";
@@ -129,7 +130,7 @@ public class Keys {
         public static final String hkApiAccessKey = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls = "eyeTryOnXmls";
 
-		public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
+		    public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
 
         public static final String hkBridgeRestUrl = "hkBridgeRestUrl";
         public static final String userEmailLinksRedirected = "userEmailLinksRedirected";
