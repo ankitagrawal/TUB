@@ -14,6 +14,7 @@ import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.constants.rtv.EnumExtraInventoryLineItemType;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -114,6 +115,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private Double rtvTotalPayable;
 	private Long extraInventoryId;
 	private Double piFinalPayable;
+	private Boolean isDebitNoteCreated;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -163,6 +165,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					purchaseInvoiceLineItems.add(purchaseInvoiceLineItem);
 			}
 			
+			isDebitNoteCreated = purchaseInvoiceService.getDebitNote(purchaseInvoice)!=null?Boolean.TRUE:Boolean.FALSE;
 			//fetch all existing RTV
 			piHasRtv = Boolean.FALSE;
 			if (purchaseInvoice.getRtvNotes() != null && purchaseInvoice.getRtvNotes().size() > 0) {
@@ -328,7 +331,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public Resolution save() {
 		if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceLineItems.size());
+			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoice.getId());
 
 			if (StringUtils.isBlank(purchaseInvoice.getInvoiceNumber()) || purchaseInvoice.getInvoiceDate() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
@@ -371,6 +374,11 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	public Resolution delete() {
 		Boolean deleteStatus = false;
 		if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
+			if(purchaseInvoiceService.getDebitNote(purchaseInvoice)!=null){
+				DebitNote dn = purchaseInvoiceService.getDebitNote(purchaseInvoice);
+				addRedirectAlertMessage(new SimpleMessage("Debit Note # "+dn.getId()+" is attached to this PI. Please delete that first"));
+				return new RedirectResolution(PurchaseInvoiceAction.class);
+			}
 			deleteStatus = procurementService.deletePurchaseInvoice(purchaseInvoice);
 		}
 		if (deleteStatus == false) {
@@ -424,6 +432,15 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				}
 			}
 		}
+	}
+	
+	public Resolution createDebitNote(){
+		if(purchaseInvoiceService.getDebitNote(purchaseInvoice)!=null){
+			addRedirectAlertMessage(new SimpleMessage("Debit Note Number - "+purchaseInvoiceService.getDebitNote(purchaseInvoice).getId()+"has already been created against the PI"));
+			return new RedirectResolution(DebitNoteAction.class);
+		}
+		
+		return new RedirectResolution(DebitNoteAction.class).addParameter("debitNoteFromPi").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -798,6 +815,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setIsRtvReconciled(Boolean isRtvReconciled) {
 		this.isRtvReconciled = isRtvReconciled;
+	}
+	
+	public Boolean getIsDebitNoteCreated() {
+		return isDebitNoteCreated;
+	}
+
+	public void setIsDebitNoteCreated(Boolean isDebitNoteCreated) {
+		this.isDebitNoteCreated = isDebitNoteCreated;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)

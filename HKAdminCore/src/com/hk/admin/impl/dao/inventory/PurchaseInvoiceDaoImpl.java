@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
@@ -73,5 +74,16 @@ public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoi
                 "select distinct pili.purchaseInvoice from PurchaseInvoiceLineItem pili where pili.sku.productVariant = (:productVariant)").setParameter("productVariant",
                 productVariant).list();
     }
+
+	@Override
+	public DebitNote getDebitNote(PurchaseInvoice purchaseInvoice) {
+		String query = "from DebitNote dn where dn.purchaseInvoice=:purchaseInvoice ";
+		DebitNote debitNote = (DebitNote) findUniqueByNamedParams(query, new String[]{"purchaseInvoice"}, new Object[]{purchaseInvoice});
+		if(debitNote!=null){
+			return debitNote;
+		}
+		else
+			return null;
+	}
 
 }

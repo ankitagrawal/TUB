@@ -1,42 +1,15 @@
 package com.hk.taglibs;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import com.hk.admin.impl.service.email.ProductInventoryDto;
-import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
-import com.hk.domain.queue.ActionTask;
-import com.hk.impl.service.queue.BucketService;
-import net.sourceforge.stripes.util.CryptoUtil;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
+import com.hk.admin.impl.service.email.ProductInventoryDto;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
@@ -54,13 +27,7 @@ import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfig;
-import com.hk.domain.catalog.product.VariantConfigOption;
-import com.hk.domain.catalog.product.VariantConfigOptionParam;
-import com.hk.domain.catalog.product.VariantConfigValues;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.content.HeadingProduct;
 import com.hk.domain.core.Country;
@@ -76,6 +43,8 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderLifecycle;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.ActionTask;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
@@ -83,17 +52,17 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.queue.ActionItem;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.dao.sku.SkuDao;
@@ -118,6 +87,21 @@ import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
 import com.hk.util.OrderUtil;
 import com.hk.util.ProductUtil;
+import net.sourceforge.stripes.util.CryptoUtil;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class Functions {
 
@@ -278,15 +262,15 @@ public class Functions {
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsAnyCollectionItem(Collection c1, Collection c2) {
-      if (c1 == null || c2 == null) {
-        return false;
-      }
-      for (Object o : c2) {
-        if (c1.contains(o)) {
-          return true;
+        if (c1 == null || c2 == null) {
+            return false;
         }
-      }
-      return false;
+        for (Object o : c2) {
+            if (c1.contains(o)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
@@ -910,14 +894,8 @@ public class Functions {
     }
 
     public static String getAppendedURL(String baseUrl, String parameter, String value) {
-        if (StringUtils.isNotBlank(baseUrl) && StringUtils.isNotBlank(parameter) && StringUtils.isNotBlank(value)) {
-            if (baseUrl.contains("?")) {
-                return baseUrl.concat("&" + parameter + "=" + value);
-            } else {
-                return baseUrl.concat("?" + parameter + "=" + value);
-            }
-        }
-        return baseUrl;
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.getAppendedProductURL(baseUrl, parameter, value);
     }
 
     public static ActionItem getActionItem(ShippingOrder shippingOrder) {

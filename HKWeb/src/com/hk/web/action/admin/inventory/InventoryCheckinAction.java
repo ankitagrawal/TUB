@@ -7,6 +7,7 @@ import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
+import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
@@ -29,6 +30,8 @@ import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.*;
+import com.hk.domain.inventory.po.PurchaseInvoice;
+import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
@@ -108,6 +111,8 @@ public class InventoryCheckinAction extends BaseAction {
     private List<SkuGroup> skuGroupList;
     @Autowired
     CycleCountService cycleCountService;
+    @Autowired
+	private PurchaseInvoiceDao purchaseInvoiceDao;
 
     // SkuGroupDao skuGroupDao;
 
@@ -269,6 +274,24 @@ public class InventoryCheckinAction extends BaseAction {
                         	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
                         	po.setExtraInventoryId(id);
                         }
+                    	
+						List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
+						if (grnLineItems != null && grnLineItems.size() > 0) {
+							for (GrnLineItem item : grnLineItems) {
+							if (item.getQty() != null && item.getQty() == 0) {
+								if (grn.getPurchaseInvoices() != null && grn.getPurchaseInvoices().size() > 0) {
+									for (PurchaseInvoice invoice : grn.getPurchaseInvoices()) {
+										List<PurchaseInvoiceLineItem> items = invoice.getPurchaseInvoiceLineItems();
+										if (items != null && items.size() > 0) {
+										for (PurchaseInvoiceLineItem pili : items) {
+										if (pili.getGrnLineItem().equals(item)) {
+											pili.setGrnLineItem(null);
+											purchaseInvoiceDao.save(pili);
+											}}}}}
+								grnLineItemDao.delete(item);
+								}
+								
+							}}
                         grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
                         getAdminEmailManager().sendGRNEmail(grn);

@@ -1,0 +1,210 @@
+.clr				{ 
+					clear:both;
+					}
+			
+.nRow				{
+					width:100%;
+					clear:both;
+					}
+			
+
+.container			{ 
+					width:960px;
+					clear:both; 
+					margin:0 auto;
+					}
+					
+
+.firstThreeBanners	{ 
+					width:910px; 
+					height:395px; 
+					margin:0 auto; 
+					text-align:left; 
+					background:url(../pages/offers/health-nutrition-page/images/first-three-categories.jpg) top left no-repeat;
+					}
+					
+.secondThreeBanners	{ 
+					width:910px; 
+					height:390px; 
+					margin:0 auto; 
+					text-align:left; 
+					background:url(../pages/offers/health-nutrition-page/images/second-three-categories.jpg) top left no-repeat;
+					}
+
+.lastThreeBanners	{ 
+					width:910px; 
+					height:390px; 
+					margin:0 auto; 
+					text-align:left; 
+					background:url(../pages/offers/health-nutrition-page/images/last-three-categories.jpg) top left no-repeat;
+					}
+					
+
+.btn1				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:235px 0px 0px 200px;
+					}
+					
+.btn2				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:257px 0px 0px 470px;
+					}
+					
+.btn3				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:260px 0px 0px 785px;
+					}
+					
+
+.btn4				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:240px 0px 0px 190px;
+					}
+					
+.btn5				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:248px 0px 0px 475px;
+					}
+					
+.btn6				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:267px 0px 0px 770px;
+					}
+					
+
+.btn7				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:242px 0px 0px 180px;
+					}
+					
+.btn8				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:254px 0px 0px 470px;
+					}
+					
+.btn9				{ 
+					position:absolute; 
+					height:50px; 
+					width:100px; 
+					margin:247px 0px 0px 780px;
+					}
+
+#cquery-ALL-5				{ 
+							position:relative; 
+							width:960px;
+							}
+							
+#cquery-ALL-5 ul 			{ 
+							margin:0px; 
+							padding:0px; 
+							list-style-type:none;
+							height:380px; 
+							overflow:hidden; 
+							position:relative;
+							}
+							
+#cquery-ALL-5 ul li			{ 
+							margin:0px; 
+							height:380px; 
+							overflow:hidden; 
+							padding:0px; 
+							position:absolute; 
+							display:none;
+							}
+							
+
+.controllButton-ALL-5			{ 
+								margin:350px 0px 0px 870px;
+								position:absolute; 
+								z-index:10000; 
+								height:50px; 
+								width:200px; top:0px;
+								}
+								
+.controllButton-ALL-5 a			{ 
+								margin:0px 8px 0px 0px; 
+								padding:0px; 
+								width:11px; 
+								height:11px; 
+								background: url(../pages/offers/health-nutrition-page/images/r-btn.png) 0 0 no-repeat;
+								*background:#ccc; 
+								_background: #ccc; 
+								float:left; 
+								display:block; 
+								cursor:pointer; 
+								font-size:10px; 
+								line-height:10px;
+                                border:none;
+                                text-decoration:none;
+                                outline:none;
+								}
+								
+
+.controllButton-ALL-5 a:hover		{ 
+									background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0px no-repeat;
+									*background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0 no-repeat;
+									_background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0 no-repeat;
+                                    border:none;
+                                    text-decoration:none;
+                                    outline:none;
+									}
+								
+.controllButton-ALL-5 a.setActive	{  
+									background:url(../pages/offers/health-nutrition-page/images/r-btn.png) -11px 0px no-repeat;
+									*background:#000; 
+									_background:#000;
+                                    border:none;
+                                    text-decoration:none;
+                                    outline:none;
+									}
+									
+.previous-ALL-5						{
+									position:absolute; 
+									width:30px; 
+									height:363px; 
+									margin:0px 0px 0px -30px; 
+									background:#555;cursor:pointer; 
+									text-decoration:none; 
+									top:0px;
+									}
+									
+.previous-ALL-5:hover				{ 
+									background:#ffc000;
+									cursor:pointer; 
+									text-decoration:none;
+									}
+									
+
+.next-ALL-5							{	
+									position:absolute; 
+									width:30px; 
+									height:363px; 
+									background:#555;  
+									margin:0px 0px 0px 960px;
+									cursor:pointer; 
+									text-decoration:none; 
+									top:0px;
+									}
+									
+.next-ALL-5:hover					{ 
+									background:#ffc000;
+									cursor:pointer; 
+									text-decoration:none;
+									}
+									

@@ -18,6 +18,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.warehouse.EnumWarehouseIdentifier;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -1156,7 +1157,12 @@ public class AdminEmailManager {
         }
         return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
 	}
-
+    
+    public boolean sendDebitNoteMail(DebitNote debitNote){
+    	HashMap valuesMap = new HashMap();
+    	valuesMap.put("debitNote", debitNote);
+    	return false;
+    }
     static enum Product_Status {
 
     }
