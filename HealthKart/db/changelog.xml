@@ -13338,7 +13338,13 @@
          insert into payment_status values (9,'Refunded');
      </sql>
  </changeSet>
- 	<changeSet author="deepakC" id="1370601362351-11234">
+<changeSet author="Ankit Chhabra (written)" id="20130625-01">
+     <sql>
+         update badge set badge_name = 'COPPER' where id = '1';
+     </sql>
+ </changeSet>
+ 
+  	<changeSet author="deepakC" id="1370601362351-11234">
         <addColumn tableName="product_variant">
             <column name="mrp_qty" type="INT"/>
         </addColumn>
@@ -13351,5 +13357,4 @@
             <column name="status" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
-
 </databaseChangeLog>

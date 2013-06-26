@@ -71,6 +71,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	public void addToCart(Long orderId, List<ProductVariantInfo> productVariants) throws InvalidOrderException {
 		Map<String, CartLineItem> cartItemMap = new HashMap<String, CartLineItem>();
 
+		double totalHKPrice = 0;
 		Order order = this.orderService.find(orderId);
 		List<CartLineItem> cartItems = order.getProductCartLineItems();
 
@@ -82,6 +83,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 						cartLineItem.setQty(productVariantInfo.getQuantity());
 						processedVariants.add(productVariantInfo);
 					}
+					totalHKPrice += cartLineItem.getHkPrice() * cartLineItem.getQty();
 					cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 				}
 			}
@@ -98,11 +100,12 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			cartLineItem.setMarkedPrice(productVariant.getMarkedPrice());
 			cartLineItem.setDiscountOnHkPrice(0d);
 			cartLineItem.setHkPrice(productVariant.getHkPrice());
+			totalHKPrice += (cartLineItem.getHkPrice() * cartLineItem.getQty());
 			cartLineItem.setLineItemType(EnumCartLineItemType.Product.asCartLineItemType());
 			cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 		}
 
-		this.validateCart(order.getUser().getId(), cartItemMap.values());
+		this.validateCart(order.getUser().getId(), cartItemMap.values(), totalHKPrice);
 
 		for (CartLineItem cartLineItem : cartItemMap.values()) {
 			this.cartLineItemService.save(cartLineItem);
@@ -140,7 +143,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	public Payment makePayment(Long orderId, String remoteIp) throws InvalidOrderException {
 		Order order = this.orderService.find(orderId);
 		List<CartLineItem> cartLineItems = order.getProductCartLineItems();
-		this.validateCart(order.getUser().getId(), cartLineItems);
+		this.validateCart(order.getUser().getId(), cartLineItems, order.getAmount());
 		List<CartLineItem> lineItems = new ArrayList<CartLineItem>(cartLineItems);
 		for (CartLineItem cartLineItem : lineItems) {
 			if (cartLineItem.getQty() == 0l) {
@@ -175,7 +178,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 
 	protected abstract Payment doPayment(Long orderId, String remoteIp);
 
-	protected abstract void validateCart(Long userId, Collection<CartLineItem> cartLineItems)
+	protected abstract void validateCart(Long userId, Collection<CartLineItem> cartLineItems, double hkPrice)
 			throws InvalidOrderException;
 
 	protected abstract void validatePayment(Long orderId) throws InvalidOrderException;
