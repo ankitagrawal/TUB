@@ -146,7 +146,7 @@ public class ProductAction extends BaseAction {
 
       // code to check if this page has all variants out of stock. this is used to fire a GA custom event
       if (!product.isDeleted()) {
-        if (product.getProductVariants() != null && product.getProductVariants().size() > 1) {
+        if (product.getProductVariants() != null && !product.getProductVariants().isEmpty() && product.getProductVariants().size() > 1) {
           // multiple products
 	        isOutOfStockPage = true;
           for (ProductVariant productVariant: product.getProductVariants()) {
@@ -154,7 +154,7 @@ public class ProductAction extends BaseAction {
               isOutOfStockPage = false;
             }
           }
-        } else if (product.getProductVariants() != null) {
+        } else if (product.getProductVariants() != null && !product.getProductVariants().isEmpty()) {
           ProductVariant productVariant = product.getProductVariants().get(0);
           if (!productVariant.isDeleted() && productVariant.isOutOfStock()) {
             isOutOfStockPage = true;
