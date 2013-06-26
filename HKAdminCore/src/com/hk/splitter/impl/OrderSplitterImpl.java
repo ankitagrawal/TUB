@@ -19,6 +19,7 @@ import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.core.fliter.OrderSplitterFilter;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.CartLineItem;
@@ -78,8 +79,6 @@ public class OrderSplitterImpl implements OrderSplitter {
 
 		validate(order);
 
-		Warehouse corporateWarehouse = warehouseService.getCorporateOffice();
-		
 		Collection<Warehouse> whs = warehouseService.getAllActiveWarehouses();
 		List<Warehouse> filteredWarehoues = new ArrayList<Warehouse>();
 		for (Warehouse warehouse : whs) {
@@ -108,11 +107,18 @@ public class OrderSplitterImpl implements OrderSplitter {
 				}
 				
 				if(!isAdded) {
-					if(cartLineItem.getProductVariant().getProduct().isService()) {
-						container.addLineItem(corporateWarehouse, cartLineItem);
-					} else {
-						throw new OrderSplitException("Inventory is not available for line item: " + cartLineItem.getId(), order); 
+					Product product = cartLineItem.getProductVariant().getProduct();
+					if(product.isDropShipping() || product.isService()) {
+						Collection<Sku> skus = skuService.getSkus(cartLineItem.getProductVariant(), filteredWarehoues);
+						for (Sku sku : skus) {
+							container.addLineItem(sku.getWarehouse(), cartLineItem);
+							isAdded = true;
+						}
 					}
+				}
+				
+				if(!isAdded) {
+					throw new OrderSplitException("Inventory is not available for line item: " + cartLineItem.getId(), order); 
 				}
 			}
 		}
