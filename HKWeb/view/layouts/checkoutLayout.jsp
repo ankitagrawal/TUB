@@ -25,7 +25,7 @@
 
     <jsp:include page="/includes/_style.jsp"/>
     <s:layout-component name="analytics">
-      <jsp:include page="/includes/_analytics.jsp"/>
+      <s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="" allCategories="" brand="" isProd="<%=false%>"/>
     </s:layout-component>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>

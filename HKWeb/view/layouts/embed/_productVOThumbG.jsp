@@ -6,6 +6,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page import="com.hk.cache.vo.ProductVO" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
@@ -43,9 +44,11 @@
     }
   </style>
   <c:if test="${!productVO.googleAdDisallowed && !productVO.deleted && !productVO.hidden}">
+    <c:set var="param_ref" value="<%=HealthkartConstants.URL.productReferrerId%>"/>
+    <c:set var="productURL" value="${hk:getAppendedURL(productVO.productURL, param_ref, productReferrerId)}"/>
     <div class='grid_4 product'>
       <div class='img128 ${productVO.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
-        <a href="${productVO.productURL}?productReferrerId=${productReferrerId}" class="prod_link"
+        <a href="${productURL}" class="prod_link"
                 title="${productVO.name}">
           <img src="${hk:getS3ImageUrl(imageSmallSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
@@ -53,7 +56,7 @@
       </div>
       <div>
 					<span style="height:20px;max-width:190px;">
-						<a href="${productVO.productURL}?productReferrerId=${productReferrerId}" title="${productVO.name}"
+						<a href="${productURL}" title="${productVO.name}"
                     class="prod_link">
               ${productVO.name}
             </a>
