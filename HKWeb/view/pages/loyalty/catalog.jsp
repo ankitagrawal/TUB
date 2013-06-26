@@ -29,15 +29,15 @@
           <div class="embedMarginTop119"></div>
           <div class="priceFilterContainerOne" style="margin-bottom:30px;">
             <div class="sorting">SORT BY POINTS</div>
-                 <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
                   <div class="priceRange optionBottom">
+                 <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" style="width:100%; float:left;">
 			   		<strong><span class="categoryNameSpan" style="font-size: 16px;">
                   		clear all </span></strong>
-			 	  </div></s:link>
+			 	  </s:link></div>
                   <c:set var="rangeSelected" value="${lca.rangeSelected}"/>
                   <div class="brandsContainer" >
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
 	   			  <div class="priceRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="0"/>
                   <s:param name="maxPoints" value="100"/>
                     <c:choose>
@@ -48,10 +48,10 @@
 							<span class="pointRange">less than 100</span>
                       </c:otherwise>
                     </c:choose>
-                  </div>
                   </s:link>
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  </div>
 				  <div class="priceRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="101"/>
                   <s:param name="maxPoints" value="200"/>
                     <c:choose>
@@ -62,10 +62,10 @@
 							<span class="pointRange">101-200</span>
                       </c:otherwise>
                     </c:choose>
-				  </div>
                   </s:link>
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+				  </div>
 				<div class="priceRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="201"/>
                   <s:param name="maxPoints" value="300"/>
                   <c:choose>
@@ -76,9 +76,10 @@
 							<span class="pointRange">201-300</span>
                       </c:otherwise>
                     </c:choose>
-                  </div></s:link>
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  </s:link>
+                  </div>
 				<div class="priceRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="301"/>
                   <s:param name="maxPoints" value="10000"/>
                   <c:choose>
@@ -89,17 +90,17 @@
 							<span class="pointRange">301 and above</span>
                       </c:otherwise>
                     </c:choose>
-                  </div></s:link>
+                  </s:link></div>
 				  </div>
 			</div>
 			
 		<div class="priceFilterContainerOne">
 			<div class="sorting">SORT BY CATEGORY</div>
-              <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
               <div class="priceRange optionBottom">
+              <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" style="width:100%; float:left;">
 			   <strong><span class="categoryNameSpan" style="font-size: 16px;">
                   clear all </span></strong>
-			 </div></s:link>
+			 </s:link></div>
               <div class="brandsContainer " style ="height: 245px;">
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
