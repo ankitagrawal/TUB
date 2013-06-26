@@ -324,6 +324,15 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		bonusProfile.setStatus(KarmaPointStatus.BONUS);
 		bonusProfile.setBadge(this.getUserBadgeInfo(user).getBadge());
 		this.loyaltyProductDao.saveOrUpdate(bonusProfile);
+		
+		
+		//Check for last 24 hours orders to add previous orders
+		List<Order> previousOrders = this.getPreviousDayOrders(user);
+		if (previousOrders.size() > 0) {
+			for(Order previousOrder: previousOrders) {
+				this.creditKarmaPoints(previousOrder);
+			}
+		}
 	}
 
 	@Override
@@ -724,7 +733,32 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
     	return loyaltyProducts; 
 
 	}
+
+	@Override
+	public List<UserOrderKarmaProfile> searchKarmaProfiles(Map<String, Object> searchMap) {
+		 return userOrderKarmaProfileDao.searchUserOrderKarmaProfile(searchMap);
+				 
+	}
 	
+	private List<Order> getPreviousDayOrders (User user) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		criteria.add(Restrictions.ge("createDate", calendar.getTime()));
+		criteria.add(Restrictions.disjunction());
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Placed.asOrderStatus().getId()));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.InProcess.asOrderStatus().getId()));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Shipped.asOrderStatus().getId()));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.OnHold.asOrderStatus().getId()));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId()));
+
+		@SuppressWarnings("unchecked")
+		List<Order> list = this.baseDao.findByCriteria(criteria);
+		return list;
+
+		
+	}
 	/**
 	 * 
 	 * Setters and getters start from here.
