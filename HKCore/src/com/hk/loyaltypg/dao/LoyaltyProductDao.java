@@ -8,7 +8,7 @@ import com.hk.store.CategoryDto;
 
 public interface LoyaltyProductDao extends BaseDao {
 
-	LoyaltyProduct getProductbyVarientId(String variantId);
+	LoyaltyProduct getProductbyVariantId(String variantId);
 
 	List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
 

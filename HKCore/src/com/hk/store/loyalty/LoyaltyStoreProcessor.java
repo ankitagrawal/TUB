@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.discount.RewardPointConstants;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
@@ -85,12 +86,14 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	}
 
 	@Override
-	protected void validateCart(Long userId, Collection<CartLineItem> cartLineItems) throws InvalidOrderException {
+	protected void validateCart(Long userId, Collection<CartLineItem> cartLineItems, double hkPrice) throws InvalidOrderException {
 		double shoppingPoints = this.loyaltyProgramService.calculateLoyaltyPoints(cartLineItems);
 		double userKarmaPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.userService.getUserById(userId));
-		if(shoppingPoints > userKarmaPoints ) {
-			throw new InvalidOrderException("You do not have sufficient loyalty points to purchase the product.");
-		}
+		if (RewardPointConstants.MAX_REWARD_POINTS <= hkPrice) {
+			throw new InvalidOrderException("Sorry! You can not put any more product in your cart right now. Confirm this order and place another order to add more products.");
+		} else if(shoppingPoints > userKarmaPoints ) {
+			throw new InvalidOrderException("You do not have sufficient loyalty points to add this product.");
+		}  
 	}
 
 	@Override
