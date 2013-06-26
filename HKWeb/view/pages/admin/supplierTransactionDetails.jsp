@@ -11,6 +11,11 @@
                 margin: 0em;
             }
         </style>
+
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+        <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#show-search-filter').click(function(){

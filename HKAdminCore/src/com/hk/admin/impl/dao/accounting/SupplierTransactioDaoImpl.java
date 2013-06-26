@@ -68,7 +68,7 @@ public class SupplierTransactioDaoImpl extends BaseDaoImpl implements SupplierTr
             }
         }
         else {
-            String query = "from SupplierTransaction st where st.id in (231, 227, 226, 225, 224) ORDER BY id DESC";
+            String query = "from SupplierTransaction s where s.id in (select max(st.id) from SupplierTransaction st group by st.supplier.id)";
             supplierTransactionList = (List<SupplierTransaction>) findByQuery(query);
         }
 
