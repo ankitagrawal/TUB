@@ -1,0 +1,326 @@
+body			{ 
+				margin:50px 0px 20px 0px; 
+				text-align:center; 
+				font-family:Georgia, "Times New Roman", Times, serif; 
+				font-size:15px; 
+				line-height:23px; 
+				color:#464646; 
+				font-weight:normal;
+				}
+				
+p				{ 
+				margin:0px;
+				padding:0px;
+				}
+				
+p.paraGp1		{ 
+				margin:0px 0px 20px 0px;
+				}
+				
+pre				{ 
+				font-family:Georgia, "Times New Roman", Times, serif; 
+				font-size:15px; 
+				line-height:23px; 
+				margin-bottom:22px;
+				}
+
+.nRow			
+				{ 
+				width:100%; 
+				clear:both;
+				}
+
+.dHeight1		
+				{ 
+				height:70px;
+				}
+				
+.cl				{ 
+				clear:both;
+				}
+				
+
+ul.listOne		{ 
+				margin:0px; 
+				padding:0px; 
+				list-style:none;
+				}
+				
+ul.listOne li	{ 
+				line-height:20px; 
+				padding-bottom:5px;
+				}
+
+#container		{ 
+				clear:both; 
+				width:960px; 
+				margin:0 auto; 
+				text-align:left;
+				}
+				
+
+.pageHeadImg1	{ 
+				text-align:center; 
+				padding-bottom:10px;
+				}
+				
+.pageHeadImg2	{ 
+				text-align:center;
+				padding-bottom:20px;
+				}
+
+.mainHead1		{ 
+				text-align:center; 
+				padding:65px 0px 10px 0px;
+				}
+				
+.mainHead1 p	{ 
+				margin-bottom:20px;
+				}
+				
+
+h1				{ 
+				margin:0px 190px 0px 150px; 
+				padding:0px; 
+				font-family:Georgia, "Times New Roman", Times, serif; 
+			  	font-size:22px; 
+				line-height:26px; 
+				font-weight:normal;
+				}
+				
+h1 span			{ 
+				font-size:14px;
+				}
+				
+
+.leftBar		{ 
+				width:300px; 
+				float:left; 
+				padding-right:20px;
+				}
+				
+.centerBar		{ 
+				width:300px; 
+				float:left; 
+				padding-right:20px;
+				}
+				
+.rightBar		{ 
+				width:300px; 
+				float:right;
+				}
+				
+.bananaPic		{ 
+				position:absolute; 
+				margin:0px 0px 0px 220px;
+				}
+				
+.broccoliPic	{ 
+				position:absolute; 
+				margin:272px 0px 0px 0px;
+				}
+				
+.muttonPic		{ 
+				position:absolute; 
+				margin:157px 0px 0px 118px;
+				}
+				
+.oatMealPic		{ 
+				position:absolute; 
+				margin:510px 0px 0px 133px;
+				}
+				
+
+.supplementPic1	{ 
+				position:absolute; 
+				margin:320px 0px 0px 0px;
+				}
+				
+.supplementPic2	{ 
+				position:absolute; 
+				margin:0px 0px 0px 160px;
+				}
+				
+.supplementPic3	{ 
+				position:absolute; 
+				margin:683px 0px 0px 160px;
+				}
+				
+.supplementPic4	{ 
+				position:absolute; 
+				margin:0px 0px 0px 160px;
+				}
+				
+.supplementPic5	{ 
+				position:absolute; 
+				margin:322px 0px 0px 160px;
+				}
+
+.yellowBx				{ 
+						position:absolute; 
+						width:1px; 
+						height:1px; 
+						overflow:hidden; 
+						display:none; 
+						z-index:10001; 
+						margin:0px 0px 0px 39px; 
+						border:4px solid #000; 
+						text-align:left; 
+						background:#fff; 
+						}
+
+.yellowBx h1			{ 
+						margin:0px 0px 10px 0px; 
+						padding:0px; 
+						font-size:30px; 
+						line-height:30px; 
+						font-weight:bold;  
+						color:#182a5c; 
+						font-family:Arial;
+						}
+
+.greenBx				{
+						right:0; 
+						position:absolute; 
+						width:172px; 
+						height:152px; 
+						margin-top:0px; 
+						z-index:10000; 
+						background:url(images/diet-and-workout-counselling.jpg) top right no-repeat;
+						}
+						
+.greenBx a.one			{ 
+						width:162px; 
+						height:152px; 
+						display:block; 
+						line-height:107px; 
+						text-decoration:none;
+						}
+						
+.greenBx a.one:hover	{ 
+						text-decoration:none;
+						}
+						
+a.closeBtn				{ 
+						width:22px; 
+						height:22px; 
+						display:block; 
+						position:absolute; 
+						text-decoration:none; 
+						margin:320px 0px 0px 435px;
+						background:url(images/close-btn.jpg) top left no-repeat;
+						}
+						
+.pad1Form				{ 
+						padding:20px 0px 20px 25px; 
+						font-size:13px;
+						}
+						
+.pad1Form h3			{
+						margin:0px 0px 6px 0px; 
+						padding:0px;
+						color:#333;
+						font-family:Arial, Helvetica, sans-serif;
+						font-size:16px !important;
+						line-height:16px;
+						font-weight:normal;
+						}						
+						
+.pad1Form p				{ 
+						margin:0px; 
+						padding:0px;
+						font-family:Tahoma, Geneva, sans-serif; 
+						font-size:12px; 
+						color:#222; 
+						font-weight:normal;
+						}
+
+.bgFormInputs			{ 
+						width:280px; 
+						padding:8px 10px 4px 10px; 
+						margin-bottom:10px; 
+						background:url(images/bg-inputs.jpg) top left repeat-x #fff; 
+						border:1px solid #c1c1c1; 
+						font-size:15px; 
+						font-weight:normal; 
+						outline:none;
+						}
+						
+.bgFormCBArea			{
+						width:25px; 
+						padding-top:5px; 
+						float:left;	
+						}	
+								
+.bgFormCBMsgArea		{
+						width:400px; 
+						float:left;
+						padding:5px 0px 8px 0px;
+						font-size:12px;
+						line-height:16px;
+						font-family:Arial, Helvetica, sans-serif;
+						}					
+						
+
+.captchaImgArea			{ 
+						width:120px; 
+						float:left;
+						margin-top:4px;
+						}
+						
+.captchaInputArea		{ 
+						width:115px; 
+						float:left; 
+						margin-bottom:10px;
+						}
+						
+.captchaInput			{ 
+						width:100px; 
+						padding:6px 10px 6px 10px; 
+						margin-bottom:10px; 
+						background:url(images/bg-inputs.jpg) top left repeat-x #fff; 
+						border:1px solid #c1c1c1; 
+						font-size:15px; 
+						font-weight:normal; 
+						outline:none;
+						}
+						
+.captchaTxt				{ 
+						width:180px; 
+						float:left; 
+						padding:4px 0px 0px 20px; 
+						font-size:13px; 
+						font-family:Tahoma, Geneva, sans-serif;
+						}
+
+
+.bgFormTxtArea			{ 
+						width:350px; 
+						height:120px; 
+						padding:8px 10px 0px 10px; 
+						margin-bottom:3px; 
+						background:url(images/bg-inputs.jpg) top left repeat-x #fff; 
+						border:1px solid #c1c1c1; 
+						font-size:15px; 
+						font-weight:normal; 
+						outline:none;
+						}
+
+.backToHK				{
+						border-top:1px solid #ccc;
+						padding:10px 30px 0px 0px;
+						font-size:12px;
+						text-align:right;
+						}						
+.backToHK a				{ 
+						color:#333;
+						text-decoration:none;
+						font-family:Georgia, "Times New Roman", Times, serif;	
+						}
+
+.submitBtnRed           {
+                        background:none;
+                        border:none;
+                        outline:none;
+                        cursor:pointer;
+                        }

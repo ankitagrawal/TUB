@@ -445,8 +445,6 @@ public class XslGenerator {
         xlsWriter.addHeader(XslConstants.SUPPLIER_NAME, XslConstants.SUPPLIER_NAME);
         xlsWriter.addHeader(XslConstants.SUPPLIER_TIN, XslConstants.SUPPLIER_TIN);
         xlsWriter.addHeader(XslConstants.ADDRESS, XslConstants.ADDRESS);
-        xlsWriter.addHeader(XslConstants.CONTACT_PERSON, XslConstants.CONTACT_PERSON);
-        xlsWriter.addHeader(XslConstants.CONTACT_NUMBER, XslConstants.CONTACT_NUMBER);
         xlsWriter.addHeader(XslConstants.CREDIT_DAYS, XslConstants.CREDIT_DAYS);
         xlsWriter.addHeader(XslConstants.TARGET_CREDIT_DAYS, XslConstants.TARGET_CREDIT_DAYS);
         xlsWriter.addHeader(XslConstants.LEAD_TIME, XslConstants.LEAD_TIME);
@@ -454,6 +452,16 @@ public class XslGenerator {
         xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
         xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
         xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
+        xlsWriter.addHeader(XslConstants.CONTACT_PERSON, XslConstants.CONTACT_PERSON);
+        xlsWriter.addHeader(XslConstants.CONTACT_NUMBER, XslConstants.CONTACT_NUMBER);
+        xlsWriter.addHeader(XslConstants.EMAIL_ID_1, XslConstants.EMAIL_ID_1);
+        xlsWriter.addHeader(XslConstants.CONTACT_PERSON_2, XslConstants.CONTACT_PERSON_2);
+        xlsWriter.addHeader(XslConstants.CONTACT_NUMBER_2, XslConstants.CONTACT_NUMBER_2);
+        xlsWriter.addHeader(XslConstants.EMAIL_ID_2, XslConstants.EMAIL_ID_2);
+        xlsWriter.addHeader(XslConstants.CONTACT_PERSON_3, XslConstants.CONTACT_PERSON_3);
+        xlsWriter.addHeader(XslConstants.CONTACT_NUMBER_3, XslConstants.CONTACT_NUMBER_3);
+        xlsWriter.addHeader(XslConstants.EMAIL_ID_3, XslConstants.EMAIL_ID_3);
+        
 
         for (Supplier supplier : supplierList) {
             xlsWriter.addCell(xlsRow, supplier.getName());
@@ -481,8 +489,6 @@ public class XslGenerator {
             }
 
             xlsWriter.addCell(xlsRow, supplierAddress.toString());
-            xlsWriter.addCell(xlsRow, supplier.getContactPerson());
-            xlsWriter.addCell(xlsRow, supplier.getContactNumber());
             xlsWriter.addCell(xlsRow, supplier.getCreditDays());
             xlsWriter.addCell(xlsRow, supplier.getTargetCreditDays());
             xlsWriter.addCell(xlsRow, supplier.getLeadTime());
@@ -490,6 +496,16 @@ public class XslGenerator {
             xlsWriter.addCell(xlsRow, supplier.getMargins());
             xlsWriter.addCell(xlsRow, supplier.getBrandName());
             xlsWriter.addCell(xlsRow, supplier.getTOT());
+            xlsWriter.addCell(xlsRow, supplier.getContactPerson());
+            xlsWriter.addCell(xlsRow, supplier.getContactNumber());
+            xlsWriter.addCell(xlsRow, supplier.getEmail_id());
+            xlsWriter.addCell(xlsRow, supplier.getContactPerson2());
+            xlsWriter.addCell(xlsRow, supplier.getContactNumber2());
+            xlsWriter.addCell(xlsRow, supplier.getEmail_id2());
+            xlsWriter.addCell(xlsRow, supplier.getContactPerson3());
+            xlsWriter.addCell(xlsRow, supplier.getContactNumber3());
+            xlsWriter.addCell(xlsRow, supplier.getEmail_id3());            
+            
             xlsRow++;
         }
         xlsWriter.writeData(xlsFile, "SupplierList");

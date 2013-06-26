@@ -5,6 +5,7 @@ import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.catalog.image.EnumImageType;
 import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
@@ -27,15 +28,20 @@ import com.hk.web.filter.WebContext;
 import com.hk.cache.vo.ProductVO;
 import net.sourceforge.stripes.controller.StripesFilter;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    @Value("#{hkEnvProps['" + Keys.Env.projectEnv + "']}")
+	  private String projectEnv;
 
     @Autowired
     private ProductDao                productDAO;
@@ -564,7 +570,7 @@ public class ProductServiceImpl implements ProductService {
           solrProduct.setHkPrice(combo.getHkPrice());
           solrProduct.setComboDiscountPercent(combo.getDiscountPercent());
         } else {
-          productVariant = product.getMaximumDiscountProducVariant();
+          productVariant = product.getInStockMaximumDiscountProductVariant();
           if (productVariant.getDiscountPercent() != null) {
             solrProduct.setHkPrice(productVariant.getHkPrice());
             solrProduct.setMarkedPrice(productVariant.getMarkedPrice());
@@ -661,7 +667,7 @@ public class ProductServiceImpl implements ProductService {
     productVO.setId(product.getId());
     productVO.setName(product.getName());
 
-    productVO.setProductURL(linkManager.getProductURL(product, EnumProductReferrer.homePage.getId()));
+    productVO.setProductURL(linkManager.getProductURL(product, 0L));
     productVO.setMainImageId(product.getMainImageId());
     productVO.setGoogleAdDisallowed(product.isGoogleAdDisallowed());
     productVO.setDeleted(product.isDeleted());
@@ -671,7 +677,7 @@ public class ProductServiceImpl implements ProductService {
       productVO.setCombo(true);
     else {
       productVO.setCombo(false);
-      ProductVariant maxDiscountVariant = product.getMaximumDiscountProducVariant();
+      ProductVariant maxDiscountVariant = product.getInStockMaximumDiscountProductVariant();
       if (maxDiscountVariant != null && maxDiscountVariant.getId() != null) {
         productVO.setMaxDiscount(maxDiscountVariant.getDiscountPercent());
         productVO.setMaxDiscountHKPrice(maxDiscountVariant.getHkPrice() + (product.getService() ? maxDiscountVariant.getPostpaidAmount() : 0.0));
@@ -682,4 +688,18 @@ public class ProductServiceImpl implements ProductService {
 
     return productVO;
   }
+
+  public String getAppendedProductURL(String baseUrl, String parameter, String value) {
+      if (StringUtils.isNotBlank(baseUrl) && StringUtils.isNotBlank(parameter) && StringUtils.isNotBlank(value)) {
+        if (StringUtils.equals(projectEnv, "admin")) {
+          baseUrl = baseUrl.replace("www.healthkart.com", "admin.healthkart.com");
+        }
+        if (baseUrl.contains("?")) {
+          return baseUrl.concat("&" + parameter + "=" + value);
+        } else {
+          return baseUrl.concat("?" + parameter + "=" + value);
+        }
+      }
+      return baseUrl;
+    }
 }

@@ -14,9 +14,10 @@
   }
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
-    <img src="${pageContext.request.contextPath}/images/banners/top/eye_care_strip_banner.jpg" alt="Need eye care advice? Request a callback.">
-  </s:link>
+  <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">--%>
+      <a href='${pageContext.request.contextPath}/pages/offers/eye-page/eye.jsp'>
+    <img src="${pageContext.request.contextPath}/images/banners/top/eye-strip-banner.jpg" alt="Need eye care advice? Request a callback."> </a>
+  <%--</s:link>--%>
   <script type="text/javascript">
     var params = {};
     params['srcUrl']=document.location.href;

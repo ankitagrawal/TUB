@@ -113,7 +113,12 @@ public class GRNManager {
 		for (GoodsReceivedNote grn : grnList) {
 			String poDetail = "";
 			poDetail += ID + grn.getId() + " " + CREATED_DATE + dateFormat.format(grn.getGrnDate()) + " ";
+			if(grn.getPurchaseOrder().getPoPlaceDate()!=null){
 			poDetail += CREATED_BY + grn.getPurchaseOrder().getCreatedBy().getName() + " " + PO_DATE + dateFormat.format(grn.getPurchaseOrder().getPoPlaceDate()) + " ";
+			}
+			else{
+				poDetail += CREATED_BY + grn.getPurchaseOrder().getCreatedBy().getName() + " " + PO_DATE + "N/A" + " ";
+			}
 			poDetail += SUPPLIER + grn.getPurchaseOrder().getSupplier().getName() + " " + STATUS + grn.getGrnStatus().getName();
 			rowCounter++;
 			row1 = sheet1.createRow(rowCounter);
@@ -248,19 +253,23 @@ public class GRNManager {
 			// GoodsReceivedNote grn = debitNoteLineItem.getDebitNote().getGoodsReceivedNote();
 			@SuppressWarnings("unused")
 			Warehouse warehouse = debitNote.getWarehouse();
-			// Sku sku = skuService.getSKU(productVariant, warehouse);
-			ProductVariant productVariant = sku.getProductVariant();
+			if (sku != null) {
+				ProductVariant productVariant = sku.getProductVariant();
 
-			if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null && productVariant != null && sku.getTax() != null) {
-				/*
-												 * Tax skuTax = sku.getTax(); if
-												 * (grn.getPurchaseOrder().getSupplier().getState().equals(sku.getWarehouse().getState())) { tax =
-												 * skuTax.getValue() * taxable; surcharge = tax * StateList.SURCHARGE; } else { if (skuTax.getValue() !=
-												 * 0.0) { tax = StateList.CST * taxable; //surcharge = tax * StateList.SURCHARGE; } }
-												 */
-				TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(debitNote.getSupplier(), sku, taxable);
+				if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null
+						&& productVariant != null && sku.getTax() != null) {
+					TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(debitNote.getSupplier(), sku, taxable);
+					tax = taxComponent.getTax();
+					surcharge = taxComponent.getSurcharge();
+				}
+			} else {
+				if (debitNote.getSupplier() != null && debitNote.getSupplier().getState() != null
+						&& debitNote.getWarehouse()!=null) {
+				TaxComponent taxComponent = TaxUtil.getSupplierTaxForExtraInventory(debitNote.getSupplier(),
+						debitNote.getWarehouse().getState(), debitNoteLineItem.getTax(), taxable);
 				tax = taxComponent.getTax();
 				surcharge = taxComponent.getSurcharge();
+				}
 			}
 			payable = taxable + tax + surcharge;
 			debitNoteLineItemDto.setTaxable(taxable);

@@ -180,7 +180,7 @@
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction">Supplier List<br/> <span
-                class="sml gry">(Create PO or Raise a Debit Note)</span></s:link>
+                class="sml gry">(Create PO)</span></s:link>
     </h3>
 
     <h3>
