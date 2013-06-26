@@ -5,7 +5,7 @@
   <html>
   <head>
     <title>${pageTitle} | HealthKart.com</title>
-    <s:layout-component name="analytics"><jsp:include page="/includes/_analytics.jsp"/></s:layout-component>
+    <s:layout-component name="analytics"><s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="" allCategories="" brand="" isProd="<%=false%>"/></s:layout-component>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/otherScripts/jQuery-1.4.2.js"></script>
     <s:layout-component name="htmlHead"/>

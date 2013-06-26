@@ -11,7 +11,7 @@ public class HealthkartConstants {
     public static final String useRewardPoints = "useRewardPoints";
     public static final String perPageCatalog = "perPageCatalog";
     public static final String affId = "affId";
-    public static final String newSession = "newSession";
+    public static final String newSession = "newSessionLpVar";
     public static final String userId = "userId";
     public static final String signupDate = "signupDate";
     public static final String orderCount = "orderCount";

@@ -1,24 +1,5 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import com.shiro.PrincipalImpl;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
@@ -49,11 +30,20 @@ import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.pact.service.image.ProductImageService;
-import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.search.ProductSearchService;
+import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
+import com.shiro.PrincipalImpl;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
+
+import java.util.*;
 
 @UrlBinding("/product/{productSlug}/{productId}")
 @Component
@@ -83,6 +73,8 @@ public class ProductAction extends BaseAction {
 
     Long                               productReferrerId;  // Same as HealthkartConstants.URL.productReferrerId
     String                             productPosition;  // Same as HealthkartConstants.URL.productPosition
+    boolean                            isOutOfStockPage = false;
+    String                             menuNodeUrlFragment;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                     preferredZone;
@@ -152,6 +144,24 @@ public class ProductAction extends BaseAction {
             return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
         }
 
+      // code to check if this page has all variants out of stock. this is used to fire a GA custom event
+      if (!product.isDeleted()) {
+        if (product.getProductVariants() != null && product.getProductVariants().size() > 1) {
+          // multiple products
+	        isOutOfStockPage = true;
+          for (ProductVariant productVariant: product.getProductVariants()) {
+            if (!productVariant.isDeleted() && !productVariant.isOutOfStock()) {
+              isOutOfStockPage = false;
+            }
+          }
+        } else if (product.getProductVariants() != null) {
+          ProductVariant productVariant = product.getProductVariants().get(0);
+          if (!productVariant.isDeleted() && productVariant.isOutOfStock()) {
+            isOutOfStockPage = true;
+          }
+        }
+      }
+
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
             if (user != null) {
@@ -200,8 +210,8 @@ public class ProductAction extends BaseAction {
         urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
         productImages = productImageService.searchProductImages(null, product, null, true, false);
         seoData = seoManager.generateSeo(productId);
-        String breadcrumbUrlFragment = menuHelper.getUrlFragementFromProduct(product);
-        MenuNode breadcrumbMenuNode = menuHelper.getMenuNode(breadcrumbUrlFragment);
+        menuNodeUrlFragment = menuHelper.getUrlFragementFromProduct(product);
+        MenuNode breadcrumbMenuNode = menuHelper.getMenuNode(menuNodeUrlFragment);
         topCategoryUrlSlug = menuHelper.getTopCategorySlug(breadcrumbMenuNode);
         allCategories = menuHelper.getAllCategoriesString(breadcrumbMenuNode);
 
@@ -477,4 +487,20 @@ public class ProductAction extends BaseAction {
     public void setValidTryOnProductVariant(ProductVariant validTryOnProductVariant) {
         this.validTryOnProductVariant = validTryOnProductVariant;
     }
+
+  public boolean isOutOfStockPage() {
+    return isOutOfStockPage;
+  }
+
+  public void setOutOfStockPage(boolean outOfStockPage) {
+    isOutOfStockPage = outOfStockPage;
+  }
+
+  public String getMenuNodeUrlFragment() {
+    return menuNodeUrlFragment;
+  }
+
+  public void setMenuNodeUrlFragment(String menuNodeUrlFragment) {
+    this.menuNodeUrlFragment = menuNodeUrlFragment;
+  }
 }
