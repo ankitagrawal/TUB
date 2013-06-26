@@ -7,7 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 <stripes:layout-definition>
-
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -75,11 +75,11 @@
 		 String roles = RoleConstants.HK_USER + "," + RoleConstants.HK_UNVERIFIED;
 	%>
   </head>
-
+<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="cartAction" event="getCartItems"/>
 
   <body>
 
-    <div class="embedMargin" id="header">
+    <div id="header">
         <div class="container_16 clearfix">
 	<c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" />
         
@@ -123,13 +123,14 @@
 				</p> 
             </div>
              <div>
-              <p class="section2 font-caps"> <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" rel="noFollow">signout</s:link></p>
+              <p class="section2"> <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" rel="noFollow">signout</s:link></p>
             </div>
 
             <div>
-              <p class="section2 font-caps"> <a href="${pageContext.request.contextPath}/core/loyaltypg/Cart.action">cart</a></p>
+              <p class="section2"> <a href="${pageContext.request.contextPath}/core/loyaltypg/Cart.action">cart
+              	(<span id="productsInCart">${cartAction.itemsInCart}</span>)
+              </a></p>
             </div>
-
         </div>
         
 <!--         <div id="search" class="search">

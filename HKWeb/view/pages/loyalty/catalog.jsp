@@ -29,59 +29,95 @@
           <div class="embedMarginTop119"></div>
           <div class="priceFilterContainerOne" style="margin-bottom:30px;">
             <div class="sorting">SORT BY POINTS</div>
-                   <div class="brandsContainer" >
-					<div class="priceRange">
-                  <span  id= "pointRange">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <div class="priceRange optionBottom">
+                 <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" style="width:100%; float:left;">
+			   		<strong><span class="categoryNameSpan" style="font-size: 16px;">
+                  		clear all </span></strong>
+			 	  </s:link></div>
+                  <c:set var="rangeSelected" value="${lca.rangeSelected}"/>
+                  <div class="brandsContainer" >
+	   			  <div class="priceRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="0"/>
                   <s:param name="maxPoints" value="100"/>
-                  less than 100</s:link>
-                  </span></div>
-				<div class="priceRange">
-                  <span  id= "pointRange">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                    <c:choose>
+                      <c:when test="${rangeSelected == 1}">
+		                  <span class="pointRange selectedCategory">less than 100</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">less than 100</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </s:link>
+                  </div>
+				  <div class="priceRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="101"/>
                   <s:param name="maxPoints" value="200"/>
-                  101-200</s:link></span></div>
+                    <c:choose>
+                      <c:when test="${rangeSelected == 2}">
+		                  <span class="pointRange selectedCategory">101-200</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">101-200</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </s:link>
+				  </div>
 				<div class="priceRange">
-                  <span  id= "pointRange">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="201"/>
                   <s:param name="maxPoints" value="300"/>
-                  201-300</s:link></span></div>
+                  <c:choose>
+                      <c:when test="${rangeSelected == 3}">
+		                  <span class="pointRange selectedCategory">201-300</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">201-300</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </s:link>
+                  </div>
 				<div class="priceRange">
-                  <span  id= "pointRange">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" style="width:100%; float:left;">
                   <s:param name="minPoints" value="301"/>
                   <s:param name="maxPoints" value="10000"/>
-                  301 and above</s:link></span></div>
+                  <c:choose>
+                      <c:when test="${rangeSelected == 4}">
+		                  <span class="pointRange selectedCategory">301 and above</span>
+                      </c:when>
+                      <c:otherwise>
+							<span class="pointRange">301 and above</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </s:link></div>
 				  </div>
 			</div>
 			
 		<div class="priceFilterContainerOne">
 			<div class="sorting">SORT BY CATEGORY</div>
+              <div class="priceRange optionBottom">
+              <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" style="width:100%; float:left;">
+			   <strong><span class="categoryNameSpan" style="font-size: 16px;">
+                  clear all </span></strong>
+			 </s:link></div>
               <div class="brandsContainer " style ="height: 245px;">
-               <div class="priceRange">
-			   <span  id= "categoryNameSpan" >
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
-                  clear all </s:link></span>
-			     </div>
-			 
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
-			   <span  id= "categoryNameSpan" class="font-small">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
-                  <s:param name="categoryName" value="${loyaltyCategory.name}"/>
+            <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory"  style="width:100%; float:left;">
+			   <span class="categoryNameSpan font-small">
                     <c:choose>
                       <c:when test="${lca.categoryName == loyaltyCategory.name}">
-                        <strong>
-                            ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} )</strong>
+                        <span class="selectedCategory">
+                            ${loyaltyCategory.displayName} (${loyaltyCategory.prodCount})</span>
                       </c:when>
                       <c:otherwise>
-                        ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} )
+                        ${loyaltyCategory.displayName} (${loyaltyCategory.prodCount})
                       </c:otherwise>
                     </c:choose>
-                   </s:link></span>
+                   </span>
+        	     <s:param name="categoryName" value="${loyaltyCategory.name}"/>
+			   </s:link>
 			     </div>
 			 </c:forEach>
 			</div>
@@ -96,7 +132,7 @@
     <script type="text/javascript">
       $(document).ready(function() {
 
-    	  $(".jspDrag").css("height","30px");
+    	  $(".jspDrag").css("height","80px");
         $('#successToolTipBtn').click(function (resp) {
         	
           $('#successToolTip').attr('style', 'display: none;');
@@ -121,16 +157,15 @@
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
                 $("#" + form.context.id + ' input').attr('class', 'btnDisabled');
                 redeemButton.attr('value', 'Added to Cart');
-                redeemButton.removeClass()
-                redeemButton.disabled =true;
-                //$("#" + form.context.id + ' input').disabled = true;
-
+                redeemButton.removeAttr('href');
+                redeemButton.removeClass('redeemBtn');
+                redeemButton.attr('disabled','disabled');
+                $('#productsInCart').html(resp.data.itemsInCart);
                 $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');
        		    $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
               } else {
 			  $('#successToolTip').attr('style', 'display: none;');
-			  //  $("#errorMsg").attr('style', 'display:block;');
 	            $("#errorMsg").text(resp.message);
                 $('#errorToolTip').attr('style', 'display:block;');
 	      		$('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
@@ -179,19 +214,24 @@
 			} else { colCount++; }
 			%>
 				<div class="product clickable">
+				<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction">
 				<c:set var="variant" value="${lp.variant}"/>
 				<c:set var="product" value="${variant.product}"/>
 				<c:set var="imageId" value = "${variant.product.mainImageId }" />
-				<div class="imgContainer">
-					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
-					     title="${product.name}" class="productImage" >
-				</div>
-                <div class="productDescription embedMargin">${product.name}</div>
+					<div class="imgContainer">
+						<img src="${hk:getS3ImageUrl(imageMediumSize, imageId)}" alt="${product.name}"
+					    	 title="${product.name}" class="productImage" >
+						<s:param name ="prodVariantId" value="${variant.id}" />
+					</div>
+				</s:link>
+                <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyProductAction"><div class="productDescription embedMargin">
+                ${product.name}<s:param name ="prodVariantId" value="${variant.id}" />
+                </div></s:link>
                 <div class="loyaltyPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>
                 <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
 				<input type="hidden" value="${variant.id}" name="productVariantId">
 				<input type="hidden" value="1" name="qty">
-				<input type="submit" class="addToCompare font-caps embedMargin5 redeemBtn" name="addToCart" value="REDEEM">
+				<input type="submit" class="buyNowButton font-caps embedMargin5 redeemBtn" name="addToCart" value="REDEEM">
 				</form>
 				</div>
 			<% if (colCount %3==0) { %>

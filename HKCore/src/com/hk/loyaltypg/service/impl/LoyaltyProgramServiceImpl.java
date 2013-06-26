@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.stripes.action.FileBean;
@@ -562,9 +563,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public void uploadLoyaltyProductsCSV(FileBean csvFileReader, List<String> errorMessages) {
 		Set<LoyaltyProduct> uploadedProducts = new HashSet<LoyaltyProduct>();
-		if (this.validateLoyaltyCsvFile(csvFileReader, uploadedProducts, errorMessages)) {
-			this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
-		}
+		this.validateLoyaltyCsvFile(csvFileReader, uploadedProducts, errorMessages);
+		this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
 	}
 
 	private boolean validateLoyaltyCsvFile(FileBean csvFileReader, Set<LoyaltyProduct> uploadedProducts,
@@ -633,9 +633,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public void uploadBadgeInfoCSV(FileBean csvFileReader, List<String> errorMessages) {
 		Set<UserBadgeInfo> uploadedBadges = new HashSet<UserBadgeInfo>();
-		if (this.validateBadgeCsvFile(csvFileReader, uploadedBadges, errorMessages)) {
-			this.loyaltyProductDao.saveOrUpdate(uploadedBadges);
-		}
+		this.validateBadgeCsvFile(csvFileReader, uploadedBadges, errorMessages);
+		this.loyaltyProductDao.saveOrUpdate(uploadedBadges);
 	}
 
 	private boolean validateBadgeCsvFile(FileBean csvFileReader, Set<UserBadgeInfo> uploadedBadges,
@@ -708,6 +707,24 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 		return false;
 	}
+	
+	@Override
+	public List<LoyaltyProduct> searchLoyaltyProducts (Map<String, String> keywordsMap) {
+    	DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+    	if(keywordsMap.containsKey("variantId"))  {
+    		criteria.add(Restrictions.like("variant.id", keywordsMap.get("variantId")));
+    	}
+    	if(keywordsMap.containsKey("productId")) {
+    		criteria.createAlias("variant", LoyaltyProductAlias.VARIANT.alias, CriteriaSpecification.INNER_JOIN);
+    		criteria.add(Restrictions.like(LoyaltyProductAlias.VARIANT.alias + ".product.id", keywordsMap.get("productId")));
+    	}   	
+    	
+		@SuppressWarnings("unchecked")
+		List<LoyaltyProduct> loyaltyProducts = this.loyaltyProductDao.findByCriteria(criteria);
+    	return loyaltyProducts; 
+
+	}
+	
 	/**
 	 * 
 	 * Setters and getters start from here.
