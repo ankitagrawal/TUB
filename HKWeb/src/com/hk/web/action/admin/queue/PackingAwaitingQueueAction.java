@@ -97,14 +97,16 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
-        Set<Category> basketCategoryList = new HashSet<Category>();
-        for (String category : basketCategories) {
-            if (category != null) {
-                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+        if(!basketCategories.isEmpty()){
+            Set<Category> basketCategoryList = new HashSet<Category>();
+            for (String category : basketCategories) {
+                if (category != null) {
+                    Category basketCategory = (Category) categoryDao.getCategoryByName(category);
                     basketCategoryList.add(basketCategory);
+                }
             }
+            shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         }
-        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         shippingOrderSearchCriteria.setLastEscStartDate(startDate).setLastEscEndDate(endDate);
         shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
 
