@@ -158,6 +158,7 @@
     <c:set var="healthNutrition" value="<%=CategoryConstants.HEALTH_NUTRITION%>"/>
     <c:set var="homeLiving" value="<%=CategoryConstants.HOME_LIVING%>"/>
       <c:set var="personalCare" value="<%=CategoryConstants.PERSONAL_CARE%>"/>
+      <c:set var="healthDevices" value="<%=CategoryConstants.HEALTH_DEVICES%>"/>
     <c:choose>
       <c:when test="${categoryBean.category.name eq sportsNutrition}">
         <%-- <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
@@ -188,8 +189,8 @@
         </a>
       </c:when>
         <c:when test="${categoryBean.category.name eq personalCare}">
-            <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
-                 <img src="<hk:vhostImage/>/images/banners/Self-Defence.jpg" alt="self-defence"
+            <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                 <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
                       class="small_banner"/>
                </a>
                <a href="${pageContext.request.contextPath}/personal-care/sexual-wellness">
@@ -197,6 +198,17 @@
                     class="small_banner"/>
                </a>
              </c:when>
+        <c:when test="${categoryBean.category.name eq healthDevices}">
+                    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                         <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
+                              class="small_banner"/>
+                       </a>
+                       <a href="${pageContext.request.contextPath}/brand/health-devices/Equinox">
+                       <img src="<hk:vhostImage/>/images/banners/Equinox.jpg" alt="Equinox"
+                            class="small_banner"/>
+                       </a>
+                     </c:when>
+
       <c:otherwise>
         <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
