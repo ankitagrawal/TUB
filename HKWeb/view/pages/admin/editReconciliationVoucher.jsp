@@ -5,6 +5,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
@@ -194,6 +195,13 @@
 
     </s:form>
 
+	<div id="closeButtonDiv">
+	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 }">
+	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
+	<s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher}" />
+	 Create Debit Note </s:link>
+	</c:if>
+	</div>
 
     <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
@@ -261,7 +269,7 @@
             
             
             $('#SubtractReconciled').click(function() {
-            	var supplier=${pa.reconciliationVoucher.supplier};
+            	var supplier=${pa.reconciliationVoucher.supplier}!=null?${pa.reconciliationVoucher.supplier}:null;
             	var barcode = $('#upc').val();
             	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
             	var productSupplier;
@@ -281,7 +289,9 @@
             	
             });
             
-
+            if(${pa.isDebitNoteCreated!=null && pa.isDebitNoteCreated}){
+    			$("#createDebitNoteButton").hide();
+    		}
         });
     </script>
     
@@ -312,6 +322,13 @@
     #rvTable{
     width: 100%;
     }
+    #closeButtonDiv{
+	float: left;
+	position: relative;
+	left: 40%;
+	margin-bottom: 2px;
+	margin-top: 2px;
+}
     
     </style>
 </s:layout-component>

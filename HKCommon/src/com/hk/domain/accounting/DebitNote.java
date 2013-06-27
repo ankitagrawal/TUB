@@ -93,6 +93,21 @@ public class DebitNote implements java.io.Serializable {
     @Temporal (TemporalType.TIMESTAMP)
     @Column (name = "close_date", length = 19)
     private Date closeDate;
+    
+    @Column(name = "discount")
+	private Double discount;
+    
+    @Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "payable_amount")
+	private Double payableAmount;
 
     public Long getId() {
         return this.id;
@@ -227,6 +242,46 @@ public class DebitNote implements java.io.Serializable {
 
 	public void setFinalDebitAmount(Double finalDebitAmount) {
 		this.finalDebitAmount = finalDebitAmount;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getPayableAmount() {
+		return payableAmount;
+	}
+
+	public void setPayableAmount(Double payableAmount) {
+		this.payableAmount = payableAmount;
 	}
 }
 

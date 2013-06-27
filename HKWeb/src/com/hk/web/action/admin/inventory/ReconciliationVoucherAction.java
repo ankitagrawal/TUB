@@ -110,6 +110,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private Supplier                supplier;
     private Long warehouseId;
     private String barcode;
+    private Boolean isDebitNoteCreated;
 
 
     @Validate(required = true, on = "parse")
@@ -226,6 +227,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         }
         
         reconciliationVoucher = reconciliationVoucherService.save(reconciliationVoucher);
+        isDebitNoteCreated = reconciliationVoucherService.getDebitNote(reconciliationVoucher)!=null?Boolean.TRUE:Boolean.FALSE;
         return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
     }
 
@@ -636,6 +638,14 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 		noCache();
 		return new JsonResolution(healthkartResponse);
 	}
+	
+	public Resolution createDebitNote(){
+		if(reconciliationVoucherService.getDebitNote(reconciliationVoucher)!=null){
+			addRedirectAlertMessage(new SimpleMessage("Debit Note Number - "+reconciliationVoucherService.getDebitNote(reconciliationVoucher).getId()+"has already been created against the RV"));
+			return new RedirectResolution(DebitNoteAction.class);
+		}
+		return new RedirectResolution(DebitNoteAction.class).addParameter("debitNoteFromRV").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+	}
     
     public ReconciliationVoucher getReconciliationVoucher() {
         return reconciliationVoucher;
@@ -807,6 +817,14 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 	public void setBarcode(String barcode) {
 		this.barcode = barcode;
+	}
+	
+	public Boolean getIsDebitNoteCreated() {
+		return isDebitNoteCreated;
+	}
+
+	public void setIsDebitNoteCreated(Boolean isDebitNoteCreated) {
+		this.isDebitNoteCreated = isDebitNoteCreated;
 	}
     
 }

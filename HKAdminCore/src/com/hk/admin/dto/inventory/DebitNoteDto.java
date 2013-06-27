@@ -25,6 +25,10 @@ public class DebitNoteDto {
   private Double totalTaxable = 0.0;
 
   private Double totalSurcharge = 0.0;
+  
+  private Double totalDiscount = 0.0D;
+  
+  private Double finalDebitAmount = 0.0D;
 
   public Double getTotalTax() {
     return totalTax;
@@ -73,4 +77,20 @@ public class DebitNoteDto {
   public void setTotalSurcharge(Double totalSurcharge) {
     this.totalSurcharge = totalSurcharge;
   }
+
+public Double getTotalDiscount() {
+	return totalDiscount;
+}
+
+public void setTotalDiscount(Double totalDiscount) {
+	this.totalDiscount = totalDiscount;
+}
+
+public Double getFinalDebitAmount() {
+	return finalDebitAmount;
+}
+
+public void setFinalDebitAmount(Double finalDebitAmount) {
+	this.finalDebitAmount = finalDebitAmount;
+}
 }

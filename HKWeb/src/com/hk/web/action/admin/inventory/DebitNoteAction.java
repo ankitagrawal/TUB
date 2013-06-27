@@ -38,6 +38,9 @@ import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
+import com.hk.domain.inventory.rv.RvLineItem;
+import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.inventory.SkuService;
@@ -83,6 +86,8 @@ public class DebitNoteAction extends BasePaginatedAction {
     public PurchaseInvoice purchaseInvoice; 
     public List<RtvNote> rtvList = new ArrayList<RtvNote>();
     public List<ExtraInventoryLineItem> eiLineItem = new ArrayList<ExtraInventoryLineItem>();
+    public List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
+    private ReconciliationVoucher reconciliationVoucher;
 
     @DefaultHandler
     public Resolution pre() {
@@ -141,6 +146,24 @@ public class DebitNoteAction extends BasePaginatedAction {
     	}
     	//return new ForwardResolution("/pages/admin/debitNote.jsp");
     	return new RedirectResolution(DebitNoteAction.class).addParameter("editDebitNote").addParameter("debitNote", debitNote.getId());
+    }
+    
+    public Resolution debitNoteFromRV(){
+    	User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        }
+    	if(reconciliationVoucher!=null){
+    		rvLineItems = reconciliationVoucher.getRvLineItems();
+    		debitNote = new DebitNote();
+        	debitNote.setReconciliationVoucher(reconciliationVoucher);
+        	debitNote.setSupplier(reconciliationVoucher.getSupplier());
+        	warehouse = loggedOnUser.getSelectedWarehouse();
+        	debitNote.setWarehouse(loggedOnUser.getSelectedWarehouse());
+    		debitNote = debitNoteService.createDebitNoteLineItemWithRVLineItems(debitNote, rvLineItems);
+    	}
+		
+		return new RedirectResolution(DebitNoteAction.class).addParameter("editDebitNote").addParameter("debitNote", debitNote.getId());
     }
     
     public Resolution editDebitNote(){
@@ -327,5 +350,13 @@ public class DebitNoteAction extends BasePaginatedAction {
 
 	public void setEiLineItem(List<ExtraInventoryLineItem> eiLineItem) {
 		this.eiLineItem = eiLineItem;
+	}
+
+	public ReconciliationVoucher getReconciliationVoucher() {
+		return reconciliationVoucher;
+	}
+
+	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
+		this.reconciliationVoucher = reconciliationVoucher;
 	}
 }
