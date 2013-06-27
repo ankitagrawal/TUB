@@ -105,8 +105,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
             }
         }
         shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
-        shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
-        //introduced paymentDate as another filter as escalation filter is not working properly, temporary solution
+        shippingOrderSearchCriteria.setLastEscStartDate(startDate).setLastEscEndDate(endDate);
         shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
 
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
