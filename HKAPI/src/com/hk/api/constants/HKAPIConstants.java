@@ -14,5 +14,7 @@ public class HKAPIConstants {
     public static final String NON_CONTACTABLE = "NON_CONTACTABLE";
     public static final String HEALTHKART = "HEALTHKART";
 
+    public static final String NO_SUPPLIER = "NO SUPPLIER";
+
 
 }
