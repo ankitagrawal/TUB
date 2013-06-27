@@ -76,9 +76,9 @@ public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
 	@Column (name = "mrp")
 	private Double mrp;
 
-    @Column (name="status")
+    @Column (name="status", nullable=false)
     @Enumerated(EnumType.STRING)
-    private EnumSkuGroupStatus status;
+    private EnumSkuGroupStatus status = EnumSkuGroupStatus.NA;
 
 	@JsonSkip
 	@OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuGroup")

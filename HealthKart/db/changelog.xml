@@ -13354,7 +13354,9 @@
     </changeSet>
     <changeSet author="Ankit (generated)" id="1370601362351-11235">
         <addColumn tableName="sku_group">
-            <column name="status" type="VARCHAR(45)" />
+            <column name="status" type="VARCHAR(45)" defaultValue="NA">
+            	 <constraints nullable="false"/>
+            </column>
         </addColumn>
     </changeSet>
     
@@ -13405,5 +13407,4 @@
     		<column name="name" value="SO Line Item could not be fixed" type="VARCHAR(100)"></column>
     	</insert>
     </changeSet>
-
 </databaseChangeLog>

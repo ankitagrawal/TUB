@@ -9,5 +9,5 @@ package com.hk.constants.sku;
  */
 public enum EnumSkuGroupStatus {
 
-    UNDER_REVIEW , REVIEW_DONE
+    UNDER_REVIEW , REVIEW_DONE, NA
 }
