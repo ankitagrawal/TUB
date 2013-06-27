@@ -71,5 +71,6 @@ public class EmailTemplateConstants {
     public static final String adminPaymentStatusChangeEmail= "/adminPaymentStatusChangeEmail.ftl";
     public static final String adminPaymentMisMatchMail="/adminPaymentMisMatchMail.ftl";
     public static final String poMailToSupplier = "/poMailToSupplier.ftl";
+    public static final String soFixedMail = "/soFixEmail.ftl";
 
 }

@@ -113,6 +113,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 					
 					if(product.isService()) {
 						container.addLineItem(warehouseService.getCorporateOffice(), cartLineItem);
+						isAdded = true;
 					}
 				}
 				

@@ -38,6 +38,8 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 	@Autowired FixedShippingOrderDao fixedShippingOrderDao;
 	@Autowired ShippingOrderService shippingOrderService;
 	
+	private static final String EMAIL_FTL = "soFixEmail.ftl";
+	
 	@Override
 	@Transactional
 	public void fixLineItem(LineItem lineItem) throws CouldNotFixException {
