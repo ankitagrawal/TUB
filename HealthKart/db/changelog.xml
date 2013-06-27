@@ -13369,9 +13369,7 @@
             <column name="created_by" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="closed_by" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="closed_by" type="INT"/>
             <column name="remarks" type="TEXT">
                 <constraints nullable="false"/>
             </column>

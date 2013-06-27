@@ -23,11 +23,11 @@ public class FixedShippingOrder implements java.io.Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "created_by", nullable = false)
-  private User userByCreatedBy;
+  private User createdBy;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "closed_by", nullable = false)
-  private User userByClosedBy;
+  @JoinColumn(name = "closed_by", nullable = true)
+  private User closedBy;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "shipping_order_id", nullable = false)
@@ -57,20 +57,20 @@ public class FixedShippingOrder implements java.io.Serializable {
     this.id = id;
   }
 
-  public User getUserByCreatedBy() {
-    return this.userByCreatedBy;
+  public User getCreatedBy() {
+    return createdBy;
   }
 
-  public void setUserByCreatedBy(User userByCreatedBy) {
-    this.userByCreatedBy = userByCreatedBy;
+  public void setCreatedBy(User createdBy) {
+    this.createdBy = createdBy;
   }
 
-  public User getUserByClosedBy() {
-    return this.userByClosedBy;
+  public User getClosedBy() {
+    return closedBy;
   }
 
-  public void setUserByClosedBy(User userByClosedBy) {
-    this.userByClosedBy = userByClosedBy;
+  public void setClosedBy(User closedBy) {
+    this.closedBy = closedBy;
   }
 
   public ShippingOrder getShippingOrder() {
