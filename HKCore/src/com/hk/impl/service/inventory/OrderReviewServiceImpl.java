@@ -2,6 +2,7 @@ package com.hk.impl.service.inventory;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,6 +123,17 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		fso.setRemarks(remarks.toString());
 		fixedShippingOrderDao.save(fso);
 		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("variantName", lineItem.getCartLineItem().getProductVariant().getId());
+		map.put("gatewayId", lineItem.getShippingOrder().getGatewayOrderId());
+		map.put("quantity", String.valueOf(lineItem.getQty()));
+		map.put("previousMrp", String.valueOf(previousMrp));
+		map.put("newMrp", String.valueOf(lineItem.getMarkedPrice()));
+		map.put("prevHKPrice", String.valueOf(preHkPrice));
+		map.put("newHKPrice", String.valueOf(lineItem.getHkPrice()));
+		
+		emailManager.sendSoFixedMail(map);
+
 		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
 				EnumShippingOrderLifecycleActivity.SO_LineItemFixed, null, remarks.toString());
 	}

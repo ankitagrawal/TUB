@@ -208,14 +208,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Long getAvailableUnbookedInventory(ProductVariant productVariant) {
-    	if(productVariant.getMrpQty() == null) {
-    		inventoryHealthService.checkInventoryHealth(productVariant);
-    	}
-        productVariant = productVariantService.getVariantById(productVariant.getId());
-        if(productVariant.getMrpQty() == null) {
-        	return 0l;
-        }
-        return productVariant.getMrpQty();
+    	return inventoryHealthService.getAvailableUnbookedInventory(productVariant);
     }
 
     @Override

@@ -53,6 +53,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.review.Mail;
+import com.hk.domain.shippingOrder.FixedShippingOrder;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
@@ -968,14 +969,9 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
     }
 
-    public boolean sendSoFixedMail(Double actualAmt, Double gatewayAmount, String gatewayOrderId){
-        HashMap valueMap = new HashMap();
-        valueMap.put("username","Admin");
-        valueMap.put("gatewayOrderId", gatewayOrderId);
-        valueMap.put("RequestAmount", actualAmt);
-        valueMap.put("RequestAmount", gatewayAmount);
+    public boolean sendSoFixedMail(HashMap<String, String> map){
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixedMail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "info@healthkart.com", "Admin");
+        return emailService.sendHtmlEmail(freemarkerTemplate, map, "info@healthkart.com", "Admin");
     }
     
     /*
