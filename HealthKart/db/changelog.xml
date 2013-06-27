@@ -13338,6 +13338,11 @@
          insert into payment_status values (9,'Refunded');
      </sql>
  </changeSet>
+<changeSet author="Ankit Chhabra (written)" id="20130625-01">
+     <sql>
+         update badge set badge_name = 'COPPER' where id = '1';
+     </sql>
+ </changeSet>
 
     <changeSet author="tarun (generated)" id="1372146772298-1">
         <createTable tableName="supplier_transaction_type">

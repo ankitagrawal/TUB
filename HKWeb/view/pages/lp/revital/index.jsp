@@ -5,7 +5,7 @@
 <title>Revital</title>
  <%@include file="/includes/_taglibInclude.jsp" %>  
 <link href="${pageContext.request.contextPath}/pages/lp/revital/default.css" rel="stylesheet" type="text/css" />
-  <jsp:include page="/includes/_analytics.jsp"/>
+  <s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="health-nutrition" allCategories="health-nutrition, women-health" brand="Revital" isProd="<%=false%>"/>
 </head>
 
 <body>

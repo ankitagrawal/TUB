@@ -17,9 +17,13 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.store.EnumStore;
+import com.hk.domain.user.User;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.InvalidOrderException;
 import com.hk.store.ProductVariantInfo;
@@ -32,7 +36,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	private long qty;
 	private Double totalShoppingPoints = 0d;
 	private CartLineItem cartLineItem;
-	
+	private int itemsInCart ;
 	@Autowired LoyaltyProgramService loyaltyProgramService;   
 	
 	private List<LoyaltyProduct> loyaltyProductList;
@@ -58,6 +62,7 @@ public class CartAction extends AbstractLoyaltyAction {
 		}
 		this.init();
 		responseMap.put("totalShoppingPoints", this.totalShoppingPoints);
+		responseMap.put("itemsInCart", this.itemsInCart + 1);
 		healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", responseMap);
         this.noCache();
 		return new JsonResolution(healthkartResponse);
@@ -84,9 +89,14 @@ public class CartAction extends AbstractLoyaltyAction {
 				this.loyaltyProductList.add(loyaltyProduct);
 			}
 			this.totalShoppingPoints = this.loyaltyProgramService.calculateLoyaltyPoints(order);
+			this.itemsInCart = this.loyaltyProductList.size();
 		}
 	}
 
+    public Resolution getCartItems() {
+    	init();
+        return new ForwardResolution("/pages/loyalty/cart.jsp");
+    }
 	@JsonHandler
 	public Resolution updateQuantity() {
 		return this.addToCart();
@@ -131,5 +141,19 @@ public class CartAction extends AbstractLoyaltyAction {
 
 	public void setCartLineItem(CartLineItem cartLineItem) {
 		this.cartLineItem = cartLineItem;
+	}
+
+	/**
+	 * @return the itemsInCart
+	 */
+	public int getItemsInCart() {
+		return itemsInCart;
+	}
+
+	/**
+	 * @param itemsInCart the itemsInCart to set
+	 */
+	public void setItemsInCart(int itemsInCart) {
+		this.itemsInCart = itemsInCart;
 	}
 }

@@ -288,8 +288,9 @@ public class InventoryCheckinAction extends BaseAction {
 											pili.setGrnLineItem(null);
 											purchaseInvoiceDao.save(pili);
 											}}}}}
-								}
 								grnLineItemDao.delete(item);
+								}
+								
 							}}
                         grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);

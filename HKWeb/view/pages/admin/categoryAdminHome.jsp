@@ -80,7 +80,7 @@
                         beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link>
             </h3>
 			<h3><s:link
-                        beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">Add new loyalty Products/ User Badges</s:link>
+                        beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction">Add new loyalty Products/ User Badges</s:link>
             </h3>
 
         </div>

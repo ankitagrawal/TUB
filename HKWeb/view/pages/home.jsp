@@ -23,7 +23,10 @@
 %>
 
 <s:layout-render name="/layouts/genericG.jsp"
-                 pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
+                 pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India"
+                 topCategory="home"
+                 allCategories="home"
+    >
 
 <s:layout-component name="htmlHead">
   <meta name="description"
