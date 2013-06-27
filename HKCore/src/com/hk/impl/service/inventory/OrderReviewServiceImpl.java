@@ -1,6 +1,7 @@
 package com.hk.impl.service.inventory;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.shippingOrder.FixedShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.manager.EmailManager;
+import com.hk.pact.dao.shippingOrder.FixedShippingOrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryHealthService.FetchType;
@@ -28,6 +32,8 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 	@Autowired CartLineItemService cartLineItemService;
 	
 	@Autowired EmailManager emailManager;
+	@Autowired UserService userService;
+	@Autowired FixedShippingOrderDao fixedShippingOrderDao;
 	
 	@Override
 	@Transactional
@@ -59,13 +65,16 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 			throw new CouldNotFixException("Failed to fix the SO. Escalate back the SO.");
 		}
 		
+		double existingMrp = lineItem.getMarkedPrice().doubleValue();
+		double existingHkPrice = lineItem.getHkPrice().doubleValue();
 		if(selectedInfo.getMrp() > lineItem.getMarkedPrice().doubleValue()) {
 			updateHighMrp(lineItem, selectedInfo);
 		} else {
 			updateLowMrp(lineItem, selectedInfo);
 		}
 		
-		recordAndMail();
+		recordAndMail(lineItem, existingMrp, existingHkPrice);
+		inventoryHealthService.checkInventoryHealth(variant);
 	}
 	
 	private void updateHighMrp(LineItem lineItem, SkuInfo skuInfo) {
@@ -76,7 +85,6 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		CartLineItem cartLineItem = lineItem.getCartLineItem();
 		cartLineItem.setMarkedPrice(skuInfo.getMrp());
 		cartLineItemService.save(cartLineItem);
-		
 	}
 	
 	private void updateLowMrp(LineItem lineItem, SkuInfo skuInfo) {
@@ -94,7 +102,19 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		cartLineItemService.save(cartLineItem);
 	}
 	
-	private void recordAndMail() {
+	private void recordAndMail(LineItem lineItem, double previousMrp, double preHkPrice) {
+		FixedShippingOrder fso = new FixedShippingOrder();
+		fso.setCreateDate(new Date());
+		fso.setShippingOrder(lineItem.getShippingOrder());
+		fso.setCreatedBy(userService.getLoggedInUser());
+
+		StringBuilder remarks = new StringBuilder("Line Item: " + lineItem.getId());  
+		remarks.append("\n Previous MRP: " + previousMrp);
+		remarks.append("\n New MRP: " + lineItem.getMarkedPrice());
+		remarks.append("\n Previous HK Price: " + preHkPrice);
+		remarks.append("\n New HK Price: " + lineItem.getHkPrice());
 		
+		fso.setRemarks(remarks.toString());
+		fixedShippingOrderDao.save(fso);
 	}
 }

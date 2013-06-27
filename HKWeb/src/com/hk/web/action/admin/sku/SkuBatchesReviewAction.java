@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -20,7 +19,7 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.OrderReviewService;
-import com.hk.web.HealthkartResponse;
+import com.hk.web.action.admin.inventory.InventoryCheckoutAction;
 
 /**
  * Created by IntelliJ IDEA.
@@ -68,16 +67,17 @@ public class SkuBatchesReviewAction extends BaseAction {
         return new ForwardResolution("/pages/admin/skuGroupReviewList.jsp");
     }
     
-    public JsonResolution fixLineItem() {
-    	HealthkartResponse healthkartResponse = null;
+    public Resolution fixLineItem() {
     	try {
     		orderReviewService.fixLineItem(lineItem);
     		lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
-    		healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Line item fixed with MRP: " + lineItem.getMarkedPrice());
+    		addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
     	} catch (Exception e) {
-    		healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage()); 
+    		addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
     	}
-        return new JsonResolution(healthkartResponse);
+        return new RedirectResolution(InventoryCheckoutAction.class)
+        		.addParameter("checkout")
+        		.addParameter("gatewayOrderId", lineItem.getShippingOrder().getGatewayOrderId());
     }
 
     public Resolution ChangeStatus() {

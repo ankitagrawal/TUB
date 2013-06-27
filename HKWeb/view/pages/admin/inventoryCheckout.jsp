@@ -244,7 +244,7 @@
               </s:link>
               </td>   
               
-              <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction">
+              <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="fixLineItem" class="fixIt">
                 Fix it  <s:param name="lineItem" value="${lineItem.id}"/>                 
               </s:link>
               </td>            
@@ -262,6 +262,15 @@
 		      if(${alertCount == 0} && upc == '' && commentType == ${commentTypePacking}) {
 			      alert("User Instruction : " + $('#userComments').val());
 		      }
+		      
+		      $(document).ready(function(){
+			    	 $('.fixIt').click(function fixIt(){
+			    		 var sure = confirm("Assuming, you have marked the corrsponding batch under review.");
+		    		 	if(!sure){
+		    		 		return false;
+		    		 	}
+			    	 }) 
+			      });
 	      </script>
       </table>
     </div>
