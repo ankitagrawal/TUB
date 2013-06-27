@@ -155,7 +155,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
+    public PaymentStatus updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
 
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
@@ -181,6 +181,7 @@ public class PaymentServiceImpl implements PaymentService {
                 getPaymentManager().error(gatewayOrderId, e);
             }
         }
+        return basePayment.getPaymentStatus();
     }
 
 
@@ -193,9 +194,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
+    public PaymentStatus refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
         Double gatewayAmount = null;
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
+        PaymentStatus paymentStatus = null;
 
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
             if (EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
@@ -222,6 +224,8 @@ public class PaymentServiceImpl implements PaymentService {
                     }
                     updatePaymentBasedOnResponse(hkRefundPaymentResponse, refundRequestPayment);
 
+                    paymentStatus = refundRequestPayment.getPaymentStatus();
+
                 } catch (HealthkartPaymentGatewayException e) {
                     if (e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)) {
                         emailManager.sendPaymentMisMatchMailToAdmin(amount, gatewayAmount, gatewayOrderId);
@@ -230,6 +234,8 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
         }
+
+        return paymentStatus;
     }
 
     /**

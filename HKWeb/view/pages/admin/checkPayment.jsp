@@ -163,6 +163,12 @@
                                 <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
                                 Seek Payment
                             </s:link>)
+                                (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
+                                         event="refundPayment">
+                                <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
+                                <s:param name="amount" value="${payment.amount}"/>
+                                 Refund Payment
+                            </s:link>)
                             </td>
                             <td><fmt:formatDate value="${payment.createDate}" type="both"/></td>
                             <td><fmt:formatDate value="${payment.paymentDate}" type="both"/></td>

@@ -88,6 +88,8 @@ public class CheckPaymentAction extends BaseAction {
 
     List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
 
+    private PaymentStatus paymentStatus;
+
     @DefaultHandler
     public Resolution show() {
         paymentList = getPaymentService().listByOrderId(order.getId());
@@ -117,6 +119,7 @@ public class CheckPaymentAction extends BaseAction {
     }
 
     @DontValidate
+    @Secure(hasAnyPermissions = {PermissionConstants.BULK_SEEK}, authActionBean = AdminPermissionAction.class)
     public Resolution bulkSeekPayment() {
         try {
 
@@ -161,10 +164,10 @@ public class CheckPaymentAction extends BaseAction {
 
 
     @DontValidate
-    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         try{
-            paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+            paymentStatus = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
 
         } catch (HealthkartPaymentGatewayException e){
             logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
@@ -178,7 +181,7 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updatePayment() {
         try{
-            paymentService.updatePayment(gatewayOrderId);
+            paymentStatus = paymentService.updatePayment(gatewayOrderId);
 
         } catch (HealthkartPaymentGatewayException e){
             logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
@@ -487,5 +490,13 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setBulkHkPaymentResponseList(List<Map<String, List<HkPaymentResponse>>> bulkHkPaymentResponseList) {
         this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

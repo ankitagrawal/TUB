@@ -39,10 +39,11 @@
                 <s:submit name="refundPayment" value="Refund  (beta)" id="refund"/>
                 <s:submit name="capturePayment" value="Capture  (EBS)" id="capture"/>
                 <s:submit name="cancelPayment" value="Cancel (EBS)" id="cancel"/>
-                <shiro:hasRole name="<%=RoleConstants.GOD%>">
-                    <s:submit name="bulkSeekPayment" value="Bulk Seek" id="bulkSeek"/>
-                    <s:submit name="updatePayment"  value="Update" id="update"/>
-                </shiro:hasRole>
+                <%--<shiro:hasRole name="<%=RoleConstants.GOD%>">--%>
+                <s:submit name="bulkSeekPayment" value="Bulk Seek" id="bulkSeek"/>
+                <%--</shiro:hasRole>--%>
+                <s:submit name="updatePayment"  value="Update" id="update"/>
+
             </fieldset>
         </s:form>
 
@@ -106,6 +107,10 @@
             </c:forEach>
 
         </c:forEach>
+
+        <c:if test="${not empty cpa.paymentStatus}">
+            Status --> ${cpa.paymentStatus}
+        </c:if>
 
 
     </s:layout-component>

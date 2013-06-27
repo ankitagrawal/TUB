@@ -172,4 +172,5 @@ public class PermissionConstants {
     public static final String EDIT_NDR = "EDIT_NDR";
     public static final String ACTION_ITEM_RESOLVER = "ACTION_ITEM_RESOLVER";
     public static final String ASSIGN_USER_BASKET = "ASSIGN_USER_BASKET";
+    public static final String BULK_SEEK = "BULK_SEEK";
 }
