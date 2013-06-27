@@ -21,7 +21,7 @@
 				// do nothing
 			} else {
 				e.preventDefault();
-				alert ("Invalid value given as points for Order Id " + variant_id);
+				alert ("Invalid value given as points for Order Id " + order_id);
 			}
 		});
 		
