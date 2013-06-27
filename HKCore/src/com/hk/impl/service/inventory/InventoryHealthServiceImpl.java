@@ -365,24 +365,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	}
 	
 	@Override
-	public Collection<Sku> getAvailableSkus(ProductVariant variant, SkuFilter filter) {
-		List<Sku> skus = new ArrayList<Sku>();
-		
+	public Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter) {
+		List<SkuInfo> skus = new ArrayList<SkuInfo>();
+
 		Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
 		boolean invAdded = false;
 		for (InventoryInfo inventoryInfo : infos) {
-			if(filter.getMrp() != null && inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+			if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
 				for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-					if(skuInfo.getUnbookedQty() >= filter.getMinQty()) {
+					if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
 						Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
-						if(filter.getWarehouseId() == null || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
-							skus.add(sku);
+						if (filter.getWarehouseId() == null
+								|| filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
+							skus.add(skuInfo);
 							invAdded = true;
 						}
 					}
 				}
 			}
-			if((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
+			if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
 		}
 		return skus;
 	}

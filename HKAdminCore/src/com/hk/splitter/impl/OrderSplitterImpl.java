@@ -36,6 +36,7 @@ import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryHealthService.FetchType;
 import com.hk.pact.service.inventory.InventoryHealthService.SkuFilter;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -91,8 +92,9 @@ public class OrderSplitterImpl implements OrderSplitter {
 				filter.setMinQty(cartLineItem.getQty());
 				filter.setMrp(cartLineItem.getMarkedPrice());
 				
-				Collection<Sku> skuList = inventoryHealthService.getAvailableSkus(cartLineItem.getProductVariant(), filter);
-				for (Sku sku : skuList) {
+				Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkus(cartLineItem.getProductVariant(), filter);
+				for (SkuInfo skuInfo : skuList) {
+					Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
 					if(whs.contains(sku.getWarehouse())) {
 						container.addLineItem(sku.getWarehouse(), cartLineItem);
 						isAdded = true;

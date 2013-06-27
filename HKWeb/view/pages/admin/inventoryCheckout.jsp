@@ -242,7 +242,12 @@
               <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction">
                 Review it  <s:param name="lineItem" value="${lineItem.id}"/>                 
               </s:link>
-              </td>             
+              </td>   
+              
+              <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction">
+                Fix it  <s:param name="lineItem" value="${lineItem.id}"/>                 
+              </s:link>
+              </td>            
             </c:when>
               <c:otherwise>
                 <td colspan="5">${icBean.shippingOrder.orderStatus.name}</td>
