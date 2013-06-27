@@ -18,6 +18,8 @@ public interface InventoryHealthService {
 
 	Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant);
 	
+	Collection<Sku> getAvailableSkus(ProductVariant variant, SkuFilter filter);
+	
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
 		private double mrp;
@@ -115,5 +117,48 @@ public interface InventoryHealthService {
 		public void setCostPrice(double costPrice) {
 			this.costPrice = costPrice;
 		}
+	}
+	
+	public static class SkuFilter {
+		private Double mrp;
+		private long minQty;
+		private FetchType fetchType;
+		private Long warehouseId;
+
+		public Double getMrp() {
+			return mrp;
+		}
+
+		public void setMrp(Double mrp) {
+			this.mrp = mrp;
+		}
+
+		public long getMinQty() {
+			return minQty;
+		}
+
+		public void setMinQty(long minQty) {
+			this.minQty = minQty;
+		}
+
+		public FetchType getFetchType() {
+			return fetchType;
+		}
+
+		public void setFetchType(FetchType fetchType) {
+			this.fetchType = fetchType;
+		}
+		
+		public Long getWarehouseId() {
+			return warehouseId;
+		}
+		
+		public void setWarehouseId(Long warehouseId) {
+			this.warehouseId = warehouseId;
+		}
+	}
+	
+	public static enum FetchType {
+		FIRST_ORDER, ALL
 	}
 }

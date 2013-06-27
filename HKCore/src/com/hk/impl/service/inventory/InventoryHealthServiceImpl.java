@@ -1,5 +1,21 @@
 package com.hk.impl.service.inventory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -16,14 +32,6 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -354,6 +362,29 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			whs.add(sku.getWarehouse());
 		}
 		return getAvailableInventory(skus.get(0).getProductVariant(), whs);
+	}
+	
+	@Override
+	public Collection<Sku> getAvailableSkus(ProductVariant variant, SkuFilter filter) {
+		List<Sku> skus = new ArrayList<Sku>();
+		
+		Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
+		boolean invAdded = false;
+		for (InventoryInfo inventoryInfo : infos) {
+			if(filter.getMrp() != null && inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+				for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+					if(skuInfo.getUnbookedQty() >= filter.getMinQty()) {
+						Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+						if(filter.getWarehouseId() == null || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
+							skus.add(sku);
+							invAdded = true;
+						}
+					}
+				}
+			}
+			if((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
+		}
+		return skus;
 	}
 	
 	private static <T> T removeFirst(List<T> list) {

@@ -13343,18 +13343,34 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
- 
-  	<changeSet author="deepakC" id="1370601362351-11234">
-        <addColumn tableName="product_variant">
-            <column name="mrp_qty" type="INT"/>
-        </addColumn>
-        <addColumn tableName="product_variant">
-            <column name="net_qty" type="INT"/>
-        </addColumn>
-    </changeSet>     
-    <changeSet author="Ankit (generated)" id="1371733656713-1">
-        <addColumn tableName="sku_group">
-            <column name="status" type="VARCHAR(45)"/>
-        </addColumn>
-    </changeSet>
+
+	<changeSet author="deepakC" id="1370601362351-11234">
+		<addColumn tableName="product_variant">
+			<column name="mrp_qty" type="INT" />
+		</addColumn>
+		<addColumn tableName="product_variant">
+			<column name="net_qty" type="INT" />
+		</addColumn>
+	</changeSet>
+	<changeSet author="Ankit (generated)" id="1370601362351-11235">
+		<addColumn tableName="sku_group">
+			<column name="status" type="VARCHAR(45)" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="DeepakC" id="1370601362351-11236">
+		<createTable tableName="line_item_fix">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="line_item_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="is_cod" type="TINYINT"/>
+			<column name="previous_mrp" type="DOUBLE"/>
+			<column name="fixed_mrp" type="DOUBLE"/>
+			<column name="fixed_hk_price" type="DOUBLE"/>
+			<column name="fixed_hk_discount" type="DOUBLE"/>
+		</createTable>
+	</changeSet>
 </databaseChangeLog>

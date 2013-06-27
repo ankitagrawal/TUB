@@ -19,7 +19,6 @@ import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.fliter.OrderSplitterFilter;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -35,8 +34,8 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
-import com.hk.pact.service.inventory.InventoryHealthService.InventoryInfo;
-import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
+import com.hk.pact.service.inventory.InventoryHealthService.FetchType;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuFilter;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -86,7 +85,13 @@ public class OrderSplitterImpl implements OrderSplitter {
 		for (CartLineItem cartLineItem : order.getCartLineItems()) {
 			if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
 				boolean isAdded = false;
-				List<Sku> skuList = getPreferredSkus(cartLineItem.getProductVariant(), cartLineItem.getMarkedPrice(), cartLineItem.getQty());
+				
+				SkuFilter filter = new SkuFilter();
+				filter.setFetchType(FetchType.FIRST_ORDER);
+				filter.setMinQty(cartLineItem.getQty());
+				filter.setMrp(cartLineItem.getMarkedPrice());
+				
+				Collection<Sku> skuList = inventoryHealthService.getAvailableSkus(cartLineItem.getProductVariant(), filter);
 				for (Sku sku : skuList) {
 					if(whs.contains(sku.getWarehouse())) {
 						container.addLineItem(sku.getWarehouse(), cartLineItem);
@@ -238,26 +243,6 @@ public class OrderSplitterImpl implements OrderSplitter {
 			}
 		}
 		return orderSplitterHelper.calculateShippingPlusTax(dummyOrders);
-	}
-	
-	private List<Sku> getPreferredSkus(ProductVariant variant, Double preferredMrp, Long qty) {
-		List<Sku> skus = new ArrayList<Sku>();
-		
-		Collection<InventoryInfo> infos = inventoryHealthService.getAvailableInventory(variant);
-		boolean invAdded = false;
-		for (InventoryInfo inventoryInfo : infos) {
-			if(inventoryInfo.getMrp() == preferredMrp) {
-				for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-					if(skuInfo.getUnbookedQty() >= qty) {
-						Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
-						skus.add(sku);
-						invAdded = true;
-					}
-				}
-			}
-			if(invAdded) break;
-		}
-		return skus;
 	}
 	
 	public OrderService getOrderService() {
