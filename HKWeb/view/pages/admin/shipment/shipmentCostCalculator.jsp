@@ -130,7 +130,7 @@
                         </li>
                         <li>
                             <div class="clear"></div>
-                            <label style="width: 50px;">Weight (gm)</label>
+                            <label style="width: 50px;">Weight (KG)</label>
                             <s:text name="weight" style="width:50px"/>
                             <span style="font-size: 10px;">if system weight needs to be updated</span>
                             <div class="clear"></div>
