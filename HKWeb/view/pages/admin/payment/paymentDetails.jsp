@@ -109,7 +109,7 @@
         </c:forEach>
 
         <c:if test="${not empty cpa.paymentStatus}">
-            Status --> ${cpa.paymentStatus}
+            Status --> ${cpa.paymentStatus.name}
         </c:if>
 
 
