@@ -15,13 +15,14 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.OrderReviewService;
-import com.hk.splitter.impl.OrderSplitterImpl;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.admin.inventory.InventoryCheckoutAction;
 
 /**
@@ -39,14 +40,13 @@ public class SkuBatchesReviewAction extends BaseAction {
     private List<SkuGroup> skuGroups;
     private LineItem lineItem;
     private SkuGroup searchSkuGroup;
-    @Autowired
-    private AdminInventoryService adminInventoryService;
     
+    @Autowired AdminInventoryService adminInventoryService;
     @Autowired InventoryService inventoryService;
     @Autowired OrderReviewService orderReviewService;
     @Autowired LineItemDao lineItemDao;
-
-
+    @Autowired ShippingOrderService shippingOrderService;
+    
     @DefaultHandler
     public Resolution pre() {
         if (skuGroups != null && skuGroups.size() < 1) {
@@ -73,20 +73,20 @@ public class SkuBatchesReviewAction extends BaseAction {
     }
     
     public Resolution fixLineItem() {
-    	String gatewayId = null;
     	try {
     		orderReviewService.fixLineItem(lineItem);
     		lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
-    		gatewayId = lineItem.getShippingOrder().getGatewayOrderId();
     		addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
     	} catch (Exception e) {
-    		logger.error("Error while fixing the item", e);
+    		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
+    				EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed, null, e.getMessage());
+    		logger.error("Error while fixing the line item", e);
     		addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
     	}
     	
         return new RedirectResolution(InventoryCheckoutAction.class)
         		.addParameter("checkout")
-        		.addParameter("gatewayOrderId", gatewayId);
+        		.addParameter("gatewayOrderId", lineItem.getShippingOrder().getGatewayOrderId());
     }
 
     public Resolution ChangeStatus() {

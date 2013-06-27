@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.FixedShippingOrder;
@@ -22,6 +23,7 @@ import com.hk.pact.service.inventory.InventoryHealthService.SkuFilter;
 import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.OrderReviewService;
 import com.hk.pact.service.order.CartLineItemService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
 @Service
 public class OrderReviewServiceImpl implements OrderReviewService {
@@ -34,6 +36,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 	@Autowired EmailManager emailManager;
 	@Autowired UserService userService;
 	@Autowired FixedShippingOrderDao fixedShippingOrderDao;
+	@Autowired ShippingOrderService shippingOrderService;
 	
 	@Override
 	@Transactional
@@ -62,7 +65,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		}
 		
 		if(selectedInfo == null) {
-			throw new CouldNotFixException("Failed to fix the SO. Escalate back the SO.");
+			throw new CouldNotFixException("Failed to fix the SO. Escalate back to action queue.");
 		}
 		
 		double existingMrp = lineItem.getMarkedPrice().doubleValue();
@@ -111,12 +114,15 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		fso.setStatus("OPEN");
 
 		StringBuilder remarks = new StringBuilder("Line Item: " + lineItem.getId());  
-		remarks.append("\n Previous MRP: " + previousMrp);
-		remarks.append("\n New MRP: " + lineItem.getMarkedPrice());
-		remarks.append("\n Previous HK Price: " + preHkPrice);
-		remarks.append("\n New HK Price: " + lineItem.getHkPrice());
+		remarks.append("<br/> Previous MRP: " + previousMrp);
+		remarks.append("<br/> New MRP: " + lineItem.getMarkedPrice());
+		remarks.append("<br/> Previous HK Price: " + preHkPrice);
+		remarks.append("<br/> New HK Price: " + lineItem.getHkPrice());
 		
 		fso.setRemarks(remarks.toString());
 		fixedShippingOrderDao.save(fso);
+		
+		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
+				EnumShippingOrderLifecycleActivity.SO_LineItemFixed, null, remarks.toString());
 	}
 }

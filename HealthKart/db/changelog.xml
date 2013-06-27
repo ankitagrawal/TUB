@@ -13394,5 +13394,16 @@
     <changeSet author="Ajeet (generated)" id="1372320184003-4">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="fixed_shipping_order" constraintName="fk_fixed_shipping_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
+    
+    <changeSet id="1372320184003-5" author="DeepakC">
+    	<insert tableName="shipping_order_lifecycle_activity">
+    		<column name="id" value="1001" type="INT"></column>
+    		<column name="name" value="SO Line Item fixed" type="VARCHAR(100)"></column>
+    	</insert>
+    	<insert tableName="shipping_order_lifecycle_activity">
+    		<column name="id" value="1002" type="INT"></column>
+    		<column name="name" value="SO Line Item could not be fixed" type="VARCHAR(100)"></column>
+    	</insert>
+    </changeSet>
 
 </databaseChangeLog>
