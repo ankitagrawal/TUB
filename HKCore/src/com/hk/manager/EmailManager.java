@@ -971,7 +971,7 @@ public class EmailManager {
 
     public boolean sendSoFixedMail(HashMap<String, String> map){
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixedMail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, map, "info@healthkart.com", "Admin");
+        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
     }
     
     /*
