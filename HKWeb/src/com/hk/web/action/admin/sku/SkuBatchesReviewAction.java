@@ -8,6 +8,8 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,7 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.OrderReviewService;
+import com.hk.splitter.impl.OrderSplitterImpl;
 import com.hk.web.action.admin.inventory.InventoryCheckoutAction;
 
 /**
@@ -31,6 +34,8 @@ import com.hk.web.action.admin.inventory.InventoryCheckoutAction;
 @Component
 public class SkuBatchesReviewAction extends BaseAction {
 
+	private static Logger logger = LoggerFactory.getLogger(SkuBatchesReviewAction.class);
+	
     private List<SkuGroup> skuGroups;
     private LineItem lineItem;
     private SkuGroup searchSkuGroup;
@@ -68,16 +73,20 @@ public class SkuBatchesReviewAction extends BaseAction {
     }
     
     public Resolution fixLineItem() {
+    	String gatewayId = null;
     	try {
     		orderReviewService.fixLineItem(lineItem);
     		lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
+    		gatewayId = lineItem.getShippingOrder().getGatewayOrderId();
     		addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
     	} catch (Exception e) {
+    		logger.error("Error while fixing the item", e);
     		addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
     	}
+    	
         return new RedirectResolution(InventoryCheckoutAction.class)
         		.addParameter("checkout")
-        		.addParameter("gatewayOrderId", lineItem.getShippingOrder().getGatewayOrderId());
+        		.addParameter("gatewayOrderId", gatewayId);
     }
 
     public Resolution ChangeStatus() {
