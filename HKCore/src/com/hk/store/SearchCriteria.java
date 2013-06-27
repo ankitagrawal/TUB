@@ -6,7 +6,9 @@ public class SearchCriteria {
 	private Range range; 
 	private int startRow;
 	private int maxRows;
-
+	private String productId;
+	private String variantId;
+	
 	public int getStartRow() {
 		return this.startRow;
 	}

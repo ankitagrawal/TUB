@@ -2,10 +2,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes"	uri="http://stripes.sourceforge.net/stripes.tld"%>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-</head>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 
@@ -30,9 +27,9 @@
 						success: function(resp) {
 							if(resp.code == "error"){
 								qty_box.val(qty-1);
+								error_message.text(resp.message);
 								error_message.addClass('errorMessage').slideDown().delay(3000).slideUp();
-							}
-							else{
+							} else {
 								var rowCount = $("#itemRows").val();
 								if (rowCount ==="0") {
 									window.location.reload();
@@ -48,11 +45,13 @@
 					});
 				});
 				
-				$('.removeLink').click(function(){
+				$('.removeLink').click(function() {
 					var lineItemQty =  $(this).parent().find('.lineItemQty');
 					var currentQty = parseInt(lineItemQty.val());
 					lineItemQty.val(0); 
 					$(this).parent().parent().hide();
+					var cartItems = $('#productsInCart').html();
+					$('#productsInCart').html(cartItems-1);
 					lineItemQty.trigger('blur');
 					var rowCount = $("#itemRows").val();
 					$("#itemRows").val(rowCount-1);
