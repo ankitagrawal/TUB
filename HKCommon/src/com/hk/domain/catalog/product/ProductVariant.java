@@ -8,6 +8,7 @@ import com.hk.constants.core.EnumRole;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
+import com.hk.domain.courier.BoxSize;
 
 import javax.persistence.*;
 import java.util.*;
@@ -108,6 +109,13 @@ public class ProductVariant implements java.io.Serializable {
 
     @Column(name = "weight")
     private Double                    weight;
+
+    @Column(name = "weight")
+    private Double                    commission;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "box_size_id")
+    private BoxSize estimatedBoxSize;
 
     @Column(name = "upc")
     private String                    upc;                                                       // Universal Product
@@ -717,4 +725,19 @@ public class ProductVariant implements java.io.Serializable {
         this.optionsAuditString = optionsAuditString;
     }
 
+    public BoxSize getEstimatedBoxSize() {
+        return estimatedBoxSize;
+    }
+
+    public void setEstimatedBoxSize(BoxSize estimatedBoxSize) {
+        this.estimatedBoxSize = estimatedBoxSize;
+    }
+
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
+    }
 }

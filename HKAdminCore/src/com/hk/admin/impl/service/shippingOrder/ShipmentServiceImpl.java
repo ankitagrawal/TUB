@@ -234,7 +234,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder) {
-        Double estimatedWeight = 100D;
+        Double estimatedWeight = 180D;
+        Double estimatedVolumetricWeight = 0D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             Double variantWeight = productVariant.getWeight();
@@ -243,8 +244,13 @@ public class ShipmentServiceImpl implements ShipmentService {
             } else {
                 estimatedWeight += variantWeight;
             }
+            Double variantVolumetricWeight = productVariant.getEstimatedBoxSize().getVolumetricWeight();
+            if(estimatedVolumetricWeight < variantVolumetricWeight){
+                estimatedVolumetricWeight = variantVolumetricWeight;
+            }
         }
-        return estimatedWeight / 1000;
+        Double maxWeight = estimatedWeight > estimatedVolumetricWeight ? estimatedWeight : estimatedVolumetricWeight;
+        return maxWeight / 1000;
     }
 
     public UserService getUserService() {

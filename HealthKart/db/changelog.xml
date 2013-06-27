@@ -13343,5 +13343,32 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-2">
+        <addColumn tableName="box_size">
+            <column name="packaging_cost" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-3">
+        <addColumn tableName="box_size">
+            <column name="physical_weight" type="DECIMAL(8,4)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-4">
+        <addColumn tableName="box_size">
+            <column name="volumetric_weight" type="DECIMAL(8,4)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-5">
+        <addColumn tableName="product_variant">
+            <column name="box_size_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-45">
+        <addForeignKeyConstraint baseColumnNames="box_size_id" baseTableName="product_variant"
+                                 constraintName="fk_product_variant_box_size1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="box_size"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
 
 </databaseChangeLog>
