@@ -3,7 +3,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Credit Note List">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Fixed SO List">
   <s:useActionBean beanclass="com.hk.web.action.admin.shippingOrder.FixedShippingOrderAction" var="poa"/>
   <%
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
@@ -30,7 +30,7 @@
             <s:option value="${wh.id}">${wh.identifier}</s:option>
           </c:forEach>
         </s:select>
-        <s:submit name="pre" value="Search"/>
+        <s:submit name="search" value="Search"/>
       </s:form>
     </fieldset>
 
