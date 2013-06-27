@@ -44,6 +44,7 @@ import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryHealthService.FetchType;
 import com.hk.pact.service.inventory.InventoryHealthService.SkuFilter;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
@@ -123,19 +124,25 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
 	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
-		boolean shouldUpdate = false;
+		boolean shouldUpdate = true;
 		try {
 			for (LineItem lineItem : lineItems) {
 				SkuFilter filter = new SkuFilter();
 				filter.setFetchType(FetchType.ALL);
-				filter.setWarehouseId(lineItem.getSku().getWarehouse().getId());
+				filter.setWarehouseId(warehouse.getId());
 				filter.setMinQty(lineItem.getQty());
 				filter.setMrp(lineItem.getMarkedPrice());
-				Collection<Sku> skus = inventoryHealthService.getAvailableSkus(lineItem.getCartLineItem().getProductVariant(), filter);
+				Collection<SkuInfo> skus = inventoryHealthService.getAvailableSkus(lineItem.getCartLineItem().getProductVariant(), filter);
 
 				if(skus != null && skus.size() > 0) {
-					lineItem.setSku(skus.iterator().next());
-					shouldUpdate = true;
+					Sku sku = baseDao.get(Sku.class, skus.iterator().next().getSkuId());
+					lineItem.setSku(sku);
+				}
+			}
+			
+			for (LineItem lineItem : lineItems) {
+				if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
+					shouldUpdate = false;
 				}
 			}
 

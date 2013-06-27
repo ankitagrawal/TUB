@@ -18,7 +18,7 @@ public interface InventoryHealthService {
 
 	Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant);
 	
-	Collection<Sku> getAvailableSkus(ProductVariant variant, SkuFilter filter);
+	Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter);
 	
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
