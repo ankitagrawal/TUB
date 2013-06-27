@@ -103,13 +103,15 @@ public class OrderSplitterImpl implements OrderSplitter {
 				
 				if(!isAdded) {
 					Product product = cartLineItem.getProductVariant().getProduct();
-					if(product.isDropShipping() || product.isJit()) {
+					if(product.isDropShipping() || (product.isJit() && !product.isService())) {
 						Collection<Sku> skus = skuService.getSkus(cartLineItem.getProductVariant(), whs);
 						for (Sku sku : skus) {
 							container.addLineItem(sku.getWarehouse(), cartLineItem);
 							isAdded = true;
 						}
-					} else if(product.isService()) {
+					} 
+					
+					if(product.isService()) {
 						container.addLineItem(warehouseService.getCorporateOffice(), cartLineItem);
 					}
 				}
