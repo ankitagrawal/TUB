@@ -7,8 +7,6 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.EnumCourierOperations;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
@@ -21,7 +19,6 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
-import com.hk.util.PaymentFinder;
 import com.hk.util.ShipmentServiceMapper;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -35,7 +32,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,7 +58,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     boolean cod;
 
-    String shippingOrderId;
+    Long shippingOrderId;
     String merchantId;
 
     int days;
@@ -76,7 +76,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     CourierCostCalculator courierCostCalculator;
 
     @Autowired
-	ShipmentService shipmentService;
+    ShipmentService shipmentService;
 
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
@@ -103,10 +103,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveActualShippingCostForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
+        ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
             if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+                if (weight != null && weight > 0D) {
+                    shipment.setBoxWeight(weight);
+                }
                 shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
@@ -127,7 +130,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution calculateCourierCostingForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
+        ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
         if (shippingOrder != null) {
             Order order = shippingOrder.getBaseOrder();
             Shipment shipment = shippingOrder.getShipment();
@@ -140,27 +143,27 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                 }
             }
             ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
-            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(),(ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
+            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
-
+/*
     public Resolution findIciciPayment() {
         Map<String, Object> paymentResultMap = PaymentFinder.findIciciPayment(shippingOrderId, merchantId);
         for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
             logger.info(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
-    }
+    }*/
 
     @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveHistoricalShipmentCost() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
-        if (applicableCourier != null){
+        if (applicableCourier != null) {
             shippingOrderSearchCriteria.setCourierList(Arrays.asList(applicableCourier));
         }
         List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
@@ -227,11 +230,11 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         this.cod = cod;
     }
 
-    public String getShippingOrderId() {
+    public Long getShippingOrderId() {
         return shippingOrderId;
     }
 
-    public void setShippingOrderId(String shippingOrderId) {
+    public void setShippingOrderId(Long shippingOrderId) {
         this.shippingOrderId = shippingOrderId;
     }
 
