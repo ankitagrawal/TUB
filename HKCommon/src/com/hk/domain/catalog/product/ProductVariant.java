@@ -110,7 +110,7 @@ public class ProductVariant implements java.io.Serializable {
     @Column(name = "weight")
     private Double                    weight;
 
-    @Column(name = "weight")
+    @Column(name = "commission")
     private Double                    commission;
 
     @ManyToOne(fetch = FetchType.LAZY)
