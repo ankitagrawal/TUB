@@ -105,8 +105,10 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 	private void recordAndMail(LineItem lineItem, double previousMrp, double preHkPrice) {
 		FixedShippingOrder fso = new FixedShippingOrder();
 		fso.setCreateDate(new Date());
+		fso.setUpdateDate(new Date());
 		fso.setShippingOrder(lineItem.getShippingOrder());
 		fso.setCreatedBy(userService.getLoggedInUser());
+		fso.setStatus("OPEN");
 
 		StringBuilder remarks = new StringBuilder("Line Item: " + lineItem.getId());  
 		remarks.append("\n Previous MRP: " + previousMrp);
