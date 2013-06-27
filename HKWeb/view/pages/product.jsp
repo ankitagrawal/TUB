@@ -811,7 +811,7 @@
 				People who bought this also bought these products
 			</h4>
 
-			<c:forEach items="${relatedProducts}" var="relatedProduct">
+			<c:forEach items="${relatedProducts}" var="relatedProduct" begin="1" end="6">
                  <c:if test="${!relatedProduct.outOfStock and !relatedProduct.deleted and !relatedProduct.hidden and !relatedProduct.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productVOThumbG.jsp" product="${relatedProduct}"/>
                      <c:set var="check_related_products" value="1"/>
