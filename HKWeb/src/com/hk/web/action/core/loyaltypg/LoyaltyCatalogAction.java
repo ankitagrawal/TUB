@@ -30,7 +30,7 @@ import com.hk.store.SearchCriteria;
 @Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
-	private int defaultPerPage = 12;
+	private int defaultPerPage = 15;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
 	private List<Badge> badgeList;
@@ -38,7 +38,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private String categoryName;
 	private double minPoints;
 	private double maxPoints;
-	
+	private int rangeSelected;
 	
 	@Autowired
 	LoyaltyProgramService loyaltyProgramService;
@@ -108,6 +108,17 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
 		criteria.setRange(criteria.new Range(this.minPoints, this.maxPoints));
+		
+		/* This code will be re-factored in next release */
+		if(minPoints == 0) {
+			this.rangeSelected = 1;
+		} else if (minPoints == 101) {
+			this.rangeSelected = 2;
+		} else if (minPoints == 201) {
+			this.rangeSelected = 3;
+		} else if (minPoints == 301) {
+			this.rangeSelected = 4;
+		}
 
 		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
 		List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
@@ -208,6 +219,20 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	 */
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	/**
+	 * @return the rangeSelected
+	 */
+	public int getRangeSelected() {
+		return rangeSelected;
+	}
+
+	/**
+	 * @param rangeSelected the rangeSelected to set
+	 */
+	public void setRangeSelected(int rangeSelected) {
+		this.rangeSelected = rangeSelected;
 	}
 
 
