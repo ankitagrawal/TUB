@@ -65,7 +65,7 @@
     </c:if>
     <c:if test="${hk:collectionContains(categoryNameList, 'devices') ||
             hk:collectionContains(categoryNameList, 'diabetic-food') ||
-            hk:collectionContains(brandList, 'frio') }">
+            hk:collectionContains(brandList, 'Frio') }">
             <jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>
         </c:if>
 
