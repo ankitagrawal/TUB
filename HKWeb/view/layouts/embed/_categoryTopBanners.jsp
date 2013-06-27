@@ -6,8 +6,16 @@
 
 <s:layout-definition>
     <%
-        List<String> brandList = (List<String>) pageContext.getAttribute("brandList");
-        pageContext.setAttribute("brandList", brandList);
+        String brands = (String) pageContext.getAttribute("brands");
+        pageContext.setAttribute("brands", brands);
+
+        List<String> brandList = new ArrayList<String>();
+                if (StringUtils.isNotBlank(brands)) {
+                    for (String s : StringUtils.split(brands, ',')) {
+                        brandList.add(s.trim());
+                    }
+                }
+                pageContext.setAttribute("brandList", brandList);
 
         String categoryNames = (String) pageContext.getAttribute("categories");
         pageContext.setAttribute("categories", categoryNames);
