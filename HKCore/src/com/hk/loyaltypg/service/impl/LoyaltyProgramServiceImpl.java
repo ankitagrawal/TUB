@@ -15,6 +15,7 @@ import java.util.Set;
 import net.sourceforge.stripes.action.FileBean;
 
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.ProjectionList;
@@ -746,12 +747,14 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR, -1);
 		criteria.add(Restrictions.ge("createDate", calendar.getTime()));
-		criteria.add(Restrictions.disjunction());
-		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Placed.asOrderStatus().getId()));
-		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.InProcess.asOrderStatus().getId()));
-		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Shipped.asOrderStatus().getId()));
-		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.OnHold.asOrderStatus().getId()));
-		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId()));
+		Criterion crit1 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Placed.asOrderStatus().getId());
+		Criterion crit2 = Restrictions.eq("orderStatus.id", EnumOrderStatus.InProcess.asOrderStatus().getId());
+		Criterion crit3 = Restrictions.eq("orderStatus.id", EnumOrderStatus.OnHold.asOrderStatus().getId());
+		Criterion crit4 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Shipped.asOrderStatus().getId());
+		Criterion crit5 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId());
+		Criterion crit6 = Restrictions.or(crit1, crit2);
+		Criterion crit7 = Restrictions.or(crit3, crit4);
+		criteria.add(Restrictions.or(Restrictions.or(crit6, crit7), crit5));
 
 		@SuppressWarnings("unchecked")
 		List<Order> list = this.baseDao.findByCriteria(criteria);
