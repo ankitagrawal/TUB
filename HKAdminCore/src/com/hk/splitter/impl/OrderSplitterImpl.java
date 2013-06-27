@@ -17,7 +17,6 @@ import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.core.fliter.OrderSplitterFilter;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -79,18 +78,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 
 		validate(order);
 
-		Collection<Warehouse> whs = warehouseService.getAllActiveWarehouses();
-		List<Warehouse> filteredWarehoues = new ArrayList<Warehouse>();
-		for (Warehouse warehouse : whs) {
-			if (warehouse.isHonoringB2COrders() && (warehouse.getWarehouseType().equals(EnumWarehouseType.Online_B2C.getId()) 
-					|| warehouse.getWarehouseType().equals(EnumWarehouseType.Online_B2B.getId()))) {
-				filteredWarehoues.add(warehouse);
-			}
-		}
-		
-		if(filteredWarehoues.size() == 0) {
-			return Collections.emptySet();
-		}
+		List<Warehouse> whs = warehouseService.getServiceableWarehouses(order);
 		
 		long startTime = System.currentTimeMillis();
 
@@ -100,7 +88,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 				boolean isAdded = false;
 				List<Sku> skuList = getPreferredSkus(cartLineItem.getProductVariant(), cartLineItem.getMarkedPrice(), cartLineItem.getQty());
 				for (Sku sku : skuList) {
-					if(filteredWarehoues.contains(sku.getWarehouse())) {
+					if(whs.contains(sku.getWarehouse())) {
 						container.addLineItem(sku.getWarehouse(), cartLineItem);
 						isAdded = true;
 					}
@@ -108,12 +96,14 @@ public class OrderSplitterImpl implements OrderSplitter {
 				
 				if(!isAdded) {
 					Product product = cartLineItem.getProductVariant().getProduct();
-					if(product.isDropShipping() || product.isService() || product.isJit()) {
-						Collection<Sku> skus = skuService.getSkus(cartLineItem.getProductVariant(), filteredWarehoues);
+					if(product.isDropShipping() || product.isJit()) {
+						Collection<Sku> skus = skuService.getSkus(cartLineItem.getProductVariant(), whs);
 						for (Sku sku : skus) {
 							container.addLineItem(sku.getWarehouse(), cartLineItem);
 							isAdded = true;
 						}
+					} else if(product.isService()) {
+						container.addLineItem(warehouseService.getCorporateOffice(), cartLineItem);
 					}
 				}
 				
