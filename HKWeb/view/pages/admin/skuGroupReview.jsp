@@ -47,7 +47,7 @@
                         <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
                         <td> ${skuGroup.status}</td>
                        <td> 
-                       <c:if test="${sbr.lineItem.markedPrice == skuGroup.mrp && skuGroup.status == EnumSkuGroupStatus.UNDER_REVIEW}">
+                       <c:if test="${sbr.lineItem.markedPrice == skuGroup.mrp && skuGroup.status != EnumSkuGroupStatus.UNDER_REVIEW}">
 	                       <s:link
 	                                beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
 	                                event="markSkuGroupAsUnderReview">
