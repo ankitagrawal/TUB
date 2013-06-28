@@ -7,7 +7,6 @@
 <s:layout-definition>
     <%
         String brands = (String) pageContext.getAttribute("brands");
-        pageContext.setAttribute("brands", brands);
 
         List<String> brandList = new ArrayList<String>();
                 if (StringUtils.isNotBlank(brands)) {
@@ -70,11 +69,13 @@
 
     <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
         <jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
+       < c:out value="${brands}"/>
+        < c:out value="${categoryNameList}" />
     </c:if>
     <c:if test="${hk:collectionContains(categoryNameList, 'devices') ||
             hk:collectionContains(categoryNameList, 'diabetic-food') ||
             hk:collectionContains(brandList, 'Frio') }">
             <jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>
         </c:if>
-
+<c:out value="${brandList}" />
 </s:layout-definition>
