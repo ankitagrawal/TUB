@@ -66,7 +66,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		}
 		
 		if(selectedInfo == null) {
-			throw new CouldNotFixException("Failed to fix the SO. Escalate back to action queue.");
+			throw new CouldNotFixException("No Sku Item is available with different MRP. Escalate back to action queue.");
 		}
 		
 		double existingMrp = lineItem.getMarkedPrice().doubleValue();
@@ -74,7 +74,8 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		if(selectedInfo.getMrp() > lineItem.getMarkedPrice().doubleValue()) {
 			updateHighMrp(lineItem, selectedInfo);
 		} else {
-			updateLowMrp(lineItem, selectedInfo);
+			throw new CouldNotFixException("No Sku Item is available with Higher MRP. Escalate back to action queue.");
+			//updateLowMrp(lineItem, selectedInfo);
 		}
 		
 		recordAndMail(lineItem, existingMrp, existingHkPrice);
@@ -91,6 +92,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		cartLineItemService.save(cartLineItem);
 	}
 	
+	@SuppressWarnings("unused")
 	private void updateLowMrp(LineItem lineItem, SkuInfo skuInfo) {
 		double discount = 1d - lineItem.getHkPrice()/lineItem.getMarkedPrice();
 		double newHkPrice = skuInfo.getMrp() * (1d - discount);
