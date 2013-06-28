@@ -76,6 +76,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 			success(lineItem, existingMrp, lineItem.getHkPrice());
 		} else {
 			fail(lineItem, "No Sku Item is available with Higher MRP. Escalate back to action queue.");
+			return;
 		}
 		inventoryHealthService.checkInventoryHealth(variant);
 	}
