@@ -103,19 +103,21 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveActualShippingCostForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-        if (shippingOrder != null) {
-            Shipment shipment = shippingOrder.getShipment();
-            if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                if (weight != null && weight > 0D) {
-                    shipment.setBoxWeight(weight);
+        if (shippingOrderId != null) {
+            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+            if (shippingOrder != null) {
+                Shipment shipment = shippingOrder.getShipment();
+                if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+                    if (weight != null && weight > 0D) {
+                        shipment.setBoxWeight(weight);
+                    }
+                    shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                    shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+                    shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                    shipmentService.save(shipment);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
                 }
-                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-                shipmentService.save(shipment);
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
