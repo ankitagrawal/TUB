@@ -95,7 +95,7 @@ public class DateUtils {
   }
 
     public static String getDateString(Date date){
-        DateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("MMM, dd yyyy");
         return dateFormat.format(date);
     }
 
