@@ -53,7 +53,7 @@ public class ProductVariantSupplierInfoServiceImpl implements ProductVariantSupp
 		return productVariantSupplierInfo;
 	}
 	
-	public Supplier getSupplierFromProductVariant(String productVariant) {
+	public Supplier getSupplierFromProductVariant(ProductVariant productVariant) {
 		Supplier supplier = getProductVariantSupplierInfoDao().getSupplierFromProductVariant(productVariant);
 		return supplier;
 	}

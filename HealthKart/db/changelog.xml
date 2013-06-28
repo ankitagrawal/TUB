@@ -13409,4 +13409,39 @@
     <changeSet author="Nihal (generated)" id="1372321252786-19">
         <addForeignKeyConstraint baseColumnNames="courier_pickup_detail_id" baseTableName="debit_note" constraintName="fk_debit_note_courier_pickup_detail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_pickup_detail" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1372328585647-2">
+        <addColumn tableName="debit_note">
+            <column name="destination_address" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372328585647-3">
+        <addColumn tableName="debit_note">
+            <column name="return_by_hand" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-2">
+        <addColumn tableName="debit_note">
+            <column name="return_address" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-3">
+        <addColumn tableName="debit_note">
+            <column name="return_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-4">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_return_address" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-5">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_return_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-6">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_tracking_number" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

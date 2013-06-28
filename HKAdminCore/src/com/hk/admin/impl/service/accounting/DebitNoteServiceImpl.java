@@ -102,7 +102,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 		debitNoteDto.setTotalTaxable(debitNote.getTaxableAmount());
 		debitNoteDto.setTotalTax(debitNote.getTaxAmount());
 		debitNoteDto.setTotalSurcharge(debitNote.getSurchargeAmount());
-		debitNoteDto.setTotalPayable(debitNote.getFinalDebitAmount());
+		debitNoteDto.setTotalPayable(debitNote.getPayableAmount());
 		debitNoteDto.setTotalDiscount(debitNote.getDiscount());
 		debitNoteDto.setFinalDebitAmount(debitNote.getFinalDebitAmount());
 		return debitNoteDto;
@@ -173,7 +173,6 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 		debitNote.setTaxAmount(totalTax);
 		debitNote.setSurchargeAmount(totalSurcharge);
 		debitNote.setPayableAmount(totalPayable);
-		finalDebitAmount+=debitNote.getFreightForwardingCharges();
 		debitNote.setFinalDebitAmount(finalDebitAmount);
 		debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
 		Set<DebitNoteLineItem> debitNoteLineItemSet = new HashSet<DebitNoteLineItem>();
@@ -210,7 +209,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 			if (lineItem.getSku() != null) {
 				debitNoteLineItem.setSku(lineItem.getSku());
 				debitNoteLineItem.setProductName(lineItem.getSku().getProductVariant().getVariantName());
-				if(debitNote.getSupplier().getState().equals(debitNote.getWarehouse().getState())){
+				if(debitNote.getSupplier().getState().equalsIgnoreCase(debitNote.getWarehouse().getState())){
 					debitNoteLineItem.setTax(lineItem.getSku().getTax());
 				}
 				else{
@@ -227,7 +226,6 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 				totalTax += taxComponent.getTax();
 				totalSurcharge += taxComponent.getSurcharge();
 				totalPayable += taxComponent.getPayable();
-				finalDebitAmount+=totalPayable;
 				debitNoteLineItem.setTaxableAmount(taxableAmount);
 				debitNoteLineItem.setTaxAmount(taxComponent.getTax());
 				debitNoteLineItem.setSurchargeAmount(taxComponent.getSurcharge());
@@ -239,6 +237,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 		debitNote.setTaxableAmount(totalTaxable);
 		debitNote.setTaxAmount(totalTax);
 		debitNote.setSurchargeAmount(totalSurcharge);
+		finalDebitAmount+=totalPayable;
 		finalDebitAmount+=debitNote.getFreightForwardingCharges();
 		debitNote.setFinalDebitAmount(finalDebitAmount);
 		debitNote.setDiscount(0.0D);

@@ -615,13 +615,14 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
+    @JsonHandler
 	public Resolution getSupplierAgainstBarcode() {
 		Map<Object, Object> dataMap = new HashMap<Object, Object>();
 		HealthkartResponse healthkartResponse = null;
 		if (StringUtils.isNotBlank(barcode) && warehouseId != null) {
 			try {
 				SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(barcode, warehouseId);
-				String productVariant = skuGroup.getSku().getProductVariant().getId();
+				ProductVariant productVariant = skuGroup.getSku().getProductVariant();
 				Supplier supplier = productVariantSupplierInfoService.getSupplierFromProductVariant(productVariant);
 				if (supplier != null) {
 					dataMap.put("supplier", supplier);
@@ -630,21 +631,25 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 				}
 
 			} catch (Exception e) {
-				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage());
 			}
 		} else {
-			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Input Data", dataMap);
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Input Data");
 		}
 		noCache();
 		return new JsonResolution(healthkartResponse);
 	}
 	
 	public Resolution createDebitNote(){
+		if(warehouse==null){
+			addRedirectAlertMessage(new SimpleMessage("Please select a warehouse"));
+			return new RedirectResolution(ReconciliationVoucherAction.class).addParameter("create");
+		}
 		if(reconciliationVoucherService.getDebitNote(reconciliationVoucher)!=null){
 			addRedirectAlertMessage(new SimpleMessage("Debit Note Number - "+reconciliationVoucherService.getDebitNote(reconciliationVoucher).getId()+"has already been created against the RV"));
 			return new RedirectResolution(DebitNoteAction.class);
 		}
-		return new RedirectResolution(DebitNoteAction.class).addParameter("debitNoteFromRV").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+		return new RedirectResolution(DebitNoteAction.class).addParameter("debitNoteFromRV").addParameter("reconciliationVoucher", reconciliationVoucher.getId()).addParameter("warehouse", warehouse.getId());
 	}
     
     public ReconciliationVoucher getReconciliationVoucher() {

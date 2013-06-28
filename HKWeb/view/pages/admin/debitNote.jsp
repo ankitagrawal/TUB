@@ -10,6 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.constants.courier.EnumPickupStatus" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="pa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <%
@@ -93,6 +94,14 @@
                 var obj = $(this);
                 obj.hide();
                 var bool = true;
+                if($('#returnByHand').is(":checked")){
+             	  var retVal = confirm("Are you sure to return by hand. You may not be able to add courier details further");
+             	   if( retVal == true ){
+             		  return true;
+             	   }else{
+             		  return false;
+             	   }
+                }
                 $('.pvDetails').each(function(){
                    var pvDetails = $(this).html();
                     if(pvDetails == null || pvDetails == ""){
@@ -144,6 +153,11 @@
                     obj.show();
                    return false;
                     }
+                
+                $('#dnForm').submit(function() {
+  				  $(this).find(':input:disabled') 
+  				    .prop('disabled', false); 
+  				});
             });
 			
             
@@ -258,18 +272,35 @@
     					overallDiscount = parseFloat($("#totalsTable").parent().find('.overallDiscount').val());
     			}
     			finalPayable -= overallDiscount;
-    			$("#totalsTable").find('.finalPayable').val(finalPayable.toFixed(2));
     			freightCharges = parseFloat($("#totalsTable").find('.freight').val());
     			finalPayable = finalPayable+freightCharges;
-    			$("#totalsTable").find('#finalDebitAmount').val(finalPayable.toFixed(2));
+    			$("#totalsTable").find('.finalDebitAmount').val(finalPayable.toFixed(2));
     		});
             
             
             if(${pa.debitNote.purchaseInvoice!=null}){
             	$(".addRowButton").hide();
             }
-
-
+            
+            if(${pa.debitNote.returnByHand!=null && pa.debitNote.returnByHand}){
+            	$("#debitNoteCourier").hide();
+            }
+            
+            $('#returnByHand').click(function(){
+            	if($(this).is(":checked")){
+            		$("#debitNoteCourier").hide();	
+            	}else{
+            		$("#debitNoteCourier").show();
+            	}
+            	
+              });
+            
+            if(${(pa.debitNote.purchaseInvoice!=null)}){
+    			$("#dnForm .taxValues").each(function(){
+    				$(this).prop('disabled', true);
+    	    		});
+    		}
+            
         });
     </script>
 </s:layout-component>
@@ -282,7 +313,7 @@
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
     </div>
 
-    <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
+    <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" id="dnForm">
         <s:hidden name="debitNote" value="${pa.debitNote.id}" id="debitNoteId"  />
         <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}" />
         <s:hidden name="debitNote.purchaseInvoice" value="${pa.debitNote.purchaseInvoice.id}" />
@@ -326,14 +357,79 @@
             <tr>
                 <td>For Warehouse</td>
                 <td>
-                    <s:hidden name="debitNote.warehouse" value="${whAction.setWarehouse.id}"/>
-                        ${whAction.setWarehouse.identifier}
+                        ${pa.debitNote.warehouse.identifier}
                 </td>
                 <td>Remarks</td>
                 <td><s:textarea name="debitNote.remarks" style="height:50px;"/></td>
+                <td>Return By Hand</td>
+                <td>
+                <c:choose>
+	              <c:when test="${pa.debitNote.returnByHand}">
+	                <!-- <input type="checkbox" checked="checked" id="returnByHand" name="debitNote.returnByHand"  /> -->
+	                <label>Yes</label>
+	              </c:when>
+	              <c:otherwise>
+	                <input type="checkbox" id="returnByHand" name="debitNote.returnByHand"/>
+	              </c:otherwise>
+	            </c:choose>
+            </td>
             </tr>
         </table>
+<br>
+<div class="clear"></div>
 
+<div id="debitNoteCourier">
+<h2>Courier Details</h2>
+        <table border="1">
+            <thead>
+              <tr>
+                  <th>Courier</th>
+                  <th>Pickup Confirmation No.</th>
+                  <th>Tracking No.</th>
+                  <th>PickUp Status</th>
+                  <th>Pickup Date</th>
+                  <th>Destination Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                  <td>
+                      <input type="hidden" name="courierPickupDetail.id" value="${pa.debitNote.courierPickupDetail.id}" >
+                     <s:select name="courierPickupDetail.courier" id="allActiveCourier">
+                         <s:option value="">--Select--</s:option>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                           serviceProperty="allActiveCourier" value="id" label="name"/>
+                      </s:select>
+                      <script type="text/javascript">
+                          $('#allActiveCourier').val(${pa.debitNote.courierPickupDetail.courier.id});
+                      </script>
+                  </td>
+                  <td>
+                       <s:text name="courierPickupDetail.pickupConfirmationNo" value="${pa.debitNote.courierPickupDetail.pickupConfirmationNo}"/>
+                  </td>
+                  <td>
+                      <s:text name="courierPickupDetail.trackingNo" value="${pa.debitNote.courierPickupDetail.trackingNo}"/>
+                  </td>
+                  <td>
+                      <s:select name="pickupStatusId" id="pickupStatus">
+                          <s:option value="">--Select--</s:option>
+                          <s:option value="<%=EnumPickupStatus.OPEN.getId()%>"><%=EnumPickupStatus.OPEN.getName()%></s:option>
+                          <s:option value="<%=EnumPickupStatus.CLOSE.getId()%>"><%=EnumPickupStatus.CLOSE.getName()%></s:option>
+                      </s:select>
+                      <script type="text/javascript">
+                          $('#pickupStatus').val(${pa.debitNote.courierPickupDetail.pickupStatus.id});
+                      </script>
+                  </td>
+                  <td><s:text class="date_input" id="pickupDate" formatPattern="yyyy-MM-dd" name="courierPickupDetail.pickupDate" value="${pa.debitNote.courierPickupDetail.pickupDate}"/></td>
+                  <td>
+                      <s:text name="destinationAddress" value="${pa.debitNote.destinationAddress}" id="destinationAddress" />
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+        </div>
+        <br><br>
+        
         <table border="1" id="debitNoteLineItems">
             <thead>
             <tr>
@@ -342,7 +438,7 @@
                 <th>UPC</th>
                 <th>Details</th>
                 <c:choose>
-				<c:when test="${pa.debitNote.supplier.state == pa.warehouse.state}">
+				<c:when test="${fn:toLowerCase(pa.debitNote.supplier.state) == fn:toLowerCase(pa.debitNote.warehouse.state)}">
 				<th>Tax<br/>Category</th>
 				</c:when>
 				<c:otherwise>
@@ -394,7 +490,7 @@
 					<input type="hidden" value="finance"
 					       class="taxIdentifier"/>
 					<c:choose>
-						<c:when test="${pa.debitNote.supplier.state == pa.warehouse.state}">
+						<c:when test="${fn:toLowerCase(pa.debitNote.supplier.state) == fn:toLowerCase(pa.debitNote.warehouse.state)}">
 							<s:select name="debitNoteLineItems[${ctr.index}].tax" 
 							          value="${debitNoteLineItemDto.debitNoteLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
@@ -414,7 +510,7 @@
 				</shiro:hasPermission>
 				<shiro:lacksPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
 					<c:choose>
-						<c:when test="${pa.debitNote.supplier.state == pa.userWarehouse.state}">
+						<c:when test="${fn:toLowerCase(pa.debitNote.supplier.state) == fn:toLowerCase(pa.debitNote.warehouse.state)}">
 							<s:text name="debitNoteLineItems[${ctr.index}].tax"
 							        value="${debitNoteLineItemDto.debitNoteLineItem.tax.value}" class="taxCategory taxValues"/>
 						</c:when>
@@ -516,7 +612,7 @@
 			
 				<c:choose>
                     		<c:when test="${pa.debitNote.purchaseInvoice!=null }">
-                    		${debitNoteLineItemDto.debitNoteLineItem.surcharge}
+                    		${debitNoteLineItemDto.debitNoteLineItem.surchargeAmount}
                     		<s:hidden name="debitNoteLineItems[${ctr.index}].surchargeAmount" value="${debitNoteLineItemDto.debitNoteLineItem.surchargeAmount}"/>
                     		</c:when>
                     	<c:otherwise>
@@ -588,12 +684,12 @@
 		</tr>
 		<tr>
 		<td colspan="4">Freight And Forwarding</td>
-		<td><s:text class="overallDiscount valueChange freight"  name="debitNote.freightForwardingCharges" value="${debitNote.freightForwardingCharges}" id="freightForwardingCharges"/></td>
+		<td><s:text  class="overallDiscount valueChange freight"  name="debitNote.freightForwardingCharges" value="${debitNote.freightForwardingCharges}" id="freightForwardingCharges"/></td>
 		</tr>
 		<tr>
 		<td colspan="4">Final Payable</td>
 		<td>
-		<s:text readonly="readonly" class="finalPayable" name="debitNote.finalDebitAmount" value="${pa.debitNoteDto.finalDebitAmount}"/></td>
+		<s:text readonly="readonly" class="finalPayable finalDebitAmount" name="debitNote.finalDebitAmount" value="${pa.debitNoteDto.finalDebitAmount}"/></td>
 				            <td>
 		</tr>
 		</table>
@@ -622,6 +718,9 @@ float: right;
 #totalsdiv{
 position: relative;
 float: right;
+}
+#debitNoteLineItems{
+width:100%;
 }
 
 </style>

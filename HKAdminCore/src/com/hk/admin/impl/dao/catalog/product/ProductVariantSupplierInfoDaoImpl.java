@@ -36,7 +36,7 @@ public class ProductVariantSupplierInfoDaoImpl extends BaseDaoImpl implements Pr
 	}
 
 	@Override
-	public Supplier getSupplierFromProductVariant(String productVariant) {
+	public Supplier getSupplierFromProductVariant(ProductVariant productVariant) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantSupplierInfo.class);
 		criteria.add(Restrictions.eq("productVariant", productVariant));
 		List<ProductVariantSupplierInfo> productVariantSupplierInfoList = findByCriteria(criteria);

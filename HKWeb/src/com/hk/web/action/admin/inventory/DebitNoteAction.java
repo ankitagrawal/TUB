@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.admin.pact.service.accounting.DebitNoteService;
+import com.hk.admin.pact.service.courier.CourierPickupService;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -27,12 +29,14 @@ import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.constants.inventory.EnumDebitNoteStatus;
 import com.hk.constants.inventory.EnumDebitNoteType;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteLineItem;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
@@ -43,6 +47,7 @@ import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -67,6 +72,10 @@ public class DebitNoteAction extends BasePaginatedAction {
     DebitNoteService             debitNoteService;
     @Autowired
 	AdminEmailManager adminEmailManager;
+    @Autowired
+	CourierPickupService courierPickupService;
+    @Autowired
+    WarehouseService warehouseService;
 
     Page                            debitNotePage;
     private List<DebitNote>         debitNoteList      = new ArrayList<DebitNote>();
@@ -88,6 +97,10 @@ public class DebitNoteAction extends BasePaginatedAction {
     public List<ExtraInventoryLineItem> eiLineItem = new ArrayList<ExtraInventoryLineItem>();
     public List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
     private ReconciliationVoucher reconciliationVoucher;
+    private String destinationAddress;
+    private CourierPickupDetail courierPickupDetail;
+	private Long pickupStatusId;
+	private boolean returnByHand;
 
     @DefaultHandler
     public Resolution pre() {
@@ -120,19 +133,10 @@ public class DebitNoteAction extends BasePaginatedAction {
 
     @Secure(hasAnyRoles = { RoleConstants.FINANCE }, authActionBean = AdminPermissionAction.class)
     public Resolution debitNoteFromPi(){
-    	Double shippingChargesOnHk= 0.0;
-		Double shippingChargesOnVendor = 0.0;
-		Double finalDebitAmount = 0.0;
     	if (purchaseInvoice != null) {
     		rtvList = purchaseInvoice.getRtvNotes();
     		eiLineItem = purchaseInvoice.getEiLineItems();
     		for(RtvNote rtv:rtvList){
-    			if(rtv.getShippingChargeHk()!=null){
-    				shippingChargesOnHk+=rtv.getShippingChargeHk();
-    			}
-    			if(rtv.getShippingChargeVendor()!=null){
-    				shippingChargesOnVendor+=rtv.getShippingChargeVendor();
-    			}
     		List<RtvNoteLineItem> rtvNoteLineItemsList = rtvNoteLineItemService.getRtvNoteLineItemsByRtvNote(rtv);
     		if(rtvNoteLineItemsList!=null && rtvNoteLineItemsList.size()>0){
     			rtvNoteLineItems.addAll(rtvNoteLineItemsList);
@@ -140,7 +144,6 @@ public class DebitNoteAction extends BasePaginatedAction {
     		}
 		debitNote = new DebitNote();
 		debitNote.setPurchaseInvoice(purchaseInvoice);
-		debitNote.setFreightForwardingCharges(shippingChargesOnVendor);
 		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
     		
     	}
@@ -158,8 +161,11 @@ public class DebitNoteAction extends BasePaginatedAction {
     		debitNote = new DebitNote();
         	debitNote.setReconciliationVoucher(reconciliationVoucher);
         	debitNote.setSupplier(reconciliationVoucher.getSupplier());
-        	warehouse = loggedOnUser.getSelectedWarehouse();
-        	debitNote.setWarehouse(loggedOnUser.getSelectedWarehouse());
+        	/*Long id = loggedOnUser.getSelectedWarehouse().getId();
+        	warehouse = warehouseService.getWarehouseById(id);*/
+        	if(warehouse!=null){
+        		debitNote.setWarehouse(warehouse);
+        	}
     		debitNote = debitNoteService.createDebitNoteLineItemWithRVLineItems(debitNote, rvLineItems);
     	}
 		
@@ -188,6 +194,15 @@ public class DebitNoteAction extends BasePaginatedAction {
 		if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId())){
 			debitNote.setCloseDate(new Date());
 		}
+		if (courierPickupDetail != null && pickupStatusId != null && courierPickupDetail.getCourier() != null) {
+			if (courierPickupDetail.getPickupDate() == null) {
+				courierPickupDetail.setPickupDate(new Date());
+			}
+			courierPickupDetail.setPickupStatus(EnumPickupStatus.asPickupStatusById(pickupStatusId));
+			courierPickupDetail = courierPickupService.save(courierPickupDetail);
+			debitNote.setCourierPickupDetail(courierPickupDetail);
+		}
+		debitNote.setDestinationAddress(destinationAddress);
 		debitNote = (DebitNote) debitNoteService.save(debitNote);
 		debitNote = (DebitNote) debitNoteService.save(debitNote, debitNoteLineItems);
 
@@ -358,5 +373,41 @@ public class DebitNoteAction extends BasePaginatedAction {
 
 	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
 		this.reconciliationVoucher = reconciliationVoucher;
+	}
+
+	public String getDestinationAddress() {
+		return destinationAddress;
+	}
+
+	public void setDestinationAddress(String destinationAddress) {
+		this.destinationAddress = destinationAddress;
+	}
+
+	public CourierPickupDetail getCourierPickupDetail() {
+		return courierPickupDetail;
+	}
+
+	public void setCourierPickupDetail(CourierPickupDetail courierPickupDetail) {
+		this.courierPickupDetail = courierPickupDetail;
+	}
+
+	public Long getPickupStatusId() {
+		return pickupStatusId;
+	}
+
+	public void setPickupStatusId(Long pickupStatusId) {
+		this.pickupStatusId = pickupStatusId;
+	}
+
+	public boolean isReturnByHand() {
+		return returnByHand;
+	}
+
+	public void setReturnByHand(boolean returnByHand) {
+		this.returnByHand = returnByHand;
+	}
+	
+	public boolean getReturnByHand(){
+		return returnByHand;
 	}
 }

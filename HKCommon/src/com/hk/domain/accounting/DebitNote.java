@@ -22,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
@@ -108,6 +109,23 @@ public class DebitNote implements java.io.Serializable {
 
 	@Column(name = "payable_amount")
 	private Double payableAmount;
+	
+	 @Column (name = "destination_address")
+	  private String destinationAddress;
+	
+	@ManyToOne
+	  @JoinColumn(name = "courier_pickup_detail_id")
+	  private CourierPickupDetail courierPickupDetail;
+	
+	 @Column(name="return_by_hand")
+	  private Boolean returnByHand;
+	 
+	 @Temporal (TemporalType.TIMESTAMP)
+	  @Column(name="return_date")
+	  private Date returnDate;
+	  
+	  @Column (name = "return_address")
+	  private String returnAddress;
 
     public Long getId() {
         return this.id;
@@ -282,6 +300,46 @@ public class DebitNote implements java.io.Serializable {
 
 	public void setPayableAmount(Double payableAmount) {
 		this.payableAmount = payableAmount;
+	}
+
+	public CourierPickupDetail getCourierPickupDetail() {
+		return courierPickupDetail;
+	}
+
+	public void setCourierPickupDetail(CourierPickupDetail courierPickupDetail) {
+		this.courierPickupDetail = courierPickupDetail;
+	}
+
+	public String getDestinationAddress() {
+		return destinationAddress;
+	}
+
+	public void setDestinationAddress(String destinationAddress) {
+		this.destinationAddress = destinationAddress;
+	}
+
+	public Boolean getReturnByHand() {
+		return returnByHand;
+	}
+
+	public void setReturnByHand(Boolean returnByHand) {
+		this.returnByHand = returnByHand;
+	}
+
+	public Date getReturnDate() {
+		return returnDate;
+	}
+
+	public void setReturnDate(Date returnDate) {
+		this.returnDate = returnDate;
+	}
+
+	public String getReturnAddress() {
+		return returnAddress;
+	}
+
+	public void setReturnAddress(String returnAddress) {
+		this.returnAddress = returnAddress;
 	}
 }
 

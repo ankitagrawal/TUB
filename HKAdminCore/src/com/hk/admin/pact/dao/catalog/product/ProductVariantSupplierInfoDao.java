@@ -16,6 +16,6 @@ public interface ProductVariantSupplierInfoDao extends BaseDao {
 
 	public ProductVariantSupplierInfo getPVSupplierInfoByVariantAndSupplier(ProductVariant productVariant, Supplier supplier);
 	
-	public Supplier getSupplierFromProductVariant(String productVariant);
+	public Supplier getSupplierFromProductVariant(ProductVariant productVariant);
 
 }

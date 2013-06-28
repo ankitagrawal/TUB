@@ -199,12 +199,13 @@
 	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 }">
 	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
 	<s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher}" />
+	<s:param name = "warehouse" value="${pa.reconciliationVoucher.warehouse}"/>
 	 Create Debit Note </s:link>
 	</c:if>
 	</div>
 
     <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
-        <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
+        <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="uploadForm">
             <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
             <fieldset>
                 <legend>Upload Excel to Subtract RV</legend>
@@ -268,25 +269,27 @@
               });
             
             
-            $('#SubtractReconciled').click(function() {
+            $('#upc').change(function() {
             	var supplier=${pa.reconciliationVoucher.supplier}!=null?${pa.reconciliationVoucher.supplier}:null;
             	var barcode = $('#upc').val();
             	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
             	var productSupplier;
             	
-            	$.getJSON($('#supplierInfo').attr('href'), {
-            		barcode : barcode, warehouseId : warehouseId
-                  },
-                      function(res) {
+            	$.getJSON($('#supplierInfo').attr('href'), {barcode : barcode, warehouseId : warehouseId},function(res) {
                 	  if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                		  alert('I am okk');
-                	  }
-                	  else{
+                		  if(res.data.supplier.id!=supplier){
+                			  var retVal = confirm("The suppliers against the rv and against the product variant do not match. Do you want to continue?");
+                        	   if(retVal){
+                        	      return true;               	 
+                        	   }
+                        	   
+                		  }
+                	  }else{
                 		  alert('Either Invalid barcode or No Item found.');
-                		  return false;
                 	  }
-                  });
-            	
+                  }
+            	);
+            	return false;
             });
             
             if(${pa.isDebitNoteCreated!=null && pa.isDebitNoteCreated}){
@@ -328,6 +331,11 @@
 	left: 40%;
 	margin-bottom: 2px;
 	margin-top: 2px;
+}
+
+#uploadForm{
+float: left;
+	position: relative;
 }
     
     </style>
