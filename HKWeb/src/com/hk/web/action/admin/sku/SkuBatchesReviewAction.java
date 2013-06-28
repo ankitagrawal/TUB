@@ -12,9 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.shippingOrder.LineItem;
@@ -33,6 +35,7 @@ import com.hk.web.action.admin.inventory.InventoryCheckoutAction;
  * To change this template use File | Settings | File Templates.
  */
 @Component
+@Secure(hasAnyPermissions={PermissionConstants.SO_FIX, PermissionConstants.SO_REVIEW})
 public class SkuBatchesReviewAction extends BaseAction {
 
 	private static Logger logger = LoggerFactory.getLogger(SkuBatchesReviewAction.class);
