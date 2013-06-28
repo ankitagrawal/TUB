@@ -192,6 +192,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         HashSet<String> params = new HashSet<String>();
         params.add("startDate");
         params.add("endDate");
+        params.add("paymentStartDate");
+        params.add("paymentEndDate");
         params.add("shippingOrderId");
         params.add("baseOrderId");
         // params.add("gatewayOrderId");
