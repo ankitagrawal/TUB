@@ -80,7 +80,7 @@ public class SkuBatchesReviewAction extends BaseAction {
     	} catch (Exception e) {
     		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
     				EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed, null, e.getMessage());
-    		logger.error("Error while fixing the line item", e);
+    		logger.error("Error while fixing the line item", e.getMessage());
     		addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
     	}
     	
