@@ -974,6 +974,11 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
     }
     
+    public boolean sendSoFixFailedMail(HashMap<String, String> map){
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixFailedMail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
+    }
+    
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();
      * valuesMap.put("product", product); valuesMap.put("stockStatus", stockStatus); boolean success = true; Template
