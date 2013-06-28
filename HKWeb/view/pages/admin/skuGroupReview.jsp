@@ -1,3 +1,4 @@
+<%@page import="com.hk.constants.sku.EnumSkuGroupStatus"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" var="sbr"/>
@@ -45,15 +46,17 @@
                         <td>${fn:length(skuGroup.skuItems)}</td>
                         <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
                         <td> ${skuGroup.status}</td>
-						<c:if test="${sbr.lineItem.markedPrice == skuGroup.mrp}">
-	                       <td> <s:link
+                       <td> 
+                       <c:if test="${sbr.lineItem.markedPrice == skuGroup.mrp && skuGroup.status == EnumSkuGroupStatus.UNDER_REVIEW}">
+	                       <s:link
 	                                beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
 	                                event="markSkuGroupAsUnderReview">
 	                            Mark Review
 	                            <s:param name="searchSkuGroup" value="${skuGroup.id}"/>
 	                           <s:param name="lineItem" value="${sbr.lineItem}"/>
-	                        </s:link>  </td>
-						</c:if>
+	                        </s:link>  
+                       </c:if>
+                        </td>
                     </tr>
 
                 </c:forEach>

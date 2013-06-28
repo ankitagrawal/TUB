@@ -311,7 +311,7 @@ public class InventoryCheckoutAction extends BaseAction {
                             if (skuItem != null) {
                                  // Mrp check --starts
                                  if ( (checkMrpPreCheckOut(variant) && skuItem.getSkuGroup().getMrp() != null && !skuItem.getSkuGroup().getMrp().equals(lineItem.getMarkedPrice()))  || (skuItem.getSkuGroup().getStatus()!=null && skuItem.getSkuGroup().getStatus().equals(EnumSkuGroupStatus.UNDER_REVIEW))) {
-		                              addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout Either Wrong MRP variant or Under Review batch.Please put the Batch no : " + skuItem.getSkuGroup().getBatchNumber() + " under Review   "  ));
+		                              addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout Either Wrong MRP variant or under review batch"));
                                       return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
                                 }
                                 // MRP check ends --

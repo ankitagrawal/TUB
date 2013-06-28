@@ -5,6 +5,6 @@ import com.hk.domain.shippingOrder.LineItem;
 
 public interface OrderReviewService {
 	
-	public void fixLineItem(LineItem lineItem);
+	public boolean fixLineItem(LineItem lineItem);
 	
 }

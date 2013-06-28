@@ -59,8 +59,13 @@ public class SkuBatchesReviewAction extends BaseAction {
 
     public Resolution markSkuGroupAsUnderReview() {
         if (searchSkuGroup != null) {
-            searchSkuGroup.setStatus(EnumSkuGroupStatus.UNDER_REVIEW);
-            getBaseDao().save(searchSkuGroup);
+            skuGroups = adminInventoryService.getInStockSkuGroupsForReview(lineItem);
+            for (SkuGroup skuGroup : skuGroups) {
+            	if(skuGroup.getMrp().equals(lineItem.getMarkedPrice())) {
+            		searchSkuGroup.setStatus(EnumSkuGroupStatus.UNDER_REVIEW);
+            		getBaseDao().save(searchSkuGroup);
+            	}
+			}
         }
         inventoryService.checkInventoryHealth(searchSkuGroup.getSku().getProductVariant());
         return new RedirectResolution(SkuBatchesReviewAction.class).addParameter("lineItem", lineItem);
@@ -74,9 +79,13 @@ public class SkuBatchesReviewAction extends BaseAction {
     
     public Resolution fixLineItem() {
     	try {
-    		orderReviewService.fixLineItem(lineItem);
+    		boolean fixed = orderReviewService.fixLineItem(lineItem);
     		lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
-    		addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
+    		if(fixed) {
+    			addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
+    		} else {
+    			addRedirectAlertMessage(new SimpleMessage("No Sku Item is available with Higher MRP. Escalate back to action queue."));
+    		}
     	} catch (Exception e) {
     		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
     				EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed, null, e.getMessage());

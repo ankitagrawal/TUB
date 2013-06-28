@@ -269,6 +269,7 @@
 		    		 	if(!sure){
 		    		 		return false;
 		    		 	}
+		    		 	$('.fixIt').attr("disabled", "disabled");
 			    	 }) 
 			      });
 	      </script>
