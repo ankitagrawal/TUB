@@ -96,7 +96,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 							${order.shipment.awb.courier.name}
 							</td>
                             <td>
-                            ${order.targetDelDate}
+                            ${targetDeliverDate}
                             </td>
 						</tr>
 					</#list>

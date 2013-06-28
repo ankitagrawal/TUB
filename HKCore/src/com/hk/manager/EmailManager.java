@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.akube.framework.util.DateUtils;
+import com.akube.framework.util.FormatUtils;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
@@ -570,6 +572,7 @@ public class EmailManager {
         Order order = shippingOrder.getBaseOrder();
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);
+        valuesMap.put("targetDeliverDate", DateUtils.getDateString(shippingOrder.getTargetDelDate()));
 
         for (ShippingOrder shippingOrderFromAllSO : order.getShippingOrders()) {
             if (shippingOrderFromAllSO.isServiceOrder() || shippingOrderFromAllSO.getId().equals(shippingOrder.getId())

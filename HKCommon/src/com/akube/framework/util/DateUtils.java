@@ -94,6 +94,11 @@ public class DateUtils {
     return getDate(dateString, time);
   }
 
+    public static String getDateString(Date date){
+        DateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy");
+        return dateFormat.format(date);
+    }
+
   public static Date getStartOfThisDay(Date date){
     if(date==null)
       return null;
