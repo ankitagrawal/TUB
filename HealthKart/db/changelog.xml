@@ -13407,4 +13407,23 @@
     		<column name="name" value="SO Line Item could not be fixed" type="VARCHAR(100)"></column>
     	</insert>
     </changeSet>
+    
+    <changeSet id="1372320184003-6" author="DeepakC">
+    	<insert tableName="permission">
+    		<column name="name" value="SO_REVIEW" type="VARCHAR(40)"></column>
+    	</insert>
+    	<insert tableName="permission">
+    		<column name="name" value="SO_FIX" type="VARCHAR(40)"></column>
+    	</insert>
+
+    	<insert tableName="role_has_permission">
+    		<column name="role_name" value="WH_Queue_Manager" type="VARCHAR(40)"></column>
+    		<column name="permission_name" value="SO_REVIEW" type="VARCHAR(40)"></column>
+    	</insert>
+    	
+    	<insert tableName="role_has_permission">
+    		<column name="role_name" value="WH_Queue_Manager" type="VARCHAR(40)"></column>
+    		<column name="permission_name" value="SO_FIX" type="VARCHAR(40)"></column>
+    	</insert>
+    </changeSet>
 </databaseChangeLog>
