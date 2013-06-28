@@ -297,6 +297,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         return paymentEndDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setPaymentEndDate(Date paymentEndDate) {
         this.paymentEndDate = paymentEndDate;
     }
