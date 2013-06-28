@@ -56,8 +56,9 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		
 		if(skuInfos != null) {
 			for (SkuInfo skuInfo : skuInfos) {
-				double delta =  Math.abs(skuInfo.getMrp() - lineItem.getMarkedPrice().doubleValue());
-				if(delta == 0d) continue;
+				double delta =  skuInfo.getMrp() - lineItem.getMarkedPrice().doubleValue();
+				if(delta <= 0d) continue;
+				delta = Math.abs(delta);
 				if(delta < bestDelta) {
 					bestDelta = delta;
 					selectedInfo = skuInfo;
