@@ -204,6 +204,8 @@
           <th>Qty</th>
           <th width="50px;">Net Inventory</th>
           <th width="75px;">Checked Out Qty</th>
+          <th>Review</th>
+          <th>Fix</th>
         </tr>
         </thead>
 	    <c:set var="alertCount" value="0" />
