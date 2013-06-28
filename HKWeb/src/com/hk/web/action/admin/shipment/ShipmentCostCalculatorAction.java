@@ -132,20 +132,22 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution calculateCourierCostingForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-        if (shippingOrder != null) {
-            Order order = shippingOrder.getBaseOrder();
-            Shipment shipment = shippingOrder.getShipment();
-            Double weight = 0D;
-            if (shippingOrder.getShipment() != null) {
-                weight = shipment.getBoxWeight() * 1000;
-            } else {
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    weight += lineItem.getSku().getProductVariant().getWeight();
+        if (shippingOrderId != null) {
+            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+            if (shippingOrder != null) {
+                Order order = shippingOrder.getBaseOrder();
+                Shipment shipment = shippingOrder.getShipment();
+                Double weight = 0D;
+                if (shippingOrder.getShipment() != null) {
+                    weight = shipment.getBoxWeight() * 1000;
+                } else {
+                    for (LineItem lineItem : shippingOrder.getLineItems()) {
+                        weight += lineItem.getSku().getProductVariant().getWeight();
+                    }
                 }
+                ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+                courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
             }
-            ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
-            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
         }
