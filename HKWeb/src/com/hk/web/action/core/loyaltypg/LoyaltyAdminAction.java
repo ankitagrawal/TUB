@@ -4,6 +4,7 @@
 package com.hk.web.action.core.loyaltypg;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,12 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.hk.constants.core.PermissionConstants;
+import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
+import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
@@ -49,6 +55,16 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
     private String productId;
     private double points;
     private List<LoyaltyProduct> loyaltyProducts;
+    private Long userId;
+    private Long orderId;
+    private Long profileOrderID;
+    private List<UserOrderKarmaProfile> profiles;
+    private KarmaPointStatus[] statusArray;
+    private KarmaPointStatus profileStatus;
+    private List<Badge> badges;
+    private boolean newEntry;
+    private double amount;
+    private Long profileBadgeId;
     
     @DefaultHandler
     public Resolution pre() {
@@ -103,7 +119,7 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
     	if (searchKeywordsMap.size() > 0) {
     		loyaltyProducts = loyaltyProgramService.searchLoyaltyProducts(searchKeywordsMap);
         } else {
-        	this.errorMessages.add("Invalid or no search parameters given.");
+        	this.errorMessages.add("Invalid or no search parameters given");
         }
     	
     	if (loyaltyProducts != null && !(loyaltyProducts.size() > 0)) {
@@ -146,6 +162,89 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
     	healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Error in removing the product.", null);
 		this.noCache();
 		return new JsonResolution(healthkartResponse);
+    }
+    
+    public Resolution searchKarmaProfile () {
+    	this.errorMessages = new ArrayList<String>();
+    	Map<String, Object> searchKeywordsMap = new HashMap<String, Object>();
+    	
+    	// Add search parameters
+    	if(userId != null) {
+    		searchKeywordsMap.put("userId", userId);
+    	}
+    	if(orderId != null ) {
+    		searchKeywordsMap.put("orderId", orderId);
+    	}   	
+    	
+    	// If no parameters added return without any db call
+    	if (searchKeywordsMap.size() > 0) {
+    		profiles = loyaltyProgramService.searchKarmaProfiles(searchKeywordsMap);
+        } else {
+        	this.errorMessages.add("Invalid or no search parameters given");
+        }
+    	
+    	if (profiles != null && !(profiles.size() > 0)) {
+    		this.errorMessages.add("No Products Found for the given userId and order Id");
+    	}
+ 
+    	this.statusArray = KarmaPointStatus.values();
+    	this.badges = new ArrayList<Badge>();
+    	this.badges.addAll(loyaltyProgramService.getAllBadges());
+        return new ForwardResolution("/pages/loyalty/loyaltyUserProfileAdmin.jsp");
+    	
+    }
+    
+    public Resolution saveOrUpdateUserProfile() {
+    	this.errorMessages = new ArrayList<String>();
+    	if (profileOrderID !=null ) {
+    		if (!newEntry) {
+    			UserOrderKarmaProfile orderProfile = this.loyaltyProgramService.getUserOrderKarmaProfile(profileOrderID);
+    			if (orderProfile != null) {
+    				orderProfile.setKarmaPoints(this.points);
+    				orderProfile.setStatus(this.profileStatus);
+    				Badge profileBadge = this.loyaltyProductDao.get(Badge.class, this.profileBadgeId);
+    				orderProfile.setBadge(profileBadge);
+    				orderProfile.setUpdateTime(Calendar.getInstance().getTime());
+    				loyaltyProductDao.save(orderProfile);
+    			} else {
+    				errorMessages.add("No order profile exists fo the given order ID");
+    			}
+    		} else {
+    			Order entryOrder = loyaltyProductDao.get(Order.class, profileOrderID);
+    			if (entryOrder != null) {
+    				UserOrderKarmaProfile newProfile = new UserOrderKarmaProfile();
+    				newProfile.setOrder(entryOrder);
+    				newProfile.setUser(entryOrder.getUser());
+    				newProfile.setCreationTime(entryOrder.getCreateDate());
+    				newProfile.setUpdateTime(Calendar.getInstance().getTime());
+    				newProfile.setStatus(this.profileStatus);
+    				Badge profileBadge = this.loyaltyProductDao.get(Badge.class, this.profileBadgeId);
+    				newProfile.setBadge(profileBadge);
+    				newProfile.setKarmaPoints((profileBadge.getLoyaltyPercentage()*amount)/100);
+    				newProfile.setTransactionType(TransactionType.CREDIT);
+    				this.loyaltyProductDao.save(newProfile);
+    			} else {
+    				errorMessages.add("No order found for the given order Id");
+    			}
+    			
+    		}
+    		
+    	} else {
+    		errorMessages.add("No Order for given orderId found");
+    	}
+    	if(errorMessages.isEmpty()) {
+    		this.successMessage = "Loyalty Profile successfully updated for Order Id : " + profileOrderID;
+    	}
+    	return new ForwardResolution("/pages/loyalty/loyaltyUserProfileAdmin.jsp");
+    	
+    }
+    
+    public Resolution viewProfile() {
+    	this.statusArray = KarmaPointStatus.values();
+    	this.badges = new ArrayList<Badge>();
+    	this.badges.addAll(loyaltyProgramService.getAllBadges());
+    	return new ForwardResolution("/pages/loyalty/loyaltyUserProfileAdmin.jsp");
+
     }
 	/**
 	 * @return the errorMessages
@@ -258,6 +357,148 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
 	 */
 	public void setPoints(double points) {
 		this.points = points;
+	}
+
+
+	/**
+	 * @return the userId
+	 */
+	public Long getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	/**
+	 * @return the orderId
+	 */
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	/**
+	 * @param orderId the orderId to set
+	 */
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
+
+
+	/**
+	 * @return the profiles
+	 */
+	public List<UserOrderKarmaProfile> getProfiles() {
+		return profiles;
+	}
+
+	/**
+	 * @param profiles the profiles to set
+	 */
+	public void setProfiles(List<UserOrderKarmaProfile> profiles) {
+		this.profiles = profiles;
+	}
+
+	/**
+	 * @return the statusArray
+	 */
+	public KarmaPointStatus[] getStatusArray() {
+		return statusArray;
+	}
+
+	/**
+	 * @param statusArray the statusArray to set
+	 */
+	public void setStatusArray(KarmaPointStatus[] statusArray) {
+		this.statusArray = statusArray;
+	}
+
+	/**
+	 * @return the profileStatus
+	 */
+	public KarmaPointStatus getProfileStatus() {
+		return profileStatus;
+	}
+
+	/**
+	 * @param profileStatus the profileStatus to set
+	 */
+	public void setProfileStatus(KarmaPointStatus profileStatus) {
+		this.profileStatus = profileStatus;
+	}
+
+	/**
+	 * @return the badges
+	 */
+	public List<Badge> getBadges() {
+		return badges;
+	}
+
+	/**
+	 * @param badges the badges to set
+	 */
+	public void setBadges(List<Badge> badges) {
+		this.badges = badges;
+	}
+
+	/**
+	 * @return the newEntry
+	 */
+	public boolean isNewEntry() {
+		return newEntry;
+	}
+
+	/**
+	 * @param newEntry the newEntry to set
+	 */
+	public void setNewEntry(boolean newEntry) {
+		this.newEntry = newEntry;
+	}
+
+	/**
+	 * @return the amount
+	 */
+	public double getAmount() {
+		return amount;
+	}
+
+	/**
+	 * @param amount the amount to set
+	 */
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	/**
+	 * @return the profileBadgeId
+	 */
+	public Long getProfileBadgeId() {
+		return profileBadgeId;
+	}
+
+	/**
+	 * @param profileBadgeId the profileBadgeId to set
+	 */
+	public void setProfileBadgeId(Long profileBadgeId) {
+		this.profileBadgeId = profileBadgeId;
+	}
+
+	/**
+	 * @return the profileOrderID
+	 */
+	public Long getProfileOrderID() {
+		return profileOrderID;
+	}
+
+	/**
+	 * @param profileOrderID the profileOrderID to set
+	 */
+	public void setProfileOrderID(Long profileOrderID) {
+		this.profileOrderID = profileOrderID;
 	}
 
 

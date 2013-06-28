@@ -1,12 +1,15 @@
 package com.hk.impl.dao.email;
 
-import java.util.Calendar;
+import java.security.PublicKey;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
+
+import org.hibernate.Query;
+import org.hibernate.criterion.*;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +35,9 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     }
 
     public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory,
-                               Boolean productInStock, Boolean productDeleted) {
+                               Boolean productVariantOutOfStock, Boolean productDeleted) {
         DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                productInStock, productDeleted);
+                productVariantOutOfStock, productDeleted);
         if (pageNo == 0 && perPage == 0) {
             return list(notifyMeCriteria, 1, 1000);
         }
@@ -43,14 +46,15 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     }
 
     public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
-                                         Boolean productInStock, Boolean productDeleted) {
+                                         Boolean productVariantOutOfStock, Boolean productDeleted) {
         DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                productInStock, productDeleted);
+                productVariantOutOfStock, productDeleted);
         return findByCriteria(notifyMeCriteria);
     }
 
+
     private DetachedCriteria getNotifyMeListSearchCriteria(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
-                                                           Boolean productInStock, Boolean productDeleted) {
+                                                           Boolean productVariantOutOfStock, Boolean productDeleted) {
         DetachedCriteria notifyMeCriteria = DetachedCriteria.forClass(NotifyMe.class);
         if (startDate != null) {
             notifyMeCriteria.add(Restrictions.gt("createdDate", startDate));
@@ -63,27 +67,28 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
             notifyMeCriteria.add(Restrictions.eq("productVariant", productVariant));
         }
         DetachedCriteria productVariantCriteria = null;
-        if (product != null || primaryCategory != null || productDeleted != null || productInStock != null) {
+        if (product != null || primaryCategory != null || productDeleted != null || productVariantOutOfStock != null) {
             productVariantCriteria = notifyMeCriteria.createCriteria("productVariant");
         }
 
         if (product != null) {
             productVariantCriteria.add(Restrictions.eq("product", product));
         }
+        DetachedCriteria productCriteria = null;
         if (primaryCategory != null) {
-            DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product");
+            productCriteria = productVariantCriteria.createCriteria("product");
             productCriteria.add(Restrictions.eq("primaryCategory", primaryCategory));
         }
         if (productDeleted != null) {
             productVariantCriteria.add(Restrictions.eq("deleted", productDeleted));
         }
-        if (productInStock != null) {
-            productVariantCriteria.add(Restrictions.eq("outOfStock", productInStock));
+        if (productVariantOutOfStock != null) {
+            productVariantCriteria.add(Restrictions.eq("outOfStock", productVariantOutOfStock));
         }
 
         notifyMeCriteria.add(Restrictions.isNull("notifiedDate"));
         notifyMeCriteria.add(Restrictions.isNull("notifiedByUser"));
-        notifyMeCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+        notifyMeCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
 
         return notifyMeCriteria;
     }
@@ -97,8 +102,8 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     public List<NotifyMe> getNotifyMeListForProductVariantInStock() {
         return (List<NotifyMe>) getSession().createQuery(
-                "Select nm from NotifyMe nm, ProductVariant pv where pv =nm.productVariant and nm.notifiedByUser is null "
-                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock  order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).list();
+                "Select nm from NotifyMe nm, ProductVariant pv  where pv =nm.productVariant and nm.notifiedByUser is null "
+                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock and (pv.product.hidden is null or pv.product.hidden = :hidden) order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).setBoolean("hidden", false).list();
     }
 
     public Page getNotifyMeListForProductVariantInStock(int pageNo, int perPage) {
@@ -129,6 +134,123 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     public List<NotifyMe> getPendingNotifyMeListByVariant(String notifyMeEmail, List<ProductVariant> productVariantList) {
         String query = "select nm from NotifyMe nm  where nm.notifiedDate is null and nm.productVariant in (:productVariantList) and nm.email =:notifyMeEmail";
         return getSession().createQuery(query).setParameterList("productVariantList", productVariantList).setParameter("notifyMeEmail", notifyMeEmail).list();
+    }
+
+
+    public List<NotifyMe> notifyMeForSimilarProductsMails(Date endDate, Boolean productVariantOutOfStock, Boolean productVariantDeleted) {
+        String hql = "select distinct(nm) from NotifyMe as nm join nm.productVariant as  pv join pv.product as  p where p.similarProducts.size > :size " +
+                "  and nm.notifiedDate is null and nm.notifiedByUser is null  ";
+        if (endDate != null) {
+            hql = hql + " and nm.createdDate < :endDate ";
+        }
+
+        if (productVariantOutOfStock != null) {
+            hql = hql + "and pv.outOfStock = :productVariantOutOfStock";
+        }
+
+        if (productVariantDeleted != null) {
+            hql = hql + "  and pv.deleted = :productVariantDeleted ";
+        }
+        Query query = getSession().createQuery(hql).setParameter("size", 0);
+
+        if (endDate != null) {
+            query.setDate("endDate", endDate);
+        }
+
+        if (productVariantOutOfStock != null) {
+            query.setParameter("productVariantOutOfStock", productVariantOutOfStock);
+        }
+
+        if (productVariantDeleted != null) {
+            query.setParameter("productVariantDeleted", productVariantDeleted);
+        }
+        return query.list();
+    }
+
+    private Page getNotifyMeList(int pageNo, int perPage, Product product, Category primaryCategory, Boolean productVariantOutOfStock, Boolean similarProduct) {
+        String hql = "Select nm.id as id , nm.name as name , nm.email as email , nm.productVariant as productVariant  , count(nm.id) as userCount  from NotifyMe nm ," +
+                " ProductVariant pv  , Product  p where pv = nm.productVariant and p = pv.product and nm.notifiedByUser is null and nm.notifiedDate is null ";
+
+        if (productVariantOutOfStock != null) {
+            hql = hql + " and pv.outOfStock = :outOfStock ";
+        }
+
+        if (product != null) {
+            hql = hql + " and pv.product.id = :productId ";
+        }
+
+        if (primaryCategory != null) {
+            hql = hql + " and pv.product.primaryCategory.id = :primaryCategory";
+        }
+
+        if (similarProduct != null) {
+            if (similarProduct) {
+                hql = hql + " and p.similarProducts.size > 0 ";
+            } else {
+                hql = hql + " and p.similarProducts.size = 0 ";
+            }
+        }
+
+        hql = hql + " group by nm.productVariant  order by nm.id asc";
+        Query query = getSession().createQuery(hql);
+
+        if (productVariantOutOfStock != null) {
+            query.setBoolean("outOfStock", productVariantOutOfStock);
+        }
+        if (product != null) {
+            query.setParameter("productId", product.getId());
+        }
+        if (primaryCategory != null) {
+            query.setParameter("primaryCategory", primaryCategory.getName());
+        }
+        return exceuteQuery(query, pageNo, perPage);
+
+    }
+
+
+    public Page getAllNotifyMeList(int pageNo, int perPage, Product product, Category primaryCategory) {
+        return getNotifyMeList(pageNo, perPage, product, primaryCategory, null, null);
+    }
+
+    public Page getNotifyMeListForSimilarProducts(int pageNo, int perPage, Product product, Category primaryCategory, Boolean productVariantOutOfStock, Boolean similarProduct) {
+      return getNotifyMeList(pageNo, perPage, product, primaryCategory, true, similarProduct);
+    }
+
+
+    public Page notifyMeListForInStockProduct(int pageNo, int perPage, Product product, Category primaryCategory) {
+
+        String hql = "Select nm.id as id , nm.name as name , nm.email as email , nm.productVariant as productVariant  , count(nm.id) as userCount  from NotifyMe nm ," +
+                " ProductVariant pv  where pv = nm.productVariant and nm.notifiedByUser is null and nm.notifiedDate is null  "
+                + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock and (pv.product.hidden is null or pv.product.hidden = :hidden) ";
+
+        if (product != null) {
+            hql = hql + " and pv.product.id = :productId ";
+        }
+
+        if (primaryCategory != null) {
+            hql = hql + "and pv.product.primaryCategory = :primaryCategory";
+        }
+        hql = hql + " group by nm.productVariant  order by nm.id asc";
+
+        Query query = getSession().createQuery(hql).setBoolean("deleted", true).setBoolean("outOfStock", true).setBoolean("hidden", false);
+        if (product != null) {
+            query.setParameter("productId", product.getId());
+        }
+        if (primaryCategory != null) {
+            query.setParameter("primaryCategory", primaryCategory.getName());
+        }
+        return exceuteQuery(query, pageNo, perPage);
+    }
+
+    private Page exceuteQuery(Query query, int pageNo, int perPage) {
+        query.setResultTransformer(Transformers.aliasToBean(NotifyMeDto.class));
+        int totalResults = query.list().size();
+        int firstResult = (pageNo - 1) * perPage;
+        query.setFirstResult(firstResult);
+        query.setMaxResults(perPage);
+        List resultList = query.list();
+        return new Page(resultList, perPage, pageNo, totalResults);
+
     }
 
 }
