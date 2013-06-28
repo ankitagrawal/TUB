@@ -72,7 +72,7 @@
 			<br/>
 			<br/>
 			<s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" event="checkout">
-				<s:param name="gatewayOrderId" value="${lineItem.shippingOrdergatewayOrderId}"/>
+				<s:param name="gatewayOrderId" value="${lineItem.shippingOrder.gatewayOrderId}"/>
     			<div align="center" style="font-weight:bold; font-size:150%">BACK</div>
 			</s:link>
 
