@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.accounting;
 
 import java.util.List;
 
+import com.hk.admin.pact.service.accounting.SupplierTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,9 @@ public class ProcurementServiceImpl implements ProcurementService {
   GoodsReceivedNoteDao goodsReceivedNoteDao;
   @Autowired
   PaymentHistoryDao paymentHistoryDao;
+  @Autowired
+  SupplierTransactionService supplierTransactionService;
+
 
   @Transactional
   public Boolean deletePurchaseInvoice(PurchaseInvoice purchaseInvoice) {
@@ -38,6 +42,7 @@ public class ProcurementServiceImpl implements ProcurementService {
           grn.setReconciled(false);
           goodsReceivedNoteDao.save(grn);
         }
+        supplierTransactionService.deletePurchaseInvoiceTransaction(purchaseInvoice);
         purchaseInvoiceDao.delete(purchaseInvoice);
         isDeleted = true;
     }

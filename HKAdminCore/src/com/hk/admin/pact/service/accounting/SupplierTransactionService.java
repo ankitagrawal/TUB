@@ -41,4 +41,6 @@ public interface SupplierTransactionService {
     public List<SupplierTransaction> getLastTransactionListForSuppliers(Supplier supplier);
 
     public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate);
+
+    public boolean deletePurchaseInvoiceTransaction(PurchaseInvoice purchaseInvoice);
 }

@@ -27,4 +27,6 @@ public interface SupplierTransactionDao extends BaseDao {
 
     public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate);
 
+    public List<SupplierTransaction> getToBeUpdatedSupplierTransactions(SupplierTransaction supplierTransaction);
+
 }

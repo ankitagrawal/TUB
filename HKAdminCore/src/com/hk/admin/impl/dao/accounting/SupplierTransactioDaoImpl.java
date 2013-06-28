@@ -92,4 +92,15 @@ public class SupplierTransactioDaoImpl extends BaseDaoImpl implements SupplierTr
 
         return (List<SupplierTransaction>) findByCriteria(supplierTransactionCriteria);
     }
+
+    @Override
+    public List<SupplierTransaction> getToBeUpdatedSupplierTransactions(SupplierTransaction supplierTransaction) {
+        DetachedCriteria supplierTransactionCriteria = DetachedCriteria.forClass(SupplierTransaction.class);
+        if(supplierTransaction != null){
+            supplierTransactionCriteria.add(Restrictions.gt("id", supplierTransaction.getId()));
+            supplierTransactionCriteria.add(Restrictions.eq("supplier.id", supplierTransaction.getSupplier().getId()));
+        }
+
+        return (List<SupplierTransaction>) findByCriteria(supplierTransactionCriteria);
+    }
 }

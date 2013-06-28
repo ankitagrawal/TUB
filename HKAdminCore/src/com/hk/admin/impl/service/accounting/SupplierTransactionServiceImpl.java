@@ -117,8 +117,15 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
             supplierTransaction.setBusySupplierBalance(busySupplierBalance);
             supplierTransaction.setBusyPaymentId(busyPaymentId);
             supplierTransaction.setNarration(narration);
-            supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
         }
+        else{
+            if(!supplierTransaction.getSupplier().getId().equals(supplier.getId())){
+                return null;
+            }
+            supplierTransaction = updateBusySupplierTransaction(supplierTransaction, supplierTransaction.getSupplierTransactionType(),amount, date, busySupplierBalance, narration);
+        }
+
+        supplierTransaction =  (SupplierTransaction)getSupplierTransactionDao().save(supplierTransaction);
         return supplierTransaction;
     }
 
@@ -132,7 +139,37 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         return getSupplierTransactionDao().getLastTransactionForSupplier(supplier);
     }
 
-    public Double getUpdatedSupplierBalance(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount) {
+    @Override
+    public boolean deletePurchaseInvoiceTransaction(PurchaseInvoice purchaseInvoice){
+        SupplierTransaction toBeDeletedSupplierTransaction = getSupplierTransactionDao().getSupplierTransactionFromPurchaseInvoice(purchaseInvoice);
+        if(toBeDeletedSupplierTransaction == null){
+            return false;
+        }
+        List<SupplierTransaction> toBeUpdatedSupplierTransactionList = getSupplierTransactionDao().getToBeUpdatedSupplierTransactions(toBeDeletedSupplierTransaction);
+        for (SupplierTransaction supplierTransaction : toBeUpdatedSupplierTransactionList){
+            //Deduct invoice amount from all current balances of transactions below the PI transaction
+            supplierTransaction.setCurrentBalance(supplierTransaction.getCurrentBalance() - toBeDeletedSupplierTransaction.getAmount());
+        }
+        getSupplierTransactionDao().saveOrUpdate(toBeUpdatedSupplierTransactionList);
+        getSupplierTransactionDao().delete(toBeDeletedSupplierTransaction);
+        return true;
+    }
+
+    @Override
+    public List<SupplierTransaction> getLastTransactionListForSuppliers(Supplier supplier) {
+        return getSupplierTransactionDao().getLastTransactionListForSuppliers(supplier);
+    }
+
+    @Override
+    public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate) {
+        return getSupplierTransactionDao().getAllTransactionListForSuppliers(supplier, startDate, endDate);
+    }
+
+    public SupplierTransactionDao getSupplierTransactionDao() {
+        return supplierTransactionDao;
+    }
+
+    private Double getUpdatedSupplierBalance(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount) {
         SupplierTransaction supplierTransaction = getLastTransactionForSupplier(supplier);
         Double netBalance=null;
         if(supplierTransaction == null){
@@ -149,18 +186,23 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
         return netBalance;
     }
 
+    private SupplierTransaction updateBusySupplierTransaction(SupplierTransaction oldSupplierTransaction, SupplierTransactionType supplierTransactionType,
+                                                              Double amount, Date date, Double busySupplierBalance, String narration){
+        if(!oldSupplierTransaction.getAmount().equals(amount)){
+            List<SupplierTransaction> toBeUpdatedSupplierTransactionList = getSupplierTransactionDao().getToBeUpdatedSupplierTransactions(oldSupplierTransaction);
+            Double differenceAmount = oldSupplierTransaction.getAmount() - amount;
+            if(supplierTransactionType.getId().equals(EnumSupplierTransactionType.Payment.getId())){
+                for(SupplierTransaction supplierTransaction : toBeUpdatedSupplierTransactionList){
+                    supplierTransaction.setCurrentBalance(supplierTransaction.getCurrentBalance() + differenceAmount);
+                }
+            }
+            oldSupplierTransaction.setCurrentBalance(oldSupplierTransaction.getCurrentBalance() + differenceAmount);
+            oldSupplierTransaction.setAmount(amount);
+        }
 
-    @Override
-    public List<SupplierTransaction> getLastTransactionListForSuppliers(Supplier supplier) {
-        return getSupplierTransactionDao().getLastTransactionListForSuppliers(supplier);
-    }
-
-    @Override
-    public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate) {
-        return getSupplierTransactionDao().getAllTransactionListForSuppliers(supplier, startDate, endDate);
-    }
-
-    public SupplierTransactionDao getSupplierTransactionDao() {
-        return supplierTransactionDao;
+        oldSupplierTransaction.setNarration(narration);
+        oldSupplierTransaction.setDate(date);
+        oldSupplierTransaction.setBusySupplierBalance(busySupplierBalance);
+        return oldSupplierTransaction;
     }
 }
