@@ -23,7 +23,7 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         if (skuList != null && !skuList.isEmpty()) {
             //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
 	        String query = "select count(si) from SkuItem si where si.skuGroup.status != :skuStatus and si.skuGroup.sku in (:skuList) and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId();
-	        netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW.name()).uniqueResult();
+	        netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW).uniqueResult();
             if (netInv == null) {
                 netInv = 0L;
             }
