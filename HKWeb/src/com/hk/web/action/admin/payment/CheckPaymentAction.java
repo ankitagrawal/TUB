@@ -88,7 +88,7 @@ public class CheckPaymentAction extends BaseAction {
 
     List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
 
-    private PaymentStatus paymentStatus;
+
 
     @DefaultHandler
     public Resolution show() {
@@ -164,10 +164,10 @@ public class CheckPaymentAction extends BaseAction {
 
 
     @DontValidate
-    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         try{
-            paymentStatus = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+            payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
 
         } catch (HealthkartPaymentGatewayException e){
             logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
@@ -181,7 +181,7 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updatePayment() {
         try{
-            paymentStatus = paymentService.updatePayment(gatewayOrderId);
+            payment = paymentService.updatePayment(gatewayOrderId);
 
         } catch (HealthkartPaymentGatewayException e){
             logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
@@ -492,11 +492,4 @@ public class CheckPaymentAction extends BaseAction {
         this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
     }
 
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
 }

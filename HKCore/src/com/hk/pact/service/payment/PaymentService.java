@@ -47,9 +47,9 @@ public interface PaymentService {
 
     public List<HkPaymentResponse> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;
 
-    public PaymentStatus updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;
+    public Payment updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;
 
-    public PaymentStatus refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException;
+    public Payment refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException;
     /**
      * Send payment emails and return true if emails sent successfully
      *

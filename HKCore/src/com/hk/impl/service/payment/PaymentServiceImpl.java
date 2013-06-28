@@ -155,7 +155,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentStatus updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
+    public Payment updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
 
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
@@ -181,7 +181,7 @@ public class PaymentServiceImpl implements PaymentService {
                 getPaymentManager().error(gatewayOrderId, e);
             }
         }
-        return basePayment.getPaymentStatus();
+        return basePayment;
     }
 
 
@@ -194,15 +194,15 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentStatus refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
+    public Payment refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
         Double gatewayAmount = null;
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
-        PaymentStatus paymentStatus = null;
+        Payment refundRequestPayment = null;
 
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
             if (EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
                 HkPaymentService hkPaymentService = getHkPaymentService(basePayment.getGateway());
-                Payment refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
+                refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
                 try {
                     HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
                     // handle the case of citrus
@@ -224,8 +224,6 @@ public class PaymentServiceImpl implements PaymentService {
                     }
                     updatePaymentBasedOnResponse(hkRefundPaymentResponse, refundRequestPayment);
 
-                    paymentStatus = refundRequestPayment.getPaymentStatus();
-
                 } catch (HealthkartPaymentGatewayException e) {
                     if (e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)) {
                         emailManager.sendPaymentMisMatchMailToAdmin(amount, gatewayAmount, gatewayOrderId);
@@ -235,7 +233,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
 
-        return paymentStatus;
+        return refundRequestPayment;
     }
 
     /**
