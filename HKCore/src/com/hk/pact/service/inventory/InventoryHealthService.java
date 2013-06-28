@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface InventoryHealthService {
 
@@ -19,6 +20,8 @@ public interface InventoryHealthService {
 	Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant);
 	
 	Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter);
+	
+	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
 	
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

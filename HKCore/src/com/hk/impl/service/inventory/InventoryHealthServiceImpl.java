@@ -223,7 +223,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			" group by b.id" +
 			" order by checkinDate asc";
 	
-	private Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
+	@Override
+	public Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
 		String sql = checkedInInvSql;
 		SQLQuery query = baseDao.createSqlQuery(sql);
 		

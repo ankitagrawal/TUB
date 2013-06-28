@@ -1,7 +1,9 @@
 package com.hk.impl.service.inventory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.shippingOrder.FixedShippingOrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -47,7 +50,10 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		filter.setMinQty(lineItem.getQty());
 		filter.setWarehouseId(lineItem.getSku().getWarehouse().getId());
 		
-		Collection<SkuInfo> skuInfos = inventoryHealthService.getAvailableSkus(variant, filter);
+		List<Warehouse> whs = new ArrayList<Warehouse>();
+		whs.add(lineItem.getSku().getWarehouse());
+		Collection<SkuInfo> skuInfos = inventoryHealthService.getCheckedInInventory(variant, whs);
+		//Collection<SkuInfo> skuInfos = inventoryHealthService.getAvailableSkus(variant, filter);
 		
 		double bestDelta = Double.MAX_VALUE;
 		SkuInfo selectedInfo = null;
