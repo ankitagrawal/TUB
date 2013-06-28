@@ -414,7 +414,7 @@
 
 <div id="tech">
 
-  <h3>Position: Software Engineer(Java/J2EE)</h3>
+  <h3>Position: Lead/Senior Software Engineer(Java/J2EE)</h3>
   <p>
     <b>Responsibilities:</b>
   <ul style="list-style:circle; padding-left:20px">
@@ -434,13 +434,14 @@
     <li>DB Technologies: MySQL/Oracle; proficient in DB designing and writing queries</li>
     <li>Scripting Technologies: Javascript/jQuery, Groovy, Ruby</li>
     <li>Front end Technologies: HTML, CSS, JSP</li>
+    <li>Project and Team Management</li>
   </ul>
   </p>
 
   <p>
     <b>Experience:</b>
   <ul style="list-style:circle; padding-left:20px">
-    <li>2-6 years of experience in Java web application development</li>
+    <li>5-10 years of experience in Java web application development</li>
     <li>Should have worked in a significant capacity in the development stages of an internet based product
     </li>
     <li>Comfortable with the backend stack from business logic to database design</li>
@@ -451,7 +452,7 @@
     <b>Compensation:</b>
   <ul style="list-style:circle; padding-left:20px">
     <li>Would be commensurate with experience</li>
-    <li>Range between Rs 6 LPA to 12 LPA. Will consider higher salary for exceptional candidates</li>
+    <li>Range between Rs 10 LPA to 18 LPA. Will consider higher salary for exceptional candidates</li>
   </ul>
   </p>
 
@@ -517,7 +518,7 @@
   <br/>
 
 
-  <h3>Position: QA Engineer (Manual, Automation, Performace)</h3>
+  <%--<h3>Position: QA Engineer (Manual, Automation, Performace)</h3>
 
   <p>
     <b>Responsibilities:</b>
@@ -556,7 +557,7 @@
     <li>Would be commensurate with experience</li>
     <li>Range between Rs 5 LPA to 9 LPA. Will consider higher salary for exceptional candidates</li>
   </ul>
-  </p>
+  </p>--%>
 
 
 </div>
