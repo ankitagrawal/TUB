@@ -39,7 +39,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 	
 	@Override
 	@Transactional
-	public boolean fixLineItem(LineItem lineItem) {
+	public void fixLineItem(LineItem lineItem) throws CouldNotFixException {
 		ProductVariant variant = productVariantService.getVariantById(lineItem.getCartLineItem().getProductVariant().getId());
 		
 		SkuFilter filter = new SkuFilter();
@@ -55,7 +55,10 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		if(skuInfos != null) {
 			for (SkuInfo skuInfo : skuInfos) {
 				double delta =  skuInfo.getMrp() - lineItem.getMarkedPrice().doubleValue();
-				if(delta <= 0d) continue;
+				if(delta == 0d) {
+					throw fail(lineItem, "Sku Item with same MRP is already available in inventory. Place the corresponding batch under review to update MRP.");
+				}
+				if(delta < 0d) continue;
 				delta = Math.abs(delta);
 				if(delta < bestDelta) {
 					bestDelta = delta;
@@ -65,8 +68,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		}
 		
 		if(selectedInfo == null) {
-			fail(lineItem, "No Sku Item is available with different MRP. Escalate back to action queue.");
-			return false;
+			throw fail(lineItem, "No Sku Item is available with different MRP. Escalate back to action queue.");
 		}
 		
 		if(selectedInfo.getMrp() > lineItem.getMarkedPrice().doubleValue()) {
@@ -74,12 +76,10 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 			updateHighMrp(lineItem, selectedInfo);
 			success(lineItem, existingMrp, lineItem.getHkPrice());
 		} else {
-			fail(lineItem, "No Sku Item is available with Higher MRP. Escalate back to action queue.");
-			return false;
+			throw fail(lineItem, "No Sku Item is available with Higher MRP. Escalate back to action queue.");
 		}
 		
 		inventoryHealthService.checkInventoryHealth(variant);
-		return true;
 	}
 	
 	private void updateHighMrp(LineItem lineItem, SkuInfo skuInfo) {
@@ -101,42 +101,17 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 
 		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
 				EnumShippingOrderLifecycleActivity.SO_LineItemFixed, null, remarks.toString());
-/*		
- 		FixedShippingOrder fso = new FixedShippingOrder();
-		fso.setCreateDate(new Date());
-		fso.setUpdateDate(new Date());
-		fso.setShippingOrder(lineItem.getShippingOrder());
-		fso.setCreatedBy(userService.getLoggedInUser());
-		fso.setStatus("OPEN");
 
-		
-		fso.setRemarks(remarks.toString());
-		fixedShippingOrderDao.save(fso);
-		
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("variantName", lineItem.getCartLineItem().getProductVariant().getId());
-		map.put("gatewayId", lineItem.getShippingOrder().getGatewayOrderId());
-		map.put("quantity", String.valueOf(lineItem.getQty()));
-		map.put("previousMrp", String.valueOf(previousMrp));
-		map.put("newMrp", String.valueOf(lineItem.getMarkedPrice()));
-		map.put("prevHKPrice", String.valueOf(preHkPrice));
-		map.put("newHKPrice", String.valueOf(lineItem.getHkPrice()));
-		
-		emailManager.sendSoFixedMail(map);
-*/
 	}
 	
-	private void fail(LineItem lineItem, String reason) {
+	private CouldNotFixException fail(LineItem lineItem, String reason) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("variantName", lineItem.getCartLineItem().getProductVariant().getId());
 		map.put("gatewayId", lineItem.getShippingOrder().getGatewayOrderId());
 		map.put("quantity", String.valueOf(lineItem.getQty()));
 		map.put("mrp", String.valueOf(lineItem.getMarkedPrice()));
 		map.put("reason", reason);
-		
 		emailManager.sendSoFixFailedMail(map);
-		
-		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
-				EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed, null, reason);
+		return new CouldNotFixException(reason);
 	}
 }
