@@ -288,6 +288,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         return paymentStartDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setPaymentStartDate(Date paymentStartDate) {
         this.paymentStartDate = paymentStartDate;
     }
