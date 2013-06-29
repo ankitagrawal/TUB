@@ -94,22 +94,7 @@
                 var obj = $(this);
                 obj.hide();
                 var bool = true;
-                if($('#returnByHand').is(":checked")){
-             	  var retVal = confirm("Are you sure to return by hand. You may not be able to add courier details further");
-             	   if( retVal == true ){
-             		  return true;
-             	   }else{
-             		  return false;
-             	   }
-                }
-                $('.pvDetails').each(function(){
-                   var pvDetails = $(this).html();
-                    if(pvDetails == null || pvDetails == ""){
-                        alert("Enter Valid Product Variant");
-                        bool = false;
-                        return false;
-                    }
-                });
+                
                 if(bool){
                 $('.qty').each(function(){
                   var qty = $(this).val();
@@ -148,6 +133,18 @@
                     bool=false;
                     return false;
                 }
+                
+                if($('#returnByHand').is(":checked")){
+               	  var retVal = confirm("Are you sure to return by hand. You may not be able to add courier details further");
+               	   if( retVal == true ){
+               		   bool = true;
+               		  return true;
+               	   }else{
+               		   obj.show();
+               		   bool = false;
+               		  return false;
+               	   }
+                  }
                 
                 if(!bool){
                     obj.show();
@@ -271,7 +268,13 @@
     				}else
     					overallDiscount = parseFloat($("#totalsTable").parent().find('.overallDiscount').val());
     			}
-    			finalPayable -= overallDiscount;
+    			
+    			if(finalPayable-overallDiscount<0){
+    				alert('the final amount will be negative');
+    				$("#totalsTable").find($('.overallDiscount')).val('0');
+    			}else{
+    				finalPayable -= overallDiscount;
+    			}
     			freightCharges = parseFloat($("#totalsTable").find('.freight').val());
     			finalPayable = finalPayable+freightCharges;
     			$("#totalsTable").find('.finalDebitAmount').val(finalPayable.toFixed(2));

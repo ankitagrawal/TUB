@@ -13444,4 +13444,7 @@
             <column name="rtv_tracking_number" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1372488185651-6">
+        <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="debit_note_line_item" constraintName="fk_debit_note_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

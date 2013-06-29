@@ -105,6 +105,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 		debitNoteDto.setTotalPayable(debitNote.getPayableAmount());
 		debitNoteDto.setTotalDiscount(debitNote.getDiscount());
 		debitNoteDto.setFinalDebitAmount(debitNote.getFinalDebitAmount());
+		debitNoteDto.setFreightForwardingCharges(debitNote.getFreightForwardingCharges());
 		return debitNoteDto;
 
 	}
@@ -168,6 +169,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 			debitNoteLineItem.setDiscountPercent(0.0D);
 			debitNoteLineItems.add(debitNoteLineItem);
 		}
+		debitNote.setFreightForwardingCharges(0.0D);
 		debitNote.setDiscount(0.0D);
 		debitNote.setTaxableAmount(totalTaxable);
 		debitNote.setTaxAmount(totalTax);

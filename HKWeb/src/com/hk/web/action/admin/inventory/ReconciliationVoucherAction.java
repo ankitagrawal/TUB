@@ -107,7 +107,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private RvLineItem rvLineItemSaved;
     private ReconciliationType reconciliationType;
     private String remarks;
-    private Supplier                supplier;
+    private Supplier                supplier = null;
     private Long warehouseId;
     private String barcode;
     private Boolean isDebitNoteCreated;
@@ -619,10 +619,26 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	public Resolution getSupplierAgainstBarcode() {
 		Map<Object, Object> dataMap = new HashMap<Object, Object>();
 		HealthkartResponse healthkartResponse = null;
+		SkuItem skuItem = null;
 		if (StringUtils.isNotBlank(barcode) && warehouseId != null) {
 			try {
+				SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(barcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+		        if (skuItemBarcode != null) {
+		            skuItem = skuItemBarcode;
+		        } else {
+		            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser());
+		            if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
+		                skuItem = inStockSkuItemList.get(0);
+		            }
+		        }
+		        ProductVariant productVariant;
 				SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(barcode, warehouseId);
-				ProductVariant productVariant = skuGroup.getSku().getProductVariant();
+				if(skuItem!=null){
+					productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
+				}
+				else{
+					productVariant = skuGroup.getSku().getProductVariant();
+				}
 				Supplier supplier = productVariantSupplierInfoService.getSupplierFromProductVariant(productVariant);
 				if (supplier != null) {
 					dataMap.put("supplier", supplier);

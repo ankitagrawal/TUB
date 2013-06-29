@@ -216,7 +216,7 @@
 
                 <h2>File to Upload: <s:file id="fileBean" name="fileBean" size="30"/></h2>
 
-                <div class="buttons">
+                <div class="closeButtonDiv">
                     <s:submit id="excelUpload" name="parseSubtractRVExcel" value="Create RV LineItems"/>
                 </div>
 
@@ -244,11 +244,9 @@
                         alert('Enter Batch Number && Qty for variant :::::: ' + variant);
                         result = false;
                         return false;
-
                     }
 
                 });
-                
                 if (!result) {
                     return false;
                 }
@@ -268,9 +266,16 @@
                 }
               });
             
-            
             $('#upc').change(function() {
-            	var supplier=${pa.reconciliationVoucher.supplier}!=null?${pa.reconciliationVoucher.supplier}:null;
+            	var supplier = null;
+            	if(${pa.reconciliationVoucher.reconciliationType.id==190}){
+            		if(${pa.supplier}==null){
+                		supplier = null;
+                	}
+                	else{
+                		supplier = ${pa.supplier};
+                	}
+            	}
             	var barcode = $('#upc').val();
             	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
             	var productSupplier;
@@ -282,10 +287,10 @@
                         	   if(retVal){
                         	      return true;               	 
                         	   }
-                        	   
                 		  }
                 	  }else{
                 		  alert('Either Invalid barcode or No Item found.');
+                		  $('#upc').val('');
                 	  }
                   }
             	);
@@ -299,33 +304,35 @@
     </script>
     
     <style>
-    
-    #rvInfoDiv{
-    width:700px;
-    float:none;
-    margin:auto;
-    }
-    
-    #rvAndSupplierDiv{
-    float:left;
-    position:relative;
-    width:48%;
-    }
-    #scanDiv{
-    float:right;
-    position:relative;
-    width:48%;
-   
-    }
-    #rvDiv{
-    float: right;
-    position: relative;
-    width: 100%;
-    }
-    #rvTable{
-    width: 100%;
-    }
-    #closeButtonDiv{
+#rvInfoDiv {
+	width: 700px;
+	float: none;
+	margin: auto;
+}
+
+#rvAndSupplierDiv {
+	float: left;
+	position: relative;
+	width: 48%;
+}
+
+#scanDiv {
+	float: right;
+	position: relative;
+	width: 48%;
+}
+
+#rvDiv {
+	float: right;
+	position: relative;
+	width: 100%;
+}
+
+#rvTable {
+	width: 100%;
+}
+
+#closeButtonDiv {
 	float: left;
 	position: relative;
 	left: 40%;
@@ -333,12 +340,11 @@
 	margin-top: 2px;
 }
 
-#uploadForm{
-float: left;
+#uploadForm {
+	float: left;
 	position: relative;
 }
-    
-    </style>
+</style>
 </s:layout-component>
 
 </s:layout-render>

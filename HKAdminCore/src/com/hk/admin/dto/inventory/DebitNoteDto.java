@@ -29,6 +29,8 @@ public class DebitNoteDto {
   private Double totalDiscount = 0.0D;
   
   private Double finalDebitAmount = 0.0D;
+  
+  private Double freightForwardingCharges = 0.0D;
 
   public Double getTotalTax() {
     return totalTax;
@@ -92,5 +94,13 @@ public Double getFinalDebitAmount() {
 
 public void setFinalDebitAmount(Double finalDebitAmount) {
 	this.finalDebitAmount = finalDebitAmount;
+}
+
+public Double getFreightForwardingCharges() {
+	return freightForwardingCharges;
+}
+
+public void setFreightForwardingCharges(Double freightForwardingCharges) {
+	this.freightForwardingCharges = freightForwardingCharges;
 }
 }
