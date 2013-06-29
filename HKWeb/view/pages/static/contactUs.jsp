@@ -64,7 +64,7 @@
       <p style="font-size: 1.2em;">0124-4616444 <br/> <span style="font-size: 10px;">9 AM to 12 AM (midnight)</span></p>
 
       <div
-          style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 25px; padding-top: 3px; font-size: 9px;">
+          style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 25px; padding-top: 3px; font-size: 11px;">
         Our customer care phone lines will be down for maintenance from 5:30pm to 9:00pm on 29th June 2013. Sincere apologies for the inconvenience caused.
       </div>
 
