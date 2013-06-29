@@ -613,7 +613,7 @@ public class OrderManager {
           }
 
           if (!(product.isJit() || product.isService() || product.isDropShipping() ||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
-              Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(skuList);
+              Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(productVariant);
               if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
                   // Check in case of negative unbooked inventory
                   if (comboInstance != null) {
@@ -666,7 +666,7 @@ public class OrderManager {
 		}
         if (!isJit && !isService) {
             //Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-	        Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(this.skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
+	        Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(productVariant);
             if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
                 return false;
             }

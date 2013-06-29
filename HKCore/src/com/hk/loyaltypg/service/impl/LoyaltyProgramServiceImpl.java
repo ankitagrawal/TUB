@@ -9,11 +9,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.stripes.action.FileBean;
 
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.ProjectionList;
@@ -323,6 +325,15 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		bonusProfile.setStatus(KarmaPointStatus.BONUS);
 		bonusProfile.setBadge(this.getUserBadgeInfo(user).getBadge());
 		this.loyaltyProductDao.saveOrUpdate(bonusProfile);
+		
+		
+		//Check for last 24 hours orders to add previous orders
+		List<Order> previousOrders = this.getPreviousDayOrders(user);
+		if (previousOrders.size() > 0) {
+			for(Order previousOrder: previousOrders) {
+				this.creditKarmaPoints(previousOrder);
+			}
+		}
 	}
 
 	@Override
@@ -562,9 +573,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public void uploadLoyaltyProductsCSV(FileBean csvFileReader, List<String> errorMessages) {
 		Set<LoyaltyProduct> uploadedProducts = new HashSet<LoyaltyProduct>();
-		if (this.validateLoyaltyCsvFile(csvFileReader, uploadedProducts, errorMessages)) {
-			this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
-		}
+		this.validateLoyaltyCsvFile(csvFileReader, uploadedProducts, errorMessages);
+		this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
 	}
 
 	private boolean validateLoyaltyCsvFile(FileBean csvFileReader, Set<LoyaltyProduct> uploadedProducts,
@@ -633,9 +643,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public void uploadBadgeInfoCSV(FileBean csvFileReader, List<String> errorMessages) {
 		Set<UserBadgeInfo> uploadedBadges = new HashSet<UserBadgeInfo>();
-		if (this.validateBadgeCsvFile(csvFileReader, uploadedBadges, errorMessages)) {
-			this.loyaltyProductDao.saveOrUpdate(uploadedBadges);
-		}
+		this.validateBadgeCsvFile(csvFileReader, uploadedBadges, errorMessages);
+		this.loyaltyProductDao.saveOrUpdate(uploadedBadges);
 	}
 
 	private boolean validateBadgeCsvFile(FileBean csvFileReader, Set<UserBadgeInfo> uploadedBadges,
@@ -707,6 +716,51 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public List<LoyaltyProduct> searchLoyaltyProducts (Map<String, String> keywordsMap) {
+    	DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+    	if(keywordsMap.containsKey("variantId"))  {
+    		criteria.add(Restrictions.like("variant.id", keywordsMap.get("variantId")));
+    	}
+    	if(keywordsMap.containsKey("productId")) {
+    		criteria.createAlias("variant", LoyaltyProductAlias.VARIANT.alias, CriteriaSpecification.INNER_JOIN);
+    		criteria.add(Restrictions.like(LoyaltyProductAlias.VARIANT.alias + ".product.id", keywordsMap.get("productId")));
+    	}   	
+    	
+		@SuppressWarnings("unchecked")
+		List<LoyaltyProduct> loyaltyProducts = this.loyaltyProductDao.findByCriteria(criteria);
+    	return loyaltyProducts; 
+
+	}
+
+	@Override
+	public List<UserOrderKarmaProfile> searchKarmaProfiles(Map<String, Object> searchMap) {
+		 return userOrderKarmaProfileDao.searchUserOrderKarmaProfile(searchMap);
+				 
+	}
+	
+	private List<Order> getPreviousDayOrders (User user) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		criteria.add(Restrictions.ge("createDate", calendar.getTime()));
+		Criterion crit1 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Placed.asOrderStatus().getId());
+		Criterion crit2 = Restrictions.eq("orderStatus.id", EnumOrderStatus.InProcess.asOrderStatus().getId());
+		Criterion crit3 = Restrictions.eq("orderStatus.id", EnumOrderStatus.OnHold.asOrderStatus().getId());
+		Criterion crit4 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Shipped.asOrderStatus().getId());
+		Criterion crit5 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId());
+		Criterion crit6 = Restrictions.or(crit1, crit2);
+		Criterion crit7 = Restrictions.or(crit3, crit4);
+		criteria.add(Restrictions.or(Restrictions.or(crit6, crit7), crit5));
+
+		@SuppressWarnings("unchecked")
+		List<Order> list = this.baseDao.findByCriteria(criteria);
+		return list;
+
+		
 	}
 	/**
 	 * 

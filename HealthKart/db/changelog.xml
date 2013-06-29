@@ -13338,6 +13338,84 @@
          insert into payment_status values (9,'Refunded');
      </sql>
  </changeSet>
+<changeSet author="Ankit Chhabra (written)" id="20130625-01">
+     <sql>
+         update badge set badge_name = 'COPPER' where id = '1';
+     </sql>
+ </changeSet>
+
+    <changeSet author="deepakC" id="1370601362351-11234">
+        <addColumn tableName="product_variant">
+            <column name="mrp_qty" type="INT" />
+        </addColumn>
+        <addColumn tableName="product_variant">
+            <column name="net_qty" type="INT" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1370601362351-11235">
+        <addColumn tableName="sku_group">
+            <column name="status" type="VARCHAR(45)" defaultValue="NA">
+            	 <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1372320184003-1">
+        <createTable tableName="fixed_shipping_order">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="closed_by" type="INT"/>
+            <column name="remarks" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="OPEN" name="status" remarks="OPEN and CLOSED" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1372320184003-2">
+        <addForeignKeyConstraint baseColumnNames="closed_by" baseTableName="fixed_shipping_order" constraintName="fk_fixed_shipping_order_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1372320184003-3">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="fixed_shipping_order" constraintName="fk_fixed_shipping_order_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1372320184003-4">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="fixed_shipping_order" constraintName="fk_fixed_shipping_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    
+    <changeSet id="1372320184003-5" author="DeepakC">
+    	<insert tableName="shipping_order_lifecycle_activity">
+    		<column name="id" value="1001" type="INT"></column>
+    		<column name="name" value="SO Line Item fixed" type="VARCHAR(100)"></column>
+    	</insert>
+    	<insert tableName="shipping_order_lifecycle_activity">
+    		<column name="id" value="1002" type="INT"></column>
+    		<column name="name" value="SO Line Item could not be fixed" type="VARCHAR(100)"></column>
+    	</insert>
+    </changeSet>
+    
+    <changeSet id="1372320184003-6" author="DeepakC">
+    	<insert tableName="permission">
+    		<column name="name" value="SO_REVIEW" type="VARCHAR(40)"></column>
+    	</insert>
+    	<insert tableName="permission">
+    		<column name="name" value="SO_FIX" type="VARCHAR(40)"></column>
+    	</insert>
+    </changeSet>
     <changeSet author="Nihal (generated)" id="1372098072716-2">
         <addColumn tableName="reconciliation_voucher">
             <column name="supplier_id" type="INT"/>

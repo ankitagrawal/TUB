@@ -125,4 +125,5 @@ public interface ProductService {
 
     public ProductVO createProductVO(Product product);
 
+    public String getAppendedProductURL(String baseUrl, String parameter, String value);
 }

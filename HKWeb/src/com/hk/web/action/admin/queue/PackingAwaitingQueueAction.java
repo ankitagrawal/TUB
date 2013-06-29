@@ -97,16 +97,17 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
-        Set<Category> basketCategoryList = new HashSet<Category>();
-        for (String category : basketCategories) {
-            if (category != null) {
-                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+        if(!basketCategories.isEmpty()){
+            Set<Category> basketCategoryList = new HashSet<Category>();
+            for (String category : basketCategories) {
+                if (category != null) {
+                    Category basketCategory = (Category) categoryDao.getCategoryByName(category);
                     basketCategoryList.add(basketCategory);
+                }
             }
+            shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         }
-        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
-        shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
-        //introduced paymentDate as another filter as escalation filter is not working properly, temporary solution
+        shippingOrderSearchCriteria.setLastEscStartDate(startDate).setLastEscEndDate(endDate);
         shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
 
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
@@ -191,6 +192,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         HashSet<String> params = new HashSet<String>();
         params.add("startDate");
         params.add("endDate");
+        params.add("paymentStartDate");
+        params.add("paymentEndDate");
         params.add("shippingOrderId");
         params.add("baseOrderId");
         // params.add("gatewayOrderId");
@@ -285,6 +288,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         return paymentStartDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setPaymentStartDate(Date paymentStartDate) {
         this.paymentStartDate = paymentStartDate;
     }
@@ -293,6 +297,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         return paymentEndDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setPaymentEndDate(Date paymentEndDate) {
         this.paymentEndDate = paymentEndDate;
     }

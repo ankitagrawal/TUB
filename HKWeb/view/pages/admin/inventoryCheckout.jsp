@@ -1,3 +1,4 @@
+<%@page import="com.hk.constants.core.PermissionConstants"%>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -204,6 +205,12 @@
           <th>Qty</th>
           <th width="50px;">Net Inventory</th>
           <th width="75px;">Checked Out Qty</th>
+          <shiro:hasPermission name="<%=PermissionConstants.SO_REVIEW%>">
+          <th>Review</th>
+          </shiro:hasPermission>
+          <shiro:hasPermission name="<%=PermissionConstants.SO_FIX%>">
+          <th>Fix</th>
+          </shiro:hasPermission>
         </tr>
         </thead>
 	    <c:set var="alertCount" value="0" />
@@ -238,7 +245,23 @@
               <td>${lineItem.markedPrice}</td>
               <td>${lineItem.qty}</td>
               <td>${hk:netInventory(lineItem.sku)}</td>
+              
+              <shiro:hasPermission name="<%=PermissionConstants.SO_REVIEW%>">
               <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>
+              <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" target="_blank">
+                Review it  <s:param name="lineItem" value="${lineItem.id}"/>                 
+              </s:link>
+              </td>   
+              
+              </shiro:hasPermission>
+            
+              <shiro:hasPermission name="<%=PermissionConstants.SO_FIX%>">
+              <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="fixLineItem" class="fixIt">
+                Fix it  <s:param name="lineItem" value="${lineItem.id}"/>                 
+              </s:link>
+              </td>            
+              </shiro:hasPermission>
+            
             </c:when>
               <c:otherwise>
                 <td colspan="5">${icBean.shippingOrder.orderStatus.name}</td>
@@ -253,6 +276,16 @@
 		      if(${alertCount == 0} && upc == '' && commentType == ${commentTypePacking}) {
 			      alert("User Instruction : " + $('#userComments').val());
 		      }
+		      
+		      $(document).ready(function(){
+			    	 $('.fixIt').click(function fixIt(){
+			    		 var sure = confirm("Assuming, you have marked the corrsponding batch under review.");
+		    		 	if(!sure){
+		    		 		return false;
+		    		 	}
+		    		 	$('.fixIt').attr("disabled", "disabled");
+			    	 }) 
+			      });
 	      </script>
       </table>
     </div>

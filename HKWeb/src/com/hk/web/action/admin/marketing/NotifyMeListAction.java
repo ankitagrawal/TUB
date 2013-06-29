@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
-import com.hk.web.action.core.user.NotifyMeAction;
+import com.hk.impl.dao.email.NotifyMeDto;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -83,22 +83,26 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     Page notifyMePage;
     private Integer defaultPerPage = 30;
     private List<NotifyMe> notifyMeList = new ArrayList<NotifyMe>();
+    private List<NotifyMeDto> notifyMeDtoList = new ArrayList<NotifyMeDto>();
     private List<NotifyMe> notifyMeListForProductVariantInStock = new ArrayList<NotifyMe>();
     private ProductVariant productVariant;
     private Product product;
     private Category primaryCategory;
-    private Boolean productInStock;
+    private Boolean productOutOfStock;
     private Boolean productDeleted;
-    private Float conversionRate = 0.01f;
+    private Boolean productHidden;
+    private Float conversionRate = 0.1f;
     private int bufferRate = 2;
+    private int totalProductVariant;
+    private Boolean similarProductAvailable;
 
 
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        notifyMePage = notifyMeDao.searchNotifyMe(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted);
-        notifyMeList = notifyMePage.getList();
-        return new ForwardResolution("/pages/admin/notifyMeList.jsp");
+        notifyMePage = notifyMeDao.getAllNotifyMeList(getPageNo(), getPerPage(), product, primaryCategory);
+        notifyMeDtoList = notifyMePage.getList();
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 
     @ValidationMethod(on = "sendMailToNotifiedUsers")
@@ -128,7 +132,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/notify-me-list" + sdf.format(new Date()) + ".xls");
-            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted);
+            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate, product, productVariant, primaryCategory, productOutOfStock, productDeleted);
             addRedirectAlertMessage(new SimpleMessage("Notify me list successfully generated."));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
@@ -205,14 +209,44 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         addRedirectAlertMessage(new SimpleMessage("Sending Emails to  In Stock PV  Notified Users"));
         return new RedirectResolution(NotifyMeListAction.class);
     }
+    /*Above methods are not used*/
 
-    public Resolution sendAllNotifyMails() {
+
+    /*pre method for similar product screen*/
+    public Resolution showNotifyMeList() {
+        if (productOutOfStock != null) {
+            if (productOutOfStock) {
+                /*similar products*/
+                notifyMePage = notifyMeDao.getNotifyMeListForSimilarProducts(getPageNo(), getPerPage(), product, primaryCategory, productOutOfStock, similarProductAvailable);
+            } else {
+                /*inStock */
+                notifyMePage = notifyMeDao.notifyMeListForInStockProduct(getPageNo(), getPerPage(), product, primaryCategory);
+            }
+        } else {
+            /*all notify request*/
+            notifyMePage = notifyMeDao.getAllNotifyMeList(getPageNo(), getPerPage(), product, primaryCategory);
+        }
+        notifyMeDtoList = notifyMePage.getList();
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
+    }
+
+    /*Send Mails For In Stock Products*/
+    public Resolution sendMailsForInStockProductsAutomation() {
         if (conversionRate > 1) {
             addRedirectAlertMessage(new SimpleMessage("enter conversion rate less than 1"));
             return new RedirectResolution(NotifyMeListAction.class);
         }
-        productVariantNotifyMeEmailService.sendNotifyMeEmail(conversionRate, bufferRate);
-        return new RedirectResolution(NotifyMeListAction.class);
+        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForInStockProducts(conversionRate, bufferRate);
+        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent For InStock Products    " + countOfSentMail));
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
+    }
+
+
+    /*Send Mails  For Similar Products*/
+    public Resolution sendMailsForSimilarProductsAutomation() {
+        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForSimilarProducts(conversionRate, bufferRate);
+        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent For Similar Products     " + countOfSentMail));
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 
     public List<NotifyMe> getNotifyMeList() {
@@ -258,13 +292,11 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     public Set<String> getParamSet() {
 
         HashSet<String> params = new HashSet<String>();
-        params.add("productVariant");
         params.add("product");
-        params.add("startDate");
-        params.add("endDate");
         params.add("primaryCategory");
-        params.add("productInStock");
+        params.add("productOutOfStock");
         params.add("productDeleted");
+        params.add("similarProductAvailable");
         return params;
     }
 
@@ -328,12 +360,12 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         this.emailCampaignDao = emailCampaignDao;
     }
 
-    public Boolean getProductInStock() {
-        return productInStock;
+    public Boolean getProductOutOfStock() {
+        return productOutOfStock;
     }
 
-    public void setProductInStock(Boolean productInStock) {
-        this.productInStock = productInStock;
+    public void setProductOutOfStock(Boolean productOutOfStock) {
+        this.productOutOfStock = productOutOfStock;
     }
 
     public Boolean getProductDeleted() {
@@ -358,5 +390,37 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     public void setBufferRate(int bufferRate) {
         this.bufferRate = bufferRate;
+    }
+
+    public List<NotifyMeDto> getNotifyMeDtoList() {
+        return notifyMeDtoList;
+    }
+
+    public void setNotifyMeDtoList(List<NotifyMeDto> notifyMeDtoList) {
+        this.notifyMeDtoList = notifyMeDtoList;
+    }
+
+    public Boolean getProductHidden() {
+        return productHidden;
+    }
+
+    public void setProductHidden(Boolean productHidden) {
+        this.productHidden = productHidden;
+    }
+
+    public int getTotalProductVariant() {
+        return totalProductVariant;
+    }
+
+    public void setTotalProductVariant(int totalProductVariant) {
+        this.totalProductVariant = totalProductVariant;
+    }
+
+    public Boolean getSimilarProductAvailable() {
+        return similarProductAvailable;
+    }
+
+    public void setSimilarProductAvailable(Boolean similarProductAvailable) {
+        this.similarProductAvailable = similarProductAvailable;
     }
 }
