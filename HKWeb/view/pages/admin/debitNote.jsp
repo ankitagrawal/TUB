@@ -310,6 +310,7 @@
 <s:layout-component name="heading">
     Edit Debit Note # ${pa.debitNote.id}
     <c:if test="${pa.debitNote.purchaseInvoice!=null }">(Against PI # ${pa.debitNote.purchaseInvoice.id})</c:if> 
+    <c:if test="${pa.debitNote.reconciliationVoucher!=null }">(Against RV # ${pa.debitNote.reconciliationVoucher.id})</c:if>
 </s:layout-component>
 <s:layout-component name="content">
     <div style="display: none;">
@@ -725,5 +726,18 @@ float: right;
 #debitNoteLineItems{
 width:100%;
 }
+#debitNoteLineItems {
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  #debitNoteLineItems tr td {
+    text-align: left;
+    font-size: small;
+    border-width: 1px 1px 0 0;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
 
 </style>

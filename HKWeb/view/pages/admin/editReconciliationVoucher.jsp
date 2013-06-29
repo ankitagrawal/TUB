@@ -195,7 +195,8 @@
 
     </s:form>
 
-	<div id="closeButtonDiv">
+<shiro:hasPermission name="<%=PermissionConstants.FINANCE_MANAGEMENT%>">
+<div id="closeButtonDiv">
 	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 }">
 	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
 	<s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher}" />
@@ -203,6 +204,8 @@
 	 Create Debit Note </s:link>
 	</c:if>
 	</div>
+</shiro:hasPermission>
+	
 
     <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="uploadForm">
@@ -269,11 +272,11 @@
             $('#upc').change(function() {
             	var supplier = null;
             	if(${pa.reconciliationVoucher.reconciliationType.id==190}){
-            		if(${pa.supplier}==null){
+            		if(${pa.reconciliationVoucher.supplier}==null){
                 		supplier = null;
                 	}
                 	else{
-                		supplier = ${pa.supplier};
+                		supplier = ${pa.reconciliationVoucher.supplier};
                 	}
             	}
             	var barcode = $('#upc').val();
@@ -286,6 +289,9 @@
                 			  var retVal = confirm("The suppliers against the rv and against the product variant do not match. Do you want to continue?");
                         	   if(retVal){
                         	      return true;               	 
+                        	   }
+                        	   else{
+                        		   $('#upc').val('');
                         	   }
                 		  }
                 	  }else{

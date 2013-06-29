@@ -131,7 +131,7 @@ public class DebitNoteAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/debitNote.jsp");
     }
 
-    @Secure(hasAnyRoles = { RoleConstants.FINANCE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.FINANCE_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution debitNoteFromPi(){
     	if (purchaseInvoice != null) {
     		rtvList = purchaseInvoice.getRtvNotes();
@@ -151,6 +151,8 @@ public class DebitNoteAction extends BasePaginatedAction {
     	return new RedirectResolution(DebitNoteAction.class).addParameter("editDebitNote").addParameter("debitNote", debitNote.getId());
     }
     
+    
+    @Secure(hasAnyPermissions = { PermissionConstants.FINANCE_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution debitNoteFromRV(){
     	User loggedOnUser = null;
         if (getPrincipal() != null) {
