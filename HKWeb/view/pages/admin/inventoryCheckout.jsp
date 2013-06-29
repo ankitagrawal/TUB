@@ -245,9 +245,9 @@
               <td>${lineItem.markedPrice}</td>
               <td>${lineItem.qty}</td>
               <td>${hk:netInventory(lineItem.sku)}</td>
-              
+	            <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>
+
               <shiro:hasPermission name="<%=PermissionConstants.SO_REVIEW%>">
-              <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>
               <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" target="_blank">
                 Review it  <s:param name="lineItem" value="${lineItem.id}"/>                 
               </s:link>
