@@ -103,19 +103,21 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveActualShippingCostForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-        if (shippingOrder != null) {
-            Shipment shipment = shippingOrder.getShipment();
-            if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                if (weight != null && weight > 0D) {
-                    shipment.setBoxWeight(weight);
+        if (shippingOrderId != null) {
+            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+            if (shippingOrder != null) {
+                Shipment shipment = shippingOrder.getShipment();
+                if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+                    if (weight != null && weight > 0D) {
+                        shipment.setBoxWeight(weight);
+                    }
+                    shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                    shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+                    shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                    shipmentService.save(shipment);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
                 }
-                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-                shipmentService.save(shipment);
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
@@ -130,20 +132,22 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution calculateCourierCostingForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-        if (shippingOrder != null) {
-            Order order = shippingOrder.getBaseOrder();
-            Shipment shipment = shippingOrder.getShipment();
-            Double weight = 0D;
-            if (shippingOrder.getShipment() != null) {
-                weight = shipment.getBoxWeight() * 1000;
-            } else {
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    weight += lineItem.getSku().getProductVariant().getWeight();
+        if (shippingOrderId != null) {
+            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+            if (shippingOrder != null) {
+                Order order = shippingOrder.getBaseOrder();
+                Shipment shipment = shippingOrder.getShipment();
+                Double weight = 0D;
+                if (shippingOrder.getShipment() != null) {
+                    weight = shipment.getBoxWeight() * 1000;
+                } else {
+                    for (LineItem lineItem : shippingOrder.getLineItems()) {
+                        weight += lineItem.getSku().getProductVariant().getWeight();
+                    }
                 }
+                ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+                courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
             }
-            ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
-            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
         }

@@ -192,6 +192,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         HashSet<String> params = new HashSet<String>();
         params.add("startDate");
         params.add("endDate");
+        params.add("paymentStartDate");
+        params.add("paymentEndDate");
         params.add("shippingOrderId");
         params.add("baseOrderId");
         // params.add("gatewayOrderId");
@@ -286,6 +288,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         return paymentStartDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setPaymentStartDate(Date paymentStartDate) {
         this.paymentStartDate = paymentStartDate;
     }
@@ -294,6 +297,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         return paymentEndDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setPaymentEndDate(Date paymentEndDate) {
         this.paymentEndDate = paymentEndDate;
     }

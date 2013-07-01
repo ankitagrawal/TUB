@@ -1,27 +1,22 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
-import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.core.fliter.ShippingOrderFilter;
-import com.hk.domain.order.*;
-import com.hk.domain.shippingOrder.ShippingOrderCategory;
-import com.hk.impl.service.queue.BucketService;
-import com.hk.loyaltypg.service.LoyaltyProgramService;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -29,21 +24,34 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.impl.service.queue.BucketService;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryHealthService.FetchType;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuFilter;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.domain.analytics.Reason;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -81,6 +89,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     
     @Autowired
     private LoyaltyProgramService loyaltyProgramService;
+    
+    @Autowired InventoryHealthService inventoryHealthService;
+    
+    @Autowired BaseDao baseDao;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
@@ -110,35 +122,48 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
     }
 
-    public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
-        Map<Long, Sku> lineItemToSkuUpdate = new HashMap<Long, Sku>();
+	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
+		Set<LineItem> lineItems = shippingOrder.getLineItems();
+		boolean shouldUpdate = true;
+		try {
+			for (LineItem lineItem : lineItems) {
+				SkuFilter filter = new SkuFilter();
+				filter.setFetchType(FetchType.ALL);
+				filter.setWarehouseId(warehouse.getId());
+				filter.setMinQty(lineItem.getQty());
+				filter.setMrp(lineItem.getMarkedPrice());
+				Collection<SkuInfo> skus = inventoryHealthService.getAvailableSkus(lineItem.getCartLineItem().getProductVariant(), filter);
 
-        boolean shouldUpdate = true;
-        Set<LineItem> lineItems = shippingOrder.getLineItems();
-        try {
-        for (LineItem lineItem : lineItems) {
-            Sku skuInOtherWarehouse = getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse);
-                lineItemToSkuUpdate.put(lineItem.getId(), skuInOtherWarehouse);
-        }
-        }catch(NoSkuException noSku){
-        shouldUpdate = false;
-        }
-        if (shouldUpdate) {
-            for (LineItem lineItem : lineItems) {
-                lineItem.setSku(lineItemToSkuUpdate.get(lineItem.getId()));
-            }
-            shippingOrder.setWarehouse(warehouse);
-	        shipmentService.recreateShipment(shippingOrder);
-            shippingOrder = getShippingOrderService().save(shippingOrder);
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
+				if(skus != null && skus.size() > 0) {
+					Sku sku = baseDao.get(Sku.class, skus.iterator().next().getSkuId());
+					lineItem.setSku(sku);
+				}
+			}
+			
+			for (LineItem lineItem : lineItems) {
+				if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
+					shouldUpdate = false;
+				}
+			}
 
-            // Re-checkin checkedout inventory in case of flipping.
-            getAdminInventoryService().reCheckInInventory(shippingOrder);
-        }
+			if (shouldUpdate) {
+				shippingOrder.setWarehouse(warehouse);
+				shipmentService.recreateShipment(shippingOrder);
+				shippingOrder = getShippingOrderService().save(shippingOrder);
+				getShippingOrderService().logShippingOrderActivity(shippingOrder,
+						EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
 
-        return shouldUpdate;
-    }
+				// Re-checkin checkedout inventory in case of flipping.
+				getAdminInventoryService().reCheckInInventory(shippingOrder);
 
+			}
+
+		} catch (NoSkuException noSku) {
+			shouldUpdate = false;
+		}
+		return shouldUpdate;
+	}
+	
     public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse) {
 
         if (cartLineItems != null && !cartLineItems.isEmpty() && warehouse != null) {
