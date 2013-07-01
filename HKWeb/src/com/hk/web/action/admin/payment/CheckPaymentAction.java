@@ -169,7 +169,12 @@ public class CheckPaymentAction extends BaseAction {
 
         if (isRefundAmountValid(gatewayOrderId,amount)){
             try {
-                payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+                if(isSuccessFullPayment(gatewayOrderId)){
+                    payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
+                }
+
 
             } catch (HealthkartPaymentGatewayException e) {
                 logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
@@ -179,6 +184,16 @@ public class CheckPaymentAction extends BaseAction {
         }
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
+    private boolean isSuccessFullPayment(String gatewayOrderId) {
+        if (gatewayOrderId != null) {
+            Payment payment = paymentService.findByGatewayOrderId(gatewayOrderId);
+            if (EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @DontValidate
