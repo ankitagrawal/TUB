@@ -109,12 +109,14 @@ public class CheckPaymentAction extends BaseAction {
     public Resolution seekPayment() {
 
         try {
-            Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
-            Gateway gateway = basePayment.getGateway();
-            if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
-                hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Seek feature only works for citrus/icici/ebs"));
+            if (gatewayOrderId != null) {
+                Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+                Gateway gateway = basePayment.getGateway();
+                if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
+                    hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("Seek feature only works for citrus/icici/ebs"));
+                }
             }
 
 
@@ -171,7 +173,7 @@ public class CheckPaymentAction extends BaseAction {
 
 
     @DontValidate
-    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
         Gateway gateway = basePayment.getGateway();
