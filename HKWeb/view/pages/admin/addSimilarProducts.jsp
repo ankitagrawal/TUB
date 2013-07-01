@@ -105,7 +105,7 @@
     <%--<s:hidden name="similarProductsList" value="${spa.similarProductsList}" />--%>
     <s:submit name="update" value="Update" />
   </s:form>
-    
+
 <s:form beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">
   <h4>Add Similar Products</h4>
     <p></p>

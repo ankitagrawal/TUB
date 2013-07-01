@@ -15,6 +15,7 @@ import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -286,9 +287,9 @@ public class InventoryCheckoutAction extends BaseAction {
                 }
                 if (lineItem != null) {
                     ProductVariant variant = skuGroup.getSku().getProductVariant();
-	                if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
-		                addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
-                    } else {
+//	                if (checkMrpPreCheckOut(variant) && skuGroup.getMrp() != null && skuGroup.getMrp() < lineItem.getMarkedPrice()) {
+//		                addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout lower MRP variant."));
+//                    } else {
                         Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
                         if (checkedOutItemCount == null) {
                             checkedOutItemCount = 0L;
@@ -308,6 +309,12 @@ public class InventoryCheckoutAction extends BaseAction {
 //                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
 //                            if (inStockSkuItems != null && inStockSkuItems.size() > 0)
                             if (skuItem != null) {
+                                 // Mrp check --starts
+                                 if ( (checkMrpPreCheckOut(variant) && skuItem.getSkuGroup().getMrp() != null && !skuItem.getSkuGroup().getMrp().equals(lineItem.getMarkedPrice()))  || (skuItem.getSkuGroup().getStatus()!=null && skuItem.getSkuGroup().getStatus().equals(EnumSkuGroupStatus.UNDER_REVIEW))) {
+		                              addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout Either Wrong MRP variant or under review batch"));
+                                      return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+                                }
+                                // MRP check ends --
                                 getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
                                         getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
                                 binManager.removeBinAllocated(skuItem);
@@ -335,7 +342,7 @@ public class InventoryCheckoutAction extends BaseAction {
                         } else {
                             addRedirectAlertMessage(new SimpleMessage("Oops!! All SkuItem Units for the In-process LineItem are already checked out."));
                         }
-                    }
+//                    }
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout wrong variant. Plz check."));
                 }

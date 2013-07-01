@@ -133,8 +133,7 @@ public class B2BCartAction extends BaseAction {
 				b2bOutOfStockProductList.add(b2bProduct);
 			}
 			if (variant != null
-					&& inventoryService.getAvailableUnbookedInventory(skuService
-							.getSKUsForProductVariantAtServiceableWarehouses(variant)) <= 0) {
+					&& inventoryService.getAvailableUnbookedInventory(variant) <= 0) {
 				setExcelFileValidated(Boolean.FALSE);
 				b2bInventoryNotFoundProductList.add(b2bProduct);
 			}

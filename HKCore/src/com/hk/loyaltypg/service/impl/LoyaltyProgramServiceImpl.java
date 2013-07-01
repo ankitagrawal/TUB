@@ -15,6 +15,7 @@ import java.util.Set;
 import net.sourceforge.stripes.action.FileBean;
 
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.ProjectionList;
@@ -324,6 +325,15 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		bonusProfile.setStatus(KarmaPointStatus.BONUS);
 		bonusProfile.setBadge(this.getUserBadgeInfo(user).getBadge());
 		this.loyaltyProductDao.saveOrUpdate(bonusProfile);
+		
+		
+		//Check for last 24 hours orders to add previous orders
+		List<Order> previousOrders = this.getPreviousDayOrders(user);
+		if (previousOrders.size() > 0) {
+			for(Order previousOrder: previousOrders) {
+				this.creditKarmaPoints(previousOrder);
+			}
+		}
 	}
 
 	@Override
@@ -724,7 +734,34 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
     	return loyaltyProducts; 
 
 	}
+
+	@Override
+	public List<UserOrderKarmaProfile> searchKarmaProfiles(Map<String, Object> searchMap) {
+		 return userOrderKarmaProfileDao.searchUserOrderKarmaProfile(searchMap);
+				 
+	}
 	
+	private List<Order> getPreviousDayOrders (User user) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		criteria.add(Restrictions.ge("createDate", calendar.getTime()));
+		Criterion crit1 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Placed.asOrderStatus().getId());
+		Criterion crit2 = Restrictions.eq("orderStatus.id", EnumOrderStatus.InProcess.asOrderStatus().getId());
+		Criterion crit3 = Restrictions.eq("orderStatus.id", EnumOrderStatus.OnHold.asOrderStatus().getId());
+		Criterion crit4 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Shipped.asOrderStatus().getId());
+		Criterion crit5 = Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId());
+		Criterion crit6 = Restrictions.or(crit1, crit2);
+		Criterion crit7 = Restrictions.or(crit3, crit4);
+		criteria.add(Restrictions.or(Restrictions.or(crit6, crit7), crit5));
+
+		@SuppressWarnings("unchecked")
+		List<Order> list = this.baseDao.findByCriteria(criteria);
+		return list;
+
+		
+	}
 	/**
 	 * 
 	 * Setters and getters start from here.

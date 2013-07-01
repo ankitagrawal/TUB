@@ -183,6 +183,12 @@ public class ProductVariant implements java.io.Serializable {
     @Transient
     @Expose
     private String                    optionsAuditString;
+    
+    @Column(name = "mrp_qty")
+    private Long mrpQty;
+    
+    @Column(name = "net_qty")
+    private Long netQty;
 
     public List<ProductImage> getProductImages() {
         return productImages;
@@ -716,5 +722,21 @@ public class ProductVariant implements java.io.Serializable {
     public void setOptionsAuditString(String optionsAuditString) {
         this.optionsAuditString = optionsAuditString;
     }
+    
+    public Long getMrpQty() {
+		return mrpQty;
+	}
+    
+    public void setMrpQty(Long mrpQty) {
+		this.mrpQty = mrpQty;
+	}
+    
+    public Long getNetQty() {
+		return netQty;
+	}
+    
+    public void setNetQty(Long netQty) {
+		this.netQty = netQty;
+	}
 
 }
