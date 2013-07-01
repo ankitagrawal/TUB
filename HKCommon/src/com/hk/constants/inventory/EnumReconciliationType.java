@@ -12,6 +12,8 @@ import java.util.List;
 public enum EnumReconciliationType {
     Add(10L, "Add"),
     Subtract(20L, "Subtract"),
+    
+    
     SubtractDamage(30L, "Damage-Subtract"),
     SubtractExpired(40L, "Expired-Subtract"),
     Lost(50L, "Lost-Subtract"),
