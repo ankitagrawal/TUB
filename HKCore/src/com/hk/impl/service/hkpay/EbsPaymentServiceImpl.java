@@ -160,6 +160,8 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
                 Element element = callPaymentGateway(null,gatewayReferenceId, null, amount.toString(), EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
 
                 hkRefundPaymentResponse = verifyAndCreateHkResponsePayment(element, baseGatewayOrderId,EnumPaymentTransactionType.REFUND.getName());
+            } else {
+                throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.PAYMENT_NOT_UPDATED);
             }
 
         } catch (Exception e){

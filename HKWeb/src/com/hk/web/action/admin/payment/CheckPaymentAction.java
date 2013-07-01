@@ -109,7 +109,14 @@ public class CheckPaymentAction extends BaseAction {
     public Resolution seekPayment() {
 
         try {
-            hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
+            Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+            Gateway gateway = basePayment.getGateway();
+            if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
+                hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Seek feature only works for citrus/icici/ebs"));
+            }
+
 
         } catch (HealthkartPaymentGatewayException e) {
             logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
@@ -164,24 +171,31 @@ public class CheckPaymentAction extends BaseAction {
 
 
     @DontValidate
-    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
+        Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+        Gateway gateway = basePayment.getGateway();
+        if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
+            if (isRefundAmountValid(gatewayOrderId, amount)) {
+                try {
+                    if (isSuccessFullPayment(gatewayOrderId)) {
+                        payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+                    } else {
+                        addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
+                    }
 
-        if (isRefundAmountValid(gatewayOrderId,amount)){
-            try {
-                if(isSuccessFullPayment(gatewayOrderId)){
-                    payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
+
+                } catch (HealthkartPaymentGatewayException e) {
+                    logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
                 }
-
-
-            } catch (HealthkartPaymentGatewayException e) {
-                logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Amount cannot exceed total remaining amount"));
             }
+
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Amount cannot exceed total remaining amount"));
+            addRedirectAlertMessage(new SimpleMessage("Refund feature only works for citrus/icici/ebs"));
         }
+
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
@@ -199,13 +213,20 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updatePayment() {
-        try{
-            payment = paymentService.updatePayment(gatewayOrderId);
+        Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+        Gateway gateway = basePayment.getGateway();
+        if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
+            try {
+                payment = paymentService.updatePayment(gatewayOrderId);
 
-        } catch (HealthkartPaymentGatewayException e){
-            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
-            // redirect to error page
+            } catch (HealthkartPaymentGatewayException e) {
+                logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+                // redirect to error page
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Update feature only works for citrus/icici/ebs"));
         }
+
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
