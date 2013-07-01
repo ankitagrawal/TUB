@@ -42,9 +42,9 @@ public class AnalyticsConstants {
   public static enum CustomVarSlot {
     sessionOrderCount(1, "SessionOrderCount", CustomVarScope.sessionLevel),
     firstPurchaseDate(2, "FirstPurchaseDate", CustomVarScope.visitorLevel),
-    signUpDate(3, "signupDate", CustomVarScope.visitorLevel),
-    userId(4, "userId", CustomVarScope.visitorLevel),
-    orderCount(5, "OrderCount", CustomVarScope.visitorLevel),
+    lpBrand(3, "lpBrand", CustomVarScope.sessionLevel),
+    lpPrimCat(4, "lpPrimCat", CustomVarScope.sessionLevel),
+    lpCatTree(5, "lpCatTree", CustomVarScope.sessionLevel),
     ;
 
     int slot;

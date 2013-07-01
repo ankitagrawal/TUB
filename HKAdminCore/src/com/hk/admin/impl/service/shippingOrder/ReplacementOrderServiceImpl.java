@@ -82,6 +82,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
                     //lineItem.setShippingCharges(0.00);
                     //lineItem.setRewardPoints(0.00);
                 }
+                
+                lineItem.setMarkedPrice(lineItem.getCartLineItem().getProductVariant().getMarkedPrice());
                 lineItemSet.add(lineItem);
 
                 // lineItem.setShippingOrder(replacementOrder);

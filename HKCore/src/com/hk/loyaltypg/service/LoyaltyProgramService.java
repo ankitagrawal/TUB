@@ -2,6 +2,7 @@ package com.hk.loyaltypg.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.stripes.action.FileBean;
 
@@ -65,5 +66,9 @@ public interface LoyaltyProgramService {
 	public String updateCardNumber(UserBadgeInfo info, String cardNumber);
 
 	public List<UserOrderKarmaProfile> getUserLoyaltyProfileHistory(User user);
+
+	public List<LoyaltyProduct> searchLoyaltyProducts(Map<String, String> keywordsMap);
+
+	public List<UserOrderKarmaProfile> searchKarmaProfiles(Map<String, Object> searchMap);
 
 }
