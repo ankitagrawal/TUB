@@ -244,9 +244,12 @@ public class ShipmentServiceImpl implements ShipmentService {
             } else {
                 estimatedWeight += variantWeight;
             }
-            Double variantVolumetricWeight = productVariant.getEstimatedBoxSize().getVolumetricWeight();
-            if(estimatedVolumetricWeight < variantVolumetricWeight){
-                estimatedVolumetricWeight = variantVolumetricWeight;
+            BoxSize estimatedBoxSize = productVariant.getEstimatedBoxSize();
+            if(estimatedBoxSize != null){
+                Double variantVolumetricWeight = estimatedBoxSize.getVolumetricWeight();
+                if(estimatedVolumetricWeight < variantVolumetricWeight){
+                    estimatedVolumetricWeight = variantVolumetricWeight;
+                }
             }
         }
         Double maxWeight = estimatedWeight > estimatedVolumetricWeight ? estimatedWeight : estimatedVolumetricWeight;
