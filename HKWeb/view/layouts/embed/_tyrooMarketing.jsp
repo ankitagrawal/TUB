@@ -30,8 +30,8 @@
 	%>
 
 	<script type="text/javascript"
-		src="https://affiliates.tyroodr.com/i_sale_third/10960/${lineItemString}/${transactionId}/${city},${saleAmount},${modeOfPayment}"
+		src="https://affiliates.tyroodr.com/i_sale_third/10960/${saleAmount}/${transactionId}/${city},${saleAmount},${modeOfPayment}"
 		class="tyroo_track"></script>
 	<noscript><img
-		src="https://affiliates.tyroodr.com/i_track_sale/10960/${lineItemString}/${transactionId}/${city},${saleAmount},${modeOfPayment}"></noscript>
+		src="https://affiliates.tyroodr.com/i_track_sale/10960/${saleAmount}/${transactionId}/${city},${saleAmount},${modeOfPayment}"></noscript>
 </s:layout-definition>

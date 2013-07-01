@@ -20,7 +20,7 @@ import com.hk.store.CategoryDto;
 public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProductDao {
 
 	@Override
-	public LoyaltyProduct getProductbyVarientId(String variantId) {
+	public LoyaltyProduct getProductbyVariantId(String variantId) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.add(Restrictions.eq("variant.id", variantId));
 		@SuppressWarnings("unchecked")
