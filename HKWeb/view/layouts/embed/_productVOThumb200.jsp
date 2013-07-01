@@ -56,7 +56,7 @@
       <div class='img180 ${productVO.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
         <a href="${productURL}" class="prod_link"
                 title="${productVO.name}">
-          <img
+          <img style="max-height:180px;max-width:180px;"
                src="${hk:getS3ImageUrl(imageMediumSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
         </a>
