@@ -5,13 +5,16 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.warehouse.Warehouse;
 import org.hibernate.annotations.Where;
+import org.jboss.resteasy.spi.touri.MappedBy;
 
 import javax.persistence.*;
+
 import java.util.*;
 
 @SuppressWarnings("serial")
@@ -84,6 +87,15 @@ public class ShippingOrder implements java.io.Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private List<ShippingOrderLifecycle> shippingOrderLifecycles = new ArrayList<ShippingOrderLifecycle>(0);
+    
+    @JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy="shippingOrders")
+	@JoinTable(
+	    name = "shipping_order_has_purchase_order",
+	    joinColumns = {@JoinColumn(name = "shipping_order_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "purchase_order_id", nullable = false, updatable = false)}
+	)
+	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 
     @Transient
     private Reason reason;
@@ -323,6 +335,15 @@ public class ShippingOrder implements java.io.Serializable {
     public void setShippingOrderCategories(Set<ShippingOrderCategory> categories) {
         this.shippingOrderCategories = categories;
     }
+
+	public List<PurchaseOrder> getPurchaseOrders() {
+		return purchaseOrders;
+	}
+
+	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+		this.purchaseOrders = purchaseOrders;
+	}
+    
 
 /*    public ActionItem getActionItem() {
         return actionItem;

@@ -87,10 +87,10 @@ public class FreeMarkerService {
       // the first line in the template is the email subject
       // the rest is the html body
       String out = stringWriter.toString();
-      String subject = out.substring(0, out.indexOf(BaseUtils.newline));
-      String body = out.substring(out.indexOf(BaseUtils.newline) + 1, out.length());
+      //String subject = out.substring(0, out.indexOf(BaseUtils.newline));
+      //String body = out.substring(out.indexOf(BaseUtils.newline) + 1, out.length());
 
-      renderOutput = new RenderOutput(subject, body);
+      renderOutput = new RenderOutput("", "");
     } catch (IOException e) {
       logger.error("IOException in getRenderOutputForTemplate for template ", e);
     } catch (TemplateException e) {

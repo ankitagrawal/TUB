@@ -616,6 +616,11 @@
                         <c:if test="${isActionQueue == true}">
                             Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days
                         </c:if>
+                      <span>
+                      <c:forEach items="${shippingOrder.purchaseOrders}" var="po">
+                      PO#${po.id}
+                      </c:forEach>
+                      </span>
             </td>
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
@@ -632,6 +637,8 @@
         </c:forEach>
     </table>
 </td>
+
+
 <c:set var="shipment" value="${shippingOrder.shipment}"/>
 <c:if test="${shipment !=null}">
     <td>

@@ -4,8 +4,9 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,13 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderType;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
@@ -25,13 +29,16 @@ import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.web.action.admin.AdminHomeAction;
 
 @Component
 public class JitShippingOrderAction extends BasePaginatedAction {
@@ -42,14 +49,18 @@ public class JitShippingOrderAction extends BasePaginatedAction {
 	PurchaseOrderDao purchaseOrderDao;
 	@Autowired
 	BaseDao baseDao;
-	
-	
+	@Autowired
+	SkuService skuService;
+	@Autowired
+	AdminEmailManager adminEmailManager;
+
 	private Integer defaultPerPage = 40;
 	private Date startDate;
 	private Date endDate;
 	private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 	private List<LineItem> jitLineItems = new ArrayList<LineItem>();
 	private HashMap<Supplier, List<LineItem>> supplierLineItemListMap = new HashMap<Supplier, List<LineItem>>();
+	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 
 	@SuppressWarnings("unchecked")
 	@DefaultHandler
@@ -57,27 +68,41 @@ public class JitShippingOrderAction extends BasePaginatedAction {
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
 		shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(),
 				getPerPage());
+		List<ShippingOrder> shippingOrderListToProcess = new ArrayList<ShippingOrder>();
 		if (shippingOrderPage != null) {
 			shippingOrderList = shippingOrderPage.getList();
-			jitLineItems = getJitLineItems(shippingOrderList);
+
+			for (ShippingOrder shippingOrder : shippingOrderList) {
+				if (shippingOrder.getPurchaseOrders() == null) {
+					shippingOrderListToProcess.add(shippingOrder);
+				}
+			}
+			jitLineItems = getJitLineItems(shippingOrderListToProcess);
 			supplierLineItemListMap = getSupplierLineItemMap(jitLineItems);
-			createPurchaseOrder(supplierLineItemListMap);
-			
+			HashMap<Supplier, HashMap<ProductVariant, Long>> supplierVariantQtyMap = createSupplierVariantQuantityMap(supplierLineItemListMap);
+			// createPurchaseOrder(supplierVariantQtyMap);
+			purchaseOrders = createPurchaseOrder(supplierLineItemListMap);
+			createPoLineItems(purchaseOrders, supplierVariantQtyMap);
+			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus
+					.getAllPurchaseOrderStatusForSystemGeneratedPOs();
+			for (PurchaseOrder purchaseOrder : purchaseOrders) {
+				approveAllPos(purchaseOrder, purchaseOrderStatus);
+			}
+
 		}
 
-		return new ForwardResolution("/pages/admin/jitShippingOrderQueue.jsp");
+		addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()
+				+ " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+		return new RedirectResolution(AdminHomeAction.class);
 
 	}
 
 	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
 		shippingOrderSearchCriteria.setContainsJitProducts(true);
-		if (startDate != null) {
-			shippingOrderSearchCriteria.setPaymentStartDate(startDate);
-		}
-		if (endDate != null) {
-			shippingOrderSearchCriteria.setPaymentEndDate(endDate);
-		}
+		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
+		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
 		return shippingOrderSearchCriteria;
 	}
 
@@ -111,18 +136,7 @@ public class JitShippingOrderAction extends BasePaginatedAction {
 				List<LineItem> lineItemlist = new ArrayList<LineItem>();
 				for (LineItem lineItem : lineItems) {
 					if (lineItem.getSku().getProductVariant().getProduct().getSupplier().equals(supplier)) {
-						if(lineItemlist.size()>0){
-							for(LineItem dupItem:lineItemlist){
-								if(dupItem.getSku().getProductVariant().equals(lineItem.getSku().getProductVariant())){
-									dupItem.setQty(dupItem.getQty()+lineItem.getQty());
-									lineItemlist.add(dupItem);
-								}
-								else
-									lineItemlist.add(lineItem);
-							}
-						}
-						else
-							lineItemlist.add(lineItem);
+						lineItemlist.add(lineItem);
 					}
 				}
 				supplierItemMap.put(supplier, lineItemlist);
@@ -132,66 +146,120 @@ public class JitShippingOrderAction extends BasePaginatedAction {
 		return supplierItemMap;
 	}
 
-	public List<PoLineItem> createPoLineItems(PurchaseOrder purchaseOrder, List<LineItem> lineItems) {
-		List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
-		Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
-		if(lineItems!=null && lineItems.size()>0){
-			for(LineItem lineItem: lineItems){
-				Double taxableAmount = 0.0D;
-				Double discountPercentage = 0D;
-				PoLineItem poLineItem = new PoLineItem();
-				Sku sku = lineItem.getSku();
-				ProductVariant productVariant = sku.getProductVariant();
-				poLineItem.setSku(lineItem.getSku());
-				poLineItem.setQty(lineItem.getQty());
-				poLineItem.setCostPrice(productVariant.getCostPrice());
-				poLineItem.setMrp(productVariant.getMarkedPrice());
-				poLineItem.setPurchaseOrder(purchaseOrder);
-				
-				Tax tax;
-				if (lineItem.getSku() != null) {
-					if(purchaseOrder.getSupplier().getState().equalsIgnoreCase(purchaseOrder.getWarehouse().getState())){
-						tax = lineItem.getSku().getTax();
+	public void createPoLineItems(List<PurchaseOrder> purchaseOrders,
+			HashMap<Supplier, HashMap<ProductVariant, Long>> supplierVariantQtyMap) {
+
+		if (supplierVariantQtyMap != null && supplierVariantQtyMap.size() > 0) {
+			for (PurchaseOrder purchaseOrder : purchaseOrders) {
+				List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
+				Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
+
+				Set<Entry<Supplier, HashMap<ProductVariant, Long>>> entrySet = supplierVariantQtyMap.entrySet();
+
+				for (Entry<Supplier, HashMap<ProductVariant, Long>> supplierProVarMap : entrySet) {
+					Supplier supplier = supplierProVarMap.getKey();
+					if (purchaseOrder.getSupplier().equals(supplier)) {
+						Set<Entry<ProductVariant, Long>> prodQty = supplierProVarMap.getValue().entrySet();
+						for (Entry<ProductVariant, Long> entry : prodQty) {
+							ProductVariant productVariant = entry.getKey();
+							Long quantity = entry.getValue();
+
+							Double taxableAmount = 0.0D;
+							Double discountPercentage = 0D;
+							PoLineItem poLineItem = new PoLineItem();
+							Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
+							poLineItem.setSku(sku);
+							poLineItem.setQty(quantity);
+							poLineItem.setCostPrice(productVariant.getCostPrice());
+							poLineItem.setMrp(productVariant.getMarkedPrice());
+							poLineItem.setPurchaseOrder(purchaseOrder);
+
+							Tax tax;
+							if (sku != null) {
+								if (purchaseOrder.getSupplier().getState()
+										.equalsIgnoreCase(purchaseOrder.getWarehouse().getState())) {
+									tax = sku.getTax();
+								} else {
+									tax = new Tax();
+									tax.setId(EnumTax.CST.getId());
+									tax.setName(EnumTax.CST.getName());
+									tax.setType(EnumTax.CST.getType());
+									tax.setValue(EnumTax.CST.getValue());
+								}
+								taxableAmount = quantity
+										* ((productVariant.getCostPrice() - productVariant.getCostPrice()
+												* discountPercentage / 100));
+								totalTaxable += taxableAmount;
+								TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(
+										purchaseOrder.getSupplier(), purchaseOrder.getWarehouse().getState(), tax,
+										taxableAmount);
+								totalTax += taxComponent.getTax();
+								totalSurcharge += taxComponent.getSurcharge();
+								totalPayable += taxComponent.getPayable();
+								poLineItem.setTaxableAmount(taxableAmount);
+								poLineItem.setTaxAmount(taxComponent.getTax());
+								poLineItem.setSurchargeAmount(taxComponent.getSurcharge());
+								poLineItem.setPayableAmount(taxComponent.getPayable());
+								poLineItem = (PoLineItem) getBaseDao().save(poLineItem);
+								poLineItems.add(poLineItem);
+							}
+
+						}
+						break;
 					}
-					else{
-						tax = new Tax();
-						tax.setId(EnumTax.CST.getId());
-						tax.setName(EnumTax.CST.getName());
-						tax.setType(EnumTax.CST.getType());
-						tax.setValue(EnumTax.CST.getValue());
-					}
-					taxableAmount = (lineItem.getQty() * (lineItem.getCostPrice() - lineItem.getCostPrice() * discountPercentage / 100));
-					totalTaxable += taxableAmount;
-					TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(purchaseOrder.getSupplier(),purchaseOrder.getWarehouse().getState(), tax, taxableAmount);
-					totalTax += taxComponent.getTax();
-					totalSurcharge += taxComponent.getSurcharge();
-					totalPayable += taxComponent.getPayable();
-					poLineItem.setTaxableAmount(taxableAmount);
-					poLineItem.setTaxAmount(taxComponent.getTax());
-					poLineItem.setSurchargeAmount(taxComponent.getSurcharge());
-					poLineItem.setPayableAmount(taxComponent.getPayable());
-					poLineItem = (PoLineItem) getBaseDao().save(poLineItem);
-					poLineItems.add(poLineItem);
+
 				}
+				purchaseOrder.setPayable(totalPayable);
+				purchaseOrder.setTaxableAmount(totalTaxable);
+				purchaseOrder.setTaxAmount(totalTax);
+				purchaseOrder.setSurchargeAmount(totalSurcharge);
+				purchaseOrder.setPoLineItems(poLineItems);
+
+				purchaseOrder.setPoLineItems(poLineItems);
+				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			}
-			purchaseOrder.setPayable(totalPayable);
-			purchaseOrder.setTaxableAmount(totalTaxable);
-			purchaseOrder.setTaxAmount(totalTax);
-			purchaseOrder.setSurchargeAmount(totalSurcharge);
-			purchaseOrder.setPoLineItems(poLineItems);
 		}
-		return poLineItems;
+
 	}
 
-	public void createPurchaseOrder(HashMap<Supplier, List<LineItem>> supplierLineItemHashMap) {
+	public HashMap<Supplier, HashMap<ProductVariant, Long>> createSupplierVariantQuantityMap(
+			HashMap<Supplier, List<LineItem>> supplierLineItemHashMap) {
+		HashMap<Supplier, HashMap<ProductVariant, Long>> supplierVariantQuantityMap = new HashMap<Supplier, HashMap<ProductVariant, Long>>();
 
+		Set<Entry<Supplier, List<LineItem>>> entrySet = supplierLineItemHashMap.entrySet();
+		for (Entry<Supplier, List<LineItem>> entry : entrySet) {
+			Supplier supplier = entry.getKey();
+			List<LineItem> lineItems = entry.getValue();
+			HashMap<ProductVariant, Long> productQtyHashMap = new HashMap<ProductVariant, Long>();
+			if (lineItems != null && lineItems.size() > 0) {
+				for (LineItem item : lineItems) {
+					ProductVariant productVariant = item.getSku().getProductVariant();
+					Long quantity = item.getQty();
+					if (productQtyHashMap.containsKey(productVariant)) {
+						Long qty = productQtyHashMap.get(productVariant);
+						qty += quantity;
+						productQtyHashMap.put(productVariant, qty);
+					} else {
+						productQtyHashMap.put(productVariant, quantity);
+					}
+				}
+			}
+			supplierVariantQuantityMap.put(supplier, productQtyHashMap);
+		}
+		return supplierVariantQuantityMap;
+	}
+
+	public List<PurchaseOrder> createPurchaseOrder(HashMap<Supplier, List<LineItem>> supplierVariantQuantityMap) {
+
+		List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 		User user = null;
 		if (getPrincipal() != null) {
 			user = getUserService().getUserById(getPrincipal().getId());
 		}
 
-		if (supplierLineItemHashMap != null && !supplierLineItemHashMap.isEmpty()) {
-			Set<Entry<Supplier, List<LineItem>>> entrySet = supplierLineItemHashMap.entrySet();
+		if (supplierVariantQuantityMap != null && !supplierVariantQuantityMap.isEmpty()) {
+			Set<Entry<Supplier, List<LineItem>>> entrySet = supplierVariantQuantityMap.entrySet();
+
 			for (Entry<Supplier, List<LineItem>> entry : entrySet) {
 				Supplier supplier = entry.getKey();
 				List<LineItem> lineItems = entry.getValue();
@@ -199,6 +267,7 @@ public class JitShippingOrderAction extends BasePaginatedAction {
 				purchaseOrder.setCreateDate(new Date());
 				purchaseOrder.setCreatedBy(user);
 				purchaseOrder.setSupplier(supplier);
+				purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.JIT.asEnumPurchaseOrderType());
 				purchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class,
 						EnumPurchaseOrderStatus.Generated.getId()));
 				Calendar calendar = Calendar.getInstance();
@@ -213,10 +282,42 @@ public class JitShippingOrderAction extends BasePaginatedAction {
 					purchaseOrder.setEstPaymentDate(new Date());
 				}
 				purchaseOrder.setWarehouse(user.getSelectedWarehouse());
+
+				Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+				for (LineItem lineItem : lineItems) {
+					ShippingOrder so = lineItem.getShippingOrder();
+					shippingOrders.add(so);
+				}
+				List<ShippingOrder> soList = new ArrayList<ShippingOrder>(shippingOrders);
+				purchaseOrder.setShippingOrders(soList);
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
-				List<PoLineItem> poLineItems = createPoLineItems(purchaseOrder, lineItems);
-				purchaseOrder.setPoLineItems(poLineItems);
+				purchaseOrders.add(purchaseOrder);
+			}
+		}
+		return purchaseOrders;
+	}
+
+	public void approveAllPos(PurchaseOrder purchaseOrder, List<PurchaseOrderStatus> purchaseOrderStatus) {
+
+		for (PurchaseOrderStatus status : purchaseOrderStatus) {
+			EnumPurchaseOrderStatus poStatus = EnumPurchaseOrderStatus.getById(status.getId());
+			purchaseOrder.setUpdateDate(new Date());
+			purchaseOrder.setPurchaseOrderStatus(poStatus.asEnumPurchaseOrderStatus());
+			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+			if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
+				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
+				if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
+					if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
+						if (purchaseOrder.getSupplier().getEmail_id() != null) {
+							adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier()
+									.getEmail_id());
+						}
+					}
+				}
+				purchaseOrder
+						.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+
 			}
 		}
 	}
@@ -297,6 +398,14 @@ public class JitShippingOrderAction extends BasePaginatedAction {
 
 	public void setSupplierLineItemListMap(HashMap<Supplier, List<LineItem>> supplierLineItemListMap) {
 		this.supplierLineItemListMap = supplierLineItemListMap;
+	}
+
+	public List<PurchaseOrder> getPurchaseOrders() {
+		return purchaseOrders;
+	}
+
+	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+		this.purchaseOrders = purchaseOrders;
 	}
 
 }
