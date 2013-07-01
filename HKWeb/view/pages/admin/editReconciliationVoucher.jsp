@@ -197,7 +197,7 @@
 
 <shiro:hasPermission name="<%=PermissionConstants.FINANCE_MANAGEMENT%>">
 <div id="closeButtonDiv">
-	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 }">
+	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 && pa.reconciliationVoucher.supplier!=null }">
 	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
 	<s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher}" />
 	<s:param name = "warehouse" value="${pa.reconciliationVoucher.warehouse}"/>

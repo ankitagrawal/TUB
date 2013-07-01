@@ -643,26 +643,6 @@
                 </tr>
             </c:forEach>
             </tbody>
-            <%-- <tfoot>
-            <tr>
-                <td colspan="8">Total</td>
-                <td><fmt:formatNumber value="${pa.debitNoteDto.totalTaxable}" maxFractionDigits="2"/></td>
-                <td><fmt:formatNumber value="${pa.debitNoteDto.totalTax}" maxFractionDigits="2"/></td>
-                <td><fmt:formatNumber value="${pa.debitNoteDto.totalSurcharge}" maxFractionDigits="2"/></td>
-                <td id="totalPayable"><fmt:formatNumber value="${pa.debitNoteDto.totalPayable}" maxFractionDigits="2"/></td>
-            </tr>
-            <tr></tr>
-            <tr>
-            <td colspan="8"></td>
-            <td colspan="3">Freight And Forwarding</td>
-            <td><s:text name="debitNote.freightForwardingCharges" value="${debitNote.freightForwardingCharges}" id="freightForwardingCharges"/></td>
-            </tr>
-            <tr>
-            <td colspan="8"></td>
-            <td colspan="3">Final Debit Amount</td>
-            <td><s:text name="debitNote.finalDebitAmount" value="${debitNote.finalDebitAmount}" id="finalDebitAmount"/></td>
-            </tr>
-            </tfoot> --%>
         </table>
         <div class="variantDetails info"></div>
         
@@ -677,14 +657,14 @@
 		</tr>
 		<tr>
 		<td colspan="">Total</td>
-		  <td><s:text readonly="readonly" class="totalTaxable" name="debitNote.totalTaxable" value="${pa.debitNoteDto.totalTaxable}"/></td>
-		<td><s:text readonly="readonly" class="totalTax" name="debitNote.totalTax" value="${pa.debitNoteDto.totalTax}"/></td>
-		<td><s:text readonly="readonly" class="totalSurcharge" name="debitNote.totalSurcharge" value="${pa.debitNoteDto.totalSurcharge}"/></td>
-		<td><s:text readonly="readonly" class="totalPayable" name="debitNote.totalPayable" value="${pa.debitNoteDto.totalPayable}"/></td>
+		  <td><s:text readonly="readonly" class="totalTaxable" name="debitNote.taxableAmount" value="${debitNote.taxableAmount}"/></td>
+		<td><s:text readonly="readonly" class="totalTax" name="debitNote.taxAmount" value="${debitNote.taxAmount}"/></td>
+		<td><s:text readonly="readonly" class="totalSurcharge" name="debitNote.surchargeAmount" value="${debitNote.surchargeAmount}"/></td>
+		<td><s:text readonly="readonly" class="totalPayable" name="debitNote.payableAmount" value="${debitNote.payableAmount}"/></td>
 		</tr>
 		<tr>
 		<td colspan="4">Further Discount (if any)</td>
-		<td><s:text class="overallDiscount valueChange" name="debitNote.discount" value="${pa.debitNoteDto.totalDiscount}"/></td>
+		<td><s:text class="overallDiscount valueChange" name="debitNote.discount" value="${debitNote.discount}"/></td>
 		</tr>
 		<tr>
 		<td colspan="4">Freight And Forwarding</td>
@@ -693,7 +673,7 @@
 		<tr>
 		<td colspan="4">Final Payable</td>
 		<td>
-		<s:text readonly="readonly" class="finalPayable finalDebitAmount" name="debitNote.finalDebitAmount" value="${pa.debitNoteDto.finalDebitAmount}"/></td>
+		<s:text readonly="readonly" class="finalPayable finalDebitAmount" name="debitNote.finalDebitAmount" value="${debitNote.finalDebitAmount}"/></td>
 				            <td>
 		</tr>
 		</table>
