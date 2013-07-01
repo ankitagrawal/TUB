@@ -49,11 +49,11 @@ public class BulkUploadRelatedProductAction extends BaseAction {
     public Resolution save() throws IOException {
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Select choose file to upload"));
-            return new RedirectResolution("/pages/bulkUploadRelatedProduct.jsp.jsp");
+            return new RedirectResolution("/pages/bulkUploadRelatedProduct.jsp");
         }
         if (!(fileBean.getContentType().equals("application/vnd.ms-excel"))) {
             addRedirectAlertMessage(new SimpleMessage("upload xls file only"));
-            return new RedirectResolution("/pages/bulkUploadRelatedProduct.jsp.jsp");
+            return new RedirectResolution("/pages/bulkUploadRelatedProduct.jsp");
         }
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
         String excelFilePath = adminUploadsPath + "/relatedProductFiles/" + sdf.format(new Date()) + "/" + sdf.format(new Date()) + ".xls";
