@@ -22,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
@@ -93,6 +94,38 @@ public class DebitNote implements java.io.Serializable {
     @Temporal (TemporalType.TIMESTAMP)
     @Column (name = "close_date", length = 19)
     private Date closeDate;
+    
+    @Column(name = "discount")
+	private Double discount;
+    
+    @Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "payable_amount")
+	private Double payableAmount;
+	
+	 @Column (name = "destination_address")
+	  private String destinationAddress;
+	
+	@ManyToOne
+	  @JoinColumn(name = "courier_pickup_detail_id")
+	  private CourierPickupDetail courierPickupDetail;
+	
+	 @Column(name="return_by_hand")
+	  private Boolean returnByHand;
+	 
+	 @Temporal (TemporalType.TIMESTAMP)
+	  @Column(name="return_date")
+	  private Date returnDate;
+	  
+	  @Column (name = "return_address")
+	  private String returnAddress;
 
     public Long getId() {
         return this.id;
@@ -227,6 +260,86 @@ public class DebitNote implements java.io.Serializable {
 
 	public void setFinalDebitAmount(Double finalDebitAmount) {
 		this.finalDebitAmount = finalDebitAmount;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getPayableAmount() {
+		return payableAmount;
+	}
+
+	public void setPayableAmount(Double payableAmount) {
+		this.payableAmount = payableAmount;
+	}
+
+	public CourierPickupDetail getCourierPickupDetail() {
+		return courierPickupDetail;
+	}
+
+	public void setCourierPickupDetail(CourierPickupDetail courierPickupDetail) {
+		this.courierPickupDetail = courierPickupDetail;
+	}
+
+	public String getDestinationAddress() {
+		return destinationAddress;
+	}
+
+	public void setDestinationAddress(String destinationAddress) {
+		this.destinationAddress = destinationAddress;
+	}
+
+	public Boolean getReturnByHand() {
+		return returnByHand;
+	}
+
+	public void setReturnByHand(Boolean returnByHand) {
+		this.returnByHand = returnByHand;
+	}
+
+	public Date getReturnDate() {
+		return returnDate;
+	}
+
+	public void setReturnDate(Date returnDate) {
+		this.returnDate = returnDate;
+	}
+
+	public String getReturnAddress() {
+		return returnAddress;
+	}
+
+	public void setReturnAddress(String returnAddress) {
+		this.returnAddress = returnAddress;
 	}
 }
 

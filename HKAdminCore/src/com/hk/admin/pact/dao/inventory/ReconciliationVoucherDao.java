@@ -1,6 +1,7 @@
 package com.hk.admin.pact.dao.inventory;
 
 import com.akube.framework.dao.Page;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationType;
@@ -18,5 +19,7 @@ public interface ReconciliationVoucherDao extends BaseDao {
     public RvLineItem getRvLineItem(ReconciliationVoucher reconciliationVoucher , Sku sku);
 
     public RvLineItem getRvLineItems (ReconciliationVoucher reconciliationVoucher , Sku sku, SkuGroup skuGroup,  ReconciliationType reconciliationType );
+    
+    public DebitNote getDebitNote(ReconciliationVoucher reconciliationVoucher);
 
 }
