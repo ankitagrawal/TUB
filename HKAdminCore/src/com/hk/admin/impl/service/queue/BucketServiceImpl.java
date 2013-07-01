@@ -258,7 +258,7 @@ public class BucketServiceImpl implements BucketService {
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             Long availableUnbookedInv = inventoryService.getAvailableUnbookedInventory(lineItem.getSku());
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            if (availableUnbookedInv < 0) {
+            if (availableUnbookedInv <= 0) {
                 categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
             }
             if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {

@@ -1,5 +1,12 @@
 package com.hk.admin.pact.service.email;
 
+import com.hk.admin.impl.service.email.ProductInventoryDto;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.marketing.NotifyMe;
+
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Seema
@@ -9,6 +16,11 @@ package com.hk.admin.pact.service.email;
  */
 public interface ProductVariantNotifyMeEmailService {
 
-    public void sendNotifyMeEmail(final float notifyConversionRate, final int bufferRate);
+    public int sendNotifyMeEmailForInStockProducts(final float notifyConversionRate, final int bufferRate);
 
+    public int sendNotifyMeEmailForSimilarProducts(final float notifyConversionRate, final int bufferRate);
+
+    public List<ProductInventoryDto> getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(ProductVariant productVariant);
+
+    public List<Product> getSimilarProductsWithMaxUnbookedInvn(ProductVariant productVariant, int noOfSimilarProduct);
 }

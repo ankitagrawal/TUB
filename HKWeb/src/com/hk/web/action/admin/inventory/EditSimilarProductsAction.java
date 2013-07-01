@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.catalog.product.SimilarProductsDao;
 import com.hk.pact.service.catalog.ProductService;
 
 import com.hk.domain.catalog.product.Product;
@@ -34,9 +33,6 @@ public class EditSimilarProductsAction extends BaseAction {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired
-    SimilarProductsDao     similarProductsDao;
 
     public String          productId;
     Product                inputProduct;
@@ -78,7 +74,7 @@ public class EditSimilarProductsAction extends BaseAction {
 
     public Resolution search() {
         if (inputProduct != null && inputProduct.getId() != null) {
-            similarProductsList = similarProductsDao.getSimProdsFromDB(inputProduct);
+            similarProductsList = inputProduct.getSimilarProducts();
         } else {
             similarProductsList = new ArrayList<SimilarProduct>();
             addRedirectAlertMessage(new SimpleMessage("Please enter a valid product in the text field above."));

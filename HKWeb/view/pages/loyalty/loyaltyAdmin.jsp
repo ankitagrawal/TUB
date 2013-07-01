@@ -70,6 +70,8 @@
   	<div style="color: green;">
   	${loyaltyAdminAction.successMessage}
   	</div>
+  	<div style="float:right"><p><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction" event="viewProfile">
+  		Click here </s:link> to add/edit loyalty points</p></div>
   	<div style="float: left; clear:both; width:100%;">
 	<s:form beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction" id="searchForm">
   		<h2>Search Loyalty Products </h2>

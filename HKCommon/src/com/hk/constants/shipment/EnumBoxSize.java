@@ -16,6 +16,7 @@ public enum EnumBoxSize {
     XL(50L, "XL", 4300D, 31.9D, 580D, 16D, 30D, 46D),
     XXL(60L, "XXL", 8500D, 37D, 800D, 30D, 31D, 45D),
     XXXL(70L, "XXXL", 10500D, 57.2D, 1200D, 0D, 0D, 0D),
+    TAMPER_PROOF(80L, "TAMPER_PROOF", 1000D, 5.0D, 2D, 13D, 16D, 23D),
     MIGRATE(-1L, "MIGRATE", 0D, 0D, 0D, 0D, 0D, 0D);
 
     private String name;
@@ -46,10 +47,10 @@ public enum EnumBoxSize {
         return boxSize;
     }
 
-    EnumBoxSize(Long id, String name, Double weight, Double packagingCost, Double boxWeight, Double length, Double breadth, Double height) {
+    EnumBoxSize(Long id, String name, Double volumetricWeight, Double packagingCost, Double boxWeight, Double length, Double breadth, Double height) {
         this.name = name;
         this.id = id;
-        this.volumetricWeight = weight;
+        this.volumetricWeight = volumetricWeight;
         this.packagingCost = packagingCost;
         this.boxWeight = boxWeight;
         this.length = length;
@@ -58,13 +59,15 @@ public enum EnumBoxSize {
     }
 
     public static List<EnumBoxSize> getAllEnumBoxSize() {
-        return Arrays.asList(EnumBoxSize.XS, EnumBoxSize.S, EnumBoxSize.M, EnumBoxSize.M2, EnumBoxSize.L, EnumBoxSize.L2, EnumBoxSize.XL, EnumBoxSize.XXL, EnumBoxSize.XXXL, EnumBoxSize.MIGRATE);
+        return Arrays.asList(EnumBoxSize.XS, EnumBoxSize.S, EnumBoxSize.M,
+                EnumBoxSize.M2, EnumBoxSize.L, EnumBoxSize.L2, EnumBoxSize.XL,
+                EnumBoxSize.XXL, EnumBoxSize.XXXL, EnumBoxSize.TAMPER_PROOF,
+                EnumBoxSize.MIGRATE);
     }
 
     public static String getLengthBreadthHeight(Double weight) {
         String lengthBreadthHeightString = null;
-        List<EnumBoxSize> enumBoxSizeList = Arrays.asList(EnumBoxSize.XS, EnumBoxSize.S, EnumBoxSize.M, EnumBoxSize.M2, EnumBoxSize.L, EnumBoxSize.L2, EnumBoxSize.XL, EnumBoxSize.XXL);
-        for (EnumBoxSize boxSize : enumBoxSizeList) {
+        for (EnumBoxSize boxSize : getAllEnumBoxSize()) {
             if (weight < (boxSize.getVolumetricWeight() / 1000)) {
                 lengthBreadthHeightString = boxSize.getLength() + "-" + boxSize.getBreadth() + "-" + boxSize.getHeight();
                 return lengthBreadthHeightString;
