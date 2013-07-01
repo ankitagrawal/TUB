@@ -32,6 +32,11 @@ public class Test {
 
             Date dateTemp  = HKDateUtil.addToDate(new Date(), Calendar.DAY_OF_MONTH, 10);
             System.out.println( ":" + dateTemp);
+
+            DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy");
+            System.out.println( ":" + dateFormat.format(date));
+
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

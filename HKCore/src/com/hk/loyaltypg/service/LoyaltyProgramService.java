@@ -67,6 +67,8 @@ public interface LoyaltyProgramService {
 
 	public List<UserOrderKarmaProfile> getUserLoyaltyProfileHistory(User user);
 
-	List<LoyaltyProduct> searchLoyaltyProducts(Map<String, String> keywordsMap);
+	public List<LoyaltyProduct> searchLoyaltyProducts(Map<String, String> keywordsMap);
+
+	public List<UserOrderKarmaProfile> searchKarmaProfiles(Map<String, Object> searchMap);
 
 }

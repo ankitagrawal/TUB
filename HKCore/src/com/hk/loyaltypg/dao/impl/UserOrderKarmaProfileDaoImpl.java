@@ -1,5 +1,8 @@
 package com.hk.loyaltypg.dao.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -23,5 +26,22 @@ public class UserOrderKarmaProfileDaoImpl extends BaseDaoImpl implements UserOrd
         criteria.addOrder(org.hibernate.criterion.Order.desc("creationTime"));
         return this.list(criteria, page, perPage);
     }
+	
+	@Override
+	public List<UserOrderKarmaProfile> searchUserOrderKarmaProfile(Map<String,Object> searchMap) {
+	    DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
+	    if(searchMap.containsKey("userId"))  {
+    		criteria.add(Restrictions.eq("user.id", searchMap.get("userId")));
+    	}
+	    if(searchMap.containsKey("orderId"))  {
+    		criteria.add(Restrictions.eq("order.id", searchMap.get("orderId")));
+    	}
+        criteria.addOrder(org.hibernate.criterion.Order.desc("creationTime"));
+        
+    	@SuppressWarnings("unchecked")
+		List<UserOrderKarmaProfile> profiles = this.findByCriteria(criteria);
+    	
+    	return profiles;
+	}
 
 }
