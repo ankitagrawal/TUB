@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.replacementOrder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class ReplacementOrderAction extends BaseAction {
 			if (lineItem.getQty() > 0) {
 				valid_item_flag++;
 			}
-			if (lineItem.getQty() != 0 && lineItem.getQty() > inventoryService.getAvailableUnbookedInventory(lineItem.getSku())) {
+			if (lineItem.getQty() != 0 && lineItem.getQty() >= inventoryService.getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku()))) {
 				addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " out of stock."));
 				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}
