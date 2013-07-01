@@ -337,7 +337,7 @@ public class CheckPaymentAction extends BaseAction {
             }
         }
         if (basePayment != null && basePayment.getAmount() != null) {
-            if ((basePayment.getAmount() - (totalRefundAmount + amount)) > 0f) {
+            if ((basePayment.getAmount() - (totalRefundAmount + amount)) >= 0f) {
                 return true;
             }
         }
