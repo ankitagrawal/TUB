@@ -108,10 +108,10 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     public Resolution seekPayment() {
 
-        try{
+        try {
             hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
 
-        } catch (HealthkartPaymentGatewayException e){
+        } catch (HealthkartPaymentGatewayException e) {
             logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
         }
 
@@ -166,12 +166,16 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
-        try{
-            payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
 
-        } catch (HealthkartPaymentGatewayException e){
-            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
-            // redirect to error page
+        if (isRefundAmountValid(gatewayOrderId,amount)){
+            try {
+                payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+
+            } catch (HealthkartPaymentGatewayException e) {
+                logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Amount cannot exceed total remaining amount"));
         }
 
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
@@ -319,6 +323,25 @@ public class CheckPaymentAction extends BaseAction {
 
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
+    }
+
+    private boolean isRefundAmountValid(String gatewayOrderId, String amountStr) {
+        Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+        List<PaymentStatus> refundStatus = Arrays.asList(EnumPaymentStatus.REFUNDED.asPaymenStatus());
+        List<Payment> refundPayments = paymentService.searchPayments(null, refundStatus, null, null, null, null, null, basePayment, null);
+        double totalRefundAmount = 0;
+        Double amount = NumberUtils.toDouble(amountStr);
+        if (refundPayments != null && !refundPayments.isEmpty()) {
+            for (Payment payment : refundPayments) {
+                totalRefundAmount = totalRefundAmount +  payment.getAmount();
+            }
+        }
+        if (basePayment != null && basePayment.getAmount() != null) {
+            if ((basePayment.getAmount() - (totalRefundAmount + amount)) > 0f) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Order getOrder() {
