@@ -257,6 +257,13 @@
     			updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, table, $("#totalsTable"));
     			updateTotalPI('.payableAmount', '.totalPayable', 0, table, $("#totalsTable"));
     			}
+    			
+    			if($(this).attr('id')=="discount" || $(this).attr('id')=="freightForwardingCharges"){
+    				var value = $(this).val();
+    				if(value=""){
+    					$(this).val('0');
+    				}
+    			}
     			var finalPayable = parseFloat($("#totalsTable").parent().find('.totalPayable').val());
     			if (isNaN(overallDiscount)) {
     				overallDiscount = 0;
@@ -684,7 +691,7 @@
 		</tr>
 		<tr>
 		<td colspan="4">Further Discount (if any)</td>
-		<td><s:text class="overallDiscount valueChange" name="debitNote.discount" value="${pa.debitNoteDto.totalDiscount}"/></td>
+		<td><s:text id="discount" class="overallDiscount valueChange" name="debitNote.discount" value="${pa.debitNoteDto.totalDiscount}"/></td>
 		</tr>
 		<tr>
 		<td colspan="4">Freight And Forwarding</td>
