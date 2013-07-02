@@ -168,6 +168,9 @@ $(document).ready(function () {
 		$.each($(fromTotalClass), function (index, value) {
 			var eachRow = $(value);
 			var eachRowValue = eachRow.val().trim();
+			if(eachRowValue=="") {
+				return;
+			} 
 			total += parseFloat(eachRowValue);
 		});
 		if (toHtml == 1) {
