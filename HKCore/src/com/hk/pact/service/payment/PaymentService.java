@@ -60,4 +60,6 @@ public interface PaymentService {
 
     public List<Payment> listPaymentFamily(String gatewayOrderId);
 
+    public boolean isRefundAmountValid(String gatewayOrderId , Double amount);
+
 }

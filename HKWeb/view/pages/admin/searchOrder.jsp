@@ -170,6 +170,8 @@
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
 <c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
+<c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
+<c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT %>"/>
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
@@ -304,6 +306,12 @@
       <br/>
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
+      <%--<c:if test="${order.payment.paymentStatus.id eq paymentStatusSuccess and order.payment.paymentMode.id eq onlinePayment}">--%>
+      <br/>
+      Reward Points: <s:radio value="0" name="reconillationType"/>
+      <br/>
+      Refund Payment: <s:radio value="1" name="reconillationType"/>
+      <%--</c:if>--%>
       <div class="buttons">
         <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
       </div>

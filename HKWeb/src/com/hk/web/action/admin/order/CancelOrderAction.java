@@ -3,8 +3,13 @@ package com.hk.web.action.admin.order;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hk.domain.payment.Payment;
+import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.PaymentService;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +38,10 @@ public class CancelOrderAction extends BaseAction {
     AdminOrderService             adminOrderService;
     @Autowired
     private UserService      userService;
+    @Autowired
+    private PaymentService paymentService;
+    @Autowired
+    private RewardPointService rewardPointService;
 
     @Validate(required = true)
     private Order            order;
@@ -42,12 +51,31 @@ public class CancelOrderAction extends BaseAction {
 
     private String           cancellationRemark;
 
+    @Validate(required = true)
+    private String reconciliationType;
+
     @JsonHandler
     public Resolution pre() {
         User loggedOnUser = null;
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
+        if(reconciliationType.equalsIgnoreCase("0")) {
+            //TODO:
+        } else {
+            if(paymentService.isRefundAmountValid(order.getGatewayOrderId(),order.getAmount())){
+                try {
+                    paymentService.refundPayment(order.getGatewayOrderId(), order.getAmount());
+                    // TODO: get the Refund Payment object if unsuccessful then again ask for Reward Points
+                } catch (HealthkartPaymentGatewayException e){
+                    //TODO:
+                }
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Total Refund Amount cannot exceed base order amount"));
+            }
+        }
+
         // TODO: need to tighten logic for cancellation of order
         adminOrderService.cancelOrder(order, cancellationType, cancellationRemark, loggedOnUser);
         Map<String, Object> data = new HashMap<String, Object>(1);
@@ -75,6 +103,12 @@ public class CancelOrderAction extends BaseAction {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-    
-    
+
+    public String getReconciliationType() {
+        return reconciliationType;
+    }
+
+    public void setReconciliationType(String reconciliationType) {
+        this.reconciliationType = reconciliationType;
+    }
 }

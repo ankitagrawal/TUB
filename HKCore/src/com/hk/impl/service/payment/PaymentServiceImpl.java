@@ -302,6 +302,11 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setAuthIdCode(authIdCode);
             payment.setResponseMessage(respMsg);
             payment.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
+            Payment parent = payment.getParent();
+            if(parent != null && payment.getAmount() != null){
+                double refundAmount = parent.getRefundAmount() + payment.getAmount();
+                parent.setRefundAmount(refundAmount);
+            }
             save(payment);
         }
     }
@@ -366,6 +371,23 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         return paymentFamilyList;
+    }
+
+    @Override
+    public boolean isRefundAmountValid(String gatewayOrderId, Double amount) {
+        Payment payment = findByGatewayOrderId(gatewayOrderId);
+        if (payment != null && payment.getAmount() != null) {
+            double remainAmt = -1;
+            if (payment.getRefundAmount() != null) {
+                remainAmt = payment.getAmount() - (payment.getRefundAmount() + amount);
+            } else {
+                remainAmt = payment.getAmount() - amount;
+            }
+            if (remainAmt >= 0f) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
