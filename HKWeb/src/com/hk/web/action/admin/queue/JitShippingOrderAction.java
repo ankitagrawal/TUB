@@ -34,6 +34,7 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
@@ -70,6 +71,7 @@ public class JitShippingOrderAction extends BaseAction {
 	private HashMap<Supplier, List<LineItem>> supplierLineItemListMap = new HashMap<Supplier, List<LineItem>>();
 	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 	private List<LineItem> jitFilteredLineItems = new ArrayList<LineItem>();
+	private HashMap<PurchaseOrder, List<LineItem>> purOrderLineItem = new HashMap<PurchaseOrder, List<LineItem>>();
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -79,17 +81,28 @@ public class JitShippingOrderAction extends BaseAction {
 		if (shippingOrderList != null && shippingOrderList.size() > 0) {
 
 			for (ShippingOrder shippingOrder : shippingOrderList) {
-				if (shippingOrder.getPurchaseOrders() == null) {
+				if (shippingOrder.getPurchaseOrders() == null
+						|| (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() == 0)) {
 					shippingOrderListToProcess.add(shippingOrder);
 				}
 			}
 			jitLineItems = getJitLineItems(shippingOrderListToProcess);
 			jitFilteredLineItems = autoEscalateShippingOrdersOfJitLineItems(jitLineItems);
 			supplierLineItemListMap = getSupplierLineItemMap(jitFilteredLineItems);
-			HashMap<Supplier, HashMap<ProductVariant, Long>> supplierVariantQtyMap = createSupplierVariantQuantityMap(supplierLineItemListMap);
-			purchaseOrders = createPurchaseOrder(supplierLineItemListMap);
-			createPoLineItems(purchaseOrders, supplierVariantQtyMap);
-			purchaseOrders = deletePOsWithEmptyPOLineItems(purchaseOrders);
+			HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineItemsMap = createSupplierWhLineitemsMap(supplierLineItemListMap);
+			purOrderLineItem = createPurchaseOrder(supplierWhLineItemsMap);
+			HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap = createPurchaseOrderVariantQuantityMap(purOrderLineItem);
+			createPoLineItems(purchaseOrderProductVariantMap);
+
+			List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
+			Set<Entry<PurchaseOrder, HashMap<ProductVariant, Long>>> entrySet = purchaseOrderProductVariantMap
+					.entrySet();
+			for (Entry<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderPVEntry : entrySet) {
+				PurchaseOrder purchaseOrder = purchaseOrderPVEntry.getKey();
+				purchaseOrderList.add(purchaseOrder);
+			}
+
+			purchaseOrders = deletePOsWithEmptyPOLineItems(purchaseOrderList);
 			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus
 					.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 			for (PurchaseOrder purchaseOrder : purchaseOrders) {
@@ -129,8 +142,8 @@ public class JitShippingOrderAction extends BaseAction {
 
 	public List<LineItem> getJitLineItems(List<ShippingOrder> shippingOrders) {
 		List<LineItem> lineItemIsJitList = new ArrayList<LineItem>();
-		if (shippingOrderList != null && shippingOrderList.size() > 0) {
-			for (ShippingOrder order : shippingOrderList) {
+		if (shippingOrders != null && shippingOrders.size() > 0) {
+			for (ShippingOrder order : shippingOrders) {
 				Set<LineItem> items = order.getLineItems();
 				for (LineItem lineItem : items) {
 					if (lineItem.getSku().getProductVariant().getProduct().getJit()) {
@@ -181,13 +194,13 @@ public class JitShippingOrderAction extends BaseAction {
 		return supplierItemMap;
 	}
 
-	public HashMap<Supplier, HashMap<ProductVariant, Long>> createSupplierVariantQuantityMap(
-			HashMap<Supplier, List<LineItem>> supplierLineItemHashMap) {
-		HashMap<Supplier, HashMap<ProductVariant, Long>> supplierVariantQuantityMap = new HashMap<Supplier, HashMap<ProductVariant, Long>>();
+	public HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> createPurchaseOrderVariantQuantityMap(
+			HashMap<PurchaseOrder, List<LineItem>> supplierLineItemHashMap) {
+		HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderVariantQuantityMap = new HashMap<PurchaseOrder, HashMap<ProductVariant, Long>>();
 
-		Set<Entry<Supplier, List<LineItem>>> entrySet = supplierLineItemHashMap.entrySet();
-		for (Entry<Supplier, List<LineItem>> entry : entrySet) {
-			Supplier supplier = entry.getKey();
+		Set<Entry<PurchaseOrder, List<LineItem>>> entrySet = supplierLineItemHashMap.entrySet();
+		for (Entry<PurchaseOrder, List<LineItem>> entry : entrySet) {
+			PurchaseOrder purchaseOrder = entry.getKey();
 			List<LineItem> lineItems = entry.getValue();
 			HashMap<ProductVariant, Long> productQtyHashMap = new HashMap<ProductVariant, Long>();
 			if (lineItems != null && lineItems.size() > 0) {
@@ -203,130 +216,164 @@ public class JitShippingOrderAction extends BaseAction {
 					}
 				}
 			}
-			supplierVariantQuantityMap.put(supplier, productQtyHashMap);
+			purchaseOrderVariantQuantityMap.put(purchaseOrder, productQtyHashMap);
 		}
-		return supplierVariantQuantityMap;
+		return purchaseOrderVariantQuantityMap;
 	}
 
-	public List<PurchaseOrder> createPurchaseOrder(HashMap<Supplier, List<LineItem>> supplierVariantQuantityMap) {
-
-		List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
+	public HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> createSupplierWhLineitemsMap(
+			HashMap<Supplier, List<LineItem>> supplierVariantQuantityMap) {
+		HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineitemsMap = new HashMap<Supplier, HashMap<Warehouse, List<LineItem>>>();
 		if (supplierVariantQuantityMap != null && !supplierVariantQuantityMap.isEmpty()) {
 			Set<Entry<Supplier, List<LineItem>>> entrySet = supplierVariantQuantityMap.entrySet();
-
 			for (Entry<Supplier, List<LineItem>> entry : entrySet) {
 				Supplier supplier = entry.getKey();
 				List<LineItem> lineItems = entry.getValue();
+				HashMap<Warehouse, List<LineItem>> whLiMap = new HashMap<Warehouse, List<LineItem>>();
 				if (lineItems != null && lineItems.size() > 0) {
-					PurchaseOrder purchaseOrder = new PurchaseOrder();
-					purchaseOrder.setCreateDate(new Date());
-					purchaseOrder.setCreatedBy(userService.getAdminUser());
-					purchaseOrder.setSupplier(supplier);
-					purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.JIT.asEnumPurchaseOrderType());
-					purchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class,
-							EnumPurchaseOrderStatus.Generated.getId()));
-					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(new Date());
-					calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
-					purchaseOrder.setEstDelDate(calendar.getTime());
-					if (purchaseOrder.getSupplier().getCreditDays() != null
-							&& purchaseOrder.getSupplier().getCreditDays() >= 0) {
-						calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
-						purchaseOrder.setEstPaymentDate(calendar.getTime());
-					} else {
-						purchaseOrder.setEstPaymentDate(new Date());
+					for (LineItem item : lineItems) {
+						Warehouse wh = item.getSku().getWarehouse();
+						if (whLiMap.containsKey(wh)) {
+							List<LineItem> items = new ArrayList<LineItem>(whLiMap.get(wh));
+							items.add(item);
+							whLiMap.put(wh, items);
+						} else {
+							List<LineItem> items = new ArrayList<LineItem>();
+							items.add(item);
+							whLiMap.put(wh, items);
+						}
 					}
-					// purchaseOrder.setWarehouse(user.getSelectedWarehouse());
-
-					Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-					for (LineItem lineItem : lineItems) {
-						ShippingOrder so = lineItem.getShippingOrder();
-						shippingOrders.add(so);
-					}
-					List<ShippingOrder> soList = new ArrayList<ShippingOrder>(shippingOrders);
-					purchaseOrder.setShippingOrders(soList);
-					purchaseOrder.setWarehouse(soList.get(0).getWarehouse());
-					purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
-					purchaseOrders.add(purchaseOrder);
+					supplierWhLineitemsMap.put(supplier, whLiMap);
 				}
-
 			}
 		}
-		return purchaseOrders;
+		return supplierWhLineitemsMap;
 	}
 
-	public void createPoLineItems(List<PurchaseOrder> purchaseOrders,
-			HashMap<Supplier, HashMap<ProductVariant, Long>> supplierVariantQtyMap) {
+	public HashMap<PurchaseOrder, List<LineItem>> createPurchaseOrder(
+			HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineitemsMap) {
 
-		if (supplierVariantQtyMap != null && supplierVariantQtyMap.size() > 0) {
-			for (PurchaseOrder purchaseOrder : purchaseOrders) {
+		// HashMap<Supplier, HashMap<Warehouse, List<LineItem>>>
+		// supplierWhLineitemsMap = new HashMap<Supplier, HashMap<Warehouse,
+		// List<LineItem>>>();
+		HashMap<PurchaseOrder, List<LineItem>> purchaseOrderLineItemMap = new HashMap<PurchaseOrder, List<LineItem>>();
+		// List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
+		if (supplierWhLineitemsMap != null && !supplierWhLineitemsMap.isEmpty()) {
+			Set<Entry<Supplier, HashMap<Warehouse, List<LineItem>>>> entrySet = supplierWhLineitemsMap.entrySet();
+
+			for (Entry<Supplier, HashMap<Warehouse, List<LineItem>>> entry : entrySet) {
+				Supplier supplier = entry.getKey();
+				HashMap<Warehouse, List<LineItem>> whLineItemsMap = entry.getValue();
+				if (whLineItemsMap != null && !whLineItemsMap.isEmpty()) {
+					Set<Entry<Warehouse, List<LineItem>>> whLiEntry = whLineItemsMap.entrySet();
+					for (Entry<Warehouse, List<LineItem>> otherEntry : whLiEntry) {
+						List<LineItem> lineItemsFromwhLineItemsMap = otherEntry.getValue();
+						Warehouse warehouse = otherEntry.getKey();
+						if (lineItemsFromwhLineItemsMap != null && lineItemsFromwhLineItemsMap.size() > 0) {
+							PurchaseOrder purchaseOrder = new PurchaseOrder();
+							purchaseOrder.setCreateDate(new Date());
+							purchaseOrder.setCreatedBy(userService.getAdminUser());
+							purchaseOrder.setSupplier(supplier);
+							purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.JIT.asEnumPurchaseOrderType());
+							purchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class,
+									EnumPurchaseOrderStatus.Generated.getId()));
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(new Date());
+							calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
+							purchaseOrder.setEstDelDate(calendar.getTime());
+							if (purchaseOrder.getSupplier().getCreditDays() != null
+									&& purchaseOrder.getSupplier().getCreditDays() >= 0) {
+								calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+								purchaseOrder.setEstPaymentDate(calendar.getTime());
+							} else {
+								purchaseOrder.setEstPaymentDate(new Date());
+							}
+							Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+							for (LineItem lineItem : lineItemsFromwhLineItemsMap) {
+								ShippingOrder so = lineItem.getShippingOrder();
+								shippingOrders.add(so);
+							}
+							List<ShippingOrder> soList = new ArrayList<ShippingOrder>(shippingOrders);
+							purchaseOrder.setShippingOrders(soList);
+							purchaseOrder.setWarehouse(warehouse);
+							purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+							purchaseOrderLineItemMap.put(purchaseOrder, lineItemsFromwhLineItemsMap);
+							// purchaseOrders.add(purchaseOrder);
+						}
+					}
+				}
+			}
+		}
+		return purchaseOrderLineItemMap;
+	}
+
+	public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap) {
+
+		if (purchaseOrderProductVariantMap != null && purchaseOrderProductVariantMap.size() > 0) {
+
+			Set<Entry<PurchaseOrder, HashMap<ProductVariant, Long>>> entrySet = purchaseOrderProductVariantMap
+					.entrySet();
+
+			for (Entry<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderPVEntry : entrySet) {
+
+				PurchaseOrder purchaseOrder = purchaseOrderPVEntry.getKey();
 				List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
 				Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
+				Set<Entry<ProductVariant, Long>> prodQty = purchaseOrderPVEntry.getValue().entrySet();
+				for (Entry<ProductVariant, Long> entry : prodQty) {
+					ProductVariant productVariant = entry.getKey();
+					Long quantity = entry.getValue();
 
-				Set<Entry<Supplier, HashMap<ProductVariant, Long>>> entrySet = supplierVariantQtyMap.entrySet();
+					Long inventory = productVariantService.findNetInventory(productVariant);
+					if (inventory != null && quantity.compareTo(inventory) > 0 && (quantity - inventory) > 0) {
+						Long poQty = quantity - inventory;
+						// TODO --
+						Double taxableAmount = 0.0D;
+						Double discountPercentage = 0D;
+						PoLineItem poLineItem = new PoLineItem();
+						Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
+						poLineItem.setSku(sku);
+						poLineItem.setQty(poQty);
+						poLineItem.setCostPrice(productVariant.getCostPrice());
+						poLineItem.setMrp(productVariant.getMarkedPrice());
+						poLineItem.setPurchaseOrder(purchaseOrder);
 
-				for (Entry<Supplier, HashMap<ProductVariant, Long>> supplierProVarMap : entrySet) {
-					Supplier supplier = supplierProVarMap.getKey();
-					if (purchaseOrder.getSupplier().equals(supplier)) {
-						Set<Entry<ProductVariant, Long>> prodQty = supplierProVarMap.getValue().entrySet();
-						for (Entry<ProductVariant, Long> entry : prodQty) {
-							ProductVariant productVariant = entry.getKey();
-							Long quantity = entry.getValue();
-
-							Long inventory = productVariantService.findNetInventory(productVariant);
-							if (inventory != null && quantity.compareTo(inventory) > 0 && (quantity - inventory) > 0) {
-								Long poQty = quantity - inventory;
-								// TODO --
-								Double taxableAmount = 0.0D;
-								Double discountPercentage = 0D;
-								PoLineItem poLineItem = new PoLineItem();
-								Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
-								poLineItem.setSku(sku);
-								poLineItem.setQty(poQty);
-								poLineItem.setCostPrice(productVariant.getCostPrice());
-								poLineItem.setMrp(productVariant.getMarkedPrice());
-								poLineItem.setPurchaseOrder(purchaseOrder);
-
-								Tax tax;
-								if (sku != null) {
-									if (purchaseOrder.getSupplier().getState()
-											.equalsIgnoreCase(purchaseOrder.getWarehouse().getState())) {
-										tax = sku.getTax();
-									} else {
-										tax = new Tax();
-										tax.setId(EnumTax.CST.getId());
-										tax.setName(EnumTax.CST.getName());
-										tax.setType(EnumTax.CST.getType());
-										tax.setValue(EnumTax.CST.getValue());
-									}
-									taxableAmount = quantity
-											* ((productVariant.getCostPrice() - productVariant.getCostPrice()
-													* discountPercentage / 100));
-									totalTaxable += taxableAmount;
-									TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(
-											purchaseOrder.getSupplier(), purchaseOrder.getWarehouse().getState(), tax,
-											taxableAmount);
-									totalTax += taxComponent.getTax();
-									totalSurcharge += taxComponent.getSurcharge();
-									totalPayable += taxComponent.getPayable();
-									poLineItem.setTaxableAmount(taxableAmount);
-									poLineItem.setTaxAmount(taxComponent.getTax());
-									poLineItem.setSurchargeAmount(taxComponent.getSurcharge());
-									poLineItem.setPayableAmount(taxComponent.getPayable());
-									poLineItem = (PoLineItem) getBaseDao().save(poLineItem);
-									poLineItems.add(poLineItem);
-								}
+						Tax tax;
+						if (sku != null) {
+							if (purchaseOrder.getSupplier().getState()
+									.equalsIgnoreCase(purchaseOrder.getWarehouse().getState())) {
+								tax = sku.getTax();
+							} else {
+								tax = new Tax();
+								tax.setId(EnumTax.CST.getId());
+								tax.setName(EnumTax.CST.getName());
+								tax.setType(EnumTax.CST.getType());
+								tax.setValue(EnumTax.CST.getValue());
 							}
+							taxableAmount = quantity
+									* ((productVariant.getCostPrice() - productVariant.getCostPrice()
+											* discountPercentage / 100));
+							totalTaxable += taxableAmount;
+							TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(
+									purchaseOrder.getSupplier(), purchaseOrder.getWarehouse().getState(), tax,
+									taxableAmount);
+							totalTax += taxComponent.getTax();
+							totalSurcharge += taxComponent.getSurcharge();
+							totalPayable += taxComponent.getPayable();
+							poLineItem.setTaxableAmount(taxableAmount);
+							poLineItem.setTaxAmount(taxComponent.getTax());
+							poLineItem.setSurchargeAmount(taxComponent.getSurcharge());
+							poLineItem.setPayableAmount(taxComponent.getPayable());
+							poLineItem = (PoLineItem) getBaseDao().save(poLineItem);
+							poLineItems.add(poLineItem);
 						}
-						break;
 					}
 				}
 				purchaseOrder.setPayable(totalPayable);
 				purchaseOrder.setTaxableAmount(totalTaxable);
 				purchaseOrder.setTaxAmount(totalTax);
 				purchaseOrder.setSurchargeAmount(totalSurcharge);
-				purchaseOrder.setPoLineItems(poLineItems);
-
+				purchaseOrder.setFinalPayableAmount(totalPayable+totalTaxable+totalTax+totalSurcharge);
 				purchaseOrder.setPoLineItems(poLineItems);
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			}
@@ -335,19 +382,20 @@ public class JitShippingOrderAction extends BaseAction {
 	}
 
 	private List<PurchaseOrder> deletePOsWithEmptyPOLineItems(List<PurchaseOrder> purchaseOrders) {
-		List<PurchaseOrder> nonEmptyPOList = new ArrayList<PurchaseOrder>();
+		List<PurchaseOrder> list = new ArrayList<PurchaseOrder>();
 		if (purchaseOrders != null && purchaseOrders.size() > 0) {
 			Iterator<PurchaseOrder> iterator = purchaseOrders.iterator();
 			while (iterator.hasNext()) {
 				PurchaseOrder po = iterator.next();
-				if (po.getNoOfSku() == 0) {
-					getBaseDao().delete(po);
+				if (po.getPoLineItems() != null && po.getPoLineItems().size() > 0) {
+					list.add(po);
+				} else {
 					iterator.remove();
-				} else
-					nonEmptyPOList.add(po);
+					getBaseDao().delete(po);
+				}
 			}
 		}
-		return nonEmptyPOList;
+		return list;
 	}
 
 	public void approveAllPos(PurchaseOrder purchaseOrder, List<PurchaseOrderStatus> purchaseOrderStatus) {
