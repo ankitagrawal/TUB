@@ -256,14 +256,10 @@ public class BucketServiceImpl implements BucketService {
         List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
         Set<String> categoryNames = new HashSet<String>();
         for (LineItem lineItem : shippingOrder.getLineItems()) {
-            Long availableUnbookedInv = inventoryService.getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku()));
+            Long availableUnbookedInv = inventoryService.getUnbookedInventoryInProcessingQueue(lineItem);
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            boolean isJit = productVariant.getProduct().isJit();
-            
-            if(isJit && availableUnbookedInv <= 0) {
-            	categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
-            }
-            if (!isJit && availableUnbookedInv < 0) {
+
+            if (availableUnbookedInv < 0) {
             	categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
             }
             if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
