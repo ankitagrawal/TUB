@@ -213,8 +213,12 @@
     <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.freightForwardingCharges}" maxFractionDigits="2"/></Strong>
     </td>
   </tr>
+  <tr>
+						<td colspan="11">Overall Discount</td>
+						<td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></Strong>
+					</tr>
 
-			<c:choose>
+			<%-- <c:choose>
 				<c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
 					<tr>
 						<td colspan="11">Overall Discount</td>
@@ -223,7 +227,7 @@
 				</c:when>
 				<c:otherwise>
 				</c:otherwise>
-			</c:choose>
+			</c:choose> --%>
 
 
 			<tr>

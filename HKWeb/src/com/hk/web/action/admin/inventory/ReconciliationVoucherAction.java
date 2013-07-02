@@ -1,3 +1,4 @@
+
 package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.dao.Page;

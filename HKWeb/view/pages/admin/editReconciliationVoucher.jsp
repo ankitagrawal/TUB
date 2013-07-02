@@ -272,15 +272,7 @@
               });
             
             $('#upc').change(function() {
-            	var supplier = null;
-            	if(${pa.reconciliationVoucher.reconciliationType.id==190}){
-            		if(${pa.reconciliationVoucher.supplier}==null){
-                		supplier = null;
-                	}
-                	else{
-                		supplier = ${pa.reconciliationVoucher.supplier};
-                	}
-            	}
+            	var supplier = "${pa.reconciliationVoucher.supplier.id}";
             	var barcode = $('#upc').val();
             	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
             	var productSupplier;
