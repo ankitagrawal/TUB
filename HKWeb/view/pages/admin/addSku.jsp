@@ -15,7 +15,7 @@
 					pageContext.setAttribute("taxList", taxList);
 
 					WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-					pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+					pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
 		%>
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -59,6 +59,7 @@
 							<s:option value="">-Select-</s:option>
 							<c:forEach items="${whList}" var="wh">
 								<s:option value="${wh.id}">${wh.identifier}</s:option>
+								<s:option value="<%=WarehouseService.GGN_CORPORATE_OFFICE_ID%>">GGN_CORPORATE_OFFICE</s:option>
 							</c:forEach>
 						</s:select></td>
 					</tr>
