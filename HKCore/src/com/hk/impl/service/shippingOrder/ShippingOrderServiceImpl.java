@@ -256,7 +256,16 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         return false;
                     }
                     Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
-                    if (availableUnbookedInv <= 0) {
+                    
+                    boolean isJit = lineItem.getCartLineItem().getProductVariant().getProduct().isJit();
+                    boolean inventoryAvailable = true;
+                    if(isJit && availableUnbookedInv <= 0) {
+                    	inventoryAvailable = false;
+                    }
+                    if (!isJit && availableUnbookedInv < 0) {
+                    	inventoryAvailable = false;
+                    }
+                    if (!inventoryAvailable) {
                         String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
                         logger.debug(comments);
                         logShippingOrderActivity(shippingOrder, adminUser,
