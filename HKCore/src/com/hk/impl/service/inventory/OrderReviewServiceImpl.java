@@ -2,6 +2,7 @@ package com.hk.impl.service.inventory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.shippingOrder.FixedShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.EmailManager;
@@ -107,7 +109,17 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 
 		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
 				EnumShippingOrderLifecycleActivity.SO_LineItemFixed, null, remarks.toString());
+		
+		
+		FixedShippingOrder fso = new FixedShippingOrder();
+		fso.setCreateDate(new Date());
+		fso.setUpdateDate(new Date());
+		fso.setShippingOrder(lineItem.getShippingOrder());
+		fso.setCreatedBy(userService.getLoggedInUser());
+		fso.setStatus("OPEN");
 
+		fso.setRemarks(remarks.toString());
+		fixedShippingOrderDao.save(fso);
 	}
 	
 	private CouldNotFixException fail(LineItem lineItem, String reason) {

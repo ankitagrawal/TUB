@@ -6,6 +6,7 @@ public enum EnumImageSize {
   Original(null, "o"),
   LargeSize(900, "l"),
   MediumSize(320, "m"),
+  BigThumbSize(180, "bt"),
   SmallSize(128, "s"),
   TinySize(48, "t"),
   ;
