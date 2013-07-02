@@ -13443,4 +13443,22 @@
     		<column name="name" value="SO_FIX" type="VARCHAR(40)"></column>
     	</insert>
     </changeSet>
+    <changeSet author="user (generated)" id="1372752202757-1">
+        <modifyDataType columnName="volumetric_weight" newDataType="DECIMAL(12,4)" tableName="box_size"/>
+    </changeSet>
+    <changeSet id="2013-07-02" author="Pratham">
+        <sql>
+            update box_size set packaging_cost = 8.25, physical_weight = 30, volumetric_weight = 100 where id = 10 ;
+            update box_size set packaging_cost = 12, physical_weight = 100, volumetric_weight = 400 where id = 20 ;
+            update box_size set packaging_cost = 15.5, physical_weight = 180, volumetric_weight = 1000 where id = 30 ;
+            update box_size set packaging_cost = 17.6, physical_weight = 240, volumetric_weight = 1520 where id = 35 ;
+            update box_size set packaging_cost = 17.7, physical_weight = 340, volumetric_weight = 2300 where id = 40 ;
+            update box_size set packaging_cost = 22.5, physical_weight = 450, volumetric_weight = 3600 where id = 45 ;
+            update box_size set packaging_cost = 31.9, physical_weight = 580, volumetric_weight = 4300 where id = 50 ;
+            update box_size set packaging_cost = 37, physical_weight = 800, volumetric_weight = 8500 where id = 60 ;
+            update box_size set packaging_cost = 57.2, physical_weight = 1200, volumetric_weight = 10500 where id = 70 ;
+            update box_size set packaging_cost = 5.0, physical_weight = 2, volumetric_weight = 1000 where id = 80 ;
+
+        </sql>
+    </changeSet>
 </databaseChangeLog>
