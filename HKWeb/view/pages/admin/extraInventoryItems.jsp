@@ -329,7 +329,7 @@ $(document).ready(function () {
         $('#poTable').append(newRowHtml);
         $('#checkRtvStatus').remove();
         $('.createRtv').remove();
-
+        $('.createShort').hide();
         return false;
     });
     
