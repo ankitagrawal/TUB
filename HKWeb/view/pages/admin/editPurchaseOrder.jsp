@@ -240,6 +240,13 @@ function validateSubmitForm() {
 			return false;
 		}
 	}
+	$.each($('.variant'), function checkVaraint() {
+		var variantVal = $(this).val();
+		if (variantVal.trim() == "") {
+			$(this).parent().parent().remove();
+		}
+	});
+	
 	$.each($('.quantity'), function checkQty() {
 		var quantity = $(this).val();
 		if (quantity == "" || isNaN(quantity)) {
