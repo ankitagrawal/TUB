@@ -59,8 +59,8 @@
 							<s:option value="">-Select-</s:option>
 							<c:forEach items="${whList}" var="wh">
 								<s:option value="${wh.id}">${wh.identifier}</s:option>
-								<s:option value="<%=WarehouseService.GGN_CORPORATE_OFFICE_ID%>">GGN_CORPORATE_OFFICE</s:option>
 							</c:forEach>
+              <s:option value="<%=WarehouseService.GGN_CORPORATE_OFFICE_ID%>">GGN_CORPORATE_OFFICE</s:option>
 						</s:select></td>
 					</tr>
 					<tr>
