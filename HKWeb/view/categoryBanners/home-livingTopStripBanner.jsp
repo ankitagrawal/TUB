@@ -20,7 +20,7 @@
 <div style="margin-left: auto; margin-right: auto; width:960px;">
     <%--<img src="${pageContext.request.contextPath}/images/banners/top/beauty-promotional-strip-banner.jpg" alt="Beauty Discount">--%>
      <img
-            src="${pageContext.request.contextPath}/images/banners/top/bajaj-strip-banner.jpg"
+            src="${pageContext.request.contextPath}/images/banners/home-living-banner.jpg"
             alt="Flat 20% Off on these 3 appliances from BAJAJ" usemap="#Map">
       <map name="Map" id="Map">
         <area shape="rect" coords="262,-7,453,94" href="http://www.healthkart.com/home-living/mix-grind-chop/food-processor?brand=Bajaj" />

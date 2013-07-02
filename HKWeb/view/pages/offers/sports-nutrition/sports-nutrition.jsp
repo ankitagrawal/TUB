@@ -75,7 +75,7 @@
                 alert("Please Enter 10 digit Phone No");
                 return false;
             }
-            else if (!filter.test(email.value))  {
+            else if (!filter.test(email))  {
                 alert("Please provide a valid email address!") ;
                 return false;
             }
@@ -94,6 +94,11 @@
                         url: "${pageContext.request.contextPath}/core/user/RequestCallback.action?getContact=",
                         success: function (response) {
                             alert(response.message);
+                            beforeCls();
+                            document.getElementById("name").value = "";
+                            document.getElementById("phone").value="";
+                            document.getElementById("email").value="";
+
                         },
                         error: function onError() {
                             alert('Could not save Your details please try again');
