@@ -280,14 +280,14 @@
     					overallDiscount = parseFloat($("#totalsTable").parent().find('.overallDiscount').val());
     			}
     			
+    			freightCharges = parseFloat($("#totalsTable").find('.freight').val());
+    			finalPayable = finalPayable+freightCharges;
     			if(finalPayable-overallDiscount<0){
     				alert('the final amount will be negative');
     				$("#totalsTable").find($('.overallDiscount')).val('0');
     			}else{
     				finalPayable -= overallDiscount;
     			}
-    			freightCharges = parseFloat($("#totalsTable").find('.freight').val());
-    			finalPayable = finalPayable+freightCharges;
     			$("#totalsTable").find('.finalDebitAmount').val(finalPayable.toFixed(2));
     		});
             

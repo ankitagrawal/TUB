@@ -214,14 +214,14 @@
     </td>
   </tr>
   <tr>
-						<td colspan="11">Overall Discount</td>
+						<td colspan="10">Further Discount</td>
 						<td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></Strong>
 					</tr>
 
 			<%-- <c:choose>
 				<c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
 					<tr>
-						<td colspan="11">Overall Discount</td>
+						<td colspan="11">Further Discount</td>
 						<td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></Strong>
 					</tr>
 				</c:when>
