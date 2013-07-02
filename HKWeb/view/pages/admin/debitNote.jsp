@@ -194,6 +194,10 @@
                 );
             });
             
+            function isPositiveInteger(n) {
+                return n >>> 0 === parseFloat(n);
+            }
+            
             $('.valueChange').live("change", function() {
     			var table = $(this).parent().parent().parent();
     			var valueChangeRow = $(this).parents('.lineItemRow');
@@ -256,6 +260,13 @@
     			updateTotalPI('.taxAmount', '.totalTax', 0, table, $("#totalsTable"));
     			updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, table, $("#totalsTable"));
     			updateTotalPI('.payableAmount', '.totalPayable', 0, table, $("#totalsTable"));
+    			}
+    			
+    			if($(this).attr('id')=="discount" || $(this).attr('id')=="freightForwardingCharges"){
+    				var value = $(this).val();
+    				if($.trim(value)=="" || !isPositiveInteger(value)){
+    					$(this).val('0');
+    				}
     			}
     			var finalPayable = parseFloat($("#totalsTable").parent().find('.totalPayable').val());
     			if (isNaN(overallDiscount)) {
@@ -664,7 +675,7 @@
 		</tr>
 		<tr>
 		<td colspan="4">Further Discount (if any)</td>
-		<td><s:text class="overallDiscount valueChange" name="debitNote.discount" value="${debitNote.discount}"/></td>
+		<td><s:text id="discount" class="overallDiscount valueChange" name="debitNote.discount" value="${pa.debitNoteDto.totalDiscount}"/></td>
 		</tr>
 		<tr>
 		<td colspan="4">Freight And Forwarding</td>

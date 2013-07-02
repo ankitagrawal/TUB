@@ -206,8 +206,8 @@
 	</div>
 </shiro:hasPermission>
 	
-
-    <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
+	<c:if test="${pa.reconciliationVoucher.supplier==null }">
+	<shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="uploadForm">
             <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
             <fieldset>
@@ -226,7 +226,9 @@
             </fieldset>
         </s:form>
     </shiro:hasRole>
+	</c:if>
 
+    
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -270,15 +272,7 @@
               });
             
             $('#upc').change(function() {
-            	var supplier = null;
-            	if(${pa.reconciliationVoucher.reconciliationType.id==190}){
-            		if(${pa.reconciliationVoucher.supplier}==null){
-                		supplier = null;
-                	}
-                	else{
-                		supplier = ${pa.reconciliationVoucher.supplier};
-                	}
-            	}
+            	var supplier = "${pa.reconciliationVoucher.supplier.id}";
             	var barcode = $('#upc').val();
             	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
             	var productSupplier;

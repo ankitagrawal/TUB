@@ -122,6 +122,12 @@
     <th>Qty</th>
     <th>Cost Price<br/>(Without TAX)</th>
     <th>MRP</th>
+    <c:choose>
+    <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+    <th>Discount %</th>
+    </c:when>
+    <c:otherwise></c:otherwise>
+    </c:choose>
     <%--<th>VAT</th>--%>
     <th>Taxable</th>
     <th>Tax</th>
@@ -158,6 +164,12 @@
       </td>
       <td>${debitNoteDto.debitNoteLineItem.mrp}
       </td>
+      <c:choose>
+	    <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td>${debitNoteDto.debitNoteLineItem.discountPercent}</td>
+	    </c:when>
+	    <c:otherwise></c:otherwise>
+    	</c:choose>
       <%--<td>
         <fmt:formatNumber value="${debitNoteDto.debitNoteLineItem.sku.tax.value * 100}" maxFractionDigits="2"/>%
       </td>--%>
@@ -178,7 +190,13 @@
   </tbody>
   <tfoot>
   <tr>
-    <td colspan="7">Total</td>
+  <c:choose>
+	    <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td colspan="8">Total</td>
+	    </c:when>
+	    <c:otherwise><td colspan="7">Total</td></c:otherwise>
+    	</c:choose>
+  
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalTaxable}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalTax}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalSurcharge}" maxFractionDigits="2"/></td>
@@ -186,12 +204,39 @@
     </td>
   </tr>
   <tr>
-    <td colspan="10">Freight And Forwarding</td>
+  <c:choose>
+  <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td colspan="11">Freight And Forwarding</td>
+	    </c:when>
+	    <c:otherwise><td colspan="10">Freight And Forwarding</td></c:otherwise>
+    	</c:choose>
     <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.freightForwardingCharges}" maxFractionDigits="2"/></Strong>
     </td>
   </tr>
   <tr>
-    <td colspan="10">Final Debit Amount</td>
+						<td colspan="11">Overall Discount</td>
+						<td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></Strong>
+					</tr>
+
+			<%-- <c:choose>
+				<c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+					<tr>
+						<td colspan="11">Overall Discount</td>
+						<td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></Strong>
+					</tr>
+				</c:when>
+				<c:otherwise>
+				</c:otherwise>
+			</c:choose> --%>
+
+
+			<tr>
+  <c:choose>
+  <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td colspan="11">Final Debit Amount</td>
+	    </c:when>
+	    <c:otherwise><td colspan="10">Final Debit Amount</td></c:otherwise>
+    	</c:choose>
     <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.finalDebitAmount}" maxFractionDigits="2"/></Strong>
     </td>
   </tr>
