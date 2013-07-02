@@ -193,7 +193,9 @@
                             <td>
                                     ${payment.responseMessage}
                             </td>
+                            <td>
                                     ${payment.errorLog}
+                            </td>
                             <td>
                                     ${payment.gatewayReferenceId}
                             </td>
