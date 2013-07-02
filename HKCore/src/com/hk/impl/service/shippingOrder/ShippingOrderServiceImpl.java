@@ -195,7 +195,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 if(!(shippingOrder.isServiceOrder())){
                 User adminUser = getUserService().getAdminUser();
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
+                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(lineItem); // This
 
                     if (availableUnbookedInv < 0 && !shippingOrder.isDropShipping()){ // It cannot be = as for last order/unit unbooked will always be ZERO 
                         String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
@@ -255,17 +255,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
                         return false;
                     }
-                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
+                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(lineItem); // This
                     
-                    boolean isJit = lineItem.getCartLineItem().getProductVariant().getProduct().isJit();
-                    boolean inventoryAvailable = true;
-                    if(isJit && availableUnbookedInv <= 0) {
-                    	inventoryAvailable = false;
-                    }
-                    if (!isJit && availableUnbookedInv < 0) {
-                    	inventoryAvailable = false;
-                    }
-                    if (!inventoryAvailable) {
+                    if (availableUnbookedInv < 0) {
                         String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
                         logger.debug(comments);
                         logShippingOrderActivity(shippingOrder, adminUser,

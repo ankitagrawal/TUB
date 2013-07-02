@@ -19,6 +19,7 @@ import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.LowInventory;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
@@ -212,6 +213,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Deprecated
     public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList) {
     	long qty = 0l;
     	Collection<InventoryInfo> infos = inventoryHealthService.getAvailableInventory(skuList);
@@ -221,6 +223,11 @@ public class InventoryServiceImpl implements InventoryService {
 			}
 		}
         return qty;
+    }
+    
+    @Override
+    public long getUnbookedInventoryInProcessingQueue(LineItem lineItem) {
+    	return inventoryHealthService.getUnbookedInventoryInProcessingQueue(lineItem);
     }
 
     @Deprecated
