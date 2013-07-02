@@ -197,7 +197,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
 
-                    if (availableUnbookedInv <= 0 && !shippingOrder.isDropShipping()){
+                    if (availableUnbookedInv < 0 && !shippingOrder.isDropShipping()){ // It cannot be = as for last order/unit unbooked will always be ZERO 
                         String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);

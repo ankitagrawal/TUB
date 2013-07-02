@@ -184,6 +184,11 @@
             </div>
 
             <div class="qAndA">
+			  <p>Q. Will I get any point(s) if I have not registered for Loyalty program?</p>
+			  A. No. You will be entitled to the benefits of loyalty program only after you register for Loyalty program.
+			</div>
+			
+            <div class="qAndA">
               <p>Q: I forgot my password. Now what? </p>
               A: If you have any unanswered queries, please feel free to contact the HealthKart Customer Support at 0124-4616444. 
             </div>

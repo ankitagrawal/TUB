@@ -63,10 +63,8 @@ private static Logger logger                    = LoggerFactory.getLogger(Produc
     //boolean isVisible = !(productVariant.getDeleted() || productVariant.isOutOfStock());
     boolean isVisible = false;
     Long unbookedInventory = 0L;
-    List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
-    if (skuList != null && !skuList.isEmpty()) {
-      unbookedInventory = getInventoryService().getAvailableUnbookedInventory(skuList);
-    }
+    unbookedInventory = getInventoryService().getAvailableUnbookedInventory(productVariant);
+    
     if(unbookedInventory > 0){
       isVisible = true;
     }

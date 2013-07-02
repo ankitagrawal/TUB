@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.akube.framework.util.DateUtils;
+import com.akube.framework.util.FormatUtils;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
@@ -53,6 +55,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.review.Mail;
+import com.hk.domain.shippingOrder.FixedShippingOrder;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
@@ -570,6 +573,7 @@ public class EmailManager {
         Order order = shippingOrder.getBaseOrder();
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);
+        valuesMap.put("targetDeliverDate", DateUtils.getDateString(shippingOrder.getTargetDelDate()));
 
         for (ShippingOrder shippingOrderFromAllSO : order.getShippingOrders()) {
             if (shippingOrderFromAllSO.isServiceOrder() || shippingOrderFromAllSO.getId().equals(shippingOrder.getId())
@@ -968,6 +972,16 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
     }
 
+    public boolean sendSoFixedMail(HashMap<String, String> map){
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixedMail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
+    }
+    
+    public boolean sendSoFixFailedMail(HashMap<String, String> map){
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixFailedMail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
+    }
+    
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();
      * valuesMap.put("product", product); valuesMap.put("stockStatus", stockStatus); boolean success = true; Template
