@@ -213,21 +213,26 @@
     <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.freightForwardingCharges}" maxFractionDigits="2"/></Strong>
     </td>
   </tr>
-  <tr>
+<%--   <tr>
 						<td colspan="10">Further Discount</td>
-						<td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></Strong>
+						<td><strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/> </strong></td>
 					</tr>
-
-			<%-- <c:choose>
+ --%>
+			<c:choose>
 				<c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
 					<tr>
 						<td colspan="11">Further Discount</td>
-						<td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></Strong>
+						<td><strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></strong></td>
 					</tr>
 				</c:when>
 				<c:otherwise>
+					<tr>
+						<td colspan="10">Further Discount</td>
+						<td><strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></strong></td>
+					</tr>
+				
 				</c:otherwise>
-			</c:choose> --%>
+			</c:choose>
 
 
 			<tr>
