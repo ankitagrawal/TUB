@@ -78,11 +78,13 @@ public class CheckPaymentAction extends BaseAction {
     private PaymentManager paymentManager;
 
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+    @Validate (required = true, on = {"refundPayment","updatePayment"})
     private String gatewayOrderId;
     private Date txnStartDate;
     private Date txnEndDate;
     private String merchantId;
     private String paymentId;
+    @Validate (required = true, on = {"refundPayment"})
     private String amount;
 
 
@@ -172,8 +174,8 @@ public class CheckPaymentAction extends BaseAction {
     }
 
 
-    @DontValidate
-    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    //@DontValidate
+    //@Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
         Gateway gateway = basePayment.getGateway();
@@ -212,8 +214,8 @@ public class CheckPaymentAction extends BaseAction {
         return false;
     }
 
-    @DontValidate
-    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    //@DontValidate
+    //@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updatePayment() {
         Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
         Gateway gateway = basePayment.getGateway();
