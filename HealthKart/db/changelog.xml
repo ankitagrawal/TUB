@@ -13343,6 +13343,7 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
+<<<<<<< HEAD
     <changeSet author="Pratham (generated)" id="1372371453604-2">
         <addColumn tableName="box_size">
             <column name="packaging_cost" type="DECIMAL(10,2)"/>
@@ -13369,8 +13370,6 @@
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="box_size"
                                  referencesUniqueColumn="false"/>
-    </changeSet>
-
     <changeSet author="deepakC" id="1370601362351-11234">
         <addColumn tableName="product_variant">
             <column name="mrp_qty" type="INT" />
@@ -13459,6 +13458,12 @@
             update box_size set packaging_cost = 57.2, physical_weight = 1200, volumetric_weight = 10500 where id = 70 ;
             update box_size set packaging_cost = 5.0, physical_weight = 2, volumetric_weight = 1000 where id = 80 ;
 
+        </sql>
+    </changeSet>
+    <changeSet author="Shakti Singh (written)" id="20130627-01">
+        <sql>
+            insert into permission values ('BULK_SEEK');
+            insert into role_has_permission values('GOD','BULK_SEEK');
         </sql>
     </changeSet>
 </databaseChangeLog>

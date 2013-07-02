@@ -118,7 +118,8 @@ public enum EnumPermission {
   ADD_REMOVE_AGENT                               (PermissionConstants.ADD_REMOVE_AGENT),
   VIEW_NDR                                       (PermissionConstants.VIEW_NDR),
   CONSIGNMENT_TRACKING_REPORT                    (PermissionConstants.CONSIGNMENT_TRACKING_REPORT),
-  EDIT_NDR                                       (PermissionConstants.EDIT_NDR);
+  EDIT_NDR                                       (PermissionConstants.EDIT_NDR),
+  BULK_SEEK                                      (PermissionConstants.BULK_SEEK);
 
   String permissionName;
 
