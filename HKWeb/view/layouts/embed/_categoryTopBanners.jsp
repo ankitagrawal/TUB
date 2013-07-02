@@ -7,7 +7,7 @@
 <s:layout-definition>
     <%
         String brands = (String) pageContext.getAttribute("brands");
-
+        pageContext.setAttribute("brands", brands);
         List<String> brandList = new ArrayList<String>();
                 if (StringUtils.isNotBlank(brands)) {
                     for (String s : StringUtils.split(brands, ',')) {
