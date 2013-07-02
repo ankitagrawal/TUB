@@ -3,11 +3,13 @@ package com.hk.db.seed.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hk.constants.inventory.EnumDebitNoteType;
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.inventory.EnumPurchaseOrderType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.inventory.po.PurchaseOrderType;
 
+@Component
 public class PurchaseOrderTypeSeedData extends BaseSeedData{
 	
 	public void insert(java.lang.String name, java.lang.Long id){

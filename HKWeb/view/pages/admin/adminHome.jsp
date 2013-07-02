@@ -63,6 +63,8 @@
             
             <h3><s:link
             beanclass="com.hk.web.action.admin.queue.JitShippingOrderAction">Jit Shipping Orders</s:link></h3>
+            <h3><s:link
+            beanclass="com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">Escalate Jit Shipping Orders</s:link></h3>
 
    <!-- <h3><s:link
             beanclass="com.hk.web.action.admin.shippingOrder.FixedShippingOrderAction">Search Fixed Shipping Orders</s:link></h3> -->
