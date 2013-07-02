@@ -64,6 +64,7 @@
             var name = document.getElementById("name").value;
             var phoneNo = document.getElementById("phone").value;
             var email = document.getElementById("email").value;
+            var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             if (name == null || name == "" || phoneNo == null || phoneNo == "" || email == null || email == "") {
                 alert("Please Enter All Fields!!");
                 return false;
@@ -72,6 +73,10 @@
                 return false;
             } else if (phoneNo.length != 10) {
                 alert("Please Enter 10 digit Phone No");
+                return false;
+            }
+            else if (!filter.test(email.value))  {
+                alert("Please provide a valid email address!") ;
                 return false;
             }
             var subscribe = $('#subscribe').is(':checked');
@@ -89,7 +94,6 @@
                         url: "${pageContext.request.contextPath}/core/user/RequestCallback.action?getContact=",
                         success: function (response) {
                             alert(response.message);
-                            $('.greenBx').hide();
                         },
                         error: function onError() {
                             alert('Could not save Your details please try again');
