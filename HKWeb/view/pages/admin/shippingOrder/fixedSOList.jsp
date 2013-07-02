@@ -46,7 +46,7 @@
         <th>Created By</th>
         <th>Status</th>
         <th>Remarks</th>
-        <th>Closed By</th>
+        <%--<th>Closed By</th>--%>
       </tr>
       </thead>
       <c:forEach items="${poa.fixedShippingOrderList}" var="fixedSO" varStatus="ctr">
@@ -57,7 +57,7 @@
           <td>${fixedSO.createdBy.login}</td>
           <td>${fixedSO.status}</td>
           <td>${fixedSO.remarks}</td>
-          <td>${fixedSO.closedBy.login}</td>
+          <%--<td>${fixedSO.closedBy.login}</td>--%>
         </tr>
       </c:forEach>
     </table>
