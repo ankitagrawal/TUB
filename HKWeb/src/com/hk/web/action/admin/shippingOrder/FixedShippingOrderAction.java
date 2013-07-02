@@ -33,7 +33,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Component
-@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE})
+@Secure(hasAnyPermissions={PermissionConstants.SO_FIX, PermissionConstants.SO_REVIEW})
 public class FixedShippingOrderAction extends BasePaginatedAction {
 
 
