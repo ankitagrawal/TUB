@@ -197,7 +197,7 @@
 
 <shiro:hasPermission name="<%=PermissionConstants.FINANCE_MANAGEMENT%>">
 <div id="closeButtonDiv">
-	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 }">
+	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 && pa.reconciliationVoucher.supplier!=null }">
 	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
 	<s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher}" />
 	<s:param name = "warehouse" value="${pa.reconciliationVoucher.warehouse}"/>
@@ -206,8 +206,8 @@
 	</div>
 </shiro:hasPermission>
 	
-
-    <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
+	<c:if test="${pa.reconciliationVoucher.supplier==null }">
+	<shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="uploadForm">
             <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
             <fieldset>
@@ -226,7 +226,9 @@
             </fieldset>
         </s:form>
     </shiro:hasRole>
+	</c:if>
 
+    
 
     <script type="text/javascript">
         $(document).ready(function() {
