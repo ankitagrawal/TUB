@@ -182,10 +182,10 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
             String transactionId = pgResponse.getTxnId();
             if (transactionId != null){
                 hkPaymentResponse = createPayment(transactionId, pgResponse.getEpgTxnId(), pgResponse.getRRN(), pgResponse.getRespMessage(),
-                        EnumPaymentTransactionType.SALE.getName(), null, pgResponse.getAuthIdCode());
+                        pgResponse.getTxnType(), null, pgResponse.getAuthIdCode());
             } else {
                 hkPaymentResponse = createPayment(gatewayOrderId, pgResponse.getEpgTxnId(), pgResponse.getRRN(), pgResponse.getRespMessage(),
-                        EnumPaymentTransactionType.SALE.getName(), null, pgResponse.getAuthIdCode());
+                        pgResponse.getTxnType(), null, pgResponse.getAuthIdCode());
             }
             setPaymentStatus(pgResponse.getRespCode(), hkPaymentResponse);
         }
