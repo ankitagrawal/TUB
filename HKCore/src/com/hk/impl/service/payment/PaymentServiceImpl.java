@@ -124,12 +124,19 @@ public class PaymentServiceImpl implements PaymentService {
                             }
                         }
 
-                        List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
                         //TODO: in case of ICICI stuff amount in response code
-                        if(EnumGateway.ICICI.getId().equals(gateway.getId())){
-                            stuffAmountInRespObj(requestResponseMappedList) ;
+                        if (EnumGateway.ICICI.getId().equals(gateway.getId())) {
+                            if (hkPaymentResponseList != null && hkPaymentRequestList != null) {
+                                for (HkPaymentResponse resp : hkPaymentResponseList) {
+                                    for (Payment req : hkPaymentRequestList) {
+                                        stuffAmountInRespObj(resp, req);
+                                    }
+                                }
+                            }
                         }
 
+
+                        List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
                         verifyRequestAndResponseList(requestResponseMappedList);
                         verifyAmountOfRequestAndResponseList(requestResponseMappedList, faultyAmountMap);
 
@@ -146,11 +153,18 @@ public class PaymentServiceImpl implements PaymentService {
         return hkPaymentResponseList;
     }
 
-    private void stuffAmountInRespObj(List<Map<String, Object>> requestResponseMappedList) {
-        for(Map<String,Object> requestResponseMap : requestResponseMappedList){
-            Payment request = (Payment) requestResponseMap.get("Request");
-            HkPaymentResponse response = (HkPaymentResponse) requestResponseMap.get("Response");
-            response.setAmount(request.getAmount());
+    private void stuffAmountInRespObj(HkPaymentResponse resp, Payment req) {
+        if (resp != null && req != null) {
+            String gatewayReferenceId = req.getGatewayReferenceId();
+            String rrn = req.getRrn();
+            String gatewayOrderId = req.getGatewayOrderId();
+            if (EnumPaymentTransactionType.REFUND.getName().equalsIgnoreCase(resp.getTransactionType())) {
+                if (rrn != null && gatewayReferenceId != null && gatewayReferenceId.equalsIgnoreCase(resp.getGatewayReferenceId()) && rrn.equalsIgnoreCase(resp.getRrn())) {
+                    resp.setAmount(req.getAmount());
+                }
+            } else if (gatewayOrderId != null && gatewayOrderId.equalsIgnoreCase(resp.getGatewayOrderId())) {
+                resp.setAmount(req.getAmount());
+            }
         }
     }
 
