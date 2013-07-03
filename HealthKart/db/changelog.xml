@@ -13343,33 +13343,13 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
-<<<<<<< HEAD
-    <changeSet author="Pratham (generated)" id="1372371453604-2">
-        <addColumn tableName="box_size">
-            <column name="packaging_cost" type="DECIMAL(10,2)"/>
-        </addColumn>
+    <changeSet author="Shakti Singh (written)" id="20130627-01">
+        <sql>
+            insert into permission values ('BULK_SEEK');
+            insert into role_has_permission values('GOD','BULK_SEEK');
+        </sql>
     </changeSet>
-    <changeSet author="Pratham (generated)" id="1372371453604-3">
-        <addColumn tableName="box_size">
-            <column name="physical_weight" type="DECIMAL(8,4)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Pratham (generated)" id="1372371453604-4">
-        <addColumn tableName="box_size">
-            <column name="volumetric_weight" type="DECIMAL(8,4)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Pratham (generated)" id="1372371453604-5">
-        <addColumn tableName="product_variant">
-            <column name="box_size_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Pratham (generated)" id="1372371453604-45">
-        <addForeignKeyConstraint baseColumnNames="box_size_id" baseTableName="product_variant"
-                                 constraintName="fk_product_variant_box_size1" deferrable="false"
-                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id" referencedTableName="box_size"
-                                 referencesUniqueColumn="false"/>
+
     <changeSet author="deepakC" id="1370601362351-11234">
         <addColumn tableName="product_variant">
             <column name="mrp_qty" type="INT" />
@@ -13442,10 +13422,146 @@
     		<column name="name" value="SO_FIX" type="VARCHAR(40)"></column>
     	</insert>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1372098072716-2">
+        <addColumn tableName="reconciliation_voucher">
+            <column name="supplier_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372098072716-10">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="reconciliation_voucher" constraintName="fk_reconciliation_voucher_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372191173219-2">
+        <addColumn tableName="debit_note">
+            <column name="discount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372191173219-3">
+        <addColumn tableName="debit_note_line_item">
+            <column name="discount_percent" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-2">
+        <addColumn tableName="debit_note">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-3">
+        <addColumn tableName="debit_note">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-4">
+        <addColumn tableName="debit_note">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-5">
+        <addColumn tableName="debit_note">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+        <changeSet author="Nihal (generated)" id="1372226601285-2">
+        <addColumn tableName="debit_note_line_item">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372226601285-3">
+        <addColumn tableName="debit_note_line_item">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372226601285-4">
+        <addColumn tableName="debit_note_line_item">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372226601285-5">
+        <addColumn tableName="debit_note_line_item">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372321252786-2">
+        <addColumn tableName="debit_note">
+            <column name="courier_pickup_detail_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372321252786-3">
+        <addColumn tableName="rtv_note">
+            <column name="return_by_hand" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372321252786-19">
+        <addForeignKeyConstraint baseColumnNames="courier_pickup_detail_id" baseTableName="debit_note" constraintName="fk_debit_note_courier_pickup_detail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_pickup_detail" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372328585647-2">
+        <addColumn tableName="debit_note">
+            <column name="destination_address" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372328585647-3">
+        <addColumn tableName="debit_note">
+            <column name="return_by_hand" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-2">
+        <addColumn tableName="debit_note">
+            <column name="return_address" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-3">
+        <addColumn tableName="debit_note">
+            <column name="return_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-4">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_return_address" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-5">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_return_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-6">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_tracking_number" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <!-- <changeSet author="Nihal (generated)" id="1372488185651-6">
+        <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="debit_note_line_item" constraintName="fk_debit_note_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+    </changeSet> -->
+    <changeSet author="Pratham (generated)" id="1372371453604-2">
+        <addColumn tableName="box_size">
+            <column name="packaging_cost" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-3">
+        <addColumn tableName="box_size">
+            <column name="physical_weight" type="DECIMAL(8,4)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-4">
+        <addColumn tableName="box_size">
+            <column name="volumetric_weight" type="DECIMAL(8,4)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-5">
+        <addColumn tableName="product_variant">
+            <column name="box_size_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1372371453604-45">
+    <addForeignKeyConstraint baseColumnNames="box_size_id" baseTableName="product_variant"
+                             constraintName="fk_product_variant_box_size1" deferrable="false"
+                             initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="box_size"
+                             referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="user (generated)" id="1372752202757-1">
         <modifyDataType columnName="volumetric_weight" newDataType="DECIMAL(12,4)" tableName="box_size"/>
     </changeSet>
-    <changeSet id="2013-07-02" author="Pratham">
+    <changeSet id="2013-07-03" author="Pratham">
         <sql>
             update box_size set packaging_cost = 8.25, physical_weight = 30, volumetric_weight = 100 where id = 10 ;
             update box_size set packaging_cost = 12, physical_weight = 100, volumetric_weight = 400 where id = 20 ;
@@ -13457,13 +13573,6 @@
             update box_size set packaging_cost = 37, physical_weight = 800, volumetric_weight = 8500 where id = 60 ;
             update box_size set packaging_cost = 57.2, physical_weight = 1200, volumetric_weight = 10500 where id = 70 ;
             update box_size set packaging_cost = 5.0, physical_weight = 2, volumetric_weight = 1000 where id = 80 ;
-
-        </sql>
-    </changeSet>
-    <changeSet author="Shakti Singh (written)" id="20130627-01">
-        <sql>
-            insert into permission values ('BULK_SEEK');
-            insert into role_has_permission values('GOD','BULK_SEEK');
         </sql>
     </changeSet>
 </databaseChangeLog>

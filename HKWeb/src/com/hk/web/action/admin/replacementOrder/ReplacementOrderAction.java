@@ -142,7 +142,7 @@ public class ReplacementOrderAction extends BaseAction {
 			if (lineItem.getQty() > 0) {
 				valid_item_flag++;
 			}
-			if (lineItem.getQty() != 0 && lineItem.getQty() > inventoryService.getAvailableUnbookedInventory(lineItem.getSku())) {
+			if (lineItem.getQty() != 0 && lineItem.getQty() > inventoryService.getAvailableUnbookedInventory(lineItem.getSku().getProductVariant())) {
 				addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " out of stock."));
 				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}

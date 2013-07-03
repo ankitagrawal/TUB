@@ -24,6 +24,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
@@ -339,6 +340,28 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			}
 		}
 		return invList;
+	}
+	
+	@Override
+	public long getUnbookedInventoryInProcessingQueue(LineItem lineItem) {
+		long qty = 0l;
+		Sku sku = lineItem.getSku();
+		Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+		if(checkedInInvList != null) {
+			for (SkuInfo skuInfo : checkedInInvList) {
+				if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+					qty += skuInfo.getQty();
+				}
+			}
+		}
+		
+		List<SkuInfo> inProcessList = getInProcessInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+		for (SkuInfo skuInfo : inProcessList) {
+			if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+				qty -= skuInfo.getQty();
+			}
+		}
+		return qty;
 	}
 	
 	private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
