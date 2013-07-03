@@ -352,7 +352,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         return "FAILED - Incorrect Values";
       }
     } catch (Exception e) {
-      return "FAILED - " + e.getMessage();
+      return "FAILED - Exception: " + e.getMessage();
     }
   }
 
