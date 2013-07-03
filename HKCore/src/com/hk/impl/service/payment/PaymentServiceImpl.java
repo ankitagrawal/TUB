@@ -373,7 +373,7 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentFamilyList;
     }
 
-    @Override
+    /*@Override
     public boolean isRefundAmountValid(String gatewayOrderId, Double amount) {
         Payment payment = findByGatewayOrderId(gatewayOrderId);
         if (payment != null && payment.getAmount() != null) {
@@ -388,6 +388,19 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         return false;
+    }*/
+
+    @Override
+    public Double getRefundableAmount(Payment payment, Double orderAmt) {
+        return payment.getAmount() - payment.getRefundAmount() - orderAmt;
+    }
+
+    @Override
+    @Transactional
+    public void setRefundAmount(Payment payment, Double amount) {
+        Double updatedAmount = payment.getRefundAmount() + amount;
+        payment.setRefundAmount(updatedAmount);
+        save(payment);
     }
 
 

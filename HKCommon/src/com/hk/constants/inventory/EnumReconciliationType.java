@@ -27,7 +27,10 @@ public enum EnumReconciliationType {
     AddDamage(150L, "Damage-Add"),
     AddExpired(160L, "Expired-Add"),
     AddBatchMismatch(170L, "Batch Mismatch-Add"),
-    AddFreeVariant(180L, "Free Variant-Add"),;
+    AddFreeVariant(180L, "Free Variant-Add"),
+    RefundAmount(190L, "Refund Amount"),
+    RewardPoints(200L, "Reward Points"),
+    ;
 
 
     private java.lang.String name;

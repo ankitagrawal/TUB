@@ -1,8 +1,13 @@
 package com.hk.web.action.admin.order;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.order.RewardPointService;
@@ -12,6 +17,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -52,27 +58,28 @@ public class CancelOrderAction extends BaseAction {
     private String           cancellationRemark;
 
     @Validate(required = true)
-    private String reconciliationType;
+    private Long reconciliationType;
 
     @JsonHandler
     public Resolution pre() {
-        User loggedOnUser = null;
-        if (getPrincipal() != null) {
-            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        }
-        if(reconciliationType.equalsIgnoreCase("0")) {
-            //TODO:
-        } else {
-            if(paymentService.isRefundAmountValid(order.getGatewayOrderId(),order.getAmount())){
-                try {
-                    paymentService.refundPayment(order.getGatewayOrderId(), order.getAmount());
-                    // TODO: get the Refund Payment object if unsuccessful then again ask for Reward Points
-                } catch (HealthkartPaymentGatewayException e){
-                    //TODO:
-                }
+        User loggedOnUser = userService.getLoggedInUser();
 
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Total Refund Amount cannot exceed base order amount"));
+        Double refundableAmount = paymentService.getRefundableAmount(order.getPayment(), order.getAmount());
+        if (refundableAmount >= 0) {
+            if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType)) {
+
+                RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, order.getUser(),
+                        order, refundableAmount, null, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+                rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),null);
+                paymentService.setRefundAmount(order.getPayment(),refundableAmount);
+
+            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType)) {
+                try {
+                    paymentService.refundPayment(order.getPayment().getGatewayOrderId(), refundableAmount);
+                } catch (HealthkartPaymentGatewayException e) {
+                    //TODO: handle it properly
+                }
             }
         }
 
@@ -104,11 +111,11 @@ public class CancelOrderAction extends BaseAction {
         this.userService = userService;
     }
 
-    public String getReconciliationType() {
+    public Long getReconciliationType() {
         return reconciliationType;
     }
 
-    public void setReconciliationType(String reconciliationType) {
+    public void setReconciliationType(Long reconciliationType) {
         this.reconciliationType = reconciliationType;
     }
 }

@@ -4,6 +4,7 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationType" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
@@ -171,7 +172,9 @@
 <c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
-<c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT %>"/>
+<c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
+<c:set var="rewardPoints" value="<%=EnumReconciliationType.RewardPoints.getId()%>"/>
+<c:set var="refundPoints" value="<%=EnumReconciliationType.RefundAmount.getId()%>"/>
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
@@ -308,9 +311,9 @@
       <s:textarea name="cancellationRemark" style="height:100px"/>
       <%--<c:if test="${order.payment.paymentStatus.id eq paymentStatusSuccess and order.payment.paymentMode.id eq onlinePayment}">--%>
       <br/>
-      Reward Points: <s:radio value="0" name="reconillationType"/>
+      Reward Points: <s:radio value="${rewardPoints}" name="reconillationType"/>
       <br/>
-      Refund Payment: <s:radio value="1" name="reconillationType"/>
+      Refund Payment: <s:radio value="${refundPoints}" name="reconillationType"/>
       <%--</c:if>--%>
       <div class="buttons">
         <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
