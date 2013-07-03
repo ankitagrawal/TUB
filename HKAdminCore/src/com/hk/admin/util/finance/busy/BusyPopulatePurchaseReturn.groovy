@@ -171,7 +171,7 @@ public class BusyPopulatePurchaseReturn {
         int s_no = 0;
         sql.eachRow("""
                       select li.id, li.sku_id, li.qty, li.mrp, li.cost_price, li.product_name,
-                      t.value as tax_value
+                      t.value as tax_value, li.surcharge_amount
                       from debit_note_line_item li
                       inner join tax t on li.tax_id = t.id
                       where li.debit_note_id = ${debit_note_id}
@@ -190,7 +190,7 @@ public class BusyPopulatePurchaseReturn {
                 Double mrp = debitNoteItem.mrp;
                 Double rate = debitNoteItem.cost_price;
                 Double vat = debitNoteItem.tax_value;
-                Double amount = (rate+(vat*rate))*qty;
+                Double amount = ((rate+(vat*rate))*qty)+debitNoteItem.surcharge_amount;
                 s_no++;
                 try{
                     busySql.executeInsert("""
