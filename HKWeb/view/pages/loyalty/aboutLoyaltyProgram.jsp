@@ -69,16 +69,16 @@
             <div id="top" class="sorting makeCursor">TOP</div>
               <div class="brandsContainer1">
                 <div id="aboutLoyalty" class="priceRange">
-                  <span >About loyalty</span>
+                  <span class="optionSpan">About loyalty</span>
                 </div>
                 <div id="hwItWorks" class="priceRange">
-                  <span >Program Structure</span>
+                  <span class="optionSpan">Program Structure</span>
                 </div>
                 <div id="benefitsLevel" class="priceRange">
-                  <span >Benefits levels</span>
+                  <span class="optionSpan">Benefits levels</span>
                 </div>
                 <div id="faqs" class="priceRange">
-                  <span >FAQs</span>
+                  <span class="optionSpan">FAQs</span>
                 </div>
               </div>
  			<div id="bottom" class="bottomText makeCursor">BOTTOM</div>
@@ -92,6 +92,7 @@
             </div>
             <div class="dottedLine"></div>
           </div>
+		<c:set var="copper" value="${lca.badgeList[0] }" />
 		<c:set var="bronze" value="${lca.badgeList[1]}" />
 		<c:set var="silver" value="${lca.badgeList[2]}" />
 		<c:set var="gold" value="${lca.badgeList[3]}" />
@@ -100,6 +101,7 @@
           <div class="aboutContent">
             <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Loyalty Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
             <p>Here’s how it works- you’ll earn certain Loyalty points (depending upon your tier) every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Loyalty features four reward levels namely (in ascending order)</p>
+            <p class="embedMargin5">-${copper.badgeName}</p>
             <p class="embedMargin5">-${bronze.badgeName}</p>
             <p class="embedMargin5">-${silver.badgeName}</p>
             <p class="embedMargin5">-${gold.badgeName}</p>
@@ -118,6 +120,7 @@
 			shop more than Rs. 1500 or above. At the beginning, as a token of appreciation you will be credited with 15 bonus points</p>
 			
 	        <p>On every purchase, you will earn loyalty points as follows:</p>
+	        <p class="embedMargin5">For ${copper.badgeName} level, you will not earn any loyalty points. </p>
 	        <p class="embedMargin5">For ${bronze.badgeName} level, you will earn ${bronze.loyaltyPercentage}% of total amount you spend while shopping. </p>
             <p class="embedMargin5">For ${silver.badgeName} level, you will earn ${silver.loyaltyPercentage}% of total amount you spend while shopping. </p>
             <p class="embedMargin5">For ${gold.badgeName} level, you will earn ${gold.loyaltyPercentage}% of total amount you spend while shopping. </p>
@@ -180,6 +183,11 @@
               more.
             </div>
 
+            <div class="qAndA">
+			  <p>Q. Will I get any point(s) if I have not registered for Loyalty program?</p>
+			  A. No. You will be entitled to the benefits of loyalty program only after you register for Loyalty program.
+			</div>
+			
             <div class="qAndA">
               <p>Q: I forgot my password. Now what? </p>
               A: If you have any unanswered queries, please feel free to contact the HealthKart Customer Support at 0124-4616444. 

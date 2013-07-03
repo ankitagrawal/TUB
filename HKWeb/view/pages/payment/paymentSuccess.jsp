@@ -86,15 +86,18 @@
 </s:layout-component>
 <s:layout-component name="heading">
    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
-    <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
-        <div>
-            <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
-                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus-banner-15discount.png"/>
-            </a>
-        </div>
-    </c:if>
-
-
+  <div>
+    <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+      <c:choose>
+        <c:when test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+          <img src="${pageContext.request.contextPath}/images/banners/hkplus-15off-banner.jpg" alt="HealthKartPlus 15% Off"/>
+        </c:when>
+        <c:otherwise>
+          <img src="${pageContext.request.contextPath}/images/banners/hkplus-app.jpg" alt="HealthKartPlus App"/>
+        </c:otherwise>
+      </c:choose>
+    </a>
+  </div>
 </s:layout-component>
 
 <s:layout-component name="left_col">
@@ -147,14 +150,6 @@
   </c:if>
 
   _gaq.push(['_trackTrans']); //submits transaction to the Analytics servers
-
-  //track order count
-  _gaq.push(['_setCustomVar',
-    <%=AnalyticsConstants.CustomVarSlot.orderCount.getSlot()%>,
-    "<%=AnalyticsConstants.CustomVarSlot.orderCount.getName()%>",
-    "${fn:length(actionBean.order.user.orders)}",
-    <%=AnalyticsConstants.CustomVarSlot.orderCount.getScope().getLevel()%>
-  ]);
 
   <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
   _gaq.push(['_setCustomVar',

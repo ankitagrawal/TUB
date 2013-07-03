@@ -80,7 +80,7 @@
                         beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link>
             </h3>
 			<h3><s:link
-                        beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">Add new loyalty Products/ User Badges</s:link>
+                        beanclass="com.hk.web.action.core.loyaltypg.LoyaltyAdminAction">Add new loyalty Products/ User Badges</s:link>
             </h3>
 
         </div>
@@ -132,7 +132,7 @@
         <div class="float roundBox">
             <h2>Marketing Related Tasks</h2>
 
-            <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
+            <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction" event = "showNotifyMeList" > Notify Me List </s:link></h3>
             <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
             <h3><s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">Similar Products</s:link></h3>
             <h3><s:link beanclass="com.hk.web.action.admin.marketing.AmazonParseExcelAction">Upload Amazon Excel</s:link></h3>

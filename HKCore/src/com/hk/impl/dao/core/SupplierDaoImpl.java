@@ -68,4 +68,8 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
         Long count = (Long) (getSession().createQuery("select count(distinct s.tinNumber) from Supplier s where s.tinNumber = :tinNumber").setString("tinNumber", tinNumber).uniqueResult());
         return (count != null && count > 0);
     }
+    
+    public Supplier findById(Long id) {
+        return (Supplier) getSession().createQuery("from Supplier s where s.id = :id").setLong("id", id).uniqueResult();
+    }
 }

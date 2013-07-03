@@ -83,19 +83,20 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
         com.opus.epg.sfa.java.Merchant oMerchant = new com.opus.epg.sfa.java.Merchant();
         try {
             PostLib oPostLib = new PostLib();
-            oMerchant.setMerchantRelatedTxnDetails(merchantId, merchantId, merchantId, basePayment.getGatewayOrderId(), basePayment.getGatewayReferenceId()
-                    ,basePayment.getRrn(),basePayment.getAuthIdCode(),  null,null,"INR", "enq.Refund", amount.toString(),
+            oMerchant.setMerchantRelatedTxnDetails(merchantId, null, null, basePayment.getGatewayOrderId(), basePayment.getGatewayReferenceId()
+                    ,basePayment.getRrn(),basePayment.getAuthIdCode(),  null,null,"INR", "req.Refund", amount.toString(),
                     null, null, null, null, null, null);
 
             PGResponse oPgResp = oPostLib.postRelatedTxn(oMerchant);
             if (oPgResp != null) {
                 hkPaymentResponse = createPayment(oPgResp.getTxnId(), oPgResp.getEpgTxnId(), oPgResp.getRRN(), oPgResp.getRespMessage(),
-                                                  oPgResp.getTxnType(), null, oPgResp.getAuthIdCode());
+                                                  EnumPaymentTransactionType.REFUND.getName(), null, oPgResp.getAuthIdCode());
                 setRefundPaymentStatus(oPgResp.getRespCode(),hkPaymentResponse);
             }
 
         } catch (Exception e) {
             logger.debug("There is an error while processing refund from Icici " + basePayment.getGatewayOrderId(), e);
+            hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
         }
         return hkPaymentResponse;
     }
@@ -180,9 +181,11 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
         if(pgResponse != null) {
             String transactionId = pgResponse.getTxnId();
             if (transactionId != null){
-                hkPaymentResponse = createPayment(transactionId, pgResponse.getEpgTxnId(), pgResponse.getRRN(), pgResponse.getRespMessage(), pgResponse.getTxnType(), null, pgResponse.getAuthIdCode());
+                hkPaymentResponse = createPayment(transactionId, pgResponse.getEpgTxnId(), pgResponse.getRRN(), pgResponse.getRespMessage(),
+                        pgResponse.getTxnType(), null, pgResponse.getAuthIdCode());
             } else {
-                hkPaymentResponse = createPayment(gatewayOrderId, pgResponse.getEpgTxnId(), pgResponse.getRRN(), pgResponse.getRespMessage(), pgResponse.getTxnType(), null, pgResponse.getAuthIdCode());
+                hkPaymentResponse = createPayment(gatewayOrderId, pgResponse.getEpgTxnId(), pgResponse.getRRN(), pgResponse.getRespMessage(),
+                        pgResponse.getTxnType(), null, pgResponse.getAuthIdCode());
             }
             setPaymentStatus(pgResponse.getRespCode(), hkPaymentResponse);
         }
@@ -225,10 +228,10 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
         HkPaymentResponse hkPaymentResponse = new HkPaymentResponse(gatewayOrderId,gatewayReferenceId,respMsg,
                 EnumGateway.ICICI.asGateway(),null,null,rrn,authIdCode,NumberUtils.toDouble(amount));
 
-        if(txnType.equalsIgnoreCase(EnumPaymentTransactionType.SALE.getName())){
+        if(txnType != null && txnType.equalsIgnoreCase(EnumPaymentTransactionType.SALE.getName())){
             hkPaymentResponse.setGatewayOrderId(gatewayOrderId);
             hkPaymentResponse.setTransactionType(EnumPaymentTransactionType.SALE.getName());
-        } else if (txnType.equalsIgnoreCase(EnumPaymentTransactionType.REFUND.getName())){
+        } else if (txnType != null && txnType.equalsIgnoreCase(EnumPaymentTransactionType.REFUND.getName())){
             hkPaymentResponse.setTransactionType(EnumPaymentTransactionType.REFUND.getName());
         }
         return hkPaymentResponse;

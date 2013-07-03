@@ -21,4 +21,6 @@ public interface SupplierDao extends BaseDao {
     public boolean doesTinNumberExist(String tinNumber);
     
     public Supplier save(Supplier supplier);
+    
+    public Supplier findById(Long id);
 }
