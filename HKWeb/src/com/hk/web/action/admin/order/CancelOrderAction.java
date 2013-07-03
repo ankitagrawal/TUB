@@ -7,6 +7,7 @@ import java.util.Map;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
@@ -46,8 +47,6 @@ public class CancelOrderAction extends BaseAction {
     private UserService      userService;
     @Autowired
     private PaymentService paymentService;
-    @Autowired
-    private RewardPointService rewardPointService;
 
     @Validate(required = true)
     private Order            order;
@@ -58,31 +57,12 @@ public class CancelOrderAction extends BaseAction {
     private String           cancellationRemark;
 
     @Validate(required = true)
-    private Long reconciliationType;
+    private ReconciliationType reconciliationType;
 
     @JsonHandler
     public Resolution pre() {
         User loggedOnUser = userService.getLoggedInUser();
-
-        Double refundableAmount = paymentService.getRefundableAmount(order.getPayment(), order.getAmount());
-        if (refundableAmount >= 0) {
-            if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType)) {
-
-                RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, order.getUser(),
-                        order, refundableAmount, null, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
-
-                rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),null);
-                paymentService.setRefundAmount(order.getPayment(),refundableAmount);
-
-            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType)) {
-                try {
-                    paymentService.refundPayment(order.getPayment().getGatewayOrderId(), refundableAmount);
-                } catch (HealthkartPaymentGatewayException e) {
-                    //TODO: handle it properly
-                }
-            }
-        }
-
+        paymentService.reconciliationOnCancel(reconciliationType,order, order.getAmount());
         // TODO: need to tighten logic for cancellation of order
         adminOrderService.cancelOrder(order, cancellationType, cancellationRemark, loggedOnUser);
         Map<String, Object> data = new HashMap<String, Object>(1);
@@ -111,11 +91,11 @@ public class CancelOrderAction extends BaseAction {
         this.userService = userService;
     }
 
-    public Long getReconciliationType() {
+    public ReconciliationType getReconciliationType() {
         return reconciliationType;
     }
 
-    public void setReconciliationType(Long reconciliationType) {
+    public void setReconciliationType(ReconciliationType reconciliationType) {
         this.reconciliationType = reconciliationType;
     }
 }

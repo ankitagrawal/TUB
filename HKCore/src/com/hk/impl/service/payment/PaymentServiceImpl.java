@@ -1,14 +1,20 @@
 package com.hk.impl.service.payment;
 
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.payment.*;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.ProductVariantPaymentType;
+import com.hk.domain.inventory.rv.ReconciliationType;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.SMSManager;
@@ -16,7 +22,9 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pojo.HkPaymentResponse;
@@ -45,6 +53,10 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentDao       paymentDao;
 	@Autowired
 	SMSManager smsManager;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RewardPointService rewardPointService;
 
 
     public List<Payment> listByOrderId(Long orderId) {
@@ -401,6 +413,30 @@ public class PaymentServiceImpl implements PaymentService {
         Double updatedAmount = payment.getRefundAmount() + amount;
         payment.setRefundAmount(updatedAmount);
         save(payment);
+    }
+
+    @Override
+    public void reconciliationOnCancel(ReconciliationType reconciliationType, Order order,Double amount) {
+        User loggedOnUser =  userService.getLoggedInUser();
+        Double refundableAmount = getRefundableAmount(order.getPayment(), amount);
+        if (refundableAmount >= 0) {
+            if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType.getId())) {
+
+                //TODO:pass comment in the API
+                RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, order.getUser(),
+                        order, refundableAmount, null, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+                rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),null);
+                setRefundAmount(order.getPayment(), refundableAmount);
+
+            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType.getId())) {
+                try {
+                    refundPayment(order.getPayment().getGatewayOrderId(), refundableAmount);
+                } catch (HealthkartPaymentGatewayException e) {
+                    //TODO: handle it properly
+                }
+            }
+        }
     }
 
 

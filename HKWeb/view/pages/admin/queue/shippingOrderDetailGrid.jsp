@@ -14,6 +14,8 @@
 <%@ page import="java.util.HashSet" %>
 <%@ page import="java.util.Collection" %>
 <%@ page import="com.hk.domain.queue.ActionTask" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationType" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -88,6 +90,10 @@
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 <c:set var="shippingOrderStatusReversePickup" value="<%=EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId()%>"/>
+<c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
+<c:set var="rewardPoints" value="<%=EnumReconciliationType.RewardPoints.getId()%>"/>
+<c:set var="refundPoints" value="<%=EnumReconciliationType.RefundAmount.getId()%>"/>
+<c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
 
 <c:set var="TH" value="<%=VariantConfigOptionParam.THICKNESS.param()%>"/>
 <c:set var="THBF" value="<%=VariantConfigOptionParam.BFTHICKNESS.param()%>"/>
@@ -312,6 +318,13 @@
              <br>
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
+                <%--<c:if test="${shippingOrder.baseOrder.payment.paymentStatus eq paymentStatusSuccess and shippingOrder.baseOrder.payment.paymentMode.id eq onlinePayment}">--%>
+                <br/>
+                Reward Points: <s:radio value="${rewardPoints}" name="reconillationType"/>
+                <br/>
+                Refund Payment: <s:radio value="${refundPoints}" name="reconillationType"/>
+                <%--</c:if>--%>
+
                 <div class="buttons">
                    <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO"/>
                 </div>

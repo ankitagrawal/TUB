@@ -309,12 +309,12 @@
       <br/>
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
-      <%--<c:if test="${order.payment.paymentStatus.id eq paymentStatusSuccess and order.payment.paymentMode.id eq onlinePayment}">--%>
+      <c:if test="${order.payment.paymentStatus.id eq paymentStatusSuccess and order.payment.paymentMode.id eq onlinePayment}">
       <br/>
       Reward Points: <s:radio value="${rewardPoints}" name="reconillationType"/>
       <br/>
       Refund Payment: <s:radio value="${refundPoints}" name="reconillationType"/>
-      <%--</c:if>--%>
+      </c:if>
       <div class="buttons">
         <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
       </div>
