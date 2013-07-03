@@ -20,6 +20,7 @@
         <ul>
           <s:hidden name="user" value="${rpBean.user.id}"/>
           <li><label>Value</label><s:text name="value"/></li>
+          <li><label>Order Id</label><s:text name="orderId"/></li>
           <li><label>Mode</label>
             <s:select name="rewardPointMode"><hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
             </s:select></li>
