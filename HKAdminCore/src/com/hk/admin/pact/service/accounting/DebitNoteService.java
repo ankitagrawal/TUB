@@ -7,6 +7,7 @@ import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
+import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.payment.PaymentHistory;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public interface DebitNoteService {
 
     public DebitNote createDebitNoteLineItem(DebitNote debitNote, List<RtvNoteLineItem> rtvNoteLineItems,
                                              List<ExtraInventoryLineItem> extraInventoryLineItems);
+    
+    public DebitNote createDebitNoteLineItemWithRVLineItems(DebitNote debitNote, List<RvLineItem> rvLineItems);
 
     public DebitNote save(DebitNote debitNote, List<DebitNoteLineItem> debitNoteLineItems);
 

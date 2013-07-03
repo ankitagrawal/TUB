@@ -87,6 +87,21 @@ public class RtvNote implements Serializable{
   @Column(name="shipping_charge_vendor")
   private Double shippingChargeVendor;
   
+  @Column(name="return_by_hand")
+  private Boolean returnByHand;
+  
+  @Temporal (TemporalType.TIMESTAMP)
+  @Column(name="rtv_return_date")
+  private Date rtvReturnDate;
+  
+  @Column (name = "rtv_return_address")
+  private String rtvReturnAddress;
+  
+  @Column (name = "rtv_tracking_number")
+  private String rtvTrackingNumber;
+  
+  
+  
   public Long getId() {
     return id;
   }
@@ -205,6 +220,46 @@ public class RtvNote implements Serializable{
 	
 	public void setShippingChargeVendor(Double shippingChargeVendor) {
 		this.shippingChargeVendor = shippingChargeVendor;
+	}
+
+	public Boolean getIsDebitToSupplier() {
+		return isDebitToSupplier;
+	}
+
+	public void setIsDebitToSupplier(Boolean isDebitToSupplier) {
+		this.isDebitToSupplier = isDebitToSupplier;
+	}
+
+	public Boolean getReturnByHand() {
+		return returnByHand;
+	}
+
+	public void setReturnByHand(Boolean returnByHand) {
+		this.returnByHand = returnByHand;
+	}
+
+	public Date getRtvReturnDate() {
+		return rtvReturnDate;
+	}
+
+	public void setRtvReturnDate(Date rtvReturnDate) {
+		this.rtvReturnDate = rtvReturnDate;
+	}
+
+	public String getRtvReturnAddress() {
+		return rtvReturnAddress;
+	}
+
+	public void setRtvReturnAddress(String rtvReturnAddress) {
+		this.rtvReturnAddress = rtvReturnAddress;
+	}
+
+	public String getRtvTrackingNumber() {
+		return rtvTrackingNumber;
+	}
+
+	public void setRtvTrackingNumber(String rtvTrackingNumber) {
+		this.rtvTrackingNumber = rtvTrackingNumber;
 	}
 	
 }
