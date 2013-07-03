@@ -1,27 +1,23 @@
 package com.hk.api.impl.service;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.ws.rs.core.MediaType;
-
+import com.akube.framework.gson.JsonUtils;
+import com.akube.framework.imaging.ImageUtils;
+import com.akube.framework.util.BaseUtils;
+import com.google.gson.Gson;
+import com.hk.admin.util.S3Utils;
 import com.hk.api.constants.EnumHKAPIErrorCode;
-import com.hk.api.constants.HKAPIOperationStatus;
 import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.api.dto.product.HKAPIProductDTO;
 import com.hk.api.dto.product.HKAPIProductVariantDTO;
+import com.hk.api.pact.service.HKAPIProductService;
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.core.Keys;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.util.HKImageUtils;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -31,19 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.akube.framework.gson.JsonUtils;
-import com.akube.framework.imaging.ImageUtils;
-import com.akube.framework.util.BaseUtils;
-import com.google.gson.Gson;
-import com.hk.admin.util.S3Utils;
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.constants.core.Keys;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.pact.dao.catalog.product.ProductDao;
-import com.hk.pact.service.catalog.ProductService;
-import com.hk.api.pact.service.HKAPIProductService;
-import com.hk.util.HKImageUtils;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.ws.rs.core.MediaType;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA. User: Pradeep Date: 8/28/12 Time: 3:47 PM
@@ -61,6 +52,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 
 	@Autowired
 	ProductService productService;
+
 
 	@Value ("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
 	String awsAccessKey;
@@ -335,7 +327,36 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 		return productIdsForLowResolutionImages.toString();
 	}
 
-	private String getImageFilePath() {
+  public String downloadResizeAndUploadImage(String productId, String srcImageSize, String targetImageSize) {
+    try {
+      Product product = getProductById(productId);
+      EnumImageSize srcEnumImageSize = EnumImageSize.getEnumImageSize(srcImageSize);
+      EnumImageSize targetEnumImageSize = EnumImageSize.getEnumImageSize(targetImageSize);
+
+      if (product != null && srcEnumImageSize != null && targetEnumImageSize != null) {
+
+        String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+        File imageFile = new File(imageFilePath);
+
+        imageFile.getParentFile().mkdirs();
+        S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(srcEnumImageSize, product.getMainImageId()), hkReadBucket, imageFile);
+
+
+        String repositoryFilePath = HKImageUtils.getRepositoryImagePath(targetEnumImageSize, product.getMainImageId());
+        ImageUtils.createThumbnail(imageFilePath, repositoryFilePath, targetEnumImageSize.getDimension(), QUALITY, false, false, .5F);
+        String imageUrl = HKImageUtils.getS3ImageKey(targetEnumImageSize, product.getMainImageId());
+        S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, hkReadBucket);
+
+        return "SUCCESS";
+      }else{
+        return "FAILED - Incorrect Values";
+      }
+    } catch (Exception e) {
+      return "FAILED - " + e.getMessage();
+    }
+  }
+
+  private String getImageFilePath() {
 		return adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
 	}
 

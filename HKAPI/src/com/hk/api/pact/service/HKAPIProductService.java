@@ -2,6 +2,7 @@ package com.hk.api.pact.service;
 
 import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.domain.catalog.product.Product;
+import com.hk.constants.catalog.image.EnumImageSize;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,16 +12,18 @@ import com.hk.domain.catalog.product.Product;
  */
 public interface HKAPIProductService {
 
-    public HKAPIBaseDTO getProductDetails(String productId);
+  public HKAPIBaseDTO getProductDetails(String productId);
 
-    public Product getProductById(String ProductId);
+  public Product getProductById(String ProductId);
 
-    public String syncContentAndDescription();
+  public String syncContentAndDescription();
 
-    public String syncProductImages();
+  public String syncProductImages();
 
-	public String getProductsWithLowResolutionImages();
+  public String getProductsWithLowResolutionImages();
 
-    public HKAPIBaseDTO getOOSHiddenDeletedProducts();
+  public HKAPIBaseDTO getOOSHiddenDeletedProducts();
+
+  public String downloadResizeAndUploadImage(String productId, String srcImageSize, String targetImageSize);
 
 }

@@ -70,6 +70,12 @@ public class ProductResource {
 		return getHkapiProductService().syncProductImages();
 	}
 
+  @Path ("/resizeImage/{productId}/${srcImage}/${targetImage}")
+	@Produces (MediaType.APPLICATION_JSON)
+	public String resizeImage(@PathParam ("productId") String productId, @PathParam ("srcImage") String srcImage, @PathParam ("targetImage") String targetImage) {
+		return getHkapiProductService().downloadResizeAndUploadImage(productId,  srcImage, targetImage);
+	}
+
     @GET
     @Path("/ooshiddendeleted/all")
     @Produces (MediaType.APPLICATION_JSON)

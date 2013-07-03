@@ -2,6 +2,7 @@ package com.hk.cache;
 
 import com.hk.cache.vo.ProductVO;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.search.SolrProduct;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.service.ServiceLocatorFactory;
 import org.apache.commons.lang.StringUtils;
@@ -59,6 +60,13 @@ public class ProductCache {
     if (product != null && product.getId() != null) {
       logger.debug("Refreshing Product Cache for Product=" + product.getId());
       idToProductCache.put(product.getId(), getProductService().createProductVO(product));
+    }
+  }
+
+  public void refreshCache(SolrProduct solrProduct) {
+    if (solrProduct != null && solrProduct.getId() != null) {
+      logger.debug("Refreshing Product Cache for Solr Product=" + solrProduct.getId());
+      idToProductCache.put(solrProduct.getId(), getProductService().createProductVO(solrProduct));
     }
   }
 
