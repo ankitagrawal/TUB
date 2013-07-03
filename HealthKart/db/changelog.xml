@@ -13343,6 +13343,12 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
+    <changeSet author="Shakti Singh (written)" id="20130627-01">
+        <sql>
+            insert into permission values ('BULK_SEEK');
+            insert into role_has_permission values('GOD','BULK_SEEK');
+        </sql>
+    </changeSet>
 
     <changeSet author="deepakC" id="1370601362351-11234">
         <addColumn tableName="product_variant">

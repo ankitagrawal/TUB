@@ -25,6 +25,7 @@ public class HealthkartPaymentGatewayException extends Exception {
     NO_RESPONSE_PAYMENT_FOUND(70,"No response payment found for gateway order id"),
     REQUEST_RESPONSE_SIZE_MISMATCH(75,"Request and Response payment have different sizes"),
     REQUEST_RESPONSE_INCONSISTENCY(80,"Request and Response payments are inconsistent"),
+    PAYMENT_NOT_UPDATED(85,"Payment object is not updated"),
     ;
 
     private int code;
