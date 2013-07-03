@@ -204,7 +204,7 @@ public class BusyPopulatePurchaseData {
         //Inserting short quantity data from pi has extra inventory line item
         sql.eachRow("""
                       select li.id, li.sku_id, li.received_qty as qty, li.mrp, li.cost_price, li.product_name,
-                      t.value as tax_value
+                      t.value as tax_value, li.surcharge_amount
                       from extra_inventory_line_item li
                       inner join tax t on li.tax_id = t.id
                       inner join purchase_invoice_has_extra_inventory_line_item pieli ON pieli.extra_inventory_line_item_id = li.id
@@ -224,7 +224,7 @@ public class BusyPopulatePurchaseData {
                 Double mrp = debitNoteItem.mrp;
                 Double rate = debitNoteItem.cost_price;
                 Double vat = debitNoteItem.tax_value;
-                Double amount = (rate+(rate*vat))*qty;
+                Double amount = ((rate+(rate*vat))*qty)+ debitNoteItem.surcharge_amount;
                 count++;
                 try{
                     busySql.executeInsert("""
@@ -249,7 +249,7 @@ public class BusyPopulatePurchaseData {
         //Inserting surplus quantity from pi has rtv note.
         sql.eachRow("""
                       select li.id, li.sku_id, li.received_qty as qty, li.mrp, li.cost_price, li.product_name,
-                      t.value as tax_value
+                      t.value as tax_value, li.surcharge_amount
                       from extra_inventory_line_item li
                       inner join tax t on li.tax_id = t.id
                       inner join rtv_note_line_item rtvli ON rtvli.extra_inventory_line_item_id = li.id
@@ -270,7 +270,7 @@ public class BusyPopulatePurchaseData {
                 Double mrp = debitNoteItem.mrp;
                 Double rate = debitNoteItem.cost_price;
                 Double vat = debitNoteItem.tax_value;
-                Double amount = (rate+(rate*vat))*qty;
+                Double amount = ((rate+(rate*vat))*qty)+debitNoteItem.surcharge_amount;
                 count++;
                 try{
                     busySql.executeInsert("""
