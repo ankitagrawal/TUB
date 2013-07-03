@@ -154,18 +154,20 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         String baseGatewayOrderId = basePayment.getGatewayOrderId();
         String gatewayReferenceId = basePayment.getGatewayReferenceId();
         HkPaymentResponse hkRefundPaymentResponse = null;
-        try{
-            // Call payment gateway
-            if(baseGatewayOrderId != null && gatewayReferenceId != null){
-                Element element = callPaymentGateway(null,gatewayReferenceId, null, amount.toString(), EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
 
-                hkRefundPaymentResponse = verifyAndCreateHkResponsePayment(element, baseGatewayOrderId,EnumPaymentTransactionType.REFUND.getName());
+        if (baseGatewayOrderId != null && gatewayReferenceId != null) {
+            try {
+                Element element = callPaymentGateway(null, gatewayReferenceId, null, amount.toString(), EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
+
+                hkRefundPaymentResponse = verifyAndCreateHkResponsePayment(element, baseGatewayOrderId, EnumPaymentTransactionType.REFUND.getName());
+            } catch (Exception e) {
+                logger.debug("Ebs Payment gateway exception :", e);
             }
 
-        } catch (Exception e){
-            logger.debug("Ebs Payment gateway exception :",e);
-            //throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
+        } else {
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.PAYMENT_NOT_UPDATED);
         }
+
         return hkRefundPaymentResponse;
     }
 

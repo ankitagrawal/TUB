@@ -9,8 +9,11 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumSupplierTransactionType;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.util.XslGenerator;
+import com.hk.web.action.admin.inventory.ReconciliationVoucherAction;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
@@ -57,6 +60,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
     private String supplierTin;
     private String supplierName;
     private Boolean status;
+    private Warehouse warehouse;
 
     Page supplierPage;
     private Integer defaultPerPage = 30;
@@ -206,6 +210,21 @@ public class SupplierManagementAction extends BasePaginatedAction {
 				supplier.getTargetCreditDays() != null && supplier.getLeadTime() != null &&
 				supplier.getActive() != null);
 	}
+	
+	public Resolution createRV(){
+		
+		User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        }
+        warehouse = loggedOnUser.getSelectedWarehouse();
+		if(warehouse==null){
+			addRedirectAlertMessage(new SimpleMessage("Please select a warehouse"));
+			return new RedirectResolution(SupplierManagementAction.class);
+		}		
+		return new RedirectResolution(ReconciliationVoucherAction.class).addParameter("create").
+				addParameter("supplier", supplier.getId()).addParameter("warehouse", warehouse.getId());
+	}
 
     public List<Supplier> getSupplierList() {
         return supplierList;
@@ -279,6 +298,11 @@ public class SupplierManagementAction extends BasePaginatedAction {
     public Boolean getStatus() {
         return status;
     }
+
+	public static int getLenghtoftin() {
+		return LenghtOfTIN;
+	}
+    
     
     
 }
