@@ -60,6 +60,21 @@ public class DebitNoteLineItem implements java.io.Serializable {
 	
 	@Column(name = "product_name")
 	  private String productName;
+	
+	@Column(name = "discount_percent")
+	private Double discountPercent;
+	
+	@Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "payable_amount")
+	private Double payableAmount;
 
   public Long getId() {
     return this.id;
@@ -140,6 +155,47 @@ public class DebitNoteLineItem implements java.io.Serializable {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+
+	public Double getDiscountPercent() {
+		return discountPercent;
+	}
+
+	public void setDiscountPercent(Double discountPercent) {
+		this.discountPercent = discountPercent;
+	}
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getPayableAmount() {
+		return payableAmount;
+	}
+
+	public void setPayableAmount(Double payableAmount) {
+		this.payableAmount = payableAmount;
+	}
+
 }
 
 

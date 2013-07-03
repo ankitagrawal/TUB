@@ -39,10 +39,11 @@
                 <s:submit name="refundPayment" value="Refund  (beta)" id="refund"/>
                 <s:submit name="capturePayment" value="Capture  (EBS)" id="capture"/>
                 <s:submit name="cancelPayment" value="Cancel (EBS)" id="cancel"/>
-                <shiro:hasRole name="<%=RoleConstants.GOD%>">
-                    <s:submit name="bulkSeekPayment" value="Bulk Seek" id="bulkSeek"/>
-                    <s:submit name="updatePayment"  value="Update" id="update"/>
-                </shiro:hasRole>
+                <%--<shiro:hasRole name="<%=RoleConstants.GOD%>">--%>
+                <s:submit name="bulkSeekPayment" value="Bulk Seek" id="bulkSeek"/>
+                <%--</shiro:hasRole>--%>
+                <s:submit name="updatePayment"  value="Update" id="update"/>
+
             </fieldset>
         </s:form>
 
@@ -60,32 +61,22 @@
             <br/>
         </c:forEach>
 
-        <%--<c:if test="${not empty cpa.hkPaymentResponse}">
-            Gateway Order Id --> ${cpa.hkPaymentResponse.gatewayOrderId}  <br/>
-            Gateway Reference Id --> ${cpa.hkPaymentResponse.gatewayReferenceId} <br/>
-            Transaction Type --> ${cpa.hkPaymentResponse.transactionType}<br/>
-            Amount --> ${cpa.hkPaymentResponse.amount} <br/>
-            Payment Status --> ${cpa.hkPaymentResponse.paymentStatus.name}<br/>
-            Response Message --> ${cpa.hkPaymentResponse.responseMsg}  <br/>
-            Root Reference No --> ${cpa.hkPaymentResponse.rrn}<br/>
-            Gateway --> ${cpa.hkPaymentResponse.gateway.name}<br/>
-            Error Log --> ${cpa.hkPaymentResponse.errorLog}<br/>
+
+
+        <c:if test="${not empty cpa.payment}">
+            Gateway Order Id --> ${cpa.payment.gatewayOrderId}  <br/>
+            Gateway Reference Id --> ${cpa.payment.gatewayReferenceId} <br/>
+            Transaction Type --> ${cpa.payment.transactionType}<br/>
+            Amount --> ${cpa.payment.amount} <br/>
+            Payment Status --> ${cpa.payment.paymentStatus.name}<br/>
+            Response Message --> ${cpa.payment.responseMessage}  <br/>
+            Root Reference No --> ${cpa.payment.rrn}<br/>
+            Gateway --> ${cpa.payment.gateway.name}<br/>
+            Payment Date --> ${cpa.payment.createDate}<br/>
+            Error Log --> ${cpa.payment.errorLog}<br/>
+            Parent gateway order id --> ${cpa.payment.parent.gatewayOrderId}<br/>
             <br/>
         </c:if>
-
-        <c:if test="${not empty cpa.updatedPayment}">
-            Gateway Order Id --> ${cpa.updatedPayment.gatewayOrderId}  <br/>
-            Gateway Reference Id --> ${cpa.updatedPayment.gatewayReferenceId} <br/>
-            Transaction Type --> ${cpa.updatedPayment.transactionType}<br/>
-            Amount --> ${cpa.updatedPayment.amount} <br/>
-            Payment Status --> ${cpa.updatedPayment.paymentStatus.name}<br/>
-            Response Message --> ${cpa.updatedPayment.responseMessage}  <br/>
-            Root Reference No --> ${cpa.updatedPayment.rrn}<br/>
-            Gateway --> ${cpa.updatedPayment.gateway.name}<br/>
-            Payment Date --> ${cpa.updatedPayment.createDate}<br/>
-            Error Log --> ${cpa.updatedPayment.errorLog}<br/>
-            <br/>
-        </c:if>--%>
 
         <c:forEach items="${cpa.bulkHkPaymentResponseList}" var="responseMap">
             <c:forEach items="${responseMap}" var="content">
@@ -106,6 +97,10 @@
             </c:forEach>
 
         </c:forEach>
+
+        <%--<c:if test="${not empty cpa.paymentStatus}">
+            Status --> ${cpa.paymentStatus.name}
+        </c:if>--%>
 
 
     </s:layout-component>

@@ -1,6 +1,8 @@
 package com.hk.admin.pact.service.inventory;
 
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.domain.accounting.DebitNote;
+import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationType;
@@ -39,6 +41,8 @@ public interface ReconciliationVoucherService {
     public ReconciliationVoucher createReconciliationVoucher(ReconciliationType reconciliationType ,String remark );
 
     public RvLineItem reconcileInventoryForPV(RvLineItem rvLineItem , List<SkuItem> inStockSkuItems,Sku sku);
+    
+    public DebitNote getDebitNote(ReconciliationVoucher reconciliationVoucher);
 
 
 }
