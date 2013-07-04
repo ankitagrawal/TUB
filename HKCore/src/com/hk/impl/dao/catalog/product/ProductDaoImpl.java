@@ -148,6 +148,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return super.findByQuery("select p from Product p where p.deleted = false");
     }
 
+    public List<Product> getAllNonDeletedProductsWithImages() {
+        return super.findByQuery("select p from Product p where p.deleted = false and p.mainImageId is not null");
+    }
+
     public List<Product> getAllProductByBrand(String brand) {
         return getSession().createQuery("select p from Product p where p.brand = :brand order by p.orderRanking asc").setString("brand", brand).list();
     }

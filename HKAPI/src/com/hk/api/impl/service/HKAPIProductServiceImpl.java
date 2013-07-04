@@ -333,7 +333,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
       EnumImageSize srcEnumImageSize = EnumImageSize.getEnumImageSize(srcImageSize);
       EnumImageSize targetEnumImageSize = EnumImageSize.getEnumImageSize(targetImageSize);
 
-      if (product != null && srcEnumImageSize != null && targetEnumImageSize != null) {
+      if (product != null &&  product.getMainImageId() != null && srcEnumImageSize != null && targetEnumImageSize != null) {
 
         String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
         File imageFile = new File(imageFilePath);
@@ -346,6 +346,10 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         ImageUtils.createThumbnail(imageFilePath, repositoryFilePath, targetEnumImageSize.getDimension(), QUALITY, false, false, .5F);
         String imageUrl = HKImageUtils.getS3ImageKey(targetEnumImageSize, product.getMainImageId());
         S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, hkReadBucket);
+
+        //To disqualify next time
+        product.setMainImageId(null);
+        getProductService().save(product);
 
         return "SUCCESS";
       }else{
