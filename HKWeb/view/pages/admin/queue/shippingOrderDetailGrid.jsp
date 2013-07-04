@@ -618,7 +618,7 @@
                         </c:if>
                       <span>
                       <c:forEach items="${shippingOrder.purchaseOrders}" var="po">
-                     <a href="${pageContext.request.contextPath}/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${po.id}" target="_blank">PO#${po.id}</a>
+                     PO# <a href="${pageContext.request.contextPath}/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${po.id}" target="_blank">${po.id}</a>
                       </c:forEach>
                       </span>
             </td>

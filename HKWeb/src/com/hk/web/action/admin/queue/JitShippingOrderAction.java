@@ -115,7 +115,7 @@ public class JitShippingOrderAction extends BaseAction {
 			}
 
 			purchaseOrders = deletePOsWithEmptyPOLineItems(purchaseOrderList);
-			
+
 			for (PurchaseOrder po : purchaseOrders) {
 				List<ProductVariant> pvFromPoList = purchaseOrderService.getAllProductVariantFromPO(po);
 				List<ShippingOrder> soList = po.getShippingOrders();
@@ -131,7 +131,7 @@ public class JitShippingOrderAction extends BaseAction {
 								}
 							}
 						}
-						if(!pvFromPoList.containsAll(pvFromSoSet)){
+						if (!pvFromPoList.containsAll(pvFromSoSet)) {
 							purchaseOrderService.deleteSoForPo(po, so);
 						}
 					}
@@ -359,19 +359,24 @@ public class JitShippingOrderAction extends BaseAction {
 
 					Long inventory = adminInventoryService.getNetInventory(productVariant);
 					Long bookedInventory = adminInventoryService.getBookedInventory(productVariant);
-					if(bookedInventory == null){
+					if (bookedInventory == null) {
 						bookedInventory = 0L;
 					}
 					if (inventory == null) {
 						inventory = 0L;
 					}
 					Long unbookedInventory = inventory - bookedInventory;
-					if(unbookedInventory<=0){
-						unbookedInventory=0L;
-					}
+					/*
+					 * if(unbookedInventory<=0){ unbookedInventory=0L; }
+					 */
 					logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
 					if ((quantity - unbookedInventory) > 0) {
-						Long poQty = quantity - unbookedInventory;
+						Long poQty = 0L;
+						if (unbookedInventory < 0) {
+							poQty = Math.abs(unbookedInventory);
+						} else {
+							poQty = quantity - unbookedInventory;
+						}
 						// TODO --
 						Double taxableAmount = 0.0D;
 						Double discountPercentage = 0D;
