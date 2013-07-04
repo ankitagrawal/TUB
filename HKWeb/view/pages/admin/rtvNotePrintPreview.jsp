@@ -118,13 +118,13 @@ PURCHASE RETURN
   <tr>
   <td class="tdHead">Supplier</td>
   <td>${ei.purchaseOrder.supplier.name}</td>
-  <td class="tdHead">Debit Note Create Date</td>
+  <td class="tdHead">RTV Note Create Date</td>
   <td>${ei.rtvNote.createDate }</td>
   </tr>
   <tr>
   <td class="tdHead">Address</td>
   <td><p>${ei.purchaseOrder.supplier.line1}</p><p>${ei.purchaseOrder.supplier.line2}</p><p>${ei.purchaseOrder.supplier.city}</p><p>${ei.purchaseOrder.supplier.state}</p></td>
-  <td class="tdHead">Debit Note Number</td>
+  <td class="tdHead">RTV Note Number</td>
   <td>${ei.rtvNote.id }</td>
   </tr>
   <tr>

@@ -3,6 +3,7 @@ package com.hk.admin.impl.dao.inventory;
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationType;
@@ -67,6 +68,17 @@ public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements Reconci
             return rvLineItemList.get(0);
         else
             return null;
+    }
+    
+    @Override
+    public DebitNote getDebitNote(ReconciliationVoucher reconciliationVoucher) {
+    	String query = "from DebitNote dn where dn.reconciliationVoucher=:reconciliationVoucher ";
+		DebitNote debitNote = (DebitNote) findUniqueByNamedParams(query, new String[]{"reconciliationVoucher"}, new Object[]{reconciliationVoucher});
+		if(debitNote!=null){
+			return debitNote;
+		}
+		else
+			return null;
     }
 
 

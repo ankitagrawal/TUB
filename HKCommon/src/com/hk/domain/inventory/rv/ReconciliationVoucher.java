@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.akube.framework.gson.JsonSkip;
@@ -62,6 +63,10 @@ public class ReconciliationVoucher implements java.io.Serializable {
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="reconciliation_type_id")
   private ReconciliationType reconciliationType;
+  
+  @ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "supplier_id")
+  private Supplier supplier;
 
 
   public Long getId() {
@@ -128,8 +133,16 @@ public class ReconciliationVoucher implements java.io.Serializable {
     public void setReconciliationType(ReconciliationType reconciliationType) {
         this.reconciliationType = reconciliationType;
     }
+    
+    public Supplier getSupplier() {
+		return supplier;
+	}
 
-    @Override
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
+	}
+
+	@Override
     public String toString() {
         return this.id != null ? this.id.toString() : "";
     }

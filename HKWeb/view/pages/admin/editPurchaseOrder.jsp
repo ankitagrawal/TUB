@@ -168,6 +168,9 @@ $(document).ready(function () {
 		$.each($(fromTotalClass), function (index, value) {
 			var eachRow = $(value);
 			var eachRowValue = eachRow.val().trim();
+			if(eachRowValue=="") {
+				return;
+			} 
 			total += parseFloat(eachRowValue);
 		});
 		if (toHtml == 1) {
@@ -240,6 +243,13 @@ function validateSubmitForm() {
 			return false;
 		}
 	}
+	$.each($('.variant'), function checkVaraint() {
+		var variantVal = $(this).val();
+		if (variantVal.trim() == "") {
+			$(this).parent().parent().remove();
+		}
+	});
+	
 	$.each($('.quantity'), function checkQty() {
 		var quantity = $(this).val();
 		if (quantity == "" || isNaN(quantity)) {

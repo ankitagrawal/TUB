@@ -14,8 +14,10 @@
         pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
         Long addId = EnumReconciliationType.Add.getId();
         Long productAuditedId = EnumReconciliationType.ProductVariantAudited.getId();
+        Long debitNoteId  = EnumReconciliationType.RVForDebitNote.getId();
         pageContext.setAttribute("addId", addId);
         pageContext.setAttribute("productAuditedId", productAuditedId);
+        pageContext.setAttribute("debitNoteId", debitNoteId);
     %>
     <s:layout-component name="htmlHead">
         <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -107,7 +109,14 @@
                                             Product Audit
                                         </c:when>
                                         <c:otherwise>
-                                            Subtract
+                                        <c:choose>
+                                        <c:when test="${reconvoucher.reconciliationType.id == debitNoteId}">
+                                        Subtract/Rv For Debit Note
+                                        </c:when>
+                                        <c:otherwise>
+                                         Subtract
+                                        </c:otherwise>
+                                        </c:choose>
                                         </c:otherwise>
                                     </c:choose>
                                 </c:otherwise>
