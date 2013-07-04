@@ -451,6 +451,7 @@ public class JitShippingOrderAction extends BaseAction {
 		for (PurchaseOrderStatus status : purchaseOrderStatus) {
 			EnumPurchaseOrderStatus poStatus = EnumPurchaseOrderStatus.getById(status.getId());
 			purchaseOrder.setUpdateDate(new Date());
+			purchaseOrder.setApprovedBy(userService.getAdminUser());
 			purchaseOrder.setPurchaseOrderStatus(poStatus.asEnumPurchaseOrderStatus());
 			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
