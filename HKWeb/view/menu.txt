@@ -443,7 +443,7 @@
 ---/health-devices/clinical-products/devices/knee-hammer
 
 
-/home-living:Home & Kitchen
+/home-living:Home & Living
 -/home-living/breakfast-maker:Breakfast Maker
 --/home-living/breakfast-maker/sandwich-maker:Sandwich Maker
 --/home-living/breakfast-maker/popup-toaster:Pop-up Toaster
