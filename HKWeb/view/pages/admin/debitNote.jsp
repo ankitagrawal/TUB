@@ -315,11 +315,12 @@
     	    		});
     		}
             
+            
         });
     </script>
 </s:layout-component>
 <s:layout-component name="heading">
-    Edit Debit Note # ${pa.debitNote.id}
+    Edit <label class="dnRtvLabel">Debit Note</label> # ${pa.debitNote.id}
     <c:if test="${pa.debitNote.purchaseInvoice!=null }">(Against PI # ${pa.debitNote.purchaseInvoice.id})</c:if> 
     <c:if test="${pa.debitNote.reconciliationVoucher!=null }">(Against RV # ${pa.debitNote.reconciliationVoucher.id})</c:if>
 </s:layout-component>
@@ -501,7 +502,7 @@
                     </c:choose>
                     
                     <td class="taxCategory">
-					<shiro:hasPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
+					<shiro:hasPermission name='<%=PermissionConstants.FINANCE_MANAGEMENT%>'>
 					<input type="hidden" value="finance"
 					       class="taxIdentifier"/>
 					<c:choose>
@@ -523,17 +524,9 @@
 						</c:otherwise>
 					</c:choose>
 				</shiro:hasPermission>
-				<shiro:lacksPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
-					<c:choose>
-						<c:when test="${fn:toLowerCase(pa.debitNote.supplier.state) == fn:toLowerCase(pa.debitNote.warehouse.state)}">
-							<s:text name="debitNoteLineItems[${ctr.index}].tax"
+				<shiro:lacksPermission name="<%=PermissionConstants.FINANCE_MANAGEMENT%>">
+							<s:text readonly = "true" name="debitNoteLineItems[${ctr.index}].tax"
 							        value="${debitNoteLineItemDto.debitNoteLineItem.tax.value}" class="taxCategory taxValues"/>
-						</c:when>
-						<c:otherwise>
-							<s:text name="debitNoteLineItems[${ctr.index}].tax"
-							        value="${debitNoteLineItemDto.debitNoteLineItem.tax.value}" class="taxCategory taxValues"/>
-						</c:otherwise>
-					</c:choose>
 				</shiro:lacksPermission>
 			</td>
                     
@@ -544,7 +537,14 @@
                     		<s:hidden name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
                     		</c:when>
                     	<c:otherwise>
-                    		<s:text class="qty valueChange receivedQuantity" name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
+                    	
+                    	<shiro:hasRole name="<%=RoleConstants.FINANCE%>">
+                            <s:text class="qty valueChange receivedQuantity" name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
+                        </shiro:hasRole>
+                        <shiro:lacksRole name="<%=RoleConstants.FINANCE%>">
+                            ${debitNoteLineItemDto.debitNoteLineItem.qty}
+                    		<s:hidden name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
+                        </shiro:lacksRole>
                     		</c:otherwise>
                     	</c:choose>
                         
@@ -557,11 +557,11 @@
                                       value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
                     		</c:when>
                     		<c:otherwise>
-                        <shiro:hasRole name="<%=RoleConstants.FINANCE%>">
+                        <shiro:hasRole name="<%=RoleConstants.FINANCE_ADMIN%>">
                             <s:text name="debitNoteLineItems[${ctr.index}].costPrice"
                                    class="costPrice valueChange" value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
                         </shiro:hasRole>
-                        <shiro:lacksRole name="<%=RoleConstants.FINANCE%>">
+                        <shiro:lacksRole name="<%=RoleConstants.FINANCE_ADMIN%>">
                             ${debitNoteLineItemDto.debitNoteLineItem.costPrice}
                             <s:hidden name="debitNoteLineItems[${ctr.index}].costPrice"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
@@ -577,11 +577,11 @@
                                       value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
                     		</c:when>
                     		<c:otherwise>
-                    		<shiro:hasRole name="<%=RoleConstants.FINANCE%>">
+                    		<shiro:hasRole name="<%=RoleConstants.FINANCE_ADMIN%>">
                             <s:text class="mrp valueChange" name="debitNoteLineItems[${ctr.index}].mrp"
                                     value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
                         </shiro:hasRole>
-                        <shiro:lacksRole name="<%=RoleConstants.FINANCE%>">
+                        <shiro:lacksRole name="<%=RoleConstants.FINANCE_ADMIN%>">
                             ${debitNoteLineItemDto.debitNoteLineItem.mrp}
                             <s:hidden class="mrp" name="debitNoteLineItems[${ctr.index}].mrp"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
@@ -592,9 +592,15 @@
                     </td>
                     <c:if test="${pa.debitNote.debitNoteType.id==20}">
                 	<td>
+                	<shiro:hasRole name="<%=RoleConstants.FINANCE_ADMIN%>">
                     		 <s:text class="discountPercentage valueChange" name="debitNoteLineItems[${ctr.index}].discountPercent"
+                                      value="${debitNoteLineItemDto.debitNoteLineItem.discountPercent}"/></shiro:hasRole>
+                      <shiro:lacksRole name="<%=RoleConstants.FINANCE_ADMIN%>">
+                      
+                      <s:text readonly="true" class="discountPercentage valueChange" name="debitNoteLineItems[${ctr.index}].discountPercent"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.discountPercent}"/>
-                    		</td>
+                      </shiro:lacksRole>                
+                                      </td>
                 	</c:if>
                     <td>
                     <c:choose>
