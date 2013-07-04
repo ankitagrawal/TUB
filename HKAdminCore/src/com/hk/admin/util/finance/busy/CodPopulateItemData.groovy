@@ -32,9 +32,9 @@ class CodPopulateItemData {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(CodPopulateItemData.class);
 
-    public void populateCodCalldata() {
+    public int  populateCodCalldata() {
         try {
-            sql.executeUpdate("""
+           int rowUpdateKnowlarity=  sql.executeUpdate("""
                       update user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
                       set ucc.call_status=10
                       where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and  p.payment_date >(
@@ -55,7 +55,7 @@ class CodPopulateItemData {
 
 
 """);
-            sql.executeUpdate("""
+            int rowUpdateEffortBpo=sql.executeUpdate("""
 
             update  user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
             set ucc.call_status=60
@@ -84,7 +84,7 @@ class CodPopulateItemData {
 """
 
             ) ;
-            sql.executeUpdate("""
+            int rowUpdateHK= sql.executeUpdate("""
                   update   user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
                   set ucc.call_status=70
                   where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and  p.payment_date <(
@@ -98,9 +98,10 @@ class CodPopulateItemData {
                   end)
 
 """) ;
+       return (rowUpdateKnowlarity+rowUpdateEffortBpo+rowUpdateHK);
         }
         catch (Exception e) {
-            Logger.info("Unable to insert in  item: ", e);
+            Logger.info("Unable to Update in  item: ", e);
         }
     }
 
