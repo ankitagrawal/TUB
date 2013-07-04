@@ -356,9 +356,9 @@ public class JitShippingOrderAction extends BaseAction {
 				for (Entry<ProductVariant, Long> entry : prodQty) {
 					ProductVariant productVariant = entry.getKey();
 					Long quantity = entry.getValue();
-
-					Long inventory = adminInventoryService.getNetInventory(productVariant);
-					Long bookedInventory = adminInventoryService.getBookedInventory(productVariant);
+					Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
+					Long inventory = adminInventoryService.getNetInventory(sku);
+					Long bookedInventory = adminInventoryService.getBookedInventory(sku);
 					if (bookedInventory == null) {
 						bookedInventory = 0L;
 					}
@@ -381,7 +381,6 @@ public class JitShippingOrderAction extends BaseAction {
 						Double taxableAmount = 0.0D;
 						Double discountPercentage = 0D;
 						PoLineItem poLineItem = new PoLineItem();
-						Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
 						poLineItem.setSku(sku);
 						poLineItem.setQty(poQty);
 						poLineItem.setCostPrice(productVariant.getCostPrice());
@@ -399,7 +398,7 @@ public class JitShippingOrderAction extends BaseAction {
 								tax.setType(EnumTax.CST.getType());
 								tax.setValue(EnumTax.CST.getValue());
 							}
-							taxableAmount = quantity * ((productVariant.getCostPrice() - productVariant.getCostPrice() * discountPercentage / 100));
+							taxableAmount = poQty * ((productVariant.getCostPrice() - productVariant.getCostPrice() * discountPercentage / 100));
 							totalTaxable += taxableAmount;
 							TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(purchaseOrder.getSupplier(), purchaseOrder
 									.getWarehouse().getState(), tax, taxableAmount);
