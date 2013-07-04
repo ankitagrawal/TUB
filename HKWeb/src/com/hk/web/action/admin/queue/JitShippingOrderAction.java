@@ -375,7 +375,8 @@ public class JitShippingOrderAction extends BaseAction {
 				purchaseOrder.setTaxableAmount(totalTaxable);
 				purchaseOrder.setTaxAmount(totalTax);
 				purchaseOrder.setSurchargeAmount(totalSurcharge);
-				purchaseOrder.setFinalPayableAmount(totalPayable + totalTaxable + totalTax + totalSurcharge);
+				//purchaseOrder.setFinalPayableAmount(totalPayable + totalTaxable + totalTax + totalSurcharge);
+				purchaseOrder.setFinalPayableAmount(totalPayable);
 				purchaseOrder.setPoLineItems(poLineItems);
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			}

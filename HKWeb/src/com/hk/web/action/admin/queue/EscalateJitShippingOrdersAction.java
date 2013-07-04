@@ -94,6 +94,9 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				for (ProductVariant pv : productVariants) {
 					if (li.getSku().getProductVariant().equals(pv)) {
 						Long inventory = productVariantService.findNetInventory(pv);
+						if(inventory==null){
+							inventory = 0L;
+						}
 						if (inventory.compareTo(li.getQty()) >= 0) {
 							shippingOrderService.automateManualEscalation(so);
 							ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
