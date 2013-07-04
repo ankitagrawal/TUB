@@ -154,6 +154,10 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
     public Resolution markShippingOrdersAsShipped() {
         if (!shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
+                if(! shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_CheckedOut.getId())){
+                    addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("So need to be checked out before marking it as shipped"));
+                    return new RedirectResolution(DropShippingAwaitingQueueAction.class).addParameter("shippingOrder", shippingOrder);      
+                 }
                 if (shippingOrder.getShipment() == null) {
                     addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please Enter the shipment details"));
                     return new RedirectResolution(DropShippingAwaitingQueueAction.class).addParameter("shippingOrder", shippingOrder);

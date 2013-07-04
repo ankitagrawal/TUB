@@ -123,8 +123,9 @@ public class InventoryCheckoutAction extends BaseAction {
         shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderId);
         if (shippingOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("No Such Order"));
-        } else if (!EnumShippingOrderStatus.SO_Picking.getId().equals(shippingOrder.getOrderStatus().getId())) {
-            addRedirectAlertMessage(new SimpleMessage("Order is not in picking cannot proceed to checkout"));
+        } else if (!((EnumShippingOrderStatus.SO_ReadyForDropShipping.getId().equals(shippingOrder.getOrderStatus().getId()))|| ( EnumShippingOrderStatus.SO_Picking.getId().equals(shippingOrder.getOrderStatus().getId()))) ){
+            addRedirectAlertMessage(new SimpleMessage("Order is not in picking state or Drop shipping state so  cannot proceed to checkout"));
+            return new RedirectResolution(InventoryCheckoutAction.class);
         } else {
             logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
             Set<LineItem> pickingLIs = shippingOrder.getLineItems();
