@@ -32,7 +32,7 @@ class CodPopulateItemData {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(CodPopulateItemData.class);
 
-    public int  populateCodCalldata() {
+    public Integer  populateCodCalldata() {
         try {
            int rowUpdateKnowlarity=  sql.executeUpdate("""
                       update user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
@@ -98,7 +98,7 @@ class CodPopulateItemData {
                   end)
 
 """) ;
-       return (rowUpdateKnowlarity+rowUpdateEffortBpo+rowUpdateHK);
+       return (rowUpdateKnowlarity+rowUpdateEffortBpo+rowUpdateHK).toInteger();
         }
         catch (Exception e) {
             Logger.info("Unable to Update in  item: ", e);

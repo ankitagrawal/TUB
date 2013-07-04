@@ -26,7 +26,7 @@ public class PopulateCodCallDataAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.dbPassword + "']}")
     private String dbPassword;
 
-    private int totalRowsUpdateCodCall;
+    private Integer totalRowsUpdateCodCall;
 
     @DefaultHandler
     public Resolution pre() {
@@ -34,19 +34,12 @@ public class PopulateCodCallDataAction extends BaseAction {
             CodPopulateItemData codPopulateItemData = new CodPopulateItemData(dbHostName, dbName, dbUser, dbPassword);
 
             logger.info("Populating Cod Call ");
-             totalRowsUpdateCodCall=codPopulateItemData.populateCodCalldata();
-            addRedirectAlertMessage(new SimpleMessage("Total Rows Updated:" ,totalRowsUpdateCodCall)) ;
+            totalRowsUpdateCodCall = codPopulateItemData.populateCodCalldata();
+            addRedirectAlertMessage(new SimpleMessage("total rows updated", totalRowsUpdateCodCall.toString()));
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
         }
         return new RedirectResolution("/pages/admin/adminHome.jsp");
     }
 
-    public int getTotalRowsUpdateCodCall() {
-        return totalRowsUpdateCodCall;
-    }
-
-    public void setTotalRowsUpdateCodCall(int totalRowsUpdateCodCall) {
-        this.totalRowsUpdateCodCall = totalRowsUpdateCodCall;
-    }
 }
