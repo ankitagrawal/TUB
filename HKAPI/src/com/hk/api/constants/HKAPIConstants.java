@@ -16,6 +16,9 @@ public class HKAPIConstants {
 
     public static final String NO_SUPPLIER = "NO SUPPLIER";
     public static final String INVALID_DATE = "INVALID DATE";
+    public static final String INVALID_API_KEY = "INVALID API KEY";
+
+    public static final String BUSY_API_KEY = "258fdab38f9989dae1933585f2c4680f";
 
 
 }

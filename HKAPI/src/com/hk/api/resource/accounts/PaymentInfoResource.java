@@ -4,14 +4,19 @@ import com.hk.admin.pact.service.accounting.SupplierTransactionService;
 import com.hk.api.constants.HKAPIConstants;
 import com.hk.api.constants.HKAPIOperationStatus;
 import com.hk.api.dto.HKAPIBaseDTO;
+import com.hk.api.dto.accounts.HKAPIPaymentInfoDTO;
 import com.hk.constants.inventory.EnumSupplierTransactionType;
 import com.hk.domain.accounting.SupplierTransaction;
 import com.hk.domain.catalog.Supplier;
 import com.hk.pact.dao.core.SupplierDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.context.request.RequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,11 +35,18 @@ public class PaymentInfoResource {
 	@POST
 	@Path ("/add")
 	@Produces ("application/json")
-	public HKAPIBaseDTO addPaymentForSupplier(@FormParam("tinNumber") String tinNumber, @FormParam("date") String date, @FormParam("busyPaymentId") String busyPaymentId,
-                                        @FormParam("amount") Double amount, @FormParam("busySupplierBalance") Double busySupplierBalance,
-                                        @FormParam("narration") String narration){
+	public HKAPIBaseDTO addPaymentForSupplier(@RequestBody HKAPIPaymentInfoDTO hkapiPaymentInfoDTO,
+                                              @Context HttpServletRequest request, @HeaderParam("apiKey") String apiKey){
+
         HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
-        Supplier supplier = supplierDao.findByTIN(tinNumber);
+
+        if(apiKey == null  || !apiKey.equals(HKAPIConstants.BUSY_API_KEY)){
+            baseDTO.setStatus(HKAPIOperationStatus.ERROR);
+            baseDTO.setMessage(HKAPIConstants.INVALID_API_KEY);
+            return baseDTO;
+        }
+
+        Supplier supplier = supplierDao.findByTIN(hkapiPaymentInfoDTO.getTinNumber());
 
         if(supplier == null){
             baseDTO.setStatus(HKAPIOperationStatus.ERROR);
@@ -44,15 +56,16 @@ public class PaymentInfoResource {
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
         Date paymentDate = null;
         try{
-            paymentDate = df.parse(date);
+            paymentDate = df.parse(hkapiPaymentInfoDTO.getDate());
         }catch (ParseException e){
             baseDTO.setStatus(HKAPIOperationStatus.ERROR);
             baseDTO.setMessage(HKAPIConstants.INVALID_DATE);
             return baseDTO;
         }
 
-        SupplierTransaction supplierTransaction = supplierTransactionService.createSupplierTransaction(supplier, EnumSupplierTransactionType.Payment.asSupplierTransactionType(), amount, paymentDate, busyPaymentId,
-                busySupplierBalance, narration);
+        SupplierTransaction supplierTransaction = supplierTransactionService.createSupplierTransaction(supplier,
+                EnumSupplierTransactionType.Payment.asSupplierTransactionType(), hkapiPaymentInfoDTO.getAmount(), paymentDate, hkapiPaymentInfoDTO.getBusyPaymentId(),
+                hkapiPaymentInfoDTO.getBusySupplierBalance(), hkapiPaymentInfoDTO.getNarration());
         if(supplierTransaction == null){
             baseDTO.setStatus(HKAPIOperationStatus.ERROR);
         }
