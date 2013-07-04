@@ -235,6 +235,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<ReconciliationType> getReconciliationTypeList() {
         return EnumReconciliationType.getSubtractReconciliationType();
     }
+    
+    public List<ReconciliationType> getDebitNoteReconciliationType(){
+    	return EnumReconciliationType.getDebitNoteReconciliationType();
+    }
 
     public List<Mail> getAllMailType() {
         return mailService.getAllMailType();

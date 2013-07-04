@@ -124,12 +124,19 @@ public class PaymentServiceImpl implements PaymentService {
                             }
                         }
 
-                        List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
                         //TODO: in case of ICICI stuff amount in response code
-                        if(EnumGateway.ICICI.getId().equals(gateway.getId())){
-                            stuffAmountInRespObj(requestResponseMappedList) ;
+                        if (EnumGateway.ICICI.getId().equals(gateway.getId())) {
+                            if (hkPaymentResponseList != null && hkPaymentRequestList != null) {
+                                for (HkPaymentResponse resp : hkPaymentResponseList) {
+                                    for (Payment req : hkPaymentRequestList) {
+                                        stuffAmountInRespObj(resp, req);
+                                    }
+                                }
+                            }
                         }
 
+
+                        List<Map<String, Object>> requestResponseMappedList = mapRequestAndResponseObject(hkPaymentRequestList, hkPaymentResponseList);
                         verifyRequestAndResponseList(requestResponseMappedList);
                         verifyAmountOfRequestAndResponseList(requestResponseMappedList, faultyAmountMap);
 
@@ -146,16 +153,23 @@ public class PaymentServiceImpl implements PaymentService {
         return hkPaymentResponseList;
     }
 
-    private void stuffAmountInRespObj(List<Map<String, Object>> requestResponseMappedList) {
-        for(Map<String,Object> requestResponseMap : requestResponseMappedList){
-            Payment request = (Payment) requestResponseMap.get("Request");
-            HkPaymentResponse response = (HkPaymentResponse) requestResponseMap.get("Response");
-            response.setAmount(request.getAmount());
+    private void stuffAmountInRespObj(HkPaymentResponse resp, Payment req) {
+        if (resp != null && req != null) {
+            String gatewayReferenceId = req.getGatewayReferenceId();
+            String rrn = req.getRrn();
+            String gatewayOrderId = req.getGatewayOrderId();
+            if (EnumPaymentTransactionType.REFUND.getName().equalsIgnoreCase(resp.getTransactionType())) {
+                if (rrn != null && gatewayReferenceId != null && gatewayReferenceId.equalsIgnoreCase(resp.getGatewayReferenceId()) && rrn.equalsIgnoreCase(resp.getRrn())) {
+                    resp.setAmount(req.getAmount());
+                }
+            } else if (gatewayOrderId != null && gatewayOrderId.equalsIgnoreCase(resp.getGatewayOrderId())) {
+                resp.setAmount(req.getAmount());
+            }
         }
     }
 
     @Override
-    public void updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
+    public Payment updatePayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
 
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
@@ -181,6 +195,7 @@ public class PaymentServiceImpl implements PaymentService {
                 getPaymentManager().error(gatewayOrderId, e);
             }
         }
+        return basePayment;
     }
 
 
@@ -193,14 +208,15 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
+    public Payment refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
         Double gatewayAmount = null;
         Payment basePayment = findByGatewayOrderId(gatewayOrderId);
+        Payment refundRequestPayment = null;
 
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
             if (EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
                 HkPaymentService hkPaymentService = getHkPaymentService(basePayment.getGateway());
-                Payment refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
+                refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
                 try {
                     HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
                     // handle the case of citrus
@@ -230,6 +246,8 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
         }
+
+        return refundRequestPayment;
     }
 
     /**
@@ -501,6 +519,7 @@ public class PaymentServiceImpl implements PaymentService {
         refundPayment.setPaymentStatus(paymentStatus);
         refundPayment.setParent(basePayment);
         refundPayment.setAmount(amount);
+        refundPayment.setTransactionType(EnumPaymentTransactionType.REFUND.getName());
 
         refundPayment = paymentDao.save(refundPayment);
 
@@ -519,7 +538,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private boolean isCitrusResponseSuccessful(HkPaymentResponse hkPaymentResponse) {
-        if(hkPaymentResponse != null && EnumHKPaymentStatus.SUCCESS.getId().equals(hkPaymentResponse.getHKPaymentStatus().getId())){
+        if(hkPaymentResponse != null && hkPaymentResponse.getHKPaymentStatus() != null  &&
+                EnumHKPaymentStatus.SUCCESS.getId().equals(hkPaymentResponse.getHKPaymentStatus().getId())){
             return true;
         }
         return false;

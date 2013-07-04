@@ -15,6 +15,8 @@ public class DebitNoteLineItemDto {
   private Double payable = 0.0;
 
   private Long debitQty = 0L;
+  
+  private Double discountPercent = 0.0;
 
   public DebitNoteLineItem getDebitNoteLineItem() {
     return debitNoteLineItem;
@@ -63,4 +65,12 @@ public class DebitNoteLineItemDto {
   public void setDebitQty(Long debitQty) {
     this.debitQty = debitQty;
   }
+
+public Double getDiscountPercent() {
+	return discountPercent;
+}
+
+public void setDiscountPercent(Double discountPercent) {
+	this.discountPercent = discountPercent;
+}
 }
