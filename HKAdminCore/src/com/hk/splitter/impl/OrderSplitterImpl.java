@@ -118,6 +118,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 				}
                 //ps hack to split prescription eyeglasses
                 if (cartLineItem.getCartLineItemConfig() != null){
+                    container.addLineItem( warehouseService.getDefaultWarehouse() ,cartLineItem);
                     isAdded = true;
                 }
 				
