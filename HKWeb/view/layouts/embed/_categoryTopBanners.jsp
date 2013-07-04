@@ -69,16 +69,10 @@
 
   <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
     <jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
-    <c:out value="${brands}"/>
-    <c:out value="${categoryNameList}"/>
   </c:if>
   <c:if test="${hk:collectionContains(categoryNameList, 'devices') ||
             hk:collectionContains(categoryNameList, 'diabetic-food') ||
             hk:collectionContains(brandList, 'Frio') }">
     <jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>
-  </c:if>
-
-  <c:if test="${! empty brandList}">
-    <c:out value="${brandList}"/>
   </c:if>
 </s:layout-definition>
