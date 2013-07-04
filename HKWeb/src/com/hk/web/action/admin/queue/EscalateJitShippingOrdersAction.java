@@ -2,6 +2,8 @@ package com.hk.web.action.admin.queue;
 
 import java.util.*;
 
+import javax.sound.sampled.Line;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -87,28 +89,34 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 		sortedShippingOrderList.addAll(shippingOrderListToProcess);
 		sortedShippingOrderList = getSortedShippingOrders();
 		Set<ShippingOrder> sortedShippingOrdersSet = new HashSet<ShippingOrder>(sortedShippingOrderList);
+		
+		List<LineItem> lineItemsList = new ArrayList<LineItem>();
+		for (ShippingOrder so : sortedShippingOrdersSet) {
+			Set<LineItem> items = so.getLineItems();
+			if (items != null && items.size() > 0) {
+				lineItemsList.addAll(items);
+			}
+		}
 
 		int ctr = 0;
-		for (ShippingOrder so : sortedShippingOrdersSet) {
-			for (LineItem li : so.getLineItems()) {
-				for (ProductVariant pv : productVariants) {
-					if (li.getSku().getProductVariant().equals(pv)) {
-						Long inventory = productVariantService.findNetInventory(pv);
-						if(inventory==null){
-							inventory = 0L;
-						}
-						if (inventory.compareTo(li.getQty()) >= 0) {
-							shippingOrderService.automateManualEscalation(so);
-							ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
-							shippingOrderLifecycle.setOrder(so);
-							shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
-									EnumShippingOrderLifecycleActivity.SO_LoggedComment.getId()));
-							shippingOrderLifecycle.setUser(userService.getAdminUser());
-							shippingOrderLifecycle.setComments("PO against the shipping order served.");
-							shippingOrderLifecycle.setActivityDate(new Date());
-							shippingOrderLifecycleDao.save(shippingOrderLifecycle);
-							ctr++;
-						}
+		for (LineItem li : lineItemsList) {
+			for (ProductVariant pv : productVariants) {
+				if (li.getSku().getProductVariant().equals(pv)) {
+					Long inventory = productVariantService.findNetInventory(pv);
+					if (inventory == null) {
+						inventory = 0L;
+					}
+					if (inventory.compareTo(li.getQty()) >= 0) {
+						shippingOrderService.automateManualEscalation(li.getShippingOrder());
+						ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
+						shippingOrderLifecycle.setOrder(li.getShippingOrder());
+						shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
+								EnumShippingOrderLifecycleActivity.SO_LoggedComment.getId()));
+						shippingOrderLifecycle.setUser(userService.getAdminUser());
+						shippingOrderLifecycle.setComments("PO against the shipping order served.");
+						shippingOrderLifecycle.setActivityDate(new Date());
+						shippingOrderLifecycleDao.save(shippingOrderLifecycle);
+						ctr++;
 					}
 				}
 			}
