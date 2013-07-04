@@ -139,6 +139,7 @@
 --/sports/fitness-accessories/rehabilitation-supports
 --/sports/fitness-accessories/gym-clothing
 --/sports/fitness-accessories/gym-essential-kits
+--/sports/fitness-accessories/bottles-shakers : Bottles & Shakers
 --/sports/fitness-accessories/fitness-watches
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
@@ -161,8 +162,12 @@
 ---/sports/fitness-equipment/exercise-bike/commercial
 --/sports/fitness-equipment/rowers
 --/sports/fitness-equipment/home-gym
+---/sports/fitness-equipment/home-gym/multi-gym-accessories
+--/sports/fitness-equipment/smith-machines
 --/sports/fitness-equipment/steppers
 --/sports/fitness-equipment/bench-equipments
+--/sports/fitness-equipment/multi-utility-equipments
+--/sports/fitness-equipment/abdominal-machines
 --/sports/fitness-equipment/heart-rate-monitors
 ---/sports/fitness-equipment/heart-rate-monitors/accessories
 --/sports/fitness-equipment/massage-equipments
@@ -195,7 +200,7 @@
 ----/sports/sports-equipment/cricket/bats/english-willow: English Willow
 ---/sports/sports-equipment/cricket/balls
 ---/sports/sports-equipment/cricket/gloves
----/sports/sports-equipment/cricket/helmets
+---/sports/sports-eqipment/cricket/helmets
 ---/sports/sports-equipment/cricket/pads
 ---/sports/sports-equipment/cricket/guards
 ---/sports/sports-equipment/cricket/bags
