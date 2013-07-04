@@ -33,7 +33,7 @@ public class PopulateCodCallDataAction extends BaseAction {
 
             logger.info("Populating Cod Call ");
             int totalRowsUpdateCodCall=codPopulateItemData.populateCodCalldata();
-            addRedirectAlertMessage(new SimpleMessage("Total Rows Updated:",+totalRowsUpdateCodCall)) ;
+            addRedirectAlertMessage(new SimpleMessage("Total Rows Updated:" ,totalRowsUpdateCodCall)) ;
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
         }
