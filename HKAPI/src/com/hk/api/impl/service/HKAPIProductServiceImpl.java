@@ -347,10 +347,6 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         String imageUrl = HKImageUtils.getS3ImageKey(targetEnumImageSize, product.getMainImageId());
         S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, hkReadBucket);
 
-        //To disqualify next time
-        product.setMainImageId(null);
-        getProductService().save(product);
-
         return "SUCCESS";
       }else{
         return "FAILED - Incorrect Values";
