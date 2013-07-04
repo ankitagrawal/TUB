@@ -338,7 +338,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
    }
 
   public String downloadResizeAndUploadImage(String productId, String srcImageSize, String targetImageSize) {
-    Product product = getProductById(productId);
+    Product product = getProductService().getProductById(productId);
     return downloadResizeAndUploadImage(product, srcImageSize, targetImageSize);
   }
 
