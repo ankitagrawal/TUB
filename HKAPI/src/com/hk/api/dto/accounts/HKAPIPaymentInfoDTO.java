@@ -61,4 +61,32 @@ public class HKAPIPaymentInfoDTO {
     public void setNarration(String narration) {
         this.narration = narration;
     }
+
+    public String toString(){
+        String requestDataString="";
+        if(this.getTinNumber() != null){
+            requestDataString += "tinNumber: "+this.getTinNumber()+",  ";
+        }
+
+        if(this.getAmount() != null){
+            requestDataString += "amount: "+this.getAmount()+",  ";
+        }
+
+        if(this.getBusyPaymentId() != null){
+            requestDataString += "busyPaymentId: "+this.getBusyPaymentId()+",  ";
+        }
+
+        if(this.getDate() != null){
+            requestDataString += "date: "+this.getDate()+",  ";
+        }
+
+        if(this.getBusySupplierBalance() != null){
+            requestDataString += "busySupplierBalance: "+this.getBusySupplierBalance()+",  ";
+        }
+
+        if(this.getNarration() != null){
+            requestDataString += "narration: "+this.getNarration()+"  ";
+        }
+        return requestDataString;
+    }
 }

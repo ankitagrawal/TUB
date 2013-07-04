@@ -1,6 +1,7 @@
 package com.hk.admin.pact.service.accounting;
 
 import com.akube.framework.dao.Page;
+import com.hk.domain.accounting.BusyApiCallLog;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.SupplierTransactionType;
 import com.hk.domain.accounting.SupplierTransaction;
@@ -43,4 +44,6 @@ public interface SupplierTransactionService {
     public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate);
 
     public boolean deletePurchaseInvoiceTransaction(PurchaseInvoice purchaseInvoice);
+
+    public BusyApiCallLog logApiRequestFromBusy(BusyApiCallLog busyApiCallLog);
 }

@@ -57,6 +57,10 @@ public class SupplierTransaction implements java.io.Serializable {
     @Column (name = "narration")
     String narration;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date", nullable = false)
+    private Date createDate = new Date();
+
     public Long getId() {
         return this.id;
     }
@@ -151,6 +155,14 @@ public class SupplierTransaction implements java.io.Serializable {
 
     public void setNarration(String narration) {
         this.narration = narration;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }
 

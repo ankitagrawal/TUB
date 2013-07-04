@@ -6,6 +6,7 @@ import com.hk.api.constants.HKAPIOperationStatus;
 import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.api.dto.accounts.HKAPIPaymentInfoDTO;
 import com.hk.constants.inventory.EnumSupplierTransactionType;
+import com.hk.domain.accounting.BusyApiCallLog;
 import com.hk.domain.accounting.SupplierTransaction;
 import com.hk.domain.catalog.Supplier;
 import com.hk.pact.dao.core.SupplierDao;
@@ -21,6 +22,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 
 @Path ("/payment")
 @Component
@@ -39,6 +41,37 @@ public class PaymentInfoResource {
                                               @Context HttpServletRequest request, @HeaderParam("apiKey") String apiKey){
 
         HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
+
+        if(hkapiPaymentInfoDTO == null){
+            baseDTO.setStatus(HKAPIOperationStatus.ERROR);
+            baseDTO.setMessage(HKAPIConstants.NO_DATA_RECEIVED);
+            return baseDTO;
+        }
+
+        BusyApiCallLog busyApiCallLog = new BusyApiCallLog();
+
+        busyApiCallLog.setIp(request.getRemoteAddr());
+        busyApiCallLog.setApiKey(apiKey);
+        busyApiCallLog.setRequestUrl(request.getRequestURI());
+        busyApiCallLog.setRequestData(hkapiPaymentInfoDTO.toString());
+        String headerData="";
+        String headerElement=null;
+        Enumeration headerNames = request.getHeaderNames();
+        while(headerNames.hasMoreElements()){
+            headerElement = (String)headerNames.nextElement();
+            if(headerElement != null){
+                headerData+= headerElement+" : ";
+                if (request.getHeader(headerElement) != null){
+                    headerData+= request.getHeader(headerElement)+" , ";
+                }
+                else{
+                    headerData+= "null , ";
+                }
+            }
+        }
+        busyApiCallLog.setRequestHeader(headerData);
+
+        supplierTransactionService.logApiRequestFromBusy(busyApiCallLog);
 
         if(apiKey == null  || !apiKey.equals(HKAPIConstants.BUSY_API_KEY)){
             baseDTO.setStatus(HKAPIOperationStatus.ERROR);

@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.accounting.SupplierTransactionDao;
 import com.hk.admin.pact.service.accounting.SupplierTransactionService;
 import com.hk.constants.inventory.EnumSupplierTransactionType;
+import com.hk.domain.accounting.BusyApiCallLog;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.SupplierTransactionType;
 import com.hk.domain.accounting.SupplierTransaction;
@@ -163,6 +164,11 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
     @Override
     public List<SupplierTransaction> getAllTransactionListForSuppliers(Supplier supplier, Date startDate, Date endDate) {
         return getSupplierTransactionDao().getAllTransactionListForSuppliers(supplier, startDate, endDate);
+    }
+
+    @Override
+    public BusyApiCallLog logApiRequestFromBusy(BusyApiCallLog busyApiCallLog) {
+        return (BusyApiCallLog)getSupplierTransactionDao().save(busyApiCallLog);
     }
 
     public SupplierTransactionDao getSupplierTransactionDao() {

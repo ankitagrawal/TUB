@@ -15,6 +15,7 @@ public class HKAPIConstants {
     public static final String HEALTHKART = "HEALTHKART";
 
     public static final String NO_SUPPLIER = "NO SUPPLIER";
+    public static final String NO_DATA_RECEIVED = "NO DATA RECEIVED";
     public static final String INVALID_DATE = "INVALID DATE";
     public static final String INVALID_API_KEY = "INVALID API KEY";
 
