@@ -140,7 +140,7 @@ public class PurchaseOrder implements java.io.Serializable {
   private boolean isExtraInventoryCreated;
   
   @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "purchase_order_type_id", nullable = false)
+  @JoinColumn (name = "purchase_order_type_id")
   private PurchaseOrderType purchaseOrderType;
 
 	@Transient

@@ -7,6 +7,7 @@ import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
@@ -28,4 +29,8 @@ public interface PurchaseOrderDao extends BaseDao {
     public List<PurchaseOrder> listPurchaseOrdersExcludingStatusInTimeFrame(List<Long> purchaseOrderStatusList, Date startDate, Date endDate);
 
     public boolean isPiCreated(PurchaseOrder purchaseOrder);
+    
+    public List<ProductVariant> getAllProductVariantFromPO(PurchaseOrder po);
+    
+    public void deleteSoForPo(PurchaseOrder po, ShippingOrder so);
 }

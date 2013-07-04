@@ -4,10 +4,13 @@ import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.hk.domain.order.ShippingOrder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +72,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
   @SuppressWarnings("unchecked")
   public List<PurchaseOrder> getAllPurchaseOrderByExtraInventory(){
     return (List<PurchaseOrder>) getPurchaseOrderDao().findByNamedQuery("getAllPurchaseOrderByExtraInventory");
+  }
+  
+  public List<ProductVariant> getAllProductVariantFromPO(PurchaseOrder po){
+	  return (List<ProductVariant>) getPurchaseOrderDao().getAllProductVariantFromPO(po);
+  }
+  
+  public void deleteSoForPo(PurchaseOrder po, ShippingOrder so){
+	  getPurchaseOrderDao().deleteSoForPo(po,so);
   }
 
 	public PurchaseOrderDao getPurchaseOrderDao() {

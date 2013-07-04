@@ -1,27 +1,37 @@
 package com.hk.admin.impl.dao.inventory;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.BaseDao;
 
 @SuppressWarnings("unchecked")
 @Repository
 public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDao {
+	
+	@Autowired
+	BaseDao baseDao;
 
     public List<PurchaseOrder> listPurchaseOrdersExcludingStatus(List<Long> purchaseOrderStatusList) {
         return (List<PurchaseOrder>) getSession().createQuery("from PurchaseOrder o where o.purchaseOrderStatus.id not in (:purchaseOrderStatusList)").setParameterList(
@@ -107,5 +117,19 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
                 }
              }
         return false;
+    }
+    
+    public List<ProductVariant> getAllProductVariantFromPO(PurchaseOrder po){
+    	List<PoLineItem> poLineItems = po.getPoLineItems();
+    	return (List<ProductVariant>) getSession().createQuery( "Select p.sku.productVariant from PoLineItem p where p in (:poLineItems)").setParameterList("poLineItems", poLineItems).list();
+    }
+    
+    public void deleteSoForPo(PurchaseOrder po, ShippingOrder so){
+    	 //getSession().createQuery( "from  PoLineItem p where p in (:poLineItems)").setParameterList("poLineItems", poLineItems).list();
+    	String sql = "delete from  shipping_order_has_purchase_order where shipping_order_id  = :soid and purchase_order_id = :poid";
+    	SQLQuery query = baseDao.createSqlQuery(sql);
+    	query.setParameter("soid", so.getId());
+		query.setParameter("poid", po.getId());
+    	query.executeUpdate();
     }
 }

@@ -3,6 +3,8 @@ package com.hk.web.action.admin.queue;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.sound.sampled.Line;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
@@ -69,6 +73,10 @@ public class JitShippingOrderAction extends BaseAction {
 	ShippingOrderLifecycleDao shippingOrderLifecycleDao;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	PurchaseOrderService purchaseOrderService;
+	@Autowired
+	AdminInventoryService adminInventoryService;
 
 	private Date startDate;
 	private Date endDate;
@@ -107,6 +115,29 @@ public class JitShippingOrderAction extends BaseAction {
 			}
 
 			purchaseOrders = deletePOsWithEmptyPOLineItems(purchaseOrderList);
+			
+			for (PurchaseOrder po : purchaseOrders) {
+				List<ProductVariant> pvFromPoList = purchaseOrderService.getAllProductVariantFromPO(po);
+				List<ShippingOrder> soList = po.getShippingOrders();
+				if (soList != null && soList.size() > 0) {
+					for (ShippingOrder so : soList) {
+						Set<LineItem> liSet = so.getLineItems();
+						Set<ProductVariant> pvFromSoSet = new HashSet<ProductVariant>();
+						if (liSet != null && liSet.size() > 0) {
+							for (LineItem li : liSet) {
+								ProductVariant pv = li.getSku().getProductVariant();
+								if (pv.getProduct().isJit()) {
+									pvFromSoSet.add(pv);
+								}
+							}
+						}
+						if(!pvFromPoList.containsAll(pvFromSoSet)){
+							purchaseOrderService.deleteSoForPo(po, so);
+						}
+					}
+				}
+			}
+
 			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 			for (PurchaseOrder purchaseOrder : purchaseOrderList) {
 				if (purchaseOrder != null) {
@@ -326,13 +357,21 @@ public class JitShippingOrderAction extends BaseAction {
 					ProductVariant productVariant = entry.getKey();
 					Long quantity = entry.getValue();
 
-					Long inventory = productVariantService.findNetInventory(productVariant);
-					if(inventory==null){
+					Long inventory = adminInventoryService.getNetInventory(productVariant);
+					Long bookedInventory = adminInventoryService.getBookedInventory(productVariant);
+					if(bookedInventory == null){
+						bookedInventory = 0L;
+					}
+					if (inventory == null) {
 						inventory = 0L;
 					}
-					logger.debug("Inventory check for Variant - "+productVariant.getId()+ "qty - "+inventory+ "asked Qty - "+quantity);
-					if (inventory != null && quantity.compareTo(inventory) > 0 && (quantity - inventory) > 0) {
-						Long poQty = quantity - inventory;
+					Long unbookedInventory = inventory - bookedInventory;
+					if(unbookedInventory<=0){
+						unbookedInventory=0L;
+					}
+					logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
+					if ((quantity - unbookedInventory) > 0) {
+						Long poQty = quantity - unbookedInventory;
 						// TODO --
 						Double taxableAmount = 0.0D;
 						Double discountPercentage = 0D;
@@ -375,7 +414,8 @@ public class JitShippingOrderAction extends BaseAction {
 				purchaseOrder.setTaxableAmount(totalTaxable);
 				purchaseOrder.setTaxAmount(totalTax);
 				purchaseOrder.setSurchargeAmount(totalSurcharge);
-				//purchaseOrder.setFinalPayableAmount(totalPayable + totalTaxable + totalTax + totalSurcharge);
+				// purchaseOrder.setFinalPayableAmount(totalPayable +
+				// totalTaxable + totalTax + totalSurcharge);
 				purchaseOrder.setFinalPayableAmount(totalPayable);
 				purchaseOrder.setPoLineItems(poLineItems);
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);

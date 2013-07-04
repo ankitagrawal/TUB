@@ -1,7 +1,9 @@
 package com.hk.admin.pact.service.inventory;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.hk.domain.order.ShippingOrder;
 
 import java.util.List;
 
@@ -23,5 +25,9 @@ public interface PurchaseOrderService {
   public PurchaseOrder getPurchaseOrderByExtraInventory(ExtraInventory extraInventory);
 
   public List<PurchaseOrder> getAllPurchaseOrderByExtraInventory();
+  
+  public List<ProductVariant> getAllProductVariantFromPO(PurchaseOrder po);
+  
+  public void deleteSoForPo(PurchaseOrder po, ShippingOrder so);
 
 }
