@@ -75,4 +75,5 @@
             hk:collectionContains(brandList, 'Frio') }">
     <jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>
   </c:if>
+
 </s:layout-definition>
