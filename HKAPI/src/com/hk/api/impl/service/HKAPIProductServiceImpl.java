@@ -327,9 +327,24 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 		return productIdsForLowResolutionImages.toString();
 	}
 
+   public String downloadResizeAndUploadImages(String srcImageSize, String targetImageSize){
+     StringBuffer stringBuffer = new StringBuffer("IDs:");
+     List<Product> productList = getProductService().getAllNonDeletedProducts();
+     for (Product product : productList) {
+       String resp = downloadResizeAndUploadImage(product, srcImageSize, targetImageSize);
+       stringBuffer.append(resp);
+     }
+    return stringBuffer.toString();
+   }
+
   public String downloadResizeAndUploadImage(String productId, String srcImageSize, String targetImageSize) {
+    Product product = getProductById(productId);
+    return downloadResizeAndUploadImage(product, srcImageSize, targetImageSize);
+  }
+
+
+  private String downloadResizeAndUploadImage(Product product, String srcImageSize, String targetImageSize) {
     try {
-      Product product = getProductById(productId);
       EnumImageSize srcEnumImageSize = EnumImageSize.getEnumImageSize(srcImageSize);
       EnumImageSize targetEnumImageSize = EnumImageSize.getEnumImageSize(targetImageSize);
 
@@ -346,8 +361,8 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         ImageUtils.createThumbnail(imageFilePath, repositoryFilePath, targetEnumImageSize.getDimension(), QUALITY, false, false, .5F);
         String imageUrl = HKImageUtils.getS3ImageKey(targetEnumImageSize, product.getMainImageId());
         S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, hkReadBucket);
-
-        return "SUCCESS";
+        logger.debug("Resized Image for Product="+product.getId());
+        return "SUCCESS:"+product.getId();
       }else{
         return "FAILED - Incorrect Values";
       }

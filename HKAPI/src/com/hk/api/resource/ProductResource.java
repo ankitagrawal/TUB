@@ -77,6 +77,13 @@ public class ProductResource {
   }
 
   @GET
+  @Path("/resizeImage/all/{srcImageSize}/{targetImageSize}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String resizeAllImages(@PathParam("srcImageSize") String srcImageSize, @PathParam("targetImageSize") String targetImageSize) {
+    return getHkapiProductService().downloadResizeAndUploadImages(srcImageSize, targetImageSize);
+  }
+
+  @GET
   @Path("/ooshiddendeleted/all")
   @Produces(MediaType.APPLICATION_JSON)
   public HKAPIBaseDTO getOOSHiddenDeletedProducts() {

@@ -24,6 +24,8 @@ public interface HKAPIProductService {
 
   public HKAPIBaseDTO getOOSHiddenDeletedProducts();
 
+  public String downloadResizeAndUploadImages(String srcImageSize, String targetImageSize);
+
   public String downloadResizeAndUploadImage(String productId, String srcImageSize, String targetImageSize);
 
 }
