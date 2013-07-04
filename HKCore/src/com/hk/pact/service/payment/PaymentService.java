@@ -62,10 +62,10 @@ public interface PaymentService {
 
     public List<Payment> listPaymentFamily(String gatewayOrderId);
 
-    public Double getRefundableAmount(Payment amount, Double orderAmount);
+    public boolean isValidRefundableAmount(Payment amount, Double orderAmount);
 
     public void setRefundAmount(Payment payment, Double amount);
 
-    public void reconciliationOnCancel(ReconciliationType reconciliationType, Order order, Double amount);
+    public void reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment);
 
 }

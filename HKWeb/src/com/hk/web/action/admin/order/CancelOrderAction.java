@@ -57,12 +57,12 @@ public class CancelOrderAction extends BaseAction {
     private String           cancellationRemark;
 
     @Validate(required = true)
-    private ReconciliationType reconciliationType;
+    private Long reconciliationType;
 
     @JsonHandler
     public Resolution pre() {
         User loggedOnUser = userService.getLoggedInUser();
-        paymentService.reconciliationOnCancel(reconciliationType,order, order.getAmount());
+        paymentService.reconciliationOnCancel(reconciliationType,order, order.getAmount(), cancellationRemark);
         // TODO: need to tighten logic for cancellation of order
         adminOrderService.cancelOrder(order, cancellationType, cancellationRemark, loggedOnUser);
         Map<String, Object> data = new HashMap<String, Object>(1);
@@ -91,11 +91,11 @@ public class CancelOrderAction extends BaseAction {
         this.userService = userService;
     }
 
-    public ReconciliationType getReconciliationType() {
+    public Long getReconciliationType() {
         return reconciliationType;
     }
 
-    public void setReconciliationType(ReconciliationType reconciliationType) {
+    public void setReconciliationType(Long reconciliationType) {
         this.reconciliationType = reconciliationType;
     }
 }

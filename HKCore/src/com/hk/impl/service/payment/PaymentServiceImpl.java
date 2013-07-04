@@ -403,8 +403,11 @@ public class PaymentServiceImpl implements PaymentService {
     }*/
 
     @Override
-    public Double getRefundableAmount(Payment payment, Double orderAmt) {
-        return payment.getAmount() - payment.getRefundAmount() - orderAmt;
+    public boolean isValidRefundableAmount(Payment payment, Double orderAmt) {
+        if (payment.getRefundAmount() == null) {
+            payment.setRefundAmount(0.0);
+        }
+        return ((payment.getAmount() - payment.getRefundAmount() - orderAmt) >= 0);
     }
 
     @Override
@@ -416,22 +419,21 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void reconciliationOnCancel(ReconciliationType reconciliationType, Order order,Double amount) {
+    public void reconciliationOnCancel(Long reconciliationType, Order order,Double amount, String comment) {
         User loggedOnUser =  userService.getLoggedInUser();
-        Double refundableAmount = getRefundableAmount(order.getPayment(), amount);
-        if (refundableAmount >= 0) {
-            if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType.getId())) {
+        if (isValidRefundableAmount(order.getPayment(), amount)) {
+            if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType)) {
 
                 //TODO:pass comment in the API
                 RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, order.getUser(),
-                        order, refundableAmount, null, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+                        order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
 
                 rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),null);
-                setRefundAmount(order.getPayment(), refundableAmount);
+                setRefundAmount(order.getPayment(), amount);
 
-            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType.getId())) {
+            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType)) {
                 try {
-                    refundPayment(order.getPayment().getGatewayOrderId(), refundableAmount);
+                    refundPayment(order.getPayment().getGatewayOrderId(), amount);
                 } catch (HealthkartPaymentGatewayException e) {
                     //TODO: handle it properly
                 }
@@ -623,12 +625,12 @@ public class PaymentServiceImpl implements PaymentService {
         return orderService;
     }
 
-    public PaymentManager getPaymentManager() {
-        return ServiceLocatorFactory.getBean(PaymentManager.class);
-    }
-
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    public PaymentManager getPaymentManager() {
+        return ServiceLocatorFactory.getBean(PaymentManager.class);
     }
 
     public PaymentDao getPaymentDao() {

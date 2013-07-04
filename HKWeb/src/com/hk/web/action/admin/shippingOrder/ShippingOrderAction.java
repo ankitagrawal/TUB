@@ -56,7 +56,7 @@ public class ShippingOrderAction extends BaseAction {
     private String customerSatisfyReason;
 
     @Validate(required = true)
-    private ReconciliationType reconciliationType;
+    private Long reconciliationType;
 
     @DefaultHandler
     public Resolution pre() {
@@ -111,7 +111,7 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution cancelShippingOrder() {
-        paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount());
+        paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
         adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark);
         if (shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())) {
             addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
@@ -199,11 +199,11 @@ public class ShippingOrderAction extends BaseAction {
         this.firewall = firewall;
     }
 
-    public ReconciliationType getReconciliationType() {
+    public Long getReconciliationType() {
         return reconciliationType;
     }
 
-    public void setReconciliationType(ReconciliationType reconciliationType) {
+    public void setReconciliationType(Long reconciliationType) {
         this.reconciliationType = reconciliationType;
     }
 }
