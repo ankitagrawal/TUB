@@ -13606,7 +13606,7 @@
     </changeSet>
     <changeSet author="tarun (Written)" id="1372941433730-9">
         <sql>
-            INSERT INTO `healthkart_latest`.`supplier_transaction_type` (`id`, `name`) VALUES (NULL, 'CREATE'), (NULL, 'PURC'), (NULL, 'BP'), (NULL, 'PRT');
+            INSERT INTO `supplier_transaction_type` (`id`, `name`) VALUES (NULL, 'CREATE'), (NULL, 'PURC'), (NULL, 'BP'), (NULL, 'PRT');
         </sql>
     </changeSet>
 </databaseChangeLog>
