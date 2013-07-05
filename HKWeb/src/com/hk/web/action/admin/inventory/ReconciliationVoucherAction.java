@@ -1,3 +1,4 @@
+
 package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.dao.Page;
@@ -6,6 +7,7 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
+import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.util.BarcodeUtil;
@@ -15,6 +17,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
@@ -26,6 +29,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -62,6 +66,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private ReconciliationVoucherParser rvParser;
     @Autowired
     ReconciliationVoucherService reconciliationVoucherService;
+    @Autowired 
+    SupplierDao supplierDao;
 
     @Autowired
     UserDao userDao;
@@ -81,6 +87,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     SkuGroupService skuGroupService;
     @Autowired
     UserService userService;
+    @Autowired 
+    ProductVariantSupplierInfoService productVariantSupplierInfoService;
 
     private ReconciliationVoucher reconciliationVoucher;
     private List<ReconciliationVoucher> reconciliationVouchers = new ArrayList<ReconciliationVoucher>();
@@ -100,6 +108,10 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private RvLineItem rvLineItemSaved;
     private ReconciliationType reconciliationType;
     private String remarks;
+    private Supplier                supplier = null;
+    private Long warehouseId;
+    private String barcode;
+    private Boolean isDebitNoteCreated;
 
 
     @Validate(required = true, on = "parse")
@@ -203,11 +215,20 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
+        
         if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
+        	 if(supplier!=null){
+        		 reconciliationVoucher = new ReconciliationVoucher();
+        		 reconciliationVoucher.setSupplier(supplier);
+        		 reconciliationVoucher.setReconciliationType(EnumReconciliationType.RVForDebitNote.asReconciliationType());
+        		 reconciliationVoucher.setWarehouse(loggedOnUser.getSelectedWarehouse());
+        	 }
             reconciliationVoucher.setCreateDate(new Date());
             reconciliationVoucher.setCreatedBy(loggedOnUser);
         }
+        
         reconciliationVoucher = reconciliationVoucherService.save(reconciliationVoucher);
+        isDebitNoteCreated = reconciliationVoucherService.getDebitNote(reconciliationVoucher)!=null?Boolean.TRUE:Boolean.FALSE;
         return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
     }
 
@@ -595,6 +616,59 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
+    @JsonHandler
+	public Resolution getSupplierAgainstBarcode() {
+		Map<Object, Object> dataMap = new HashMap<Object, Object>();
+		HealthkartResponse healthkartResponse = null;
+		SkuItem skuItem = null;
+		if (StringUtils.isNotBlank(barcode) && warehouseId != null) {
+			try {
+				SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(barcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+		        if (skuItemBarcode != null) {
+		            skuItem = skuItemBarcode;
+		        } else {
+		            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser());
+		            if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
+		                skuItem = inStockSkuItemList.get(0);
+		            }
+		        }
+		        ProductVariant productVariant;
+				SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(barcode, warehouseId);
+				if(skuItem!=null){
+					productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
+				}
+				else{
+					productVariant = skuGroup.getSku().getProductVariant();
+				}
+				Supplier supplier = productVariantSupplierInfoService.getSupplierFromProductVariant(productVariant);
+				if (supplier != null) {
+					dataMap.put("supplier", supplier);
+					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Supplier Name",
+							dataMap);
+				}
+
+			} catch (Exception e) {
+				healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage());
+			}
+		} else {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Input Data");
+		}
+		noCache();
+		return new JsonResolution(healthkartResponse);
+	}
+	
+	public Resolution createDebitNote(){
+		if(warehouse==null){
+			addRedirectAlertMessage(new SimpleMessage("Please select a warehouse"));
+			return new RedirectResolution(ReconciliationVoucherAction.class).addParameter("create");
+		}
+		if(reconciliationVoucherService.getDebitNote(reconciliationVoucher)!=null){
+			addRedirectAlertMessage(new SimpleMessage("Debit Note Number - "+reconciliationVoucherService.getDebitNote(reconciliationVoucher).getId()+"has already been created against the RV"));
+			return new RedirectResolution(DebitNoteAction.class);
+		}
+		return new RedirectResolution(DebitNoteAction.class).addParameter("debitNoteFromRV").addParameter("reconciliationVoucher", reconciliationVoucher.getId()).addParameter("warehouse", warehouse.getId());
+	}
+    
     public ReconciliationVoucher getReconciliationVoucher() {
         return reconciliationVoucher;
     }
@@ -742,4 +816,37 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+	public Supplier getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
+	}
+
+	public Long getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+	
+	public Boolean getIsDebitNoteCreated() {
+		return isDebitNoteCreated;
+	}
+
+	public void setIsDebitNoteCreated(Boolean isDebitNoteCreated) {
+		this.isDebitNoteCreated = isDebitNoteCreated;
+	}
+    
 }
