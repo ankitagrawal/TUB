@@ -35,7 +35,7 @@ public class PopulateCodCallDataAction extends BaseAction {
 
             logger.info("Populating Cod Call ");
             totalRowsUpdateCodCall = codPopulateItemData.populateCodCalldata();
-            addRedirectAlertMessage(new SimpleMessage("total rows updated", totalRowsUpdateCodCall.toString()));
+            addRedirectAlertMessage(new SimpleMessage("total rows updated :"+totalRowsUpdateCodCall.toString()+""));
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
         }
