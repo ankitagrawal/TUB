@@ -346,19 +346,25 @@ public class JitShippingOrderAction extends BaseAction {
 					 * if(unbookedInventory<=0){ unbookedInventory=0L; }
 					 */
 					logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
-					if ((quantity - unbookedInventory) > 0) {
+					if (unbookedInventory<0) {
 						Long poQty = 0L;
-						if (unbookedInventory < 0) {
+						/*if (unbookedInventory < 0) {
 							poQty = Math.abs(unbookedInventory);
 						} else {
 							poQty = quantity - unbookedInventory;
-						}
+						}*/
 						// TODO --
 						Double taxableAmount = 0.0D;
 						Double discountPercentage = 0D;
 						PoLineItem poLineItem = new PoLineItem();
 						poLineItem.setSku(sku);
-						poLineItem.setQty(poQty);
+						if(Math.abs(unbookedInventory)<quantity){
+							poQty = Math.abs(unbookedInventory);
+						}
+						else{
+							poQty = quantity;
+						}
+						poLineItem.setQty(quantity);
 						poLineItem.setCostPrice(productVariant.getCostPrice());
 						poLineItem.setMrp(productVariant.getMarkedPrice());
 						poLineItem.setPurchaseOrder(purchaseOrder);
