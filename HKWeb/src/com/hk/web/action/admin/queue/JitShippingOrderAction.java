@@ -116,7 +116,7 @@ public class JitShippingOrderAction extends BaseAction {
 
 			purchaseOrders = deletePOsWithEmptyPOLineItems(purchaseOrderList);
 
-			for (PurchaseOrder po : purchaseOrders) {
+			/*for (PurchaseOrder po : purchaseOrders) {
 				List<ProductVariant> pvFromPoList = purchaseOrderService.getAllProductVariantFromPO(po);
 				List<ShippingOrder> soList = po.getShippingOrders();
 				if (soList != null && soList.size() > 0) {
@@ -136,7 +136,7 @@ public class JitShippingOrderAction extends BaseAction {
 						}
 					}
 				}
-			}
+			}*/
 
 			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 			for (PurchaseOrder purchaseOrder : purchaseOrderList) {
