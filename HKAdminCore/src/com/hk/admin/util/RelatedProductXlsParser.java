@@ -45,7 +45,7 @@ public class RelatedProductXlsParser {
                 HKRow row = rowIterator.next();
                 String productId = row.getColumnValue(XslConstants.PRODUCT_ID);
                 String relatedProductStr = row.getColumnValue(XslConstants.RELATED_PRODUCTS);
-                List<Product> relatedProducts = new ArrayList<Product>();
+                Set<Product> relatedProducts = new HashSet<>();
 
                 if (StringUtils.isEmpty(productId)) {
                     logger.error("product id cannot be null/empty");
@@ -64,7 +64,9 @@ public class RelatedProductXlsParser {
                         relatedProducts.add(relatedProduct);
                     }
                 }
-                product.setRelatedProducts(relatedProducts);
+                product.getRelatedProducts().addAll(relatedProducts);
+                List<Product> relatedProductList=  new ArrayList<>(relatedProducts);
+                product.setRelatedProducts(relatedProductList);
                 getProductService().save(product);
                 productSet.add(product);
                 relatedProducts.add(product);
