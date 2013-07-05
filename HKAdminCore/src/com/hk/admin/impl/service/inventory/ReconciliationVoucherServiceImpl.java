@@ -17,6 +17,7 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
+import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.core.InvTxnType;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -339,6 +340,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
         return rvLineItemSaved;
     }
+
+	@Override
+	public DebitNote getDebitNote(ReconciliationVoucher reconciliationVoucher) {
+		return (DebitNote) reconciliationVoucherDao.getDebitNote(reconciliationVoucher);
+	}
 
 
 }

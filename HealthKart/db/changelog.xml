@@ -13343,6 +13343,12 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
+    <changeSet author="Shakti Singh (written)" id="20130627-01">
+        <sql>
+            insert into permission values ('BULK_SEEK');
+            insert into role_has_permission values('GOD','BULK_SEEK');
+        </sql>
+    </changeSet>
 
     <changeSet author="deepakC" id="1370601362351-11234">
         <addColumn tableName="product_variant">
@@ -13416,4 +13422,120 @@
     		<column name="name" value="SO_FIX" type="VARCHAR(40)"></column>
     	</insert>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1372098072716-2">
+        <addColumn tableName="reconciliation_voucher">
+            <column name="supplier_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372098072716-10">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="reconciliation_voucher" constraintName="fk_reconciliation_voucher_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372191173219-2">
+        <addColumn tableName="debit_note">
+            <column name="discount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372191173219-3">
+        <addColumn tableName="debit_note_line_item">
+            <column name="discount_percent" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-2">
+        <addColumn tableName="debit_note">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-3">
+        <addColumn tableName="debit_note">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-4">
+        <addColumn tableName="debit_note">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372223479503-5">
+        <addColumn tableName="debit_note">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+        <changeSet author="Nihal (generated)" id="1372226601285-2">
+        <addColumn tableName="debit_note_line_item">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372226601285-3">
+        <addColumn tableName="debit_note_line_item">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372226601285-4">
+        <addColumn tableName="debit_note_line_item">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372226601285-5">
+        <addColumn tableName="debit_note_line_item">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372321252786-2">
+        <addColumn tableName="debit_note">
+            <column name="courier_pickup_detail_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372321252786-3">
+        <addColumn tableName="rtv_note">
+            <column name="return_by_hand" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372321252786-19">
+        <addForeignKeyConstraint baseColumnNames="courier_pickup_detail_id" baseTableName="debit_note" constraintName="fk_debit_note_courier_pickup_detail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_pickup_detail" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372328585647-2">
+        <addColumn tableName="debit_note">
+            <column name="destination_address" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372328585647-3">
+        <addColumn tableName="debit_note">
+            <column name="return_by_hand" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-2">
+        <addColumn tableName="debit_note">
+            <column name="return_address" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-3">
+        <addColumn tableName="debit_note">
+            <column name="return_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-4">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_return_address" type="VARCHAR(200)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-5">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_return_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372343674834-6">
+        <addColumn tableName="rtv_note">
+            <column name="rtv_tracking_number" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <!-- <changeSet author="Nihal (generated)" id="1372488185651-6">
+        <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="debit_note_line_item" constraintName="fk_debit_note_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+    </changeSet> -->
+	<changeSet author="Rohit" id="20130704-01">
+		<sql>
+			INSERT INTO store (id ,name ,prefix ,callback_rest_url)VALUES ('301', 'Greater Kailash 2', 'GK2', NULL);
+			INSERT INTO warehouse (tin, identifier, name, line1, line2, city, state, pincode, wh_phone, store_id, honoring_b2c_orders, warehouse_type, active) VALUES ('7840464349', 'Greater Kailash Aqua Store', 'Aquamarine Healthcare Pvt Ltd', 'B-25 ,Front Portion of Ground Floor', 'Greater Kailash Enclave 2', 'New Delhi', 'New Delhi', '110048', '', '301', '1', '3', '1');
+			INSERT INTO seek_invoice_num (warehouse_id, invoice_num, prefix, description) VALUES ('1001', '1', 'R', 'Retail Invoice 2013');
+		</sql>
+	</changeSet>
 </databaseChangeLog>

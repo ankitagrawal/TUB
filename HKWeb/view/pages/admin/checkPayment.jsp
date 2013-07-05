@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentTransactionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -19,6 +20,7 @@
     <c:set var="paymentStatusRequested" value="<%=EnumPaymentStatus.REQUEST.getId()%>"/>
     <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
     <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
+    <c:set var="refundTxn" value="<%=EnumPaymentTransactionType.REFUND.getName()%>"/>
 
     <s:layout-component name="content">
 
@@ -148,7 +150,10 @@
                     <c:forEach items="${checkPaymentBean.paymentList}" var="payment" varStatus="ctr">
                         <tr>
                                 <%--<c:set var="radioDisabled" value="${checkPaymentBean.pricingDto.grandTotalPayable eq payment.amount ? false : true}"/>--%>
-                            <td><s:radio value="${payment.id}" name="payment"/></td>
+                            <c:if test="${payment.transactionType ne refundTxn}">
+                                <td><s:radio value="${payment.id}" name="payment"/></td>
+                            </c:if>
+                            <c:if test="${payment.transactionType eq refundTxn}"> <td></td></c:if>
                                 <%--disabled="${radioDisabled}" --%>
                             <td>
                                     ${payment.gatewayOrderId}
@@ -158,11 +163,20 @@
                                     Edit Payment
                                 </s:link>)
                                 </shiro:hasPermission>
+                            <c:if test="${payment.transactionType ne refundTxn}">
                                 (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
-                                         event="seekPayment">
+                                         event="seekPayment" >
                                 <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
                                 Seek Payment
-                            </s:link>)
+                            </s:link>) </c:if>
+
+                             <c:if test="${payment.transactionType ne refundTxn and payment.paymentStatus.id eq paymentStatusSuccess}">
+                                (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
+                                         event="refundPayment">
+                                <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
+                                <s:param name="amount" value="${payment.amount}"/>
+                                 Refund Payment
+                            </s:link>) </c:if>
                             </td>
                             <td><fmt:formatDate value="${payment.createDate}" type="both"/></td>
                             <td><fmt:formatDate value="${payment.paymentDate}" type="both"/></td>
@@ -179,7 +193,9 @@
                             <td>
                                     ${payment.responseMessage}
                             </td>
+                            <td>
                                     ${payment.errorLog}
+                            </td>
                             <td>
                                     ${payment.gatewayReferenceId}
                             </td>

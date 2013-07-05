@@ -6,6 +6,7 @@ import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
@@ -28,8 +29,13 @@ public interface InventoryService {
      * @return Unbooked Inventory - this is difference of net physical inventory and all booked inventory The return
      *         value can be negative in case we are doing overbooking and product is not timely marked as Out Of Stock
      */
+    @Deprecated
     public Long getAvailableUnbookedInventory(Sku sku);
 
+    @Deprecated
+    public Long getAvailableUnbookedInventoryForPrescriptionEyeglasses(List<Sku> skuList);
+
+    @Deprecated
     public Long getAvailableUnbookedInventory(List<Sku> skuList);
 
     public Long getAvailableUnbookedInventory(ProductVariant productVariant);
@@ -40,7 +46,10 @@ public interface InventoryService {
 
     public Long getBookedQtyOfSkuInQueue(List<Sku> sku);
 
+    @Deprecated
     public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList);
+    
+    long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
 
     public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
 
