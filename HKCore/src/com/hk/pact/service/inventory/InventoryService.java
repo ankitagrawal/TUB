@@ -33,6 +33,9 @@ public interface InventoryService {
     public Long getAvailableUnbookedInventory(Sku sku);
 
     @Deprecated
+    public Long getAvailableUnbookedInventoryForPrescriptionEyeglasses(List<Sku> skuList);
+
+    @Deprecated
     public Long getAvailableUnbookedInventory(List<Sku> skuList);
 
     public Long getAvailableUnbookedInventory(ProductVariant productVariant);
