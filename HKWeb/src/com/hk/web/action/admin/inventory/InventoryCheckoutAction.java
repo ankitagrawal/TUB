@@ -296,7 +296,7 @@ public class InventoryCheckoutAction extends BaseAction {
                             checkedOutItemCount = 0L;
                         }
 
-                        if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
+                        if (Math.abs(checkedOutItemCount) < lineItem.getQty() && (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId()) ||shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()) )) {
                             SkuItem skuItem;
                             if (skuItemBarcode != null) {
                               skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
