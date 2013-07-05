@@ -63,10 +63,10 @@ public class ProductCache {
     }
   }
 
-  public void refreshCache(SolrProduct solrProduct) {
-    if (solrProduct != null && solrProduct.getId() != null) {
-      logger.debug("Refreshing Product Cache for Solr Product=" + solrProduct.getId());
-      idToProductCache.put(solrProduct.getId(), getProductService().createProductVO(solrProduct));
+  public void refreshCache(ProductVO productVO) {
+    if (productVO != null && productVO.getId() != null) {
+      logger.debug("Refreshing Product Cache for ProductVO=" + productVO.getId());
+      idToProductCache.put(productVO.getId(), productVO);
     }
   }
 

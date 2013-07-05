@@ -667,6 +667,9 @@ public class ProductServiceImpl implements ProductService {
     productVO.setOutOfStock(solrProduct.getOutOfStock());
     productVO.setCombo(solrProduct.getCombo());
     productVO.setService(solrProduct.getService());
+
+    //Refreshing Cache for ProductVO
+    ProductCache.getInstance().refreshCache(productVO);
     
     return productVO;
   }
@@ -694,6 +697,9 @@ public class ProductServiceImpl implements ProductService {
       }
     }
     productVO.setService(product.getService());
+
+    //Refreshing Cache for ProductVO
+    ProductCache.getInstance().refreshCache(productVO);
 
     return productVO;
   }
