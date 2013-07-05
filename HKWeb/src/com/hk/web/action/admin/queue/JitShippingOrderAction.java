@@ -364,7 +364,7 @@ public class JitShippingOrderAction extends BaseAction {
 						else{
 							poQty = quantity;
 						}
-						poLineItem.setQty(quantity);
+						poLineItem.setQty(poQty);
 						poLineItem.setCostPrice(productVariant.getCostPrice());
 						poLineItem.setMrp(productVariant.getMarkedPrice());
 						poLineItem.setPurchaseOrder(purchaseOrder);
