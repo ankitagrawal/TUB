@@ -68,7 +68,7 @@ Free Shaker & Blender bottle worth Rs. 600 with ${product_name}
             <td width="15">&nbsp;</td>
             <td width="470"><table width="470" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="147"><img src="http://healthkart-prod.s3.amazonaws.com/23/2212_s.jpg"  /></td>
+                <td width="147"><img src="http://hk-prod.s3.amazonaws.com/23/2212_s.jpg"  /></td>
                 <td width="17" style="border-left:1px solid #CCCCCC">&nbsp;</td>
                 <td width="306" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
