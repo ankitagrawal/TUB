@@ -99,6 +99,7 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
+        shippingOrderSearchCriteria.setDropShip(true);
 
          logger.debug("basketCategories : " + basketCategories.size());
         Set<Category> basketCategoryList = new HashSet<Category>();

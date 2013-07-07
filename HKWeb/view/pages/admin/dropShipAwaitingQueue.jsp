@@ -144,7 +144,7 @@
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   </div>
   <div style="display:inline;float:left;">
-      <c:if test="${(shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusDropShippingAwaiting) || (shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusCheckedOut)}">
+      <c:if test="${shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusDropShippingAwaiting || shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusCheckedOut }">
           <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
           <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
                     value="Re-Assign for process" style="display:none;"/>
