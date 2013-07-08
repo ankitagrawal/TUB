@@ -264,7 +264,7 @@
     			
     			if($(this).attr('id')=="discount" || $(this).attr('id')=="freightForwardingCharges"){
     				var value = $(this).val();
-    				if($.trim(value)=="" || !isPositiveInteger(value)){
+    				if($.trim(value)=="" || isNaN(value)){
     					$(this).val('0');
     				}
     			}
