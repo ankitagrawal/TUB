@@ -200,10 +200,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
                         availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
                     }else{
-                        availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(lineItem);
+                        availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
                     }
 
-                    if (availableUnbookedInv < 0 && !shippingOrder.isDropShipping()){ // It cannot be = as for last order/unit unbooked will always be ZERO 
+                    Long orderedQty = lineItem.getQty();
+
+                    if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()){ // It cannot be = as for last order/unit unbooked will always be ZERO
                         String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);

@@ -1,30 +1,25 @@
 package com.hk.api.resource.order;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.Encoded;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.api.constants.HKAPIConstants;
 import com.hk.api.models.user.APIUserDetail;
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.domain.clm.KarmaProfile;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
+import com.hk.domain.user.UserDetail;
 import com.hk.impl.service.queue.BucketService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.UserOrderService;
+import com.hk.pact.service.user.UserDetailService;
 import net.sourceforge.stripes.util.CryptoUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +27,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
-import com.hk.constants.core.Keys;
-import com.hk.domain.clm.KarmaProfile;
-import com.hk.domain.order.Order;
-import com.hk.domain.user.User;
-import com.hk.domain.user.UserDetail;
-import com.hk.pact.service.UserService;
-import com.hk.pact.service.clm.KarmaProfileService;
-import com.hk.pact.service.order.UserOrderService;
-import com.hk.pact.service.user.UserDetailService;
+import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA. User: Marut Date: 10/11/12 Time: 1:33 PM To change this template use File | Settings |
@@ -82,7 +73,7 @@ public class UserOrderResource {
     @Produces("application/json")
     public Response updateUser(@PathParam("email")
                                String email, @PathParam("phone")
-    long phone) {
+                               long phone) {
         email = email.toLowerCase().trim();
         User user = userService.findByLogin(email);
         // User user = UserCache.getInstance().getUserByLogin(email).getUser();
@@ -129,7 +120,7 @@ public class UserOrderResource {
     @Encoded
     public Response getUserDetails(@PathParam("phone")
                                    String phone, @QueryParam("key")
-    String key) {
+                                   String key) {
 
         long phoneNo = 0L;
         phoneNo = Long.parseLong(phone);
@@ -225,7 +216,6 @@ public class UserOrderResource {
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
             }
             userCodCall = orderService.saveUserCodCall(userCodCall);
-            bucketService.updateCODBucket(userCodCall.getBaseOrder());
             return Response.status(Response.Status.OK).build();
         } catch (DataIntegrityViolationException dataInt) {
             logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status: " + dataInt.getMessage());
@@ -240,6 +230,9 @@ public class UserOrderResource {
             } catch (Exception exp) {
                 logger.error("Unable to save user_cod record..", exp);
             }
+        }
+        if (userCodCall != null) {
+            bucketService.updateCODBucket(userCodCall.getBaseOrder());
         }
         return response;
     }
