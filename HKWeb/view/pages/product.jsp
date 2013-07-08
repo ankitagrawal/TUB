@@ -138,7 +138,7 @@
 			//Click and change image
 			$('.color_box').click(function () {
 				var variantMainImageId = $(this).find('.variantMainImageId').val();
-				//var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
+				//var url = "http://hk-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
 				//$(".img320").html("<img class='icon' src='"+url+"'/>") ;
 				$.getJSON($('#updateProductVariantImageLink').attr('href'), {mainProductImageId:variantMainImageId}, function (resurl) {
 					//                alert(resurl.data);

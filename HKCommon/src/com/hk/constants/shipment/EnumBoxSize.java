@@ -3,6 +3,7 @@ package com.hk.constants.shipment;
 import com.hk.domain.courier.BoxSize;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public enum EnumBoxSize {
@@ -21,8 +22,8 @@ public enum EnumBoxSize {
 
     private String name;
     private Long id;
-    private Double volumetricWeight;
-    private Double boxWeight;
+    private Double volumetricWeight;  //grams
+    private Double boxWeight;  //grams
     private Double packagingCost;
     private Double length;
     private Double breadth;
