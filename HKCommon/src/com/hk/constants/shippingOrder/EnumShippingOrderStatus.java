@@ -204,7 +204,8 @@ public enum EnumShippingOrderStatus {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(),
                 EnumShippingOrderStatus.SO_Delivered.getId(),
                 EnumShippingOrderStatus.RTO_Initiated.getId(),
-                EnumShippingOrderStatus.SO_RTO.getId());
+                EnumShippingOrderStatus.SO_RTO.getId(),
+                EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId());
     }
 
 }
