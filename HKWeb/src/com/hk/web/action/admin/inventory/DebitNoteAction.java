@@ -224,7 +224,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     }
     
     public Resolution delete(){
-    	if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId())){
+    	if(debitNote.getDebitNoteStatus().getId()>=EnumDebitNoteStatus.CLosed.getId()){
     		addRedirectAlertMessage(new SimpleMessage("Cannot delete a Debit Note once it is closed"));
     		return new RedirectResolution(DebitNoteAction.class);
     	}
