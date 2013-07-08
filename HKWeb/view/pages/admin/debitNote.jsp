@@ -699,10 +699,12 @@
         <br/>
         <!-- <a href="debitNote.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a> -->
 
+<c:if test="${pa.debitNote.debitNoteStatus.name!='Closed'}">
         <s:submit name="save" id="save" value="Save" />
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
 			<s:submit name="delete" value="Delete"/>
 		</shiro:hasRole>
+		</c:if>
         
     </s:form>
 

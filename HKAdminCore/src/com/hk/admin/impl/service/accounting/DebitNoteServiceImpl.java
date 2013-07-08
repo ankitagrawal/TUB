@@ -213,7 +213,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
     @Override
     public DebitNote save(DebitNote debitNote) {
         String invoiceNumType = InvoiceNumHelper.PREFIX_FOR_DEBIT_NOTE;
-        if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId())){
+        if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId()) && debitNote.getDebitNoteNumber()==null){
             debitNote.setDebitNoteNumber(seekInvoiceNumService.getInvoiceNum(invoiceNumType, debitNote.getWarehouse()));
         }
         return (DebitNote)getDebitNoteDao().save(debitNote);
