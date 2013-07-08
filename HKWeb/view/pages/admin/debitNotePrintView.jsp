@@ -106,6 +106,7 @@ $(document).ready(function() {
     <td>${debitNoteSummary.debitNote.id }</td>
     </c:when>
     <c:otherwise>
+    <c:choose>
     <c:when test="${debitNoteSummary.debitNote.debitNoteNumber!=null }">
        <td>
           ${debitNoteSummary.debitNote.debitNoteNumber}
@@ -114,6 +115,7 @@ $(document).ready(function() {
       <c:otherwise>
     <td></td>
     </c:otherwise>
+    </c:choose>
     </c:otherwise>
     </c:choose>
   </tr>
