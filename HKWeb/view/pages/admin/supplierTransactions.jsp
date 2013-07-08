@@ -45,7 +45,7 @@
                                 Cr
                             </c:when>
                             <c:otherwise>
-                                Db
+                                Dr
                             </c:otherwise>
                         </c:choose>
                     </td>

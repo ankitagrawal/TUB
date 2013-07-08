@@ -19,8 +19,16 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                $('#show-search-filter').click(function(){
+                $('.show-search-filter').click(function(){
                     $('#filter-bar').slideToggle("slow");
+                    if($(this).attr("id") == "expand-search"){
+                        $(this).hide();
+                        $('#collapse-search').show();
+                    }
+                    else{
+                        $(this).hide();
+                        $('#expand-search').show();
+                    }
                 });
 
             });
@@ -35,7 +43,7 @@
                         Cr
                     </c:when>
                     <c:otherwise>
-                        Db
+                        Dr
                     </c:otherwise>
                 </c:choose>
                 &nbsp;&nbsp;&nbsp;
@@ -45,22 +53,38 @@
         <s:form beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction">
 
             <fieldset class="fieldset-margin">
-                <strong><a href="#" id="show-search-filter">+</a></strong>
-                <div id="filter-bar">
-                <label>Supplier:</label>  &nbsp;&nbsp; <strong>${supplierTransactionBean.supplier.name}</strong>
-                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                <label>Start Date:</label> &nbsp;&nbsp; <s:text class="date_input startDate" style="width:150px"
-                                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                                name="startDate"/>
-                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                <label>End Date:</label>  &nbsp;&nbsp;<s:text class="date_input startDate" style="width:150px"
-                                                              formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                              name="endDate"/>
-                    &nbsp; &nbsp;&nbsp; &nbsp;
-                <s:hidden name="supplier" value="${supplierTransactionBean.supplier.id}"/>
-                <s:hidden name="defaultView" value="0"/>
+                <strong><a href="#" id="expand-search" class="show-search-filter" style="display: none;">+</a></strong>
+                <strong><a href="#" id="collapse-search" class="show-search-filter">-</a></strong>
 
-                <s:submit name="viewDetails" value="Search"/>
+                <div id="filter-bar">
+                    <table>
+                        <tr>
+                            <td><label><strong>Supplier:</strong></label></td>
+                            <td>${supplierTransactionBean.supplier.name}</td>
+                            <td><label><strong>Start Date:</strong></label></td>
+                            <td><s:text class="date_input startDate"
+                                                                            style="width:150px"
+                                                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                                            name="startDate"/></td>
+                            <td><label><strong>End Date:</strong></label> </td>
+                            <td><s:text class="date_input startDate"
+                                                                         style="width:150px"
+                                                                         formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                                         name="endDate"/></td>
+                            <s:hidden name="supplier" value="${supplierTransactionBean.supplier.id}"/>
+                            <s:hidden name="defaultView" value="0"/>
+
+                            <td><s:submit name="viewDetails" value="Search"/></td>
+                        </tr>
+                        <tr>
+                            <td><label><strong>Supplier tin: </strong></label></td>
+                            <td>${supplierTransactionBean.supplier.tinNumber}</td>
+                            <td><label><strong>State: </strong></label></td>
+                            <td>${supplierTransactionBean.supplier.state}</td>
+                            <td><label><strong>Credit days: </strong></label></td>
+                            <td>${supplierTransactionBean.supplier.creditDays}</td>
+                        </tr>
+                    </table>
                 </div>
             </fieldset>
         </s:form>
@@ -116,7 +140,7 @@
                                 Cr
                             </c:when>
                             <c:otherwise>
-                                Db
+                                Dr
                             </c:otherwise>
                         </c:choose>
                     </td>
