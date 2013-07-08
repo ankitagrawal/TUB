@@ -98,8 +98,10 @@ public class JitShippingOrderAction extends BaseAction {
 				}
 			}
 			jitLineItems = getJitLineItems(shippingOrderListToProcess);
-			jitFilteredLineItems = autoEscalateShippingOrdersOfJitLineItems(jitLineItems);
-			supplierLineItemListMap = getSupplierLineItemMap(jitFilteredLineItems);
+			//jitFilteredLineItems = autoEscalateShippingOrdersOfJitLineItems(jitLineItems);
+			//supplierLineItemListMap = getSupplierLineItemMap(jitFilteredLineItems);
+			
+			supplierLineItemListMap = getSupplierLineItemMap(jitLineItems);
 			HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineItemsMap = createSupplierWhLineitemsMap(supplierLineItemListMap);
 			purOrderLineItem = createPurchaseOrder(supplierWhLineItemsMap);
 			HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap = createPurchaseOrderVariantQuantityMap(purOrderLineItem);
@@ -163,7 +165,7 @@ public class JitShippingOrderAction extends BaseAction {
 		return lineItemIsJitList;
 	}
 
-	public List<LineItem> autoEscalateShippingOrdersOfJitLineItems(List<LineItem> jitLineItems) {
+	/*public List<LineItem> autoEscalateShippingOrdersOfJitLineItems(List<LineItem> jitLineItems) {
 		if (jitLineItems != null && jitLineItems.size() > 0) {
 			for (LineItem item : jitLineItems) {
 				if (item.getShippingOrder().getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus())) {
@@ -177,7 +179,7 @@ public class JitShippingOrderAction extends BaseAction {
 		logger.debug("Inside method 2 - autoEscalateShippingOrdersOfJitLineItems, jitLineItems received - " + jitLineItems.size() + "\n"
 				+ " jitFilteredLineItems returned - " + jitFilteredLineItems.size() + " escalated - " + (jitLineItems.size() - jitFilteredLineItems.size()));
 		return jitFilteredLineItems;
-	}
+	}*/
 
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems) {
 		HashMap<Supplier, List<LineItem>> supplierItemMap = new HashMap<Supplier, List<LineItem>>();
