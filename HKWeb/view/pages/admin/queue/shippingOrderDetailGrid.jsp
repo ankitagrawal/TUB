@@ -88,6 +88,7 @@
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 <c:set var="shippingOrderStatusReversePickup" value="<%=EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId()%>"/>
+<c:set var="shippingOrderStatusCheckedOut" value="<%=EnumShippingOrderStatus.SO_CheckedOut.getId()%>"/>
 
 <c:set var="TH" value="<%=VariantConfigOptionParam.THICKNESS.param()%>"/>
 <c:set var="THBF" value="<%=VariantConfigOptionParam.BFTHICKNESS.param()%>"/>
@@ -228,7 +229,7 @@
           Accounting Invoice
       </s:link>)
         <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
-            <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
+            <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id ||  shippingOrderStatusCheckedOut == shippingOrder.orderStatus.id }">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
                          target="_blank">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
