@@ -37,7 +37,8 @@ class CodPopulateItemData {
            int rowUpdateKnowlarity=  sql.executeUpdate("""
                       update user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
                       set ucc.call_status=10
-                      where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and  p.payment_date >(
+                      where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40 and ucc.call_status <> 10
+                      and  p.payment_date >(
                       SELECT
                       case
                        when (TIME(NOW()) between '00:00:00' and '08:00:00')
@@ -59,7 +60,8 @@ class CodPopulateItemData {
 
             update  user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
             set ucc.call_status=60
-            where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40 and  p.payment_date between (
+            where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40 and ucc.call_status <> 60
+            and  p.payment_date between (
             select
             TIMESTAMP(case
              when (TIME(NOW()) between '00:00:00' and '08:00:00')
@@ -87,7 +89,8 @@ class CodPopulateItemData {
             int rowUpdateHK= sql.executeUpdate("""
                   update   user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
                   set ucc.call_status=70
-                  where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and  p.payment_date <(
+                  where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status <> 70
+                  and  p.payment_date <(
                   select
                   case
                    when (TIME(NOW()) between '00:00:00' and '08:00:00')

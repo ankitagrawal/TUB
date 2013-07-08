@@ -113,7 +113,7 @@ We know You LOVE ${product_name}. Here are 3 other Whey Proteins that you will l
             <td width="15">&nbsp;</td>
             <td width="470"><table width="470" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="147"><a href="http://www.healthkart.com/product/musclepharm-combat-powder/NUT468?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s8_MP"><img src="http://healthkart-prod.s3.amazonaws.com/102/10163_s.jpg" /></a></td>
+                <td width="147"><a href="http://www.healthkart.com/product/musclepharm-combat-powder/NUT468?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s8_MP"><img src="http://hk-prod.s3.amazonaws.com/102/10163_s.jpg" /></a></td>
                 <td width="17" style="border-left:1px solid #CCCCCC">&nbsp;</td>
                 <td width="306" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
@@ -160,7 +160,7 @@ We know You LOVE ${product_name}. Here are 3 other Whey Proteins that you will l
             <td width="15">&nbsp;</td>
             <td width="470"><table width="470" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="147"><a href="http://www.healthkart.com/product/dymatize-elite-whey/NUT471?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s8_DYMA"><img src="http://healthkart-prod.s3.amazonaws.com/14/1342_s.jpg"  /></a></td>
+                <td width="147"><a href="http://www.healthkart.com/product/dymatize-elite-whey/NUT471?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s8_DYMA"><img src="http://hk-prod.s3.amazonaws.com/14/1342_s.jpg"  /></a></td>
                 <td width="17" style="border-left:1px solid #CCCCCC">&nbsp;</td>
                 <td width="306" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
@@ -207,7 +207,7 @@ We know You LOVE ${product_name}. Here are 3 other Whey Proteins that you will l
             <td width="15">&nbsp;</td>
             <td width="470"><table width="470" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="147"><a href="http://www.healthkart.com/product/venky-s-whey-protein/NUT1162?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s8_Venky"><img src="http://healthkart-prod.s3.amazonaws.com/141/14078_s.jpg"  /></a></td>
+                <td width="147"><a href="http://www.healthkart.com/product/venky-s-whey-protein/NUT1162?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s8_Venky"><img src="http://hk-prod.s3.amazonaws.com/141/14078_s.jpg"  /></a></td>
                 <td width="17" style="border-left:1px solid #CCCCCC">&nbsp;</td>
                 <td width="306" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>

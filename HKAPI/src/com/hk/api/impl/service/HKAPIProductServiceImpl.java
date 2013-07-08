@@ -201,7 +201,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 					if (product.getMainImageId() == null) {
 						try {
 							imageFile.getParentFile().mkdirs();
-							S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), "healthkart-prod", imageFile);
+							S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(EnumImageSize.Original, hkProduct.getMainImageId()), "hk-prod", imageFile);
 							ProductImage productImage = setImage(imageFile, product, true, false);
 							if (productImage != null) {
 								resizeAndUpload(imageFile.getAbsolutePath(), productImage);
