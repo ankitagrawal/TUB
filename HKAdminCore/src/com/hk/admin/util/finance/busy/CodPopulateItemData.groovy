@@ -32,65 +32,57 @@ class CodPopulateItemData {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(CodPopulateItemData.class);
 
-    public Integer  populateCodCalldata() {
+    public Integer populateCodCalldata() {
         try {
-           int rowUpdateKnowlarity=  sql.executeUpdate("""
-                      update user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
-                      set ucc.call_status=10
-                      where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40 and ucc.call_status <> 10
-                      and  p.payment_date >(
-                      SELECT
-                      case
-                       when (TIME(NOW()) between '00:00:00' and '08:00:00')
-                       then CONCAT(DATE((DATE(NOW())-1))," ", '15:00:00' )
+            int rowUpdateKnowlarity = sql.executeUpdate("""
+            update user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
+           set ucc.call_status=10
+           where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status<>10 and  p.payment_date >(
+           SELECT
+           case
+            when (TIME(NOW()) between '00:00:00' and '08:00:00')
+            then CONCAT(DATE((DATE(NOW())-1))," ", '15:00:00' )
 
-                      when(TIME(NOW()) between '19:00:00' and '24:00:00')
-                       then CONCAT(DATE(DATE(NOW())-1)," ", '15:00:00' )
+           when(TIME(NOW()) between '19:00:00' and '24:00:00')
+            then CONCAT(DATE(DATE(NOW())-1)," ", '15:00:00' )
 
-                      when(TIME(NOW()) between '08:00:00' and '12:00:00')
-                      then   CONCAT(DATE(DATE(NOW())-1) , " " ,  TIME('19:00:00'-TIME( '12:00:00'-TIME(NOW()))))
+           when(TIME(NOW()) between '08:00:00' and '12:00:00')
+           then   CONCAT(DATE(DATE(NOW())-1) , " " ,  TIME(TIME('07:00:00')+TIME(NOW())))
 
-                      else CONCAT(DATE((DATE(NOW())))," ", TIME(DATE_SUB(NOW(),INTERVAL 4 HOUR)))
-                      end  );
-
+           else CONCAT(DATE((DATE(NOW())))," ", TIME(DATE_SUB(NOW(),INTERVAL 4 HOUR)))
+           end  );
 
 
 """);
-            int rowUpdateEffortBpo=sql.executeUpdate("""
+            int rowUpdateEffortBpo = sql.executeUpdate("""
+                            update  user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
+                            set ucc.call_status=60
+                            where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status<>60 and  p.payment_date between (
+                            select
+                            TIMESTAMP(case
+                             when (TIME(NOW()) between '00:00:00' and '08:00:00')
+                             then CONCAT(DATE((DATE(NOW())-1))," ", '08:00:00' )
+                            when(TIME(NOW()) between '19:00:00' and '24:00:00')
+                             then CONCAT(DATE(DATE(NOW())-1)," ", '08:00:00' )
+                            else   CONCAT(DATE(DATE(NOW())-1) , " ", TIME(NOW()))
+                            end))
+                            and (select TIMESTAMP(case
+                             when (TIME(NOW()) between '00:00:00' and '08:00:00')
+                             then CONCAT(DATE((DATE(NOW())-1))," ", '15:00:00' )
 
-            update  user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
-            set ucc.call_status=60
-            where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40 and ucc.call_status <> 60
-            and  p.payment_date between (
-            select
-            TIMESTAMP(case
-             when (TIME(NOW()) between '00:00:00' and '08:00:00')
-             then CONCAT(DATE((DATE(NOW())-1))," ", '08:00:00' )
-            when(TIME(NOW()) between '19:00:00' and '24:00:00')
-             then CONCAT(DATE(DATE(NOW())-1)," ", '08:00:00' )
-            else   CONCAT(DATE(DATE(NOW())-1) , " ", TIME(NOW()))
-            end))
-            and (select TIMESTAMP(case
-             when (TIME(NOW()) between '00:00:00' and '08:00:00')
-             then CONCAT(DATE((DATE(NOW())-1))," ", '15:00:00' )
+                            when(TIME(NOW()) between '19:00:00' and '24:00:00')
+                             then CONCAT(DATE(DATE(NOW())-1)," ", '15:00:00' )
 
-            when(TIME(NOW()) between '19:00:00' and '24:00:00')
-             then CONCAT(DATE(DATE(NOW())-1)," ", '15:00:00' )
+                            when(TIME(NOW()) between '08:00:00' and '12:00:00')
+                            then   CONCAT(DATE(DATE(NOW())-1) , " " , TIME(TIME('07:00:00')+TIME(NOW())))
+                            else CONCAT(DATE((DATE(NOW())))," ", TIME(DATE_SUB(NOW(),INTERVAL 4 HOUR)))
+                            end  )) ;
+                            """);
 
-            when(TIME(NOW()) between '08:00:00' and '12:00:00')
-            then   CONCAT(DATE(DATE(NOW())-1) , " " , TIME('19:00:00'-TIME( '12:00:00'-TIME(NOW()))))
-            else CONCAT(DATE((DATE(NOW())))," ", TIME(DATE_SUB(NOW(),INTERVAL 4 HOUR)))
-            end  ))
-
-
-"""
-
-            ) ;
-            int rowUpdateHK= sql.executeUpdate("""
+            int rowUpdateHK = sql.executeUpdate("""
                   update   user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
                   set ucc.call_status=70
-                  where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status <> 70
-                  and  p.payment_date <(
+                  where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status<>70 and  p.payment_date <(
                   select
                   case
                    when (TIME(NOW()) between '00:00:00' and '08:00:00')
@@ -98,10 +90,10 @@ class CodPopulateItemData {
                   when(TIME(NOW()) between '19:00:00' and '24:00:00')
                    then CONCAT(DATE(DATE(NOW())-1)," ", '08:00:00' )
                   else   CONCAT(DATE(DATE(NOW())-1) , " ", TIME(NOW()))
-                  end)
+                  end) ;
 
-""") ;
-       return (rowUpdateKnowlarity+rowUpdateEffortBpo+rowUpdateHK).toInteger();
+""");
+            return (rowUpdateKnowlarity + rowUpdateEffortBpo + rowUpdateHK).toInteger();
         }
         catch (Exception e) {
             Logger.info("Unable to Update in  item: ", e);
