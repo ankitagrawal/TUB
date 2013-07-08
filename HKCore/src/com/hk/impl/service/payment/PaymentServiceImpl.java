@@ -9,7 +9,6 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.ProductVariantPaymentType;
-import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
@@ -34,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.*;
 
@@ -349,7 +349,7 @@ public class PaymentServiceImpl implements PaymentService {
     private void error(String gatewayOrderId, String errorLog){
         Payment payment = findByGatewayOrderId(gatewayOrderId);
         if(payment != null){
-            payment.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+            payment.setPaymentStatus(EnumPaymentStatus.REFUND_FAILURE.asPaymenStatus());
             payment.setErrorLog(errorLog);
             save(payment);
         }
@@ -437,26 +437,28 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void reconciliationOnCancel(Long reconciliationType, Order order,Double amount, String comment) {
+    public boolean reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) {
         User loggedOnUser =  userService.getLoggedInUser();
         if (isValidRefundableAmount(order.getPayment(), amount)) {
             if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType)) {
 
-                //TODO:pass comment in the API
                 RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, order.getUser(),
                         order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
 
                 rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),null);
                 setRefundAmount(order.getPayment(), amount);
+                return true;
 
             } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType)) {
                 try {
                     refundPayment(order.getPayment().getGatewayOrderId(), amount);
+                    return true;
                 } catch (HealthkartPaymentGatewayException e) {
-                    //TODO: handle it properly
+                   return false;
                 }
             }
         }
+        return false;
     }
 
 

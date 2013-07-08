@@ -63,7 +63,11 @@ public enum EnumShippingOrderLifecycleActivity {
   AI_ACTION_TASK_CHANGED(820L,"Action Task Changed for AI"),
   SO_Cancelled(999L, "SO  Cancelled"),
   SO_LineItemFixed(1001l, "SO Line Item fixed"),
-  SO_LineItemCouldNotFixed(1002l, "SO Line Item could not be fixed");
+  SO_LineItemCouldNotFixed(1002l, "SO Line Item could not be fixed"),
+  RewardPointOrderCancel(1003L,"Reward Point given on order cancellation"),
+  AmountRefundedOrderCancel(1004L,"Amount Refunded on order cancellation"),
+  RefundAmountFailed(1005L,"Refund Process on cancellation failed"),
+  ;
 
   private String name;
   private Long id;

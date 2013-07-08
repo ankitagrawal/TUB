@@ -13582,4 +13582,14 @@
 			INSERT INTO seek_invoice_num (warehouse_id, invoice_num, prefix, description) VALUES ('1001', '1', 'R', 'Retail Invoice 2013');
 		</sql>
 	</changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130708-1">
+        <addColumn tableName="payment">
+            <column name="refund_amount" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130708-2">
+        <sql>
+            insert into payment_status values (10,'Refund failure');
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -118,7 +118,7 @@ public class Payment implements java.io.Serializable {
     @JoinColumn(name="parent_id")
     private Payment parent;
 
-    @Column(name = "refund_amount", nullable = false, precision = 8)
+    @Column(name = "refund_amount", precision = 8)
     private Double refundAmount;
 
 	@Transient

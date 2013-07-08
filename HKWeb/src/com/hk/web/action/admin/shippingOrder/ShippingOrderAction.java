@@ -4,6 +4,8 @@ import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -111,9 +113,19 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution cancelShippingOrder() {
-        paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
         adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark);
         if (shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())) {
+            boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
+            if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
+                shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
+                addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
+            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && flag) {
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.AmountRefundedOrderCancel);
+                addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
+            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountFailed);
+                addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
+            }
             addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please Try again Later!!!"));

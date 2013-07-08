@@ -66,6 +66,6 @@ public interface PaymentService {
 
     public void setRefundAmount(Payment payment, Double amount);
 
-    public void reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment);
+    public boolean reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) ;
 
 }
