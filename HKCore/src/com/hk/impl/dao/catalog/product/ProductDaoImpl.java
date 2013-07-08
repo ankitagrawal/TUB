@@ -145,7 +145,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     }
 
     public List<Product> getAllNonDeletedProducts() {
-        return super.findByQuery("select p from Product p where p.deleted = false order by id asc");
+        return super.findByQuery("select p from Product p where p.deleted = false where update_dt > '2013:06:22 00:00:00' order by id asc");
     }
 
     public List<Product> getAllNonDeletedProductsWithImages() {
