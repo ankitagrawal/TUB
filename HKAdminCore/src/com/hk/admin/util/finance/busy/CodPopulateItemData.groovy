@@ -2,7 +2,6 @@ package com.hk.admin.util.finance.busy
 
 import groovy.sql.Sql
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +29,6 @@ class CodPopulateItemData {
 
     }
 
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(CodPopulateItemData.class);
 
     public Integer populateCodCalldata() {
         try {
