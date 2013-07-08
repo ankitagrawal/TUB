@@ -102,13 +102,18 @@ $(document).ready(function() {
     </td>
     <td><b><label class="dnRtvLabel">Debit Note</label> Number:</b></td>
     <c:choose>
-      <c:when test="${debitNoteSummary.debitNote.debitNoteNumber!=null }">
+    <c:when test="${pa.printAsRtv!=null && pa.printAsRtv }">
+    <td>${debitNoteSummary.debitNote.id }</td>
+    </c:when>
+    <c:otherwise>
+    <c:when test="${debitNoteSummary.debitNote.debitNoteNumber!=null }">
        <td>
           ${debitNoteSummary.debitNote.debitNoteNumber}
       </td>
       </c:when>
       <c:otherwise>
     <td></td>
+    </c:otherwise>
     </c:otherwise>
     </c:choose>
   </tr>
