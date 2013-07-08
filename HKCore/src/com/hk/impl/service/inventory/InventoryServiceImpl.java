@@ -202,6 +202,23 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public Long getAvailableUnbookedInventoryForPrescriptionEyeglasses(List<Sku> skuList) {
+        Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
+        logger.debug("net inventory " + netInventory);
+
+        Long bookedInventory = 0L;
+        if (!skuList.isEmpty()) {
+            ProductVariant productVariant = skuList.get(0).getProductVariant();
+            bookedInventory = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
+            logger.debug("booked inventory " + bookedInventory);
+        }
+
+        long availableUnbookedInventory = netInventory - bookedInventory;
+        logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
+        return availableUnbookedInventory;
+    }
+
+    @Override
     @Deprecated
     public Long getAvailableUnbookedInventory(List<Sku> skuList) {
     	return getAvailableUnbookedInventory(skuList.get(0).getProductVariant());
