@@ -109,13 +109,18 @@ public class OrderSplitterImpl implements OrderSplitter {
 							container.addLineItem(sku.getWarehouse(), cartLineItem);
 							isAdded = true;
 						}
-					} 
-					
+					}
+
 					if(product.isService()) {
 						container.addLineItem(warehouseService.getCorporateOffice(), cartLineItem);
 						isAdded = true;
 					}
 				}
+                //ps hack to split prescription eyeglasses
+                if (cartLineItem.getCartLineItemConfig() != null){
+                    container.addLineItem( warehouseService.getDefaultWarehouse() ,cartLineItem);
+                    isAdded = true;
+                }
 				
 				if(!isAdded) {
 					throw new OrderSplitException("Inventory is not available for line item: " + cartLineItem.getId(), order); 
