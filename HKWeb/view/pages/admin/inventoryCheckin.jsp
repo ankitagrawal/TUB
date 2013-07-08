@@ -162,6 +162,8 @@
 		    $('.invCheckin').click(function(event){
 			    //$(this).css("display", "none");
 			    event.preventDefault();
+			    var saveBtn = $(this);
+			    saveBtn.hide();
 			    $.getJSON(
 					    $('#validationLink').attr('href'), {upc : $('.variant').val(), costPrice : $('#costPrice').val(), mrp : $('#mrp').val()},
 					    function (res) {
@@ -176,6 +178,7 @@
 								    $('#checkinForm').submit();
 								    $(this).css("display", "none");
 							    } else {
+							    	 saveBtn.show();
 								    return false;
 							    }
 						    }

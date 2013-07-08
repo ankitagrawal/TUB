@@ -204,6 +204,18 @@
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
+                <s:form beanclass="com.hk.web.action.admin.accounts.PopulateCodCallDataAction">
+                                    <fieldset class="top_label">
+                                        <legend> Update Cod Call </legend>
+
+                                        <div class="clear"></div>
+
+                                        <div style="margin-top:15px;"></div>
+                                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                                            <s:submit name="pre" value="Update Cod Call"/>
+                                        </shiro:hasAnyRoles>
+                                    </fieldset>
+                                </s:form>
             </shiro:hasAnyRoles>
 
         </div>
