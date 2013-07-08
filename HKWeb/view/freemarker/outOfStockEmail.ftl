@@ -27,7 +27,7 @@
       <td>Options</td>
       <td>
         <table cellpadding="2" cellspacing="0" border="1" style="font-size:10px;">
-          <#if !productVariant.productOptions.empty>
+          <#if productVariant.productOptions?has_content>
           	<#list productVariant.productOptions as productOption>
          		<tr>
             		<td>${productOption.name}</td>
