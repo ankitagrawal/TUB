@@ -210,6 +210,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		return list;
 	}
 
+    private List<SkuInfo> getPostActionQueueInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        String sql = inProcessInventorySql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
+        query.addScalar("skuId", Hibernate.LONG);
+
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("whIds", toWarehouseIds(whs));
+        query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
+        query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventoryInProcessingQueue()));
+
+        query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
+
+        @SuppressWarnings("unchecked")
+        List<SkuInfo> list = query.list();
+        return list;
+    }
+
 
 	private static final String checkedInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
 			" count(a.id) as qty, b.create_date as checkinDate" +
@@ -363,6 +382,28 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return qty;
 	}
+
+    @Override
+    public long getUnbookedInventoryForActionQueue(LineItem lineItem) {
+        long qty = 0l;
+        Sku sku = lineItem.getSku();
+        Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+        if(checkedInInvList != null) {
+            for (SkuInfo skuInfo : checkedInInvList) {
+                if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+                    qty += skuInfo.getQty();
+                }
+            }
+        }
+
+        List<SkuInfo> inProcessList = getPostActionQueueInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+        for (SkuInfo skuInfo : inProcessList) {
+            if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+                qty -= skuInfo.getQty();
+            }
+        }
+        return qty;
+    }
 	
 	private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
 		List<SkuInfo> infos = new ArrayList<SkuInfo>();
