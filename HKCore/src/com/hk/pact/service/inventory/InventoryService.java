@@ -51,6 +51,8 @@ public interface InventoryService {
     
     long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
 
+    public long getUnbookedInventoryForActionQueue(LineItem lineItem);
+
     public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
 
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);

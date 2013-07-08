@@ -13,7 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 public class PopulateCodCallDataAction extends BaseAction {
+
     private static Logger logger = LoggerFactory.getLogger(PopulateCodCallDataAction.class);
+
+
     @Value("#{hkEnvProps['" + Keys.Env.dbHostName + "']}")
     private String dbHostName;
 
@@ -35,7 +38,7 @@ public class PopulateCodCallDataAction extends BaseAction {
 
             logger.info("Populating Cod Call ");
             totalRowsUpdateCodCall = codPopulateItemData.populateCodCalldata();
-            addRedirectAlertMessage(new SimpleMessage("total rows updated :"+totalRowsUpdateCodCall.toString()+""));
+            addRedirectAlertMessage(new SimpleMessage("total rows updated :" + totalRowsUpdateCodCall.toString() + ""));
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
         }
