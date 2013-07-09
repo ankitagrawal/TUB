@@ -14,15 +14,17 @@ import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
-
-import java.io.File;
-import java.util.*;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class RelatedProductXlsParser {
@@ -56,17 +58,25 @@ public class RelatedProductXlsParser {
                 }
                 Product product = getProductService().getProductById(productId);
 
+                List<Product> productHasRelated=product.getRelatedProducts();
                 String[] relatedProductStrArray = StringUtils.split(relatedProductStr, "|");
                 for (String relatedProductId : relatedProductStrArray) {
                     Product relatedProduct = getProductService().getProductById(relatedProductId);
-                    if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !relatedProducts.contains(relatedProduct)) {
+                    if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !productHasRelated.contains(relatedProduct)) {
                         relatedProducts.add(relatedProduct);
                     }
+                    if (productHasRelated.contains(relatedProduct)) {
+                        logger.error(relatedProduct + "Already Added");
+                    }
                 }
-                product.getRelatedProducts().addAll(relatedProducts);
-                getProductService().save(product);
+                if (relatedProducts.isEmpty()) {
+                    logger.error("All Product are already added");
+                    throw new Exception("All related product are already added for product_id: "+product);
+                } else {
+                    getProductService().getRelatedProducts(product).addAll(relatedProducts);
+                    getProductService().save(product);
+                }
             }
-
         } catch (ExcelBlankFieldException e) {
             throw new ExcelBlankFieldException(e.getMessage());
         }
