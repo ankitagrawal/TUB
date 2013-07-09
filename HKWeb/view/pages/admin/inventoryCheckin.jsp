@@ -160,6 +160,12 @@
 
 		    });
 		    $('.invCheckin').click(function(event){
+		    	
+		    	if($('#costPrice').val()>$('#mrp').val()){
+		    		alert("Cost Price cannot be greater than MRP");
+		    		return false;
+		    	}
+		    	
 			    //$(this).css("display", "none");
 			    event.preventDefault();
 			    var saveBtn = $(this);
