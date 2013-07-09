@@ -27,4 +27,14 @@ public enum EnumImageSize {
     return suffix;
   }
 
+public static EnumImageSize getEnumImageSize(String imageSize){
+    for (EnumImageSize enumImageSize : EnumImageSize.values()) {
+      if(enumImageSize.getSuffix().equals(imageSize)){
+        return enumImageSize;
+      }
+    }
+    return null;
+  }
+
+
 }
