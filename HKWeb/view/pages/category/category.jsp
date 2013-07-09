@@ -172,8 +172,8 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Universal+Nutrition">
-                    <img src="${pageContext.request.contextPath}/images/banners/Universal-static.jpg"
+                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Gaspari+Nutrition">
+                    <img src="${pageContext.request.contextPath}/images/banners/Gaspari-Nutrition_static.jpg"
                          alt="Brand Of the Week - Gaspari Nutrition!"
                          class="small_banner"/>
                 </a>
@@ -193,8 +193,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/bajaj-jx4-juicer-mixer-grinder/BAJ118">
-                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-bajaj.jpg" alt="Brand of the Week"
+                <a href="${pageContext.request.contextPath}/product/westinghouse-1750gs-hand-blender/WST001">
+                    <img src="<hk:vhostImage/>/images/banners/westinghouse-product-of-the-week-(static-banner).jpg" alt="Brand of the Week"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -203,8 +203,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/personal-care/sexual-wellness">
-                    <img src="<hk:vhostImage/>/images/banners/Sexual-wellness.jpg" alt="Sexual-wellness`"
+                <a href="${pageContext.request.contextPath}/brand/personal-care/Oral-B">
+                    <img src="<hk:vhostImage/>/images/banners/Oral-B.jpg" alt="oral-B"
                          class="small_banner"/>
                 </a>
             </c:when>
