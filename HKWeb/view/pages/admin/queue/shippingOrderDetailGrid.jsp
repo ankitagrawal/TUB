@@ -616,17 +616,14 @@
                         <c:if test="${isActionQueue == true}">
                             Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days
                         </c:if>
-
                         Current Buckets:
                         <c:set var="actionItem" value="${shippingOrder.actionItem}"/>
                         <c:if test="${actionItem != null}">
                             <c:forEach items="${actionItem.buckets}" var="bucket">
-                                ${bucket.name}
+                                ${bucket.name} |
                             </c:forEach>
+                         ${actionItem.currentActionTask.name}
                         </c:if>
-
-                ${shippingOrder.actionItem}
-
             </td>
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
