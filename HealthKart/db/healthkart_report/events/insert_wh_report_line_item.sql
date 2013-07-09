@@ -1,5 +1,6 @@
+
 delimiter |
-ALTER EVENT `insert_wh_report_line_item` ON SCHEDULE EVERY 8 HOUR STARTS '2013-04-30 00:01:58' ON COMPLETION NOT PRESERVE ENABLE DO
+CREATE EVENT `insert_wh_report_line_item` ON SCHEDULE EVERY 8 HOUR STARTS '2013-07-05 00:15:01' ON COMPLETION NOT PRESERVE ENABLE DO
 
  BEGIN
 truncate table wh_report_line_item;
@@ -51,5 +52,6 @@ inner join sku on sku.id = lt.sku_id
 inner join shipping_order so on so.id = lt.shipping_order_id
 inner join shipment st on st.id = so.shipment_id
 inner join product_variant pv on pv.id = sku.product_variant_id;
-END |
+END  |
 delimiter ;
+

@@ -172,8 +172,8 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/TWINLAB">
-                    <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small_sports.jpg"
+                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Universal+Nutrition">
+                    <img src="${pageContext.request.contextPath}/images/banners/Universal-static.jpg"
                          alt="Brand Of the Week - Gaspari Nutrition!"
                          class="small_banner"/>
                 </a>
@@ -183,8 +183,8 @@
                     <img src="${pageContext.request.contextPath}/images/banners/patanjali-banner.jpg"
                          alt="Patanjali Offer" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Vitamin+Shoppe">
-                    <img src="${pageContext.request.contextPath}/images/banners/VS.jpg" alt="Vitamin Shoppe"
+                <a href="${pageContext.request.contextPath}/health-nutrition/shop-by-need/hair-skin-nails">
+                    <img src="${pageContext.request.contextPath}/images/banners/Hair-skin-nails.jpg" alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -223,8 +223,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}brand/eye/Geek+Attitude">
-                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-eye.jpg" alt="eye"
+                <a href="${pageContext.request.contextPath}brand/eye/Geek">
+                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week(geek).jpg" alt="eye"
                          class="small_banner"/>
                 </a>
             </c:when>

@@ -318,10 +318,15 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         RvLineItem rvLineItemSaved = null;
         User loggedOnUser = userService.getLoggedInUser();
         int deleteQty = rvLineItem.getQty().intValue();
+        rvLineItem.setSku(sku);
+        rvLineItem.setReconciledQty(rvLineItem.getQty());
+        rvLineItem.setReconciliationType(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+        rvLineItemSaved = (RvLineItem) reconciliationVoucherDao.save(rvLineItem);
+
         for (int i = 0; i < deleteQty; i++) {
             SkuItem skuItem = inStockSkuItems.get(i);
             //Delete -1 entry in PVI
-            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
+            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItemSaved, null,
                     inventoryService.getInventoryTxnType(EnumInvTxnType.PRODUCT_VARIANT_AUDITED), -1L, loggedOnUser);
 
             //set sku item status to Product_variant_ Audited
@@ -332,10 +337,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         // Check inventory health now.
         inventoryService.checkInventoryHealth(sku.getProductVariant());
         //save RvLine item
-        rvLineItem.setSku(sku);
-        rvLineItem.setReconciledQty(rvLineItem.getQty());
-        rvLineItem.setReconciliationType(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
-        rvLineItemSaved = (RvLineItem) reconciliationVoucherDao.save(rvLineItem);
+
         return rvLineItemSaved;
     }
 

@@ -32,7 +32,7 @@
                     <div class="nRow">
                         <div class="bgFormCBArea"><input name="" type="checkbox" value="" id="subscribe"/></div>
                         <div class="bgFormCBMsgArea">I would like to receive updates/ new offers from
-                            HealthKart.com in future through Phone/SMS/E-Mails.
+                            HealthKart.com in future through Phone/SMS/E-Mails. By clikcing on 'Submit' you agree to receive calls from our experts.
                         </div>
                         <div class="cl"></div>
                     </div>
