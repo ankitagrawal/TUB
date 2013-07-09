@@ -26,6 +26,7 @@
         <area shape="rect" coords="262,-7,453,94" href="${pageContext.request.contextPath}/brand/home-living/Godrej" />
         <area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/havells-super-chopper/HAV041" />
         <area shape="rect" coords="667,1,874,80" href="${pageContext.request.contextPath}/product/bajaj-popular-dry-iron/BAJ028" />
+
       </map>
 </div>
 

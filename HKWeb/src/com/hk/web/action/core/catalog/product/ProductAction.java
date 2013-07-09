@@ -35,6 +35,7 @@ import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
+import com.hk.cache.ProductCache;
 import com.shiro.PrincipalImpl;
 import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
@@ -128,6 +129,8 @@ public class ProductAction extends BaseAction {
         }
 
         product = getProductService().getProductById(productId);
+        //Refresh Cache.
+        ProductCache.getInstance().refreshCache(product);
 
         if (product != null) {
             if (product instanceof Combo) {
