@@ -320,7 +320,7 @@
              <br>
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
-                <c:if test="${shippingOrder.baseOrder.payment.paymentStatus eq paymentStatusSuccess and shippingOrder.baseOrder.payment.paymentMode.id eq onlinePayment}">
+                <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess and shippingOrder.baseOrder.payment.paymentMode.id eq onlinePayment}">
                 <br/>
                 Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType"/>
                 <br/>

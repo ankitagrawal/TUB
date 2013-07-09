@@ -13278,11 +13278,11 @@
     <changeSet author="Nihal (generated)" id="1371032589311-10">
         <addForeignKeyConstraint baseColumnNames="reconciliation_voucher_id" baseTableName="debit_note" constraintName="fk_debit_note_reconciliation_voucher1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_voucher" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1371202029098-7">
+    <!--<changeSet author="Nihal (generated)" id="1371202029098-7">
         <addColumn tableName="debit_note_line_item">
             <column name="product_name" type="VARCHAR(200)"/>
         </addColumn>
-    </changeSet>
+    </changeSet>-->
     <changeSet author="Nihal (generated)" id="1371571434761-3">
         <addColumn tableName="rtv_note">
             <column name="shipping_charge_hk" type="DECIMAL(12,2)"/>
@@ -13343,12 +13343,12 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
-    <changeSet author="Shakti Singh (written)" id="20130627-01">
+    <!--<changeSet author="Shakti Singh (written)" id="20130627-01">
         <sql>
             insert into permission values ('BULK_SEEK');
             insert into role_has_permission values('GOD','BULK_SEEK');
         </sql>
-    </changeSet>
+    </changeSet>-->
 
     <changeSet author="deepakC" id="1370601362351-11234">
         <addColumn tableName="product_variant">
@@ -13586,10 +13586,5 @@
         <addColumn tableName="payment">
             <column name="refund_amount" type="DECIMAL(8,2)"/>
         </addColumn>
-    </changeSet>
-    <changeSet author="Shakti Singh (generated)" id="20130708-2">
-        <sql>
-            insert into payment_status values (10,'Refund failure');
-        </sql>
     </changeSet>
 </databaseChangeLog>
