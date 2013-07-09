@@ -65,8 +65,6 @@ public class RelatedProductXlsParser {
                     }
                 }
                 product.getRelatedProducts().addAll(relatedProducts);
-                List<Product> relatedProductList=  new ArrayList<>(relatedProducts);
-                product.setRelatedProducts(relatedProductList);
                 getProductService().save(product);
                 productSet.add(product);
                 relatedProducts.add(product);

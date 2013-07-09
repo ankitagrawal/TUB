@@ -1,12 +1,7 @@
 
 package com.hk.domain.catalog.product;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -135,7 +130,7 @@ public class Product  implements java.io.Serializable {
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "product_has_related_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "related_product_id", nullable = false, updatable = false) })
-    private List<Product>        relatedProducts  = new ArrayList<Product>(0);
+    private Set<Product>        relatedProducts  = new HashSet<Product>(0);
 
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
@@ -301,11 +296,11 @@ public class Product  implements java.io.Serializable {
         this.maxDays = maxDays;
     }
 
-    public List<Product> getRelatedProducts() {
+    public Set<Product> getRelatedProducts() {
         return relatedProducts;
     }
 
-    public void setRelatedProducts(List<Product> relatedProducts) {
+    public void setRelatedProducts(Set<Product> relatedProducts) {
         this.relatedProducts = relatedProducts;
     }
 
