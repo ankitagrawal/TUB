@@ -102,6 +102,9 @@ public class B2BCartAction extends BaseAction {
 							dataMap);
 					//Long value = inventoryService.getAvailableUnbookedInventory(pv);
 					Long value = adminInventoryService.getNetInventory(pv);
+					if(value==null){
+						value = 0L;
+					}
 					dataMap.put("inventory", value);
 
 				} catch (Exception e) {
