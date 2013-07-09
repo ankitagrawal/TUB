@@ -130,7 +130,7 @@ public class Product  implements java.io.Serializable {
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "product_has_related_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "related_product_id", nullable = false, updatable = false) })
-    private Set<Product>        relatedProducts  = new HashSet<Product>(0);
+    private List<Product>        relatedProducts  = new ArrayList<Product>(0);
 
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
@@ -296,11 +296,11 @@ public class Product  implements java.io.Serializable {
         this.maxDays = maxDays;
     }
 
-    public Set<Product> getRelatedProducts() {
+    public List<Product> getRelatedProducts() {
         return relatedProducts;
     }
 
-    public void setRelatedProducts(Set<Product> relatedProducts) {
+    public void setRelatedProducts(List<Product> relatedProducts) {
         this.relatedProducts = relatedProducts;
     }
 

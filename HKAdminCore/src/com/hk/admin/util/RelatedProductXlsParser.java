@@ -35,7 +35,6 @@ public class RelatedProductXlsParser {
 
     public Set<Product> readRelatedProductExcel(File file) throws Exception {
         logger.debug("parsing RelatedProduct info : " + file.getAbsolutePath());
-        Set<Product> productSet = new HashSet<Product>();
         ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
         Iterator<HKRow> rowIterator = excel.parse();
         int rowCount = 1;
@@ -45,7 +44,7 @@ public class RelatedProductXlsParser {
                 HKRow row = rowIterator.next();
                 String productId = row.getColumnValue(XslConstants.PRODUCT_ID);
                 String relatedProductStr = row.getColumnValue(XslConstants.RELATED_PRODUCTS);
-                Set<Product> relatedProducts = new HashSet<>();
+                List<Product> relatedProducts = new ArrayList<Product>();
 
                 if (StringUtils.isEmpty(productId)) {
                     logger.error("product id cannot be null/empty");
@@ -66,9 +65,6 @@ public class RelatedProductXlsParser {
                 }
                 product.getRelatedProducts().addAll(relatedProducts);
                 getProductService().save(product);
-                productSet.add(product);
-                relatedProducts.add(product);
-
             }
 
         } catch (ExcelBlankFieldException e) {
