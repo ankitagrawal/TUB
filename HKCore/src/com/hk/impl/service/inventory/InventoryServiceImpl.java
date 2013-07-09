@@ -247,6 +247,10 @@ public class InventoryServiceImpl implements InventoryService {
     	return inventoryHealthService.getUnbookedInventoryInProcessingQueue(lineItem);
     }
 
+    @Override
+    public long getUnbookedInventoryForActionQueue(LineItem lineItem) {
+        return inventoryHealthService.getUnbookedInventoryForActionQueue(lineItem);
+    }
     @Deprecated
     private Long getBookedQty(ProductVariant productVariant) {
         Long bookedInventory = 0L;

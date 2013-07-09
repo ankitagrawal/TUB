@@ -7,6 +7,7 @@ import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.payment.PaymentHistory;
 
@@ -28,5 +29,7 @@ public interface DebitNoteService {
     public DebitNote save(DebitNote debitNote, List<DebitNoteLineItem> debitNoteLineItems);
 
     public DebitNote save(DebitNote debitNote);
+    
+    public ReconciliationVoucher getRvForDebitNote(DebitNote debitNote);
 
 }
