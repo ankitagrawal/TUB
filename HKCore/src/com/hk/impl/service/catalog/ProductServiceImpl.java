@@ -1,11 +1,10 @@
 package com.hk.impl.service.catalog;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.cache.vo.ProductVO;
 import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.constants.catalog.image.EnumImageType;
-import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.core.Keys;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
@@ -25,7 +24,6 @@ import com.hk.pact.service.search.ProductSearchService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKImageUtils;
 import com.hk.web.filter.WebContext;
-import com.hk.cache.vo.ProductVO;
 import net.sourceforge.stripes.controller.StripesFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -326,7 +324,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductVariant validTryOnProductVariant(Product product) {
-        if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
+
+	    //Commenting the code which check validTryOnProductVariant, it will always retrun null. 7th July 2013
+
+        /*if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
             // Category virtualTryOnCategory = new Category("Virtual Try On", "Try It Online");
             // if (product.getCategories().contains(virtualTryOnCategory)) {
             for (ProductVariant productVariant : product.getInStockVariants()) {
@@ -346,7 +347,7 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
             // }
-        }
+        }*/
         return null;
     }
 

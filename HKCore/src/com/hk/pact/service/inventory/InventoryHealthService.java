@@ -25,7 +25,9 @@ public interface InventoryHealthService {
 	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
 	
 	long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
-	
+
+	long getUnbookedInventoryForActionQueue(LineItem lineItem);
+
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
 		private double mrp;

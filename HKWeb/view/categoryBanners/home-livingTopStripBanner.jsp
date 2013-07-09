@@ -24,8 +24,8 @@
             alt="Flat 20% Off on these 3 appliances from BAJAJ" usemap="#Map">
       <map name="Map" id="Map">
         <area shape="rect" coords="262,-7,453,94" href="${pageContext.request.contextPath}/product/bajaj-jx4-juicer-mixer-grinder/MIT002" />
-        <area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/product/Electric Cooker/PAN016" />
-        <area shape="rect" coords="667,1,874,80" href="${pageContext.request.contextPath}/product/food-steamer/WST022" />
+        <area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/product/food-steamer/WST022" />
+        <area shape="rect" coords="667,1,874,80" href="${pageContext.request.contextPath}/product/Electric Cooker/PAN016" />
       </map>
 </div>
 
