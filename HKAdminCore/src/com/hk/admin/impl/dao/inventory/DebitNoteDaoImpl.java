@@ -10,10 +10,10 @@ import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 
-@SuppressWarnings("unchecked")
 @Repository
 public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
 
@@ -39,5 +39,10 @@ public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
     return list(debitNoteCriteria, pageNo, perPage);
 
   }
+  
+  @Override
+	public ReconciliationVoucher getRvForDebitNote(DebitNote debitNote) {
+		return (ReconciliationVoucher)getSession().createQuery("select dn.reconciliationVoucher from DebitNote dn where dn.id = id").setParameter("id", debitNote.getId());
+	}
 
 }
