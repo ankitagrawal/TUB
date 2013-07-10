@@ -164,7 +164,7 @@ public class JitShippingOrderAction extends BaseAction {
 			}
 		}
 		logger.debug("size of shipping orders - " + shippingOrders.size());
-		return null;
+		return new RedirectResolution(AdminHomeAction.class);
 	}
 
 	public Date getStartDate() {

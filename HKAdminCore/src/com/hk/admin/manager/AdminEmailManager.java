@@ -1185,7 +1185,6 @@ public class AdminEmailManager {
     		}
     	valuesMap.put("soCancellationReason", soCancellationReason);
     	
-    	List<Category> categories = new ArrayList<Category>();
     	for(LineItem lineItem : shippingOrder.getLineItems()){
     		if(lineItem!=null && lineItem.getSku().getProductVariant().getProduct().getCategories()!=null && lineItem.getSku().getProductVariant().getProduct().getCategories().size()>0){
     			Category category = lineItem.getSku().getProductVariant().getProduct().getCategories().get(0);

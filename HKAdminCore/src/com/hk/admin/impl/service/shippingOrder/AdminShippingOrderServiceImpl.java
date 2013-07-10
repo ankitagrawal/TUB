@@ -154,7 +154,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 				shippingOrder.setWarehouse(warehouse);
 				shipmentService.recreateShipment(shippingOrder);
 				shippingOrder = getShippingOrderService().save(shippingOrder);
-				if(shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting) && shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
+				if(shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()) && shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
 				adminEmailManager.sendJitShippingCancellationMail(shippingOrder,null, EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED);
 				}
 				getShippingOrderService().logShippingOrderActivity(shippingOrder,
