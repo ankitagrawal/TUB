@@ -1199,7 +1199,8 @@ public class AdminEmailManager {
     		}
     	}
     	
-    	String fromPurchaseEmail = "purchase@healthkart.com";
+    	//String fromPurchaseEmail = "purchase@healthkart.com";
+    	String fromPurchaseEmail = "nihal@healthkart.com";
     	//emailIds.add(fromPurchaseEmail);
     	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.jitShippingOrderStatusChangeMail);
     	User user = userService.getAdminUser();
