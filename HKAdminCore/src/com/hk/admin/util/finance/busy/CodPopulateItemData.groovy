@@ -34,7 +34,7 @@ class CodPopulateItemData {
         try {
             int rowUpdateKnowlarity = sql.executeUpdate("""
             update user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
-           set ucc.call_status=10
+           set ucc.call_status=10,ucc.remark='Pending With Knowlarity'
            where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status<>10 and  p.payment_date >(
            SELECT
            case
@@ -54,7 +54,7 @@ class CodPopulateItemData {
 """);
             int rowUpdateEffortBpo = sql.executeUpdate("""
                             update  user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
-                            set ucc.call_status=60
+                            set ucc.call_status=60,ucc.remark='Pending With EffortBpo'
                             where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status<>60 and  p.payment_date between (
                             select
                             TIMESTAMP(case
@@ -79,7 +79,7 @@ class CodPopulateItemData {
 
             int rowUpdateHK = sql.executeUpdate("""
                   update   user_cod_call ucc join base_order bo on ucc.order_id=bo.id join payment p on bo.payment_id=p.id
-                  set ucc.call_status=70
+                  set ucc.call_status=70,ucc.remark='Pending With HK'
                   where bo.order_status_id in(15,20) and p.payment_status_id=2 and p.payment_mode_id=40  and ucc.call_status<>70 and  p.payment_date <(
                   select
                   case
