@@ -12992,13 +12992,13 @@
             <column name="physical_invoice_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Shilpa (written)" id="1367842551660-2">
+ <!--    <changeSet author="Shilpa (written)" id="1367842551660-2">
       <sql>
         insert into permission(name)  values  ("RECEIVE_CONSIGNMENTS"),("EDIT_RUNSHEET"),("VIEW_CONSIGNMENTS"),("VIEW_PAYMENT_HISTORY"),("TRACK_CONSIGNMENTS"),("CREATE_PAYMENT_RECONCILATION"),("ADD_EDIT_HUB"),("ADD_REMOVE_AGENT"),("CONSIGNMENT_TRACKING_REPORT"),("VIEW_NDR"),("EDIT_NDR")  on duplicate key update name = values(name);
 
        insert into role_has_permission (role_name, permission_name)  values  ("ADMIN","RECEIVE_CONSIGNMENTS"),("ADMIN","EDIT_RUNSHEET"),("ADMIN","VIEW_CONSIGNMENTS"),("ADMIN","VIEW_PAYMENT_HISTORY"),("ADMIN","TRACK_CONSIGNMENTS"),("ADMIN","CREATE_PAYMENT_RECONCILATION"),("ADMIN","ADD_EDIT_HUB"),("ADMIN","ADD_REMOVE_AGENT"),("ADMIN",                   "CONSIGNMENT_TRACKING_REPORT"),("ADMIN","VIEW_NDR"),("ADMIN","EDIT_NDR"),("OPS_MANAGER_L1","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT","VIEW_NDR"),("CUSTOMER_SUPPORT",             "EDIT_NDR"),("CUSTOMER_SUPPORT","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L2","VIEW_NDR"),("CUSTOMER_SUPPORT_L2","EDIT_NDR"),("CUSTOMER_SUPPORT_L2",                               "TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L3","VIEW_NDR"),("CUSTOMER_SUPPORT_L3","EDIT_NDR"),("CUSTOMER_SUPPORT_L3","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN",                    "RECEIVE_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","EDIT_RUNSHEET"),("HK_DELIVERY_ADMIN","VIEW_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","VIEW_PAYMENT_HISTORY"),                             ("HK_DELIVERY_ADMIN","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_ADMIN","ADD_EDIT_HUB"),("HK_DELIVERY_ADMIN",                        "ADD_REMOVE_AGENT"),("HK_DELIVERY_ADMIN","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_ADMIN","VIEW_NDR"),("HK_DELIVERY_ADMIN","EDIT_NDR"),("HK_DELIVERY_HUB_MANAGER",             "EDIT_RUNSHEET"),("HK_DELIVERY_HUB_MANAGER","VIEW_CONSIGNMENTS"),("HK_DELIVERY_HUB_MANAGER","VIEW_PAYMENT_HISTORY"),("HK_DELIVERY_HUB_MANAGER","TRACK_CONSIGNMENTS"),             ("HK_DELIVERY_HUB_MANAGER","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_HUB_MANAGER","ADD_EDIT_HUB"),("HK_DELIVERY_HUB_MANAGER","ADD_REMOVE_AGENT"),                             ("HK_DELIVERY_HUB_MANAGER","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_HUB_MANAGER","VIEW_NDR")  on duplicate key update permission_name = values(permission_name);
       </sql>
-    </changeSet>
+    </changeSet> -->
     <changeSet author="Pratham (generated)" id="1369648289023-1">
         <createTable tableName="action_path_workflow">
             <column autoIncrement="true" name="id" type="INT">
@@ -13343,12 +13343,12 @@
          update badge set badge_name = 'COPPER' where id = '1';
      </sql>
  </changeSet>
-    <changeSet author="Shakti Singh (written)" id="20130627-01">
+    <!-- <changeSet author="Shakti Singh (written)" id="20130627-01">
         <sql>
             insert into permission values ('BULK_SEEK');
             insert into role_has_permission values('GOD','BULK_SEEK');
         </sql>
-    </changeSet>
+    </changeSet> -->
 
     <changeSet author="deepakC" id="1370601362351-11234">
         <addColumn tableName="product_variant">
@@ -13583,10 +13583,10 @@
 		</sql>
 	</changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1373436305338-1">
-        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" tableName="sku_group"/>
+        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" defaultNullValue="" tableName="sku_group"/>
     </changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1373436305338-2">
-        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" tableName="sku_group"/>
+        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" defaultNullValue="" tableName="sku_group"/>
     </changeSet>
     
 </databaseChangeLog>
