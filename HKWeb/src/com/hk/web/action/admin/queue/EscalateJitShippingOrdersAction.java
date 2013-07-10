@@ -61,35 +61,10 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				}
 			}
 		}
-		/*
-		 * Set<PurchaseOrder> purchaseOrders = new HashSet<PurchaseOrder>(); for
-		 * (ShippingOrder shippingOrder : shippingOrderListToProcess) {
-		 * List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders(); if
-		 * (poList != null && poList.size() > 0) {
-		 * purchaseOrders.addAll(poList); } }
-		 */
-		/*
-		 * List<ProductVariant> productVariants = new
-		 * ArrayList<ProductVariant>(); for (PurchaseOrder order :
-		 * purchaseOrders) { if
-		 * (order.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus
-		 * .Received.asEnumPurchaseOrderStatus())) { List<PoLineItem>
-		 * poLineItemList = order.getPoLineItems(); if (poLineItemList != null
-		 * && poLineItemList.size() > 0) { for (PoLineItem poLi :
-		 * poLineItemList) { ProductVariant pv =
-		 * poLi.getSku().getProductVariant(); productVariants.add(pv); } } } }
-		 */
 
 		sortedShippingOrderList.addAll(shippingOrderListToProcess);
 		sortedShippingOrderList = getSortedShippingOrders();
 		Set<ShippingOrder> sortedShippingOrdersSet = new HashSet<ShippingOrder>(sortedShippingOrderList);
-
-		/*
-		 * List<LineItem> lineItemsList = new ArrayList<LineItem>(); for
-		 * (ShippingOrder so : sortedShippingOrdersSet) { Set<LineItem> items =
-		 * so.getLineItems(); if (items != null && items.size() > 0) {
-		 * lineItemsList.addAll(items); } }
-		 */
 
 		int ctr = 0;
 
@@ -120,34 +95,8 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 			}
 		}
 
-		/*
-		 * for (LineItem li : lineItemsList) { for (ProductVariant pv :
-		 * productVariants) { if (li.getSku().getProductVariant().equals(pv)) {
-		 * Long inventory = productVariantService.findNetInventory(pv); if
-		 * (inventory == null) { inventory = 0L; } if
-		 * (inventory.compareTo(li.getQty()) >= 0) { ShippingOrder so =
-		 * li.getShippingOrder(); List<PurchaseOrder> poList =
-		 * so.getPurchaseOrders(); boolean flag = false; if(poList!=null &&
-		 * poList.size()>0){ for(PurchaseOrder po: poList){
-		 * 
-		 * } }
-		 * shippingOrderService.automateManualEscalation(li.getShippingOrder());
-		 * ShippingOrderLifecycle shippingOrderLifecycle = new
-		 * ShippingOrderLifecycle();
-		 * shippingOrderLifecycle.setOrder(li.getShippingOrder());
-		 * shippingOrderLifecycle
-		 * .setShippingOrderLifeCycleActivity(getBaseDao().
-		 * get(ShippingOrderLifeCycleActivity.class,
-		 * EnumShippingOrderLifecycleActivity.SO_LoggedComment.getId()));
-		 * shippingOrderLifecycle.setUser(userService.getAdminUser());
-		 * shippingOrderLifecycle
-		 * .setComments("PO against the shipping order served.");
-		 * shippingOrderLifecycle.setActivityDate(new Date());
-		 * shippingOrderLifecycleDao.save(shippingOrderLifecycle); ctr++; } } }
-		 * }
-		 */
 
-		addRedirectAlertMessage(new SimpleMessage(ctr + " Shipping Orders Escalated"));
+		addRedirectAlertMessage(new SimpleMessage("Tried to Escalate "+ctr+ " Shipping Orders"));
 		return new RedirectResolution(AdminHomeAction.class);
 
 	}

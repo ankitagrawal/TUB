@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
@@ -58,9 +59,7 @@ public class SplitShippingOrderAction extends BaseAction {
     @Autowired
     ShipmentService shipmentService;
     @Autowired
-	PurchaseOrderService purchaseOrderService;
-    @Autowired
-	AdminEmailManager adminEmailManager;
+    AdminShippingOrderService adminShippingOrderService;
 
     private boolean dropShipItemPresentInSelectedItems;
     private boolean dropShipItemPresentInRemainingItems;
@@ -179,42 +178,8 @@ public class SplitShippingOrderAction extends BaseAction {
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
             
             //Handling the PO against the shipping Orders
-            List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
-            Set<PurchaseOrder> newShippingOrderPoSet = new HashSet<PurchaseOrder>();
-            Set<PurchaseOrder> parentShippingOrderPoSet = new HashSet<PurchaseOrder>();
-            List<ProductVariant> variantListFromSO = new ArrayList<ProductVariant>();
-            for(LineItem item: shippingOrder.getLineItems()){
-            	variantListFromSO.add(item.getSku().getProductVariant());
-            }
-            
-            if(poList!=null && poList.size()>0){
-            	for(PurchaseOrder order:poList){
-            		boolean flag = false;
-            		List<ProductVariant> productVariants = purchaseOrderService.getAllProductVariantFromPO(order);
-            		if(productVariants!=null && productVariants.size()>0){
-            			for(ProductVariant pv : productVariants){
-            				if(variantListFromSO.contains(pv)){
-            					flag = true;
-            				}
-            				if(shippingOrderService.shippingOrderContainsProductVariant(newShippingOrder, pv)){
-            					newShippingOrderPoSet.add(order);
-            					break;
-            				}
-            			}
-            		}
-            		if(flag ==true){
-            			parentShippingOrderPoSet.add(order);
-            		}
-            	}
-            }
-            
-            newShippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(newShippingOrderPoSet));
-            shippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(parentShippingOrderPoSet));
-            newShippingOrder = shippingOrderService.save(newShippingOrder);
-            shippingOrder = shippingOrderService.save(shippingOrder);
-            adminEmailManager.sendJitShippingCancellationMail(shippingOrder,newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
-            
-
+            adminShippingOrderService.adjustPurchaseOrderForSplittedShippingOrder(shippingOrder, newShippingOrder);
+           
             addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
             return new RedirectResolution(ActionAwaitingQueueAction.class);
         } else {

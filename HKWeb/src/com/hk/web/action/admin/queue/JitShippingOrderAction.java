@@ -95,7 +95,6 @@ public class JitShippingOrderAction extends BaseAction {
 		shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
 		List<ShippingOrder> shippingOrderListToProcess = new ArrayList<ShippingOrder>();
 		if (shippingOrderList != null && shippingOrderList.size() > 0) {
-
 			for (ShippingOrder shippingOrder : shippingOrderList) {
 				if (shippingOrder.getPurchaseOrders() == null || (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() == 0)) {
 					shippingOrderListToProcess.add(shippingOrder);
@@ -118,7 +117,6 @@ public class JitShippingOrderAction extends BaseAction {
 			}
 
 			purchaseOrders = jitShippingOrderPOCreationService.deletePOsWithEmptyPOLineItems(purchaseOrderList);
-
 			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 			for (PurchaseOrder purchaseOrder : purchaseOrderList) {
 				if (purchaseOrder != null) {
@@ -135,7 +133,6 @@ public class JitShippingOrderAction extends BaseAction {
 					}
 				}
 			}
-
 		}
 
 		addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));

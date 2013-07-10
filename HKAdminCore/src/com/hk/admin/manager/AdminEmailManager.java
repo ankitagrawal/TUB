@@ -18,6 +18,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
+import com.hk.constants.inventory.EnumPurchaseOrderType;
 import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.PoLineItem;
@@ -1145,13 +1146,19 @@ public class AdminEmailManager {
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
         
         try {
-        	
-            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".pdf");
+        	String purchaseOrdertype = "";
+        	if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())){
+        		purchaseOrdertype= "JIT";
+        	}
+        	else if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())){
+        		purchaseOrdertype = "DS";
+        	}
+            pdfFile = new File(adminDownloads + "/reports/PO-"+purchaseOrder.getId() +purchaseOrdertype+"-"+" -Dt- "+date+ ".pdf");
             pdfFile.getParentFile().mkdirs();
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
             getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
             
-            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".xls");
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +purchaseOrdertype+"-"+ purchaseOrder.getId() +" -Dt- "+date+ ".xls");
             xlsFile.getParentFile().mkdirs();
             xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
         } catch (Exception e) {

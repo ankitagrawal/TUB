@@ -2,11 +2,13 @@ package com.hk.impl.service.shippingOrder;
 
 import java.util.*;
 
+import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LifecycleReason;
@@ -428,7 +430,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			return false;
 		}
 	}
-
+	
     public UserService getUserService() {
         return userService;
     }

@@ -1,7 +1,9 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
@@ -26,6 +29,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ReplacementOrderReason;
@@ -97,6 +101,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired InventoryHealthService inventoryHealthService;
     
     @Autowired BaseDao baseDao;
+    @Autowired
+	PurchaseOrderService purchaseOrderService;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
@@ -391,6 +397,42 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		return null;
 	}
 
+	public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder shippingOrder, ShippingOrder newShippingOrder){
+		List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
+        Set<PurchaseOrder> newShippingOrderPoSet = new HashSet<PurchaseOrder>();
+        Set<PurchaseOrder> parentShippingOrderPoSet = new HashSet<PurchaseOrder>();
+        List<ProductVariant> variantListFromSO = new ArrayList<ProductVariant>();
+        for(LineItem item: shippingOrder.getLineItems()){
+        	variantListFromSO.add(item.getSku().getProductVariant());
+        }
+        
+        if(poList!=null && poList.size()>0){
+        	for(PurchaseOrder order:poList){
+        		boolean flag = false;
+        		List<ProductVariant> productVariants = purchaseOrderService.getAllProductVariantFromPO(order);
+        		if(productVariants!=null && productVariants.size()>0){
+        			for(ProductVariant pv : productVariants){
+        				if(variantListFromSO.contains(pv)){
+        					flag = true;
+        				}
+        				if(shippingOrderService.shippingOrderContainsProductVariant(newShippingOrder, pv)){
+        					newShippingOrderPoSet.add(order);
+        				}
+        			}
+        		}
+        		if(flag ==true){
+        			parentShippingOrderPoSet.add(order);
+        		}
+        	}
+        }
+        
+        newShippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(newShippingOrderPoSet));
+        shippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(parentShippingOrderPoSet));
+        newShippingOrder = shippingOrderService.save(newShippingOrder);
+        shippingOrder = shippingOrderService.save(shippingOrder);
+        adminEmailManager.sendJitShippingCancellationMail(shippingOrder,newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
+        
+	}
 
 
     public ShippingOrderService getShippingOrderService() {

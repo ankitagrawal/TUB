@@ -226,7 +226,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap) {
 
 		if (purchaseOrderProductVariantMap != null && purchaseOrderProductVariantMap.size() > 0) {
-
+			boolean containsDropShip = false;
 			Set<Entry<PurchaseOrder, HashMap<ProductVariant, Long>>> entrySet = purchaseOrderProductVariantMap.entrySet();
 
 			for (Entry<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderPVEntry : entrySet) {
@@ -237,6 +237,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				Set<Entry<ProductVariant, Long>> prodQty = purchaseOrderPVEntry.getValue().entrySet();
 				for (Entry<ProductVariant, Long> entry : prodQty) {
 					ProductVariant productVariant = entry.getKey();
+					if(productVariant.getProduct().isDropShipping()){
+						containsDropShip = true;
+					}
 					Long quantity = entry.getValue();
 					Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
 					Long inventory = adminInventoryService.getNetInventory(sku);
@@ -248,17 +251,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						inventory = 0L;
 					}
 					Long unbookedInventory = inventory - bookedInventory;
-					/*
-					 * if(unbookedInventory<=0){ unbookedInventory=0L; }
-					 */
 					logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
 					if (unbookedInventory<0) {
 						Long poQty = 0L;
-						/*if (unbookedInventory < 0) {
-							poQty = Math.abs(unbookedInventory);
-						} else {
-							poQty = quantity - unbookedInventory;
-						}*/
 						// TODO --
 						Double taxableAmount = 0.0D;
 						Double discountPercentage = 0D;
@@ -306,10 +301,11 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				purchaseOrder.setTaxableAmount(totalTaxable);
 				purchaseOrder.setTaxAmount(totalTax);
 				purchaseOrder.setSurchargeAmount(totalSurcharge);
-				// purchaseOrder.setFinalPayableAmount(totalPayable +
-				// totalTaxable + totalTax + totalSurcharge);
 				purchaseOrder.setFinalPayableAmount(totalPayable);
 				purchaseOrder.setPoLineItems(poLineItems);
+				if(containsDropShip){
+					purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType());
+				}
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			}
 		}
