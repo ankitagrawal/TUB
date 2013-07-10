@@ -152,7 +152,7 @@ public class JitShippingOrderAction extends BaseAction {
 		return shippingOrderSearchCriteria;
 	}
 
-	public Resolution checkShippingOrderForCornerCases() {
+	/*public Resolution checkShippingOrderForCornerCases() {
 
 		List<ShippingOrder> shippingOrders = purchaseOrderService.getCancelledShippingOrderFromSoPo();
 		if (shippingOrders != null && shippingOrders.size() > 0) {
@@ -165,7 +165,7 @@ public class JitShippingOrderAction extends BaseAction {
 		}
 		logger.debug("size of shipping orders - " + shippingOrders.size());
 		return new RedirectResolution(AdminHomeAction.class);
-	}
+	}*/
 
 	public Date getStartDate() {
 		return startDate;

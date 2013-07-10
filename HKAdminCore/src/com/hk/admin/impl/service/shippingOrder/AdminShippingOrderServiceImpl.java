@@ -118,7 +118,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	            shipmentService.delete(shipmentToDelete);
 	            //shippingOrderService.save(shippingOrder);
             }
-			getShippingOrderService().save(shippingOrder);
+            shippingOrder = getShippingOrderService().save(shippingOrder);
+            if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
+            	adminEmailManager.sendJitShippingCancellationMail(shippingOrder,null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
+            }
             getBucketService().popFromActionQueue(shippingOrder);
         }
         for (LineItem lineItem : shippingOrder.getLineItems()) {
