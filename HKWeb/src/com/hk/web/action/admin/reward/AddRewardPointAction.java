@@ -62,7 +62,7 @@ public class AddRewardPointAction extends BaseAction {
     @Validate(required = true, on = "add")
     private Date               expiryDate;
 
-    @Validate(required = true)
+    @Validate(required = true, on = "add")
     private Long orderId;
 
     @DefaultHandler

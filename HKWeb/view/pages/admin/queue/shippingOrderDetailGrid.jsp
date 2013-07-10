@@ -322,7 +322,7 @@
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
                 <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess and shippingOrder.baseOrder.payment.paymentMode.id eq onlinePayment}">
                 <br/>
-                Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType"/>
+                Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
                 <br/>
                 <c:if test="${hk:collectionContains(refundEnabledGatedways, shippingOrder.baseOrder.payment.gateway.id)}">
                 Refund Payment: <s:radio value="${refundPoints}" name="reconciliationType"/> </c:if>

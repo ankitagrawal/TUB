@@ -334,8 +334,14 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
             Payment parent = payment.getParent();
             if(parent != null && payment.getAmount() != null){
-                double refundAmount = parent.getRefundAmount() + payment.getAmount();
+                double refundAmount;
+                if (parent.getRefundAmount() != null) {
+                    refundAmount = parent.getRefundAmount() + payment.getAmount();
+                } else {
+                    refundAmount = payment.getAmount();
+                }
                 parent.setRefundAmount(refundAmount);
+                save(parent);
             }
             save(payment);
         }
@@ -451,14 +457,20 @@ public class PaymentServiceImpl implements PaymentService {
 
             } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType)) {
                 try {
-                    refundPayment(order.getPayment().getGatewayOrderId(), amount);
-                    return true;
+                    Payment payment = refundPayment(order.getPayment().getGatewayOrderId(), amount);
+                    return EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId());
                 } catch (HealthkartPaymentGatewayException e) {
                    return false;
                 }
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isValidReconciliation(Payment payment) {
+        return EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId())
+                && EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId());
     }
 
 

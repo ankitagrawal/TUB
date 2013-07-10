@@ -313,7 +313,7 @@
       <s:textarea name="cancellationRemark" style="height:100px"/>
       <c:if test="${order.payment.paymentStatus.id eq paymentStatusSuccess and order.payment.paymentMode.id eq onlinePayment}">
       <br/>
-      Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="true"/>
+      Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
       <br/>
       <c:if test="${hk:collectionContains(refundEnabledGatedways, order.payment.gateway.id)}">
       Refund Payment: <s:radio  value="${refundPoints}" name="reconciliationType" /></c:if>
@@ -338,6 +338,7 @@
           }
         }
       }
+
     </script>
 
   </c:if>

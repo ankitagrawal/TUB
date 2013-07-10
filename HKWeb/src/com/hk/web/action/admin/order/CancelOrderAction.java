@@ -9,6 +9,8 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.payment.Payment;
@@ -58,7 +60,7 @@ public class CancelOrderAction extends BaseAction {
 
     private String           cancellationRemark;
 
-    @Validate(required = true)
+    //@Validate(required = true, on = "pre")
     private Long reconciliationType;
 
     @JsonHandler
@@ -69,17 +71,18 @@ public class CancelOrderAction extends BaseAction {
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
         if (EnumOrderStatus.Cancelled.getId().equals(order.getOrderStatus().getId())) {
-            boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order, order.getAmount(), cancellationRemark);
-
-            if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
-                adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
-                addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
-            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && flag) {
-                adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.AmountRefundedOrderCancel);
-                addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
-            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
-                adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
-                addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
+            if (paymentService.isValidReconciliation(order.getPayment()) && reconciliationType != null) {
+                boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order, order.getAmount(), cancellationRemark);
+                if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
+                    adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
+                    addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
+                } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && flag) {
+                    adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.AmountRefundedOrderCancel);
+                    addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
+                } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
+                    adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
+                    addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
+                }
             }
         }
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "cancelled", data);

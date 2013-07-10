@@ -68,4 +68,6 @@ public interface PaymentService {
 
     public boolean reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) ;
 
+    public boolean isValidReconciliation(Payment payment) ;
+
 }
