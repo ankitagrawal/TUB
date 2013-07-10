@@ -66,8 +66,7 @@ public class BulkUploadRelatedProductAction extends BaseAction {
         }
         try {
             logger.info("Related Product Update by " + loggedOnUser.getEmail());
-            Set<Product> productSet = relatedProductXlsParser.readRelatedProductExcel(excelFile);
-            addRedirectAlertMessage(new SimpleMessage("product updated for" + productSet.size()));
+            relatedProductXlsParser.readRelatedProductExcel(excelFile);
             addRedirectAlertMessage(new SimpleMessage("Database Successfully Updated."));
         } catch (Exception ex) {
             logger.error("Exception while reading excel sheet.", ex);

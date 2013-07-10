@@ -57,8 +57,7 @@ public class RelatedProductXlsParser {
                     throw new ExcelBlankFieldException("Related Product  cannot be empty" + "    ", rowCount);
                 }
                 Product product = getProductService().getProductById(productId);
-
-                List<Product> productHasRelated=product.getRelatedProducts();
+                List<Product> productHasRelated = product.getRelatedProducts();
                 String[] relatedProductStrArray = StringUtils.split(relatedProductStr, "|");
                 for (String relatedProductId : relatedProductStrArray) {
                     Product relatedProduct = getProductService().getProductById(relatedProductId);
@@ -71,11 +70,15 @@ public class RelatedProductXlsParser {
                 }
                 if (relatedProducts.isEmpty()) {
                     logger.error("All Product are already added");
-                    throw new Exception("All related product are already added for product_id: "+product);
+                    throw new Exception("All related product are already added for product_id: " + product);
+                } else if (relatedProducts.size() == 1) {
+                    productHasRelated.add(relatedProducts.get(0));
                 } else {
-                    getProductService().getRelatedProducts(product).addAll(relatedProducts);
-                    getProductService().save(product);
+                    productHasRelated.addAll(relatedProducts);
                 }
+                product.setRelatedProducts(productHasRelated);
+                getProductService().save(product);
+
             }
         } catch (ExcelBlankFieldException e) {
             throw new ExcelBlankFieldException(e.getMessage());
