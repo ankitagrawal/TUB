@@ -70,10 +70,10 @@ public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
 	@Column (name = "create_date", nullable = false, length = 19)
 	private Date createDate;
 
-	@Column (name = "cost_price")
+	@Column (name = "cost_price",nullable = false)
 	private Double costPrice;
 
-	@Column (name = "mrp")
+	@Column (name = "mrp",nullable = false)
 	private Double mrp;
 
     @Column (name="status", nullable=false)
