@@ -544,7 +544,7 @@
                         <shiro:lacksPermission name='<%=PermissionConstants.DEBIT_NOTE_UPDATE%>'>
                             ${debitNoteLineItemDto.debitNoteLineItem.qty}
                     		<s:hidden name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
-                        </shiro:lacksPermission>>
+                        </shiro:lacksPermission>
                     		</c:otherwise>
                     	</c:choose>
                         
@@ -560,12 +560,12 @@
                         <shiro:hasPermission name='<%=PermissionConstants.DEBIT_NOTE_UPDATE%>'>
                             <s:text name="debitNoteLineItems[${ctr.index}].costPrice"
                                    class="costPrice valueChange" value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
-                        </shiro:hasPermission>>
+                        </shiro:hasPermission>
                         <shiro:lacksPermission name='<%=PermissionConstants.DEBIT_NOTE_UPDATE%>'>
                             ${debitNoteLineItemDto.debitNoteLineItem.costPrice}
                             <s:hidden name="debitNoteLineItems[${ctr.index}].costPrice"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
-                        </shiro:lacksPermission>>
+                        </shiro:lacksPermission>
                         </c:otherwise>
                     </c:choose>
                     </td>
@@ -580,12 +580,12 @@
                     		<shiro:hasPermission name='<%=PermissionConstants.DEBIT_NOTE_UPDATE%>'>
                             <s:text class="mrp valueChange" name="debitNoteLineItems[${ctr.index}].mrp"
                                     value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
-                        </shiro:hasPermission>>
+                        </shiro:hasPermission>
                         <shiro:lacksPermission name='<%=PermissionConstants.DEBIT_NOTE_UPDATE%>'>
                             ${debitNoteLineItemDto.debitNoteLineItem.mrp}
                             <s:hidden class="mrp" name="debitNoteLineItems[${ctr.index}].mrp"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
-                        </shiro:lacksPermission>>
+                        </shiro:lacksPermission>
                         </c:otherwise>
                     		</c:choose>
                         
@@ -594,12 +594,12 @@
                 	<td>
                 	<shiro:hasPermission name='<%=PermissionConstants.DEBIT_NOTE_UPDATE%>'>
                     		 <s:text class="discountPercentage valueChange" name="debitNoteLineItems[${ctr.index}].discountPercent"
-                                      value="${debitNoteLineItemDto.debitNoteLineItem.discountPercent}"/></shiro:hasPermission>>
+                                      value="${debitNoteLineItemDto.debitNoteLineItem.discountPercent}"/></shiro:hasPermission>
                       <shiro:lacksPermission name='<%=PermissionConstants.DEBIT_NOTE_UPDATE%>'>
                       
                       <s:text readonly="true" class="discountPercentage valueChange" name="debitNoteLineItems[${ctr.index}].discountPercent"
                                       value="${debitNoteLineItemDto.debitNoteLineItem.discountPercent}"/>
-                      </shiro:lacksPermission>>                
+                      </shiro:lacksPermission>             
                                       </td>
                 	</c:if>
                     <td>
