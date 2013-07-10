@@ -119,7 +119,10 @@ public enum EnumPermission {
   VIEW_NDR                                       (PermissionConstants.VIEW_NDR),
   CONSIGNMENT_TRACKING_REPORT                    (PermissionConstants.CONSIGNMENT_TRACKING_REPORT),
   EDIT_NDR                                       (PermissionConstants.EDIT_NDR),
-  BULK_SEEK                                      (PermissionConstants.BULK_SEEK);
+  BULK_SEEK                                      (PermissionConstants.BULK_SEEK),
+  DEBIT_NOTE_UPDATE								(PermissionConstants.DEBIT_NOTE_UPDATE),
+  DEBIT_NOTE_MANAGE								(PermissionConstants.DEBIT_NOTE_MANAGE)
+  ;
 
   String permissionName;
 
