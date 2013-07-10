@@ -13583,10 +13583,10 @@
 		</sql>
 	</changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1373436305338-1">
-        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" defaultNullValue="" tableName="sku_group"/>
+        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" defaultNullValue="0.0" tableName="sku_group"/>
     </changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1373436305338-2">
-        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" defaultNullValue="" tableName="sku_group"/>
+        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" defaultNullValue="0.0" tableName="sku_group"/>
     </changeSet>
     
 </databaseChangeLog>
