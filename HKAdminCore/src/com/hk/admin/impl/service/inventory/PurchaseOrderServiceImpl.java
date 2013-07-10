@@ -78,9 +78,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	  return (List<ProductVariant>) getPurchaseOrderDao().getAllProductVariantFromPO(po);
   }
   
-  public void deleteSoForPo(PurchaseOrder po, ShippingOrder so){
-	  getPurchaseOrderDao().deleteSoForPo(po,so);
-  }
+	  @Override
+	public List<ShippingOrder> getCancelledShippingOrderFromSoPo() {
+		 return (List<ShippingOrder>)getPurchaseOrderDao().getCancelledShippingOrderFromSoPo();
+		
+	}
 
 	public PurchaseOrderDao getPurchaseOrderDao() {
 		return purchaseOrderDao;

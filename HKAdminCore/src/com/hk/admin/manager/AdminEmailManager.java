@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 
 import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.cache.RoleCache;
+import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
@@ -19,6 +20,7 @@ import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.accounting.DebitNote;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -35,6 +37,7 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
@@ -322,7 +325,6 @@ public class AdminEmailManager {
     public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
         List<SkuGroup> skuGroups = skuGroupService.getAllCheckedInBatchForGrn(grn);
-        ;
         valuesMap.put("grn", grn);
         valuesMap.put("skuGroups", skuGroups);
         boolean success = true;
@@ -1163,6 +1165,43 @@ public class AdminEmailManager {
     	valuesMap.put("debitNote", debitNote);
     	return false;
     }
+    
+	public boolean sendJitShippingCancellationMail(ShippingOrder shippingOrder, ShippingOrder splitShippingOrder,  EnumJitShippingOrderMailToCategoryReason reason){
+    	HashMap valuesMap = new HashMap();
+    	Set<String> emailIds = new HashSet<String>();
+    	valuesMap.put("shippingOrder", shippingOrder);
+    	valuesMap.put("splitShippingOrder", splitShippingOrder);
+    	
+    	String soCancellationReason = null;
+    	if(reason.getId().equals(EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED.getId())){
+    		soCancellationReason="Following Shipping Orders has been cancelled. Information of corresponding POs has been mentioned below. Kindly take the required actions.";
+    	}else
+    		if(reason.getId().equals(EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED.getId())){
+    			soCancellationReason="Warehouse for the following Shipping Orders has been flipped. Information of corresponding POs has been mentioned below. Kindly take the required actions.";
+    		}
+    		else
+    			if(splitShippingOrder!=null && reason.getId().equals(EnumJitShippingOrderMailToCategoryReason.SO_SPLITTED.getId())){
+    			soCancellationReason="Shipping Order - "+shippingOrder.getId()+" has been split. The new splitted Shipping Order Id - "+splitShippingOrder.getId()+" Information of corresponding POs has been mentioned below. Kindly take the required actions.";
+    		}
+    	valuesMap.put("soCancellationReason", soCancellationReason);
+    	
+    	List<Category> categories = new ArrayList<Category>();
+    	for(LineItem lineItem : shippingOrder.getLineItems()){
+    		if(lineItem!=null && lineItem.getSku().getProductVariant().getProduct().getCategories()!=null && lineItem.getSku().getProductVariant().getProduct().getCategories().size()>0){
+    			Category category = lineItem.getSku().getProductVariant().getProduct().getCategories().get(0);
+    			emailIds.addAll(emailManager.categoryAdmins(category));
+    		}
+    	}
+    	
+    	String fromPurchaseEmail = "purchase@healthkart.com";
+    	//emailIds.add(fromPurchaseEmail);
+    	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.jitShippingOrderStatusChangeMail);
+    	User user = userService.getAdminUser();
+    	boolean sent = emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),"HK Admin", fromPurchaseEmail, "", null, null, emailIds, null, null, null);
+    	return sent;
+    }
+    
+    
     static enum Product_Status {
 
     }

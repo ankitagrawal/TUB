@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -86,6 +88,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     AwbService awbService;
     @Autowired
     UserService userService;
+    @Autowired
+	AdminEmailManager adminEmailManager;
     
     @Autowired
     private LoyaltyProgramService loyaltyProgramService;
@@ -150,6 +154,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 				shippingOrder.setWarehouse(warehouse);
 				shipmentService.recreateShipment(shippingOrder);
 				shippingOrder = getShippingOrderService().save(shippingOrder);
+				if(shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting) && shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
+				adminEmailManager.sendJitShippingCancellationMail(shippingOrder,null, EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED);
+				}
 				getShippingOrderService().logShippingOrderActivity(shippingOrder,
 						EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
 

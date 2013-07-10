@@ -2,6 +2,9 @@ package com.hk.web.action.admin.shippingOrder;
 
 import java.util.*;
 
+import com.hk.admin.manager.AdminEmailManager;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
+import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.pact.service.order.OrderService;
@@ -23,6 +26,8 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.helper.ShippingOrderHelper;
@@ -52,6 +57,10 @@ public class SplitShippingOrderAction extends BaseAction {
     ShippingOrderDao shippingOrderDao;
     @Autowired
     ShipmentService shipmentService;
+    @Autowired
+	PurchaseOrderService purchaseOrderService;
+    @Autowired
+	AdminEmailManager adminEmailManager;
 
     private boolean dropShipItemPresentInSelectedItems;
     private boolean dropShipItemPresentInRemainingItems;
@@ -168,6 +177,43 @@ public class SplitShippingOrderAction extends BaseAction {
             shippingOrder = shippingOrderService.save(shippingOrder);
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
+            
+            //Handling the PO against the shipping Orders
+            List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
+            Set<PurchaseOrder> newShippingOrderPoSet = new HashSet<PurchaseOrder>();
+            Set<PurchaseOrder> parentShippingOrderPoSet = new HashSet<PurchaseOrder>();
+            List<ProductVariant> variantListFromSO = new ArrayList<ProductVariant>();
+            for(LineItem item: shippingOrder.getLineItems()){
+            	variantListFromSO.add(item.getSku().getProductVariant());
+            }
+            
+            if(poList!=null && poList.size()>0){
+            	for(PurchaseOrder order:poList){
+            		boolean flag = false;
+            		List<ProductVariant> productVariants = purchaseOrderService.getAllProductVariantFromPO(order);
+            		if(productVariants!=null && productVariants.size()>0){
+            			for(ProductVariant pv : productVariants){
+            				if(variantListFromSO.contains(pv)){
+            					flag = true;
+            				}
+            				if(shippingOrderService.shippingOrderContainsProductVariant(newShippingOrder, pv)){
+            					newShippingOrderPoSet.add(order);
+            					break;
+            				}
+            			}
+            		}
+            		if(flag ==true){
+            			parentShippingOrderPoSet.add(order);
+            		}
+            	}
+            }
+            
+            newShippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(newShippingOrderPoSet));
+            shippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(parentShippingOrderPoSet));
+            newShippingOrder = shippingOrderService.save(newShippingOrder);
+            shippingOrder = shippingOrderService.save(shippingOrder);
+            adminEmailManager.sendJitShippingCancellationMail(shippingOrder,newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
+            
 
             addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
             return new RedirectResolution(ActionAwaitingQueueAction.class);

@@ -32,5 +32,5 @@ public interface PurchaseOrderDao extends BaseDao {
     
     public List<ProductVariant> getAllProductVariantFromPO(PurchaseOrder po);
     
-    public void deleteSoForPo(PurchaseOrder po, ShippingOrder so);
+    public List<ShippingOrder> getCancelledShippingOrderFromSoPo();
 }

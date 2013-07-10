@@ -5,6 +5,7 @@ import java.util.*;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
@@ -410,6 +411,23 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
+	
+	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant) {
+		Set<LineItem> items = shippingOrder.getLineItems();
+		List<ProductVariant> productVariants = new ArrayList<ProductVariant>();
+		if(items!=null && items.size()>0){
+			for(LineItem item : items){
+				productVariants.add(item.getSku().getProductVariant());
+			}
+		}
+		
+		if(productVariants.contains(productVariant)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
     public UserService getUserService() {
         return userService;

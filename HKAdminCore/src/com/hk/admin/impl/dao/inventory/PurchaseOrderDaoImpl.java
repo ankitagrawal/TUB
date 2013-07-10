@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +27,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -124,12 +127,13 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
     	return (List<ProductVariant>) getSession().createQuery( "Select p.sku.productVariant from PoLineItem p where p in (:poLineItems)").setParameterList("poLineItems", poLineItems).list();
     }
     
-    public void deleteSoForPo(PurchaseOrder po, ShippingOrder so){
-    	 //getSession().createQuery( "from  PoLineItem p where p in (:poLineItems)").setParameterList("poLineItems", poLineItems).list();
-    	String sql = "delete from  shipping_order_has_purchase_order where shipping_order_id  = :soid and purchase_order_id = :poid";
+    public List<ShippingOrder> getCancelledShippingOrderFromSoPo() {
+    	/*Long id = EnumShippingOrderStatus.SO_Cancelled.getId();
+    	String sql = "SELECT * FROM `shipping_order` so join shipping_order_has_purchase_order sop on so.id = sop.shipping_order_id where shipping_order_status_id=  :soStatusId";
     	SQLQuery query = baseDao.createSqlQuery(sql);
-    	query.setParameter("soid", so.getId());
-		query.setParameter("poid", po.getId());
-    	query.executeUpdate();
+    	query.setLong("soStatusId", id);
+    	return query.list(); */
+    	Long id = EnumShippingOrderStatus.SO_Cancelled.getId();
+    	return (List<ShippingOrder>) getSession().createQuery("from ShippingOrder so where so.shippingOrderStatus.id = :statusId and so.purchaseOrders.size>0").setLong("statusId", id).list();
     }
 }
