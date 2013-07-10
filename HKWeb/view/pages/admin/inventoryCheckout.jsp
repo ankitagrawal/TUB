@@ -6,6 +6,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" var="icBean"/>
 <c:set var="lineItemStatusId_picking" value="<%=EnumShippingOrderStatus.SO_Picking.getId()%>"/>
 <c:set var="lineItemStatusId_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 <c:set var="commentTypePacking" value="<%= MasterDataDao.USER_COMMENT_TYPE_PACKING_BASE_ORDER %>" />
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Inventory Checkout">
   <s:layout-component name="htmlHead">
@@ -231,7 +232,7 @@
               </c:if>
             </td>
             <c:choose><c:when
-                test="${icBean.shippingOrder.orderStatus.id == lineItemStatusId_picking || icBean.shippingOrder.orderStatus.id == lineItemStatusId_shipped}">
+                test="${icBean.shippingOrder.orderStatus.id == lineItemStatusId_picking || icBean.shippingOrder.orderStatus.id == lineItemStatusId_shipped || icBean.shippingOrder.orderStatus.id == shippingOrderStatusDropShippingAwaiting}">
               <td title="Click to fing SKU Groups/Batch">
                 <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" event="findSkuGroups">
                   ${productVariant.id}

@@ -46,14 +46,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Override
 	@Transactional
 	public void checkInventoryHealth(ProductVariant variant) {
-		Product product = variant.getProduct();
-		boolean updateHealth = (product.isJit() != null && !product.isJit())
-				&& (product.isService() != null && !product.isService()) && !product.getDropShipping();
 
-		if (!updateHealth) {
-			return;
-		}
-		
 		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
 		
 		InventoryInfo selectedInfo = null;
@@ -108,6 +101,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	
 	private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 		double newHkPrice = 0d;
+        Product product = variant.getProduct();
+        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+
 		if(vInfo.mrp != 0d && !variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
 			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
             if (updatePvPrice == null) {
@@ -131,7 +127,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		variant.setNetQty(vInfo.netQty);
 		variant.setMrpQty(vInfo.mrpQty);
-		variant.setOutOfStock(!vInfo.inStock);
+
+        // for jit/drop-ship we don't alter stock status
+        if (updateStockStatus) {
+            variant.setOutOfStock(!vInfo.inStock);
+        }
+
 		if(vInfo.costPrice != 0l) {
 			variant.setCostPrice(vInfo.costPrice);
 		}
@@ -140,19 +141,20 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		productVariantService.save(variant);
-		
-		Product product = productService.getProductById(variant.getProduct().getId());
-		if(!vInfo.inStock) {
-			List<ProductVariant> inStockVariants = product.getInStockVariants();
-			if (inStockVariants != null && inStockVariants.isEmpty()) {
-				product.setOutOfStock(true);
-				productService.save(product);
-			}
-		} else {
-			product.setOutOfStock(false);
-			productService.save(product);
-		}
-	}
+        //neither do we alter corresponding product status
+        if (updateStockStatus) {
+            if (!vInfo.inStock) {
+                List<ProductVariant> inStockVariants = product.getInStockVariants();
+                if (inStockVariants != null && inStockVariants.isEmpty()) {
+                    product.setOutOfStock(true);
+                    productService.save(product);
+                }
+            } else {
+                product.setOutOfStock(false);
+                productService.save(product);
+            }
+        }
+    }
 
 	private static final String bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty" +
 			  " from cart_line_item as a inner join base_order as b on a.order_id = b.id" +
