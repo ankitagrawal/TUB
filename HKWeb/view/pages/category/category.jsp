@@ -224,7 +224,7 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}brand/eye/Geek">
+                <a href="${pageContext.request.contextPath}/brand/eye/Geek+Boy%27s">
                     <img src="<hk:vhostImage/>/images/banners/brand-of-the-week(geek).jpg" alt="eye"
                          class="small_banner"/>
                 </a>
