@@ -13588,9 +13588,15 @@
     <changeSet author="Ankit Chhabra (generated)" id="1373436305338-2">
         <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" defaultNullValue="0.0" tableName="sku_group"/>
     </changeSet>
-    <changeSet author="Shakti Singh (generated)" id="20130708-1">
+    <changeSet author="Shakti Singh (generated)" id="20130711-1">
         <addColumn tableName="payment">
             <column name="refund_amount" type="DECIMAL(8,2)"/>
         </addColumn>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130711-2">
+        <modifyDataType columnName="value" newDataType="DOUBLE" tableName="reward_point"/>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130711-3">
+        <modifyDataType columnName="value" newDataType="DOUBLE" tableName="reward_point_txn"/>
     </changeSet>
 </databaseChangeLog>
