@@ -158,6 +158,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 					shouldUpdate = false;
 				}
 			}
+			
+			if(shippingOrder.containsJitProducts()){
+				shouldUpdate = true;
+			}
 
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);

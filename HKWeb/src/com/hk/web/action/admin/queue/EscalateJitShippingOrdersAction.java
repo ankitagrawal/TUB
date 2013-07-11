@@ -82,7 +82,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				flag = false;
 			}
 			if (flag) {
-				shippingOrderService.automateManualEscalation(shippingOrder);
+				shippingOrder = shippingOrderService.manualEscalateShippingOrder(shippingOrder);
 				ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
 				shippingOrderLifecycle.setOrder(shippingOrder);
 				shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
