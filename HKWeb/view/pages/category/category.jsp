@@ -200,12 +200,12 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
+                <%--<a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">--%>
+                    <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
                          class="small_banner"/>
-                </a>
-                <a href="${pageContext.request.contextPath}/personal-care/sexual-wellness">
-                    <img src="<hk:vhostImage/>/images/banners/Sexual-wellness.jpg" alt="Sexual-wellness`"
+                <%--</a>--%>
+                <a href="${pageContext.request.contextPath}/brand/personal-care/Skore">
+                    <img src="<hk:vhostImage/>/images/banners/Population-day-Skore-Static-revised.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
                 </a>
             </c:when>
