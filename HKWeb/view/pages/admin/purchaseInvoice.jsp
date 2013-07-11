@@ -482,7 +482,6 @@ width: 80px;
 		}
 		
 		$("#difference").text(${(pia.purchaseInvoice.piRtvShortTotal-pia.purchaseInvoice.physicalInvoiceAmount)}.toFixed(2));
-		
 	});
 </script>
 </s:layout-component>
@@ -1245,7 +1244,7 @@ width: 80px;
 <div id="closeButtonDiv">
 <c:if test="${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled &&(pia.piHasRtv||pia.piHasShortEiLi)}">
 
-<shiro:hasPermission name="<%=PermissionConstants.FINANCE_MANAGEMENT%>">
+<shiro:hasPermission name="<%=PermissionConstants.DEBIT_NOTE_UPDATE%>">
 <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
 <s:param name="purchaseInvoice" value="${pia.purchaseInvoice}" />
  Create Debit Note </s:link>
@@ -1303,7 +1302,7 @@ width: 80px;
 <tr>
 <td colspan="4"></td>
 <td><strong>Overall Total</strong></td>
-<td><strong>${pia.purchaseInvoice.piRtvShortTotal }</strong></td>
+<td id="piRtvShortTotalTd"><strong>${pia.purchaseInvoice.piRtvShortTotal }</strong></td>
 
 <tr>
 <td colspan="4"></td>

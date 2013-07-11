@@ -71,7 +71,7 @@ public enum EnumShippingOrderStatus {
 
 
      public static List<EnumShippingOrderStatus> getStatusForDropShippingQueue() {
-        return Arrays.asList( EnumShippingOrderStatus.SO_ReadyForDropShipping,
+        return Arrays.asList( EnumShippingOrderStatus.SO_ReadyForDropShipping, EnumShippingOrderStatus.SO_CheckedOut,
                 EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_Installed);
     }
 
