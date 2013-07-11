@@ -10,7 +10,9 @@ package com.hk.admin.util;
 
 import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.product.Product;
+import com.hk.exception.DuplicateEntryException;
 import com.hk.exception.ExcelBlankFieldException;
+import com.hk.exception.ProductDeletedException;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
@@ -56,17 +58,34 @@ public class RelatedProductXlsParser {
                     logger.error("Related Product cannot be null/empty");
                     throw new ExcelBlankFieldException("Related Product  cannot be empty" + "    ", rowCount);
                 }
-                Product product = getProductService().getProductById(productId);
+
+                Product product = getProductService().getProductById(productId.trim());
+                if (product==null){
+                       throw new ExcelBlankFieldException(product+ "product is invalid");
+                } else{
                 List<Product> productHasRelated = product.getRelatedProducts();
                 String[] relatedProductStrArray = StringUtils.split(relatedProductStr, "|");
                 for (String relatedProductId : relatedProductStrArray) {
+                    if(relatedProductId==null){
+                        throw new  ExcelBlankFieldException("related product is empty");
+                    }else{
                     Product relatedProduct = getProductService().getProductById(relatedProductId);
                     if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !productHasRelated.contains(relatedProduct)) {
                         relatedProducts.add(relatedProduct);
                     }
+                    else if (relatedProduct==null){
+                        throw new ExcelBlankFieldException("related product is invalid"+" "+relatedProduct);
+                    }
+                    else if(relatedProduct.equals(product)){
+                        throw new DuplicateEntryException("related product"+ " "+relatedProduct+" "+"same as product"+product);
+                    }
+                    else if(relatedProduct.isDeleted()){
+                        throw  new ProductDeletedException("product is deleted",relatedProduct);
+                    }
                     if (productHasRelated.contains(relatedProduct)) {
                         logger.error(relatedProduct + "Already Added");
                     }
+
                 }
                 if (relatedProducts.isEmpty()) {
                     logger.error("All Product are already added");
@@ -78,7 +97,8 @@ public class RelatedProductXlsParser {
                 }
                 product.setRelatedProducts(productHasRelated);
                 getProductService().save(product);
-
+                }
+                }
             }
         } catch (ExcelBlankFieldException e) {
             throw new ExcelBlankFieldException(e.getMessage());
