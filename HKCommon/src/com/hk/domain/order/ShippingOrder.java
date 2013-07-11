@@ -4,6 +4,7 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -352,4 +353,20 @@ public class ShippingOrder implements java.io.Serializable {
     public void setActionItem(ActionItem actionItem) {
         this.actionItem = actionItem;
     }*/
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Awb)) {
+			return false;
+
+		}
+		ShippingOrder so = (ShippingOrder) obj;
+		if (this.id != null && so.getId() != null) {
+			return this.id.equals(so.getId());
+		}
+		return false;
+	}
 }

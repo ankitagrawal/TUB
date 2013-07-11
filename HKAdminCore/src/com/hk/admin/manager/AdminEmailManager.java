@@ -1200,7 +1200,7 @@ public class AdminEmailManager {
     	}
     	
     	//String fromPurchaseEmail = "purchase@healthkart.com";
-    	String fromPurchaseEmail = "nihal@healthkart.com";
+    	String fromPurchaseEmail = "gagan.jain@healthkart.com";
     	//emailIds.add(fromPurchaseEmail);
     	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.jitShippingOrderStatusChangeMail);
     	User user = userService.getAdminUser();

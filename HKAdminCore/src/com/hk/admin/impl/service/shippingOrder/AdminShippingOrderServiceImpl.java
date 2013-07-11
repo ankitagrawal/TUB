@@ -426,11 +426,28 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         	}
         }
         
+        
+        //shippingOrder = shippingOrderService.save(shippingOrder);
         newShippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(newShippingOrderPoSet));
         shippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(parentShippingOrderPoSet));
+        
         newShippingOrder = shippingOrderService.save(newShippingOrder);
         shippingOrder = shippingOrderService.save(shippingOrder);
-        adminEmailManager.sendJitShippingCancellationMail(shippingOrder,newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
+        
+        for(PurchaseOrder po : newShippingOrderPoSet){
+        	
+        	List<ShippingOrder> soList = po.getShippingOrders();
+        	soList.add(newShippingOrder);
+        	if(!parentShippingOrderPoSet.contains(po)){
+        	soList.remove(shippingOrder);
+        	}
+        	po.setShippingOrders(soList);
+        	baseDao.save(po);
+        }
+        
+        
+        
+        adminEmailManager.sendJitShippingCancellationMail(shippingOrder,newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_SPLITTED);
         
 	}
 
