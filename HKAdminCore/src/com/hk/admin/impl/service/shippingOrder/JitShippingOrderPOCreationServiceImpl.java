@@ -42,10 +42,9 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
-
 @Service
-public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPOCreationService{
-	
+public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPOCreationService {
+
 	@Autowired
 	ShippingOrderService shippingOrderService;
 	@Autowired
@@ -66,7 +65,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	PurchaseOrderService purchaseOrderService;
 	@Autowired
 	AdminInventoryService adminInventoryService;
-	
+
 	private static Logger logger = LoggerFactory.getLogger(JitShippingOrderPOCreationServiceImpl.class);
 
 	public List<LineItem> getJitLineItems(List<ShippingOrder> shippingOrders) {
@@ -203,17 +202,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 							} else {
 								purchaseOrder.setEstPaymentDate(new Date());
 							}
-							Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-							for (LineItem lineItem : lineItemsFromwhLineItemsMap) {
-								ShippingOrder so = lineItem.getShippingOrder();
-								shippingOrders.add(so);
-							}
-							List<ShippingOrder> soList = new ArrayList<ShippingOrder>(shippingOrders);
-							purchaseOrder.setShippingOrders(soList);
 							purchaseOrder.setWarehouse(warehouse);
 							purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 							purchaseOrderLineItemMap.put(purchaseOrder, lineItemsFromwhLineItemsMap);
-							// purchaseOrders.add(purchaseOrder);
 						}
 					}
 				}
@@ -223,21 +214,21 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return purchaseOrderLineItemMap;
 	}
 
-	public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap) {
+	public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap, List<ShippingOrder> shippingOrders) {
 
 		if (purchaseOrderProductVariantMap != null && purchaseOrderProductVariantMap.size() > 0) {
 			boolean containsDropShip = false;
 			Set<Entry<PurchaseOrder, HashMap<ProductVariant, Long>>> entrySet = purchaseOrderProductVariantMap.entrySet();
 
 			for (Entry<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderPVEntry : entrySet) {
-
+				Set<ShippingOrder> shippingOrdersInPO = new HashSet<ShippingOrder>();
 				PurchaseOrder purchaseOrder = purchaseOrderPVEntry.getKey();
 				List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
 				Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
 				Set<Entry<ProductVariant, Long>> prodQty = purchaseOrderPVEntry.getValue().entrySet();
 				for (Entry<ProductVariant, Long> entry : prodQty) {
 					ProductVariant productVariant = entry.getKey();
-					if(productVariant.getProduct().isDropShipping()){
+					if (productVariant.getProduct().isDropShipping()) {
 						containsDropShip = true;
 					}
 					Long quantity = entry.getValue();
@@ -252,17 +243,21 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 					}
 					Long unbookedInventory = inventory - bookedInventory;
 					logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
-					if (unbookedInventory<0) {
+					if (unbookedInventory < 0) {
+						for (ShippingOrder so : shippingOrders) {
+							boolean sohaspv = shippingOrderService.shippingOrderContainsProductVariant(so, productVariant);
+							if (sohaspv && purchaseOrder.getWarehouse().equals(so.getWarehouse())) {
+								shippingOrdersInPO.add(so);
+							}
+						}
 						Long poQty = 0L;
-						// TODO --
 						Double taxableAmount = 0.0D;
 						Double discountPercentage = 0D;
 						PoLineItem poLineItem = new PoLineItem();
 						poLineItem.setSku(sku);
-						if(Math.abs(unbookedInventory)<quantity){
+						if (Math.abs(unbookedInventory) < quantity) {
 							poQty = Math.abs(unbookedInventory);
-						}
-						else{
+						} else {
 							poQty = quantity;
 						}
 						poLineItem.setQty(poQty);
@@ -303,7 +298,8 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				purchaseOrder.setSurchargeAmount(totalSurcharge);
 				purchaseOrder.setFinalPayableAmount(totalPayable);
 				purchaseOrder.setPoLineItems(poLineItems);
-				if(containsDropShip){
+				purchaseOrder.setShippingOrders(new ArrayList<ShippingOrder>(shippingOrdersInPO));
+				if (containsDropShip) {
 					purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType());
 				}
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
@@ -349,38 +345,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-			}
-		}
-	}
-	
-	@Override
-	public void deleteExtraEntryFromSOPO(List<PurchaseOrder> purchaseOrders) {
-		
-		if(purchaseOrders!=null && purchaseOrders.size()>0){
-			for(PurchaseOrder po : purchaseOrders){
-				List<ShippingOrder> removeSoList = new ArrayList<ShippingOrder>();
-				boolean deleted = true;
-				List<ProductVariant> pvList = purchaseOrderService.getAllProductVariantFromPO(po);
-				List<ShippingOrder> shippingOrders = po.getShippingOrders();
-				if(pvList!=null && pvList.size()>0 && shippingOrders!=null && shippingOrders.size()>0){
-					for(ShippingOrder so : shippingOrders){
-						for(ProductVariant pv : pvList){
-						if(shippingOrderService.shippingOrderContainsProductVariant(so, pv)){
-							deleted = false;
-							break;
-						}
-						}
-						if(deleted){
-							removeSoList.add(so);
-						}
-					}
-				}
-				if(removeSoList!=null && removeSoList.size()>0){
-				List<ShippingOrder> soFromPoList = po.getShippingOrders();
-				soFromPoList.removeAll(removeSoList);
-				po.setShippingOrders(soFromPoList);
-	        	baseDao.save(po);
-				}
 			}
 		}
 	}

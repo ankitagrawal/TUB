@@ -25,12 +25,14 @@ import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderType;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -107,7 +109,7 @@ public class JitShippingOrderAction extends BaseAction {
 			purOrderLineItem = jitShippingOrderPOCreationService.createPurchaseOrder(supplierWhLineItemsMap);
 			HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap = jitShippingOrderPOCreationService
 					.createPurchaseOrderVariantQuantityMap(purOrderLineItem);
-			jitShippingOrderPOCreationService.createPoLineItems(purchaseOrderProductVariantMap);
+			jitShippingOrderPOCreationService.createPoLineItems(purchaseOrderProductVariantMap, shippingOrderListToProcess);
 
 			List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 			Set<Entry<PurchaseOrder, HashMap<ProductVariant, Long>>> entrySet = purchaseOrderProductVariantMap.entrySet();
@@ -117,7 +119,7 @@ public class JitShippingOrderAction extends BaseAction {
 			}
 
 			purchaseOrders = jitShippingOrderPOCreationService.deletePOsWithEmptyPOLineItems(purchaseOrderList);
-			jitShippingOrderPOCreationService.deleteExtraEntryFromSOPO(purchaseOrders);
+			//jitShippingOrderPOCreationService.deleteExtraEntryFromSOPO(purchaseOrders);
 			
 			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 			for (PurchaseOrder purchaseOrder : purchaseOrderList) {
@@ -148,6 +150,9 @@ public class JitShippingOrderAction extends BaseAction {
 		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
 		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
 		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
+		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
+		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+		shippingOrderSearchCriteria.setPaymentStatuses(paymentStatusList);
 		return shippingOrderSearchCriteria;
 	}
 

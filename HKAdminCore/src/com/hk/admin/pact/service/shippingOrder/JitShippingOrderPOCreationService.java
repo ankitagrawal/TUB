@@ -24,12 +24,10 @@ public interface JitShippingOrderPOCreationService {
 	
 	public HashMap<PurchaseOrder, List<LineItem>> createPurchaseOrder(HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineitemsMap);
 	
-	public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap);
+	public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap, List<ShippingOrder> shippingOrders);
 	
 	public List<PurchaseOrder> deletePOsWithEmptyPOLineItems(List<PurchaseOrder> purchaseOrders);
 	
 	public void approveAllPos(PurchaseOrder purchaseOrder, List<PurchaseOrderStatus> purchaseOrderStatus);
 	
-	public void deleteExtraEntryFromSOPO(List<PurchaseOrder> purchaseOrders);
-
 }

@@ -1177,8 +1177,9 @@ public class AdminEmailManager {
     	HashMap valuesMap = new HashMap();
     	Set<String> emailIds = new HashSet<String>();
     	valuesMap.put("shippingOrder", shippingOrder);
-    	valuesMap.put("splitShippingOrder", splitShippingOrder);
-    	
+    	if(splitShippingOrder!=null){
+    		valuesMap.put("splitShippingOrder", splitShippingOrder);
+    	}
     	String soCancellationReason = null;
     	if(reason.getId().equals(EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED.getId())){
     		soCancellationReason="Following Shipping Orders has been cancelled. Information of corresponding POs has been mentioned below. Kindly take the required actions.";
