@@ -424,7 +424,7 @@
                     </script>
                 </c:if>
             </shiro:hasAnyRoles>
-    </c:if>
+
     <shiro:hasPermission name="<%=PermissionConstants.MARK_RTO%>">
 
                 <c:if test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
@@ -451,6 +451,7 @@
                     </script>
                 </c:if>
               </shiro:hasPermission>
+    </c:if>
     </div>
 </td>
 <c:if test="${isActionQueue == false}">
