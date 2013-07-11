@@ -3,6 +3,7 @@ package com.hk.web.action.admin.reward;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.hk.constants.discount.RewardPointConstants;
 import com.hk.domain.order.Order;
 import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -82,6 +83,9 @@ public class AddRewardPointAction extends BaseAction {
         RewardPoint rewardPoint = new RewardPoint();
         try {
             Order order = orderService.find(orderId);
+            if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
+                throw new InvalidRewardPointsException(value);
+            }
             rewardPoint = rewardPointDao.addRewardPoints(user, referredUser, order, value, comment, EnumRewardPointStatus.APPROVED, rewardPointMode);
         } catch (InvalidRewardPointsException e) {
             logger.error("Reward point cannot be added", e);
