@@ -403,6 +403,7 @@
                             <s:submit name="initiateRTO" value="Initiate RTO" class="initiateRTOButton"/>
                         </div>
                     </s:form>
+
                     <script type="text/javascript">
                         $('.initiateRTOButton').click(function() {
 	                        if($('#rto-reason').val()=="null"){
@@ -422,6 +423,9 @@
                         }
                     </script>
                 </c:if>
+            </shiro:hasAnyRoles>
+    </c:if>
+    <shiro:hasPermission name="<%=PermissionConstants.MARK_RTO%>">
 
                 <c:if test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
@@ -446,8 +450,7 @@
                         }
                     </script>
                 </c:if>
-            </shiro:hasAnyRoles>
-        </c:if>
+              </shiro:hasPermission>
     </div>
 </td>
 <c:if test="${isActionQueue == false}">
