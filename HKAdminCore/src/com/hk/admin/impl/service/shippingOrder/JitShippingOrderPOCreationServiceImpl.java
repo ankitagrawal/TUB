@@ -352,6 +352,38 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			}
 		}
 	}
+	
+	@Override
+	public void deleteExtraEntryFromSOPO(List<PurchaseOrder> purchaseOrders) {
+		
+		if(purchaseOrders!=null && purchaseOrders.size()>0){
+			for(PurchaseOrder po : purchaseOrders){
+				List<ShippingOrder> removeSoList = new ArrayList<ShippingOrder>();
+				boolean deleted = true;
+				List<ProductVariant> pvList = purchaseOrderService.getAllProductVariantFromPO(po);
+				List<ShippingOrder> shippingOrders = po.getShippingOrders();
+				if(pvList!=null && pvList.size()>0 && shippingOrders!=null && shippingOrders.size()>0){
+					for(ShippingOrder so : shippingOrders){
+						for(ProductVariant pv : pvList){
+						if(shippingOrderService.shippingOrderContainsProductVariant(so, pv)){
+							deleted = false;
+							break;
+						}
+						}
+						if(deleted){
+							removeSoList.add(so);
+						}
+					}
+				}
+				if(removeSoList!=null && removeSoList.size()>0){
+				List<ShippingOrder> soFromPoList = po.getShippingOrders();
+				soFromPoList.removeAll(removeSoList);
+				po.setShippingOrders(soFromPoList);
+	        	baseDao.save(po);
+				}
+			}
+		}
+	}
 
 	public BaseDao getBaseDao() {
 		return baseDao;

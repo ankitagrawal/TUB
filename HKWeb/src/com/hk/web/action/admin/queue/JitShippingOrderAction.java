@@ -117,6 +117,8 @@ public class JitShippingOrderAction extends BaseAction {
 			}
 
 			purchaseOrders = jitShippingOrderPOCreationService.deletePOsWithEmptyPOLineItems(purchaseOrderList);
+			jitShippingOrderPOCreationService.deleteExtraEntryFromSOPO(purchaseOrders);
+			
 			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 			for (PurchaseOrder purchaseOrder : purchaseOrderList) {
 				if (purchaseOrder != null) {

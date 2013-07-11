@@ -1,4 +1,4 @@
-Attention!! PO against JIT Shipping Orders Cancelled.
+Attention!! Purchase Order(s) for Shipping Order ${shippingOrder.id } requires actions.
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

@@ -29,5 +29,7 @@ public interface JitShippingOrderPOCreationService {
 	public List<PurchaseOrder> deletePOsWithEmptyPOLineItems(List<PurchaseOrder> purchaseOrders);
 	
 	public void approveAllPos(PurchaseOrder purchaseOrder, List<PurchaseOrderStatus> purchaseOrderStatus);
+	
+	public void deleteExtraEntryFromSOPO(List<PurchaseOrder> purchaseOrders);
 
 }

@@ -3,7 +3,7 @@ package com.hk.constants;
 public enum EnumJitShippingOrderMailToCategoryReason {
 	
 	SO_CANCELLED(10L, "so canclted"),
-	SO_WAREHOUSE_FLIPPED(30L, "so warehouse flipped"),
+	SO_WAREHOUSE_FLIPPED(20L, "so warehouse flipped"),
 	SO_SPLITTED(30L, "so splitted");
 	
 	
