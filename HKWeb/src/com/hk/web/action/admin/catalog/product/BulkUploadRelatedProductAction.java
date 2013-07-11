@@ -55,7 +55,7 @@ public class BulkUploadRelatedProductAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("upload xls file only"));
             return new RedirectResolution("/pages/bulkUploadRelatedProduct.jsp");
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminUploadsPath + "/relatedProductFiles/" + sdf.format(new Date()) + "/" + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();

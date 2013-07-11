@@ -12,7 +12,6 @@ import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.exception.DuplicateEntryException;
 import com.hk.exception.ExcelBlankFieldException;
-import com.hk.exception.ProductDeletedException;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
@@ -23,13 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 
 @Component
 public class RelatedProductXlsParser {
+    public static Map<Integer, String> xlsMap = new HashMap<Integer, String>();
+
+    static {
+        xlsMap.put(0, XslConstants.PRODUCT_ID);
+        xlsMap.put(1, XslConstants.RELATED_PRODUCTS);
+    }
 
     private static Logger logger = LoggerFactory.getLogger(RelatedProductXlsParser.class);
 
@@ -41,6 +44,16 @@ public class RelatedProductXlsParser {
         logger.debug("parsing RelatedProduct info : " + file.getAbsolutePath());
         ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
         Iterator<HKRow> rowIterator = excel.parse();
+        Map<Integer, String> excelHeaderMap = excel.getHeadingNamesMap();
+        if (xlsMap.size() != excelHeaderMap.size()) {
+            throw new Exception("Header count mismatch");
+        }
+        for (Integer key : xlsMap.keySet()) {
+            String xslValues = xlsMap.get(key);
+            if (!xslValues.equals(excelHeaderMap.get(key))) {
+                throw new Exception("Header Name mismatch");
+            }
+        }
         int rowCount = 1;
         try {
             while (rowIterator.hasNext()) {
@@ -60,44 +73,39 @@ public class RelatedProductXlsParser {
                 }
 
                 Product product = getProductService().getProductById(productId.trim());
-                if (product==null){
-                       throw new ExcelBlankFieldException(product+ "product is invalid");
-                } else{
-                List<Product> productHasRelated = product.getRelatedProducts();
-                String[] relatedProductStrArray = StringUtils.split(relatedProductStr, "|");
-                for (String relatedProductId : relatedProductStrArray) {
-                    if(relatedProductId==null){
-                        throw new  ExcelBlankFieldException("related product is empty");
-                    }else{
-                    Product relatedProduct = getProductService().getProductById(relatedProductId);
-                    if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !productHasRelated.contains(relatedProduct)) {
-                        relatedProducts.add(relatedProduct);
-                    }
-                    else if (relatedProduct==null){
-                        throw new ExcelBlankFieldException("related product is invalid"+" "+relatedProduct);
-                    }
-                    else if(relatedProduct.equals(product)){
-                        throw new DuplicateEntryException("related product"+ " "+relatedProduct+" "+"same as product"+product);
-                    }
-                    else if(relatedProduct.isDeleted()){
-                        throw  new ProductDeletedException("product is deleted",relatedProduct);
-                    }
-                    if (productHasRelated.contains(relatedProduct)) {
-                        logger.error(relatedProduct + "Already Added");
-                    }
-
-                }
-                if (relatedProducts.isEmpty()) {
-                    logger.error("All Product are already added");
-                    throw new Exception("All related product are already added for product_id: " + product);
-                } else if (relatedProducts.size() == 1) {
-                    productHasRelated.add(relatedProducts.get(0));
+                if (product == null) {
+                    throw new Exception(productId + "product is invalid");
                 } else {
-                    productHasRelated.addAll(relatedProducts);
-                }
-                product.setRelatedProducts(productHasRelated);
-                getProductService().save(product);
-                }
+                    List<Product> productHasRelated = product.getRelatedProducts();
+                    String[] relatedProductStrArray = StringUtils.split(relatedProductStr, "|");
+                    for (String relatedProductId : relatedProductStrArray) {
+                        if (relatedProductId.trim() == null || relatedProductId.trim().isEmpty()) {
+                            throw new ExcelBlankFieldException("related product is empty");
+                        } else {
+                            Product relatedProduct = getProductService().getProductById(relatedProductId);
+                            if (relatedProduct == null) {
+                                throw new ExcelBlankFieldException("related product is invalid: " + " " + relatedProductId);
+                            } else if (relatedProduct.equals(product)) {
+                                throw new DuplicateEntryException("related product" + " " + relatedProduct + " " + " same as product: " + product);
+                            } else if (relatedProduct.isDeleted()) {
+                                throw new Exception("product is deleted marked: " + relatedProduct);
+                            } else if (productHasRelated.contains(relatedProduct)) {
+                                logger.error(relatedProduct + "Already Added");
+                            } else{
+                            relatedProducts.add(relatedProduct);
+                            }
+                        }
+                    }
+                    if (relatedProducts.isEmpty()) {
+                        logger.error("All Product are already added");
+                        throw new Exception("All related product are already added for product_id: " + product);
+                    } else if (relatedProducts.size() == 1) {
+                        productHasRelated.add(relatedProducts.get(0));
+                    } else {
+                        productHasRelated.addAll(relatedProducts);
+                    }
+                    product.setRelatedProducts(productHasRelated);
+                    getProductService().save(product);
                 }
             }
         } catch (ExcelBlankFieldException e) {
