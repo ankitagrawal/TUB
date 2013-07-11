@@ -10,7 +10,6 @@
 <%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
-<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -172,8 +171,8 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Universal+Nutrition">
-                    <img src="${pageContext.request.contextPath}/images/banners/Universal-static.jpg"
+                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Gaspari+Nutrition">
+                    <img src="${pageContext.request.contextPath}/images/banners/Gaspari-Nutrition_static.jpg"
                          alt="Brand Of the Week - Gaspari Nutrition!"
                          class="small_banner"/>
                 </a>
@@ -184,7 +183,8 @@
                          alt="Patanjali Offer" class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/health-nutrition/shop-by-need/hair-skin-nails">
-                    <img src="${pageContext.request.contextPath}/images/banners/Hair-skin-nails.jpg" alt="Vitamin Shoppe"
+                    <img src="${pageContext.request.contextPath}/images/banners/Hair-skin-nails.jpg"
+                         alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -193,18 +193,19 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/bajaj-jx4-juicer-mixer-grinder/BAJ118">
-                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-bajaj.jpg" alt="Brand of the Week"
+                <a href="${pageContext.request.contextPath}/product/westinghouse-1750gs-hand-blender/WST001">
+                    <img src="<hk:vhostImage/>/images/banners/westinghouse-product-of-the-week-(static-banner).jpg"
+                         alt="Brand of the Week"
                          class="small_banner"/>
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
+                <%--<a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">--%>
+                    <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
                          class="small_banner"/>
-                </a>
-                <a href="${pageContext.request.contextPath}/personal-care/sexual-wellness">
-                    <img src="<hk:vhostImage/>/images/banners/Sexual-wellness.jpg" alt="Sexual-wellness`"
+                <%--</a>--%>
+                <a href="${pageContext.request.contextPath}/brand/personal-care/Skore">
+                    <img src="<hk:vhostImage/>/images/banners/Population-day-Skore-Static-revised.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -223,22 +224,22 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}brand/eye/Geek+Attitude">
-                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-eye.jpg" alt="eye"
+                <a href="${pageContext.request.contextPath}/brand/eye/Geek+Boy%27s">
+                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week(geek).jpg" alt="eye"
                          class="small_banner"/>
                 </a>
             </c:when>
 
             <c:when test="${categoryBean.category.name eq parenting}">
-                            <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
-                                     class="small_banner"/>
-                            </a>
-                            <a href="${pageContext.request.contextPath}/brand/parenting/Nuby">
-                                <img src="<hk:vhostImage/>/images/banners/Nuby-static-banner.jpg" alt="eye"
-                                     class="small_banner"/>
-                            </a>
-                        </c:when>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <a href="${pageContext.request.contextPath}/brand/parenting/Farlin">
+                    <img src="<hk:vhostImage/>/images/banners/farlin.jpg" alt="eye"
+                         class="small_banner"/>
+                </a>
+            </c:when>
 
             <c:otherwise>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">

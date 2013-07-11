@@ -53,6 +53,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 	@Autowired
 	ProductService productService;
 
+
 	@Value ("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
 	String awsAccessKey;
 
@@ -326,7 +327,51 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 		return productIdsForLowResolutionImages.toString();
 	}
 
-	private String getImageFilePath() {
+   public String downloadResizeAndUploadImages(String srcImageSize, String targetImageSize){
+     StringBuffer stringBuffer = new StringBuffer("IDs:");
+     List<Product> productList = getProductService().getAllNonDeletedProducts();
+     for (Product product : productList) {
+       String resp = downloadResizeAndUploadImage(product, srcImageSize, targetImageSize);
+       stringBuffer.append(resp);
+     }
+    return stringBuffer.toString();
+   }
+
+  public String downloadResizeAndUploadImage(String productId, String srcImageSize, String targetImageSize) {
+    Product product = getProductService().getProductById(productId);
+    return downloadResizeAndUploadImage(product, srcImageSize, targetImageSize);
+  }
+
+
+  private String downloadResizeAndUploadImage(Product product, String srcImageSize, String targetImageSize) {
+    try {
+      EnumImageSize srcEnumImageSize = EnumImageSize.getEnumImageSize(srcImageSize);
+      EnumImageSize targetEnumImageSize = EnumImageSize.getEnumImageSize(targetImageSize);
+
+      if (product != null &&  product.getMainImageId() != null && srcEnumImageSize != null && targetEnumImageSize != null) {
+
+        String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+        File imageFile = new File(imageFilePath);
+
+        imageFile.getParentFile().mkdirs();
+        S3Utils.downloadData(awsAccessKey, awsSecretKey, HKImageUtils.getS3ImageKey(srcEnumImageSize, product.getMainImageId()), hkReadBucket, imageFile);
+
+
+        String repositoryFilePath = HKImageUtils.getRepositoryImagePath(targetEnumImageSize, product.getMainImageId());
+        ImageUtils.createThumbnail(imageFilePath, repositoryFilePath, targetEnumImageSize.getDimension(), QUALITY, false, false, .5F);
+        String imageUrl = HKImageUtils.getS3ImageKey(targetEnumImageSize, product.getMainImageId());
+        S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, hkReadBucket);
+        logger.debug("Resized Image for Product="+product.getId());
+        return "SUCCESS:"+product.getId();
+      }else{
+        return "FAILED - Incorrect Values";
+      }
+    } catch (Exception e) {
+      return "FAILED - Exception: " + e.getMessage();
+    }
+  }
+
+  private String getImageFilePath() {
 		return adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
 	}
 

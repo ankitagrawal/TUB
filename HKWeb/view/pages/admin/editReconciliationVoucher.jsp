@@ -8,6 +8,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <c:set var="RvLineItemOut" value="<%=EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
@@ -195,7 +196,7 @@
 
     </s:form>
 
-<shiro:hasPermission name="<%=PermissionConstants.FINANCE_MANAGEMENT%>">
+<shiro:hasPermission name='<%=PermissionConstants.DEBIT_NOTE_MANAGE%>'>
 <div id="closeButtonDiv">
 	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 && pa.reconciliationVoucher.supplier!=null }">
 	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
