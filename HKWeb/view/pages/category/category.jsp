@@ -165,6 +165,7 @@
         <c:set var="eye" value="<%=CategoryConstants.EYE%>"/>
         <c:set var="parenting" value="<%=CategoryConstants.BABY%>"/>
         <c:set var="beauty" value="<%=CategoryConstants.BEAUTY%>"/>
+        <c:set var="diabetes" value="<%=CategoryConstants.DIABETES%>"/>
         <c:choose>
             <c:when test="${categoryBean.category.name eq sportsNutrition}">
                 <%-- <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
@@ -202,8 +203,8 @@
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
                 <%--<a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">--%>
-                    <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
-                         class="small_banner"/>
+                <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
+                     class="small_banner"/>
                 <%--</a>--%>
                 <a href="${pageContext.request.contextPath}/product/durex-flavours-combo/CMB-PER007?productReferrerId=1&productPosition=1/1 ">
                     <img src="<hk:vhostImage/>/images/banners/Durex.jpg" alt="Sexual-wellness`"
@@ -241,17 +242,27 @@
                          class="small_banner"/>
                 </a>
             </c:when>
-
             <c:when test="${categoryBean.category.name eq beauty}">
-                            <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
-                                     class="small_banner"/>
-                            </a>
-                            <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
-                                <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
-                                     class="small_banner"/>
-                            </a>
-                        </c:when>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
+                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
+                         class="small_banner"/>
+                </a>
+            </c:when>
+
+            <c:when test="${categoryBean.category.name eq diabetes}">
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <a href="${pageContext.request.contextPath}/brand/diabetes/OneTouch">
+                    <img src="<hk:vhostImage/>/images/banners/Onetouch.jpg" alt="diabetes"
+                         class="small_banner"/>
+                </a>
+            </c:when>
 
             <c:otherwise>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
