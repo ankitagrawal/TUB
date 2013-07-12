@@ -51,14 +51,14 @@ Attention!! Purchase Order(s) for Shipping Order ${shippingOrder.id } requires a
 	</tr>
 
 	<tr>
-		<td>${shippingOrder.id }</td>
-		<td>${shippingOrder.warehouse.identifier}</td>
-		<td><#list shippingOrder.lineItems as soLi>
+		<td>${splitShippingOrder.id }</td>
+		<td>${splitShippingOrder.warehouse.identifier}</td>
+		<td><#list splitShippingOrder.lineItems as soLi>
 			<div>
 				<label> ${soLi.id } | ${soLi.sku.productVariant.id } | ${soLi.qty } </label>
 			</div> <br> </#list>
 		</td>
-		<td><#list shippingOrder.purchaseOrders as soPo>
+		<td><#list splitShippingOrder.purchaseOrders as soPo>
 			<div>
 				<label>${soPo.id } | ${soPo.purchaseOrderStatus.name }</label>
 			</div> <br> </#list>

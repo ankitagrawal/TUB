@@ -178,7 +178,9 @@ public class SplitShippingOrderAction extends BaseAction {
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
             
             //Handling the PO against the shipping Orders
+            if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
             adminShippingOrderService.adjustPurchaseOrderForSplittedShippingOrder(shippingOrder, newShippingOrder);
+            }
            
             addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
             return new RedirectResolution(ActionAwaitingQueueAction.class);
