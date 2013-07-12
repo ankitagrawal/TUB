@@ -108,7 +108,6 @@
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
 
 
-
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
 <c:if test="${isActionQueue == false}">
     <thead>
@@ -322,6 +321,13 @@
              <br>
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
+                <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess and shippingOrder.baseOrder.payment.paymentMode.id eq onlinePayment}">
+                    <br/>
+                    Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
+                    <br/>
+                    <c:if test="${hk:collectionContains(refundEnabledGatedways, shippingOrder.baseOrder.payment.gateway.id)}">
+                        Refund Payment: <s:radio value="${refundPoints}" name="reconciliationType"/> </c:if>
+                </c:if>
                 <div class="buttons">
                    <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO"/>
                 </div>
