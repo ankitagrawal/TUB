@@ -53,9 +53,7 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT920'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1263'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT967'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT967'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT967'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT517'/>
+          <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT517'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1842'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT922'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1276'/>
