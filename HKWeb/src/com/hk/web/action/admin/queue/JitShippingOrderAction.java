@@ -152,6 +152,7 @@ public class JitShippingOrderAction extends BaseAction {
 		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
 		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
 		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+		paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
 		shippingOrderSearchCriteria.setPaymentStatuses(paymentStatusList);
 		return shippingOrderSearchCriteria;
 	}
