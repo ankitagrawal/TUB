@@ -87,6 +87,7 @@ public class AdminEmailManager {
 
     public static final String GOOGLE_BANNED_WORD_LIST = "googleBannedWordList";
     public static final String PURCHASE_REPORTING_EMAIL = "purchase.reporting@healthkart.com";
+    public static final String WAREHOUSE_PURCHASE_EMAIL = "warehouse.purchase@healthkart.com";
 
     private Set<String> hkReportAdminEmails = null;
     private Set<String> marketingAdminEmails = null;
@@ -1141,7 +1142,7 @@ public class AdminEmailManager {
             categoryAdmins = emailManager.categoryAdmins(category);
         }
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        
+        categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
         try {
         	
             pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".pdf");
