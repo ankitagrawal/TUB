@@ -414,21 +414,17 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 	
-	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant) {
+	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant, Double mrp) {
 		Set<LineItem> items = shippingOrder.getLineItems();
-		List<ProductVariant> productVariants = new ArrayList<ProductVariant>();
 		if(items!=null && items.size()>0){
 			for(LineItem item : items){
-				productVariants.add(item.getSku().getProductVariant());
+				if(item.getSku().getProductVariant().equals(productVariant)&&item.getMarkedPrice().equals(mrp)){
+					return true;
+				}
 			}
 		}
+		return false;
 		
-		if(productVariants.contains(productVariant)){
-			return true;
-		}
-		else{
-			return false;
-		}
 	}
 	
     public UserService getUserService() {

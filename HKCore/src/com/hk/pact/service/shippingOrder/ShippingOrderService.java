@@ -71,6 +71,6 @@ public interface ShippingOrderService {
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 	
-	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant);
+	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant, Double mrp);
 	
 }

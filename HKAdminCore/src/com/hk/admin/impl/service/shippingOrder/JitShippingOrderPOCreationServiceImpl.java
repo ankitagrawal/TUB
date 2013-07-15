@@ -21,24 +21,39 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.shippingOrder.JitShippingOrderPOCreationService;
 import com.hk.admin.util.TaxUtil;
+import com.hk.constants.FaqCategoryEnums.EnumPrimaryCategoryHasSecondaryCategory;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderType;
+import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.warehouse.EnumWarehouseIdentifier;
+import com.hk.constants.warehouse.EnumWarehouseType;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.core.Tax;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
+import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
@@ -65,8 +80,79 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	PurchaseOrderService purchaseOrderService;
 	@Autowired
 	AdminInventoryService adminInventoryService;
-
+	@Autowired
+	WarehouseService warehouseService;
+	@Autowired
+	SupplierDao supplierDao;
+	
+	
+	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 	private static Logger logger = LoggerFactory.getLogger(JitShippingOrderPOCreationServiceImpl.class);
+
+	public List<ShippingOrder> getShippingOrderListToProcess(Warehouse warehouse) {
+		List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(warehouse);
+		shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+		List<ShippingOrder> shippingOrderListToProcess = new ArrayList<ShippingOrder>();
+		if (shippingOrderList != null && shippingOrderList.size() > 0) {
+			for (ShippingOrder shippingOrder : shippingOrderList) {
+				if (shippingOrder.getPurchaseOrders() == null || (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() == 0)) {
+					shippingOrderListToProcess.add(shippingOrder);
+				}
+			}
+		}
+		return shippingOrderListToProcess;
+	}
+
+	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria(Warehouse warehouse) {
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+		shippingOrderSearchCriteria.setContainsJitProducts(true);
+		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
+		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
+		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
+		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+		paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
+		shippingOrderSearchCriteria.setPaymentStatuses(paymentStatusList);
+		if(warehouse!=null){
+			shippingOrderSearchCriteria.setWarehouseId(warehouse.getId());
+		}
+		return shippingOrderSearchCriteria;
+	}
+	
+	public List<PurchaseOrder> processShippingOrderForPOCreation(List<ShippingOrder> shippingOrderToProcess){
+		List<LineItem> jitLineItems = getJitLineItems(shippingOrderToProcess);
+		HashMap<Supplier, List<LineItem>> supplierLineItemListMap = getSupplierLineItemMap(jitLineItems);
+		HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineItemsMap = createSupplierWhLineitemsMap(supplierLineItemListMap);
+		HashMap<PurchaseOrder, List<LineItem>> purchaseOrderLineItemMap= createPurchaseOrder(supplierWhLineItemsMap);
+		HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> poProductVariantMrpQtyLineItemsSet=createPurchaseOrderVariantMrpQuantityMap(purchaseOrderLineItemMap);
+		Set<Entry<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>>> entrySet = poProductVariantMrpQtyLineItemsSet.entrySet();
+		for(Entry<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> entry : entrySet){
+			PurchaseOrder po = entry.getKey();
+			purchaseOrders.add(po);
+			if(entry.getValue()!=null && entry.getValue().size()>0){
+			createPOLineItemsForPO(po, entry.getValue());
+			}
+		}
+		deletePOsWithEmptyPOLineItems(purchaseOrders);
+		List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
+		for (PurchaseOrder purchaseOrder : purchaseOrders) {
+			if (purchaseOrder != null) {
+				approveAllPos(purchaseOrder, purchaseOrderStatus);
+				for (ShippingOrder so : purchaseOrder.getShippingOrders()) {
+					ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
+					shippingOrderLifecycle.setOrder(so);
+					shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
+							EnumShippingOrderLifecycleActivity.SO_LoggedComment.getId()));
+					shippingOrderLifecycle.setUser(userService.getAdminUser());
+					shippingOrderLifecycle.setComments("PO# " + purchaseOrder.getId() + " Approved for the Shipping Order");
+					shippingOrderLifecycle.setActivityDate(new Date());
+					shippingOrderLifecycleDao.save(shippingOrderLifecycle);
+				}
+			}
+		}
+		return purchaseOrders;
+	}
 
 	public List<LineItem> getJitLineItems(List<ShippingOrder> shippingOrders) {
 		logger.debug("Inside method 1 - getJitLineItems, no of shipping orders received - " + shippingOrders.size());
@@ -87,13 +173,19 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems) {
 		HashMap<Supplier, List<LineItem>> supplierItemMap = new HashMap<Supplier, List<LineItem>>();
 		Set<Supplier> suppliersSet = new HashSet<Supplier>();
+		HashMap<String, String> whSupplierMap = getWhSupplierTinMap();
 		if (lineItems != null && lineItems.size() > 0) {
 			for (LineItem lineItem : lineItems) {
-				Supplier supplier = lineItem.getSku().getProductVariant().getProduct().getSupplier();
+				Supplier supplier;
+				if(whSupplierMap.get(lineItem.getShippingOrder().getWarehouse().getTin())!=null){
+				supplier = supplierDao.findByTIN(whSupplierMap.get(lineItem.getShippingOrder().getWarehouse().getTin()));
+				}
+				else{
+				supplier = lineItem.getSku().getProductVariant().getProduct().getSupplier();
+				}
 				suppliersSet.add(supplier);
 			}
 		}
-
 		if (lineItems != null && lineItems.size() > 0) {
 			for (Supplier supplier : suppliersSet) {
 				List<LineItem> lineItemlist = new ArrayList<LineItem>();
@@ -109,6 +201,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return supplierItemMap;
 	}
 
+	// Method1. createPurchaseOrderVariantQuantityMap
 	public HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> createPurchaseOrderVariantQuantityMap(
 			HashMap<PurchaseOrder, List<LineItem>> supplierLineItemHashMap) {
 		HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderVariantQuantityMap = new HashMap<PurchaseOrder, HashMap<ProductVariant, Long>>();
@@ -169,6 +262,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return supplierWhLineitemsMap;
 	}
 
+	//Method2. createPurchaseOrder
 	public HashMap<PurchaseOrder, List<LineItem>> createPurchaseOrder(HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineitemsMap) {
 
 		int count = 0;
@@ -186,24 +280,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						count += lineItemsFromwhLineItemsMap.size();
 						Warehouse warehouse = otherEntry.getKey();
 						if (lineItemsFromwhLineItemsMap != null && lineItemsFromwhLineItemsMap.size() > 0) {
-							PurchaseOrder purchaseOrder = new PurchaseOrder();
-							purchaseOrder.setCreateDate(new Date());
-							purchaseOrder.setCreatedBy(userService.getAdminUser());
-							purchaseOrder.setSupplier(supplier);
-							purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.JIT.asEnumPurchaseOrderType());
-							purchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Generated.getId()));
-							Calendar calendar = Calendar.getInstance();
-							calendar.setTime(new Date());
-							calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
-							purchaseOrder.setEstDelDate(calendar.getTime());
-							if (purchaseOrder.getSupplier().getCreditDays() != null && purchaseOrder.getSupplier().getCreditDays() >= 0) {
-								calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
-								purchaseOrder.setEstPaymentDate(calendar.getTime());
-							} else {
-								purchaseOrder.setEstPaymentDate(new Date());
-							}
-							purchaseOrder.setWarehouse(warehouse);
-							purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+							PurchaseOrder purchaseOrder = createPO(supplier, warehouse);
 							purchaseOrderLineItemMap.put(purchaseOrder, lineItemsFromwhLineItemsMap);
 						}
 					}
@@ -214,6 +291,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return purchaseOrderLineItemMap;
 	}
 
+	//Method3. Create createPoLineItems
 	public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap, List<ShippingOrder> shippingOrders) {
 
 		if (purchaseOrderProductVariantMap != null && purchaseOrderProductVariantMap.size() > 0) {
@@ -245,7 +323,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 					logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
 					if (unbookedInventory < 0) {
 						for (ShippingOrder so : shippingOrders) {
-							boolean sohaspv = shippingOrderService.shippingOrderContainsProductVariant(so, productVariant);
+							boolean sohaspv = shippingOrderService.shippingOrderContainsProductVariant(so, productVariant, productVariant.getMarkedPrice());
 							if (sohaspv && purchaseOrder.getWarehouse().equals(so.getWarehouse())) {
 								shippingOrdersInPO.add(so);
 							}
@@ -335,10 +413,19 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
 				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
-				if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
-					if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
-						if (purchaseOrder.getSupplier().getEmail_id() != null) {
-							adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
+				if (!purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())
+						&& purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
+					List<ProductVariant> pvList = purchaseOrderService.getAllProductVariantFromPO(purchaseOrder);
+					boolean send = true;
+					for (ProductVariant pv : pvList) {
+						if (pv.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE))
+							send = false;
+					}
+					if (send) {
+						if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
+							if (purchaseOrder.getSupplier().getEmail_id() != null) {
+								adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
+							}
 						}
 					}
 				}
@@ -349,8 +436,284 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		}
 	}
 
+	// Copy of Method1. createPurchaseOrderVariantQuantityMap
+	public HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> createPurchaseOrderVariantMrpQuantityMap(
+			HashMap<PurchaseOrder, List<LineItem>> supplierLineItemHashMap) {
+		HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> purchaseOrderVariantQuantityMap = new HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>>();
+		int count = 0;
+		Set<Entry<PurchaseOrder, List<LineItem>>> entrySet = supplierLineItemHashMap.entrySet();
+		for (Entry<PurchaseOrder, List<LineItem>> entry : entrySet) {
+			PurchaseOrder purchaseOrder = entry.getKey();
+			List<LineItem> lineItems = entry.getValue();
+			count += lineItems.size();
+			Set<ProductVariantMrpQtyLineItems> pvMrpQtyLiSetForThisPO = new HashSet<JitShippingOrderPOCreationServiceImpl.ProductVariantMrpQtyLineItems>();
+			Set<ProductVariantMrpQtyLineItems> pvMrpQtyLiSetForOtherPO = new HashSet<JitShippingOrderPOCreationServiceImpl.ProductVariantMrpQtyLineItems>();
+			if (lineItems != null && lineItems.size() > 0) {
+				for (LineItem item : lineItems) {
+					boolean canAddToThisSet = false;
+					boolean canAddToOtherSet = false;
+					boolean addingToOtherSet = false;
+					ProductVariant productVariant = item.getSku().getProductVariant();
+					Long quantity = item.getQty();
+					Double mrp = item.getMarkedPrice();
+					ProductVariantMrpQtyLineItems variantMrpQtyLineItems = new ProductVariantMrpQtyLineItems();
+					variantMrpQtyLineItems.setProductVariant(productVariant);
+					variantMrpQtyLineItems.setMrp(mrp);
+					variantMrpQtyLineItems.setQty(quantity);
+					
+					for (ProductVariantMrpQtyLineItems pvmq : pvMrpQtyLiSetForThisPO) {
+						if (pvmq.getProductVariant().equals(productVariant)) {
+							canAddToThisSet = true;
+							if (pvmq.getMrp().equals(mrp)) {
+								pvmq.setQty(pvmq.getQty() + quantity);
+							}
+							else
+								canAddToOtherSet = true;
+						}
+					}
+					if(!canAddToThisSet){
+						pvMrpQtyLiSetForThisPO.add(variantMrpQtyLineItems);
+					}
+					if(canAddToOtherSet){
+						for (ProductVariantMrpQtyLineItems pvmq : pvMrpQtyLiSetForOtherPO) {
+							if (pvmq.getProductVariant().equals(productVariant) && pvmq.getMrp().equals(mrp)) {
+								addingToOtherSet = true;
+								pvmq.setQty(pvmq.getQty() + quantity);
+							}
+						}
+						if(!addingToOtherSet){
+							pvMrpQtyLiSetForOtherPO.add(variantMrpQtyLineItems);
+						}
+					}
+				}
+				if(pvMrpQtyLiSetForOtherPO!=null && pvMrpQtyLiSetForOtherPO.size()>0){
+				createPurchaseOrdersForVariedMrp(purchaseOrder, pvMrpQtyLiSetForOtherPO);
+				}
+			}
+			purchaseOrderVariantQuantityMap.put(purchaseOrder, pvMrpQtyLiSetForThisPO);
+		}
+		logger.debug("Inside method 5 - createPurchaseOrderVariantQuantityMap, no of lineItems received - " + count);
+		return purchaseOrderVariantQuantityMap;
+	}
+
+	//create PO method intermediate for the MRP varied PVs
+	public void createPurchaseOrdersForVariedMrp(PurchaseOrder purchaseOrder, Set<ProductVariantMrpQtyLineItems> productVariantMrpQtyLineItems) {
+		Warehouse wh = purchaseOrder.getWarehouse();
+		Supplier sup = purchaseOrder.getSupplier();
+		if (productVariantMrpQtyLineItems != null && productVariantMrpQtyLineItems.size() > 0) {
+			Set<ProductVariantMrpQtyLineItems> setToProcess = new HashSet<JitShippingOrderPOCreationServiceImpl.ProductVariantMrpQtyLineItems>();
+			for (ProductVariantMrpQtyLineItems pvmq : productVariantMrpQtyLineItems) {
+				if (setToProcess == null || !(setToProcess.size() > 0)) {
+					setToProcess.add(pvmq);
+				} else {
+					for (ProductVariantMrpQtyLineItems pmvqToAdd : setToProcess) {
+						if (!pvmq.getProductVariant().equals(pmvqToAdd.getProductVariant())) {
+							setToProcess.add(pvmq);
+						}
+					}
+				}
+			}
+			productVariantMrpQtyLineItems.removeAll(setToProcess);
+			if (setToProcess != null && setToProcess.size() > 0) {
+				PurchaseOrder po = createPO(sup, wh);
+				purchaseOrders.add(po);
+				createPOLineItemsForPO(po, setToProcess);
+			}
+			if (productVariantMrpQtyLineItems != null && productVariantMrpQtyLineItems.size() > 0) {
+				createPurchaseOrdersForVariedMrp(purchaseOrder, productVariantMrpQtyLineItems);
+			}
+		}
+	}
+
+	//Copy of Method2. - creatPO
+	public PurchaseOrder createPO(Supplier supplier, Warehouse warehouse) {
+		PurchaseOrder purchaseOrder = new PurchaseOrder();
+		purchaseOrder.setCreateDate(new Date());
+		purchaseOrder.setCreatedBy(userService.getAdminUser());
+		purchaseOrder.setSupplier(supplier);
+		purchaseOrder.setWarehouse(warehouse);
+		purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.JIT.asEnumPurchaseOrderType());
+		purchaseOrder.setPurchaseOrderStatus(getBaseDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Generated.getId()));
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
+		purchaseOrder.setEstDelDate(calendar.getTime());
+		if (purchaseOrder.getSupplier().getCreditDays() != null && purchaseOrder.getSupplier().getCreditDays() >= 0) {
+			calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+			purchaseOrder.setEstPaymentDate(calendar.getTime());
+		} else {
+			purchaseOrder.setEstPaymentDate(new Date());
+		}
+		purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+		return purchaseOrder;
+	}
+
+	//Copy of Method3. - createPOLineItemsForPO
+	public void createPOLineItemsForPO(PurchaseOrder purchaseOrder, Set<ProductVariantMrpQtyLineItems> items) {
+		HashMap<String, String> whSupplierMap = getWhSupplierTinMap();
+		List<ShippingOrder> shippingOrders;
+		if(whSupplierMap.get(purchaseOrder.getWarehouse().getTin())!=null){
+			Warehouse warehouse = warehouseService.getWarehouseById(10l);
+			shippingOrders = getShippingOrderListToProcess(warehouse);
+		}
+		else{
+			shippingOrders = getShippingOrderListToProcess(null);
+		}
+		if (items != null && items.size() > 0) {
+			Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
+			boolean containsDropShip = false;
+			Set<ShippingOrder> shippingOrdersInPO = new HashSet<ShippingOrder>();
+			List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
+			for (ProductVariantMrpQtyLineItems pvmq : items) {
+				ProductVariant productVariant = pvmq.getProductVariant();
+				Long quantity = pvmq.getQty();
+				Double mrp = pvmq.getMrp();
+
+				if (productVariant.getProduct().isDropShipping()) {
+					containsDropShip = true;
+				}
+				Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
+				Long inventory = adminInventoryService.getNetInventory(sku);
+				Long bookedInventory = adminInventoryService.getBookedInventory(sku);
+				if (bookedInventory == null) {
+					bookedInventory = 0L;
+				}
+				if (inventory == null) {
+					inventory = 0L;
+				}
+				Long unbookedInventory = inventory - bookedInventory;
+				logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
+				if (unbookedInventory < 0) {
+					for (ShippingOrder so : shippingOrders) {
+						boolean sohaspv = shippingOrderService.shippingOrderContainsProductVariant(so, productVariant, mrp);
+						if (sohaspv && purchaseOrder.getWarehouse().equals(so.getWarehouse())) {
+							shippingOrdersInPO.add(so);
+						}
+					}
+					Long poQty = 0L;
+					Double taxableAmount = 0.0D;
+					Double discountPercentage = 0D;
+					PoLineItem poLineItem = new PoLineItem();
+					poLineItem.setSku(sku);
+					if (Math.abs(unbookedInventory) < quantity) {
+						poQty = Math.abs(unbookedInventory);
+					} else {
+						poQty = quantity;
+					}
+					poLineItem.setQty(poQty);
+					poLineItem.setCostPrice(productVariant.getCostPrice());
+					poLineItem.setMrp(productVariant.getMarkedPrice());
+					poLineItem.setPurchaseOrder(purchaseOrder);
+
+					Tax tax;
+					if (sku != null) {
+						if (purchaseOrder.getSupplier().getState().equalsIgnoreCase(purchaseOrder.getWarehouse().getState())) {
+							tax = sku.getTax();
+						} else {
+							tax = new Tax();
+							tax.setId(EnumTax.CST.getId());
+							tax.setName(EnumTax.CST.getName());
+							tax.setType(EnumTax.CST.getType());
+							tax.setValue(EnumTax.CST.getValue());
+						}
+						taxableAmount = poQty * ((productVariant.getCostPrice() - productVariant.getCostPrice() * discountPercentage / 100));
+						totalTaxable += taxableAmount;
+						TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(purchaseOrder.getSupplier(), purchaseOrder.getWarehouse()
+								.getState(), tax, taxableAmount);
+						totalTax += taxComponent.getTax();
+						totalSurcharge += taxComponent.getSurcharge();
+						totalPayable += taxComponent.getPayable();
+						poLineItem.setTaxableAmount(taxableAmount);
+						poLineItem.setTaxAmount(taxComponent.getTax());
+						poLineItem.setSurchargeAmount(taxComponent.getSurcharge());
+						poLineItem.setPayableAmount(taxComponent.getPayable());
+						poLineItem = (PoLineItem) getBaseDao().save(poLineItem);
+						poLineItems.add(poLineItem);
+					}
+				}
+			}
+			purchaseOrder.setPayable(totalPayable);
+			purchaseOrder.setTaxableAmount(totalTaxable);
+			purchaseOrder.setTaxAmount(totalTax);
+			purchaseOrder.setSurchargeAmount(totalSurcharge);
+			purchaseOrder.setFinalPayableAmount(totalPayable);
+			purchaseOrder.setPoLineItems(poLineItems);
+			purchaseOrder.setShippingOrders(new ArrayList<ShippingOrder>(shippingOrdersInPO));
+			if (containsDropShip) {
+				purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType());
+			}
+			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+		}
+	}
+	
+	public HashMap<String, String> getWhSupplierTinMap(){
+		HashMap<String, String> whSupplierHashMap = new HashMap<String, String>();
+		whSupplierHashMap.put("06101832327","06101832036");
+		whSupplierHashMap.put("27800897340V", "27210893736V");
+		
+		return whSupplierHashMap;
+	}
+
 	public BaseDao getBaseDao() {
 		return baseDao;
 	}
+	
+	class ProductVariantMrpQtyLineItems {
+		ProductVariant productVariant;
+		Double mrp;
+		Long qty;
 
+		public ProductVariant getProductVariant() {
+			return productVariant;
+		}
+
+		public void setProductVariant(ProductVariant productVariant) {
+			this.productVariant = productVariant;
+		}
+
+		public Double getMrp() {
+			return mrp;
+		}
+
+		public void setMrp(Double mrp) {
+			this.mrp = mrp;
+		}
+
+		public Long getQty() {
+			return qty;
+		}
+
+		public void setQty(Long qty) {
+			this.qty = qty;
+		}
+
+		@Override
+		public int hashCode() {
+			return super.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof ProductVariantMrpQtyLineItems)) {
+				return false;
+			}
+			ProductVariantMrpQtyLineItems pvmrpqty = (ProductVariantMrpQtyLineItems) obj;
+			if (this.productVariant != null && pvmrpqty.getProductVariant() != null && this.mrp != null && pvmrpqty.getMrp() != null) {
+				return this.productVariant.equals(pvmrpqty.getProductVariant()) && this.mrp.equals(pvmrpqty.getMrp());
+			}
+			return false;
+		}
+	}
+
+	public List<PurchaseOrder> getPurchaseOrders() {
+		return purchaseOrders;
+	}
+
+	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+		this.purchaseOrders = purchaseOrders;
+	}
+	
 }

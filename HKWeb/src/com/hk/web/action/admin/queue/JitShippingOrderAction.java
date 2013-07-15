@@ -3,6 +3,8 @@ package com.hk.web.action.admin.queue;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -48,10 +50,12 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.admin.AdminHomeAction;
+import com.hk.web.filter.WebContext;
 
 @Component
 public class JitShippingOrderAction extends BaseAction {
@@ -81,80 +85,46 @@ public class JitShippingOrderAction extends BaseAction {
 	AdminInventoryService adminInventoryService;
 	@Autowired
 	JitShippingOrderPOCreationService jitShippingOrderPOCreationService;
+	@Autowired
+	WarehouseService warehouseService;
 
 	private Date startDate;
 	private Date endDate;
-	private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 	private List<LineItem> jitLineItems = new ArrayList<LineItem>();
 	private HashMap<Supplier, List<LineItem>> supplierLineItemListMap = new HashMap<Supplier, List<LineItem>>();
 	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 	private List<LineItem> jitFilteredLineItems = new ArrayList<LineItem>();
-	private HashMap<PurchaseOrder, List<LineItem>> purOrderLineItem = new HashMap<PurchaseOrder, List<LineItem>>();
+	private HashMap<PurchaseOrder, List<LineItem>> purchaseOrderLineItemMap = new HashMap<PurchaseOrder, List<LineItem>>();
 
 	@DefaultHandler
 	public Resolution pre() {
-		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
-		shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
-		List<ShippingOrder> shippingOrderListToProcess = new ArrayList<ShippingOrder>();
-		if (shippingOrderList != null && shippingOrderList.size() > 0) {
-			for (ShippingOrder shippingOrder : shippingOrderList) {
-				if (shippingOrder.getPurchaseOrders() == null || (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() == 0)) {
-					shippingOrderListToProcess.add(shippingOrder);
-				}
-			}
-			jitLineItems = jitShippingOrderPOCreationService.getJitLineItems(shippingOrderListToProcess);
-			supplierLineItemListMap = jitShippingOrderPOCreationService.getSupplierLineItemMap(jitLineItems);
-			HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineItemsMap = jitShippingOrderPOCreationService
-					.createSupplierWhLineitemsMap(supplierLineItemListMap);
-			purOrderLineItem = jitShippingOrderPOCreationService.createPurchaseOrder(supplierWhLineItemsMap);
-			HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap = jitShippingOrderPOCreationService
-					.createPurchaseOrderVariantQuantityMap(purOrderLineItem);
-			jitShippingOrderPOCreationService.createPoLineItems(purchaseOrderProductVariantMap, shippingOrderListToProcess);
 
-			List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
-			Set<Entry<PurchaseOrder, HashMap<ProductVariant, Long>>> entrySet = purchaseOrderProductVariantMap.entrySet();
-			for (Entry<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderPVEntry : entrySet) {
-				PurchaseOrder purchaseOrder = purchaseOrderPVEntry.getKey();
-				purchaseOrderList.add(purchaseOrder);
-			}
-
-			purchaseOrders = jitShippingOrderPOCreationService.deletePOsWithEmptyPOLineItems(purchaseOrderList);
-			//jitShippingOrderPOCreationService.deleteExtraEntryFromSOPO(purchaseOrders);
-			
-			List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
-			for (PurchaseOrder purchaseOrder : purchaseOrderList) {
-				if (purchaseOrder != null) {
-					jitShippingOrderPOCreationService.approveAllPos(purchaseOrder, purchaseOrderStatus);
-					for (ShippingOrder so : purchaseOrder.getShippingOrders()) {
-						ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
-						shippingOrderLifecycle.setOrder(so);
-						shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
-								EnumShippingOrderLifecycleActivity.SO_LoggedComment.getId()));
-						shippingOrderLifecycle.setUser(userService.getAdminUser());
-						shippingOrderLifecycle.setComments("PO# " + purchaseOrder.getId() + " Approved for the Shipping Order");
-						shippingOrderLifecycle.setActivityDate(new Date());
-						shippingOrderLifecycleDao.save(shippingOrderLifecycle);
-					}
+		HttpServletRequest  httpServletRequest = WebContext.getRequest();
+		StringBuffer uri = httpServletRequest.getRequestURL();
+		System.out.println(uri);
+		List<ShippingOrder> shippingOrderListToProcess;
+		if(uri.toString().toLowerCase().contains("brightlife")){
+			shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null);
+			if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
+				purchaseOrders=  jitShippingOrderPOCreationService.processShippingOrderForPOCreation(shippingOrderListToProcess);
+				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+				return new RedirectResolution(AdminHomeAction.class);
+		}
+			else{
+				//Hard-coding for a warehouse, to start with. Later there will be a single call without any warehouse restriction.
+				Warehouse warehouse = warehouseService.getWarehouseById(10l);
+				shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(warehouse);
+				if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
+					purchaseOrders=  jitShippingOrderPOCreationService.processShippingOrderForPOCreation(shippingOrderListToProcess);
 				}
+				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+				return new RedirectResolution(AdminHomeAction.class);
 			}
 		}
-
-		addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
 		return new RedirectResolution(AdminHomeAction.class);
-
-	}
-
-	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
-		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-		shippingOrderSearchCriteria.setContainsJitProducts(true);
-		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
-		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
-		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
-		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
-		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
-		paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
-		shippingOrderSearchCriteria.setPaymentStatuses(paymentStatusList);
-		return shippingOrderSearchCriteria;
+		
+			
 	}
 
 	public Date getStartDate() {
@@ -173,14 +143,6 @@ public class JitShippingOrderAction extends BaseAction {
 	@Validate(converter = CustomDateTypeConvertor.class)
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	public List<ShippingOrder> getShippingOrderList() {
-		return shippingOrderList;
-	}
-
-	public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
-		this.shippingOrderList = shippingOrderList;
 	}
 
 	public List<LineItem> getJitLineItems() {

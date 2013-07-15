@@ -13,7 +13,11 @@ import com.hk.domain.warehouse.Warehouse;
 
 public interface JitShippingOrderPOCreationService {
 	
+	public List<ShippingOrder> getShippingOrderListToProcess(Warehouse warehouse);
+	
 	public List<LineItem> getJitLineItems(List<ShippingOrder> shippingOrders);
+	
+	public List<PurchaseOrder> processShippingOrderForPOCreation(List<ShippingOrder> shippingOrders);
 	
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems);
 	

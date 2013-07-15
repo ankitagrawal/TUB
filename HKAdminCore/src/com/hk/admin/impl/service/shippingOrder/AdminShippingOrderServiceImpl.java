@@ -419,7 +419,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         				if(variantListFromSO.contains(pv)){
         					flag = true;
         				}
-        				if(shippingOrderService.shippingOrderContainsProductVariant(newShippingOrder, pv)){
+        				boolean soHasPv = shippingOrderService.shippingOrderContainsProductVariant(newShippingOrder, pv, pv.getMarkedPrice());
+        				if(soHasPv){
         					newShippingOrderPoSet.add(order);
         				}
         			}
@@ -448,9 +449,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         	po.setShippingOrders(soList);
         	baseDao.save(po);
         }
-        
-        
-        
         adminEmailManager.sendJitShippingCancellationMail(shippingOrder,newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_SPLITTED);
         
 	}
