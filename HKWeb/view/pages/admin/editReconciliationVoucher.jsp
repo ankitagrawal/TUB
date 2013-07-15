@@ -196,7 +196,7 @@
 
     </s:form>
 
-<shiro:hasAnyRoles name='<%=RoleConstants.FINANCE_ADMIN+","+RoleConstants.WH_MANAGER%>'>
+<shiro:hasPermission name='<%=PermissionConstants.DEBIT_NOTE_MANAGE%>'>
 <div id="closeButtonDiv">
 	<c:if test="${pa.reconciliationVoucher.rvLineItems!=null && fn:length(pa.reconciliationVoucher.rvLineItems) >0 && pa.reconciliationVoucher.supplier!=null }">
 	<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" id="createDebitNoteButton" event="createDebitNote" Value="CreateDebitNote" class="button_green addToCartButton" >
@@ -205,7 +205,7 @@
 	 Create Debit Note </s:link>
 	</c:if>
 	</div>
-</shiro:hasAnyRoles>
+</shiro:hasPermission>
 	
 	<c:if test="${pa.reconciliationVoucher.supplier==null }">
 	<shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">

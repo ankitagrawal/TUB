@@ -538,7 +538,7 @@ function temp() {
 		<td>
 				${productVariant.id}
 			<s:hidden class="variant" name="poLineItems[${ctr.index}].productVariant"
-			          value="${poLineItemDto.poLineItem.productVariant.id}"/>
+			          value="${productVariant.id}"/>
 		</td>
 		<td>${productVariant.upc}</td>
 		<td class="supplierCode">${productVariant.supplierCode}</td>

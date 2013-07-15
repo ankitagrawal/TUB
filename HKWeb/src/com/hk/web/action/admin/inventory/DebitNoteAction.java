@@ -163,7 +163,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     }
     
     
-    @Secure(hasAnyPermissions = { PermissionConstants.FINANCE_MANAGEMENT, PermissionConstants.RECON_VOUCHER_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.DEBIT_NOTE_MANAGE }, authActionBean = AdminPermissionAction.class)
     public Resolution debitNoteFromRV(){
     	User loggedOnUser = null;
         if (getPrincipal() != null) {

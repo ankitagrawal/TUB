@@ -13582,6 +13582,12 @@
 			INSERT INTO seek_invoice_num (warehouse_id, invoice_num, prefix, description) VALUES ('1001', '1', 'R', 'Retail Invoice 2013');
 		</sql>
 	</changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1373436305338-1">
+        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" defaultNullValue="0.0" tableName="sku_group"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1373436305338-2">
+        <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" defaultNullValue="0.0" tableName="sku_group"/>
+    </changeSet>
     <changeSet author="tarun (generated)" id="1372941433730-1">
         <createTable tableName="busy_api_call_log">
             <column autoIncrement="true" name="id" type="INT">
