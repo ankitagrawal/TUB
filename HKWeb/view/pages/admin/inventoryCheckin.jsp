@@ -27,7 +27,7 @@
           </tr>
           <tr>
             <td>Qty:</td>
-            <td><s:text name="qty" value="0"/></td>
+            <td><s:text name="qty" value="0" id="qty"/></td>
           </tr>
 		<tr>
 			<td>Cost Price:</td>
@@ -160,6 +160,23 @@
 
 		    });
 		    $('.invCheckin').click(function(event){
+		    	var cp = $('#costPrice').val();
+		    	var mrp = $('#mrp').val();
+		    	var qty = $('#qty').val();
+	    		if (cp == "" || mrp == "" || qty=="") {
+					alert("Qty, CP, Mrp  fields are compulsory.");
+					return false;
+				}
+	    		if (isNaN(cp) || isNaN(mrp) || cp < 0 || mrp < 0 || isNaN(qty)||qty<0) {
+					alert("Qty, CP, Mrp  fields are compulsory.");
+					return false;
+				}
+	    		
+		    	if(parseFloat(cp)>parseFloat(mrp)){
+		    		alert("Cost Price cannot be greater than MRP");
+		    		return false;
+		    	}
+		    	
 			    //$(this).css("display", "none");
 			    event.preventDefault();
 			    var saveBtn = $(this);
