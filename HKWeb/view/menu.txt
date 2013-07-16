@@ -76,12 +76,12 @@
 
 
 -/health-nutrition/dietary-supplements: Shop by Product
+--/health-nutrition/dietary-supplements/multivitamins
+--/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
 --/health-nutrition/dietary-supplements/vitamins
 --/health-nutrition/dietary-supplements/minerals
 --/health-nutrition/dietary-supplements/herbs
---/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
 --/health-nutrition/dietary-supplements/anti-oxidants:Anti-Oxidants
---/health-nutrition/dietary-supplements/combination
 --/health-nutrition/dietary-supplements/condition-specific
 --/health-nutrition/dietary-supplements/other-supplements
 
