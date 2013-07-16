@@ -44,7 +44,7 @@ class CodPopulateItemData {
             then CONCAT(DATE((DATE(NOW())-1))," ", '15:00:00' )
 
            when(TIME(NOW()) between '19:00:00' and '24:00:00')
-            then CONCAT(DATE(DATE(NOW())-1)," ", '15:00:00' )
+            then CONCAT(DATE(NOW())," ", '15:00:00' )
 
            when(TIME(NOW()) between '08:00:00' and '12:00:00')
            then   CONCAT(DATE(DATE(NOW())-1) , " " ,  TIME(TIME('07:00:00')+TIME(NOW())))
@@ -62,6 +62,7 @@ class CodPopulateItemData {
                             TIMESTAMP(case
                              when (TIME(NOW()) between '00:00:00' and '08:00:00')
                              then CONCAT(DATE((DATE(NOW())-1))," ", '08:00:00' )
+
                             when(TIME(NOW()) between '19:00:00' and '24:00:00')
                              then CONCAT(DATE(DATE(NOW())-1)," ", '08:00:00' )
                             else   CONCAT(DATE(DATE(NOW())-1) , " ", TIME(NOW()))
@@ -71,7 +72,7 @@ class CodPopulateItemData {
                              then CONCAT(DATE((DATE(NOW())-1))," ", '15:00:00' )
 
                             when(TIME(NOW()) between '19:00:00' and '24:00:00')
-                             then CONCAT(DATE(DATE(NOW())-1)," ", '15:00:00' )
+                             then CONCAT(DATE(NOW())," ", '15:00:00' )
 
                             when(TIME(NOW()) between '08:00:00' and '12:00:00')
                             then   CONCAT(DATE(DATE(NOW())-1) , " " , TIME(TIME('07:00:00')+TIME(NOW())))
