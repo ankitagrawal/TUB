@@ -1,11 +1,10 @@
 package com.hk.impl.service.catalog;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.cache.vo.ProductVO;
 import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.constants.catalog.image.EnumImageType;
-import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.core.Keys;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
@@ -26,6 +25,7 @@ import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKImageUtils;
 import com.hk.web.filter.WebContext;
 import com.hk.cache.vo.ProductVO;
+import com.hk.cache.ProductCache;
 import net.sourceforge.stripes.controller.StripesFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -73,7 +73,9 @@ public class ProductServiceImpl implements ProductService {
     private static Logger             logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     public Product getProductById(String productId) {
-        return getProductDAO().getProductById(productId);
+      Product product = getProductDAO().getProductById(productId);
+      
+      return product;
     }
 
     public List<Product> getAllProducts() {
@@ -230,6 +232,9 @@ public class ProductServiceImpl implements ProductService {
             logger.error("Error while entering audit trail for product->" + product.getId());
         }
 */
+      //Ajeet - Cache Product
+      ProductCache.getInstance().refreshCache(savedProduct);
+      
         return savedProduct;
     }
 
@@ -326,7 +331,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductVariant validTryOnProductVariant(Product product) {
-        if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
+
+	    //Commenting the code which check validTryOnProductVariant, it will always retrun null. 7th July 2013
+
+        /*if (product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)) {
             // Category virtualTryOnCategory = new Category("Virtual Try On", "Try It Online");
             // if (product.getCategories().contains(virtualTryOnCategory)) {
             for (ProductVariant productVariant : product.getInStockVariants()) {
@@ -346,7 +354,7 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
             // }
-        }
+        }*/
         return null;
     }
 
@@ -631,15 +639,18 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductVO getProductVO(String productId) {
-    ProductVO productVO = null;
-    SolrProduct solrProduct = productSearchService.getProduct(productId);
-    if (solrProduct != null) {
-      productVO = this.createProductVO(solrProduct);
-    } else {
-      Product product = this.getProductById(productId);
-      productVO = this.createProductVO(product);
+    ProductVO productVO = ProductCache.getInstance().getProductCache(productId);
+    if (productVO == null) {
+      SolrProduct solrProduct = productSearchService.getProduct(productId);
+      if (solrProduct != null) {
+        logger.debug("Getting ProductVO from SOLR for Product=" +productId);
+        productVO = this.createProductVO(solrProduct);
+      } else {
+        logger.debug("Getting ProductVO from DB for Product=" +productId);
+        Product product = this.getProductById(productId);
+        productVO = this.createProductVO(product);
+      }
     }
-
     return productVO;
   }
 
@@ -658,6 +669,9 @@ public class ProductServiceImpl implements ProductService {
     productVO.setOutOfStock(solrProduct.getOutOfStock());
     productVO.setCombo(solrProduct.getCombo());
     productVO.setService(solrProduct.getService());
+
+    //Refreshing Cache for ProductVO
+    ProductCache.getInstance().refreshCache(productVO);
     
     return productVO;
   }
@@ -685,6 +699,9 @@ public class ProductServiceImpl implements ProductService {
       }
     }
     productVO.setService(product.getService());
+
+    //Refreshing Cache for ProductVO
+    ProductCache.getInstance().refreshCache(productVO);
 
     return productVO;
   }

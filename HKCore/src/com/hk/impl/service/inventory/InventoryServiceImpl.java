@@ -19,6 +19,7 @@ import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.LowInventory;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
@@ -201,6 +202,23 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public Long getAvailableUnbookedInventoryForPrescriptionEyeglasses(List<Sku> skuList) {
+        Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
+        logger.debug("net inventory " + netInventory);
+
+        Long bookedInventory = 0L;
+        if (!skuList.isEmpty()) {
+            ProductVariant productVariant = skuList.get(0).getProductVariant();
+            bookedInventory = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
+            logger.debug("booked inventory " + bookedInventory);
+        }
+
+        long availableUnbookedInventory = netInventory - bookedInventory;
+        logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
+        return availableUnbookedInventory;
+    }
+
+    @Override
     @Deprecated
     public Long getAvailableUnbookedInventory(List<Sku> skuList) {
     	return getAvailableUnbookedInventory(skuList.get(0).getProductVariant());
@@ -212,6 +230,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Deprecated
     public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList) {
     	long qty = 0l;
     	Collection<InventoryInfo> infos = inventoryHealthService.getAvailableInventory(skuList);
@@ -222,7 +241,16 @@ public class InventoryServiceImpl implements InventoryService {
 		}
         return qty;
     }
+    
+    @Override
+    public long getUnbookedInventoryInProcessingQueue(LineItem lineItem) {
+    	return inventoryHealthService.getUnbookedInventoryInProcessingQueue(lineItem);
+    }
 
+    @Override
+    public long getUnbookedInventoryForActionQueue(LineItem lineItem) {
+        return inventoryHealthService.getUnbookedInventoryForActionQueue(lineItem);
+    }
     @Deprecated
     private Long getBookedQty(ProductVariant productVariant) {
         Long bookedInventory = 0L;

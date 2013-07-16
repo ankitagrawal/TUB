@@ -125,7 +125,12 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	private String warehouseState;
 	private Double shippingChargeHk;
 	private Double shippingChargeVendor;
+	private Boolean returnByHand;
+	private String rtvReturnAddress;
+	private String rtvTrackingNumber;
+	private Date rtvReturnDate;
 
+	
 	@DefaultHandler
 	public Resolution pre() {
 		extraInventory = getExtraInventoryService().getExtraInventoryByPoId(purchaseOrderId);
@@ -449,6 +454,10 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			rtvNote.setShippingChargeHk(shippingChargeHk);
 			rtvNote.setShippingChargeVendor(shippingChargeVendor);
 			rtvNote.setDestinationAddress(destinationAddress);
+			rtvNote.setReturnByHand(returnByHand);
+			rtvNote.setRtvReturnAddress(rtvReturnAddress);
+			rtvNote.setRtvReturnDate(rtvReturnDate);
+			rtvNote.setRtvTrackingNumber(rtvTrackingNumber);
 			rtvNote = getRtvNoteService().save(rtvNote);
 		}
 		noCache();
@@ -1008,5 +1017,38 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	public void setShippingChargeVendor(Double shippingChargeVendor) {
 		this.shippingChargeVendor = shippingChargeVendor;
 	}
+
+	public Boolean getReturnByHand() {
+		return returnByHand;
+	}
+
+	public void setReturnByHand(Boolean returnByHand) {
+		this.returnByHand = returnByHand;
+	}
+
+	public String getRtvReturnAddress() {
+		return rtvReturnAddress;
+	}
+
+	public void setRtvReturnAddress(String rtvReturnAddress) {
+		this.rtvReturnAddress = rtvReturnAddress;
+	}
+
+	public Date getRtvReturnDate() {
+		return rtvReturnDate;
+	}
+
+	public void setRtvReturnDate(Date rtvReturnDate) {
+		this.rtvReturnDate = rtvReturnDate;
+	}
+
+	public String getRtvTrackingNumber() {
+		return rtvTrackingNumber;
+	}
+
+	public void setRtvTrackingNumber(String rtvTrackingNumber) {
+		this.rtvTrackingNumber = rtvTrackingNumber;
+	}
+	
 	
 }

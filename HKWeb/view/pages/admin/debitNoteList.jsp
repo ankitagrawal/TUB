@@ -86,6 +86,13 @@
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="print">Print
               <s:param name="debitNote" value="${debitNote.id}"/>
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
+              
+              <c:if test = "${debitNote.reconciliationVoucher!=null }">
+              &nbsp;
+              <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="printAsRtv">Print As RTV
+              <s:param name="debitNote" value="${debitNote.id}"/>
+              <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
+              </c:if>
           </td>
         </tr>
       </c:forEach>

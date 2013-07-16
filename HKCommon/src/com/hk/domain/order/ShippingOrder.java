@@ -4,18 +4,16 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.analytics.Reason;
-import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
+import com.hk.domain.queue.ActionItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.warehouse.Warehouse;
 import org.hibernate.annotations.Where;
-import org.jboss.resteasy.spi.touri.MappedBy;
 
 import javax.persistence.*;
-
 import java.util.*;
 
 @SuppressWarnings("serial")
@@ -73,11 +71,10 @@ public class ShippingOrder implements java.io.Serializable {
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
 
-/*
     @JsonSkip
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private ActionItem actionItem;
-*/
+
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     @Where(clause = "deleted = 0")
@@ -88,15 +85,6 @@ public class ShippingOrder implements java.io.Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private List<ShippingOrderLifecycle> shippingOrderLifecycles = new ArrayList<ShippingOrderLifecycle>(0);
-    
-    @JsonSkip
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy="shippingOrders")
-	@JoinTable(
-	    name = "shipping_order_has_purchase_order",
-	    joinColumns = {@JoinColumn(name = "shipping_order_id", nullable = false, updatable = false)},
-	    inverseJoinColumns = {@JoinColumn(name = "purchase_order_id", nullable = false, updatable = false)}
-	)
-	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 
     @Transient
     private Reason reason;
@@ -122,6 +110,15 @@ public class ShippingOrder implements java.io.Serializable {
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private Set<ShippingOrderCategory> shippingOrderCategories = new HashSet<ShippingOrderCategory>();
+    
+    @JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy="shippingOrders")
+	@JoinTable(
+	    name = "shipping_order_has_purchase_order",
+	    joinColumns = {@JoinColumn(name = "shipping_order_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "purchase_order_id", nullable = false, updatable = false)}
+	)
+	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 
     public boolean containsJitProducts() {
         return containsJitProducts;
@@ -337,36 +334,18 @@ public class ShippingOrder implements java.io.Serializable {
         this.shippingOrderCategories = categories;
     }
 
-	public List<PurchaseOrder> getPurchaseOrders() {
-		return purchaseOrders;
-	}
-
-	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
-		this.purchaseOrders = purchaseOrders;
-	}
-    
-
-/*    public ActionItem getActionItem() {
+    public ActionItem getActionItem() {
         return actionItem;
     }
 
     public void setActionItem(ActionItem actionItem) {
         this.actionItem = actionItem;
-    }*/
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof Awb)) {
-			return false;
+    }
+    public List<PurchaseOrder> getPurchaseOrders() {
+		return purchaseOrders;
+	}
 
-		}
-		ShippingOrder so = (ShippingOrder) obj;
-		if (this.id != null && so.getId() != null) {
-			return this.id.equals(so.getId());
-		}
-		return false;
+	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+		this.purchaseOrders = purchaseOrders;
 	}
 }

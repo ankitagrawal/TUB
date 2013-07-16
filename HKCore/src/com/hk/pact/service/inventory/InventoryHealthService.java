@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 
@@ -23,6 +24,10 @@ public interface InventoryHealthService {
 	
 	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
 	
+	long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
+
+	long getUnbookedInventoryForActionQueue(LineItem lineItem);
+
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
 		private double mrp;

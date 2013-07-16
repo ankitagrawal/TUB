@@ -1,18 +1,5 @@
 package com.hk.util;
 
-import java.io.File;
-import java.util.Set;
-import java.awt.image.BufferedImage;
-
-import javax.annotation.PostConstruct;
-import javax.imageio.ImageIO;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.imaging.ImageUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.util.S3Utils;
@@ -32,6 +19,17 @@ import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Set;
 
 @Component
 public class ImageManager {
@@ -67,8 +65,8 @@ public class ImageManager {
     CategoryImageDao categoryImageDao;
     private static final float QUALITY = 0.95F;
 
-    //    static String                 awsReadBucket = "healthkart-prod";
-    //    static String                 awsBucket     = "healthkart-prod";
+    //    static String                 awsReadBucket = "hk-prod";
+    //    static String                 awsBucket     = "hk-prod";
     @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
     String uploadBucket;
 

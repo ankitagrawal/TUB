@@ -24,6 +24,7 @@ public class ShippingOrderStatusMapping {
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_RTO.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped));
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName(),Arrays.asList(EnumShippingOrderStatus.RTO_Initiated));
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName(),Arrays.asList(EnumShippingOrderStatus.RTO_Initiated));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_ReversePickup_Initiated.getName(),Arrays.asList(EnumShippingOrderStatus.RTO_Initiated));
         return shippingOrderStatusMap;
     }
 }
