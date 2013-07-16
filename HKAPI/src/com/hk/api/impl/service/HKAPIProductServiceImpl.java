@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.hk.admin.util.S3Utils;
 import com.hk.api.constants.EnumHKAPIErrorCode;
 import com.hk.api.dto.HKAPIBaseDTO;
+import com.hk.api.dto.marketing.HKAPIMarketingProductDTO;
 import com.hk.api.dto.product.HKAPIProductDTO;
 import com.hk.api.dto.product.HKAPIProductVariantDTO;
 import com.hk.api.pact.service.HKAPIProductService;
@@ -110,6 +111,17 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         }
         HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
         baseDTO.setData(productIDs);
+        return baseDTO;
+    }
+
+    public HKAPIBaseDTO getBrandCategoryInfo(String productId){
+        Product product = productService.getProductById(productId);
+        HKAPIMarketingProductDTO marketingProductDTO = new HKAPIMarketingProductDTO();
+        marketingProductDTO.setProductId(productId);
+        marketingProductDTO.setBrand(product.getBrand());
+        marketingProductDTO.setPrimaryCategory(product.getPrimaryCategory().getName());
+        HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
+        baseDTO.setData(marketingProductDTO);
         return baseDTO;
     }
 
