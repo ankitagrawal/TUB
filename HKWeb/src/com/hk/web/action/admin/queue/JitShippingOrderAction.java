@@ -98,33 +98,29 @@ public class JitShippingOrderAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-
-		HttpServletRequest  httpServletRequest = WebContext.getRequest();
-		StringBuffer uri = httpServletRequest.getRequestURL();
-		System.out.println(uri);
-		List<ShippingOrder> shippingOrderListToProcess;
-		if(uri.toString().toLowerCase().contains("brightlife")){
-			shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null);
-			if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
-				purchaseOrders=  jitShippingOrderPOCreationService.processShippingOrderForPOCreation(shippingOrderListToProcess);
-				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
-				return new RedirectResolution(AdminHomeAction.class);
-		}
-			else{
-				//Hard-coding for a warehouse, to start with. Later there will be a single call without any warehouse restriction.
-				Warehouse warehouse = warehouseService.getWarehouseById(10l);
-				shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(warehouse);
-				if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
-					purchaseOrders=  jitShippingOrderPOCreationService.processShippingOrderForPOCreation(shippingOrderListToProcess);
-				}
-				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
-				return new RedirectResolution(AdminHomeAction.class);
-			}
+		//Warehouse warehouse = warehouseService.getWarehouseById(10l);
+		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null);
+		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
+			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getLineItems(shippingOrderListToProcess);
+			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList);
+			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+			return new RedirectResolution(AdminHomeAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
 		return new RedirectResolution(AdminHomeAction.class);
-		
-			
+
+	}
+
+	public Resolution jitPoActionForBright() {
+		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null);
+		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
+			List<LineItem> jitLineItemList = jitShippingOrderPOCreationService.getJitLineItems(shippingOrderListToProcess);
+			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(jitLineItemList);
+			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+			return new RedirectResolution(AdminHomeAction.class);
+		}
+		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
+		return new RedirectResolution(AdminHomeAction.class);
 	}
 
 	public Date getStartDate() {
