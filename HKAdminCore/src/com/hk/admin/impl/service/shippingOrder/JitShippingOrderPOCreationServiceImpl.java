@@ -211,36 +211,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return supplierItemMap;
 	}
 
-	// Method1. createPurchaseOrderVariantQuantityMap
-	/*public HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> createPurchaseOrderVariantQuantityMap(
-			HashMap<PurchaseOrder, List<LineItem>> supplierLineItemHashMap) {
-		HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderVariantQuantityMap = new HashMap<PurchaseOrder, HashMap<ProductVariant, Long>>();
-		int count = 0;
-		Set<Entry<PurchaseOrder, List<LineItem>>> entrySet = supplierLineItemHashMap.entrySet();
-		for (Entry<PurchaseOrder, List<LineItem>> entry : entrySet) {
-			PurchaseOrder purchaseOrder = entry.getKey();
-			List<LineItem> lineItems = entry.getValue();
-			count += lineItems.size();
-			HashMap<ProductVariant, Long> productQtyHashMap = new HashMap<ProductVariant, Long>();
-			if (lineItems != null && lineItems.size() > 0) {
-				for (LineItem item : lineItems) {
-					ProductVariant productVariant = item.getSku().getProductVariant();
-					Long quantity = item.getQty();
-					if (productQtyHashMap.containsKey(productVariant)) {
-						Long qty = productQtyHashMap.get(productVariant);
-						qty += quantity;
-						productQtyHashMap.put(productVariant, qty);
-					} else {
-						productQtyHashMap.put(productVariant, quantity);
-					}
-				}
-			}
-			purchaseOrderVariantQuantityMap.put(purchaseOrder, productQtyHashMap);
-		}
-		logger.debug("Inside method 5 - createPurchaseOrderVariantQuantityMap, no of lineItems received - " + count);
-		return purchaseOrderVariantQuantityMap;
-	}*/
-
 	public HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> createSupplierWhLineitemsMap(HashMap<Supplier, List<LineItem>> supplierVariantQuantityMap) {
 		int count = 0;
 		HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineitemsMap = new HashMap<Supplier, HashMap<Warehouse, List<LineItem>>>();
@@ -301,100 +271,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return purchaseOrderLineItemMap;
 	}
 
-	//Method3. Create createPoLineItems
-	/*public void createPoLineItems(HashMap<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderProductVariantMap, List<ShippingOrder> shippingOrders) {
-
-		if (purchaseOrderProductVariantMap != null && purchaseOrderProductVariantMap.size() > 0) {
-			boolean containsDropShip = false;
-			Set<Entry<PurchaseOrder, HashMap<ProductVariant, Long>>> entrySet = purchaseOrderProductVariantMap.entrySet();
-
-			for (Entry<PurchaseOrder, HashMap<ProductVariant, Long>> purchaseOrderPVEntry : entrySet) {
-				Set<ShippingOrder> shippingOrdersInPO = new HashSet<ShippingOrder>();
-				PurchaseOrder purchaseOrder = purchaseOrderPVEntry.getKey();
-				List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
-				Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
-				Set<Entry<ProductVariant, Long>> prodQty = purchaseOrderPVEntry.getValue().entrySet();
-				for (Entry<ProductVariant, Long> entry : prodQty) {
-					ProductVariant productVariant = entry.getKey();
-					if (productVariant.getProduct().isDropShipping()) {
-						containsDropShip = true;
-					}
-					Long quantity = entry.getValue();
-					Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
-					Long inventory = adminInventoryService.getNetInventory(sku);
-					Long bookedInventory = adminInventoryService.getBookedInventory(sku);
-					if (bookedInventory == null) {
-						bookedInventory = 0L;
-					}
-					if (inventory == null) {
-						inventory = 0L;
-					}
-					Long unbookedInventory = inventory - bookedInventory;
-					logger.debug("Inventory check for Variant - " + productVariant.getId() + "qty - " + inventory + "asked Qty - " + quantity);
-					if (unbookedInventory < 0) {
-						for (ShippingOrder so : shippingOrders) {
-							boolean sohaspv = shippingOrderService.shippingOrderContainsProductVariant(so, productVariant, productVariant.getMarkedPrice());
-							if (sohaspv && purchaseOrder.getWarehouse().equals(so.getWarehouse())) {
-								shippingOrdersInPO.add(so);
-							}
-						}
-						Long poQty = 0L;
-						Double taxableAmount = 0.0D;
-						Double discountPercentage = 0D;
-						PoLineItem poLineItem = new PoLineItem();
-						poLineItem.setSku(sku);
-						if (Math.abs(unbookedInventory) < quantity) {
-							poQty = Math.abs(unbookedInventory);
-						} else {
-							poQty = quantity;
-						}
-						poLineItem.setQty(poQty);
-						poLineItem.setCostPrice(productVariant.getCostPrice());
-						poLineItem.setMrp(productVariant.getMarkedPrice());
-						poLineItem.setPurchaseOrder(purchaseOrder);
-
-						Tax tax;
-						if (sku != null) {
-							if (purchaseOrder.getSupplier().getState().equalsIgnoreCase(purchaseOrder.getWarehouse().getState())) {
-								tax = sku.getTax();
-							} else {
-								tax = new Tax();
-								tax.setId(EnumTax.CST.getId());
-								tax.setName(EnumTax.CST.getName());
-								tax.setType(EnumTax.CST.getType());
-								tax.setValue(EnumTax.CST.getValue());
-							}
-							taxableAmount = poQty * ((productVariant.getCostPrice() - productVariant.getCostPrice() * discountPercentage / 100));
-							totalTaxable += taxableAmount;
-							TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(purchaseOrder.getSupplier(), purchaseOrder
-									.getWarehouse().getState(), tax, taxableAmount);
-							totalTax += taxComponent.getTax();
-							totalSurcharge += taxComponent.getSurcharge();
-							totalPayable += taxComponent.getPayable();
-							poLineItem.setTaxableAmount(taxableAmount);
-							poLineItem.setTaxAmount(taxComponent.getTax());
-							poLineItem.setSurchargeAmount(taxComponent.getSurcharge());
-							poLineItem.setPayableAmount(taxComponent.getPayable());
-							poLineItem = (PoLineItem) getBaseDao().save(poLineItem);
-							poLineItems.add(poLineItem);
-						}
-					}
-				}
-				purchaseOrder.setPayable(totalPayable);
-				purchaseOrder.setTaxableAmount(totalTaxable);
-				purchaseOrder.setTaxAmount(totalTax);
-				purchaseOrder.setSurchargeAmount(totalSurcharge);
-				purchaseOrder.setFinalPayableAmount(totalPayable);
-				purchaseOrder.setPoLineItems(poLineItems);
-				purchaseOrder.setShippingOrders(new ArrayList<ShippingOrder>(shippingOrdersInPO));
-				if (containsDropShip) {
-					purchaseOrder.setPurchaseOrderType(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType());
-				}
-				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
-			}
-		}
-
-	}*/
 	
 	// Copy of Method1. createPurchaseOrderVariantQuantityMap
 		public HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> createPurchaseOrderVariantMrpQuantityMap(
