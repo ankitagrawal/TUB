@@ -228,7 +228,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
         }
 
         if (primaryCategory != null) {
-            hql = hql + "and pv.product.primaryCategory = :primaryCategory";
+            hql = hql + "and pv.product.primaryCategory.id = :primaryCategory";
         }
         hql = hql + " group by nm.productVariant  order by nm.id asc";
 

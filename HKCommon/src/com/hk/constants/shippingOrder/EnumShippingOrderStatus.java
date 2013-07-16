@@ -71,7 +71,7 @@ public enum EnumShippingOrderStatus {
 
 
      public static List<EnumShippingOrderStatus> getStatusForDropShippingQueue() {
-        return Arrays.asList( EnumShippingOrderStatus.SO_ReadyForDropShipping,
+        return Arrays.asList( EnumShippingOrderStatus.SO_ReadyForDropShipping, EnumShippingOrderStatus.SO_CheckedOut,
                 EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_Installed);
     }
 
@@ -204,7 +204,8 @@ public enum EnumShippingOrderStatus {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(),
                 EnumShippingOrderStatus.SO_Delivered.getId(),
                 EnumShippingOrderStatus.RTO_Initiated.getId(),
-                EnumShippingOrderStatus.SO_RTO.getId());
+                EnumShippingOrderStatus.SO_RTO.getId(),
+                EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId());
     }
 
 }

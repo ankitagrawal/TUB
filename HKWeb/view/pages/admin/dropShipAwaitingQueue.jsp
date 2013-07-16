@@ -11,6 +11,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction" var="shipmentQueueBean"/>
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
  <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
+ <c:set var="shippingOrderStatusCheckedOut" value="<%=EnumShippingOrderStatus.SO_CheckedOut.getId()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Drop Ship Awaiting Queue">
 <s:layout-component name="htmlHead">
@@ -143,12 +144,14 @@
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   </div>
   <div style="display:inline;float:left;">
-      <c:if test="${shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusDropShippingAwaiting}">
+      <c:if test="${shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusDropShippingAwaiting || shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusCheckedOut }">
           <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
           <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
                     value="Re-Assign for process" style="display:none;"/>
-          <s:submit name="markShippingOrdersAsShipped" class="button_orange shipped shippingOrderActionBtn" value="Mark Order as Shipped"/>
-      </c:if>
+           <s:submit name="markShippingOrdersAsShipped" class="button_orange shipped shippingOrderActionBtn" value="Mark Order as Shipped"/>
+       </c:if>
+
+
       <br>
       <br>
   </div>

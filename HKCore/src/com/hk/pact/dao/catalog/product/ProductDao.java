@@ -54,6 +54,8 @@ public interface ProductDao extends BaseDao {
 
     public List<Product> getAllNonDeletedProducts();
 
+    public List<Product> getAllNonDeletedProductsWithImages();
+
     public List<Product> getAllProductByBrand(String brand);
 
     public Page getAllProductsByCategoryAndBrand(String category, String brand, int page, int perPage);

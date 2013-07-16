@@ -101,6 +101,8 @@ public class DebitNoteAction extends BasePaginatedAction {
     private CourierPickupDetail courierPickupDetail;
 	private Long pickupStatusId;
 	private boolean returnByHand;
+	private boolean printAsRtv;
+	
 
     @DefaultHandler
     public Resolution pre() {
@@ -116,6 +118,15 @@ public class DebitNoteAction extends BasePaginatedAction {
         } else
             return new ForwardResolution("/pages/admin/debitNoteList.jsp");
     }
+    
+    public Resolution printAsRtv() {
+        if (debitNote != null) {
+        	printAsRtv = true;
+            debitNoteDto = debitNoteService.generateDebitNoteDto(debitNote);
+            return new ForwardResolution("/pages/admin/debitNotePrintView.jsp");
+        } else
+            return new ForwardResolution("/pages/admin/debitNoteList.jsp");
+    } 
 
     public Resolution view() {
         if (debitNote != null) {
@@ -152,7 +163,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     }
     
     
-    @Secure(hasAnyPermissions = { PermissionConstants.FINANCE_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.DEBIT_NOTE_MANAGE }, authActionBean = AdminPermissionAction.class)
     public Resolution debitNoteFromRV(){
     	User loggedOnUser = null;
         if (getPrincipal() != null) {
@@ -213,6 +224,10 @@ public class DebitNoteAction extends BasePaginatedAction {
     }
     
     public Resolution delete(){
+    	if(debitNote.getDebitNoteStatus().getId()>=EnumDebitNoteStatus.CLosed.getId()){
+    		addRedirectAlertMessage(new SimpleMessage("Cannot delete a Debit Note once it is closed"));
+    		return new RedirectResolution(DebitNoteAction.class);
+    	}
     	getBaseDao().delete(debitNote);
     	addRedirectAlertMessage(new SimpleMessage("Debit Note Deleted."));
     	return new RedirectResolution(DebitNoteAction.class);
@@ -412,4 +427,17 @@ public class DebitNoteAction extends BasePaginatedAction {
 	public boolean getReturnByHand(){
 		return returnByHand;
 	}
+
+	public boolean isPrintAsRtv() {
+		return printAsRtv;
+	}
+
+	public void setPrintAsRtv(boolean printAsRtv) {
+		this.printAsRtv = printAsRtv;
+	}
+	
+	public boolean getPrintAsRtv() {
+		return printAsRtv;
+	}
+	
 }
