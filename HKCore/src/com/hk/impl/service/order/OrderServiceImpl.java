@@ -746,5 +746,19 @@ public class OrderServiceImpl implements OrderService {
 		return null;
 	}
 
+    @Override
+    public boolean isSOCanceled(Long orderId) {
+        boolean isSOCanceled = false;
+        Order order = this.find(orderId);
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        for (ShippingOrder shippingOrder : shippingOrders) {
+            if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getShippingOrderStatus().getId())) {
+                isSOCanceled = true;
+                break;
+            }
+        }
+        return isSOCanceled;
+    }
+
 
 }

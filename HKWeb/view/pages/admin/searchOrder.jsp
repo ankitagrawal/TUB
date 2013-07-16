@@ -299,7 +299,7 @@
     </s:link>
   </c:if>
   <br/>
-  <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart)}">
+  <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart) && !hk:isSOCanceled(order.id)}">
     <br/>
     <s:form beanclass="com.hk.web.action.admin.order.CancelOrderAction" class="cancelOrderForm">
       <s:param name="order" value="${order.id}"/>

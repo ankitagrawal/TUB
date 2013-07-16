@@ -1297,4 +1297,15 @@
             ${hk:similarProductWithUnbookedInventory(${productVariant})}
         </example>
     </function>
+    <function>
+        <description>
+            returns whether any SO of a BO is cancelled or not
+        </description>
+        <name>isSOCanceled</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isSOCanceled(java.lang.Long)</function-signature>
+        <example>
+            ${hk:isSOCanceled(${orderId})}
+        </example>
+    </function>
 </taglib>

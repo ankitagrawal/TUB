@@ -78,5 +78,7 @@ public interface OrderService {
 	public List<UserCodCall> getAllUserCodCallForToday();
 	
 	public Order findCart(User user, Store store);
+
+    public boolean isSOCanceled(Long orderId);
 }
 
