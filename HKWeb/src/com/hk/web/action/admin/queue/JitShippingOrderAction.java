@@ -88,22 +88,24 @@ public class JitShippingOrderAction extends BaseAction {
 	@Autowired
 	WarehouseService warehouseService;
 
-	private Date startDate;
-	private Date endDate;
 	private List<LineItem> jitLineItems = new ArrayList<LineItem>();
 	private HashMap<Supplier, List<LineItem>> supplierLineItemListMap = new HashMap<Supplier, List<LineItem>>();
 	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 	private List<LineItem> jitFilteredLineItems = new ArrayList<LineItem>();
-	private HashMap<PurchaseOrder, List<LineItem>> purchaseOrderLineItemMap = new HashMap<PurchaseOrder, List<LineItem>>();
+	private Warehouse warehouse;
 
 	@DefaultHandler
 	public Resolution pre() {
+		if(getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null){
+			warehouse = getPrincipalUser().getSelectedWarehouse();
+		}
 		//Warehouse warehouse = warehouseService.getWarehouseById(10l);
-		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null);
+		boolean filterJit = false;
+		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(warehouse, filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getLineItems(shippingOrderListToProcess);
-			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList);
-			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, shippingOrderListToProcess);
+			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders"));
 			return new RedirectResolution(AdminHomeAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
@@ -112,33 +114,16 @@ public class JitShippingOrderAction extends BaseAction {
 	}
 
 	public Resolution jitPoActionForBright() {
-		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null);
+		boolean filterJit = true;
+		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null, filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> jitLineItemList = jitShippingOrderPOCreationService.getJitLineItems(shippingOrderListToProcess);
-			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(jitLineItemList);
-			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created, approved and sent to supplier for JIT shipping orders"));
+			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(jitLineItemList, shippingOrderListToProcess);
+			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created (from Bright To External), approved and sent to supplier for JIT shipping orders"));
 			return new RedirectResolution(AdminHomeAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
 		return new RedirectResolution(AdminHomeAction.class);
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	@Validate(converter = CustomDateTypeConvertor.class)
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	@Validate(converter = CustomDateTypeConvertor.class)
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
 	}
 
 	public List<LineItem> getJitLineItems() {
