@@ -67,6 +67,8 @@ public enum EnumShippingOrderLifecycleActivity {
   RewardPointOrderCancel(1003L,"Reward Point given on order cancellation"),
   AmountRefundedOrderCancel(1004L,"Amount Refunded on order cancellation"),
   RefundAmountFailed(1005L,"Refund Process on cancellation failed"),
+  RefundAmountExceedsFailed(1006L,"Amount exceeds the refundable amount"),
+  RewardPointsRevertBack(1007L,"Reward Points given back to user in SO cancellation"),
   ;
 
   private String name;

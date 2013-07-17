@@ -11,6 +11,7 @@ import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.payment.Payment;
@@ -72,7 +73,7 @@ public class CancelOrderAction extends BaseAction {
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
         if (EnumOrderStatus.Cancelled.getId().equals(order.getOrderStatus().getId())) {
             if (paymentService.isValidReconciliation(order.getPayment()) && reconciliationType != null) {
-                boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order, order.getAmount(), cancellationRemark);
+                boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order, order.getPayment().getAmount(), cancellationRemark);
                 if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
                     adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
                     addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
@@ -82,6 +83,9 @@ public class CancelOrderAction extends BaseAction {
                 } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
                     adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
                     addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
+                } else {
+                    adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RefundAmountExceedsFailed);
+                    addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
                 }
             }
         }

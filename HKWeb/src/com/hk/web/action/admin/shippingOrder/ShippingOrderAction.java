@@ -116,9 +116,10 @@ public class ShippingOrderAction extends BaseAction {
     @JsonHandler
     public Resolution cancelShippingOrder() {
         adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark);
-        if (EnumOrderStatus.Cancelled.getId().equals(shippingOrder.getBaseOrder().getOrderStatus().getId())) {
+        if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getOrderStatus().getId())) {
             if (paymentService.isValidReconciliation(shippingOrder.getBaseOrder().getPayment()) && reconciliationType != null) {
-                boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
+                double remainingAmt = shippingOrderService.revertRewardPointsOnSOCancel(shippingOrder, cancellationRemark);
+                boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount()-remainingAmt, cancellationRemark);
                 if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
                     shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
                     addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
@@ -128,6 +129,9 @@ public class ShippingOrderAction extends BaseAction {
                 } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
                     shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountFailed);
                     addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
+                } else {
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountExceedsFailed);
+                    addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
                 }
             }
             addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));

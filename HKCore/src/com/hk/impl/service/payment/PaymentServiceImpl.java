@@ -28,6 +28,7 @@ import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pojo.HkPaymentResponse;
 import com.hk.service.ServiceLocatorFactory;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -451,7 +452,7 @@ public class PaymentServiceImpl implements PaymentService {
                 RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, order.getUser(),
                         order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
 
-                rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),null);
+                rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(12).toDate());
                 setRefundAmount(order.getPayment(), amount);
                 return true;
 
@@ -469,10 +470,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public boolean isValidReconciliation(Payment payment) {
-        return EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId())
-                && EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId());
-    }
+        return EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId());
 
+    }
 
     private List<Map<String, Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) {
         List<Map<String, Object>> requestRespList = new ArrayList<Map<String, Object>>();

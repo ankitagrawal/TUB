@@ -3,14 +3,19 @@ package com.hk.impl.service.shippingOrder;
 import java.util.*;
 
 import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.impl.service.queue.BucketService;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.util.*;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +70,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	private EmailManager        emailManager;
     @Autowired
     BucketService bucketService;
+    @Autowired
+    private RewardPointService rewardPointService;
+
     private OrderService               orderService;
 	private ShipmentService 				shipmentService;
 
@@ -416,7 +424,34 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 && getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0;
     }
 
-	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
+    @Override
+    public double revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) {
+        User loggedOnUser = getUserService().getLoggedInUser();
+        double remainingRP = 0;
+        double totalRewardPoints = 0;
+        Set<LineItem> lineItems = shippingOrder.getLineItems();
+        for (LineItem lineItem : lineItems) {
+            double rewardPoints = lineItem.getRewardPoints();
+            if (rewardPoints > 0) {
+                totalRewardPoints += rewardPoints;
+            }
+        }
+        if (totalRewardPoints > 0) {
+            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, shippingOrder.getBaseOrder().getUser(),
+                    shippingOrder.getBaseOrder(), totalRewardPoints, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+            //TODO: expiry date should be on the basis of previous reward points
+            rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(3).toDate());
+            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RewardPointsRevertBack);
+            remainingRP = shippingOrder.getAmount() - totalRewardPoints;
+        } else {
+            remainingRP = shippingOrder.getAmount();
+        }
+        return remainingRP;
+    }
+
+
+    public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 
