@@ -95,9 +95,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	
 	List<String> warehouseIdList = new ArrayList<String>();
 	
-	public List<ShippingOrder> getShippingOrderListToProcess(Warehouse warehouse, boolean filterJit) {
+	public List<ShippingOrder> getShippingOrderListToProcess(boolean filterJit) {
 		List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
-		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(warehouse, filterJit);
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(filterJit);
 		shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
 		List<ShippingOrder> shippingOrderListToProcess = new ArrayList<ShippingOrder>();
 		if (shippingOrderList != null && shippingOrderList.size() > 0) {
@@ -110,7 +110,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return shippingOrderListToProcess;
 	}
 
-	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria(Warehouse warehouse, boolean filterJit) {
+	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria(boolean filterJit) {
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
 		if(filterJit){
 		shippingOrderSearchCriteria.setContainsJitProducts(true);
@@ -122,9 +122,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
 		paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
 		shippingOrderSearchCriteria.setPaymentStatuses(paymentStatusList);
-		if(warehouse!=null){
-			shippingOrderSearchCriteria.setWarehouseId(warehouse.getId());
-		}
 		return shippingOrderSearchCriteria;
 	}
 	
@@ -138,7 +135,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		Set<Entry<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>>> entrySet = poProductVariantMrpQtyLineItemsSet.entrySet();
 		for(Entry<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> entry : entrySet){
 			PurchaseOrder po = entry.getKey();
-			purchaseOrders.add(po);
+			if(!purchaseOrders.contains(po)){
+				purchaseOrders.add(po);
+			}
 			if(entry.getValue()!=null && entry.getValue().size()>0){
 			createPOLineItemsForPO(po, entry.getValue(), shippingOrders);
 			}
@@ -198,7 +197,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		warehouseIdList.addAll(Arrays.asList(aquaBrightSeparatedFor.split(",")));
 		if (lineItems != null && lineItems.size() > 0) {
 			for (LineItem lineItem : lineItems) {
-				
 				Warehouse wh = lineItem.getSku().getWarehouse(); // WH of SO
 				Supplier supplier; 
 				if(warehouseIdList.contains(wh.getId().toString())){

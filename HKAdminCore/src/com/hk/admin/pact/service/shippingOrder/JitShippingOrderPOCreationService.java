@@ -13,7 +13,7 @@ import com.hk.domain.warehouse.Warehouse;
 
 public interface JitShippingOrderPOCreationService {
 	
-	public List<ShippingOrder> getShippingOrderListToProcess(Warehouse warehouse, boolean filterJit);
+	public List<ShippingOrder> getShippingOrderListToProcess(boolean filterJit);
 	
 	public List<LineItem> getJitLineItems(List<ShippingOrder> shippingOrders);
 	

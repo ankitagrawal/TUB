@@ -101,7 +101,7 @@ public class JitShippingOrderAction extends BaseAction {
 		}
 		//Warehouse warehouse = warehouseService.getWarehouseById(10l);
 		boolean filterJit = false;
-		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(warehouse, filterJit);
+		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getLineItems(shippingOrderListToProcess);
 			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, shippingOrderListToProcess);
@@ -115,7 +115,7 @@ public class JitShippingOrderAction extends BaseAction {
 
 	public Resolution jitPoActionForBright() {
 		boolean filterJit = true;
-		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(null, filterJit);
+		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> jitLineItemList = jitShippingOrderPOCreationService.getJitLineItems(shippingOrderListToProcess);
 			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(jitLineItemList, shippingOrderListToProcess);
