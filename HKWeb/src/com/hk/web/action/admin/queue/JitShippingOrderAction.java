@@ -90,22 +90,17 @@ public class JitShippingOrderAction extends BaseAction {
 
 	private List<LineItem> jitLineItems = new ArrayList<LineItem>();
 	private HashMap<Supplier, List<LineItem>> supplierLineItemListMap = new HashMap<Supplier, List<LineItem>>();
-	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
-	private List<LineItem> jitFilteredLineItems = new ArrayList<LineItem>();
-	private Warehouse warehouse;
+	private List<PurchaseOrder> purchaseOrders;
 
 	@DefaultHandler
 	public Resolution pre() {
-		if(getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null){
-			warehouse = getPrincipalUser().getSelectedWarehouse();
-		}
 		//Warehouse warehouse = warehouseService.getWarehouseById(10l);
 		boolean filterJit = false;
 		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
 			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
-			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
+			List<PurchaseOrder> purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
 			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders"));
 			return new RedirectResolution(AdminHomeAction.class);
 		}
@@ -150,14 +145,6 @@ public class JitShippingOrderAction extends BaseAction {
 
 	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
 		this.purchaseOrders = purchaseOrders;
-	}
-
-	public List<LineItem> getJitFilteredLineItems() {
-		return jitFilteredLineItems;
-	}
-
-	public void setJitFilteredLineItems(List<LineItem> jitFilteredLineItems) {
-		this.jitFilteredLineItems = jitFilteredLineItems;
 	}
 
 }
