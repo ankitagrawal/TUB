@@ -407,7 +407,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				if (setToProcess != null && setToProcess.size() > 0) {
 					PurchaseOrder po = createPO(sup, wh);
 					createPOLineItemsForPO(po, setToProcess, shippingOrders);
-					approveAllPos(purchaseOrder, purchaseOrderStatus);
+					approveAllPos(po, purchaseOrderStatus);
 				}
 				if (productVariantMrpQtyLineItems != null && productVariantMrpQtyLineItems.size() > 0) {
 					createPurchaseOrdersForVariedMrp(purchaseOrder, productVariantMrpQtyLineItems);
