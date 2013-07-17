@@ -86,7 +86,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	private Warehouse warehouse;
 	
 	
-	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
+	private List<PurchaseOrder> purchaseOrders;
 	private static Logger logger = LoggerFactory.getLogger(JitShippingOrderPOCreationServiceImpl.class);
 	private Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 	
@@ -127,6 +127,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	
 	public List<PurchaseOrder> processShippingOrderForPOCreation(List<LineItem> lineItemsList, Set<ShippingOrder> shippingOrders){
 		//List<LineItem> jitLineItems = getJitLineItems(shippingOrderToProcess);
+		purchaseOrders = new ArrayList<PurchaseOrder>();
 		this.shippingOrders = shippingOrders;
 		HashMap<Supplier, List<LineItem>> supplierLineItemListMap = getSupplierLineItemMap(lineItemsList);
 		HashMap<Supplier, HashMap<Warehouse, List<LineItem>>> supplierWhLineItemsMap = createSupplierWhLineitemsMap(supplierLineItemListMap);
