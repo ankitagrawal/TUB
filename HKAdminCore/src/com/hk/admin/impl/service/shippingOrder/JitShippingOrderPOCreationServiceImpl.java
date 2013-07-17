@@ -217,41 +217,32 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems) {
 		HashMap<Supplier, List<LineItem>> supplierItemMap = new HashMap<Supplier, List<LineItem>>();
-		Set<Supplier> suppliersSet = new HashSet<Supplier>();
 		warehouseIdList.addAll(Arrays.asList(aquaBrightSeparatedFor.split(",")));
+		logger.debug("Aqua Bright Separated For - "+aquaBrightSeparatedFor+" "+warehouseIdList.size());
 		if (lineItems != null && lineItems.size() > 0) {
 			for (LineItem lineItem : lineItems) {
-				Warehouse wh = lineItem.getSku().getWarehouse(); // WH of SO
+				Warehouse wh = lineItem.getSku().getWarehouse();
+				logger.debug("Warehouse : " + wh.getId());// WH of SO
 				Supplier supplier; 
 				if(warehouseIdList.contains(wh.getId().toString())){
-					String tin = warehouseService.getWarehouseById(wh.getId()).getTin();
-					supplier = supplierDao.findByTIN(tin);
+					String whTin = warehouseService.getWarehouseById(wh.getId()).getTin();
+					String supplierTin = getWhSupplierTinMap(whTin);
+					supplier = supplierDao.findByTIN(supplierTin);
+					logger.debug("Warehouse : "+wh.getIdentifier()+" Supplier : "+supplier.getName());
 				}
 				else{
 					supplier = lineItem.getSku().getProductVariant().getProduct().getSupplier();
 				}
-				suppliersSet.add(supplier);
-			}
-		}
-		if (lineItems != null && lineItems.size() > 0) {
-			for (Supplier supplier : suppliersSet) {
-				List<LineItem> lineItemlist = new ArrayList<LineItem>();
-				for (LineItem lineItem : lineItems) {
-					String tin;Supplier sup = null;
-					if(warehouseIdList.contains(lineItem.getSku().getWarehouse().getId().toString())){
-						tin = warehouseService.getWarehouseById(lineItem.getSku().getWarehouse().getId()).getTin();
-						sup = supplierDao.findByTIN(tin);
-						if (supplier.equals(sup)) {
-							lineItemlist.add(lineItem);
-						}
-					}
-					else{
-						if(lineItem.getSku().getProductVariant().getProduct().getSupplier().equals(supplier)){
-							lineItemlist.add(lineItem);
-						}
-					}
+				if(supplierItemMap.containsKey(supplier)){
+					List<LineItem> items = supplierItemMap.get(supplier);
+					items.add(lineItem);
+					supplierItemMap.put(supplier, items);
 				}
-				supplierItemMap.put(supplier, lineItemlist);
+				else{
+					List<LineItem> newLineItems = new ArrayList<LineItem>();
+					lineItems.add(lineItem);
+					supplierItemMap.put(supplier, newLineItems);
+				}
 			}
 		}
 		logger.debug("Inside method 3 - getSupplierLineItemMap, no of lineItems received - " + lineItems.size());
@@ -593,6 +584,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		whSupplierHashMap.put("06101832327","06101832036");
 		whSupplierHashMap.put("27800897340V", "27210893736V");
 		whSupplierHashMap.put("07840464349", "07320452122");
+		whSupplierHashMap.put("07320452122", "07320452122");
 		String tin = whSupplierHashMap.get(tinNumber);
 		return tin;
 	}
