@@ -123,7 +123,7 @@ public class OrderSplitterImpl implements OrderSplitter {
                 }
 				
 				if(!isAdded) {
-					throw new OrderSplitException("Inventory is not available for line item: " + cartLineItem.getId(), order); 
+					throw new OrderSplitException("Inventory is not available for Variant: " + cartLineItem.getProductVariant().getId(), order); 
 				}
 			}
 		}

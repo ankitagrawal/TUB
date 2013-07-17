@@ -381,11 +381,14 @@ public class PurchaseOrderManager {
 		purchaseOrderDto.setTotalSurcharge(totalSurcharge);
 		purchaseOrderDto.setTotalPayable(totalPayable);
 		double overallDiscount = purchaseOrder.getDiscount() == null ? 0.0 : purchaseOrder.getDiscount();
-		purchaseOrderDto.setFinalPayable(totalPayable - overallDiscount);
+		double finalPayable = totalPayable - overallDiscount;
+		purchaseOrderDto.setFinalPayable(finalPayable);
 
 		purchaseOrder.setTaxableAmount(totalTaxable);
 		purchaseOrder.setTaxAmount(totalTax);
 		purchaseOrder.setSurchargeAmount(totalSurcharge);
+		purchaseOrder.setFinalPayableAmount(finalPayable);
+		
 		purchaseOrderDao.save(purchaseOrder);
 		return purchaseOrderDto;
 	}
