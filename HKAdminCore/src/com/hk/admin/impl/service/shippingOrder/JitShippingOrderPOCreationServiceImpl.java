@@ -89,7 +89,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	private List<PurchaseOrder> purchaseOrders;
 	private static Logger logger = LoggerFactory.getLogger(JitShippingOrderPOCreationServiceImpl.class);
 	private Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-	
+	List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 	@Value("#{hkEnvProps['" + Keys.Env.aquaBrightSeparatedFor + "']}")
     private String aquaBrightSeparatedFor;
 	
@@ -144,7 +144,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			}
 		}
 		deletePOsWithEmptyPOLineItems(purchaseOrders);
-		List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 		for (PurchaseOrder purchaseOrder : purchaseOrders) {
 			if (purchaseOrder != null) {
 				approveAllPos(purchaseOrder, purchaseOrderStatus);
@@ -343,7 +342,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						ProductVariantMrpQtyLineItems variantMrpQtyLineItems = new ProductVariantMrpQtyLineItems();
 						variantMrpQtyLineItems.setProductVariant(productVariant);
 						variantMrpQtyLineItems.setMrp(mrp);
+						variantMrpQtyLineItems.setCostPrice(item.getCostPrice());
 						variantMrpQtyLineItems.setQty(quantity);
+						
 						
 						for (ProductVariantMrpQtyLineItems pvmq : pvMrpQtyLiSetForThisPO) {
 							if (pvmq.getProductVariant().equals(productVariant)) {
@@ -406,6 +407,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				if (setToProcess != null && setToProcess.size() > 0) {
 					PurchaseOrder po = createPO(sup, wh);
 					createPOLineItemsForPO(po, setToProcess, shippingOrders);
+					approveAllPos(purchaseOrder, purchaseOrderStatus);
 				}
 				if (productVariantMrpQtyLineItems != null && productVariantMrpQtyLineItems.size() > 0) {
 					createPurchaseOrdersForVariedMrp(purchaseOrder, productVariantMrpQtyLineItems);
@@ -481,7 +483,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 							poQty = quantity;
 						}
 						poLineItem.setQty(poQty);
-						poLineItem.setCostPrice(productVariant.getCostPrice());
+						poLineItem.setCostPrice(pvmq.getCostPrice());
 						poLineItem.setMrp(mrp);
 						poLineItem.setPurchaseOrder(purchaseOrder);
 
@@ -602,6 +604,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	class ProductVariantMrpQtyLineItems {
 		ProductVariant productVariant;
 		Double mrp;
+		Double costPrice;
 		Long qty;
 
 		public ProductVariant getProductVariant() {
@@ -618,6 +621,14 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 
 		public void setMrp(Double mrp) {
 			this.mrp = mrp;
+		}
+
+		public Double getCostPrice() {
+			return costPrice;
+		}
+
+		public void setCostPrice(Double costPrice) {
+			this.costPrice = costPrice;
 		}
 
 		public Long getQty() {
