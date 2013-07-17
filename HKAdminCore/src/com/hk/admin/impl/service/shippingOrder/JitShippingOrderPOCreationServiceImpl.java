@@ -347,13 +347,18 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			if (productVariantMrpQtyLineItems != null && productVariantMrpQtyLineItems.size() > 0) {
 				Set<ProductVariantMrpQtyLineItems> setToProcess = new HashSet<JitShippingOrderPOCreationServiceImpl.ProductVariantMrpQtyLineItems>();
 				for (ProductVariantMrpQtyLineItems pvmq : productVariantMrpQtyLineItems) {
+					boolean canAdd = true;
 					if (setToProcess == null || !(setToProcess.size() > 0)) {
 						setToProcess.add(pvmq);
 					} else {
 						for (ProductVariantMrpQtyLineItems pmvqToAdd : setToProcess) {
-							if (!pvmq.getProductVariant().equals(pmvqToAdd.getProductVariant())) {
-								setToProcess.add(pvmq);
+							if (pvmq.getProductVariant().equals(pmvqToAdd.getProductVariant())) {
+								canAdd= false;
 							}
+						}
+						
+						if(canAdd){
+							setToProcess.add(pvmq);
 						}
 					}
 				}
