@@ -185,7 +185,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				Set<LineItem> items = order.getLineItems();
 				for (LineItem lineItem : items) {
 					ProductVariant productVariant = lineItem.getSku().getProductVariant();
-					Sku sku = skuService.getSKU(productVariant,warehouse);
+					Sku sku = skuService.getSKU(productVariant,lineItem.getShippingOrder().getWarehouse());
 					Long inventory = adminInventoryService.getNetInventory(sku);
 					Long bookedInventory = adminInventoryService.getBookedInventory(sku);
 					if (bookedInventory == null) {
