@@ -1145,7 +1145,7 @@ public class AdminEmailManager {
             categoryAdmins = emailManager.categoryAdmins(category);
         }
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
+        //categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
         try {
         	String purchaseOrdertype = "";
         	if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())){
