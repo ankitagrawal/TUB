@@ -482,7 +482,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						}
 						poLineItem.setQty(poQty);
 						poLineItem.setCostPrice(productVariant.getCostPrice());
-						poLineItem.setMrp(productVariant.getMarkedPrice());
+						poLineItem.setMrp(mrp);
 						poLineItem.setPurchaseOrder(purchaseOrder);
 
 						Tax tax;
