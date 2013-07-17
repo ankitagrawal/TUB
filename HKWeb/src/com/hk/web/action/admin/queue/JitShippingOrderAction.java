@@ -103,8 +103,9 @@ public class JitShippingOrderAction extends BaseAction {
 		boolean filterJit = false;
 		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
-			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getLineItems(shippingOrderListToProcess);
-			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, shippingOrderListToProcess);
+			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
+			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
+			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
 			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders"));
 			return new RedirectResolution(AdminHomeAction.class);
 		}
@@ -118,7 +119,8 @@ public class JitShippingOrderAction extends BaseAction {
 		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> jitLineItemList = jitShippingOrderPOCreationService.getJitLineItems(shippingOrderListToProcess);
-			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(jitLineItemList, shippingOrderListToProcess);
+			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(jitLineItemList);
+			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(jitLineItemList, validShippingOrders);
 			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created (from Bright To External), approved and sent to supplier for JIT shipping orders"));
 			return new RedirectResolution(AdminHomeAction.class);
 		}

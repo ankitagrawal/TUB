@@ -88,7 +88,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	
 	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 	private static Logger logger = LoggerFactory.getLogger(JitShippingOrderPOCreationServiceImpl.class);
-	private List<ShippingOrder> shippingOrders;
+	private Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 	
 	@Value("#{hkEnvProps['" + Keys.Env.aquaBrightSeparatedFor + "']}")
     private String aquaBrightSeparatedFor;
@@ -125,7 +125,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return shippingOrderSearchCriteria;
 	}
 	
-	public List<PurchaseOrder> processShippingOrderForPOCreation(List<LineItem> lineItemsList, List<ShippingOrder> shippingOrders){
+	public List<PurchaseOrder> processShippingOrderForPOCreation(List<LineItem> lineItemsList, Set<ShippingOrder> shippingOrders){
 		//List<LineItem> jitLineItems = getJitLineItems(shippingOrderToProcess);
 		this.shippingOrders = shippingOrders;
 		HashMap<Supplier, List<LineItem>> supplierLineItemListMap = getSupplierLineItemMap(lineItemsList);
@@ -178,17 +178,41 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return lineItemIsJitList;
 	}
 	
-	public List<LineItem> getLineItems(List<ShippingOrder> shippingOrders) {
+	public List<LineItem> getValidLineItems(List<ShippingOrder> shippingOrders) {
 		List<LineItem> lineItemList = new ArrayList<LineItem>();
 		if (shippingOrders != null && shippingOrders.size() > 0) {
 			for (ShippingOrder order : shippingOrders) {
 				Set<LineItem> items = order.getLineItems();
 				for (LineItem lineItem : items) {
-					lineItemList.add(lineItem);
+					ProductVariant productVariant = lineItem.getSku().getProductVariant();
+					Sku sku = skuService.getSKU(productVariant,warehouse);
+					Long inventory = adminInventoryService.getNetInventory(sku);
+					Long bookedInventory = adminInventoryService.getBookedInventory(sku);
+					if (bookedInventory == null) {
+						bookedInventory = 0L;
+					}
+					if (inventory == null) {
+						inventory = 0L;
+					}
+					Long unbookedInventory = inventory - bookedInventory;
+					if(unbookedInventory<0){
+						lineItemList.add(lineItem);
+					}
 				}
 			}
 		}
 		return lineItemList;
+	}
+	
+	public Set<ShippingOrder> getValidShippingOrders(List<LineItem> validLineItemList){
+		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+		if(validLineItemList!=null && validLineItemList.size()>0){
+			for(LineItem li : validLineItemList){
+				ShippingOrder so = li.getShippingOrder();
+				shippingOrders.add(so);
+			}
+		}
+		return shippingOrders;
 	}
 
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems) {
@@ -282,28 +306,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						List<LineItem> lineItemsFromwhLineItemsMap = otherEntry.getValue();
 						count += lineItemsFromwhLineItemsMap.size();
 						Warehouse warehouse = otherEntry.getKey();
-						boolean cancreatePO = false;
 						if (lineItemsFromwhLineItemsMap != null && lineItemsFromwhLineItemsMap.size() > 0) {
-							for(LineItem li : lineItemsFromwhLineItemsMap){
-								ProductVariant productVariant = li.getSku().getProductVariant();
-								Sku sku = skuService.getSKU(productVariant,warehouse);
-								Long inventory = adminInventoryService.getNetInventory(sku);
-								Long bookedInventory = adminInventoryService.getBookedInventory(sku);
-								if (bookedInventory == null) {
-									bookedInventory = 0L;
-								}
-								if (inventory == null) {
-									inventory = 0L;
-								}
-								Long unbookedInventory = inventory - bookedInventory;
-								if(unbookedInventory<0){
-									cancreatePO = true;
-								}
-							}
-							if(cancreatePO){
 							PurchaseOrder purchaseOrder = createPO(supplier, warehouse);
 							purchaseOrderLineItemMap.put(purchaseOrder, lineItemsFromwhLineItemsMap);
-							}
 						}
 					}
 				}
@@ -432,7 +437,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		}
 
 		//Copy of Method3. - createPOLineItemsForPO
-		public void createPOLineItemsForPO(PurchaseOrder purchaseOrder, Set<ProductVariantMrpQtyLineItems> items, List<ShippingOrder> shippingOrders) {
+		public void createPOLineItemsForPO(PurchaseOrder purchaseOrder, Set<ProductVariantMrpQtyLineItems> items, Set<ShippingOrder> shippingOrders) {
 			if (items != null && items.size() > 0) {
 				Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
 				boolean containsDropShip = false;
@@ -660,11 +665,11 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		this.warehouse = warehouse;
 	}
 
-	public List<ShippingOrder> getShippingOrders() {
+	public Set<ShippingOrder> getShippingOrders() {
 		return shippingOrders;
 	}
 
-	public void setShippingOrders(List<ShippingOrder> shippingOrders) {
+	public void setShippingOrders(Set<ShippingOrder> shippingOrders) {
 		this.shippingOrders = shippingOrders;
 	}
 

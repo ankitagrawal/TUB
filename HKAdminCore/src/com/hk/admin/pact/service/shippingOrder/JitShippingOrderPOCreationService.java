@@ -2,6 +2,9 @@ package com.hk.admin.pact.service.shippingOrder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+
+import javax.sound.sampled.Line;
 
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -17,9 +20,11 @@ public interface JitShippingOrderPOCreationService {
 	
 	public List<LineItem> getJitLineItems(List<ShippingOrder> shippingOrders);
 	
-	public List<LineItem> getLineItems(List<ShippingOrder> shippingOrders);
+	public List<LineItem> getValidLineItems(List<ShippingOrder> shippingOrders);
 	
-	public List<PurchaseOrder> processShippingOrderForPOCreation(List<LineItem> lineItemList, List<ShippingOrder> shippingOrders);
+	public Set<ShippingOrder> getValidShippingOrders(List<LineItem> validLineItemList);
+	
+	public List<PurchaseOrder> processShippingOrderForPOCreation(List<LineItem> lineItemList, Set<ShippingOrder> shippingOrders);
 	
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems);
 	
