@@ -282,9 +282,28 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						List<LineItem> lineItemsFromwhLineItemsMap = otherEntry.getValue();
 						count += lineItemsFromwhLineItemsMap.size();
 						Warehouse warehouse = otherEntry.getKey();
+						boolean cancreatePO = false;
 						if (lineItemsFromwhLineItemsMap != null && lineItemsFromwhLineItemsMap.size() > 0) {
+							for(LineItem li : lineItemsFromwhLineItemsMap){
+								ProductVariant productVariant = li.getSku().getProductVariant();
+								Sku sku = skuService.getSKU(productVariant,warehouse);
+								Long inventory = adminInventoryService.getNetInventory(sku);
+								Long bookedInventory = adminInventoryService.getBookedInventory(sku);
+								if (bookedInventory == null) {
+									bookedInventory = 0L;
+								}
+								if (inventory == null) {
+									inventory = 0L;
+								}
+								Long unbookedInventory = inventory - bookedInventory;
+								if(unbookedInventory<0){
+									cancreatePO = true;
+								}
+							}
+							if(cancreatePO){
 							PurchaseOrder purchaseOrder = createPO(supplier, warehouse);
 							purchaseOrderLineItemMap.put(purchaseOrder, lineItemsFromwhLineItemsMap);
+							}
 						}
 					}
 				}
