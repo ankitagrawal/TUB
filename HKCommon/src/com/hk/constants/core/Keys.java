@@ -136,6 +136,8 @@ public class Keys {
         public static final String userEmailLinksRedirected = "userEmailLinksRedirected";
 
         public static final String vanillaForumUrl = "vanillaForumUrl";
+        
+        public static final String aquaBrightSeparatedFor = "aquaBrightSeparatedFor";
 
 
     }

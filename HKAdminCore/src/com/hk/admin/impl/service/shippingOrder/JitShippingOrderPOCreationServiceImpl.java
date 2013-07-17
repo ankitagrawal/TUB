@@ -1,6 +1,7 @@
 package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hk.admin.manager.AdminEmailManager;
@@ -23,6 +25,7 @@ import com.hk.admin.pact.service.shippingOrder.JitShippingOrderPOCreationService
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumTax;
+import com.hk.constants.core.Keys;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderType;
 import com.hk.constants.payment.EnumPaymentStatus;
@@ -87,10 +90,11 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	private static Logger logger = LoggerFactory.getLogger(JitShippingOrderPOCreationServiceImpl.class);
 	private List<ShippingOrder> shippingOrders;
 	
-	private Warehouse getWarehouseOfLoggedInUser(){
-		return userService.getWarehouseForLoggedInUser();
-	}
-
+	@Value("#{hkEnvProps['" + Keys.Env.aquaBrightSeparatedFor + "']}")
+    private String aquaBrightSeparatedFor;
+	
+	List<String> warehouseIdList = new ArrayList<String>();
+	
 	public List<ShippingOrder> getShippingOrderListToProcess(Warehouse warehouse, boolean filterJit) {
 		List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(warehouse, filterJit);
@@ -191,15 +195,18 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems) {
 		HashMap<Supplier, List<LineItem>> supplierItemMap = new HashMap<Supplier, List<LineItem>>();
 		Set<Supplier> suppliersSet = new HashSet<Supplier>();
-		HashMap<String, String> whSupplierMap = getWhSupplierTinMap();
+		warehouseIdList.addAll(Arrays.asList(aquaBrightSeparatedFor.split(",")));
 		if (lineItems != null && lineItems.size() > 0) {
 			for (LineItem lineItem : lineItems) {
-				Supplier supplier;
-				if(whSupplierMap.get(lineItem.getShippingOrder().getWarehouse().getTin())!=null){
-				supplier = supplierDao.findByTIN(whSupplierMap.get(lineItem.getShippingOrder().getWarehouse().getTin()));
+				
+				Warehouse wh = lineItem.getSku().getWarehouse(); // WH of SO
+				Supplier supplier; 
+				if(warehouseIdList.contains(wh.getId().toString())){
+					String tin = warehouseService.getWarehouseById(wh.getId()).getTin();
+					supplier = supplierDao.findByTIN(tin);
 				}
 				else{
-				supplier = lineItem.getSku().getProductVariant().getProduct().getSupplier();
+					supplier = lineItem.getSku().getProductVariant().getProduct().getSupplier();
 				}
 				suppliersSet.add(supplier);
 			}
@@ -208,8 +215,18 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			for (Supplier supplier : suppliersSet) {
 				List<LineItem> lineItemlist = new ArrayList<LineItem>();
 				for (LineItem lineItem : lineItems) {
-					if (lineItem.getSku().getProductVariant().getProduct().getSupplier().equals(supplier)) {
-						lineItemlist.add(lineItem);
+					String tin;Supplier sup = null;
+					if(warehouseIdList.contains(lineItem.getSku().getWarehouse().getId().toString())){
+						tin = warehouseService.getWarehouseById(lineItem.getSku().getWarehouse().getId()).getTin();
+						sup = supplierDao.findByTIN(tin);
+						if (supplier.equals(sup)) {
+							lineItemlist.add(lineItem);
+						}
+					}
+					else{
+						if(lineItem.getSku().getProductVariant().getProduct().getSupplier().equals(supplier)){
+							lineItemlist.add(lineItem);
+						}
 					}
 				}
 				supplierItemMap.put(supplier, lineItemlist);
@@ -547,12 +564,13 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		}
 	}
 
-	public HashMap<String, String> getWhSupplierTinMap(){
+	public String getWhSupplierTinMap(String tinNumber){
 		HashMap<String, String> whSupplierHashMap = new HashMap<String, String>();
 		whSupplierHashMap.put("06101832327","06101832036");
 		whSupplierHashMap.put("27800897340V", "27210893736V");
-		
-		return whSupplierHashMap;
+		whSupplierHashMap.put("07840464349", "07320452122");
+		String tin = whSupplierHashMap.get(tinNumber);
+		return tin;
 	}
 
 	public BaseDao getBaseDao() {
@@ -632,5 +650,13 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	public void setShippingOrders(List<ShippingOrder> shippingOrders) {
 		this.shippingOrders = shippingOrders;
 	}
-	
+
+	public List<String> getWarehouseIdList() {
+		return warehouseIdList;
+	}
+
+	public void setWarehouseIdList(List<String> warehouseIdList) {
+		this.warehouseIdList = warehouseIdList;
+	}
+
 }
