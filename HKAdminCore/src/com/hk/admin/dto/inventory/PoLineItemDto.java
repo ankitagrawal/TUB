@@ -22,6 +22,8 @@ public class PoLineItemDto {
     private Double payable = 0.0;
 
     private Double marginMrpVsCP = 0.0;
+    
+    private String remarks;
 
     public PoLineItem getPoLineItem() {
         return poLineItem;
@@ -70,4 +72,12 @@ public class PoLineItemDto {
     public void setMarginMrpVsCP(Double marginMrpVsCP) {
         this.marginMrpVsCP = marginMrpVsCP;
     }
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 }

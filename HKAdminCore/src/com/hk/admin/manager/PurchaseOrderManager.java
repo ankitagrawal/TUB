@@ -328,6 +328,7 @@ public class PurchaseOrderManager {
 			Double surcharge = 0.0;
 			Double payable = 0.0;
 			Double marginMrpVsCP = 0.0;
+			String remarks = poLineItem.getRemarks();
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
 			Sku sku = skuService.getSKU(productVariant, warehouse);
 
@@ -361,6 +362,7 @@ public class PurchaseOrderManager {
 			poLineItemDto.setPayable(payable);
 			poLineItemDto.setSurcharge(surcharge);
 			poLineItemDto.setTax(tax);
+			poLineItemDto.setRemarks(remarks);
 
 			poLineItemDto.setMarginMrpVsCP(marginMrpVsCP);
 

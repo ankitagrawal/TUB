@@ -39,6 +39,9 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemConfig;
+import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
@@ -337,7 +340,13 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						variantMrpQtyLineItems.setMrp(mrp);
 						variantMrpQtyLineItems.setCostPrice(item.getCostPrice());
 						variantMrpQtyLineItems.setQty(quantity);
-						
+						String eyeConfig = "";
+						if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
+							CartLineItem cli = item.getCartLineItem();
+							CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
+							eyeConfig.concat(ciConfig.getConfigDetails());
+							variantMrpQtyLineItems.setEyeConfig(eyeConfig);
+						}
 						
 						for (ProductVariantMrpQtyLineItems pvmq : pvMrpQtyLiSetForThisPO) {
 							if (pvmq.getProductVariant().equals(productVariant)) {
@@ -479,7 +488,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						poLineItem.setCostPrice(pvmq.getCostPrice());
 						poLineItem.setMrp(mrp);
 						poLineItem.setPurchaseOrder(purchaseOrder);
-
+						if(pvmq.getEyeConfig()!=null && pvmq.getEyeConfig().length()>0){
+							poLineItem.setRemarks(pvmq.getEyeConfig());
+						}
 						Tax tax;
 						if (sku != null) {
 							if (purchaseOrder.getSupplier().getState().equalsIgnoreCase(purchaseOrder.getWarehouse().getState())) {
@@ -600,6 +611,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		Double mrp;
 		Double costPrice;
 		Long qty;
+		String eyeConfig;
 
 		public ProductVariant getProductVariant() {
 			return productVariant;
@@ -633,6 +645,14 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			this.qty = qty;
 		}
 
+		public String getEyeConfig() {
+			return eyeConfig;
+		}
+
+		public void setEyeConfig(String eyeConfig) {
+			this.eyeConfig = eyeConfig;
+		}
+
 		@Override
 		public int hashCode() {
 			return super.hashCode();
@@ -652,6 +672,24 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			}
 			return false;
 		}
+	}
+	
+	class eyeConfig{
+		Double powerLeft;
+		Double powerRight;
+		public Double getPowerLeft() {
+			return powerLeft;
+		}
+		public void setPowerLeft(Double powerLeft) {
+			this.powerLeft = powerLeft;
+		}
+		public Double getPowerRight() {
+			return powerRight;
+		}
+		public void setPowerRight(Double powerRight) {
+			this.powerRight = powerRight;
+		}
+		
 	}
 
 	public List<PurchaseOrder> getPurchaseOrders() {

@@ -13626,4 +13626,9 @@
     <changeSet author="Nihal (generated)" id="1372681593125-16">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipping_order_has_purchase_order" constraintName="fk_shipping_order_has_purchase_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-17">
+        <addColumn tableName="po_line_item">
+            <column name="remarks" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

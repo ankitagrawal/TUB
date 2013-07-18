@@ -490,6 +490,7 @@ function temp() {
 		<th>Surcharge</th>
 		<th>Payable</th>
 		<th>PO Fill Rate</th>
+		<th>Extra Remarks</th>
 
 	</tr>
 	</thead>
@@ -603,6 +604,7 @@ function temp() {
 		<td>
 				${poLineItemDto.poLineItem.fillRate}
 		</td>
+		<td>${poLineItemDto.poLineItem.remarks}</td>
 		</tr>
 	</c:forEach>
 	</tbody>
