@@ -368,7 +368,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 								if (pvmq.getMrp().equals(mrp)) {
 									pvmq.setQty(pvmq.getQty() + quantity);
 									if (StringUtils.isNotBlank(pvmq.getEyeConfig())) {
-										String updated = variantMrpQtyLineItems.getEyeConfig().concat(eyeConfig);
+										String updated = pvmq.getEyeConfig().concat(eyeConfig);
 										pvmq.setEyeConfig(updated);
 									}
 								}
@@ -387,7 +387,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 									addingToOtherSet = true;
 									pvmq.setQty(pvmq.getQty() + quantity);
 									if (StringUtils.isNotBlank(pvmq.getEyeConfig())) {
-										String updated = variantMrpQtyLineItems.getEyeConfig().concat(eyeConfig);
+										String updated = pvmq.getEyeConfig().concat(eyeConfig);
 										pvmq.setEyeConfig(updated);
 									}
 								}
