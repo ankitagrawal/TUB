@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -340,12 +341,18 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						variantMrpQtyLineItems.setMrp(mrp);
 						variantMrpQtyLineItems.setCostPrice(item.getCostPrice());
 						variantMrpQtyLineItems.setQty(quantity);
-						String eyeConfig = "";
+						
 						if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
 							CartLineItem cli = item.getCartLineItem();
 							CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
-							eyeConfig.concat(ciConfig.getConfigDetails());
-							variantMrpQtyLineItems.setEyeConfig(eyeConfig);
+							if (ciConfig != null) {
+								String eyeConfig = ciConfig.getConfigDetails();
+								if (StringUtils.isNotBlank(variantMrpQtyLineItems.getEyeConfig())) {
+									String updated = variantMrpQtyLineItems.getEyeConfig().concat(eyeConfig);
+									variantMrpQtyLineItems.setEyeConfig(updated);
+								} else
+									variantMrpQtyLineItems.setEyeConfig(eyeConfig);
+							}
 						}
 						
 						for (ProductVariantMrpQtyLineItems pvmq : pvMrpQtyLiSetForThisPO) {
@@ -491,6 +498,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						if(pvmq.getEyeConfig()!=null && pvmq.getEyeConfig().length()>0){
 							poLineItem.setRemarks(pvmq.getEyeConfig());
 						}
+						
 						Tax tax;
 						if (sku != null) {
 							if (purchaseOrder.getSupplier().getState().equalsIgnoreCase(purchaseOrder.getWarehouse().getState())) {
