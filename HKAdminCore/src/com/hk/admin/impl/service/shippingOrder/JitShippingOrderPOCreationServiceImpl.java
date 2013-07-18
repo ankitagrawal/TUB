@@ -342,7 +342,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						variantMrpQtyLineItems.setCostPrice(item.getCostPrice());
 						variantMrpQtyLineItems.setQty(quantity);
 						
-						if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
+						/*if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
 							CartLineItem cli = item.getCartLineItem();
 							CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
 							if (ciConfig != null) {
@@ -353,19 +353,32 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 								} else
 									variantMrpQtyLineItems.setEyeConfig(eyeConfig);
 							}
+						}*/
+						String eyeConfig ="";
+						if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
+							CartLineItem cli = item.getCartLineItem();
+							CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
+							if (ciConfig != null) {
+								eyeConfig = ciConfig.getConfigDetails();
+							}
 						}
-						
 						for (ProductVariantMrpQtyLineItems pvmq : pvMrpQtyLiSetForThisPO) {
 							if (pvmq.getProductVariant().equals(productVariant)) {
 								canAddToThisSet = true;
 								if (pvmq.getMrp().equals(mrp)) {
 									pvmq.setQty(pvmq.getQty() + quantity);
+									if (StringUtils.isNotBlank(pvmq.getEyeConfig())) {
+										String updated = variantMrpQtyLineItems.getEyeConfig().concat(eyeConfig);
+										pvmq.setEyeConfig(updated);
+									}
 								}
-								else
+								else{
 									canAddToOtherSet = true;
+								}
 							}
 						}
 						if(!canAddToThisSet){
+							variantMrpQtyLineItems.setEyeConfig(eyeConfig);
 							pvMrpQtyLiSetForThisPO.add(variantMrpQtyLineItems);
 						}
 						if(canAddToOtherSet){
@@ -373,9 +386,14 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 								if (pvmq.getProductVariant().equals(productVariant) && pvmq.getMrp().equals(mrp)) {
 									addingToOtherSet = true;
 									pvmq.setQty(pvmq.getQty() + quantity);
+									if (StringUtils.isNotBlank(pvmq.getEyeConfig())) {
+										String updated = variantMrpQtyLineItems.getEyeConfig().concat(eyeConfig);
+										pvmq.setEyeConfig(updated);
+									}
 								}
 							}
 							if(!addingToOtherSet){
+								variantMrpQtyLineItems.setEyeConfig(eyeConfig);
 								pvMrpQtyLiSetForOtherPO.add(variantMrpQtyLineItems);
 							}
 						}
@@ -495,7 +513,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						poLineItem.setCostPrice(pvmq.getCostPrice());
 						poLineItem.setMrp(mrp);
 						poLineItem.setPurchaseOrder(purchaseOrder);
-						if(pvmq.getEyeConfig()!=null && pvmq.getEyeConfig().length()>0){
+						if(!StringUtils.isEmpty(pvmq.getEyeConfig())){
 							poLineItem.setRemarks(pvmq.getEyeConfig());
 						}
 						
@@ -576,7 +594,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			purchaseOrder.setPurchaseOrderStatus(poStatus.asEnumPurchaseOrderStatus());
 			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
-				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
+				//adminEmailManager.sendPOApprovedEmail(purchaseOrder);
 				if (!purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())
 						&& purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
 					List<ProductVariant> pvList = purchaseOrderService.getAllProductVariantFromPO(purchaseOrder);
@@ -588,7 +606,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 					if (send) {
 						if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
 							if (purchaseOrder.getSupplier().getEmail_id() != null) {
-								adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
+								//adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
 							}
 						}
 					}
@@ -682,24 +700,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		}
 	}
 	
-	class eyeConfig{
-		Double powerLeft;
-		Double powerRight;
-		public Double getPowerLeft() {
-			return powerLeft;
-		}
-		public void setPowerLeft(Double powerLeft) {
-			this.powerLeft = powerLeft;
-		}
-		public Double getPowerRight() {
-			return powerRight;
-		}
-		public void setPowerRight(Double powerRight) {
-			this.powerRight = powerRight;
-		}
-		
-	}
-
 	public List<PurchaseOrder> getPurchaseOrders() {
 		return purchaseOrders;
 	}
