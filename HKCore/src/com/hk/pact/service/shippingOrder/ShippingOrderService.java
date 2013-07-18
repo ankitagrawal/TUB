@@ -70,6 +70,6 @@ public interface ShippingOrderService {
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 
-    public double revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) ;
+    public void revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) ;
 
 }

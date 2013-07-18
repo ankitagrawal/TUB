@@ -425,9 +425,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     @Override
-    public double revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) {
+    public void revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) {
         User loggedOnUser = getUserService().getLoggedInUser();
-        double remainingRP = 0;
         double totalRewardPoints = 0;
         Set<LineItem> lineItems = shippingOrder.getLineItems();
         for (LineItem lineItem : lineItems) {
@@ -443,11 +442,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             //TODO: expiry date should be on the basis of previous reward points
             rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(3).toDate());
             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RewardPointsRevertBack);
-            remainingRP = shippingOrder.getAmount() - totalRewardPoints;
-        } else {
-            remainingRP = shippingOrder.getAmount();
+
         }
-        return remainingRP;
     }
 
 

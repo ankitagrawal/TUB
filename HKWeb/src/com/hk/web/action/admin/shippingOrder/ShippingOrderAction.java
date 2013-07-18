@@ -118,8 +118,8 @@ public class ShippingOrderAction extends BaseAction {
         adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark);
         if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getOrderStatus().getId())) {
             if (paymentService.isValidReconciliation(shippingOrder.getBaseOrder().getPayment()) && reconciliationType != null) {
-                double remainingAmt = shippingOrderService.revertRewardPointsOnSOCancel(shippingOrder, cancellationRemark);
-                boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount()-remainingAmt, cancellationRemark);
+                shippingOrderService.revertRewardPointsOnSOCancel(shippingOrder, cancellationRemark);
+                boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
                 if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
                     shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
                     addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
