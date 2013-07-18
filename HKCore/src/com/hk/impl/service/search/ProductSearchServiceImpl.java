@@ -307,6 +307,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
         if (category.equals("adult diaper") || category.equals("adult pull-up") || category.equals("adult pull up diapers") || category.equals("adult pull-up diaper") || category.equals("adult biapers") || category.equals("adult diaperes")) {
             return "adult diapers";
         }
+        if(category.equalsIgnoreCase("back support") || category.equalsIgnoreCase("back supports") || category.equalsIgnoreCase("backrest") || category.equalsIgnoreCase("backrests") || category.equalsIgnoreCase("back rest")
+                || category.equalsIgnoreCase("back rests") || category.equalsIgnoreCase("back-support") || category.equalsIgnoreCase("back pain") || category.equalsIgnoreCase("back-supports")
+                || category.equalsIgnoreCase("lower back") || category.equalsIgnoreCase("lower back support")){
+            return "Back Supports";
+        }
+
         return category;
     }
 
@@ -399,7 +405,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             if (this.isBrandTerm(query)) {
               return this.getBrandCatalogResults(query, null, page, perPage, null, false);
             } else if (this.isCategoryTerm(query)) {
-              return this.getCategorySearchResults(query, page, perPage);
+              return this.getCategorySearchResults(makeItCategoryTerm(query), page, perPage); // ps hack
             }
             //End - Ajeet
             response = solr.query(getResultsQuery(query, searchFilters, page, perPage));
