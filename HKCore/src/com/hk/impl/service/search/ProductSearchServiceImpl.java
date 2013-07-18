@@ -287,7 +287,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
    public boolean isCategoryTerm(String term) throws SearchException {
-       term = makeItCategoryTerm(term);
+//       term = makeItCategoryTerm(term);
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + term+"\"");
         try {
@@ -304,12 +304,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
     private String makeItCategoryTerm(String category){
-        if (category.equals("adult diaper") || category.equals("adult pull-up") || category.equals("adult pull up diapers") || category.equals("adult pull-up diaper") || category.equals("adult biapers") || category.equals("adult diaperes")) {
+        if (category.equals("adult diaper") || category.equals("adult pull-up") || category.equals("adult pull up diapers") ||
+                category.equals("adult pull-up diaper") || category.equals("adult biapers") || category.equals("adult diaperes")) {
             return "adult diapers";
         }
-        if(category.equalsIgnoreCase("back support") || category.equalsIgnoreCase("back supports") || category.equalsIgnoreCase("backrest") || category.equalsIgnoreCase("backrests") || category.equalsIgnoreCase("back rest")
-                || category.equalsIgnoreCase("back rests") || category.equalsIgnoreCase("back-support") || category.equalsIgnoreCase("back pain") || category.equalsIgnoreCase("back-supports")
-                || category.equalsIgnoreCase("lower back") || category.equalsIgnoreCase("lower back support")){
+        if(category.equalsIgnoreCase("back support") || category.equalsIgnoreCase("back supports") || category.equalsIgnoreCase("backrest") || category.equalsIgnoreCase("backrests")
+                || category.equalsIgnoreCase("back rest")|| category.equalsIgnoreCase("back rests") || category.equalsIgnoreCase("back-support") || category.equalsIgnoreCase("back pain")
+                || category.equalsIgnoreCase("back-supports")|| category.equalsIgnoreCase("lower back") || category.equalsIgnoreCase("lower back support")){
             return "Back Supports";
         }
 
