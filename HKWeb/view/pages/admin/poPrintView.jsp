@@ -134,7 +134,10 @@
 		          </c:if>
 	          </c:forEach>
 	          <c:if test="${poLineItemDto.poLineItem.remarks!=null}">
-	          <br/>${poLineItemDto.poLineItem.remarks}
+	          <c:forEach items="${poLineItemDto.poLineItem.remarks}" var = "remarks">
+	          <br/>${remarks}
+	          </c:forEach>
+	          
 	          </c:if>
           </td>
           <td>${poLineItemDto.poLineItem.qty}

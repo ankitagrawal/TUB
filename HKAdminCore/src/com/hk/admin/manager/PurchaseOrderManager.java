@@ -18,6 +18,8 @@ import com.hk.impl.service.EmailServiceImpl;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -322,13 +325,16 @@ public class PurchaseOrderManager {
 		Warehouse warehouse = purchaseOrder.getWarehouse();
 
 		for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
-
+			List<String> remarksList = new ArrayList<String>();
 			Double taxable = 0.0;
 			Double tax = 0.0;
 			Double surcharge = 0.0;
 			Double payable = 0.0;
 			Double marginMrpVsCP = 0.0;
 			String remarks = poLineItem.getRemarks();
+			if(StringUtils.isNotEmpty(remarks)){
+				remarksList.addAll(Arrays.asList(remarks.split("|")));
+			}
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
 			Sku sku = skuService.getSKU(productVariant, warehouse);
 
@@ -362,7 +368,7 @@ public class PurchaseOrderManager {
 			poLineItemDto.setPayable(payable);
 			poLineItemDto.setSurcharge(surcharge);
 			poLineItemDto.setTax(tax);
-			poLineItemDto.setRemarks(remarks);
+			poLineItemDto.setRemarks(remarksList);
 
 			poLineItemDto.setMarginMrpVsCP(marginMrpVsCP);
 
