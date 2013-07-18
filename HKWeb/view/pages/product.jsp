@@ -35,13 +35,6 @@
 
     String gosf = request.getParameter("gosf");
     pageContext.setAttribute("gosf", gosf);
-
-    List<Category> categoryListToHideDesc = new ArrayList<Category>();
-    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("alternative-remedies").getCategory());
-    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("sexual-wellness").getCategory());
-    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("fertility-support").getCategory());
-
-    pageContext.setAttribute("categoryListToHideDesc", categoryListToHideDesc);
 %>
  <c:set var="product" value="${pa.product}"/>
  <c:set var="seoData" value="${pa.seoData}"/>
@@ -482,7 +475,7 @@
 			</s:link>
 		</div>
 	</shiro:hasPermission>
-	<c:if test="${hk:isNotBlank(product.overview) && !hk:collectionContainsAnyCollectionItem(product.categories, categoryListToHideDesc)}">
+	<c:if test="${hk:isNotBlank(product.overview)}">
 		<p class="overview">
 				${product.overview}
 		</p>
@@ -717,7 +710,7 @@
 		</div>
 	</c:if>
 
-	<c:if test="${hk:isNotBlank(product.description) && !hk:collectionContainsAnyCollectionItem(product.categories, categoryListToHideDesc)}">
+	<c:if test="${hk:isNotBlank(product.description)}">
 		<div class="content" id="description">
 			<h4>
 				Description
