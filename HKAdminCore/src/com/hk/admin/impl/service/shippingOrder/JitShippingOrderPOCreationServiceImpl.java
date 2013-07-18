@@ -217,14 +217,16 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 
 	public HashMap<Supplier, List<LineItem>> getSupplierLineItemMap(List<LineItem> lineItems) {
 		HashMap<Supplier, List<LineItem>> supplierItemMap = new HashMap<Supplier, List<LineItem>>();
+		if(aquaBrightSeparatedFor!=null){
 		warehouseIdList.addAll(Arrays.asList(aquaBrightSeparatedFor.split(",")));
+		}
 		logger.debug("Aqua Bright Separated For - "+aquaBrightSeparatedFor+" "+warehouseIdList.size());
 		if (lineItems != null && lineItems.size() > 0) {
 			for (LineItem lineItem : lineItems) {
 				Warehouse wh = lineItem.getSku().getWarehouse();
 				logger.debug("Warehouse : " + wh.getId());// WH of SO
 				Supplier supplier; 
-				if(warehouseIdList.contains(wh.getId().toString())){
+				if(warehouseIdList!=null && warehouseIdList.size()>0 && warehouseIdList.contains(wh.getId().toString())){
 					String whTin = warehouseService.getWarehouseById(wh.getId()).getTin();
 					String supplierTin = getWhSupplierTinMap(whTin);
 					supplier = supplierDao.findByTIN(supplierTin);
@@ -240,7 +242,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				}
 				else{
 					List<LineItem> newLineItems = new ArrayList<LineItem>();
-					lineItems.add(lineItem);
+					newLineItems.add(lineItem);
 					supplierItemMap.put(supplier, newLineItems);
 				}
 			}
