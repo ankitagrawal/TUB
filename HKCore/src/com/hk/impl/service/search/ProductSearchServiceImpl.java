@@ -287,6 +287,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
    public boolean isCategoryTerm(String term) throws SearchException {
+       term = makeItCategoryTerm(term);
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + term+"\"");
         try {
@@ -300,6 +301,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
             throw e;
         }
         return false;
+    }
+
+    private String makeItCategoryTerm(String category){
+        if (category.equals("adult diaper") || category.equals("adult pull-up") || category.equals("adult pull up diapers") || category.equals("adult pull-up diaper") || category.equals("adult biapers") || category.equals("adult diaperes")) {
+            return "adult diapers";
+        }
+        return category;
     }
 
     private SearchResult getSearchResult(List<SolrProduct> solrProducts, int totalResultCount) {
