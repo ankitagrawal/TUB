@@ -206,8 +206,8 @@
                 <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
                      class="small_banner"/>
                 <%--</a>--%>
-                <a href="${pageContext.request.contextPath}/product/durex-flavours-combo/CMB-PER007?productReferrerId=1&productPosition=1/1 ">
-                    <img src="<hk:vhostImage/>/images/banners/Durex.jpg" alt="Sexual-wellness`"
+                <a href="${pageContext.request.contextPath}/product/instant-ovulation-test/PW006?productReferrerId=7&productPosition=1/1">
+                    <img src="<hk:vhostImage/>/images/banners/Know-when.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
                 </a>
             </c:when>
