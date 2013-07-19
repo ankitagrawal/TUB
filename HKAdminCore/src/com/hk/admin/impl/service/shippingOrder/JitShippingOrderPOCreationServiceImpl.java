@@ -359,11 +359,11 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
 							CartLineItem cli = item.getCartLineItem();
 							//CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
-							eyeConfig = cli.getConfigOptionsPipeSeparated();
+							if(StringUtils.isNotEmpty(cli.getExtraOptionsPipeSeparated())){
+								extraOption = cli.getExtraOptionsPipeSeparated();
+							}
 							if(cli.getCartLineItemConfig()!=null){
-								if(StringUtils.isNotEmpty(cli.getExtraOptionsPipeSeparated())){
-									extraOption = cli.getExtraOptionsPipeSeparated();
-								}
+								eyeConfig = cli.getConfigOptionsPipeSeparated();
 								eyeConfig.concat(extraOption);
 							}
 						}
