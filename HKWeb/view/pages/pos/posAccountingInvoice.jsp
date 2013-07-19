@@ -8,35 +8,47 @@
   <title>RETAIL INVOICE/ CASH MEMO/ TAX INVOICE</title>
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      window.print();
+    });
+  </script>
 </head>
 <body>
-<s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="posPrintInvoice" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="posPrintInvoice"
+                 var="orderSummary"/>
 <c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
 <c:set var="warehouse" value="${shippingOrder.warehouse}"/>
 <c:set var="isB2BOrder" value="${baseOrder.b2bOrder}"/>
 <c:set var="b2bUserDetails" value="${orderSummary.b2bUserDetails}"/>
-<div class="container_12">
+
+<div class="container_12" id="con">
 <div class="grid_12" style="text-align: center;">
   <h4>
-        RETAIL INVOICE
+    RETAIL INVOICE
   </h4>
 </div>
 
 <div class="clear"></div>
 
 <div class="grid_12" style="border: 1px black solid;">
-	<div class="grid_4 alpha omega">
-		<div class="column">
-			<p>${warehouse.name}</p>
-			<p>${warehouse.line1}</p>
-			<p>${warehouse.line2}</p>
-			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
-			<p>Phone - ${warehouse.whPhone}</p>
+  <div class="grid_4 alpha omega">
+    <div class="column">
+      <p>${warehouse.name}</p>
+
+      <p>${warehouse.line1}</p>
+
+      <p>${warehouse.line2}</p>
+
+      <p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
+
+      <p>Phone - ${warehouse.whPhone}</p>
+
       <p>TIN# ${warehouse.tin}</p>
-		</div>
-	</div>
+    </div>
+  </div>
 
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
@@ -57,9 +69,11 @@
 
   <div class="grid_4 alpha omega" style="width: 330px;">
     <div class="column">
-      <p><strong>Shipped To:</strong><p>
+      <p><strong>Shipped To:</strong>
 
-	  <p>${address.name}</p>
+      <p>
+
+      <p>${address.name}</p>
 
       <p>${hk:escapeHtml(address.line1)}
         <c:if test="${not empty address.line2}">
@@ -73,18 +87,21 @@
       </p>
 
       <p>Ph: ${address.phone}</p>
-	    <c:if test="${isB2BOrder}">
-		    <p><strong>Consignee:</strong><p>
-		    <p>${baseOrder.user.name}</p>
-		    <c:if test="${b2bUserDetails != null}">
-			    <c:if test="${b2bUserDetails.tin != null}">
-				    <p>TIN- ${b2bUserDetails.tin}</p>
-			    </c:if>
-			    <c:if test="${b2bUserDetails.dlNumber != null}">
-				    <p>DL Number- ${b2bUserDetails.dlNumber}</p>
-			    </c:if>
-		    </c:if>
-	    </c:if>
+      <c:if test="${isB2BOrder}">
+        <p><strong>Consignee:</strong>
+
+        <p>
+
+        <p>${baseOrder.user.name}</p>
+        <c:if test="${b2bUserDetails != null}">
+          <c:if test="${b2bUserDetails.tin != null}">
+            <p>TIN- ${b2bUserDetails.tin}</p>
+          </c:if>
+          <c:if test="${b2bUserDetails.dlNumber != null}">
+            <p>DL Number- ${b2bUserDetails.dlNumber}</p>
+          </c:if>
+        </c:if>
+      </c:if>
     </div>
   </div>
 </div>
@@ -138,10 +155,10 @@
           <fmt:formatNumber
               value="${invoiceLineItem.tax}"
               maxFractionDigits="2"/></td>
-          <td>
-            <fmt:formatNumber
-                value="${invoiceLineItem.surcharge}"
-                maxFractionDigits="2"/></td>
+        <td>
+          <fmt:formatNumber
+              value="${invoiceLineItem.surcharge}"
+              maxFractionDigits="2"/></td>
       </tr>
     </c:forEach>
     <tr>
@@ -233,12 +250,16 @@
 <div style="margin-top: 15px;"></div>
 
 <div class="grid_12">
-	<p><strong>Thankyou for shopping with us !</strong></p>
+  <p><strong>Thankyou for shopping with us !</strong></p>
+
   <p><strong>Terms &amp; Conditions:</strong></p>
 
   <p>1. All disputes are subject to ${warehouse.city} Jurisdiction only.</p>
+
   <p>2. No Exchange and refund.</p>
+
   <p>3. E.&.O.E</p>
+
   <p style="display:inline;float:right;"><strong>(Authorised Signatory)</strong></p>
 </div>
 

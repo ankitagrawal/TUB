@@ -71,6 +71,7 @@
 
 				function printInvoice(elementId) {
 					var getMyFrame = document.getElementById(elementId);
+          alert(" n "+getMyFrame);
 					getMyFrame.focus();
 					getMyFrame.contentWindow.print();
 				}
