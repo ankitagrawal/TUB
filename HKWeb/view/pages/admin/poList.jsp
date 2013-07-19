@@ -28,25 +28,29 @@
   <s:layout-component name="content">
 
     <fieldset class="right_label">
-      <legend>Search PO</legend>
+      <legend><strong>Search PO	</strong></legend>
       <s:form beanclass="com.hk.web.action.admin.inventory.POAction">
-        <label>PO ID:</label><s:text name="purchaseOrder"/>
-        <label>VariantID:</label><s:text name="productVariant"/>
-        <label>Tin Number:</label><s:text name="tinNumber"/>
-        <label>Supplier Name:</label><s:text name="supplierName"/>
-        <label>Status:</label><s:select name="purchaseOrderStatus">
+      <table>
+      <tr>
+      <td><label>PO ID:</label><s:text name="purchaseOrder"/></td>
+      <td><label>VariantID:</label><s:text name="productVariant"/></td>
+      <td><label>Tin Number:</label><s:text name="tinNumber"/></td>
+      <td><label>Supplier Name:</label><s:text name="supplierName"/></td>
+      </tr>
+      <tr>
+      <td><label>Status:</label><s:select name="purchaseOrderStatus">
         <s:option value="">-All-</s:option>
           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="purchaseOrderStatusList" value="id" label="name"/>
-        </s:select>
-        <label>Approver:</label><s:select name="approvedBy">
+        </s:select></td>
+      <td><label>Approver:</label><s:select name="approvedBy">
           <s:option value="">-All-</s:option>
           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="approverList" value="id" label="name"/>
-        </s:select>
-        <label>CreatedBy:</label><s:select name="createdBy">
+        </s:select></td>
+      <td><label>CreatedBy:</label><s:select name="createdBy">
           <s:option value="">-All-</s:option>
           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="creatorList" value="id" label="name"/>
-        </s:select>
-        <label>Warehouse: </label>
+        </s:select></td>
+      <td><label>Warehouse: </label>
           <c:choose>
             <c:when test="${whAction.setWarehouse != null}">
               <s:hidden name="warehouse" value="${whAction.setWarehouse}"/>
@@ -60,12 +64,16 @@
                 </c:forEach>
               </s:select>
             </c:otherwise>
-          </c:choose>   &nbsp; &nbsp;
-          <s:checkbox name="extraInventoryCreated"/>Extra Inventory Created &nbsp; &nbsp;
-        <s:submit name="pre" value="Search"/>
+          </c:choose></td>
+      </tr>
+      <tr>
+      <td><label>Extra Inventory Created</label><s:checkbox name="extraInventoryCreated"/></td>
+      <td colspan="3"><s:submit name="pre" value="Search"/>
           <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="getExtraInventoryPO" class="addBtn button_orange">All ExInv PO              
           </s:link>
-          <s:submit name="generateExcelReport" value="Download to Excel" />
+          <s:submit name="generateExcelReport" value="Download to Excel" /></td>
+      </tr>
+      </table>
       </s:form>
     </fieldset>
 
