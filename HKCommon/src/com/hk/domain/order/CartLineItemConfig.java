@@ -147,7 +147,7 @@ public class CartLineItemConfig implements java.io.Serializable {
 		  String value = config.getValue();
 		  details.append(name+" : "+value+", ");
 	  }
-	  return details.append("|").toString();
+	  return details.append("::").toString();
   }
 }
 
