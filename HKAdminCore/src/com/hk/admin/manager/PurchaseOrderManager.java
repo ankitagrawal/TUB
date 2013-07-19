@@ -333,7 +333,7 @@ public class PurchaseOrderManager {
 			Double marginMrpVsCP = 0.0;
 			String remarks = poLineItem.getRemarks();
 			if(StringUtils.isNotEmpty(remarks)){
-				remarksList.addAll(Arrays.asList(remarks.split("|")));
+				remarksList.addAll(Arrays.asList(remarks.split("\\|")));
 			}
 			ProductVariant productVariant = poLineItem.getSku().getProductVariant();
 			Sku sku = skuService.getSKU(productVariant, warehouse);

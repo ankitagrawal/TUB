@@ -355,11 +355,14 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 							}
 						}*/
 						String eyeConfig ="";
+						String extraOption="";
 						if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
 							CartLineItem cli = item.getCartLineItem();
-							CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
-							if (ciConfig != null) {
-								eyeConfig = ciConfig.getConfigDetails();
+							//CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
+							eyeConfig = cli.getConfigOptionsPipeSeparated();
+							if(StringUtils.isNotEmpty(cli.getExtraOptionsPipeSeparated())){
+								extraOption = cli.getExtraOptionsPipeSeparated();
+								eyeConfig.concat(extraOption);
 							}
 						}
 						for (ProductVariantMrpQtyLineItems pvmq : pvMrpQtyLiSetForThisPO) {
