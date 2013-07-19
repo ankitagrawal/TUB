@@ -9,9 +9,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
@@ -47,19 +49,19 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	@Autowired
 	private UserService userService;
 
-	List<ShippingOrder> sortedShippingOrderList = new ArrayList<ShippingOrder>();
+	List<ShippingOrder> sortedShippingOrderList;
 
 	@DefaultHandler
 	public Resolution pre() {
-
+		sortedShippingOrderList = new ArrayList<ShippingOrder>();
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
 		shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
 		Set<ShippingOrder> shippingOrderListToProcess = new HashSet<ShippingOrder>();
 		if (shippingOrderList != null && shippingOrderList.size() > 0) {
 
 			for (ShippingOrder shippingOrder : shippingOrderList) {
-				boolean canAdd = true;
 				if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
+					boolean canAdd = true;
 					for(LineItem item: shippingOrder.getLineItems()){
 						if(item.getSku().getProductVariant().getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
 							canAdd = false;
@@ -79,6 +81,9 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 		int ctr = 0;
 
 		for (ShippingOrder shippingOrder : sortedShippingOrdersSet) {
+			if(shippingOrder.getId().intValue()==1639052){
+				System.out.println(shippingOrder.getId());
+			}
 			List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
 			boolean flag = true;
 			if (poList != null && poList.size() > 0) {
@@ -98,7 +103,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
 						EnumShippingOrderLifecycleActivity.SO_PO_RECEIVED.getId()));
 				shippingOrderLifecycle.setUser(userService.getAdminUser());
-				shippingOrderLifecycle.setComments("PO against the shipping order served.");
+				shippingOrderLifecycle.setComments("Tried to manually escalate as PO against the shipping order served.");
 				shippingOrderLifecycle.setActivityDate(new Date());
 				shippingOrderLifecycleDao.save(shippingOrderLifecycle);
 				ctr++;
@@ -107,15 +112,18 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 
 
 		addRedirectAlertMessage(new SimpleMessage("Tried to Escalate "+ctr+ " Shipping Orders"));
-		return new RedirectResolution(AdminHomeAction.class);
+		return new RedirectResolution(ActionAwaitingQueueAction.class);
 
 	}
 
 	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-		shippingOrderSearchCriteria.setContainsJitProducts(true);
 		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
 		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+		soStatusList.add(EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus());
+		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
+		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+		paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
 		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
 		return shippingOrderSearchCriteria;
 	}

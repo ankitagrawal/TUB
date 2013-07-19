@@ -119,6 +119,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		}
 		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
 		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+		soStatusList.add(EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus());
 		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
 		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
 		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());

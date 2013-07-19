@@ -399,10 +399,22 @@
                     <%--<label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>--%>
                     <s:submit name="search" value="Search (No Default)"/>
                 </div>
+                 
             </s:form>
         </div>
     </ul>
 </fieldset>
+
+<div>
+
+</div>
+
+<div class="buttons">
+<s:form beanclass = "com.hk.web.action.admin.queue.JitShippingOrderAction">
+<s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form>
+
+<s:form beanclass = "com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
+<s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
 
 <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>

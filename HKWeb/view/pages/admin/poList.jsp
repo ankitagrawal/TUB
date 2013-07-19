@@ -94,7 +94,7 @@
         <th>Actions</th>
         <th>Extra Inventory Created</th>
         <th>Parent PO</th>
-        <th>SHipping Orders</th>
+        <th>PO Type</th>
       </tr>
       </thead>
       <c:forEach items="${poa.purchaseOrderList}" var="purchaseOrder" varStatus="ctr">
@@ -173,10 +173,7 @@
                 </c:if>
             </td>
             <td>
-            <c:forEach var="so" items="${purchaseOrder.shippingOrders}">
-               <a href="${pageContext.request.contextPath}/admin/queue/ActionAwaitingQueue.action?orderId=${so.baseOrder.id}">${so.id}</a>${so.shippingOrderStatus.name}
-              &nbsp;
-            </c:forEach>
+            ${fn:toUpperCase(purchaseOrder.purchaseOrderType.name) }
           </td>
         </tr>
       </c:forEach>

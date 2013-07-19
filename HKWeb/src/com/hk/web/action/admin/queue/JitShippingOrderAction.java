@@ -105,7 +105,7 @@ public class JitShippingOrderAction extends BaseAction {
 			return new RedirectResolution(AdminHomeAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
-		return new RedirectResolution(AdminHomeAction.class);
+		return new RedirectResolution(ActionAwaitingQueueAction.class);
 
 	}
 
