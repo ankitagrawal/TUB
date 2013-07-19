@@ -133,31 +133,40 @@
           </td>
 	        <td>${purchaseOrder.fillRate}</td>
 	        <td>
-		        <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit/View
-			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-		        &nbsp;
-		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInExcel" target="_blank">Excel
-			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-		        &nbsp;
-		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="print" target="_blank">Print
-			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-		        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
-			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
-		        &nbsp;
+	        <div>
+	        (<s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit/View
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>)
+	        </div>
+	        
+	        
+		        <div class="floatleft">
+		        (<s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInExcel" target="_blank">Excel
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>)
+		        (<s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="print" target="_blank">Print
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>)
+		        (<s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
+			        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>)
+		        </div>
+		        <br>
+		        <div class="floatleft">
 		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier) || (purchaseOrder.purchaseOrderStatus.id == received)}">
 			        <br/>
-			        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
-				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
+			        (<s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
+				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>)
 		        </c:if>
-                <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier) || (purchaseOrder.purchaseOrderStatus.id == received)}">
-                <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">Create/Edit Extra Inventory
+		        </div>
+		        <div class="floatleft">
+		        <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier) || (purchaseOrder.purchaseOrderStatus.id == received)}">
+                (<s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">Create/Edit Extra Inventory
                    <s:param name="purchaseOrderId" value="${purchaseOrder.id}"/>
                     <s:param name="wareHouseId" value="${purchaseOrder.warehouse.id}" />
-                </s:link>
+                </s:link>)
                 </c:if>
+		        </div>
+                
 		        <br/>
-		                    <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
-			                    <s:param name="supplier" value="${purchaseOrder.supplier.id}"/></s:link>
+		                    (<s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
+			                    <s:param name="supplier" value="${purchaseOrder.supplier.id}"/></s:link>)
 	        </td>
             <td>
                 <c:if test="${purchaseOrder.extraInventoryCreated}">
@@ -184,3 +193,7 @@
 
   </s:layout-component>
 </s:layout-render>
+<style>
+#labelAction { width: 200px; float: left; margin: 0 20px 0 0; }
+#spanAction { display: block; margin: 0 0 3px; font-size: 1.2em; font-weight: bold; }
+</style>
