@@ -342,18 +342,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						variantMrpQtyLineItems.setCostPrice(item.getCostPrice());
 						variantMrpQtyLineItems.setQty(quantity);
 						
-						/*if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
-							CartLineItem cli = item.getCartLineItem();
-							CartLineItemConfig ciConfig = cli.getCartLineItemConfig();
-							if (ciConfig != null) {
-								String eyeConfig = ciConfig.getConfigDetails();
-								if (StringUtils.isNotBlank(variantMrpQtyLineItems.getEyeConfig())) {
-									String updated = variantMrpQtyLineItems.getEyeConfig().concat(eyeConfig);
-									variantMrpQtyLineItems.setEyeConfig(updated);
-								} else
-									variantMrpQtyLineItems.setEyeConfig(eyeConfig);
-							}
-						}*/
 						String eyeConfig ="";
 						String extraOption="";
 						if(productVariant.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){

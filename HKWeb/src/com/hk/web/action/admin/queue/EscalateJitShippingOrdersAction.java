@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -16,6 +17,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
@@ -56,7 +58,15 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 		if (shippingOrderList != null && shippingOrderList.size() > 0) {
 
 			for (ShippingOrder shippingOrder : shippingOrderList) {
+				boolean canAdd = true;
 				if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
+					for(LineItem item: shippingOrder.getLineItems()){
+						if(item.getSku().getProductVariant().getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
+							canAdd = false;
+							break;
+						}
+					}
+					if(canAdd)
 					shippingOrderListToProcess.add(shippingOrder);
 				}
 			}

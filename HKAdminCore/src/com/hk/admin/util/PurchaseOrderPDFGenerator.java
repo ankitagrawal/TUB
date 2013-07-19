@@ -152,7 +152,7 @@ public class PurchaseOrderPDFGenerator {
 			if(remarks!=null && remarks.size()>0){
 				int count = 0;
 				for(String str : remarks){
-					eyeConfig.append(newline + ++count+". "+str);
+					eyeConfig.append(newline + ++count+". "+str+newline);
 				}
 			}
         	

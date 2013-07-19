@@ -213,7 +213,7 @@ public class PurchaseOrderManager {
 					if(remarksList!=null && remarksList.size()>0){
 						int count = 0;
 						for(String str : remarksList){
-							eyeConfig.append(newline + ++count+". "+str);
+							eyeConfig.append(newline + ++count+". "+str+newline);
 						}
 					}
 					

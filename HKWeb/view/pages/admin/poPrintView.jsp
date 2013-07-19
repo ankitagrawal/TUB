@@ -133,9 +133,9 @@
 			          <br/>
 		          </c:if>
 	          </c:forEach>
-	          <c:if test="${poLineItemDto.poLineItem.remarks!=null}">
-	          <c:forEach items="${poLineItemDto.poLineItem.remarks}" var = "remarks">
-	          <br/>${remarks}
+	          <c:if test="${poLineItemDto.remarks!=null}">
+	          <c:forEach items="${poLineItemDto.remarks}" var = "remarks" varStatus="ctr">
+	          <br/>${ctr.index+1}. ${remarks}&nbsp;
 	          </c:forEach>
 	          
 	          </c:if>
