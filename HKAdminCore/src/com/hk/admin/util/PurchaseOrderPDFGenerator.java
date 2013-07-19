@@ -14,6 +14,8 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ import org.springframework.stereotype.Component;
 import java.io.FileOutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
@@ -142,12 +147,26 @@ public class PurchaseOrderPDFGenerator {
 
         int counter = 1;
         for(PoLineItemDto poLineItemDto : poLineItemDtoList) {
+			List<String> remarks = poLineItemDto.getRemarks();
+			StringBuffer eyeConfig = new StringBuffer();
+			if(remarks!=null && remarks.size()>0){
+				int count = 0;
+				for(String str : remarks){
+					eyeConfig.append(newline + ++count+". "+str);
+				}
+			}
+        	
             ProductVariant productVariant = poLineItemDto.getPoLineItem().getSku().getProductVariant();
 	        TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(purchaseOrderDto.getPurchaseOrder().getSupplier(), poLineItemDto.getPoLineItem().getSku(), poLineItemDto.getTaxable());
             poDetailTable.addCell(PdfGenerator.createCell("" + counter++, font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getId(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getUpc(), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName() + newline + productVariant.getOptionsCommaSeparated(), font2));
+            if(StringUtils.isNotEmpty(eyeConfig.toString())&&eyeConfig.length()>0){
+            	poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName() + newline + productVariant.getOptionsCommaSeparated()+newline+eyeConfig, font2));
+            }
+            else{
+            	poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName() + newline + productVariant.getOptionsCommaSeparated(), font2));
+            }
             poDetailTable.addCell(PdfGenerator.createCell("" + poLineItemDto.getPoLineItem().getQty(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getMrp()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getCostPrice()), font2));

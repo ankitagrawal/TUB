@@ -159,10 +159,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 				}
 			}
 			
-			if(shippingOrder.containsJitProducts()){
-				shouldUpdate = true;
-			}
-
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);
 				shipmentService.recreateShipment(shippingOrder);

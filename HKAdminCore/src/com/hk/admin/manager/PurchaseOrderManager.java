@@ -204,6 +204,19 @@ public class PurchaseOrderManager {
 
 				poLineItemList = purchaseOrder.getPoLineItems();
 				for (PoLineItem poLineItem : poLineItemList) {
+					List<String> remarksList = new ArrayList<String>();
+					String remarks = poLineItem.getRemarks();
+					if(StringUtils.isNotEmpty(remarks)){
+						remarksList.addAll(Arrays.asList(remarks.split("::")));
+					}
+					StringBuffer eyeConfig = new StringBuffer();
+					if(remarksList!=null && remarksList.size()>0){
+						int count = 0;
+						for(String str : remarksList){
+							eyeConfig.append(newline + ++count+". "+str);
+						}
+					}
+					
 					rowCounter++;
 					row2 = sheet1.createRow(rowCounter);
 					for (int columnNo = 0; columnNo < totalColumnNoInSheet1; columnNo++) {
@@ -219,7 +232,12 @@ public class PurchaseOrderManager {
 					setCellValue(row2, 1, variantName);
 
 					setCellValue(row2, 2, productVariant.getUpc());
-					setCellValue(row2, 3, productVariant.getProduct().getName() + " " + productVariant.getOptionsCommaSeparated());
+					if(StringUtils.isNotEmpty(eyeConfig.toString())&&eyeConfig.length()>0){
+						setCellValue(row2, 3, productVariant.getProduct().getName() + " " + productVariant.getOptionsCommaSeparated()+newline+eyeConfig);
+					}
+					else{
+						setCellValue(row2, 3, productVariant.getProduct().getName() + " " + productVariant.getOptionsCommaSeparated());
+					}
 					setCellValue(row2, 4, poLineItem.getQty());
 					setCellValue(row2, 5, String.valueOf(poLineItem.getMrp()));
 					setCellValue(row2, 6, String.valueOf(poLineItem.getCostPrice()));
