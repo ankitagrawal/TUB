@@ -96,7 +96,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
 				shippingOrderLifecycle.setOrder(shippingOrder);
 				shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
-						EnumShippingOrderLifecycleActivity.SO_LoggedComment.getId()));
+						EnumShippingOrderLifecycleActivity.SO_PO_RECEIVED.getId()));
 				shippingOrderLifecycle.setUser(userService.getAdminUser());
 				shippingOrderLifecycle.setComments("PO against the shipping order served.");
 				shippingOrderLifecycle.setActivityDate(new Date());

@@ -41,8 +41,6 @@ import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.CartLineItemConfig;
-import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
@@ -155,9 +153,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 					ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
 					shippingOrderLifecycle.setOrder(so);
 					shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
-							EnumShippingOrderLifecycleActivity.SO_LoggedComment.getId()));
+							EnumShippingOrderLifecycleActivity.SO_AUTO_PO_CREATED.getId()));
 					shippingOrderLifecycle.setUser(userService.getAdminUser());
-					shippingOrderLifecycle.setComments("PO# " + purchaseOrder.getId() + " Approved for the Shipping Order");
+					shippingOrderLifecycle.setComments("PO# " + purchaseOrder.getId() + "Created and Approved for the Shipping Order");
 					shippingOrderLifecycle.setActivityDate(new Date());
 					shippingOrderLifecycleDao.save(shippingOrderLifecycle);
 				}
@@ -587,20 +585,12 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			purchaseOrder.setPurchaseOrderStatus(poStatus.asEnumPurchaseOrderStatus());
 			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
-				//adminEmailManager.sendPOApprovedEmail(purchaseOrder);
+				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
 				if (!purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())
 						&& purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
-					List<ProductVariant> pvList = purchaseOrderService.getAllProductVariantFromPO(purchaseOrder);
-					boolean send = true;
-					for (ProductVariant pv : pvList) {
-						if (pv.getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE))
-							send = false;
-					}
-					if (send) {
-						if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
-							if (purchaseOrder.getSupplier().getEmail_id() != null) {
-								//adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
-							}
+					if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
+						if (purchaseOrder.getSupplier().getEmail_id() != null) {
+							adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
 						}
 					}
 				}
