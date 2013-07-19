@@ -177,6 +177,7 @@
 <c:set var="rewardPoints" value="<%=EnumReconciliationType.RewardPoints.getId()%>"/>
 <c:set var="refundPoints" value="<%=EnumReconciliationType.RefundAmount.getId()%>"/>
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+<c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
@@ -311,7 +312,7 @@
       <br/>
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
-      <c:if test="${order.payment.paymentStatus.id eq paymentStatusSuccess}">
+      <c:if test="${order.payment.paymentMode.id eq reconciliationModes}">
       <br/>
       Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
       <br/>

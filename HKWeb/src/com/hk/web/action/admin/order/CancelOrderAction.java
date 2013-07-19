@@ -73,19 +73,21 @@ public class CancelOrderAction extends BaseAction {
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
         if (EnumOrderStatus.Cancelled.getId().equals(order.getOrderStatus().getId())) {
             if (paymentService.isValidReconciliation(order.getPayment()) && reconciliationType != null) {
-                boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order, order.getPayment().getAmount(), cancellationRemark);
-                if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
-                    adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
-                    addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
-                } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && flag) {
-                    adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.AmountRefundedOrderCancel);
-                    addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
-                } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
-                    adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
-                    addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
-                } else {
-                    adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RefundAmountExceedsFailed);
-                    addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
+                if (order.getPayment().getAmount() > 0) {
+                    boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order, order.getPayment().getAmount(), cancellationRemark);
+                    if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
+                        adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
+                        addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
+                    } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && flag) {
+                        adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.AmountRefundedOrderCancel);
+                        addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
+                    } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
+                        adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
+                        addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
+                    } else {
+                        adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RefundAmountExceedsFailed);
+                        addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
+                    }
                 }
             }
         }

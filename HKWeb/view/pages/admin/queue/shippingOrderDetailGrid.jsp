@@ -106,6 +106,7 @@
 <c:set var="refundPoints" value="<%=EnumReconciliationType.RefundAmount.getId()%>"/>
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+<c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
@@ -321,7 +322,7 @@
              <br>
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
-                <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess}">
+                <c:if test="${shippingOrder.baseOrder.payment.paymentMode.id eq reconciliationModes}">
                     <br/>
                     Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
                     <br/>
