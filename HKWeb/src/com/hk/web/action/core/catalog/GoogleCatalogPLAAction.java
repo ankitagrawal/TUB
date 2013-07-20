@@ -3,6 +3,7 @@ package com.hk.web.action.core.catalog;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.marketing.EnumMarketingFeed;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.marketing.MarketingFeedService;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -34,6 +35,10 @@ public class GoogleCatalogPLAAction extends BaseAction {
 
     private List<Product> products = new ArrayList<Product>();
 
+    List<ProductVariant> productVariantList = new ArrayList<ProductVariant>();
+    private Double priceConstant = 150.0;
+    Boolean priceBool = true;
+
     public Resolution pre() {
 
         List<String> categories = new ArrayList<String>();
@@ -63,10 +68,17 @@ public class GoogleCatalogPLAAction extends BaseAction {
         List<Product> individualProducts = marketingFeedService.getProducts(EnumMarketingFeed.Google_PLA.getName());
         catProducts.addAll(individualProducts);
 
-        Map<String,Product> productMap = new HashMap<String,Product>();
+
+        Map<String, Product> productMap = new HashMap<String, Product>();
         //Need to ensure that there are not duplicate items
-        for (Product product : catProducts){
-            if (!productMap.containsKey(product.getId())){
+        for (Product product : catProducts) {
+            productVariantList = product.getProductVariants();
+            for (ProductVariant productVariant : productVariantList) {
+                if (productVariant.getHkPrice() < priceConstant) {
+                    priceBool = false;
+                }
+            }
+            if (!productMap.containsKey(product.getId()) && priceBool) {
                 products.add(product);
                 productMap.put(product.getId(), product);
             }
