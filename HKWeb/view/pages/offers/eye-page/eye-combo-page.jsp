@@ -33,7 +33,7 @@
       	<div class="nRow">&nbsp;</div>
         <div class="nRow">
         	<div class="eyeComboLeftBar">
-            		<h5>Browse By Bategory</h5>
+            		<h5>Browse By Category</h5>
                     <ul>
                     	<li><a href="http://www.healthkart.com/eye/lenses">Lenses</a></li>
                         <li><a href="http://www.healthkart.com/eye/sunglasses">Sunglasses</a></li>
