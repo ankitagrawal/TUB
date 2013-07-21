@@ -20,6 +20,7 @@ public interface WarehouseService {
   public static final Long CHANDIGARH_STORE_WH_ID = 201L;
   public static final Long DEL_PUNJABI_BAGH_STORE_WH_ID = 301L;
   public static final Long DEL_KAPASHERA_BRIGHT_WH_ID = 401L;
+  public static final Long DEL_KAPASHERA_AQUA_WH_ID = 402L;
   public static final Long GGN_CORPORATE_OFFICE_ID = 999L;
 
   public Warehouse getWarehouseById(Long warehouseId);
@@ -60,4 +61,6 @@ public interface WarehouseService {
   public Warehouse findByIdentifier(String identifier);
 
   public Warehouse findShippingWarehouse(ShippingOrder shippingOrder);
+
+  public List<Warehouse> findWarehouses(String tinPrefix);
 }

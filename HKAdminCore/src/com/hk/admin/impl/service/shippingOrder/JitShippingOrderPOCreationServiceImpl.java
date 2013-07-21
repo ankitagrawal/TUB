@@ -229,12 +229,13 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				Warehouse wh = lineItem.getSku().getWarehouse();
 				logger.debug("Warehouse : " + wh.getId());// WH of SO
 				Supplier supplier; 
-				if(warehouseIdList!=null && warehouseIdList.size()>0 && warehouseIdList.contains(wh.getId().toString())){
-					String whTin = warehouseService.getWarehouseById(wh.getId()).getTin();
-					String supplierTin = getWhSupplierTinMap(whTin);
-					supplier = supplierDao.findByTIN(supplierTin);
-					logger.debug("Warehouse : "+wh.getIdentifier()+" Supplier : "+supplier.getName());
-				}
+				 if(warehouseIdList!=null && warehouseIdList.size()>0 && warehouseIdList.contains(wh.getId().toString())){
+						supplier = getBrightSupplierForAquaWH(wh);
+						if(supplier == null){
+							supplier = lineItem.getSku().getProductVariant().getProduct().getSupplier();
+						}
+						logger.debug("Warehouse : "+wh.getIdentifier()+" Supplier : "+supplier.getName());
+					}
 				else{
 					supplier = lineItem.getSku().getProductVariant().getProduct().getSupplier();
 				}
@@ -602,15 +603,16 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		}
 	}
 
-	public String getWhSupplierTinMap(String tinNumber){
-		HashMap<String, String> whSupplierHashMap = new HashMap<String, String>();
-		whSupplierHashMap.put("06101832327","06101832036");
-		whSupplierHashMap.put("27800897340V", "27210893736V");
-		whSupplierHashMap.put("07840464349", "07320452122");
-		whSupplierHashMap.put("07320452122", "07320452122");
-		String tin = whSupplierHashMap.get(tinNumber);
-		return tin;
-	}
+	public Supplier getBrightSupplierForAquaWH(Warehouse warehouse) {
+	    if (warehouse.getId().equals(WarehouseService.GGN_AQUA_WH_ID)) {
+	      return getSupplierDao().findByTIN("06101832036");
+	    } else if (warehouse.getId().equals(WarehouseService.MUM_AQUA_WH_ID)) {
+	      return getSupplierDao().findByTIN("27210893736V");
+	    } else if (warehouse.getId().equals(WarehouseService.DEL_KAPASHERA_AQUA_WH_ID)) {
+	      return getSupplierDao().findByTIN("07320452122");
+	    }
+	    return null;
+	  }
 
 	public BaseDao getBaseDao() {
 		return baseDao;
@@ -716,4 +718,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		this.warehouseIdList = warehouseIdList;
 	}
 
+	public SupplierDao getSupplierDao() {
+		return supplierDao;
+	}
 }

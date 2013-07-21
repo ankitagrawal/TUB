@@ -86,6 +86,14 @@
         table.row_border tr {
             outline: 1px solid #cccccc;
         }
+        
+        #closeButtonDiv{
+			float: left;
+			position: relative;
+			left: 14%;
+			margin-bottom: 2px;
+			margin-top: 2px;
+}
     </style>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -401,6 +409,14 @@
                 </div>
                  
             </s:form>
+            
+            <div id="closeButtonDiv">
+<s:form beanclass = "com.hk.web.action.admin.queue.JitShippingOrderAction">
+<s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form></div>
+
+<div id="closeButtonDiv">
+<s:form beanclass = "com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
+<s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
         </div>
     </ul>
 </fieldset>
@@ -409,12 +425,6 @@
 
 </div>
 
-<div class="buttons">
-<s:form beanclass = "com.hk.web.action.admin.queue.JitShippingOrderAction">
-<s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form>
-
-<s:form beanclass = "com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
-<s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
 
 <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>
