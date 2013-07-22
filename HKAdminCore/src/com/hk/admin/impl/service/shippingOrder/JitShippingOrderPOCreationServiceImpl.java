@@ -106,6 +106,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(filterJit);
 		shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+		logger.debug("Fetched "+shippingOrderList.size()+"Shipping Orders From Search Criteria");
 		List<ShippingOrder> shippingOrderListToProcess = new ArrayList<ShippingOrder>();
 		if (shippingOrderList != null && shippingOrderList.size() > 0) {
 			for (ShippingOrder shippingOrder : shippingOrderList) {
