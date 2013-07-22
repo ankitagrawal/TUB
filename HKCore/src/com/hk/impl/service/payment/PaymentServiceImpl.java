@@ -439,7 +439,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void setRefundAmount(Payment payment, Double amount) {
-        Double updatedAmount = payment.getRefundAmount() + amount;
+        double refundPayment = 0;
+        if (payment.getRefundAmount() != null) {
+            refundPayment = payment.getRefundAmount();
+        }
+        Double updatedAmount = refundPayment + amount;
         payment.setRefundAmount(updatedAmount);
         save(payment);
     }
