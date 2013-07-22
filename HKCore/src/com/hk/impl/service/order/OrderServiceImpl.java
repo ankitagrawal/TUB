@@ -309,13 +309,15 @@ public class OrderServiceImpl implements OrderService {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
             shippingOrders = orderSplitter.split(order.getId());
-//            shippingOrders = splitOrder(order);
         } catch (NoSkuException e) {
-            logger.error("Sku could not be found" + e.getMessage());
+          logger.error("Sku could not be found" + e.getMessage());
+          orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         } catch (OrderSplitException e) {
-            logger.error(e.getMessage());
+          logger.error(e.getMessage());
+          orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         } catch (Exception e) {
-            logger.error("Order could not be split due to some exception ", e.getMessage());
+          logger.error("Order could not be split due to some exception ", e.getMessage());
+          orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         }
         return shippingOrders;
     }
@@ -697,9 +699,7 @@ public class OrderServiceImpl implements OrderService {
             subscriptionService.placeSubscriptions(order);
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
-        } else {
-			orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Number of shipping orders are zero");
-		}
+        }
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {

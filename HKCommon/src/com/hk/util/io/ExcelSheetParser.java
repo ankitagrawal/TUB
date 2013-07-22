@@ -64,6 +64,11 @@ public class ExcelSheetParser implements FileParser {
         return headingNames.get(i);
     }
 
+    public Map<Integer, String>  getHeadingNamesMap() {
+           return headingNames;
+       }
+
+
     public Iterator<HKRow> parse() {
         try {
             POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(file));

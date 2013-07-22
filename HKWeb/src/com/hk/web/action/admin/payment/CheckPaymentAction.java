@@ -335,7 +335,7 @@ public class CheckPaymentAction extends BaseAction {
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         order.setConfirmationDate(new Date());
         orderService.save(order);
-        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+//        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
         orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));

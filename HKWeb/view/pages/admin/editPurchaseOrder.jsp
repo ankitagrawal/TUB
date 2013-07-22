@@ -346,7 +346,7 @@ function temp() {
 		<td>Tax</td>
 		<td>
 			<c:choose>
-				<c:when test="${pa.purchaseOrder.supplier.state == pa.purchaseOrder.warehouse.state}">
+				<c:when test="${fn:toLowerCase(pa.purchaseOrder.supplier.state) eq fn:toLowerCase(pa.purchaseOrder.warehouse.state)}">
 					<label class="state">Non - CST</label>
 				</c:when>
 				<c:otherwise>
