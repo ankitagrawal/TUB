@@ -70,7 +70,6 @@ public class JitShippingOrderAction extends BaseAction {
 	public Resolution pre() {
 		//Warehouse warehouse = warehouseService.getWarehouseById(10l);
 		boolean filterJit = false;
-		int count = 0;
 		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);

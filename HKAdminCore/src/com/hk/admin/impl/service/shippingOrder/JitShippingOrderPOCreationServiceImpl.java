@@ -565,10 +565,8 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				purchaseOrder.setPoLineItems(poLineItems);
 				purchaseOrder.setShippingOrders(new ArrayList<ShippingOrder>(shippingOrdersInPO));
 				for(ShippingOrder so: shippingOrdersInPO){
-					for(LineItem li : so.getLineItems()){
-						if(li.getSku().getProductVariant().getProduct().isDropShipping()||li.getSku().getProductVariant().getProduct().isJit()){
-							isRegular = false;
-						}
+					if(so.containsJitProducts()||so.isDropShipping()){
+						isRegular = false;
 					}
 				}
 				if(isRegular){
