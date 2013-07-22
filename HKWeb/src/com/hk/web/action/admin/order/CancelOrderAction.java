@@ -74,7 +74,8 @@ public class CancelOrderAction extends BaseAction {
         if (EnumOrderStatus.Cancelled.getId().equals(order.getOrderStatus().getId())) {
             if (paymentService.isValidReconciliation(order.getPayment()) && reconciliationType != null) {
                 if (order.getPayment().getAmount() > 0) {
-                    boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order, order.getPayment().getAmount(), cancellationRemark);
+                    double refundableAmount = paymentService.getRefundableAmount(order.getPayment());
+                    boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order,refundableAmount, cancellationRemark);
                     if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
                         adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
                         addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));

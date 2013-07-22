@@ -475,6 +475,15 @@ public class PaymentServiceImpl implements PaymentService {
 
     }
 
+    @Override
+    public double getRefundableAmount(Payment payment) {
+        double refundedAmount = 0;
+        if(payment.getRefundAmount() != null) {
+            refundedAmount = payment.getRefundAmount();
+        }
+        return payment.getAmount() - refundedAmount;
+    }
+
     private List<Map<String, Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) {
         List<Map<String, Object>> requestRespList = new ArrayList<Map<String, Object>>();
         if(hkPaymentRequestList!=null && !hkPaymentRequestList.isEmpty() && hkPaymentResponseList != null && !hkPaymentResponseList.isEmpty()){

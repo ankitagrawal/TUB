@@ -177,7 +177,7 @@
 <c:set var="rewardPoints" value="<%=EnumReconciliationType.RewardPoints.getId()%>"/>
 <c:set var="refundPoints" value="<%=EnumReconciliationType.RefundAmount.getId()%>"/>
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
-<c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"
+<c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
@@ -300,7 +300,7 @@
     </s:link>
   </c:if>
   <br/>
-  <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart) && !hk:isSOCanceled(order.id)}">
+  <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart)}">
     <br/>
     <s:form beanclass="com.hk.web.action.admin.order.CancelOrderAction" class="cancelOrderForm">
       <s:param name="order" value="${order.id}"/>
@@ -312,7 +312,8 @@
       <br/>
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
-      <c:if test="${order.payment.paymentMode.id eq reconciliationModes}">
+      <c:if test="${hk:collectionContains(reconciliationModes, order.payment.paymentMode.id)
+                                                and order.payment.paymentStatus.id eq paymentStatusSuccess}">
       <br/>
       Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
       <br/>

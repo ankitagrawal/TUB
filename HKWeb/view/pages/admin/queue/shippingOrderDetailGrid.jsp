@@ -322,7 +322,8 @@
              <br>
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
-                <c:if test="${shippingOrder.baseOrder.payment.paymentMode.id eq reconciliationModes}">
+                <c:if test="${hk:collectionContains(reconciliationModes, shippingOrder.baseOrder.payment.paymentMode.id)
+                                                    and shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess}">
                     <br/>
                     Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
                     <br/>

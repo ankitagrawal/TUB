@@ -99,8 +99,8 @@ public enum EnumPaymentMode {
 
     public static List<Long> getReconciliationModeIds() {
         return Arrays.asList(
-                EnumPaymentMode.ONLINE_PAYMENT.getId(),
-                EnumPaymentMode.COD.getId());
+                EnumPaymentMode.ONLINE_PAYMENT.getId()
+                );
     }
 }
 

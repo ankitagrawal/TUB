@@ -70,4 +70,6 @@ public interface PaymentService {
 
     public boolean isValidReconciliation(Payment payment) ;
 
+    public double getRefundableAmount(Payment payment);
+
 }
