@@ -752,6 +752,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 
 	@Override
 	public int getCountOfPOs() {
-		return this.count;
+		return JitShippingOrderPOCreationServiceImpl.count;
 	}
 }
