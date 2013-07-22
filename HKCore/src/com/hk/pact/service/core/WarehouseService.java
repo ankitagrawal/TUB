@@ -61,6 +61,4 @@ public interface WarehouseService {
   public Warehouse findByIdentifier(String identifier);
 
   public Warehouse findShippingWarehouse(ShippingOrder shippingOrder);
-
-  public List<Warehouse> findWarehouses(String tinPrefix);
 }

@@ -2,7 +2,6 @@ package com.hk.impl.service.core;
 
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,16 +56,16 @@ public class WarehouseServiceImpl implements WarehouseService {
     public List<Warehouse> getServiceableWarehouses() {
       User user = userService.getLoggedInUser();
       if (user != null && user.getRoleStrings() != null && user.getRoleStrings().contains(RoleConstants.B2B_USER.toString())) {
-        return getWarehouseDao().getAllWarehouses(Arrays.asList(EnumWarehouseType.Online_B2B.getId()), null, Boolean.TRUE);
+        return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
       }
-      return getWarehouseDao().getAllWarehouses(Arrays.asList(EnumWarehouseType.Online_B2B.getId(), EnumWarehouseType.Online_B2C.getId()), Boolean.TRUE, Boolean.TRUE);
+      return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
     }
 
   public List<Warehouse> getServiceableWarehouses(Order order) {
       if (order != null && order.isB2bOrder() != null && order.isB2bOrder()) {
-        return getWarehouseDao().getAllWarehouses(Arrays.asList(EnumWarehouseType.Online_B2B.getId()), null, Boolean.TRUE);
+        return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
       }
-      return getWarehouseDao().getAllWarehouses(Arrays.asList(EnumWarehouseType.Online_B2B.getId(), EnumWarehouseType.Online_B2C.getId()), Boolean.TRUE, Boolean.TRUE);
+      return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
     }
 
 		public List<Warehouse> getWarehousesToMarkOOS() {
@@ -124,11 +123,6 @@ public class WarehouseServiceImpl implements WarehouseService {
       }
     }
     return shippingOrder.getWarehouse();
-  }
-
-   @Override
-  public List<Warehouse> findWarehouses(String tinPrefix) {
-    return getWarehouseDao().findWarehouses(tinPrefix);
   }
 
   public WarehouseDaoImpl getWarehouseDao() {
