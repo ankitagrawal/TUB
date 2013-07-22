@@ -429,10 +429,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public boolean isValidRefundableAmount(Payment payment, Double orderAmt) {
-        if (payment.getRefundAmount() == null) {
-            payment.setRefundAmount(0.0);
+        double refundedAmount = 0;
+        if (payment.getRefundAmount() != null) {
+            refundedAmount = payment.getRefundAmount();
         }
-        return ((payment.getAmount() - payment.getRefundAmount() - orderAmt) >= 0);
+        return ((payment.getAmount() - refundedAmount - orderAmt) >= 0);
     }
 
     @Override
