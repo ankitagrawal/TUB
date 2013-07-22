@@ -606,7 +606,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
 				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
 				if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
-					if (!purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())) {
+					if (!purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.DROP_SHIP.getId())) {
 						if (purchaseOrder.getSupplier().getEmail_id() != null) {
 							adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
 						}
@@ -614,7 +614,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				}
 				purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
-
 			}
 		}
 	}
