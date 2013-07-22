@@ -747,7 +747,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	}
 
 	public static void setCount(int count) {
-		JitShippingOrderPOCreationServiceImpl.count = count;
+		JitShippingOrderPOCreationServiceImpl.count = 0;
 	}
 
 	@Override
