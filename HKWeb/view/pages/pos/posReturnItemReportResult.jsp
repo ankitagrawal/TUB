@@ -20,33 +20,13 @@
   <s:layout-component name="htmlHead">
 
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 
   </s:layout-component>
 
-  <s:layout-component name="heading">Report Master "/>
-  </s:layout-component>
+  <s:layout-component name="heading">Report Master
+    </s:layout-component>
   <s:layout-component name="content">
     <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSAction" event="pre" var="posBean"/>
-    <table class="cont" width="100%">
-    <tr>
-      <th>Cash Collection</th>
-      <th>Cash Refund</th>
-      <th>Credit Card Collection</th>
-      <th>Credit Card Refund</th>
-      <th>Items Sold</th>
-      <th>Items Returned</th>
-    </tr>
-    <tr>
-      <td>${posBean.posSummaryDto.cashAmountCollected}</td>
-      <td>${posBean.posSummaryDto.cashAmountRefunded}</td>
-      <td>${posBean.posSummaryDto.creditCardAmountCollected}</td>
-      <td>${posBean.posSummaryDto.creditCardAmountRefunded}</td>
-      <td>${posBean.posSummaryDto.itemsSold}</td>
-      <td>${posBean.posSummaryDto.itemsReturned}</td>
-    </tr>
-    <table>
 
     <table class="cont" width="100%">
     <tr>
@@ -54,15 +34,15 @@
       <th>Status</th>
       <th>Amt</th>
       <th>Payment Mode</th>
-      <th>Items Total</th>
+      <th>Items Returned</th>
     </tr>
-    <c:forEach items="${posBean.saleList}" var="sale" >
+    <c:forEach items="${posBean.returnItemList}" var="returnItem">
       <tr>
-      <td>${sale.id}</td>
-      <td>${sale.orderStatus.name}</td>
-        <td>${sale.amount}</td>
-       <c:forEach items="${sale.payments}" var="payment" ><td>${payment.paymentMode.name} </td> </c:forEach>
-      <td>${fn:length(sale.cartLineItems)}</td>
+        <td>${returnItem.id}</td>
+        <td>${returnItem.orderStatus.name}</td>
+        <td>${returnItem.amount}</td>
+        <c:forEach items="${returnItem.payments}" var="payment" ><td>${returnItem.paymentMode.name} </td> </c:forEach>
+        <td>${fn:length(returnItem.cartLineItems)}</td>
       </tr>
 
     </c:forEach>

@@ -1,7 +1,7 @@
 package com.hk.admin.pact.service.pos;
 
-import com.hk.dto.pos.POSSalesDto;
-import com.hk.dto.pos.POSReturnItemDto;
+import com.hk.domain.order.Order;
+import com.hk.dto.pos.POSSummaryDto;
 
 import java.util.Date;
 import java.util.List;
@@ -16,8 +16,9 @@ import java.util.List;
 
 public interface POSReportService {
 
-  public List<POSSalesDto> storeSalesReport(Long storeId, Date startDate, Date endDate);
- // public List<Payment> dailyStoreSalesReport(Long storeId, Date startDate, Date endDate);
+  public List<Order> storeSalesReport(Long storeId, Date startDate, Date endDate);
 
-  public List<POSReturnItemDto> storeReturnReport(Long storeId, Date startDate, Date endDate);
+  public POSSummaryDto storeDailySalesSummaryReport(List<Order> saleList);
+
+  public List<Order> storeReturnReport(Long storeId, Date startDate, Date endDate);
 }

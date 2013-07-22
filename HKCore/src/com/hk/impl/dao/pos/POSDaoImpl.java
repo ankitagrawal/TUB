@@ -1,16 +1,20 @@
 package com.hk.impl.dao.pos;
 
-import com.hk.dto.pos.POSSalesDto;
+import com.hk.domain.core.OrderStatus;
+import com.hk.domain.order.Order;
 import com.hk.dto.pos.POSReturnItemDto;
+import com.hk.dto.pos.POSSalesDto;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.pos.POSDao;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.*;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import com.hk.pact.dao.BaseDao;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,36 +28,53 @@ public class POSDaoImpl extends BaseDaoImpl implements POSDao {
 
   @Autowired
   private BaseDao baseDao;
+
   @Override
-  public List<POSSalesDto> findSaleForTimeFrame(Long storeId, Date startDate, Date endDate) {
+  public List<Order> findSaleForTimeFrame(Long storeId, Date startDate, Date endDate, List<OrderStatus> orderStatusList) {
 
-/*    DetachedCriteria criteria = DetachedCriteria.forClass(Payment.class);
-    criteria.add(Restrictions.eq("order.id", 1L));
-    //criteria.add(Restrictions.eq("order.store.id", storeId));
+    DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+    criteria.add(Restrictions.eq("store.id", storeId));
+    if (startDate != null)
+      criteria.add(Restrictions.gt("createDate", startDate));
+    if (endDate != null)
+      criteria.add(Restrictions.lt("createDate", endDate));
+    if (orderStatusList != null)
+      criteria.add(Restrictions.in("orderStatus", orderStatusList));
+    criteria.createAlias("payment", "pmt");
+    criteria.createAlias("pmt.paymentMode", "paymentMode");
+   // criteria.createAlias("cartLineItems", "LineItems");
+/*    ProjectionList proList = Projections.projectionList();
+    proList.add(Projections.property("amount"), "amount");
+    proList.add(Projections.property("cartLineItems"),"cartLineItems");
+    proList.add(Projections.property("paymentMode.name"), "paymentMode");
+    proList.add(Projections.property("id"), "orderNo");*/
 
+    // proList.add(Projections.sum("cartLineItems.discountOnHkPrice").as("discount"));
+ //   criteria.setProjection(proList);
+  //  criteria.setResultTransformer(Transformers.aliasToBean(POSReturnItemDto.class));
+   // List<POSSalesDto> t = findByCriteria(criteria);
+    return findByCriteria(criteria);
 
-    @SuppressWarnings("unchecked")
-    List<Payment> payments = this.baseDao.findByCriteria(criteria);
-    return payments;*/
-
-    String hqlQuery = "select p.amount as amount ,p.paymentMode.name as paymentMode from Payment p where p.order.createDate > :startDate and p.order.createDate < :endDate and p.order.store.id= :storeId";
-    return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("storeId", storeId).setResultTransformer(Transformers.aliasToBean(POSSalesDto.class)).list();
 
   }
 
 
-/*  @Override
-  public List<POSSalesDto> findSaleForTimeFrame(Long storeId,Date startDate, Date endDate) {
+  public List<Order> findReturnItemForTimeFrame(Long storeId, Date startDate, Date endDate, List<OrderStatus> orderStatusList) {
 
-    String hqlQuery = "select p.amount as amount ,p.paymentMode.name as paymentMode, p.order.cartLineItems  from Payment p where p.order.createDate > :startDate and p.order.createDate < :endDate and p.order.store.id= :storeId";
-    return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("storeId", storeId).setResultTransformer(Transformers.aliasToBean(POSSalesDto.class)).list();
+    DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+    criteria.add(Restrictions.eq("store.id", storeId));
+    if (startDate != null)
+      criteria.add(Restrictions.gt("createDate", startDate));
+    if (endDate != null)
+      criteria.add(Restrictions.lt("createDate", endDate));
+    if (orderStatusList != null)
+      criteria.add(Restrictions.in("orderStatus", orderStatusList));
+    ProjectionList proList = Projections.projectionList();
+    proList.add(Projections.alias(Projections.property("amount"), "amount"));
+    criteria.setProjection(proList);
+    criteria.setResultTransformer(Transformers.aliasToBean(POSReturnItemDto.class));
+    return this.findByCriteria(criteria);
 
-  }*/
-
-  public List<POSReturnItemDto> findReturnItemForTimeFrame(Long storeId, Date startDate, Date endDate){
-
-    String hqlQuery = "select order from order order where order.orderStatus.id=45 or order.orderStatus.id=50 and order.createDate > :startDate and order.createDate < :endDate and order.store.id= :storeId ";
-    return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("storeId", storeId).setResultTransformer(Transformers.aliasToBean(POSSalesDto.class)).list();
-
+   // return t;
   }
 }

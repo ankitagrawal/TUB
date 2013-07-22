@@ -3,6 +3,7 @@ package com.hk.web.action.admin.pos;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.dto.pos.POSLineItemDto;
+import com.hk.admin.pact.dao.order.AdminOrderDao;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSReportService;
@@ -32,7 +33,9 @@ import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.dto.pos.POSReturnItemDto;
 import com.hk.dto.pos.POSSalesDto;
+import com.hk.dto.pos.POSSummaryDto;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
@@ -116,9 +119,11 @@ public class POSAction extends BaseAction {
   private String loyaltyPoints = null;
   private User loyaltyCustomer;
   private List<UserOrderKarmaProfile> customerKarmaList;
-  private List<POSSalesDto> saleList;
-
-
+  private List saleList;
+  private List returnItemList;
+  private Date startDate;
+  private Date endDate;
+  private POSSummaryDto posSummaryDto;
   @Autowired
   private UserService userService;
   @Autowired
@@ -155,6 +160,8 @@ public class POSAction extends BaseAction {
   private OrderManager orderManager;
   @Autowired
   private POSReportService posReportService;
+  @Autowired
+  private AdminOrderDao adminOrderDao;
 
   @DefaultHandler
   public Resolution pre() {
@@ -562,37 +569,34 @@ public class POSAction extends BaseAction {
     return new ForwardResolution("/pages/pos/posReport.jsp");
   }
 
-  public Resolution generateSalesByDateReport() {
-    Date date = new Date();
-    Calendar cal = new GregorianCalendar();
-    cal.setTime(date);
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date oneDayBefore= cal.getTime();
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date twoDayBefore= cal.getTime();
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date threeDayBefore= cal.getTime();
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date fourDayBefore= cal.getTime();
-    saleList= posReportService.storeSalesReport(201L, fourDayBefore, twoDayBefore);
+  public Resolution generateSalesReportByDate() {
+
+    Store store = userService.getWarehouseForLoggedInUser().getStore();
+    saleList= posReportService.storeSalesReport(store.getId(), startDate,endDate);
+    posSummaryDto=posReportService.storeDailySalesSummaryReport(saleList);
     return new ForwardResolution("/pages/pos/posReportResult.jsp");
   }
 
-  public Resolution generateReturnReportByDateReport(){
-    Date date = new Date();
-    Calendar cal = new GregorianCalendar();
-    cal.setTime(date);
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date oneDayBefore= cal.getTime();
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date twoDayBefore= cal.getTime();
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date threeDayBefore= cal.getTime();
-    cal.add(Calendar.DAY_OF_YEAR,-1);
-    Date fourDayBefore= cal.getTime();
-    saleList= posReportService.storeReturnReport(201L,fourDayBefore,twoDayBefore);
+  public Resolution generateDailySalesReport(){
+    Store store = userService.getWarehouseForLoggedInUser().getStore();
+    saleList= posReportService.storeSalesReport(store.getId(), null,null);
+    posSummaryDto=posReportService.storeDailySalesSummaryReport(saleList);
     return new ForwardResolution("/pages/pos/posReportResult.jsp");
   }
+
+  public Resolution generateReturnReportByDate(){
+    Store store = userService.getWarehouseForLoggedInUser().getStore();
+    returnItemList= posReportService.storeReturnReport(store.getId(),startDate,endDate);
+    return new ForwardResolution("/pages/pos/posReturnItemReportResult.jsp");
+  }
+
+
+  public Resolution generateDailyReturnReport(){
+    Store store = userService.getWarehouseForLoggedInUser().getStore();
+    returnItemList= posReportService.storeReturnReport(store.getId(),null,null);
+    return new ForwardResolution("/pages/pos/posReturnItemReportResult.jsp");
+  }
+
   /**
    * Setters and getters begin
    */
@@ -916,5 +920,37 @@ public class POSAction extends BaseAction {
 
   public void setSaleList(List<POSSalesDto> saleList) {
     this.saleList = saleList;
+  }
+
+  public POSSummaryDto getPosSummaryDto() {
+    return posSummaryDto;
+  }
+
+  public void setPosSummaryDto(POSSummaryDto posSummaryDto) {
+    this.posSummaryDto = posSummaryDto;
+  }
+
+  public List getReturnItemList() {
+    return returnItemList;
+  }
+
+  public void setReturnItemList(List returnItemList) {
+    this.returnItemList = returnItemList;
+  }
+
+  public Date getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
   }
 }

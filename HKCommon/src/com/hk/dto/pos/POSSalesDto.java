@@ -14,7 +14,7 @@ public class POSSalesDto {
   private String paymentMode;
   private Set cartLineItems;
   private Double discount;
-  private Double margin;
+  private Long orderNo;
 
   public Set getCartLineItems() {
     return cartLineItems;
@@ -32,12 +32,12 @@ public class POSSalesDto {
     this.discount = discount;
   }
 
-  public Double getMargin() {
-    return margin;
+  public Long getOrderNo() {
+    return orderNo;
   }
 
-  public void setMargin(Double margin) {
-    this.margin = margin;
+  public void setOrderNo(Long orderNo) {
+    this.orderNo = orderNo;
   }
 
   public Double getAmount() {
