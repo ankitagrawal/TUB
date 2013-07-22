@@ -2,8 +2,12 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +43,8 @@ import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
@@ -52,6 +58,7 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -94,6 +101,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     
     @Autowired BaseDao baseDao;
 
+    @Autowired LineItemDao lineItemDao;
+    @Autowired ShippingOrderDao shippingOrderDao;
+    
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
@@ -381,8 +391,119 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		return null;
 	}
 
+	public void splitSONormal(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean dropShipItemPresentInRemainingItems,
+			Boolean jitItemPresentInRemainingItems, Boolean dropShipItemPresentInSelectedItems, Boolean jitItemPresentInSelectedItems) {
+		if (shippingOrder != null && EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
 
+            Set<LineItem> selectedLineItems = new HashSet<LineItem>();
 
+            for (LineItem lineItem : lineItems) {
+                if (lineItem != null) {
+                    logger.debug("lineItem: " + lineItem.getSku().getProductVariant());
+                    selectedLineItems.add(lineItem);
+                }
+            }
+            if (selectedLineItems.size() == shippingOrder.getLineItems().size()) {
+          //      addRedirectAlertMessage(new SimpleMessage("Invalid LineItem selection for Shipping Order : " + shippingOrder.getGatewayOrderId() + ". Cannot be split."));
+       //         return new RedirectResolution(ActionAwaitingQueueAction.class);
+            }
+
+            Set<LineItem> originalShippingItems = shippingOrder.getLineItems();
+            originalShippingItems.removeAll(selectedLineItems);
+
+            for (LineItem remainingLineItem : originalShippingItems) {
+                if ((remainingLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
+                    dropShipItemPresentInRemainingItems = true;
+                    break;
+                }
+            }
+            for (LineItem remainingLineItem : originalShippingItems) {
+                if ((remainingLineItem.getSku().getProductVariant().getProduct().isJit())) {
+                    jitItemPresentInRemainingItems = true;
+                    break;
+                }
+            }
+
+            ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
+            newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
+            newShippingOrder.setServiceOrder(false);
+            newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
+            newShippingOrder = shippingOrderService.save(newShippingOrder);
+
+            for (LineItem selectedLineItem : selectedLineItems) {
+                selectedLineItem.setShippingOrder(newShippingOrder);
+                if ((selectedLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
+                    dropShipItemPresentInSelectedItems = true;
+                }
+                lineItemDao.save(selectedLineItem);
+            }
+            for (LineItem selectedLineItem : selectedLineItems) {
+                selectedLineItem.setShippingOrder(newShippingOrder);
+                if ((selectedLineItem.getSku().getProductVariant().getProduct().isJit())) {
+                    jitItemPresentInSelectedItems = true;
+                    break;
+                }
+                lineItemDao.save(selectedLineItem);
+            }
+            shippingOrderDao.refresh(newShippingOrder);
+            Set<ShippingOrderCategory> newShippingOrderCategories = orderService.getCategoriesForShippingOrder(newShippingOrder);
+            newShippingOrder.setShippingOrderCategories(newShippingOrderCategories);
+            newShippingOrder.setBasketCategory(orderService.getBasketCategory(newShippingOrderCategories).getName());
+            newShippingOrder = shippingOrderService.save(newShippingOrder);
+            shippingOrderDao.refresh(newShippingOrder);
+
+            if (dropShipItemPresentInSelectedItems) {
+                newShippingOrder.setDropShipping(true);
+            } else {
+                newShippingOrder.setDropShipping(false);
+            }
+            if (jitItemPresentInSelectedItems) {
+                newShippingOrder.setContainsJitProducts(true);
+            } else {
+                newShippingOrder.setContainsJitProducts(false);
+            }
+            ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
+            newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
+            newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
+            newShippingOrder = shippingOrderService.save(newShippingOrder);
+            shipmentService.createShipment(newShippingOrder, true);
+
+            /**
+             * Fetch previous shipping order and recalculate amount
+             */
+
+            shippingOrderDao.refresh(shippingOrder);
+            //shippingOrder = shippingOrderService.find(shippingOrder.getId());
+            ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, shippingOrder.getBaseOrder());
+            shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+
+            if (dropShipItemPresentInRemainingItems) {
+                shippingOrder.setDropShipping(true);
+            } else {
+                shippingOrder.setDropShipping(false);
+            }
+            if (jitItemPresentInRemainingItems) {
+                shippingOrder.setContainsJitProducts(true);
+            } else {
+                shippingOrder.setContainsJitProducts(false);
+            }
+            Set<ShippingOrderCategory> shippingOrderCategories = orderService.getCategoriesForShippingOrder(shippingOrder);
+            shippingOrder.setShippingOrderCategories(shippingOrderCategories);
+            shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrderCategories).getName());
+            shippingOrder = shippingOrderService.save(shippingOrder);
+
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
+
+        //    addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
+   //         return new RedirectResolution(ActionAwaitingQueueAction.class);
+        } else {
+    //        addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " is in incorrect status cannot be split."));
+    //        return new RedirectResolution(ActionAwaitingQueueAction.class);
+        }
+	}
+	
+	
+	
     public ShippingOrderService getShippingOrderService() {
         return shippingOrderService;
     }
