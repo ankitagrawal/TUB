@@ -5,20 +5,23 @@ import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
-
-import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.dto.pos.PosProductSearchDto;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.warehouse.WarehouseDao;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +29,10 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 @Repository
 public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
-    @Autowired
-    SkuGroupDao skuGroupDao;
-    @Autowired
-    WarehouseDao warehouseDao;
+	@Autowired
+	SkuGroupDao skuGroupDao;
+	@Autowired
+	WarehouseDao warehouseDao;
 
     /*public List<SkuGroup> getInStockSkuGroups(Sku sku) {
          List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
@@ -50,85 +53,139 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
          return skuGroupList;
      }*/
 
-    public List<SkuGroup> getInStockSkuGroups(Sku sku) {
-        String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
-                " and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc ";
-        List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
-        //List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
+	public List<SkuGroup> getInStockSkuGroups(Sku sku) {
+		String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+				" and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc ";
+		List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
+		//List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
 
-        if (skuGroupList == null) {
-            skuGroupList = new ArrayList<SkuGroup>(0);
-        }
-        return skuGroupList;
-    }
+		if (skuGroupList == null) {
+			skuGroupList = new ArrayList<SkuGroup>(0);
+		}
+		return skuGroupList;
+	}
 
-    public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
-        List<Warehouse> warehouseList =  warehouseDao.getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
-        SkuGroup minMRPUnbookedSkuGroup = null;
-        String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi " +
-            "where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.warehouse in (:warehouseList) and pvi.sku.productVariant = :productVariant " +
-            "group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
-        List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
-            .setParameter("productVariant", productVariant)
-            .setParameterList("warehouseList", warehouseList).list();
-        if (skuItemIdList != null && skuItemIdList.size() > bookedQty) {
-            List<Long> firstUnBookedSkuItem = skuItemIdList.subList(bookedQty.intValue(), bookedQty.intValue() + 1);
-            String query = "select distinct si.skuGroup from SkuItem si where si.id = :skuItemId order by si.skuGroup.mrp asc";
-            minMRPUnbookedSkuGroup = (SkuGroup) getSession().createQuery(query).setParameter("skuItemId", firstUnBookedSkuItem.get(0)).uniqueResult();
-        }
-        return minMRPUnbookedSkuGroup;
-    }
-
-
-    private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
-        DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
-        if (skuGroup != null) {
-            skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
-        }
-        if (skuItemStatus != null) {
-            skuItemCriteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
-        }
-        return skuItemCriteria;
-    }
+	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
+		List<Warehouse> warehouseList = warehouseDao.getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
+		SkuGroup minMRPUnbookedSkuGroup = null;
+		String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi " +
+				"where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.warehouse in (:warehouseList) and pvi.sku.productVariant = :productVariant " +
+				"group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
+		List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
+				.setParameter("productVariant", productVariant)
+				.setParameterList("warehouseList", warehouseList).list();
+		if (skuItemIdList != null && skuItemIdList.size() > bookedQty) {
+			List<Long> firstUnBookedSkuItem = skuItemIdList.subList(bookedQty.intValue(), bookedQty.intValue() + 1);
+			String query = "select distinct si.skuGroup from SkuItem si where si.id = :skuItemId order by si.skuGroup.mrp asc";
+			minMRPUnbookedSkuGroup = (SkuGroup) getSession().createQuery(query).setParameter("skuItemId", firstUnBookedSkuItem.get(0)).uniqueResult();
+		}
+		return minMRPUnbookedSkuGroup;
+	}
 
 
-    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
-        if (skuGroup == null) {
-            return new ArrayList<SkuItem>();
-        }
-        DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-        return findByCriteria(skuItemCriteria);
-    }
+	private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+		DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
+		if (skuGroup != null) {
+			skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
+		}
+		if (skuItemStatus != null) {
+			skuItemCriteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
+		}
+		return skuItemCriteria;
+	}
 
-    public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
-        criteria.add(Restrictions.eq("skuGroup", skuGroup));
-        criteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
-        List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
-        return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
-    }
 
-    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
-        String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
-        if (statusId != null) {
-            sql = sql + "and si.skuItemStatus.id = :statusId ";
-        }
-        Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
-        if (statusId != null) {
-            query.setParameter("statusId", statusId);
-        }
-        List<SkuItem> skuItems = query.list();
-	      if(skuItems != null && skuItems.size() > 1){
-		      logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
-	      }
-        return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
-    }
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+		if (skuGroup == null) {
+			return new ArrayList<SkuItem>();
+		}
+		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		return findByCriteria(skuItemCriteria);
+	}
 
-    public List<SkuItem> getCheckedInSkuItems(Sku sku) {
-        String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
-        Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
-        return query.list();
-    }
+	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
+		criteria.add(Restrictions.eq("skuGroup", skuGroup));
+		criteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
+		List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
+		return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
+	}
+
+	public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
+		String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
+		if (statusId != null) {
+			sql = sql + "and si.skuItemStatus.id = :statusId ";
+		}
+		Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
+		if (statusId != null) {
+			query.setParameter("statusId", statusId);
+		}
+		List<SkuItem> skuItems = query.list();
+		if (skuItems != null && skuItems.size() > 1) {
+			logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
+		}
+		return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
+	}
+
+	public List<SkuItem> getCheckedInSkuItems(Sku sku) {
+		String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
+		Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
+		return query.list();
+	}
+
+	public List<PosProductSearchDto> getCheckedInSkuItems(String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId) {
+		DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
+		skuItemCriteria.add(Restrictions.eq("skuItemStatus", EnumSkuItemStatus.Checked_IN.getSkuItemStatus()));
+		DetachedCriteria skuGroupCriteria = skuItemCriteria.createCriteria("skuGroup", "skuGrp");
+		DetachedCriteria skuCriteria = skuGroupCriteria.createCriteria("sku", "sku");
+		DetachedCriteria warehouseCriteria = skuCriteria.createCriteria("warehouse");
+		warehouseCriteria.add(Restrictions.eq("id", warehouseId));
+		DetachedCriteria productVariantCriteria = skuCriteria.createCriteria("productVariant", "productVariant");
+		DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product", "product");
+
+		if (!StringUtils.isBlank(productName)) {
+			productCriteria.add(Restrictions.like("name", "%" + productName + "%"));
+		}
+
+		if (!StringUtils.isBlank(brand)) {
+			productCriteria.add(Restrictions.eq("brand", brand));
+		}
+
+		if (!StringUtils.isBlank(primaryCategory)) {
+			DetachedCriteria categoryCriteria = productCriteria.createCriteria("primaryCategory", "primaryCategory");
+			categoryCriteria.add(Restrictions.eq("name", primaryCategory));
+		}
+
+		productVariantCriteria.createAlias("productOptions", "option", CriteriaSpecification.LEFT_JOIN);
+		//.add(Restrictions.or(Restrictions.eq("option.name", "flavor"), Restrictions.eq("option.name", "size")));
+
+		if (!StringUtils.isBlank(flavor)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "flavor"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + flavor + "%"));
+		}
+
+		if (!StringUtils.isBlank(size)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "size"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + size + "%"));
+		}
+
+		if (!StringUtils.isBlank(color)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "color"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + color + "%"));
+		}
+
+		if (!StringUtils.isBlank(form)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "form"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + form + "%"));
+		}
+
+		skuItemCriteria.setProjection(Projections.projectionList().add(Projections.countDistinct("id").as("countId"))
+				.add(Projections.property("product.name").as("productName")).add(Projections.groupProperty("skuGrp.sku").as("sku"))
+				.add(Projections.property("productVariant.id").as("productVariantId"))).setResultTransformer(Transformers.aliasToBean(PosProductSearchDto.class));
+
+		return findByCriteria(skuItemCriteria);
+	}
+
 }
 
 

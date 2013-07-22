@@ -1,6 +1,7 @@
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -59,6 +60,13 @@ pageContext.setAttribute("projectEnv", projectEnv);
             <li class='lvl1 menuItem trimPadding' title="">
                 <s:link class="invert" beanclass="com.hk.web.action.report.ReportAction">Report Manager</s:link></li>
 
+	        <li class='lvl1 menuItem trimPadding' title="">
+	        <%--<shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">--%>
+	            <c:if test="${whAction.userService.warehouseForLoggedInUser.store != null}">
+		            <a href="${pageContext.request.contextPath}/pages/pos/posAdminHome.jsp">Store Manager</a>
+	            </c:if>
+	        <%--</shiro:hasPermission>--%>
+	        </li>
             <li class='lvl1 menuItem trimPadding' title="" style="float:right;">
                 <s:link beanclass="com.hk.web.action.HomeAction">Site Home</s:link>
             </li>

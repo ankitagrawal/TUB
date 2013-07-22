@@ -7,6 +7,7 @@ import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.dto.pos.PosProductSearchDto;
 
 import java.util.List;
 
@@ -36,5 +37,7 @@ public interface POSService {
 	public Address createDefaultAddressForUser(User customer, String phone, Warehouse warehouse);
 
 	public void applyOrderLevelDiscountOnCartLineItems(Order order, Double orderLevelDiscount);
+
+	public List<PosProductSearchDto> searchProductInStore(String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
 
 }
