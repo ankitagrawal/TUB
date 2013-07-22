@@ -1201,9 +1201,8 @@ public class AdminEmailManager {
     		}
     	}
     	
-    	//String fromPurchaseEmail = "purchase@healthkart.com";
-    	String fromPurchaseEmail = "gagan.jain@healthkart.com";
-    	//emailIds.add(fromPurchaseEmail);
+    	String fromPurchaseEmail = "purchase@healthkart.com";
+    	emailIds.add(fromPurchaseEmail);
     	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.jitShippingOrderStatusChangeMail);
     	User user = userService.getAdminUser();
     	boolean sent = emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),"HK Admin", fromPurchaseEmail, "", null, null, emailIds, null, null, null);
