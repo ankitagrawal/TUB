@@ -76,7 +76,12 @@ public class JitShippingOrderAction extends BaseAction {
 			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
 			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
 			List<PurchaseOrder> purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
-			addRedirectAlertMessage(new SimpleMessage(jitShippingOrderPOCreationService.getCountOfPOs()+" Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+			if(purchaseOrders.size()>0){
+			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()+" Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+			}
+			else{
+			addRedirectAlertMessage(new SimpleMessage("(0) Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+			}
 			return new RedirectResolution(ActionAwaitingQueueAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));

@@ -741,17 +741,4 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	public SupplierDao getSupplierDao() {
 		return supplierDao;
 	}
-
-	public static int getCount() {
-		return count;
-	}
-
-	public static void setCount(int count) {
-		JitShippingOrderPOCreationServiceImpl.count = 0;
-	}
-
-	@Override
-	public int getCountOfPOs() {
-		return JitShippingOrderPOCreationServiceImpl.count;
-	}
 }
