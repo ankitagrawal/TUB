@@ -16,6 +16,7 @@
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -410,6 +411,8 @@
                  
             </s:form>
             
+            
+            <shiro:hasPermission name="<%=PermissionConstants.CREATE_JIT_PO%>">
             <div id="closeButtonDiv">
 <s:form beanclass = "com.hk.web.action.admin.queue.JitShippingOrderAction">
 <s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form></div>
@@ -417,6 +420,7 @@
 <div id="closeButtonDiv">
 <s:form beanclass = "com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
 <s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
+            </shiro:hasPermission>
         </div>
     </ul>
 </fieldset>

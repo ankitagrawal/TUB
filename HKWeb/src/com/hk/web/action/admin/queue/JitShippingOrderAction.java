@@ -76,12 +76,12 @@ public class JitShippingOrderAction extends BaseAction {
 			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
 			List<PurchaseOrder> purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
 			if(purchaseOrders.size()>0){
-				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()+" Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+				addRedirectAlertMessage(new SimpleMessage(jitShippingOrderPOCreationService.getCountOfPOs()+" Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
 			}
 			else{
-				addRedirectAlertMessage(new SimpleMessage("Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+				addRedirectAlertMessage(new SimpleMessage(jitShippingOrderPOCreationService.getCountOfPOs()+"Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
 			}
-			return new RedirectResolution(AdminHomeAction.class);
+			return new RedirectResolution(ActionAwaitingQueueAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
 		return new RedirectResolution(ActionAwaitingQueueAction.class);
@@ -101,10 +101,10 @@ public class JitShippingOrderAction extends BaseAction {
 			else{
 				addRedirectAlertMessage(new SimpleMessage("Purchase Orders created (From Bright to External), approved and sent to supplier. Please visit POList page to check them."));
 			}
-			return new RedirectResolution(AdminHomeAction.class);
+			return new RedirectResolution(ActionAwaitingQueueAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
-		return new RedirectResolution(AdminHomeAction.class);
+		return new RedirectResolution(ActionAwaitingQueueAction.class);
 	}
 
 	public List<LineItem> getJitLineItems() {

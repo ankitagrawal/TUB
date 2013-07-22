@@ -36,4 +36,6 @@ public interface JitShippingOrderPOCreationService {
 	
 	public void approveAllPos(PurchaseOrder purchaseOrder, List<PurchaseOrderStatus> purchaseOrderStatus);
 	
+	public int getCountOfPOs();
+	
 }
