@@ -129,7 +129,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
 		Date date = null;
 		try {
-			date = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(aquaBrightSeparateDate);
+			date = new SimpleDateFormat("dd-MM-yyyy").parse(aquaBrightSeparateDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
