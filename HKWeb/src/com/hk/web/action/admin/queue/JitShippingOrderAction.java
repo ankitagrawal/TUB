@@ -1,15 +1,11 @@
 package com.hk.web.action.admin.queue;
 
 import java.util.*;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,30 +18,10 @@ import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.shippingOrder.JitShippingOrderPOCreationService;
-import com.hk.admin.util.TaxUtil;
-import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
-import com.hk.constants.core.EnumTax;
-import com.hk.constants.inventory.EnumPurchaseOrderStatus;
-import com.hk.constants.inventory.EnumPurchaseOrderType;
-import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.core.search.ShippingOrderSearchCriteria;
-import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.PaymentStatus;
-import com.hk.domain.core.PurchaseOrderStatus;
-import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import com.hk.domain.order.ShippingOrderLifecycle;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.dto.TaxComponent;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
@@ -53,9 +29,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.admin.AdminHomeAction;
-import com.hk.web.filter.WebContext;
 
 @Component
 public class JitShippingOrderAction extends BaseAction {
@@ -101,7 +75,12 @@ public class JitShippingOrderAction extends BaseAction {
 			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
 			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
 			List<PurchaseOrder> purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
-			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders"));
+			if(purchaseOrders.size()>0){
+				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()+" Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+			}
+			else{
+				addRedirectAlertMessage(new SimpleMessage("Purchase Orders created (From Aqua to Bright), approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+			}
 			return new RedirectResolution(AdminHomeAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
@@ -116,7 +95,12 @@ public class JitShippingOrderAction extends BaseAction {
 			List<LineItem> jitLineItemList = jitShippingOrderPOCreationService.getJitLineItems(shippingOrderListToProcess);
 			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(jitLineItemList);
 			purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(jitLineItemList, validShippingOrders);
-			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size() + " Purchase Orders created (from Bright To External), approved and sent to supplier for JIT shipping orders"));
+			if(purchaseOrders.size()>0){
+				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()+" Purchase Orders created (From Bright to External), approved and sent to supplier. Please visit POList page to check them."));
+			}
+			else{
+				addRedirectAlertMessage(new SimpleMessage("Purchase Orders created (From Bright to External), approved and sent to supplier. Please visit POList page to check them."));
+			}
 			return new RedirectResolution(AdminHomeAction.class);
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));

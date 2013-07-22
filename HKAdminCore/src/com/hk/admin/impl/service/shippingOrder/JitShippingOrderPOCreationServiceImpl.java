@@ -198,8 +198,10 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 						inventory = 0L;
 					}
 					Long unbookedInventory = inventory - bookedInventory;
+					logger.debug("Unbooked Inventory For SKU - "+sku.getId()+" / Product Variant - "+sku.getProductVariant().getId() + "is: "+unbookedInventory);
 					if(unbookedInventory<0){
 						lineItemList.add(lineItem);
+						logger.debug(lineItem.getId()+ " - is a valid line item");
 					}
 				}
 			}
@@ -213,6 +215,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			for(LineItem li : validLineItemList){
 				ShippingOrder so = li.getShippingOrder();
 				shippingOrders.add(so);
+				logger.debug("Shipping Order - "+ so.getId()+ " - added to Valid ShippingOrder List");
 			}
 		}
 		return shippingOrders;
