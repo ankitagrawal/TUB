@@ -1,6 +1,5 @@
 package com.hk.constants.inventory;
 
-import com.hk.domain.accounting.DebitNoteType;
 import com.hk.domain.inventory.po.PurchaseOrderType;
 
 public enum EnumPurchaseOrderType {

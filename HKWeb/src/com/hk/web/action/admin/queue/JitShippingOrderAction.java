@@ -29,7 +29,6 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.web.action.admin.AdminHomeAction;
 
 @Component
 public class JitShippingOrderAction extends BaseAction {

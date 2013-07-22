@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -606,9 +605,8 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 			if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
 				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
-				if (!purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())
-						&& purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
-					if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
+				if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
+					if (!purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())) {
 						if (purchaseOrder.getSupplier().getEmail_id() != null) {
 							adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
 						}
