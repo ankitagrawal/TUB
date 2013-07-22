@@ -63,6 +63,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private boolean dropShipping = false;
     private boolean containsJitProducts = false;
     private boolean installable = false;
+    private Date shippingOrderCreateDate;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
         this.searchForPrinting = searchForPrinting;
@@ -188,6 +189,10 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         if (lastEscStartDate != null && lastEscEndDate != null) {
             criteria.add(Restrictions.between("lastEscDate", lastEscStartDate, lastEscEndDate));
+        }
+        
+        if(shippingOrderCreateDate!=null){
+        	criteria.add(Restrictions.ge("createDate", shippingOrderCreateDate));
         }
 
         if (startTargetDispatchDate != null && endTargetDispatchDate != null) {
@@ -432,4 +437,12 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     public void setUserCodCallStatus(Integer userCodCallStatus) {
         this.userCodCallStatus = userCodCallStatus;
     }
+
+	public Date getShippingOrderCreateDate() {
+		return shippingOrderCreateDate;
+	}
+
+	public void setShippingOrderCreateDate(Date shippingOrderCreateDate) {
+		this.shippingOrderCreateDate = shippingOrderCreateDate;
+	}
 }

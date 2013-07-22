@@ -1,5 +1,7 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -94,6 +97,8 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 	@Value("#{hkEnvProps['" + Keys.Env.aquaBrightSeparatedFor + "']}")
     private String aquaBrightSeparatedFor;
+	@Value("#{hkEnvProps['" + Keys.Env.aquaBrightSeparateDate + "']}")
+	private String aquaBrightSeparateDate;
 	
 	List<String> warehouseIdList = new ArrayList<String>();
 	
@@ -121,6 +126,14 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
 		soStatusList.add(EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus());
 		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
+		Date date = null;
+		try {
+			date = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(aquaBrightSeparateDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		logger.debug("Aqua Bright Separate Date Picked - "+date.toString());
+		shippingOrderSearchCriteria.setShippingOrderCreateDate(date);
 		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
 		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
 		paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
