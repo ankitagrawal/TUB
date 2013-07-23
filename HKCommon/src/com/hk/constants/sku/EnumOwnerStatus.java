@@ -1,6 +1,7 @@
 package com.hk.constants.sku;
 
 import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.SkuItemOwnerStatus;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,7 +10,7 @@ import com.hk.domain.sku.SkuItemStatus;
  * Time: 4:24:49 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum EnumHeritorStatus {
+public enum EnumOwnerStatus {
 
     SELF(10L, "SELF"),
     CUSTOMER(20L, "CUSTOMER"),
@@ -17,10 +18,19 @@ public enum EnumHeritorStatus {
     BRIGHT(40L, "BRIGHT");
 
 
-    EnumHeritorStatus(Long id, String name) {
+    EnumOwnerStatus(Long id, String name) {
         this.id = id;
         this.name = name;
     }
+
+
+    public SkuItemOwnerStatus getSkuItemOwnerStatus() {
+		SkuItemOwnerStatus skuItemOwnerStatus = new SkuItemOwnerStatus();
+		skuItemOwnerStatus.setId(this.id);
+		skuItemOwnerStatus.setName(this.name);
+		return skuItemOwnerStatus;
+	}
+
 
     private Long id;
     private String name;

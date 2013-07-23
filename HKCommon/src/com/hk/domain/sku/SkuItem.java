@@ -28,7 +28,7 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 	@JoinColumn(name = "sku_group_id", nullable = false)
 	private SkuGroup skuGroup;
 
-	@Column(name = "barcode", length = 45)
+	@Column(name = "barcode", length = 45, unique = true)
 	private String barcode;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -38,6 +38,18 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sku_item_status_id", nullable = false)
 	private SkuItemStatus skuItemStatus;
+
+    public SkuItemOwnerStatus getSkuItemOwnerStatus() {
+        return skuItemOwnerStatus;
+    }
+
+    public void setSkuItemOwnerStatus(SkuItemOwnerStatus skuItemOwnerStatus) {
+        this.skuItemOwnerStatus = skuItemOwnerStatus;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sku_item_owner_status_id", nullable = false)
+	private SkuItemOwnerStatus skuItemOwnerStatus;
 
 	@JsonSkip
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -95,6 +107,7 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 	public void setSkuItemStatus(SkuItemStatus skuItemStatus) {
 		this.skuItemStatus = skuItemStatus;
 	}
+    
 
     public int compareTo(SkuItem skuItem) {
 		if (this.getId() < skuItem.getId()) return -1;
