@@ -119,11 +119,7 @@ public class POSAction extends BaseAction {
   private String loyaltyPoints = null;
   private User loyaltyCustomer;
   private List<UserOrderKarmaProfile> customerKarmaList;
-  private List saleList;
-  private List returnItemList;
-  private Date startDate;
-  private Date endDate;
-  private POSSummaryDto posSummaryDto;
+
   @Autowired
   private UserService userService;
   @Autowired
@@ -158,8 +154,6 @@ public class POSAction extends BaseAction {
   private PricingEngine pricingEngine;
   @Autowired
   private OrderManager orderManager;
-  @Autowired
-  private POSReportService posReportService;
   @Autowired
   private AdminOrderDao adminOrderDao;
 
@@ -569,34 +563,6 @@ public class POSAction extends BaseAction {
     return new ForwardResolution("/pages/pos/posReport.jsp");
   }
 
-  public Resolution generateSalesReportByDate() {
-
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
-    saleList= posReportService.storeSalesReport(store.getId(), startDate,endDate);
-    posSummaryDto=posReportService.storeDailySalesSummaryReport(saleList);
-    return new ForwardResolution("/pages/pos/posReportResult.jsp");
-  }
-
-  public Resolution generateDailySalesReport(){
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
-    saleList= posReportService.storeSalesReport(store.getId(), null,null);
-    posSummaryDto=posReportService.storeDailySalesSummaryReport(saleList);
-    return new ForwardResolution("/pages/pos/posReportResult.jsp");
-  }
-
-  public Resolution generateReturnReportByDate(){
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
-    returnItemList= posReportService.storeReturnReport(store.getId(),startDate,endDate);
-    return new ForwardResolution("/pages/pos/posReturnItemReportResult.jsp");
-  }
-
-
-  public Resolution generateDailyReturnReport(){
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
-    returnItemList= posReportService.storeReturnReport(store.getId(),null,null);
-    return new ForwardResolution("/pages/pos/posReturnItemReportResult.jsp");
-  }
-
   /**
    * Setters and getters begin
    */
@@ -914,43 +880,4 @@ public class POSAction extends BaseAction {
     this.customerKarmaList = customerKarmaList;
   }
 
-  public List<POSSalesDto> getSaleList() {
-    return saleList;
-  }
-
-  public void setSaleList(List<POSSalesDto> saleList) {
-    this.saleList = saleList;
-  }
-
-  public POSSummaryDto getPosSummaryDto() {
-    return posSummaryDto;
-  }
-
-  public void setPosSummaryDto(POSSummaryDto posSummaryDto) {
-    this.posSummaryDto = posSummaryDto;
-  }
-
-  public List getReturnItemList() {
-    return returnItemList;
-  }
-
-  public void setReturnItemList(List returnItemList) {
-    this.returnItemList = returnItemList;
-  }
-
-  public Date getStartDate() {
-    return startDate;
-  }
-
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
-  }
-
-  public Date getEndDate() {
-    return endDate;
-  }
-
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
-  }
 }

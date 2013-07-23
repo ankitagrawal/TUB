@@ -6,7 +6,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportActionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.pos.POSReportAction" var="pos"/>
 <%
   WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
   BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
@@ -30,7 +30,7 @@
 
   <s:layout-component name="content">
     <div class="reportBox">
-      <s:form beanclass="com.hk.web.action.admin.pos.POSAction" target="_blank">
+      <s:form beanclass="com.hk.web.action.admin.pos.POSReportAction" target="_blank">
 
         <fieldset class="right_label">
           <legend>Sales Reports</legend>
@@ -64,7 +64,7 @@
     </div>
 
     <div class="reportBox">
-      <s:form beanclass="com.hk.web.action.admin.pos.POSAction" target="_blank">
+      <s:form beanclass="com.hk.web.action.admin.pos.POSReportAction" target="_blank">
 
 
         <fieldset class="right_label">

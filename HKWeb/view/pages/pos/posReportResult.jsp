@@ -1,11 +1,8 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
-<%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.domain.order.ShippingOrderStatus" %>
+<%@ page import="com.hk.pact.dao.BaseDao" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="com.hk.pact.dao.BaseDao" %>
-<%@ page import="com.hk.domain.order.ShippingOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportActionBean"/>
@@ -25,16 +22,19 @@
 
   </s:layout-component>
 
-  <s:layout-component name="heading">Report Master "/>
+  <s:layout-component name="heading">Report Master : Orders# ${reportActionBean.totalOrders}
+    &nbsp;|&nbsp; MRP:<fmt:formatNumber value="${reportActionBean.sumOfMrp}" type="currency" currencySymbol=" "
+    maxFractionDigits="0"/>
+    &nbsp;|&nbsp; HKPrice:<fmt:formatNumber value="${reportActionBean.sumOfHkPrice}" type="currency" currencySymbol=" "
+    maxFractionDigits="0"/>
   </s:layout-component>
   <s:layout-component name="content">
-    <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSAction" event="pre" var="posBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSReportAction" event="pre" var="posBean"/>
     <table class="cont" width="100%">
     <tr>
       <th>Cash Collection</th>
       <th>Cash Refund</th>
       <th>Credit Card Collection</th>
-      <th>Credit Card Refund</th>
       <th>Items Sold</th>
       <th>Items Returned</th>
     </tr>
@@ -42,7 +42,6 @@
       <td>${posBean.posSummaryDto.cashAmountCollected}</td>
       <td>${posBean.posSummaryDto.cashAmountRefunded}</td>
       <td>${posBean.posSummaryDto.creditCardAmountCollected}</td>
-      <td>${posBean.posSummaryDto.creditCardAmountRefunded}</td>
       <td>${posBean.posSummaryDto.itemsSold}</td>
       <td>${posBean.posSummaryDto.itemsReturned}</td>
     </tr>
@@ -56,13 +55,17 @@
       <th>Payment Mode</th>
       <th>Items Total</th>
     </tr>
-    <c:forEach items="${posBean.saleList}" var="sale" >
+    <c:forEach items="${posBean.saleList}" var="sale">
       <tr>
-      <td>${sale.id}</td>
-      <td>${sale.orderStatus.name}</td>
+        <td>${sale.id}</td>
+        <c:forEach items="${sale.shippingOrders}" var="SO">
+          <td>${SO.shippingOrderStatus.name} </td>
+        </c:forEach>
         <td>${sale.amount}</td>
-       <c:forEach items="${sale.payments}" var="payment" ><td>${payment.paymentMode.name} </td> </c:forEach>
-      <td>${fn:length(sale.cartLineItems)}</td>
+        <c:forEach items="${sale.payments}" var="payment">
+          <td>${payment.paymentMode.name} </td>
+        </c:forEach>
+        <td>${fn:length(sale.cartLineItems)}</td>
       </tr>
 
     </c:forEach>
