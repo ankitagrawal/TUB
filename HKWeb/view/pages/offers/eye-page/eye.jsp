@@ -7,7 +7,7 @@
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/categoryBlankLanding.jsp"
-                 pageTitle="personal-care Offer">
+                 pageTitle="eye offer">
 
 <s:layout-component name="htmlHead">
 	<link href="${pageContext.request.contextPath}/css/eye-style.css"
@@ -19,7 +19,7 @@
 			beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
 		&gt; <span class="crumb last" style="font-size: 12px;">eye Offers</span>
 
-		<h1 class="title">Beauty Offers</h1>
+		<h1 class="title">eye Offers</h1>
 	</div>
 
 </s:layout-component>

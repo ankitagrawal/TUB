@@ -112,14 +112,28 @@ public class PopulateBusyDataAction extends BaseAction {
 	@Secure(hasAnyPermissions = {PermissionConstants.POPULATE_BUSY_DATA}, authActionBean = AdminPermissionAction.class)
 	public Resolution populatePurchases() {
 		try {
-			BusyTableTransactionGenerator busyTableTransactionGenerator = new BusyTableTransactionGenerator(dbHostName, dbName, dbUser, dbPassword);
+			BusyPopulatePurchaseData busyPopulatePurchaseData = new BusyPopulatePurchaseData(dbHostName, dbName, dbUser, dbPassword);
 
 			logger.info("Populating Purchases ");
-			busyTableTransactionGenerator.populatePurchaseData();
+			busyPopulatePurchaseData.populatePurchaseData();
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Busy purchases upadted !!"));
 		return new RedirectResolution("/pages/admin/busyUpdates.jsp");
 	}
+
+    @Secure(hasAnyPermissions = {PermissionConstants.POPULATE_BUSY_DATA}, authActionBean = AdminPermissionAction.class)
+    public Resolution populatePurchaseReturns() {
+        try {
+            BusyPopulatePurchaseReturn busyPopulatePurchaseReturn = new BusyPopulatePurchaseReturn(dbHostName, dbName, dbUser, dbPassword);
+
+            logger.info("Populating Purchases ");
+            busyPopulatePurchaseReturn.populatePurchaseReturnData();
+        } catch (Exception e) {
+            logger.error("Unable to insert: ", e);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Busy purchases returns upadted !!"));
+        return new RedirectResolution("/pages/admin/busyUpdates.jsp");
+    }
 }

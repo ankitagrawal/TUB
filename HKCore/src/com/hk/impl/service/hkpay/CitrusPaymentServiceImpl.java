@@ -6,14 +6,9 @@ import com.citruspay.pg.model.Enquiry;
 import com.citruspay.pg.model.EnquiryCollection;
 import com.citruspay.pg.model.Refund;
 import com.hk.constants.payment.*;
-import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
-import com.hk.manager.EmailManager;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.service.UserService;
 import com.hk.pact.service.payment.HkPaymentService;
-import com.hk.pact.service.payment.PaymentService;
 import com.hk.pojo.HkPaymentResponse;
 import com.hk.web.AppConstants;
 import org.apache.commons.lang.math.NumberUtils;
@@ -180,7 +175,7 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
     private HkPaymentResponse createPayment(String gatewayOrderId, String gatewayReferenceId, String rrn , String respMsg, String txnType, String amount, String authIdCode){
 
         HkPaymentResponse hkPaymentResponse = new HkPaymentResponse(gatewayOrderId,gatewayReferenceId,respMsg,
-                                                                    EnumGateway.CITRUS.asGateway(),null,null,rrn,authIdCode,NumberUtils.toDouble(amount));
+                EnumGateway.CITRUS.asGateway(),null,null,rrn,authIdCode,NumberUtils.toDouble(amount));
 
         if(txnType.equalsIgnoreCase(EnumPaymentTransactionType.SALE.getName())){
             hkPaymentResponse.setGatewayOrderId(gatewayOrderId);

@@ -195,9 +195,17 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 if(!(shippingOrder.isServiceOrder())){
                 User adminUser = getUserService().getAdminUser();
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
+                    Long availableUnbookedInv = 0L;
 
-                    if (availableUnbookedInv < 0 && !shippingOrder.isDropShipping()){ // It cannot be = as for last order/unit unbooked will always be ZERO 
+                    if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
+                        availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
+                    }else{
+                        availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
+                    }
+
+                    Long orderedQty = lineItem.getQty();
+
+                    if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()){ // It cannot be = as for last order/unit unbooked will always be ZERO
                         String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
@@ -255,8 +263,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
                         return false;
                     }
-                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
-                    if (availableUnbookedInv <= 0) {
+                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(lineItem); // This
+                    
+                    if (availableUnbookedInv < 0) {
                         String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
                         logger.debug(comments);
                         logShippingOrderActivity(shippingOrder, adminUser,

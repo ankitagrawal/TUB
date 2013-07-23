@@ -56,8 +56,24 @@
   </style>
 </head>
 <body>
-
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="pa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="debitNoteSummary"/>
+
+    <script type="text/javascript" src="/healthkart/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/healthkart/js/jquery.hkCommonPlugins.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	if(${pa.printAsRtv!=null && pa.printAsRtv}){
+    	$('.dnRtvLabel').each(function(){
+    		$('.dnRtvLabel').text("RTV Note");
+    	});
+    }
+	
+});
+            
+</script>
 <div class="grid_12">
 	<div class="grid_4 alpha omega">
 		<div class="column">
@@ -70,7 +86,7 @@
       ${warehouse.state}<br/>
       TIN# ${warehouse.tin}
 </div></div></div>
-<h3 align="center">Debit Note</h3>
+<h3 align="center"><label class="dnRtvLabel">Debit Note</label></h3>
 <br/>
 		<div class="clear"></div>
 <div style="margin-top: 20px;"></div>
@@ -78,22 +94,29 @@
   <tr>
     <td><b>Supplier</b></td>
     <td>${debitNoteSummary.debitNote.supplier.name}</td>
-    <td><b>Debit Note Create Date</b></td>
+    <td><b><label class="dnRtvLabel">Debit Note</label> Create Date</b></td>
     <td><fmt:formatDate value="${debitNoteSummary.debitNote.createDate}" pattern="yyyy-MM-dd"/></td>
   </tr>
   <tr valign="top">
     <td><b>Address</b></td>
     <td>${debitNoteSummary.debitNote.supplier.line1}<br/>${debitNoteSummary.debitNote.supplier.line2}<br/>${debitNoteSummary.debitNote.supplier.city}<br/>${debitNoteSummary.debitNote.supplier.state}
     </td>
-    <td><b>Debit Note Number:</b></td>
+    <td><b><label class="dnRtvLabel">Debit Note</label> Number:</b></td>
     <c:choose>
-      <c:when test="${debitNoteSummary.debitNote.debitNoteNumber!=null }">
+    <c:when test="${pa.printAsRtv!=null && pa.printAsRtv }">
+    <td>${debitNoteSummary.debitNote.id }</td>
+    </c:when>
+    <c:otherwise>
+    <c:choose>
+    <c:when test="${debitNoteSummary.debitNote.debitNoteNumber!=null }">
        <td>
           ${debitNoteSummary.debitNote.debitNoteNumber}
       </td>
       </c:when>
       <c:otherwise>
     <td></td>
+    </c:otherwise>
+    </c:choose>
     </c:otherwise>
     </c:choose>
   </tr>
@@ -122,6 +145,12 @@
     <th>Qty</th>
     <th>Cost Price<br/>(Without TAX)</th>
     <th>MRP</th>
+    <c:choose>
+    <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+    <th>Discount %</th>
+    </c:when>
+    <c:otherwise></c:otherwise>
+    </c:choose>
     <%--<th>VAT</th>--%>
     <th>Taxable</th>
     <th>Tax</th>
@@ -158,6 +187,12 @@
       </td>
       <td>${debitNoteDto.debitNoteLineItem.mrp}
       </td>
+      <c:choose>
+	    <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td>${debitNoteDto.debitNoteLineItem.discountPercent}</td>
+	    </c:when>
+	    <c:otherwise></c:otherwise>
+    	</c:choose>
       <%--<td>
         <fmt:formatNumber value="${debitNoteDto.debitNoteLineItem.sku.tax.value * 100}" maxFractionDigits="2"/>%
       </td>--%>
@@ -178,7 +213,13 @@
   </tbody>
   <tfoot>
   <tr>
-    <td colspan="7">Total</td>
+  <c:choose>
+	    <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td colspan="8">Total</td>
+	    </c:when>
+	    <c:otherwise><td colspan="7">Total</td></c:otherwise>
+    	</c:choose>
+  
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalTaxable}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalTax}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalSurcharge}" maxFractionDigits="2"/></td>
@@ -186,12 +227,44 @@
     </td>
   </tr>
   <tr>
-    <td colspan="10">Freight And Forwarding</td>
+  <c:choose>
+  <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td colspan="11">Freight And Forwarding</td>
+	    </c:when>
+	    <c:otherwise><td colspan="10">Freight And Forwarding</td></c:otherwise>
+    	</c:choose>
     <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.freightForwardingCharges}" maxFractionDigits="2"/></Strong>
     </td>
   </tr>
-  <tr>
-    <td colspan="10">Final Debit Amount</td>
+<%--   <tr>
+						<td colspan="10">Further Discount</td>
+						<td><strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/> </strong></td>
+					</tr>
+ --%>
+			<c:choose>
+				<c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+					<tr>
+						<td colspan="11">Further Discount</td>
+						<td><strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></strong></td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<tr>
+						<td colspan="10">Further Discount</td>
+						<td><strong><fmt:formatNumber value="${debitNoteSummary.debitNote.discount}" maxFractionDigits="2"/></strong></td>
+					</tr>
+				
+				</c:otherwise>
+			</c:choose>
+
+
+			<tr>
+  <c:choose>
+  <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">
+	    <td colspan="11">Final Debit Amount</td>
+	    </c:when>
+	    <c:otherwise><td colspan="10">Final Debit Amount</td></c:otherwise>
+    	</c:choose>
     <td><Strong><fmt:formatNumber value="${debitNoteSummary.debitNote.finalDebitAmount}" maxFractionDigits="2"/></Strong>
     </td>
   </tr>

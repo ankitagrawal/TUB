@@ -35,13 +35,6 @@
 
     String gosf = request.getParameter("gosf");
     pageContext.setAttribute("gosf", gosf);
-
-    List<Category> categoryListToHideDesc = new ArrayList<Category>();
-    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("alternative-remedies").getCategory());
-    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("sexual-wellness").getCategory());
-    categoryListToHideDesc.add(CategoryCache.getInstance().getCategoryByName("fertility-support").getCategory());
-
-    pageContext.setAttribute("categoryListToHideDesc", categoryListToHideDesc);
 %>
  <c:set var="product" value="${pa.product}"/>
  <c:set var="seoData" value="${pa.seoData}"/>
@@ -138,7 +131,7 @@
 			//Click and change image
 			$('.color_box').click(function () {
 				var variantMainImageId = $(this).find('.variantMainImageId').val();
-				//var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
+				//var url = "http://hk-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
 				//$(".img320").html("<img class='icon' src='"+url+"'/>") ;
 				$.getJSON($('#updateProductVariantImageLink').attr('href'), {mainProductImageId:variantMainImageId}, function (resurl) {
 					//                alert(resurl.data);
@@ -266,11 +259,11 @@
 				</c:if>
 			</a>
 		</div>
-        <div id="tryOnLink" class="content">
+        <%--<div id="tryOnLink" class="content">
             <c:if test="${pa.validTryOnProductVariant != null}">
                 <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}"><img src="${pageContext.request.contextPath}/images/try-it-now.jpg" alt="Virtual Try On"></a>
             </c:if>
-        </div>
+        </div>--%>
 
         <div>
 			<c:if test="${fn:length(pa.productImages) > 1 && !pa.product.productHaveColorOptions}">
@@ -482,7 +475,7 @@
 			</s:link>
 		</div>
 	</shiro:hasPermission>
-	<c:if test="${hk:isNotBlank(product.overview) && !hk:collectionContainsAnyCollectionItem(product.categories, categoryListToHideDesc)}">
+	<c:if test="${hk:isNotBlank(product.overview)}">
 		<p class="overview">
 				${product.overview}
 		</p>
@@ -717,7 +710,7 @@
 		</div>
 	</c:if>
 
-	<c:if test="${hk:isNotBlank(product.description) && !hk:collectionContainsAnyCollectionItem(product.categories, categoryListToHideDesc)}">
+	<c:if test="${hk:isNotBlank(product.description)}">
 		<div class="content" id="description">
 			<h4>
 				Description
@@ -811,7 +804,7 @@
 				People who bought this also bought these products
 			</h4>
 
-			<c:forEach items="${relatedProducts}" var="relatedProduct">
+			<c:forEach items="${relatedProducts}" var="relatedProduct" begin="1" end="6">
                  <c:if test="${!relatedProduct.outOfStock and !relatedProduct.deleted and !relatedProduct.hidden and !relatedProduct.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productVOThumbG.jsp" product="${relatedProduct}"/>
                      <c:set var="check_related_products" value="1"/>

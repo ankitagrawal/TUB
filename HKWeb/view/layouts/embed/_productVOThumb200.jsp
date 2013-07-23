@@ -10,7 +10,7 @@
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+<c:set var="imageMediumSize" value="<%=EnumImageSize.BigThumbSize%>"/>
 <s:layout-definition>
   <%
     ProductVO productVO = null;

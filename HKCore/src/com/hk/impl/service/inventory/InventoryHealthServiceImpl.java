@@ -24,6 +24,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
@@ -45,14 +46,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Override
 	@Transactional
 	public void checkInventoryHealth(ProductVariant variant) {
-		Product product = variant.getProduct();
-		boolean updateHealth = (product.isJit() != null && !product.isJit())
-				&& (product.isService() != null && !product.isService()) && !product.getDropShipping();
 
-		if (!updateHealth) {
-			return;
-		}
-		
 		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
 		
 		InventoryInfo selectedInfo = null;
@@ -107,6 +101,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	
 	private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 		double newHkPrice = 0d;
+        Product product = variant.getProduct();
+        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+
 		if(vInfo.mrp != 0d && !variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
 			UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
             if (updatePvPrice == null) {
@@ -130,7 +127,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		variant.setNetQty(vInfo.netQty);
 		variant.setMrpQty(vInfo.mrpQty);
-		variant.setOutOfStock(!vInfo.inStock);
+
+        // for jit/drop-ship we don't alter stock status
+        if (updateStockStatus) {
+            variant.setOutOfStock(!vInfo.inStock);
+        }
+
 		if(vInfo.costPrice != 0l) {
 			variant.setCostPrice(vInfo.costPrice);
 		}
@@ -139,19 +141,20 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		
 		productVariantService.save(variant);
-		
-		Product product = productService.getProductById(variant.getProduct().getId());
-		if(!vInfo.inStock) {
-			List<ProductVariant> inStockVariants = product.getInStockVariants();
-			if (inStockVariants != null && inStockVariants.isEmpty()) {
-				product.setOutOfStock(true);
-				productService.save(product);
-			}
-		} else {
-			product.setOutOfStock(false);
-			productService.save(product);
-		}
-	}
+        //neither do we alter corresponding product status
+        if (updateStockStatus) {
+            if (!vInfo.inStock) {
+                List<ProductVariant> inStockVariants = product.getInStockVariants();
+                if (inStockVariants != null && inStockVariants.isEmpty()) {
+                    product.setOutOfStock(true);
+                    productService.save(product);
+                }
+            } else {
+                product.setOutOfStock(false);
+                productService.save(product);
+            }
+        }
+    }
 
 	private static final String bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty" +
 			  " from cart_line_item as a inner join base_order as b on a.order_id = b.id" +
@@ -208,6 +211,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		List<SkuInfo> list = query.list();
 		return list;
 	}
+
+    private List<SkuInfo> getPostActionQueueInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        String sql = inProcessInventorySql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
+        query.addScalar("skuId", Hibernate.LONG);
+
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("whIds", toWarehouseIds(whs));
+        query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
+        query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventoryInProcessingQueue()));
+
+        query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
+
+        @SuppressWarnings("unchecked")
+        List<SkuInfo> list = query.list();
+        return list;
+    }
 
 
 	private static final String checkedInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
@@ -340,6 +362,50 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return invList;
 	}
+	
+	@Override
+	public long getUnbookedInventoryInProcessingQueue(LineItem lineItem) {
+		long qty = 0l;
+		Sku sku = lineItem.getSku();
+		Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+		if(checkedInInvList != null) {
+			for (SkuInfo skuInfo : checkedInInvList) {
+				if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+					qty += skuInfo.getQty();
+				}
+			}
+		}
+		
+		List<SkuInfo> inProcessList = getInProcessInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+		for (SkuInfo skuInfo : inProcessList) {
+			if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+				qty -= skuInfo.getQty();
+			}
+		}
+		return qty;
+	}
+
+    @Override
+    public long getUnbookedInventoryForActionQueue(LineItem lineItem) {
+        long qty = 0l;
+        Sku sku = lineItem.getSku();
+        Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+        if(checkedInInvList != null) {
+            for (SkuInfo skuInfo : checkedInInvList) {
+                if(lineItem.getMarkedPrice().doubleValue() <= skuInfo.getMrp()) { //Ajeet putting all inventory greater tham LI MRP
+                    qty += skuInfo.getQty();
+                }
+            }
+        }
+
+        List<SkuInfo> inProcessList = getPostActionQueueInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+        for (SkuInfo skuInfo : inProcessList) {
+            if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+                qty -= skuInfo.getQty();
+            }
+        }
+        return qty;
+    }
 	
 	private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
 		List<SkuInfo> infos = new ArrayList<SkuInfo>();

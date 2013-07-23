@@ -175,5 +175,8 @@ public class PermissionConstants {
     
     public static final String SO_REVIEW = "SO_REVIEW";
     public static final String SO_FIX = "SO_FIX";
-    
+    public static final String BULK_SEEK = "BULK_SEEK";
+    public static final String DEBIT_NOTE_UPDATE = "DEBIT_NOTE_UPDATE";
+    public static final String DEBIT_NOTE_MANAGE = "DEBIT_NOTE_MANAGE";
+    public static final String MARK_RTO = "MARK_RTO";
 }

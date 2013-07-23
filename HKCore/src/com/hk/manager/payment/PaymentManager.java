@@ -128,7 +128,7 @@ public class PaymentManager {
             // a payment is either successful or the payment is awaiting authorization means that this is a double
             // payment.
             logger.info("Seems like a double payment attempt. (or a page refresh)");
-            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.DOUBLE_PAYMENT);
+//            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.DOUBLE_PAYMENT);
         }
     }
 
