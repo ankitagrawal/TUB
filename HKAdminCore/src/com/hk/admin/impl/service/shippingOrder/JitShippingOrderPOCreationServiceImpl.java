@@ -240,8 +240,9 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		HashMap<Supplier, List<LineItem>> supplierItemMap = new HashMap<Supplier, List<LineItem>>();
 		if(aquaBrightSeparatedFor!=null){
 		warehouseIdList.addAll(Arrays.asList(aquaBrightSeparatedFor.split(",")));
-		}
 		logger.debug("Aqua Bright Separated For - "+aquaBrightSeparatedFor+" "+warehouseIdList.size());
+		}
+		
 		if (lineItems != null && lineItems.size() > 0) {
 			for (LineItem lineItem : lineItems) {
 				Warehouse wh = lineItem.getSku().getWarehouse();
