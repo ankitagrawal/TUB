@@ -128,6 +128,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
 
       date = accountingInvoice.order_date;
@@ -228,6 +234,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
@@ -362,6 +374,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
       date = accountingInvoice.order_date;
 /*
@@ -460,6 +478,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
@@ -593,8 +617,15 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
-      date = accountingInvoice.order_date;
+
+          date = accountingInvoice.order_date;
 /*
       if(accountingInvoice.Order_type.equals("B2B")){
         vch_prefix = "T";
@@ -691,6 +722,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
