@@ -466,8 +466,11 @@ public class PaymentServiceImpl implements PaymentService {
                     Payment payment = refundPayment(order.getPayment().getGatewayOrderId(), amount);
                     return EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId());
                 } catch (HealthkartPaymentGatewayException e) {
-                   logger.debug("Exception occurred during reconciliation",e.getMessage());
+                   logger.debug("HealthKart Payment Gateway Exception occurred during reconciliation",e);
                    return false;
+                } catch (Exception e) {
+                    logger.debug("Exception occurred during reconciliation",e);
+                    return false;
                 }
             }
         }
