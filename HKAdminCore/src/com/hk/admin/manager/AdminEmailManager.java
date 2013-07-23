@@ -1148,7 +1148,7 @@ public class AdminEmailManager {
         //categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
         try {
         	String purchaseOrdertype = "";
-        	if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())){
+        	if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.JIT.asEnumPurchaseOrderType())){
         		purchaseOrdertype= "JIT";
         	}
         	else if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())){
