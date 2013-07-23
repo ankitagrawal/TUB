@@ -335,7 +335,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	}
 
 	
-	// Copy of Method1. createPurchaseOrderVariantQuantityMap
+	//Method1. createPurchaseOrderVariantQuantityMap - Creates Map(PO, SET<PVMrpQLi>)
 		public HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> createPurchaseOrderVariantMrpQuantityMap(
 				HashMap<PurchaseOrder, List<LineItem>> supplierLineItemHashMap) {
 			HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>> purchaseOrderVariantQuantityMap = new HashMap<PurchaseOrder, Set<ProductVariantMrpQtyLineItems>>();
@@ -420,7 +420,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			return purchaseOrderVariantQuantityMap;
 		}
 
-		//create PO method intermediate for the MRP varied PVs
+		//create PO method intermediate for the MRP varied PVs (Some nice code inside)
 		public void createPurchaseOrdersForVariedMrp(PurchaseOrder purchaseOrder, Set<ProductVariantMrpQtyLineItems> productVariantMrpQtyLineItems) {
 			Warehouse wh = purchaseOrder.getWarehouse();
 			Supplier sup = purchaseOrder.getSupplier();
@@ -455,7 +455,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			}
 		}
 
-		//Copy of Method2. - creatPO
+		//Create Purchase Orders
 		public PurchaseOrder createPO(Supplier supplier, Warehouse warehouse) {
 			PurchaseOrder purchaseOrder = new PurchaseOrder();
 			purchaseOrder.setCreateDate(new Date());
@@ -478,7 +478,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			return purchaseOrder;
 		}
 
-		//Copy of Method3. - createPOLineItemsForPO
+		//Create Purchase Order Line Items
 		public void createPOLineItemsForPO(PurchaseOrder purchaseOrder, Set<ProductVariantMrpQtyLineItems> items, Set<ShippingOrder> shippingOrders) {
 			if (items != null && items.size() > 0) {
 				Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
@@ -579,6 +579,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			}
 		}
 
+		//We do not need this, but in case of some rare corner cases it is required
 	public List<PurchaseOrder> deletePOsWithEmptyPOLineItems(List<PurchaseOrder> purchaseOrders) {
 		List<PurchaseOrder> list = new ArrayList<PurchaseOrder>();
 		if (purchaseOrders != null && purchaseOrders.size() > 0) {
@@ -596,6 +597,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		return list;
 	}
 
+	//Approve the Purchase Orders
 	public void approveAllPos(PurchaseOrder purchaseOrder, List<PurchaseOrderStatus> purchaseOrderStatus) {
 
 		for (PurchaseOrderStatus status : purchaseOrderStatus) {
@@ -619,6 +621,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 		}
 	}
 
+	//Get Bright Supplier In case there is Aqua-Bright Separation
 	public Supplier getBrightSupplierForAquaWH(Warehouse warehouse) {
 	    if (warehouse.getId().equals(WarehouseService.GGN_AQUA_WH_ID)) {
 	      return getSupplierDao().findByTIN("06101832036");

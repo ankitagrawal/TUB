@@ -128,11 +128,6 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
     }
     
     public List<ShippingOrder> getCancelledShippingOrderFromSoPo() {
-    	/*Long id = EnumShippingOrderStatus.SO_Cancelled.getId();
-    	String sql = "SELECT * FROM `shipping_order` so join shipping_order_has_purchase_order sop on so.id = sop.shipping_order_id where shipping_order_status_id=  :soStatusId";
-    	SQLQuery query = baseDao.createSqlQuery(sql);
-    	query.setLong("soStatusId", id);
-    	return query.list(); */
     	Long id = EnumShippingOrderStatus.SO_Cancelled.getId();
     	return (List<ShippingOrder>) getSession().createQuery("from ShippingOrder so where so.shippingOrderStatus.id = :statusId and so.purchaseOrders.size>0").setLong("statusId", id).list();
     }
