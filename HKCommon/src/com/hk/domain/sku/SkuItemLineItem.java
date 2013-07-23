@@ -1,9 +1,8 @@
 package com.hk.domain.sku;
 
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.shippingOrder.LineItem;
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.shippingOrder.LineItem;
 
 import javax.persistence.*;
 
@@ -16,7 +15,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "sku_Item_Line_Item")
+@Table(name = "sku_item_line_item")
 public class SkuItemLineItem implements java.io.Serializable {
 
 
@@ -26,29 +25,29 @@ public class SkuItemLineItem implements java.io.Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_variant_id")
+    @JoinColumn(name = "product_variant_id", nullable = false)
     private ProductVariant productVariant;
 
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_item_id")
+    @JoinColumn(name = "sku_item_id", nullable = false)
     private SkuItem skuItem;
 
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "line_item_id")
+    @JoinColumn(name = "line_item_id", nullable = false)
     private LineItem lineItem;
 
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_item_cli_id")
+    @JoinColumn(name = "sku_item_cli_id", nullable = false)
     private SkuItemCLI skuItemCLI;
 
 
-    @Column(name = "unit_Number", nullable = false)
+    @Column(name = "unit_number", nullable = false)
     private Long unitNumber;
 
     public Long getId() {

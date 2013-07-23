@@ -7,11 +7,9 @@ import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumOwnerStatus;
 
@@ -49,7 +47,7 @@ public class InventoryManageServiceImpl {
                 for (int i = 0; i < qtyToBeSet; i++) {
                     for (SkuItem skuItem : skuItems) {
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                        skuItem.setSkuItemOwnerStatus(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+                        skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
                         skuItem = (SkuItem) getBaseDao().save(skuItem);
                         skuItemsToBeBooked.add(skuItem);
                     }
@@ -68,7 +66,7 @@ public class InventoryManageServiceImpl {
         Long count = 1L;
         for (SkuItem si : skuItemsToBeBooked) {
             SkuItemCLI skuItemCLI = new SkuItemCLI();
-            skuItemCLI.setCartItem(cartLineItem);
+            skuItemCLI.setCartLineItem(cartLineItem);
             skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
             skuItemCLI.setUnitNumber(count);
             skuItemCLI.setSkuItem(si);

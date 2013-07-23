@@ -1,8 +1,8 @@
 package com.hk.domain.sku;
 
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -16,9 +16,9 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "sku_item_owner")
-public class SkuItemOwnerStatus   implements Serializable {
+public class SkuItemOwner implements Serializable {
 
-    @Id
+	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
@@ -50,9 +50,9 @@ public class SkuItemOwnerStatus   implements Serializable {
 			return false;
 		}
 
-		SkuItemOwnerStatus skuItemOwnerStatus = (SkuItemOwnerStatus) obj;
-		if (this.id != null && skuItemOwnerStatus.getId() != null) {
-			return (this.id.equals(skuItemOwnerStatus.getId()));
+		SkuItemOwner skuItemOwner = (SkuItemOwner) obj;
+		if (this.id != null && skuItemOwner.getId() != null) {
+			return (this.id.equals(skuItemOwner.getId()));
 		}
 		return false;
 	}
