@@ -29,7 +29,7 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         return getNetInventory(Arrays.asList(sku));
     }
 
-    // checked in as always with  heritor self
+    // checked in as always with  owner self
     public Long getNetInventory(List<Sku> skuList) {
         Long netInv = 0L;
         if (skuList != null && !skuList.isEmpty()) {

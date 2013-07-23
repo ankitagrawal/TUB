@@ -39,8 +39,8 @@ public class SkuItemCLI implements java.io.Serializable {
     @JoinColumn(name = "cart_line_item_id")
     private CartLineItem cartItem;
 
-    @Column(name = "wait_Number", nullable = false)
-    private Long waitNumber;
+    @Column(name = "unit_Number", nullable = false)
+    private Long unitNumber;
 
 
 
@@ -76,14 +76,12 @@ public class SkuItemCLI implements java.io.Serializable {
         this.cartItem = cartItem;
     }
 
-    public Long getWaitNumber() {
-        return waitNumber;
+
+    public Long getUnitNumber() {
+        return unitNumber;
     }
 
-    public void setWaitNumber(Long waitNumber) {
-        this.waitNumber = waitNumber;
+    public void setUnitNumber(Long unitNumber) {
+        this.unitNumber = unitNumber;
     }
-
-
-
 }

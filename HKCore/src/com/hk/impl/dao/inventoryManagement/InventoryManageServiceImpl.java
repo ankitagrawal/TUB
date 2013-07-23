@@ -7,9 +7,11 @@ import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumOwnerStatus;
 
@@ -68,7 +70,7 @@ public class InventoryManageServiceImpl {
             SkuItemCLI skuItemCLI = new SkuItemCLI();
             skuItemCLI.setCartItem(cartLineItem);
             skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-            skuItemCLI.setWaitNumber(count);
+            skuItemCLI.setUnitNumber(count);
             skuItemCLI.setSkuItem(si);
             getBaseDao().save(skuItemCLI);
             count++;
@@ -76,7 +78,7 @@ public class InventoryManageServiceImpl {
     }
 
 
-   /// Releasing the SkuItem in case of Payment Failure
+   /// Releasing the SkuItem in case of Payment Failure  or Error
       public void releaseSkuLineItemForOrder(Order order){
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems){
@@ -96,15 +98,7 @@ public class InventoryManageServiceImpl {
    }
 
 
-    
-
-
-
-
-
-
-
-  // get list Of SkuItems to booked
+   // get list Of SkuItems to booked
 
     public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp) {
         List<SkuItem> skuItemList = new ArrayList<SkuItem>();
@@ -122,6 +116,8 @@ public class InventoryManageServiceImpl {
         }
         return skuItemList;
     }
+
+
 
     public BaseDao getBaseDao() {
         return baseDao;

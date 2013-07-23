@@ -48,8 +48,8 @@ public class SkuItemLineItem implements java.io.Serializable {
     private SkuItemCLI skuItemCLI;
 
 
-    @Column(name = "wait_Number", nullable = false)
-    private Long waitNumber;
+    @Column(name = "unit_Number", nullable = false)
+    private Long unitNumber;
 
     public Long getId() {
         return id;
@@ -59,12 +59,12 @@ public class SkuItemLineItem implements java.io.Serializable {
         this.id = id;
     }
 
-    public Long getWaitNumber() {
-        return waitNumber;
+    public Long getUnitNumber() {
+        return unitNumber;
     }
 
-    public void setWaitNumber(Long waitNumber) {
-        this.waitNumber = waitNumber;
+    public void setUnitNumber(Long unitNumber) {
+        this.unitNumber = unitNumber;
     }
 
     public ProductVariant getProductVariant() {
