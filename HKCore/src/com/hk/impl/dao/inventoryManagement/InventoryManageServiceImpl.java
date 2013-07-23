@@ -1,5 +1,6 @@
 package com.hk.impl.dao.inventoryManagement;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.pact.service.inventory.SkuService;
@@ -11,7 +12,6 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.sku.EnumOwnerStatus;
 
 import java.util.*;
 
@@ -47,7 +47,7 @@ public class InventoryManageServiceImpl {
                 for (int i = 0; i < qtyToBeSet; i++) {
                     for (SkuItem skuItem : skuItems) {
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                        skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                         skuItem = (SkuItem) getBaseDao().save(skuItem);
                         skuItemsToBeBooked.add(skuItem);
                     }

@@ -24,17 +24,17 @@ public class SkuItemCLI implements java.io.Serializable {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "product_variant_id")
+	@JoinColumn(name = "product_variant_id", nullable = false)
 	private ProductVariant productVariant;
 
 	@JsonSkip
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sku_item_id")
+	@JoinColumn(name = "sku_item_id", nullable = false)
 	private SkuItem skuItem;
 
 	@JsonSkip
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cart_line_item_id")
+	@JoinColumn(name = "cart_line_item_id", nullable = false)
 	private CartLineItem cartLineItem;
 
 	@Column(name = "unit_num", nullable = false)
