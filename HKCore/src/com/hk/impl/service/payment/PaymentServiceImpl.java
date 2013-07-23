@@ -3,7 +3,7 @@ package com.hk.impl.service.payment;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
-import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.payment.*;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -452,7 +452,7 @@ public class PaymentServiceImpl implements PaymentService {
     public boolean reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) {
         User loggedOnUser =  userService.getLoggedInUser();
         if (isValidRefundableAmount(order.getPayment(), amount)) {
-            if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType)) {
+            if(EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
 
                 RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(order.getUser(),loggedOnUser,
                         order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
@@ -461,7 +461,7 @@ public class PaymentServiceImpl implements PaymentService {
                 setRefundAmount(order.getPayment(), amount);
                 return true;
 
-            } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType)) {
+            } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
                 try {
                     Payment payment = refundPayment(order.getPayment().getGatewayOrderId(), amount);
                     return EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId());

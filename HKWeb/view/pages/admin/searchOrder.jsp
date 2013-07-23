@@ -4,11 +4,11 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="com.hk.constants.inventory.EnumReconciliationType" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.payment.EnumGateway" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationActionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -174,8 +174,8 @@
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
 <c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
-<c:set var="rewardPoints" value="<%=EnumReconciliationType.RewardPoints.getId()%>"/>
-<c:set var="refundPoints" value="<%=EnumReconciliationType.RefundAmount.getId()%>"/>
+<c:set var="rewardPoints" value="<%=EnumReconciliationActionType.RewardPoints.getId()%>"/>
+<c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 

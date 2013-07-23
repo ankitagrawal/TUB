@@ -15,8 +15,8 @@
 <%@ page import="java.util.Collection" %>
 <%@ page import="com.hk.domain.queue.ActionTask" %>
 <%@ page import="com.hk.constants.payment.EnumGateway" %>
-<%@ page import="com.hk.constants.inventory.EnumReconciliationType" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationActionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -102,8 +102,8 @@
 <c:set var="BRANDTHBF" value="<%=VariantConfigOptionParam.BRANDTHBF.param()%>"/>
 
 <c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
-<c:set var="rewardPoints" value="<%=EnumReconciliationType.RewardPoints.getId()%>"/>
-<c:set var="refundPoints" value="<%=EnumReconciliationType.RefundAmount.getId()%>"/>
+<c:set var="rewardPoints" value="<%=EnumReconciliationActionType.RewardPoints.getId()%>"/>
+<c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>

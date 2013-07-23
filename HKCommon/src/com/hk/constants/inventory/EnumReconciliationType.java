@@ -31,8 +31,6 @@ public enum EnumReconciliationType {
     AddBatchMismatch(170L, "Batch Mismatch-Add"),
     AddFreeVariant(180L, "Free Variant-Add"),
     RVForDebitNote(190L, "RV For Debit Note"),
-    RefundAmount(200L, "Refund Amount"),
-    RewardPoints(210L, "Reward Points"),
     ;
 
 

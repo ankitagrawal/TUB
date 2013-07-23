@@ -4,7 +4,7 @@ import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -121,13 +121,13 @@ public class ShippingOrderAction extends BaseAction {
             if (paymentService.isValidReconciliation(shippingOrder.getBaseOrder().getPayment()) && reconciliationType != null) {
                 if (shippingOrder.getAmount() > 0) {
                     boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
-                    if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
+                    if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType) && flag) {
                         shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
                         addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
-                    } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && flag) {
+                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && flag) {
                         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.AmountRefundedOrderCancel);
                         addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
-                    } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
+                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && !flag){
                         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountFailed);
                         addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
                     } else {

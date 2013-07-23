@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -76,13 +77,13 @@ public class CancelOrderAction extends BaseAction {
                 if (order.getPayment().getAmount() > 0) {
                     double refundableAmount = paymentService.getRefundableAmount(order.getPayment());
                     boolean flag = paymentService.reconciliationOnCancel(reconciliationType, order,refundableAmount, cancellationRemark);
-                    if (EnumReconciliationType.RewardPoints.getId().equals(reconciliationType) && flag) {
+                    if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType) && flag) {
                         adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
                         addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
-                    } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && flag) {
+                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && flag) {
                         adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.AmountRefundedOrderCancel);
                         addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
-                    } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
+                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && !flag){
                         adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
                         addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user, Please contact tech support"));
                     } else {
