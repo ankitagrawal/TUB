@@ -288,7 +288,7 @@ public class BusyPopulateSalesData {
        transactionFooterForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
     }
       catch (Exception e) {
-            logger.info("Unable to insert in  transaction header: ",e);
+            logger.info("Unable to insert in  transaction header for SO ID : "+ accountingInvoice.shipping_order_id);
           }
     }
   }
