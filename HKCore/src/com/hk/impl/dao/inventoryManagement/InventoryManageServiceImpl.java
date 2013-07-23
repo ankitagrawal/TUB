@@ -6,8 +6,10 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
 import com.hk.constants.sku.EnumSkuItemStatus;
 
 import java.util.Set;
@@ -41,7 +43,7 @@ public class InventoryManageServiceImpl {
             for (int i = 0; i < qtyToBeSet; i++) {
                 for (SkuItem si : skuItems) {
                   si.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                  si.setSkuItemOwnerStatus();
+                  si.setSkuItemOwnerStatus(null);
                 }
             }
 
@@ -69,6 +71,26 @@ public class InventoryManageServiceImpl {
             }
         }
         return skuItemList;
+    }
+    
+    public void checkoutMethod(LineItem lineItem, SkuItem skuItem){
+    	CartLineItem cartLineItem = lineItem.getCartLineItem();
+    	if(skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.BOOKED)){
+    		SkuItemCLI skuItemCLI = getSkuItemCLI(cartLineItem);
+    		if(skuItemCLI.getSkuItem().getId().equals(skuItem.getId())){
+    			
+    		}
+    	}
+    	if(!skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.BOOKED)){
+    		//flip skuItem with a booked SI.
+    		Sku sku = lineItem.getSku();
+    	}
+    }
+    
+    //search for SkuItemCLI
+    public SkuItemCLI getSkuItemCLI(CartLineItem cartLineItem){
+    	SkuItemCLI skuItemCLI = null;
+    	return skuItemCLI;
     }
 
 
