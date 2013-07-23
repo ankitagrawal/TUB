@@ -59,6 +59,16 @@ public enum EnumPurchaseOrderStatus {
 
 
 	}
+	
+	public static List<PurchaseOrderStatus> getAllPurchaseOrderStatusForSystemGeneratedPOs() {
+
+		List<PurchaseOrderStatus> PurchaseOrderStatusList = Arrays.asList(SentForApproval.getPurchaseOrderStatus(),
+				Approved.getPurchaseOrderStatus());
+		Collections.sort(PurchaseOrderStatusList);
+		return PurchaseOrderStatusList;
+
+
+	}
 
 	public static PurchaseOrderStatus getNextPurchaseOrderStatus(PurchaseOrderStatus purchaseOrderStatus) {
 		List<PurchaseOrderStatus> purchaseOrderStatusList = geAllPurchaseOrderStatus();
@@ -97,4 +107,11 @@ public enum EnumPurchaseOrderStatus {
 		purchaseOrderStatus.setName(this.name);
 		return purchaseOrderStatus;
 	}
+	
+	public static EnumPurchaseOrderStatus getById(Long id) {
+	    for(EnumPurchaseOrderStatus e : values()) {
+	        if(e.id.equals(id)) return e;
+	    }
+	    return null;
+	 }
 }

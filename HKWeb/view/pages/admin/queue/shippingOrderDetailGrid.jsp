@@ -403,6 +403,7 @@
                             <s:submit name="initiateRTO" value="Initiate RTO" class="initiateRTOButton"/>
                         </div>
                     </s:form>
+
                     <script type="text/javascript">
                         $('.initiateRTOButton').click(function() {
 	                        if($('#rto-reason').val()=="null"){
@@ -422,6 +423,9 @@
                         }
                     </script>
                 </c:if>
+            </shiro:hasAnyRoles>
+
+    <shiro:hasPermission name="<%=PermissionConstants.MARK_RTO%>">
 
                 <c:if test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
@@ -446,8 +450,8 @@
                         }
                     </script>
                 </c:if>
-            </shiro:hasAnyRoles>
-        </c:if>
+              </shiro:hasPermission>
+    </c:if>
     </div>
 </td>
 <c:if test="${isActionQueue == false}">
@@ -628,6 +632,12 @@
                                 ${actionItem.currentActionTask.name}
                             </c:if>
                         </c:if>
+                        <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
+                        <span>
+                      <c:forEach items="${shippingOrder.purchaseOrders}" var="po">
+                     PO# <a href="${pageContext.request.contextPath}/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${po.id}" target="_blank">${po.id}</a>
+                      </c:forEach>
+                      </span></c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>

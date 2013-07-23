@@ -1,31 +1,28 @@
 package com.hk.impl.service.shippingOrder;
 
+import com.hk.util.SOFirewall;
 import java.util.*;
-
-import com.hk.constants.analytics.EnumReason;
-import com.hk.constants.queue.EnumBucket;
-import com.hk.domain.analytics.Reason;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.*;
-import com.hk.domain.payment.Payment;
-import com.hk.domain.shippingOrder.LifecycleReason;
-import com.hk.impl.service.queue.BucketService;
-import com.hk.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.akube.framework.dao.Page;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.order.*;
+import com.hk.domain.payment.Payment;
+import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.service.queue.BucketService;
+import com.hk.manager.EmailManager;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
@@ -33,11 +30,24 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.manager.EmailManager;
+import com.hk.util.HKDateUtil;
+import com.hk.util.OrderUtil;
+import com.hk.util.SOFirewall;
+import com.hk.util.TokenUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author vaibhav.adlakha
@@ -198,7 +208,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     Long availableUnbookedInv = 0L;
 
                     if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-                        availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
+	                    return true;
+                        //availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
                     }else{
                         availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
                     }
@@ -419,7 +430,20 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
-
+	
+	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant, Double mrp) {
+		Set<LineItem> items = shippingOrder.getLineItems();
+		if(items!=null && items.size()>0){
+			for(LineItem item : items){
+				if(item.getSku().getProductVariant().equals(productVariant)&&item.getMarkedPrice().equals(mrp)){
+					return true;
+				}
+			}
+		}
+		return false;
+		
+	}
+	
     public UserService getUserService() {
         return userService;
     }
