@@ -43,12 +43,12 @@ public class SkuItemLineItem implements java.io.Serializable {
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_item_cli_id", nullable = false)
+    @JoinColumn(name = "sku_item_cart_line_item_id", nullable = false)
     private SkuItemCLI skuItemCLI;
 
 
-    @Column(name = "unit_number", nullable = false)
-    private Long unitNumber;
+    @Column(name = "unit_num", nullable = false)
+    private Long unitNum;
 
     public Long getId() {
         return id;
@@ -58,12 +58,12 @@ public class SkuItemLineItem implements java.io.Serializable {
         this.id = id;
     }
 
-    public Long getUnitNumber() {
-        return unitNumber;
+    public Long getUnitNum() {
+        return unitNum;
     }
 
-    public void setUnitNumber(Long unitNumber) {
-        this.unitNumber = unitNumber;
+    public void setUnitNum(Long unitNumber) {
+        this.unitNum = unitNumber;
     }
 
     public ProductVariant getProductVariant() {

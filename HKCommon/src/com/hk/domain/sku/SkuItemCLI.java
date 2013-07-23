@@ -37,8 +37,8 @@ public class SkuItemCLI implements java.io.Serializable {
 	@JoinColumn(name = "cart_line_item_id")
 	private CartLineItem cartLineItem;
 
-	@Column(name = "unit_number", nullable = false)
-	private Long unitNumber;
+	@Column(name = "unit_num", nullable = false)
+	private Long unitNum;
 
 	public Long getId() {
 		return id;
@@ -72,11 +72,11 @@ public class SkuItemCLI implements java.io.Serializable {
 		this.cartLineItem = cartLineItem;
 	}
 
-	public Long getUnitNumber() {
-		return unitNumber;
+	public Long getUnitNum() {
+		return unitNum;
 	}
 
-	public void setUnitNumber(Long unitNumber) {
-		this.unitNumber = unitNumber;
+	public void setUnitNum(Long unitNumber) {
+		this.unitNum = unitNumber;
 	}
 }

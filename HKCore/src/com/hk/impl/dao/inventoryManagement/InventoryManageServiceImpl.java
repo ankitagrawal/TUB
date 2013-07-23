@@ -68,7 +68,7 @@ public class InventoryManageServiceImpl {
             SkuItemCLI skuItemCLI = new SkuItemCLI();
             skuItemCLI.setCartLineItem(cartLineItem);
             skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-            skuItemCLI.setUnitNumber(count);
+            skuItemCLI.setUnitNum(count);
             skuItemCLI.setSkuItem(si);
             getBaseDao().save(skuItemCLI);
             count++;
