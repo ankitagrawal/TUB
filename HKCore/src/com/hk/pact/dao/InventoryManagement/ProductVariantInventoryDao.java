@@ -20,18 +20,13 @@ public interface ProductVariantInventoryDao  {
 
 
 
-////////
 
 
-   public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);
-
-    public Long getActualBookedQtyOfProductVariant(ProductVariant productVariant);
+  // Method to get temp Booked and Booked qty
+   public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant ,Long skuItemStatusId, Long skuItemOwnerStatusId) ;
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
 
-
-    ////
-    
 
 }

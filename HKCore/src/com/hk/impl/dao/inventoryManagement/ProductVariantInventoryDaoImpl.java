@@ -2,6 +2,7 @@ package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -56,37 +57,31 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
    
 
 
-//////////
-
-    public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant) {
-        String query = "select count(*) from SkuItemCLI sici where sici.productVariant = :productVariant and sici.skuItem.skuItemStatus.id=" + EnumSkuItemStatus.TEMP_BOOKED.getId();
-        Long qtyInQueue = (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).uniqueResult();
+    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant ,Long skuItemStatusId, Long skuItemOwnerStatusId) {
+        String query = "select count(*) from SkuItem si where si.skugroup.productVariant = :productVariant and si.skuItemStatus.id= :skuItemStatusId and  si.skuItemOwner.id= :skuItemOwnerStatusId" ;
+        Long qtyInQueue = (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("skuItemStatusId",skuItemStatusId).setParameter("skuItemOwnerStatusId",skuItemOwnerStatusId).uniqueResult();
         return qtyInQueue;
     }
 
 
-    public Long getActualBookedQtyOfProductVariant(ProductVariant productVariant) {
-        String query = "select count(*) from SkuItemLineItem  siLi where siLi.productVariant = :productVariant and siLi.skuItem.skuItemStatus.id=" + EnumSkuItemStatus.BOOKED.getId();
-        Long qtyActualBooked = (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).uniqueResult();
-        return qtyActualBooked;
-    }
 
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
-
         Long netInventory = getNetInventory(skuList);
         logger.debug("net inventory " + netInventory);
 
         Long bookedInventory = 0L;
         if (!skuList.isEmpty()) {
             ProductVariant productVariant = skuList.get(0).getProductVariant();
-            bookedInventory = getBookedQtyOfProductVariantInQueue(productVariant) + getActualBookedQtyOfProductVariant(productVariant);
-            logger.debug("booked inventory " + bookedInventory);
-        }
+            bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) +getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
+            logger.debug("booked inventory " + bookedInventory);             }
 
         return (netInventory - bookedInventory);
 
     }
+
+
+    
 
 
 

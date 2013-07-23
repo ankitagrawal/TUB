@@ -38,7 +38,7 @@ public class InventoryManageServiceImpl {
     public void bookSkuLineItemForOrder(Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems) {
-            cartLineItem.getProductVariant();
+
             List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
             List<SkuItem> skuItems = getSkuItems(skus, cartLineItem.getProductVariant().getMarkedPrice());
             long qtyToBeSet = cartLineItem.getQty();

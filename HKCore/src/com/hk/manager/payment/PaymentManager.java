@@ -407,7 +407,7 @@ public class PaymentManager {
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
             payment = getPaymentService().save(payment);
 
-            //  todo ERP -- call to release Skuitems Temp booked  and hard delete entries in skuItemCLI
+            //  todo ERP  Ankit  -- call to release Skuitems Temp booked  and hard delete entries in skuItemCLI
         }
         return payment;
     }
@@ -429,7 +429,7 @@ public class PaymentManager {
                 payment.setErrorLog(e.getError().getMessage());
                 paymentDao.save(payment);
                 
-                 //  todo ERP -- call to release Skuitems Temp booked  and hard delete entries in skuItemCLI
+                 //  todo ERP Ankit -- call to release Skuitems Temp booked  and hard delete entries in skuItemCLI
             }
         }
     }
