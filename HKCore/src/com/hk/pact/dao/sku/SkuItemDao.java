@@ -23,5 +23,7 @@ public interface SkuItemDao extends BaseDao {
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku);
+    
+    public List<SkuItem> getSkuItem(Sku sku, Long id);
 
 }

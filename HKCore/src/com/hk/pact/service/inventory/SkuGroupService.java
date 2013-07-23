@@ -65,6 +65,8 @@ public interface SkuGroupService {
     public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup);
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku);
+    
+    public List<SkuItem> getSkuItem(Sku sku, Long id);
 
 
 }

@@ -108,6 +108,8 @@ public class StockTransferAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
+    	//TODO: ERP Checkout
+    	
         SkuItem skuItem = null;
         if (stockTransfer == null) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));

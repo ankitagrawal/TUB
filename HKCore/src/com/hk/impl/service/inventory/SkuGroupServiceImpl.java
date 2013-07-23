@@ -126,6 +126,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     public List<SkuItem> getCheckedInSkuItems(Sku sku) {
         return skuItemDao.getCheckedInSkuItems(sku);
     }
+    
+    public List<SkuItem> getSkuItem(Sku sku, Long id){
+    	return skuItemDao.getSkuItem(sku, id);
+    }
 
     public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn) {	
     	return skuGroupDao.getAllCheckedInBatchForGrn(grn);
