@@ -367,6 +367,7 @@
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
 -/health-devices/medical-care : Medical Care
+--/health-devices/medical-care/innovative-health-devices:Innovative Health Devices
 --/health-devices/medical-care/weighing-scales
 ---/health-devices/medical-care/weighing-scales/digital
 ---/health-devices/medical-care/weighing-scales/analog
