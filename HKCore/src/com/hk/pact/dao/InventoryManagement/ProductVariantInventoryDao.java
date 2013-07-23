@@ -1,6 +1,7 @@
 package com.hk.pact.dao.InventoryManagement;
 
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public interface ProductVariantInventoryDao  {
    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant ,Long skuItemStatusId, Long skuItemOwnerStatusId) ;
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
+
+    public List<SkuItem> getSkuItems(Sku sku, Double mrp);
 
 
 

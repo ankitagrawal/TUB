@@ -5,11 +5,15 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.hibernate.Query;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,16 +58,12 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         return netInv;
     }
 
-   
 
+    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, Long skuItemStatusId, Long skuItemOwnerStatusId) {
+        String query = "select count(*) from SkuItem si where si.skugroup.productVariant = :productVariant and si.skuItemStatus.id= :skuItemStatusId and  si.skuItemOwner.id= :skuItemOwnerStatusId";
+        return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", skuItemStatusId).setParameter("skuItemOwnerStatusId", skuItemOwnerStatusId).uniqueResult();
 
-    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant ,Long skuItemStatusId, Long skuItemOwnerStatusId) {
-        String query = "select count(*) from SkuItem si where si.skugroup.productVariant = :productVariant and si.skuItemStatus.id= :skuItemStatusId and  si.skuItemOwner.id= :skuItemOwnerStatusId" ;
-        Long qtyInQueue = (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("skuItemStatusId",skuItemStatusId).setParameter("skuItemOwnerStatusId",skuItemOwnerStatusId).uniqueResult();
-        return qtyInQueue;
     }
-
-
 
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
@@ -73,16 +73,21 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         Long bookedInventory = 0L;
         if (!skuList.isEmpty()) {
             ProductVariant productVariant = skuList.get(0).getProductVariant();
-            bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) +getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
-            logger.debug("booked inventory " + bookedInventory);             }
+            bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
+            logger.debug("booked inventory " + bookedInventory);
+        }
 
         return (netInventory - bookedInventory);
 
     }
 
 
-    
+    public List<SkuItem> getSkuItems(Sku sku, Double mrp) {
+        String sql = " from SkuItem si where si.skuGroup.sku =:sku and si.skuGroup.sku.mrp =:mrp and si.skuItemStatus.id = :skuItemStatusId and (si.skuGropu.status != :reviewStatus or si.skGroup.status is null)";
+        Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("mrp", mrp).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
+        return query.list();
 
+    }
 
 
 }

@@ -6,11 +6,14 @@ import org.springframework.stereotype.Service;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.constants.sku.EnumSkuItemStatus;
 
 import java.util.*;
@@ -32,15 +35,19 @@ public class InventoryManageServiceImpl {
     SkuGroupService skuGroupService;
     @Autowired
     private BaseDao baseDao;
+    @Autowired
+    private ProductVariantInventoryDao productVariantInventoryDao ;
 
 
     // Call this method from payment action  java
     public void bookSkuLineItemForOrder(Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems) {
-
-            List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
-            List<SkuItem> skuItems = getSkuItems(skus, cartLineItem.getProductVariant().getMarkedPrice());
+           ProductVariant productVariant = cartLineItem.getProductVariant();
+           // assuming we are going to have warehouse on product variant
+            Warehouse warehouse = null;
+           Sku sku = skuService.getSKU(productVariant, warehouse); //
+            List<SkuItem> skuItems =productVariantInventoryDao.getSkuItems(sku, productVariant.getMarkedPrice());
             long qtyToBeSet = cartLineItem.getQty();
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
             if (skuItems.size() > 0) {
@@ -114,6 +121,9 @@ public class InventoryManageServiceImpl {
         }
         return skuItemList;
     }
+
+
+    
 
 
 
