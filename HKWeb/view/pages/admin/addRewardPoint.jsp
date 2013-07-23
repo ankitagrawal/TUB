@@ -17,7 +17,7 @@
   <s:layout-component name="content">
     <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
       <fieldset>
-           Cancel Order Reward Points will not be given from this screen.
+           <label style="color: #ff0000; font-weight: bold; font-size: 25px;">Reward Points given due to cancellations will not be given from this screen. They will be given automatically</label>
       </fieldset>
       <fieldset class="left_label">
         <ul>
