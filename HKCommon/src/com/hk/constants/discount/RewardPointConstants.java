@@ -11,5 +11,5 @@ public class RewardPointConstants {
 
   public static final Double referrerRewardPoints = 100D;
   public static final int MAX_ALLOWED_DAYS_TO_REDEEM_REFERRER_POINTS = 180;
-public static final double MAX_REWARD_POINTS = 10000;
+public static final double MAX_REWARD_POINTS = 1000;
 }
