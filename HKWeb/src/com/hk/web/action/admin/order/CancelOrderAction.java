@@ -84,7 +84,7 @@ public class CancelOrderAction extends BaseAction {
                         addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
                     } else if (EnumReconciliationType.RefundAmount.getId().equals(reconciliationType) && !flag){
                         adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
-                        addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
+                        addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user, Please contact tech support"));
                     } else {
                         adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RefundAmountExceedsFailed);
                         addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
