@@ -58,13 +58,7 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         return netInv;
     }
 
-
-    public Sku getSkuOfLastAvailableUnit(ProductVariant productVariant) {
-        //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
-        String query = "select si.skuGroup.sku from SkuItem si where si.skuGroup.status != :skuStatus and si.skuItemStatus.id = "
-                + EnumSkuItemStatus.Checked_IN.getId() + " and si.skuGroup.sku.productVariant = :productVariant";
-        return (Sku) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW).list().get(0);
-    }
+   
 
 
 //////////
