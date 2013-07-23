@@ -64,8 +64,6 @@ public interface PaymentService {
 
     public boolean isValidRefundableAmount(Payment amount, Double orderAmount);
 
-    public void setRefundAmount(Payment payment, Double amount);
-
     public boolean reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) ;
 
     public boolean isValidReconciliation(Payment payment) ;
