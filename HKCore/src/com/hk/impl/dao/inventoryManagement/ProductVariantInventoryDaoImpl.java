@@ -3,6 +3,7 @@ package com.hk.impl.dao.inventoryManagement;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
@@ -91,20 +92,22 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         if (!skuList.isEmpty()) {
             ProductVariant productVariant = skuList.get(0).getProductVariant();
             bookedInventory = getBookedQtyOfProductVariantInQueue(productVariant) + getActualBookedQtyOfProductVariant(productVariant);
-            logger.debug("booked inventory " + bookedInventory);          }
+            logger.debug("booked inventory " + bookedInventory);
+        }
 
-          return (netInventory - bookedInventory);
+        return (netInventory - bookedInventory);
 
     }
 
 
-   ////////
-
-    
-    
+    ////////
 
 
+    public List<SkuItemCLI> getListSkuItemCLI(CartLineItem cartLineItem) {
+        String query = "from SkuItemCLI sici where sici.cartLineItem = :cartLineItem";
+        return (Lis<SkuItemCLI>) getSession().createQuery(query).setParameter("cartLineItem", cartLineItem).list();
 
+    }
 
 
 }

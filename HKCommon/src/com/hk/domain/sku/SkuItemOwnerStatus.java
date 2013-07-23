@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 
 @Entity
-@Table(name = "sku_item_owner_status")
+@Table(name = "sku_item_owner")
 public class SkuItemOwnerStatus   implements Serializable {
 
     @Id
