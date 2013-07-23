@@ -437,6 +437,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             }
         }
         if (totalRewardPoints > 0) {
+
             RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(shippingOrder.getBaseOrder().getUser(),loggedOnUser,
                     shippingOrder.getBaseOrder(), totalRewardPoints, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
 
