@@ -13,6 +13,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,10 @@ public class POSReportAction extends BaseAction {
 
   public Resolution generateSalesReportByDate() {
     Store store = userService.getWarehouseForLoggedInUser().getStore();
+    if (store == null) {
+      addRedirectAlertMessage(new SimpleMessage("Please select a Store"));
+      return new ForwardResolution("/pages/pos/pos.jsp");
+    }
     saleList = posReportService.storeSalesReport(store.getId(), startDate, endDate);
     returnItemList = posReportService.storeReturnReport(store.getId(), startDate, endDate);
     posSummaryDto = posReportService.storeDailySalesSummaryReport(saleList, returnItemList);
@@ -48,24 +53,27 @@ public class POSReportAction extends BaseAction {
   }
 
   public Resolution generateDailySalesReport() {
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
-    saleList = posReportService.storeSalesReport(store.getId(), null, null);
-    returnItemList = posReportService.storeReturnReport(store.getId(), null, null);
-    posSummaryDto = posReportService.storeDailySalesSummaryReport(saleList, returnItemList);
-    return new ForwardResolution("/pages/pos/posReportResult.jsp");
+    startDate = null;
+    endDate = null;
+    return generateSalesReportByDate();
+
   }
 
   public Resolution generateReturnReportByDate() {
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
-    returnItemList = posReportService.storeReturnReport(store.getId(), startDate, endDate);
+    Long warehouseId = userService.getWarehouseForLoggedInUser().getId();
+    if (warehouseId == null) {
+      addRedirectAlertMessage(new SimpleMessage("Please select a Store"));
+      return new ForwardResolution("/pages/pos/pos.jsp");
+    }
+    returnItemList = posReportService.storeReturnReport(warehouseId, startDate, endDate);
     return new ForwardResolution("/pages/pos/posReturnItemReportResult.jsp");
   }
 
 
   public Resolution generateDailyReturnReport() {
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
-    returnItemList = posReportService.storeReturnReport(store.getId(), null, null);
-    return new ForwardResolution("/pages/pos/posReturnItemReportResult.jsp");
+    startDate = null;
+    endDate = null;
+    return generateReturnReportByDate();
   }
 
   public List<Order> getSaleList() {

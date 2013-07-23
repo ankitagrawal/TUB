@@ -3,10 +3,8 @@ package com.hk.web.action.admin.pos;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.dto.pos.POSLineItemDto;
-import com.hk.admin.pact.dao.order.AdminOrderDao;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.admin.pact.service.pos.POSReportService;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.constants.core.PermissionConstants;
@@ -33,9 +31,6 @@ import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.dto.pos.POSReturnItemDto;
-import com.hk.dto.pos.POSSalesDto;
-import com.hk.dto.pos.POSSummaryDto;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
@@ -81,44 +76,45 @@ import java.util.*;
 @Component
 public class POSAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(POSAction.class);
-  @Validate(on = "receivePaymentAndProcessOrder", required = true)
-  private String phone;
-  @Validate(on = "receivePaymentAndProcessOrder", required = true)
-  private String email;
-  @Validate(on = "receivePaymentAndProcessOrder", required = true)
-  private String name;
-  private String productVariantBarcode;
-  private List<POSLineItemDto> posLineItems = new ArrayList<POSLineItemDto>(0);
-  private User customer;
-  private Double grandTotal;
-  private Order order;
-  private Address address;
-  private List<SkuItem> skuItemListToBeCheckedOut = new ArrayList<SkuItem>(0);
-  private ShippingOrder shippingOrderToPrint;
-  private PaymentMode paymentMode;
-  private String paymentReferenceNumber;
-  private String paymentRemarks;
-  private Long lastFourDigitCardNo;
-  private Store store;
-  private boolean newAddress = false;
-  private String addressLine1;
-  private String addressLine2;
-  private String addressCity;
-  private String addressState;
-  private String addressPincode;
-  private Double discount;
-  private String shippingGatewayOrderId;
-  private ShippingOrder shippingOrder;
-  private String returnOrderReason;
-  private Map<LineItem, Long> itemMap = new HashMap<LineItem, Long>();
-  private boolean addLoyaltyUser;
-  private String cardNumber;
-  private boolean useRewardPoints;
-  private boolean loyaltyUser;
-  private String loyaltyPoints = null;
-  private User loyaltyCustomer;
-  private List<UserOrderKarmaProfile> customerKarmaList;
+	private static Logger logger = LoggerFactory.getLogger(POSAction.class);
+	@Validate(on = "receivePaymentAndProcessOrder", required = true)
+	private String phone;
+	@Validate(on = "receivePaymentAndProcessOrder", required = true)
+	private String email;
+	@Validate(on = "receivePaymentAndProcessOrder", required = true)
+	private String name;
+	private String productVariantBarcode;
+	private List<POSLineItemDto> posLineItems = new ArrayList<POSLineItemDto>(0);
+	private User customer;
+	private Double grandTotal;
+	private Order order;
+	private Address address;
+	private List<SkuItem> skuItemListToBeCheckedOut = new ArrayList<SkuItem>(0);
+	private ShippingOrder shippingOrderToPrint;
+	private PaymentMode paymentMode;
+	private String paymentReferenceNumber;
+	private String paymentRemarks;
+	private Long lastFourDigitCardNo;
+	private Store store;
+	private boolean newAddress = false;
+	private String addressLine1;
+	private String addressLine2;
+	private String addressCity;
+	private String addressState;
+	private String addressPincode;
+	private Double discount;
+	private String shippingGatewayOrderId;
+	private ShippingOrder shippingOrder;
+	private String returnOrderReason;
+	private Map<LineItem, Long> itemMap = new HashMap<LineItem, Long>();
+	private boolean addLoyaltyUser;
+	private String cardNumber ;
+	private boolean useRewardPoints;
+	private boolean loyaltyUser;
+	private String loyaltyPoints = null;
+	private User loyaltyCustomer;
+	private List<UserOrderKarmaProfile> customerKarmaList;
+
 
   @Autowired
   private UserService userService;
@@ -154,98 +150,96 @@ public class POSAction extends BaseAction {
   private PricingEngine pricingEngine;
   @Autowired
   private OrderManager orderManager;
-  @Autowired
-  private AdminOrderDao adminOrderDao;
 
-  @DefaultHandler
-  public Resolution pre() {
-    return new ForwardResolution("/pages/pos/pos.jsp");
-  }
+	@DefaultHandler
+	public Resolution pre() {
+		return new ForwardResolution("/pages/pos/pos.jsp");
+	}
 
-  @SuppressWarnings("unchecked")
-  public Resolution getProductDetailsByBarcode() {
-    Map dataMap = new HashMap();
-    List<SkuItem> inStockSkuItemList = new ArrayList<SkuItem>();
-    SkuItem skuItem = null;
-    if (productVariantBarcode != null) {
-      SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
-      if (skuItemBarcode != null) {
-        skuItem = skuItemBarcode;
-        inStockSkuItemList.add(skuItem);
-        if (skuItemListToBeCheckedOut.contains(skuItem)) {
-          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Already Scanned Sku Item", dataMap);
-          noCache();
-          return new JsonResolution(healthkartResponse);
-        }
-      } else {
-        inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, userService.getWarehouseForLoggedInUser());
-        //exclude those sku items which have already been selected for this order
-        if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
-          inStockSkuItemList.removeAll(skuItemListToBeCheckedOut);
-          skuItem = inStockSkuItemList.get(0);
-        }
-      }
+	@SuppressWarnings("unchecked")
+	public Resolution getProductDetailsByBarcode() {
+		Map dataMap = new HashMap();
+		List<SkuItem> inStockSkuItemList = new ArrayList<SkuItem>();
+		SkuItem skuItem = null;
+		if (productVariantBarcode != null) {
+			SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+			if (skuItemBarcode != null) {
+				skuItem = skuItemBarcode;
+				inStockSkuItemList.add(skuItem);
+				if (skuItemListToBeCheckedOut.contains(skuItem)) {
+					HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Already Scanned Sku Item", dataMap);
+					noCache();
+					return new JsonResolution(healthkartResponse);
+				}
+			} else {
+				inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, userService.getWarehouseForLoggedInUser());
+				//exclude those sku items which have already been selected for this order
+				if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
+					inStockSkuItemList.removeAll(skuItemListToBeCheckedOut);
+					skuItem = inStockSkuItemList.get(0);
+				}
+			}
 
-      if (inStockSkuItemList == null || inStockSkuItemList.size() == 0) {
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "No item found for this Barcode", dataMap);
-        noCache();
-        return new JsonResolution(healthkartResponse);
-      }
+			if (inStockSkuItemList == null || inStockSkuItemList.size() == 0) {
+				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "No item found for this Barcode", dataMap);
+				noCache();
+				return new JsonResolution(healthkartResponse);
+			}
 
-      skuItemListToBeCheckedOut.add(skuItem);
-      SkuGroup skuGroup = skuItem.getSkuGroup();
-      ProductVariant productVariant = skuGroup.getSku().getProductVariant();
-      dataMap.put("product", productVariant.getProduct().getName());
-      dataMap.put("options", productVariant.getOptionsCommaSeparated());
-      dataMap.put("mrp", skuGroup.getMrp());
-      dataMap.put("offerPrice", productVariant.getHkPrice());
-      dataMap.put("skuItemId", skuItem.getId());
-      HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
-      noCache();
-      return new JsonResolution(healthkartResponse);
+			skuItemListToBeCheckedOut.add(skuItem);
+			SkuGroup skuGroup = skuItem.getSkuGroup();
+			ProductVariant productVariant = skuGroup.getSku().getProductVariant();
+			dataMap.put("product", productVariant.getProduct().getName());
+			dataMap.put("options", productVariant.getOptionsCommaSeparated());
+			dataMap.put("mrp", skuGroup.getMrp());
+			dataMap.put("offerPrice", productVariant.getHkPrice());
+			dataMap.put("skuItemId", skuItem.getId());
+			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
+			noCache();
+			return new JsonResolution(healthkartResponse);
 
-    } else {
-      logger.error("null or empty barcode or warehouse Id passed to load pv details in getProductDetailsByBarcode method of POSAction");
-    }
-    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", dataMap);
-    noCache();
-    return new JsonResolution(healthkartResponse);
-  }
+		} else {
+			logger.error("null or empty barcode or warehouse Id passed to load pv details in getProductDetailsByBarcode method of POSAction");
+		}
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", dataMap);
+		noCache();
+		return new JsonResolution(healthkartResponse);
+	}
 
-  @SuppressWarnings("unchecked")
-  public Resolution getCustomerDetailsByLogin() {
-    Map dataMap = new HashMap();
+	@SuppressWarnings("unchecked")
+	public Resolution getCustomerDetailsByLogin() {
+		Map dataMap = new HashMap();
 
-    if (!StringUtils.isBlank(email)) {
-      User customer = userService.findByLogin(email);
-      if (customer != null) {
-        dataMap.put("customerName", customer.getName());
-        dataMap.put("customer", customer);
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
-        List<Address> addressList = addressService.getVisibleAddresses(customer);
-        if (addressList != null && addressList.size() > 0) {
-          //Get the last address of the user
-          address = addressList.get(addressList.size() - 1);
-          dataMap.put("address", address);
-          dataMap.put("pincode", address.getPincode().getPincode());
+		if (!StringUtils.isBlank(email)) {
+			User customer = userService.findByLogin(email);
+			if (customer != null) {
+				dataMap.put("customerName", customer.getName());
+				dataMap.put("customer", customer);
+				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
+				List<Address> addressList = addressService.getVisibleAddresses(customer);
+				if (addressList != null && addressList.size() > 0) {
+					//Get the last address of the user
+					address = addressList.get(addressList.size() - 1);
+					dataMap.put("address", address);
+					dataMap.put("pincode", address.getPincode().getPincode());
 
-        }
-        if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
-          // if already a loyalty user then fill params
-          this.addLoyaltyUser = false;
-          this.loyaltyUser = true;
-          dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
-          UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
-          dataMap.put("badgeName", badgeInfo.getBadge().getBadgeName());
-          dataMap.put("cardNumber", badgeInfo.getCardNumber());
-        } else {
-          this.addLoyaltyUser = true;
-          this.loyaltyUser = false;
-          dataMap.put("cardNumber", null);
-        }
-        dataMap.put("loyaltyUser", loyaltyUser);
-        // Did not use getEligibleRewardPointsForUser(login) API of rewardPointService to save a db hit to find the user again
-        double rewardPoints = 0.0;
+				}
+				if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+					// if already a loyalty user then fill params
+					this.addLoyaltyUser = false;
+					this.loyaltyUser = true;
+					dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
+					UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
+					dataMap.put("badgeName", badgeInfo.getBadge().getBadgeName());
+					dataMap.put("cardNumber", badgeInfo.getCardNumber());
+				} else {
+					this.addLoyaltyUser = true;
+					this.loyaltyUser = false;
+					dataMap.put("cardNumber", null);
+				}
+				dataMap.put("loyaltyUser", loyaltyUser);
+				// Did not use getEligibleRewardPointsForUser(login) API of rewardPointService to save a db hit to find the user again
+				double rewardPoints = 0.0;
         if (customer.getUserAccountInfo() == null) {
           rewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
         } else {
@@ -253,39 +247,39 @@ public class POSAction extends BaseAction {
               - customer.getUserAccountInfo().getOverusedRewardPoints());
         }
 
-        if (rewardPoints > 0) {
-          dataMap.put("rewardPoints", Functions.roundNumberForDisplay(rewardPoints));
-        }
-        noCache();
-        return new JsonResolution(healthkartResponse);
-      }
-    } else {
-      logger.error("Blank email is passed in POSAction");
-    }
-    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Customer Not found", dataMap);
-    noCache();
-    return new JsonResolution(healthkartResponse);
+				if (rewardPoints > 0 ) {
+					dataMap.put("rewardPoints", Functions.roundNumberForDisplay(rewardPoints));
+				}
+				noCache();
+				return new JsonResolution(healthkartResponse);
+			}
+		} else {
+			logger.error("Blank email is passed in POSAction");
+		}
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Customer Not found", dataMap);
+		noCache();
+		return new JsonResolution(healthkartResponse);
 
-  }
+	}
 
-  public Resolution receivePaymentAndProcessOrder() {
-    Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+	public Resolution receivePaymentAndProcessOrder() {
+		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
 
-    customer = this.updateCustomerDetails(warehouse);
-    if (customer == null) {
-      return new ForwardResolution("/pages/pos/pos.jsp");
-    }
-    if (paymentMode == null) {
-      addRedirectAlertMessage(new SimpleMessage("Please select a payment mode"));
-      return new ForwardResolution("/pages/pos/pos.jsp");
-    }
+		customer = this.updateCustomerDetails(warehouse);
+		if (customer == null) {
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
+		if (paymentMode == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please select a payment mode"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
 
-    POSLineItemDto posLineItemDtoWithNonAvailableInventory = posService.getPosLineItemWithNonAvailableInventory(posLineItems);
-    if (posLineItemDtoWithNonAvailableInventory != null) {
-      addRedirectAlertMessage(new SimpleMessage("Required Inventory is not available for barcode: " + posLineItemDtoWithNonAvailableInventory.getProductVariantBarcode() +
-          " and Product: " + posLineItemDtoWithNonAvailableInventory.getProductName() + ". Please scan the order again"));
-      return new ForwardResolution("/pages/pos/pos.jsp");
-    }
+		POSLineItemDto posLineItemDtoWithNonAvailableInventory = posService.getPosLineItemWithNonAvailableInventory(posLineItems);
+		if (posLineItemDtoWithNonAvailableInventory != null) {
+			addRedirectAlertMessage(new SimpleMessage("Required Inventory is not available for barcode: " + posLineItemDtoWithNonAvailableInventory.getProductVariantBarcode() +
+					" and Product: " + posLineItemDtoWithNonAvailableInventory.getProductName() + ". Please scan the order again"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
 
     Store store = userService.getWarehouseForLoggedInUser().getStore();
 
