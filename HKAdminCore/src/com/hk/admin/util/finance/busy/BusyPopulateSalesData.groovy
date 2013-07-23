@@ -65,7 +65,7 @@ public class BusyPopulateSalesData {
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
 							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
 							from line_item li
-							inner join shipping_order so on li.shipping_order_id=so.id
+							inner join busy_missing_so_23_july so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
 							left join payment p ON bo.payment_id = p.id
 							left join payment_mode pm ON pm.id = p.payment_mode_id
@@ -298,7 +298,7 @@ public class BusyPopulateSalesData {
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
 							so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no, bo.gateway_order_id, aw.awb_number
 							from line_item li
-							inner join shipping_order so on li.shipping_order_id=so.id
+							inner join busy_missing_so_23_july so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
 							left join payment p ON bo.payment_id = p.id
 							left join payment_mode pm ON pm.id = p.payment_mode_id
@@ -529,7 +529,7 @@ public class BusyPopulateSalesData {
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type, th.hk_ref_no,
 							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
 							from line_item li
-							inner join shipping_order so on li.shipping_order_id=so.id
+							inner join busy_missing_so_23_july so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
 							left join payment p ON bo.payment_id = p.id
 							left join payment_mode pm ON pm.id = p.payment_mode_id
