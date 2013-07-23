@@ -16,6 +16,9 @@
   <s:layout-component name="heading">Add Reward Point for user ${rpBean.user.login}</s:layout-component>
   <s:layout-component name="content">
     <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
+      <fieldset>
+           Cancel Order Reward Points will not be given from this screen.
+      </fieldset>
       <fieldset class="left_label">
         <ul>
           <s:hidden name="user" value="${rpBean.user.id}"/>

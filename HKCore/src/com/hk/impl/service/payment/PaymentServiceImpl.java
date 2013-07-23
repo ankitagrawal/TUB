@@ -436,9 +436,9 @@ public class PaymentServiceImpl implements PaymentService {
         return ((payment.getAmount() - refundedAmount - orderAmt) >= 0);
     }
 
-    @Override
+
     @Transactional
-    public void setRefundAmount(Payment payment, Double amount) {
+    private void setRefundAmount(Payment payment, Double amount) {
         double refundPayment = 0;
         if (payment.getRefundAmount() != null) {
             refundPayment = payment.getRefundAmount();
