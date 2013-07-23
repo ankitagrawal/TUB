@@ -2,12 +2,10 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +56,6 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -391,21 +388,31 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		return null;
 	}
 
-	public void splitSONormal(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean dropShipItemPresentInRemainingItems,
-			Boolean jitItemPresentInRemainingItems, Boolean dropShipItemPresentInSelectedItems, Boolean jitItemPresentInSelectedItems) {
+
+	/**
+	 *  This method is used to split orders, if successful it creates a new SO and process the new as well as old shipping order by
+	 *  recalculating its amount and other data and saves them into the database.
+	 * @param shippingOrder -  SO to split
+	 * @param selectedLineItems - selected line items which needs to be split 
+	 * @param messages - success/error messages
+	 * @return result (true/false)
+	 */
+	@Override
+	public boolean splitSONormal(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages ) {
+
+    	Map<String, Boolean> flagMapOldSO = new HashMap<String, Boolean>();
+    	Map<String, Boolean> flagMapNewSO = new HashMap<String, Boolean>();
+    	flagMapOldSO.put("dropShipItemPresent", false);
+    	flagMapOldSO.put("jitItemPresent", false);
+    	flagMapNewSO.put("dropShipItemPresent", false);
+    	flagMapNewSO.put("jitItemPresent", false);
+    	
+
 		if (shippingOrder != null && EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
-
-            Set<LineItem> selectedLineItems = new HashSet<LineItem>();
-
-            for (LineItem lineItem : lineItems) {
-                if (lineItem != null) {
-                    logger.debug("lineItem: " + lineItem.getSku().getProductVariant());
-                    selectedLineItems.add(lineItem);
-                }
-            }
             if (selectedLineItems.size() == shippingOrder.getLineItems().size()) {
-          //      addRedirectAlertMessage(new SimpleMessage("Invalid LineItem selection for Shipping Order : " + shippingOrder.getGatewayOrderId() + ". Cannot be split."));
-       //         return new RedirectResolution(ActionAwaitingQueueAction.class);
+            	messages.add("Invalid LineItem selection for Shipping Order : " + shippingOrder.getGatewayOrderId()
+            			+ ". Cannot be split.");
+                return false;
             }
 
             Set<LineItem> originalShippingItems = shippingOrder.getLineItems();
@@ -413,19 +420,19 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
             for (LineItem remainingLineItem : originalShippingItems) {
                 if ((remainingLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
-                    dropShipItemPresentInRemainingItems = true;
+                    flagMapOldSO.put("dropShipItemPresent", true);
                     break;
                 }
             }
             for (LineItem remainingLineItem : originalShippingItems) {
                 if ((remainingLineItem.getSku().getProductVariant().getProduct().isJit())) {
-                    jitItemPresentInRemainingItems = true;
+                	flagMapOldSO.put("jitItemPresent", true);
                     break;
                 }
             }
 
+            // Create a new shipping order to split
             ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
-            newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
             newShippingOrder.setServiceOrder(false);
             newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
             newShippingOrder = shippingOrderService.save(newShippingOrder);
@@ -433,73 +440,67 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             for (LineItem selectedLineItem : selectedLineItems) {
                 selectedLineItem.setShippingOrder(newShippingOrder);
                 if ((selectedLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
-                    dropShipItemPresentInSelectedItems = true;
+                	flagMapNewSO.put("dropShipItemPresent", true);
+                	break;
                 }
                 lineItemDao.save(selectedLineItem);
             }
             for (LineItem selectedLineItem : selectedLineItems) {
                 selectedLineItem.setShippingOrder(newShippingOrder);
                 if ((selectedLineItem.getSku().getProductVariant().getProduct().isJit())) {
-                    jitItemPresentInSelectedItems = true;
+                	flagMapNewSO.put("jitItemPresent", true);
                     break;
                 }
                 lineItemDao.save(selectedLineItem);
             }
             shippingOrderDao.refresh(newShippingOrder);
-            Set<ShippingOrderCategory> newShippingOrderCategories = orderService.getCategoriesForShippingOrder(newShippingOrder);
-            newShippingOrder.setShippingOrderCategories(newShippingOrderCategories);
-            newShippingOrder.setBasketCategory(orderService.getBasketCategory(newShippingOrderCategories).getName());
-            newShippingOrder = shippingOrderService.save(newShippingOrder);
-            shippingOrderDao.refresh(newShippingOrder);
-
-            if (dropShipItemPresentInSelectedItems) {
-                newShippingOrder.setDropShipping(true);
-            } else {
-                newShippingOrder.setDropShipping(false);
-            }
-            if (jitItemPresentInSelectedItems) {
-                newShippingOrder.setContainsJitProducts(true);
-            } else {
-                newShippingOrder.setContainsJitProducts(false);
-            }
-            ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
-            newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
-            newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
-            newShippingOrder = shippingOrderService.save(newShippingOrder);
-            shipmentService.createShipment(newShippingOrder, true);
+            this.updateSplittedSODetails(flagMapNewSO, newShippingOrder);
 
             /**
              * Fetch previous shipping order and recalculate amount
              */
 
             shippingOrderDao.refresh(shippingOrder);
-            //shippingOrder = shippingOrderService.find(shippingOrder.getId());
-            ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, shippingOrder.getBaseOrder());
-            shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-
-            if (dropShipItemPresentInRemainingItems) {
-                shippingOrder.setDropShipping(true);
-            } else {
-                shippingOrder.setDropShipping(false);
-            }
-            if (jitItemPresentInRemainingItems) {
-                shippingOrder.setContainsJitProducts(true);
-            } else {
-                shippingOrder.setContainsJitProducts(false);
-            }
-            Set<ShippingOrderCategory> shippingOrderCategories = orderService.getCategoriesForShippingOrder(shippingOrder);
-            shippingOrder.setShippingOrderCategories(shippingOrderCategories);
-            shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrderCategories).getName());
-            shippingOrder = shippingOrderService.save(shippingOrder);
+            this.updateSplittedSODetails(flagMapOldSO, shippingOrder);
+            newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
+    		newShippingOrder = shippingOrderService.save(newShippingOrder);
+    		shipmentService.createShipment(newShippingOrder, true);
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
 
-        //    addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
-   //         return new RedirectResolution(ActionAwaitingQueueAction.class);
+            messages.add(("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
+            return true;
         } else {
-    //        addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " is in incorrect status cannot be split."));
-    //        return new RedirectResolution(ActionAwaitingQueueAction.class);
+        	messages.add("Shipping Order : " + shippingOrder.getGatewayOrderId() + " is in incorrect status cannot be split.");
+            return false;
         }
+	}
+
+	/**
+	 * This method is used to fill SO details for newly splitted orders.
+	 * @param flagMap
+	 * @param newShippingOrder
+	 */
+	private void updateSplittedSODetails(Map<String, Boolean> flagMap, ShippingOrder newShippingOrder) {
+		Set<ShippingOrderCategory> newShippingOrderCategories = orderService.getCategoriesForShippingOrder(newShippingOrder);
+		newShippingOrder.setShippingOrderCategories(newShippingOrderCategories);
+		newShippingOrder.setBasketCategory(orderService.getBasketCategory(newShippingOrderCategories).getName());
+		newShippingOrder = shippingOrderService.save(newShippingOrder);
+		shippingOrderDao.refresh(newShippingOrder);
+
+		if (flagMap.get("dropShipItemPresent")) {
+		    newShippingOrder.setDropShipping(true);
+		} else {
+		    newShippingOrder.setDropShipping(false);
+		}
+		if (flagMap.get("jitItemPresent")) {
+		    newShippingOrder.setContainsJitProducts(true);
+		} else {
+		    newShippingOrder.setContainsJitProducts(false);
+		}
+		ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
+		newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
+		
 	}
 	
 	

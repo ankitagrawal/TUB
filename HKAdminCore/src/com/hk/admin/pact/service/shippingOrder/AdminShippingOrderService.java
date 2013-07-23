@@ -2,11 +2,13 @@ package com.hk.admin.pact.service.shippingOrder;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminShippingOrderService {
@@ -52,4 +54,6 @@ public interface AdminShippingOrderService {
 	public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder);
 
 	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReason);
+
+	public boolean splitSONormal(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages);
 }
