@@ -454,7 +454,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (isValidRefundableAmount(order.getPayment(), amount)) {
             if(EnumReconciliationType.RewardPoints.getId().equals(reconciliationType)) {
 
-                RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, order.getUser(),
+                RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(order.getUser(),loggedOnUser,
                         order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
 
                 rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(12).toDate());

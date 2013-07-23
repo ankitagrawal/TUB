@@ -436,7 +436,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             }
         }
         if (totalRewardPoints > 0) {
-            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(loggedOnUser, shippingOrder.getBaseOrder().getUser(),
+            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(shippingOrder.getBaseOrder().getUser(),loggedOnUser,
                     shippingOrder.getBaseOrder(), totalRewardPoints, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
 
             //TODO: expiry date should be on the basis of previous reward points
