@@ -206,7 +206,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     Long availableUnbookedInv = 0L;
 
                     if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-                        availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
+                        //todo hard code check to escalate prescription glasses
+                        return true;
                     }else{
                         availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
                     }
