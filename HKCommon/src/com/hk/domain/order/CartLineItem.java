@@ -1,40 +1,24 @@
 package com.hk.domain.order;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.akube.framework.gson.JsonSkip;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
+import com.hk.domain.catalog.product.combo.ComboInstance;
+import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.marketing.ProductReferrer;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.subscription.Subscription;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.akube.framework.gson.JsonSkip;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.combo.ComboInstance;
-import com.hk.domain.core.CartLineItemType;
-import com.hk.domain.marketing.ProductReferrer;
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings("serial")
 @Entity
@@ -117,12 +101,12 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
 
 
     @JsonSkip
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cartItem")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cartLineItem")
     private List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
 
 
     @JsonSkip
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cartItem")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
     private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 
 
