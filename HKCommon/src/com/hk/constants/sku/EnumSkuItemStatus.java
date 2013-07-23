@@ -22,7 +22,9 @@ public enum EnumSkuItemStatus {
     FreeVariant(90L, "Free Variant"),
     NonMoving(100L, "Non Moving"),
     ProductVariantAudited(110L, "Product Variant Audited"),
-    IncorrectCounting(120L,"Incorrect Counting");
+    IncorrectCounting(120L,"Incorrect Counting"),
+    TEMP_BOOKED(150L, "TEMP BOOKED"),
+    BOOKED(160L, "BOOKED");
 
     private Long id;
 	private String name;
