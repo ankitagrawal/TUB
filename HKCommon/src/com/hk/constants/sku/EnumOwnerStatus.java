@@ -1,7 +1,6 @@
 package com.hk.constants.sku;
 
-import com.hk.domain.sku.SkuItemStatus;
-import com.hk.domain.sku.SkuItemOwnerStatus;
+import com.hk.domain.sku.SkuItemOwner;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,11 +23,11 @@ public enum EnumOwnerStatus {
     }
 
 
-    public SkuItemOwnerStatus getSkuItemOwnerStatus() {
-		SkuItemOwnerStatus skuItemOwnerStatus = new SkuItemOwnerStatus();
-		skuItemOwnerStatus.setId(this.id);
-		skuItemOwnerStatus.setName(this.name);
-		return skuItemOwnerStatus;
+    public SkuItemOwner getSkuItemOwnerStatus() {
+		SkuItemOwner skuItemOwner = new SkuItemOwner();
+		skuItemOwner.setId(this.id);
+		skuItemOwner.setName(this.name);
+		return skuItemOwner;
 	}
 
 

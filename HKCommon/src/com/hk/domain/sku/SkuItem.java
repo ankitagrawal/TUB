@@ -39,17 +39,17 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 	@JoinColumn(name = "sku_item_status_id", nullable = false)
 	private SkuItemStatus skuItemStatus;
 
-    public SkuItemOwnerStatus getSkuItemOwnerStatus() {
-        return skuItemOwnerStatus;
+    public SkuItemOwner getSkuItemOwner() {
+        return skuItemOwner;
     }
 
-    public void setSkuItemOwnerStatus(SkuItemOwnerStatus skuItemOwnerStatus) {
-        this.skuItemOwnerStatus = skuItemOwnerStatus;
+    public void setSkuItemOwner(SkuItemOwner skuItemOwner) {
+        this.skuItemOwner = skuItemOwner;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sku_item_owner_status_id", nullable = false)
-	private SkuItemOwnerStatus skuItemOwnerStatus;
+	@JoinColumn(name = "sku_item_owner_id", nullable = false)
+	private SkuItemOwner skuItemOwner;
 
 	@JsonSkip
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
