@@ -392,7 +392,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
         if(checkedInInvList != null) {
             for (SkuInfo skuInfo : checkedInInvList) {
-                if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+                if(lineItem.getMarkedPrice().doubleValue() <= skuInfo.getMrp()) { //Ajeet putting all inventory greater tham LI MRP
                     qty += skuInfo.getQty();
                 }
             }

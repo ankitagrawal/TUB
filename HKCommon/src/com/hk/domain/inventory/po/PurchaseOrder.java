@@ -2,15 +2,19 @@ package com.hk.domain.inventory.po;
 // Generated Oct 5, 2011 4:39:10 PM by Hibernate Tools 3.2.4.CR1
 
 
+import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.accounting.DebitNoteType;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -117,6 +121,16 @@ public class PurchaseOrder implements java.io.Serializable {
 
 	@Column(name = "fill_rate")
 	private Double fillRate;
+	
+	
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	    name = "shipping_order_has_purchase_order",
+	    joinColumns = {@JoinColumn(name = "purchase_order_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "shipping_order_id", nullable = false, updatable = false)}
+	)
+	private List<ShippingOrder> shippingOrders = new ArrayList<ShippingOrder>();
 
   @OneToOne
   @JoinColumn (name = "extra_inventory_id")
@@ -124,6 +138,10 @@ public class PurchaseOrder implements java.io.Serializable {
 
   @Column (name = "is_extra_inventory_created")
   private boolean isExtraInventoryCreated;
+  
+  @ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "purchase_order_type_id")
+  private PurchaseOrderType purchaseOrderType;
 
 	@Transient
 	private int noOfSku;
@@ -366,6 +384,22 @@ public class PurchaseOrder implements java.io.Serializable {
   public void setExtraInventoryId(Long extraInventoryId) {
 	 this.extraInventoryId = extraInventoryId;
   }
+
+	public List<ShippingOrder> getShippingOrders() {
+		return shippingOrders;
+	}
+	
+	public void setShippingOrders(List<ShippingOrder> shippingOrders) {
+		this.shippingOrders = shippingOrders;
+	}
+
+	public PurchaseOrderType getPurchaseOrderType() {
+		return purchaseOrderType;
+	}
+
+	public void setPurchaseOrderType(PurchaseOrderType purchaseOrderType) {
+		this.purchaseOrderType = purchaseOrderType;
+	}
   
 }
 

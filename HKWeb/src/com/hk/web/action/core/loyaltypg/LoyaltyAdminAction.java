@@ -4,7 +4,9 @@
 package com.hk.web.action.core.loyaltypg;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -65,6 +68,8 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
     private boolean newEntry;
     private double amount;
     private Long profileBadgeId;
+    private TransactionType profileTransactionType;
+    private TransactionType[] transactionTypeArray;
     
     @DefaultHandler
     public Resolution pre() {
@@ -188,6 +193,8 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
     	}
  
     	this.statusArray = KarmaPointStatus.values();
+    	this.transactionTypeArray = TransactionType.values();
+    	Collections.reverse(Arrays.asList(this.transactionTypeArray));
     	this.badges = new ArrayList<Badge>();
     	this.badges.addAll(loyaltyProgramService.getAllBadges());
         return new ForwardResolution("/pages/loyalty/loyaltyUserProfileAdmin.jsp");
@@ -220,8 +227,12 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
     				newProfile.setStatus(this.profileStatus);
     				Badge profileBadge = this.loyaltyProductDao.get(Badge.class, this.profileBadgeId);
     				newProfile.setBadge(profileBadge);
-    				newProfile.setKarmaPoints((profileBadge.getLoyaltyPercentage()*amount)/100);
-    				newProfile.setTransactionType(TransactionType.CREDIT);
+    				if(this.profileTransactionType.equals(TransactionType.DEBIT) ) {
+    					newProfile.setKarmaPoints(-(profileBadge.getLoyaltyPercentage()*amount)/100);
+    				} else {
+    					newProfile.setKarmaPoints(-(profileBadge.getLoyaltyPercentage()*amount)/100);
+    				}
+    				newProfile.setTransactionType(this.profileTransactionType);
     				this.loyaltyProductDao.save(newProfile);
     			} else {
     				errorMessages.add("No order found for the given order Id");
@@ -241,6 +252,8 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
     
     public Resolution viewProfile() {
     	this.statusArray = KarmaPointStatus.values();
+    	this.transactionTypeArray = TransactionType.values();
+    	Collections.reverse(Arrays.asList(this.transactionTypeArray));
     	this.badges = new ArrayList<Badge>();
     	this.badges.addAll(loyaltyProgramService.getAllBadges());
     	return new ForwardResolution("/pages/loyalty/loyaltyUserProfileAdmin.jsp");
@@ -499,6 +512,34 @@ public class LoyaltyAdminAction extends AbstractLoyaltyAction {
 	 */
 	public void setProfileOrderID(Long profileOrderID) {
 		this.profileOrderID = profileOrderID;
+	}
+
+	/**
+	 * @return the profileTransactionType
+	 */
+	public TransactionType getProfileTransactionType() {
+		return profileTransactionType;
+	}
+
+	/**
+	 * @param profileTransactionType the profileTransactionType to set
+	 */
+	public void setProfileTransactionType(TransactionType profileTransactionType) {
+		this.profileTransactionType = profileTransactionType;
+	}
+
+	/**
+	 * @return the transactionTypeArray
+	 */
+	public TransactionType[] getTransactionTypeArray() {
+		return transactionTypeArray;
+	}
+
+	/**
+	 * @param transactionTypeArray the transactionTypeArray to set
+	 */
+	public void setTransactionTypeArray(TransactionType[] transactionTypeArray) {
+		this.transactionTypeArray = transactionTypeArray;
 	}
 
 
