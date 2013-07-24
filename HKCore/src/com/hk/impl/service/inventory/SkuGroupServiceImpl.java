@@ -140,4 +140,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         return skuItemDao.getSkuItemWithStatusAndOwner(skuGroup, skuItemStatus, skuItemOwner);
     }
 
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner){
+        return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, statusId, skuItemOwner);
+    }
+
 }

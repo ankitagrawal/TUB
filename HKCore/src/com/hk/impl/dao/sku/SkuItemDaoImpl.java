@@ -139,7 +139,40 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
 
     public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner){
-        String sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus and si.skuItemOwner = :skuItemOwner";
+        String sql;
+        Query query = null;
+        if(skuItemOwner!=null){
+            sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus and si.skuItemOwner = :skuItemOwner";
+            query = getSession().createQuery(sql).setParameter("skuGroup", skuGroup).setParameter("skuItemStatus", skuItemStatus).setParameter("skuItemOwner", skuItemOwner);
+        }
+        else{
+            sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus";
+            query = getSession().createQuery(sql).setParameter("skuGroup", skuGroup).setParameter("skuItemStatus", skuItemStatus);
+        }
+        List<SkuItem> skuItems = query.list();
+        return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
+    }
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner){
+        String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
+        if (statusId != null) {
+            sql = sql + "and si.skuItemStatus.id = :statusId ";
+        }
+        if(skuItemOwner != null){
+            sql = sql + "and si.skuItemOwner = :skuItemOwner";
+        }
+        Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
+        if (statusId != null) {
+            query.setParameter("statusId", statusId);
+        }
+        if(skuItemOwner != null){
+            query.setParameter("skuItemOwner",skuItemOwner);
+        }
+        List<SkuItem> skuItems = query.list();
+        if(skuItems != null && skuItems.size() > 1){
+            logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
+        }
+        return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
     }
 
     
