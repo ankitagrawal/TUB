@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * Created by IntelliJ IDEA.
  * User: Ankit
- * Date: Jul 23, 2013
- * Time: 2:39:57 PM
+ * Date: Jul 24, 2013
+ * Time: 2:26:18 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ProductVariantInventoryDao {
+public interface InventoryManageDao {
 
-    public Long getNetInventory(Sku sku);
+     public Long getNetInventory(Sku sku);
 
     public Long getNetInventory(List<Sku> skuList);
 
@@ -27,7 +27,6 @@ public interface ProductVariantInventoryDao {
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
-    public List<SkuItem> getSkuItems(Sku sku, Double mrp);
-
+    public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp);
 
 }

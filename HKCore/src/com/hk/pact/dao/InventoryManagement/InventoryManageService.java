@@ -17,12 +17,12 @@ import java.util.List;
  */
 public interface InventoryManageService {
 
-     public void bookSkuLineItemForOrder(Order order);
+     public void tempBookSkuLineItemForOrder(Order order);
 
      public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
 
      public void releaseSkuItemCLIForOrder(Order order);
 
     public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp);
-    
+
 }

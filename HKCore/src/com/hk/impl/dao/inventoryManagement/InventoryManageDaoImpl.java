@@ -8,12 +8,13 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,7 +23,8 @@ import org.hibernate.Query;
  * Time: 2:41:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements ProductVariantInventoryDao {
+@Service
+public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryManageDao{
 
 
     public Long getNetInventory(Sku sku) {
@@ -82,7 +84,7 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
     }
 
 
-    public List<SkuItem> getSkuItems(Sku sku, Double mrp) {
+    public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp) {
         String sql = " from SkuItem si where si.skuGroup.sku =:sku and si.skuGroup.sku.mrp =:mrp and si.skuItemStatus.id = :skuItemStatusId and (si.skuGropu.status != :reviewStatus or si.skGroup.status is null)";
         Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("mrp", mrp).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
         return query.list();
@@ -105,7 +107,6 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
            return (netInventory - bookedInventory);
 
        }
-
 
 
 }
