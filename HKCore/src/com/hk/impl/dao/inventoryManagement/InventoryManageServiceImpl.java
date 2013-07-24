@@ -1,10 +1,6 @@
 package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
-// import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
@@ -15,12 +11,12 @@ import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.constants.sku.EnumSkuItemStatus;
 

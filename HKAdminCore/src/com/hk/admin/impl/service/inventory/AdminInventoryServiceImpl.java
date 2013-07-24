@@ -428,10 +428,9 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
                 item.setLineItem(lineItem);
                 skuItemLineItemService.save(item);
 
-                //release the already present
 
                 //delete the entry from table t1
-                baseDao.delete(toReleaseSkuItem);
+                baseDao.delete(skuItemLineItem);
             }
             if (skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.Checked_IN.getSkuItemStatus())) {
                 // flip skuItem with a booked SI.
@@ -463,7 +462,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
 
                 //delete the entry from table t1
-                baseDao.delete(toReleaseSkuItem);
+                baseDao.delete(skuItemLineItem);
             }
         }
     }
