@@ -28,6 +28,9 @@
       <th>Credit Card Collection</th>
       <th>Items Sold</th>
       <th>Items Returned</th>
+      <th>Total Collection</th>
+      <th>Avg Collection</th>
+      <th>Avg Items per Invoice</th>
     </tr>
     <tr>
       <td>${posBean.posSummaryDto.cashAmountCollected}</td>
@@ -35,6 +38,9 @@
       <td>${posBean.posSummaryDto.creditCardAmountCollected}</td>
       <td>${posBean.posSummaryDto.itemsSold}</td>
       <td>${posBean.posSummaryDto.itemsReturned}</td>
+      <td>${posBean.posSummaryDto.totalCollection}</td>
+      <td>${posBean.posSummaryDto.avgAmtPerInvoice}</td>
+      <td>${posBean.posSummaryDto.apc}</td>
     </tr>
     <table>
 
@@ -45,18 +51,22 @@
       <th>Amt</th>
       <th>Payment Mode</th>
       <th>Items Total</th>
+      <th>Discount</th>
+      <th>Loyalty Points Redeemed</th>
     </tr>
-    <c:forEach items="${posBean.saleList}" var="sale">
+    <c:forEach items="${posBean.posSaleItems}" var="sale">
       <tr>
-        <td>${sale.id}</td>
-        <c:forEach items="${sale.shippingOrders}" var="SO">
-          <td>${SO.shippingOrderStatus.name} </td>
+        <td>${sale.order.id}</td>
+        <c:forEach items="${sale.order.shippingOrders}" var="saleOrder">
+          <td>${saleOrder.shippingOrderStatus.name} </td>
         </c:forEach>
-        <td>${sale.amount}</td>
-        <c:forEach items="${sale.payments}" var="payment">
+        <td>${sale.order.amount}</td>
+        <c:forEach items="${sale.order.payments}" var="payment">
           <td>${payment.paymentMode.name} </td>
         </c:forEach>
-        <td>${fn:length(sale.cartLineItems)}</td>
+        <td>${fn:length(sale.order.cartLineItems)}</td>
+        <td>${sale.discount}</td>
+        <td>${sale.order.rewardPointsUsed}</td>
       </tr>
 
     </c:forEach>

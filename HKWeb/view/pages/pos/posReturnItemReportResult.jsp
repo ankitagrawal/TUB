@@ -19,16 +19,25 @@
     <table class="cont" width="100%">
     <tr>
       <th>Return ID</th>
+      <th>Order ID</th>
       <th>Status</th>
       <th>Amt</th>
+      <th>Total Items Returned</th>
       <th>Items Returned</th>
     </tr>
     <c:forEach items="${posBean.returnItemList}" var="returnItem">
       <tr>
-        <td>${returnItem.shippingOrder} </td>
+        <td>${returnItem.shippingOrder.id} </td>
+        <td>${returnItem.shippingOrder.baseOrder.id} </td>
         <td>${returnItem.returnReason}</td>
         <td>${returnItem.amount}</td>
         <td>${fn:length(returnItem.reverseLineItems)}</td>
+        <td><c:forEach items="${returnItem.reverseLineItems}" var="reverseItem">
+          <table>
+            <td>${reverseItem.referredLineItem.cartLineItem.productVariant.id}</td>
+            <td>${reverseItem.referredLineItem.cartLineItem.productVariant.product.name}</td>
+          </table>
+        </c:forEach></td>
       </tr>
 
     </c:forEach>
