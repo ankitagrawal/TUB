@@ -116,40 +116,40 @@ public class POSAction extends BaseAction {
 	private List<UserOrderKarmaProfile> customerKarmaList;
 
 
-  @Autowired
-  private UserService userService;
-  @Autowired
-  private AdminInventoryService adminInventoryService;
-  @Autowired
-  private POSService posService;
-  @Autowired
-  private PaymentManager paymentManager;
-  @Autowired
-  private PaymentService paymentService;
-  @Autowired
-  private ShippingOrderService shippingOrderService;
-  @Autowired
-  private ShippingOrderStatusService shippingOrderStatusService;
-  @Autowired
-  private OrderService orderService;
-  @Autowired
-  private AddressService addressService;
-  @Autowired
-  private PincodeService pincodeService;
-  @Autowired
-  private SeekInvoiceNumService seekInvoiceNumService;
-  @Autowired
-  private SkuGroupService skuGroupService;
-  @Autowired
-  private ReverseOrderService reverseOrderService;
-  @Autowired
-  private LoyaltyProgramService loyaltyProgramService;
-  @Autowired
-  private RewardPointService rewardPointService;
-  @Autowired
-  private PricingEngine pricingEngine;
-  @Autowired
-  private OrderManager orderManager;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private AdminInventoryService adminInventoryService;
+	@Autowired
+	private POSService posService;
+	@Autowired
+	private PaymentManager paymentManager;
+	@Autowired
+	private PaymentService paymentService;
+	@Autowired
+	private ShippingOrderService shippingOrderService;
+	@Autowired
+	private ShippingOrderStatusService shippingOrderStatusService;
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	private AddressService addressService;
+	@Autowired
+	private PincodeService pincodeService;
+	@Autowired
+	private SeekInvoiceNumService seekInvoiceNumService;
+	@Autowired
+	private SkuGroupService skuGroupService;
+	@Autowired
+	private ReverseOrderService reverseOrderService;
+	@Autowired
+	private LoyaltyProgramService loyaltyProgramService;
+	@Autowired
+	private RewardPointService rewardPointService;
+	@Autowired
+	private PricingEngine pricingEngine;
+	@Autowired
+	private OrderManager orderManager;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -240,7 +240,7 @@ public class POSAction extends BaseAction {
 				dataMap.put("loyaltyUser", loyaltyUser);
 				// Did not use getEligibleRewardPointsForUser(login) API of rewardPointService to save a db hit to find the user again
 				double rewardPoints = 0.0;
-        if (customer.getUserAccountInfo() == null) {
+				if (customer.getUserAccountInfo()==null) {
           rewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
         } else {
           rewardPoints = (rewardPointService.getTotalRedeemablePoints(customer)
@@ -281,57 +281,57 @@ public class POSAction extends BaseAction {
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
 
-    Store store = userService.getWarehouseForLoggedInUser().getStore();
+		Store store = userService.getWarehouseForLoggedInUser().getStore();
 
-    order = posService.createOrderForStore(customer, address, store);
-    if (order == null) {
-      addRedirectAlertMessage(new SimpleMessage("Error occurred while creating Order"));
-      return new ForwardResolution("/pages/pos/pos.jsp");
-    }
-    order.setAmount(grandTotal);
-    order = posService.createCartLineItems(posLineItems, order);
-    if (discount != null) {
-      posService.applyOrderLevelDiscountOnCartLineItems(order, discount);
-      order.setAmount(grandTotal - discount);
-    }
-    if (useRewardPoints) {
-      Double redeemRewardPoints;
-      if (customer.getUserAccountInfo() == null) {
-        redeemRewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
-      } else {
-        redeemRewardPoints = (rewardPointService.getTotalRedeemablePoints(customer) - customer
-            .getUserAccountInfo().getOverusedRewardPoints());
-      }
-      if (redeemRewardPoints != null && redeemRewardPoints > 0) {
-        CartLineItem rewardItem = pricingEngine.createRewardPointLineItemPOS(order, redeemRewardPoints);
-        rewardItem.setOrder(order);
-        order.getCartLineItems().add(rewardItem);
-        order = orderService.save(order);
-        order.setRewardPointsUsed(redeemRewardPoints);
-        this.rewardPointService.redeemRewardPoints(order, redeemRewardPoints);
-        if (order.getAmount() < redeemRewardPoints) {
-          order.setAmount(0.0);
-        } else {
-          order.setAmount(order.getAmount() - redeemRewardPoints);
-        }
-        order = this.orderService.save(order);
-      }
-    }
-    Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
-    if (payment == null) {
-      addRedirectAlertMessage(new SimpleMessage("Payment could not be processed, contact Application Support"));
-      return new ForwardResolution("/pages/pos/pos.jsp");
-    }
+		order = posService.createOrderForStore(customer, address, store);
+		if (order == null) {
+			addRedirectAlertMessage(new SimpleMessage("Error occurred while creating Order"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
+		order.setAmount(grandTotal);
+		order = posService.createCartLineItems(posLineItems, order);
+		if (discount != null) {
+			posService.applyOrderLevelDiscountOnCartLineItems(order, discount);
+			order.setAmount(grandTotal - discount);
+		}
+		if (useRewardPoints) {
+			Double redeemRewardPoints;
+			if (customer.getUserAccountInfo() == null) {
+				redeemRewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
+			} else {
+				redeemRewardPoints = (rewardPointService.getTotalRedeemablePoints(customer) - customer
+						.getUserAccountInfo().getOverusedRewardPoints());
+			}
+			if (redeemRewardPoints != null && redeemRewardPoints > 0) {
+				CartLineItem rewardItem = pricingEngine.createRewardPointLineItemPOS(order, redeemRewardPoints);
+				rewardItem.setOrder(order);
+				order.getCartLineItems().add(rewardItem);
+				order = orderService.save(order);
+				order.setRewardPointsUsed(redeemRewardPoints);
+				this.rewardPointService.redeemRewardPoints(order, redeemRewardPoints);
+				if (order.getAmount() < redeemRewardPoints) {
+					order.setAmount(0.0);
+				} else {
+					order.setAmount(order.getAmount() - redeemRewardPoints);
+				}
+				order = this.orderService.save(order);
+			}
+		}
+		Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
+		if (payment == null) {
+			addRedirectAlertMessage(new SimpleMessage("Payment could not be processed, contact Application Support"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
 
-    if (paymentMode.getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
-      payment.setGatewayReferenceId(paymentReferenceNumber);
-      payment.setBankName(paymentRemarks);
-      payment.setLastFourDigitCardNo(lastFourDigitCardNo);
-    }
-    payment.setAmount(order.getAmount());
+		if (paymentMode.getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
+			payment.setGatewayReferenceId(paymentReferenceNumber);
+			payment.setBankName(paymentRemarks);
+			payment.setLastFourDigitCardNo(lastFourDigitCardNo);
+		}
+		payment.setAmount(order.getAmount());
 
-    payment.setPaymentStatus(paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS));
-    paymentService.save(payment);
+		payment.setPaymentStatus(paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS));
+		paymentService.save(payment);
 
     order.setGatewayOrderId(payment.getGatewayOrderId());
     payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
@@ -368,13 +368,8 @@ public class POSAction extends BaseAction {
           + " loyalty points for this transaction.");
     }
     addRedirectAlertMessage(new SimpleMessage(redirectMessage.toString()));
-    //here
-    if (order.getId() != null) {
-      return new ForwardResolution(AccountingInvoiceAction.class,"posPrintInvoice").addParameter("shippingOrder", shippingOrderToPrint);
-    } else {
       return new ForwardResolution("/pages/pos/pos.jsp");
     }
-  }
 
   public Resolution print() {
     if (order == null) {

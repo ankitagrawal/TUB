@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface AdminOrderDao {
 
-	public List<Order> getOrdersByGatewayOrderList(List<String> gatewayOrderIdList);
+  public List<Order> getOrdersByGatewayOrderList(List<String> gatewayOrderIdList);
 
   public List<Order> findSaleForTimeFrame(Long storeId, Date startDate, Date endDate, List<OrderStatus> orderStatusList);
 

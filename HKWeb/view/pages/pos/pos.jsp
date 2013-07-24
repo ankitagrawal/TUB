@@ -358,7 +358,7 @@
 				<td><s:text name="shippingGatewayOrderId"/></td>
 				<td><s:submit name="createReverseOrderForPOS" value="Return Order" id="reverseOrder"/></td>
 				<td><s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction" target="_blank">Checkin Return Inventory</s:link> </td>
-        <td><s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="barcodeLink" event="posReportGenerate" target="_blank">Daily sales Report</s:link> </td>
+        <td><s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="posReport" event="posReportGenerate" target="_blank">Daily sales Report</s:link> </td>
 				<%--<td>Search a Product</td>
 				<td><input type="text" style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" id="productselect"/></td>--%>
 			</tr>
@@ -518,8 +518,8 @@
 				</c:if>
 					<c:if test="${pos.order.id != null}">
 						<td colspan="2" align="right">
-							<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="posPrintInvoice" target="_blank" class="button_orange Print">
-								Print<s:param name="shippingOrder" value="${pos.shippingOrderToPrint}"/>
+							<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="posPrintInvoice" target="_blank" class="button_orange">
+								Print<s:param name="shippingOrder" value="${pos.shippingOrderToPrint}" />
 							</s:link>
 						</td>
 					</c:if>
