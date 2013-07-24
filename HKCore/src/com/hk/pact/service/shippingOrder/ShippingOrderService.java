@@ -72,5 +72,4 @@ public interface ShippingOrderService {
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 	
-	public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages);
 }

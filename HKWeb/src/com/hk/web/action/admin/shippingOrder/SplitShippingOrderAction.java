@@ -14,15 +14,16 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -35,7 +36,7 @@ public class SplitShippingOrderAction extends BaseAction {
     private List<LineItem> lineItems;
 
     @Autowired
-    private ShippingOrderService shippingOrderService;
+    private AdminShippingOrderService adminShippingOrderService;
 
     @DontValidate
     @DefaultHandler
@@ -55,7 +56,7 @@ public class SplitShippingOrderAction extends BaseAction {
                 selectedLineItems.add(lineItem);
             }
         }
-    	boolean orderSplitSuccess = shippingOrderService.autoSplitSO(shippingOrder, selectedLineItems, messages);
+    	boolean orderSplitSuccess = adminShippingOrderService.autoSplitSO(shippingOrder, selectedLineItems, messages);
     	
     	if(orderSplitSuccess) {
     		addRedirectAlertMessage(new SimpleMessage(messages.get(0)));
@@ -85,17 +86,17 @@ public class SplitShippingOrderAction extends BaseAction {
     }
 
 	/**
-	 * @return the shippingOrderService
+	 * @return the adminShippingOrderService
 	 */
-	public ShippingOrderService getShippingOrderService() {
-		return shippingOrderService;
+	public AdminShippingOrderService getAdminShippingOrderService() {
+		return adminShippingOrderService;
 	}
 
 	/**
-	 * @param shippingOrderService the shippingOrderService to set
+	 * @param adminShippingOrderService the adminShippingOrderService to set
 	 */
-	public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-		this.shippingOrderService = shippingOrderService;
+	public void setAdminShippingOrderService(AdminShippingOrderService adminShippingOrderService) {
+		this.adminShippingOrderService = adminShippingOrderService;
 	}
 
 }
