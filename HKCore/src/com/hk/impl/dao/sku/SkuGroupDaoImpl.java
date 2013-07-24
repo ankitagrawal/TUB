@@ -6,6 +6,7 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import org.hibernate.criterion.DetachedCriteria;
@@ -191,6 +192,5 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 				createQuery("from SkuGroup sg where sg.goodsReceivedNote = :grn").
 				setParameter("grn", grn).list();
     }
-
 
 }

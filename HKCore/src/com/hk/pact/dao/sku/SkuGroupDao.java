@@ -7,6 +7,7 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 
@@ -39,6 +40,5 @@ public interface SkuGroupDao extends BaseDao {
     public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem);
     
     public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
-
 
 }
