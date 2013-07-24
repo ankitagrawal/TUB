@@ -1,5 +1,7 @@
 package com.hk.admin.dto.inventory;
 
+import java.util.List;
+
 import com.hk.domain.accounting.PoLineItem;
 
 /**
@@ -22,6 +24,8 @@ public class PoLineItemDto {
     private Double payable = 0.0;
 
     private Double marginMrpVsCP = 0.0;
+    
+    private List<String> remarks;
 
     public PoLineItem getPoLineItem() {
         return poLineItem;
@@ -70,4 +74,13 @@ public class PoLineItemDto {
     public void setMarginMrpVsCP(Double marginMrpVsCP) {
         this.marginMrpVsCP = marginMrpVsCP;
     }
+
+	public List<String> getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(List<String> remarks) {
+		this.remarks = remarks;
+	}
+
 }
