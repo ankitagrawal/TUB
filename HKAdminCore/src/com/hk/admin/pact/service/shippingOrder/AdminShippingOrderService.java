@@ -55,5 +55,5 @@ public interface AdminShippingOrderService {
 
 	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReason);
 
-	public boolean splitSONormal(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages);
+	public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages);
 }
