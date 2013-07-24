@@ -76,12 +76,12 @@
 
 
 -/health-nutrition/dietary-supplements: Shop by Product
---/health-nutrition/dietary-supplements/vitamins
+--/health-nutrition/dietary-supplements/multivitamins
+--/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
+--/health-nutrition/dietary-supplements/vitamins A-Z
 --/health-nutrition/dietary-supplements/minerals
 --/health-nutrition/dietary-supplements/herbs
---/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
 --/health-nutrition/dietary-supplements/anti-oxidants:Anti-Oxidants
---/health-nutrition/dietary-supplements/combination
 --/health-nutrition/dietary-supplements/condition-specific
 --/health-nutrition/dietary-supplements/other-supplements
 
@@ -137,6 +137,12 @@
 ---/sports/fitness-accessories/support-gear/thighs
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/rehabilitation-supports
+--/sports/fitness-accessories/heart-rate-monitors
+---/sports/fitness-accessories/heart-rate-monitors/accessories
+--/sports/fitness-accessories/weighing-scales
+---/sports/fitness-accessories/weighing-scales/Analog
+---/sports/fitness-accessories/weighing-scales/Digital
+---/sports/fitness-accessories/weighing-scales/BMI
 --/sports/fitness-accessories/gym-clothing
 --/sports/fitness-accessories/gym-essential-kits
 --/sports/fitness-accessories/bottles-shakers : Bottles & Shakers
@@ -168,14 +174,8 @@
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/multi-utility-equipments
 --/sports/fitness-equipment/abdominal-machines
---/sports/fitness-equipment/heart-rate-monitors
----/sports/fitness-equipment/heart-rate-monitors/accessories
 --/sports/fitness-equipment/massage-equipments
 --/sports/fitness-equipment/trampolines
---/sports/fitness-equipment/weighing-scales
----/sports/fitness-equipment/weighing-scales/Analog
----/sports/fitness-equipment/weighing-scales/Digital
----/sports/fitness-equipment/weighing-scales/BMI
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football

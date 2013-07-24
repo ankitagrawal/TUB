@@ -70,6 +70,9 @@ public class PoLineItem implements java.io.Serializable {
   @JoinColumn (name = "extra_inventory_line_item_id")
   private ExtraInventoryLineItem extraInventoryLineItem;
   
+  @Column(name = "remarks")
+  private String remarks;
+  
   @Transient
   private boolean firstTimePurchased;
 
@@ -213,6 +216,15 @@ public class PoLineItem implements java.io.Serializable {
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
 	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+	
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
 }
 
 
