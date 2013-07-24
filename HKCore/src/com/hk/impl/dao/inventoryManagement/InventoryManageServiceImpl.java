@@ -35,7 +35,7 @@ import java.util.*;
  */
 
 @Service
-public class InventoryManageServiceImpl implements InventoryManageService{
+public class InventoryManageServiceImpl implements InventoryManageService {
 
     @Autowired
     SkuService skuService;
@@ -44,7 +44,7 @@ public class InventoryManageServiceImpl implements InventoryManageService{
     @Autowired
     private BaseDao baseDao;
     @Autowired
-    private  InventoryManageDao inventoryManageDao ;
+    private InventoryManageDao inventoryManageDao;
     @Autowired
     SkuItemLineItemService skuItemLineItemService;
     @Autowired
@@ -57,34 +57,33 @@ public class InventoryManageServiceImpl implements InventoryManageService{
     public void tempBookSkuLineItemForOrder(Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems) {
-           ProductVariant productVariant = cartLineItem.getProductVariant();
-           // assuming we are going to have warehouse on product variant
+            ProductVariant productVariant = cartLineItem.getProductVariant();
+            // assuming we are going to have warehouse on product variant
             /*
             Warehouse warehouse = null;
            Sku sku = skuService.getSKU(productVariant, warehouse); //
              */
 
-          List<Sku> skus =  skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-          Sku sku = skus.get(0);
+            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+            Sku sku = skus.get(0);
 
 //            List<SkuItem> skuItems =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
             long qtyToBeSet = cartLineItem.getQty();
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
-                for (int i = 0; i < qtyToBeSet; i++) {
-                       SkuItem skuItem =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
-                        skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                        // todo Pvi entries
-                        skuItem = (SkuItem) getBaseDao().save(skuItem);
-                        // todo UpdatePrice and Mrp qyt
-                        skuItemsToBeBooked.add(skuItem);
-                    }
-
+            for (int i = 0; i < qtyToBeSet; i++) {
+                SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                // todo Pvi entries
+                skuItem = (SkuItem) getBaseDao().save(skuItem);
+                // todo UpdatePrice and Mrp qyt
+                skuItemsToBeBooked.add(skuItem);
+            }
 
 
             // Call method to make new entries in SKUItemCLI
-              saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+            saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
 
         }
     }
@@ -105,29 +104,29 @@ public class InventoryManageServiceImpl implements InventoryManageService{
     }
 
 
-   /// Releasing the SkuItem in case of Payment Failure  or Error
-      public void releaseSkuItemCLIForOrder(Order order){
+    /// Releasing the SkuItem in case of Payment Failure  or Error
+    public void releaseSkuItemCLIForOrder(Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
-        for (CartLineItem cartLineItem : cartLineItems){
+        for (CartLineItem cartLineItem : cartLineItems) {
             // get Entries of SkuItemCLI corresponding to cartLineItem
-             List<SkuItemCLI> skuItemCLIs =  cartLineItem.getSkuItemCLIs();
+            List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
             Iterator<SkuItemCLI> iterator = skuItemCLIs.iterator();
-              while(iterator.hasNext()){
-                   SkuItemCLI skuItemCLI = iterator.next();
-                   SkuItem skuItem =  skuItemCLI.getSkuItem();
-                     // todo Pvi entries
-                   skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                   getBaseDao().save(skuItem);
-                    // todo UpdatePrice and Mrp qyt
-                  iterator.remove();
-                  getBaseDao().delete(skuItemCLI);
-              }
+            while (iterator.hasNext()) {
+                SkuItemCLI skuItemCLI = iterator.next();
+                SkuItem skuItem = skuItemCLI.getSkuItem();
+                // todo Pvi entries
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                getBaseDao().save(skuItem);
+                // todo UpdatePrice and Mrp qyt
+                iterator.remove();
+                getBaseDao().delete(skuItemCLI);
+            }
 
         }
-   }
+    }
 
 
-   // get list Of SkuItems to booked
+    // get list Of SkuItems to booked
 
     public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp) {
         List<SkuItem> skuItemList = new ArrayList<SkuItem>();
@@ -150,7 +149,7 @@ public class InventoryManageServiceImpl implements InventoryManageService{
         User loggedOnUser = userService.getLoggedInUser();
         List<SkuItemLineItem> skuItemLineItems = skuItemLineItemService.getSkuItemLineItem(lineItem, EnumSkuItemStatus.BOOKED.getId());
         List<SkuItem> skuItemInSkuItemLineItems = new ArrayList<SkuItem>();
-        for(SkuItemLineItem item : skuItemLineItems){
+        for (SkuItemLineItem item : skuItemLineItems) {
             SkuItem si = item.getSkuItem();
             skuItemInSkuItemLineItems.add(si);
         }
@@ -158,8 +157,8 @@ public class InventoryManageServiceImpl implements InventoryManageService{
             // TODO:
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
             skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
-            skuItem = (SkuItem)baseDao.save(skuItem);
-  //          adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
+            skuItem = (SkuItem) baseDao.save(skuItem);
+            //          adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
 
         } else {
             //If skuItem is booked
@@ -168,14 +167,14 @@ public class InventoryManageServiceImpl implements InventoryManageService{
                 SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
                 toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                 skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                skuItem = (SkuItem)baseDao.save(toReleaseSkuItem);
-         //       adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
+                skuItem = (SkuItem) baseDao.save(toReleaseSkuItem);
+                //       adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
 
                 SkuItemLineItem skuItemLineItem = null;
-                for(SkuItemLineItem item: skuItemLineItems){
-                         if(item.getSkuItem().equals(skuItem)){
-                             skuItemLineItem = item;
-                         }
+                for (SkuItemLineItem item : skuItemLineItems) {
+                    if (item.getSkuItem().equals(skuItem)) {
+                        skuItemLineItem = item;
+                    }
                 }
                 SkuItemLineItem item = new SkuItemLineItem();
                 item.setSkuItem(skuItem);
@@ -205,8 +204,8 @@ public class InventoryManageServiceImpl implements InventoryManageService{
                 skuItem = (SkuItem) baseDao.save(skuItem);
 
                 SkuItemLineItem skuItemLineItem = null;
-                for(SkuItemLineItem item: skuItemLineItems){
-                    if(item.getSkuItem().equals(skuItem)){
+                for (SkuItemLineItem item : skuItemLineItems) {
+                    if (item.getSkuItem().equals(skuItem)) {
                         skuItemLineItem = item;
                     }
                 }
