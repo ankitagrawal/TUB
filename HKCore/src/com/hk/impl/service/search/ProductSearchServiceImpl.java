@@ -297,6 +297,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             if(resultCount > 0)
               return true;
         } catch (SolrServerException ex) {
+            logger.error("unable to get result ", ex);
             SearchException e = wrapException("Unable to get category term results", ex);
             throw e;
         }
