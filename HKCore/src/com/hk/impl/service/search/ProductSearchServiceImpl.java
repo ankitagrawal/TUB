@@ -140,7 +140,11 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
   public boolean isBrandTerm(String term) throws SearchException {
-        SolrQuery query = new SolrQuery("*:*");
+      SolrQuery query = new SolrQuery("*:*");
+      Synonym brandSynonym = getCategoryBrandSynonym(term, true, false);
+      if (brandSynonym != null) {
+          term = brandSynonym.getBrandName();
+      }
         //query.addFilterQuery("{!field f= brand}" + term);
         query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + term+"\"");
     
@@ -286,8 +290,16 @@ class ProductSearchServiceImpl implements ProductSearchService {
       return solrProductList != null && !solrProductList.isEmpty() ? solrProductList.get(0) : null;
     }
 
-   public boolean isCategoryTerm(String term) throws SearchException {
-       term = makeItCategoryTerm(term);
+    @Override
+    public Synonym getCategoryBrandSynonym(String searchTerm, boolean categorySearch, boolean brandSearch) {
+        return getSearchLogDao().getCategoryBrandSynonym(searchTerm, categorySearch, brandSearch);
+    }
+
+    public boolean isCategoryTerm(String term) throws SearchException {
+        Synonym categorySynonym = getCategoryBrandSynonym(term, true, false);
+        if(categorySynonym != null){
+            term = categorySynonym.getCategoryName();
+        }
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + term+"\"");
         try {

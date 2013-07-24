@@ -13631,4 +13631,26 @@
             <column name="remarks" type="TEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-07-24-01">
+        <createTable tableName="synonym">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="search_synonym" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(450)">
+                 <constraints nullable="false"/>
+            </column>
+            <column name="brand_name" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
