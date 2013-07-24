@@ -150,7 +150,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
             }
         }
         if(toBeFreedSkuItemList != null && toBeFreedSkuItemList.size() > 0){
-            getSkuItemDao().save(toBeFreedSkuItemList);
+            getSkuItemDao().saveOrUpdate(toBeFreedSkuItemList);
             return true;
         }
         return false;
