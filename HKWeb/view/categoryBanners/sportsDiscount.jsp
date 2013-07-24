@@ -19,7 +19,7 @@
 </style>--%>
 
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-    <a href="${pageContext.request.contextPath}/pages/offers/sports-and-fitness-page/index.html"> <img
+    <a href="${pageContext.request.contextPath}/pages/offers/sports-and-fitness-page/index.jsp"> <img
                 src="${pageContext.request.contextPath}/images/banners/top/sports-strip-banner.jpg"
                 alt="sports Offers"> </a>
 

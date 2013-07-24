@@ -1,14 +1,31 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Welcome to Sports Offer Page</title>
-<script src="js/jquery.easing.1.3.js" type="text/javascript" ></script>
-<script src="js/jqajax.js" type="text/javascript" ></script>
-<link href="style.css" rel="stylesheet" type="text/css" />
-</head>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/includes/_taglibInclude.jsp" %>
 
-<body>
+
+<%
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
+%>
+<s:layout-render name="/layouts/categoryBlankLanding.jsp"
+                 pageTitle="sports offer">
+
+<s:layout-component name="htmlHead">
+	<link href="${pageContext.request.contextPath}/css/eye-style.css"
+	      rel="stylesheet" type="text/css"/>
+</s:layout-component>
+
+<s:layout-component name="breadcrumbs">
+	<div class='crumb_outer'><s:link
+			beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
+		&gt; <span class="crumb last" style="font-size: 12px;">sports Offers</span>
+
+		<h1 class="title">sports Offers</h1>
+	</div>
+
+</s:layout-component>
+
+
+<s:layout-component name="content">
 <div class="sportsContainr">
     	<div class="content">
 			<div class="rm_wrapper">
@@ -41,18 +58,18 @@
 							<img src="images/sl-pic11.jpg" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'400', height:'230'} )" title="" contentID="crslDiv7" />
 						</div>
 						<div id="rm_container_4">
-							<img src="images/sl-pic4.jpg" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'400', height:'230'} )" title="" contentID="crslDiv4" />							
+							<img src="images/sl-pic4.jpg" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'400', height:'230'} )" title="" contentID="crslDiv4" />
 							<img src="images/sl-pic14.jpg" href="javascript:void(0)" onClick="$.fn.cquery_customlightbox(this, {width:'400', height:'270'} )" title="" contentID="crslDiv8" />
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>    
-    
+		</div>
+
     <div class="row BannerOneOuter">
     	<div class="BannerOneInr" align="center"><a href="#"><img src="images/cricket-bat-offer-banner.jpg" usemap="#Map" border="0" />
             <map name="Map" id="Map">
-              <area shape="rect" coords="-10,-4,877,155" href="sports-bats-offers-page.html" />
+              <area shape="rect" coords="-10,-4,877,155" href="sports-bats-offers-page.jsp" />
             </map>
    	  </a></div>
     </div>
@@ -89,7 +106,7 @@
 <div id="myCotentDiv1" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKFREESCALE</h1>
@@ -107,11 +124,11 @@
 	<div class="ppBx2">
     	<div class="row">
             <div class="offerTxt">
-                <h3><span>Note:-</span> To get 25% off on Summer 69 tshirts, buy a pair of shoes from Nivea/Vector X/Kanton.</h3>            
+                <h3><span>Note:-</span> To get 25% off on Summer 69 tshirts, buy a pair of shoes from Nivea/Vector X/Kanton.</h3>
             </div>
         </div>
         <div class="dashedBrdr1"></div>
-    	<div class="row">       
+    	<div class="row">
             <div class="spPopUpImgBox">
                 <p><img src="images/vector-X-shoes.jpg" alt="" /></p>
                 <p class="spOfferProNames">Vector X Shoes</p>
@@ -151,7 +168,7 @@
 <div id="myCotentDiv3" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKUSI</h1>
@@ -168,7 +185,7 @@
 <div id="myCotentDiv4" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKGOLA</h1>
@@ -185,7 +202,7 @@
 <div id="myCotentDiv5" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKLDHW</h1>
@@ -202,7 +219,7 @@
 <div id="myCotentDiv6" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKYONEX</h1>
@@ -219,7 +236,7 @@
 <div id="myCotentDiv7" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKFREETSHIRT</h1>
@@ -236,7 +253,7 @@
 <div id="myCotentDiv8" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKNEWFEEL15</h1>
@@ -253,7 +270,7 @@
 <div id="myCotentDiv9" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKBODYBALANCE</h1>
@@ -271,11 +288,11 @@
 	<div class="ppBx2">
     	<div class="row">
             <div class="offerTxt">
-                <h3><span>Note:-</span> With every pair of Nivea or Vector X shoes, get a pair of Slazenger socks free.</h3>            
+                <h3><span>Note:-</span> With every pair of Nivea or Vector X shoes, get a pair of Slazenger socks free.</h3>
             </div>
         </div>
         <div class="dashedBrdr1"></div>
-    	<div class="row">       
+    	<div class="row">
             <div class="spPopUpImgBox">
                 <p><img src="images/vector-X-shoes.jpg" alt="" /></p>
                 <p class="spOfferProNames">Vector X Shoes</p>
@@ -311,11 +328,11 @@
 	<div class="ppBx2">
     	<div class="row">
             <div class="offerTxt">
-                <h3><span>Note:-</span> Buy a Shaker 40 Pro or a Body Fortress Shaker and get 50% off on Stacker Bottle</h3>            
+                <h3><span>Note:-</span> Buy a Shaker 40 Pro or a Body Fortress Shaker and get 50% off on Stacker Bottle</h3>
             </div>
         </div>
         <div class="dashedBrdr1"></div>
-    	<div class="row">       
+    	<div class="row">
             <div class="spPopUpImgBox">
                 <p><img src="images/shaker40-pro.jpg" alt="" /></p>
                 <p class="spOfferProNames">Shaker 40 Pro</p>
@@ -350,7 +367,7 @@
 <div id="myCotentDiv12" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKLIFTING</h1>
@@ -371,7 +388,7 @@
 <div id="crslDiv1" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKSUUNTO</h1>
@@ -388,7 +405,7 @@
 <div id="crslDiv3" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKFREEBAND</h1>
@@ -405,7 +422,7 @@
 <div id="crslDiv4" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKWILDCRAFT</h1>
@@ -423,11 +440,11 @@
 	<div class="ppBx2">
     	<div class="row">
             <div class="offerTxt">
-                <h3>Great Discounts on Slazenger, GM & SG</h3>            
+                <h3>Great Discounts on Slazenger, GM & SG</h3>
             </div>
         </div>
         <div class="dashedBrdr1"></div>
-    	<div class="row">       
+    	<div class="row">
             <div class="spPopUpImgBox">
                 <p><img src="images/slazenger.jpg" alt="" /></p>
                 <p class="spOfferProNames">Slazenger</p>
@@ -456,7 +473,7 @@
 <div id="crslDiv6" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKYONEX15</h1>
@@ -473,7 +490,7 @@
 <div id="crslDiv7" class="hideOffers">
 	<div class="ppBx1">
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKFITNESS500</h1>
@@ -491,7 +508,7 @@
 	<div class="ppBx1">
     	<div class="row offerTxt" align="center"><h3>Spend Rs.1000 or more on Muscleblaze and get 20% off on your total cart value.</h3></div>
 		<div class="row" align="center">To avail the offer, use this coupon code.</div>
-    	<div class="row">       
+    	<div class="row">
    		<div class="couponCodeBx1">
         	<h5>Coupon Code</h5>
             <h1>HKMB20</h1>
@@ -505,16 +522,11 @@
     </div>
 </div>
 
-
-
-
-
-
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.transform-0.9.3.min.js"></script>
 <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="js/jquery.RotateImageMenu.js"></script>
 <script src="js/cquery_customlightbox.js" type="text/javascript"></script>
+</s:layout-component>
 
-</body>
-</html>
+</s:layout-render>
