@@ -38,10 +38,6 @@ public class AdminOrderDaoImpl extends BaseDaoImpl implements AdminOrderDao {
       criteria.add(Restrictions.le("createDate", endDate));
     if (orderStatusList != null)
       criteria.add(Restrictions.in("orderStatus", orderStatusList));
-    //   criteria.createAlias("shippingOrders", "SO");
-    //   criteria.createAlias("SO.shippingOrderStatus", "SOStatus");
-    //criteria.createAlias("payment", "pmt");
-    //criteria.createAlias("pmt.paymentMode", "paymentMode");
     return findByCriteria(criteria);
   }
 

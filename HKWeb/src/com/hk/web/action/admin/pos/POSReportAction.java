@@ -59,7 +59,6 @@ public class POSReportAction extends BaseAction {
     startDate = null;
     endDate = null;
     return generateSalesReportByDate();
-
   }
 
   public Resolution generateReturnReportByDate() {

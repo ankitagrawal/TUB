@@ -12,9 +12,6 @@ import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.dto.pos.POSSaleItemDto;
 import com.hk.dto.pos.POSSummaryDto;
 import com.hk.pact.dao.courier.ReverseOrderDao;
-import com.hk.pact.service.OrderStatusService;
-import com.hk.pact.service.core.WarehouseService;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +24,12 @@ public class POSReportServiceImpl implements POSReportService {
   private AdminOrderDao adminOrderDao;
   @Autowired
   private ReverseOrderDao reverseOrderDao;
-  @Autowired
-  private OrderStatusService orderStatusService;
-  @Autowired
-  private ShippingOrderStatusService shippingOrderStatusService;
-  @Autowired
-  private WarehouseService warehouseService;
 
   public List<Order> storeSalesReport(Long storeId, Date startDate, Date endDate) {
     if (startDate == null) {
       startDate = getStartDate();
     }
-    if (startDate == null) {
+    if (endDate == null) {
       endDate = new Date();
     }
     OrderStatus orderStatusReturned = EnumOrderStatus.Delivered.asOrderStatus();
@@ -47,7 +38,7 @@ public class POSReportServiceImpl implements POSReportService {
     return adminOrderDao.findSaleForTimeFrame(storeId, startDate, endDate, orderStatusList);
   }
 
-  public List<POSSaleItemDto> storeSalesReportWithDiscount(List<Order> orders) {     //TODO
+  public List<POSSaleItemDto> storeSalesReportWithDiscount(List<Order> orders) {
 
     List<POSSaleItemDto> posSaleItems = new ArrayList<POSSaleItemDto>();
     for (Order order : orders) {
@@ -56,7 +47,6 @@ public class POSReportServiceImpl implements POSReportService {
         discount = discount + lineItem.getDiscountOnHkPrice();
       }
       posSaleItems.add(new POSSaleItemDto(discount, order));
-
     }
     return posSaleItems;
   }
@@ -78,7 +68,7 @@ public class POSReportServiceImpl implements POSReportService {
         if (payment.getPaymentMode().getId().equals(EnumPaymentMode.COUNTER_CASH.getId())) {
           cashAmtCollected = cashAmtCollected + payment.getAmount();
         }
-        if (payment.getPaymentMode().getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
+         else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
           creditCardAmtCollected = creditCardAmtCollected + payment.getAmount();
         }
       }
@@ -98,7 +88,7 @@ public class POSReportServiceImpl implements POSReportService {
     if (startDate == null) {
       startDate = getStartDate();
     }
-    if (startDate == null) {
+    if (endDate == null) {
       endDate = new Date();
     }
     return reverseOrderDao.findReverseOrderForTimeFrame(storeId, startDate, endDate);
@@ -108,7 +98,6 @@ public class POSReportServiceImpl implements POSReportService {
     Date date = new Date();
     Calendar cal = new GregorianCalendar();
     cal.setTime(date);
-    cal.set(Calendar.HOUR, 0);
     cal.set(Calendar.HOUR_OF_DAY, 0);
     cal.set(Calendar.MINUTE, 0);
     cal.set(Calendar.SECOND, 0);
