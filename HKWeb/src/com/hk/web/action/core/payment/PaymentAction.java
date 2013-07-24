@@ -20,6 +20,7 @@ import com.hk.domain.user.BillingAddress;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.cart.CartAction;
@@ -71,6 +72,10 @@ public class PaymentAction extends BaseAction {
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
+
+    @Autowired
+    InventoryManageService inventoryManageService;
+
     /*
    algorithm to route multiple gateways, first let the customer choose the issuer now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
    then you iterate over your faddu logic, to decide which gateway won then call the action corresponding to that gateway along with the issuer if needed
@@ -90,9 +95,10 @@ public class PaymentAction extends BaseAction {
 //            }
 
             //  todo ERP  Ankit --Call to make entries in SkuItemCLI --for temp booked method
+            inventoryManageService.tempBookSkuLineItemForOrder(order);
 
             BillingAddress billingAddress = null;
-            if(billingAddressId != null){
+            if (billingAddressId != null) {
                 billingAddress = addressDao.getBillingAddressById(billingAddressId);
             }
 
