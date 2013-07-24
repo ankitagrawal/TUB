@@ -288,8 +288,18 @@ public class POSAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Error occurred while creating Order"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
+		for (POSLineItemDto posLineItemDto : posLineItems) {
+			if (posLineItemDto.getFreebie() != null && posLineItemDto.isFreebie()) {
+				if (discount == null) {
+					discount = 0D;
+				}
+				discount += posLineItemDto.getOfferPrice();
+				grandTotal += posLineItemDto.getOfferPrice();
+			}
+		}
 		order.setAmount(grandTotal);
 		order = posService.createCartLineItems(posLineItems, order);
+
 		if (discount != null) {
 			posService.applyOrderLevelDiscountOnCartLineItems(order, discount);
 			order.setAmount(grandTotal - discount);
