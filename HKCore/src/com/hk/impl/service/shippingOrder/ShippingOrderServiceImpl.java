@@ -47,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -200,44 +201,52 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     private boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
-        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
-            if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-                if(!(shippingOrder.isServiceOrder())){
-                User adminUser = getUserService().getAdminUser();
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    Long availableUnbookedInv = 0L;
+    	if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
+    		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+    			if(!(shippingOrder.isServiceOrder())){
+    				User adminUser = getUserService().getAdminUser();
+    				Set<LineItem> selectedItems = new HashSet<LineItem>();
 
-                    if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-	                    return true;
-                        //availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
-                    }else{
-                        availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
-                    }
+    				for (LineItem lineItem : shippingOrder.getLineItems()) {
+    					Long availableUnbookedInv = 0L;
 
-                    Long orderedQty = lineItem.getQty();
+    					if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
+    						continue;
+    						// return true;
+    						//availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
+    					}else{
+    						availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
+    					}
 
-                    if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()){ // It cannot be = as for last order/unit unbooked will always be ZERO
-                        String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
-                        return false;
-                    }
-				}
-					if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
-						Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
-						if (newShipment == null) {
-                            logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, EnumReason.ShipmentNotCreatedManual.asReason());
-							return false;
-						}
-					}
-            }
-                return true;
-            }
-        } else {
-            logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, EnumReason.InvalidPaymentStatusManual.asReason());
-            return false;
-        }
-        return false;
+    					Long orderedQty = lineItem.getQty();
+
+    					// It cannot be = as for last order/unit unbooked will always be ZERO
+    					if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()) {
+    						String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
+    						logShippingOrderActivity(shippingOrder, adminUser,
+    								getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
+    								EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
+    						//return false;
+    						selectedItems.add(lineItem);
+    					}
+    				}
+
+    				if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
+    					Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
+    					if (newShipment == null) {
+    						logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,
+    								EnumReason.ShipmentNotCreatedManual.asReason());
+    						return false;
+    					}
+    				}
+    			}
+    			return true;
+    		}
+    	} else {
+    		logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, EnumReason.InvalidPaymentStatusManual.asReason());
+    		return false;
+    	}
+    	return false;
     }
 
     private boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
