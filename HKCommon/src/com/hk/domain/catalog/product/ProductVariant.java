@@ -8,6 +8,7 @@ import com.hk.constants.core.EnumRole;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
+import com.hk.domain.courier.BoxSize;
 
 import javax.persistence.*;
 import java.util.*;
@@ -109,6 +110,13 @@ public class ProductVariant implements java.io.Serializable {
     @Column(name = "weight")
     private Double                    weight;
 
+    @Column(name = "commission")
+    private Double                    commission;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "box_size_id")
+    private BoxSize estimatedBoxSize;
+
     @Column(name = "upc")
     private String                    upc;                                                       // Universal Product
     // Code
@@ -183,6 +191,12 @@ public class ProductVariant implements java.io.Serializable {
     @Transient
     @Expose
     private String                    optionsAuditString;
+    
+    @Column(name = "mrp_qty")
+    private Long mrpQty;
+    
+    @Column(name = "net_qty")
+    private Long netQty;
 
     public List<ProductImage> getProductImages() {
         return productImages;
@@ -716,5 +730,36 @@ public class ProductVariant implements java.io.Serializable {
     public void setOptionsAuditString(String optionsAuditString) {
         this.optionsAuditString = optionsAuditString;
     }
+    
+    public Long getMrpQty() {
+		return mrpQty;
+	}
+    
+    public void setMrpQty(Long mrpQty) {
+		this.mrpQty = mrpQty;
+	}
+    
+    public Long getNetQty() {
+		return netQty;
+	}
+    
+    public void setNetQty(Long netQty) {
+		this.netQty = netQty;
+	}
 
+    public BoxSize getEstimatedBoxSize() {
+        return estimatedBoxSize;
+    }
+
+    public void setEstimatedBoxSize(BoxSize estimatedBoxSize) {
+        this.estimatedBoxSize = estimatedBoxSize;
+    }
+
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
+    }
 }

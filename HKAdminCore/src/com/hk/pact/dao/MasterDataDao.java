@@ -191,4 +191,6 @@ public interface MasterDataDao {
     public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList();
 
     public List<EnumUserCodCalling> getUserCodCallStatus();
+    
+    public List<ReconciliationType> getDebitNoteReconciliationType();
 }

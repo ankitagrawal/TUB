@@ -33,10 +33,18 @@
                        alert("Rtv Note Status can't reverted back");
                        return false;
                    }
+                   if($('#returnByHand').is(":checked")){
+                	   var retVal = confirm("Are you sure to return by hand. You may not be able to add courier details further");
+                 	   if( retVal == true ){
+                 		  return true;
+                 	   }else{
+                 		  return false;
+                 	   }
+                   }
                    var courier = $('#allActiveCourier').val();
                    var pickupStatus = $('#pickupStatus').val();
                    var destinationAddress = $('#destinationAddress').val();
-                   if(rtvNoteStatus >= 20){
+                  /*  if(rtvNoteStatus >= 20){
                        if((courier == "") || (pickupStatus == "")){
                            alert("Please Select a Courier and pickup status");
                            return false;
@@ -53,8 +61,34 @@
                                return false;
                            }
                        }
-                   }
+                   } */
                });
+               
+               if(${pa.debitNote.returnByHand!=null && pa.debitNote.returnByHand}){
+               	$("#debitNoteCourier").hide();
+               }
+               /* if ($('#returnByHand').is(':checked')) {
+               	$("#debitNoteCourier").hide();
+               } */
+               
+               $('#returnByHand').click(function(){
+               	if($(this).is(":checked")){
+               		$("#debitNoteCourier").hide();
+               		$("#rtvReturnInfo").show();
+               	}else{
+               		$("#rtvReturnInfo").hide();
+               		$("#debitNoteCourier").show();
+               	}
+               	
+                 });
+               
+               if(${rtvNote.rtvNote.returnByHand!=null && rtvNote.rtvNote.returnByHand}){
+               	$("#debitNoteCourier").hide();
+               }
+               
+               if(${rtvNote.rtvNote.courierPickupDetail!=null}){
+            	   $("#rtvReturnInfo").hide();
+               }
             });
         </script>
         </s:layout-component>
@@ -77,6 +111,9 @@
                 <th>Create Date</th>
                 <th>Update Date</th>
                 <th>Remarks</th>
+                <c:if test="${rtvNote.rtvNote.courierPickupDetail==null}">
+                <th>Return By Hand</th>
+                </c:if>
             </tr>
             </thead>
             <tbody>
@@ -121,12 +158,48 @@
                     <td>${rtvNote.rtvNote.createDate}</td>
                     <td>${rtvNote.rtvNote.updateDate}</td>
                     <td><textarea name = "comments" rows="10" cols="10" style="height:60px; width:210px;">${rtvNote.rtvNote.remarks}</textarea></td>
+                    <c:if test="${rtvNote.rtvNote.courierPickupDetail==null}">
+                    <td>
+                    <c:choose>
+	              <c:when test="${rtvNote.rtvNote.returnByHand}">
+	                <!-- <input type="checkbox" checked="checked" id="returnByHand" name="debitNote.returnByHand"  /> -->
+	                <label>Yes</label>
+	              </c:when>
+	              <c:otherwise>
+	                <input type="checkbox" id="returnByHand" name="returnByHand"/>
+	              </c:otherwise>
+	            </c:choose>
+                    </td>
+                    </c:if>
                 </tr>
             </c:if>
             </tbody>
         </table>
         <br><br>
         <div class="clear"></div>
+        <br><br>
+        
+        <div id="rtvReturnInfo">
+        <h2>RTV Return Info</h2>
+        <table border="1">
+            <thead>
+              <tr>
+                  <th>Return Date</th>
+                  <th>Tracking Number</th>
+                  <th>Return Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                  <td><s:text class="date_input" id="pickupDate" formatPattern="yyyy-MM-dd" name="rtvReturnDate" value="${rtvNote.rtvNote.rtvReturnDate}"/></td>
+                  <td><s:text name="rtvTrackingNumber" value="${rtvNote.rtvNote.rtvTrackingNumber}"/></td>
+                  <td><s:text name="rtvReturnAddress" value="${rtvNote.rtvNote.rtvReturnAddress}"/></td>
+              </tr>
+            </tbody>
+            </table>
+        </div>
+        
+        <div id="debitNoteCourier">
         <h2>Courier Details</h2>
         <table border="1">
             <thead>
@@ -183,6 +256,7 @@
               </tr>
             </tbody>
         </table>
+        </div>
         <s:hidden name="rtvNoteId" value="${rtvNote.rtvNote.id}"/>
         <br><br>
         <div class="clear"></div>

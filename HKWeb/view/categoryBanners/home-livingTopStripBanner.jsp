@@ -20,12 +20,13 @@
 <div style="margin-left: auto; margin-right: auto; width:960px;">
     <%--<img src="${pageContext.request.contextPath}/images/banners/top/beauty-promotional-strip-banner.jpg" alt="Beauty Discount">--%>
      <img
-            src="${pageContext.request.contextPath}/images/banners/top/bajaj-strip-banner.jpg"
+            src="${pageContext.request.contextPath}/images/banners/home-living-static-banner.jpg"
             alt="Flat 20% Off on these 3 appliances from BAJAJ" usemap="#Map">
       <map name="Map" id="Map">
-        <area shape="rect" coords="262,-7,453,94" href="http://www.healthkart.com/home-living/mix-grind-chop/food-processor?brand=Bajaj" />
-        <area shape="rect" coords="468,-1,655,98" href="http://www.healthkart.com/home-living/cook-fry/induction-cooker?brand=Bajaj" />
-        <area shape="rect" coords="667,1,874,80" href="http://www.healthkart.com/home-living/mix-grind-chop/juicer-mixer-grinder?brand=Bajaj" />
+        <area shape="rect" coords="262,-7,453,94" href="${pageContext.request.contextPath}/brand/home-living/Godrej" />
+        <area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/product/havells-super-chopper/HAV041" />
+        <area shape="rect" coords="667,1,874,80" href="${pageContext.request.contextPath}/product/bajaj-popular-dry-iron/BAJ028" />
+
       </map>
 </div>
 

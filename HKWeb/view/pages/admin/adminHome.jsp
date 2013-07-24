@@ -61,6 +61,9 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></h3>
 
+   <h3><s:link
+            beanclass="com.hk.web.action.admin.shippingOrder.FixedShippingOrderAction">Search Fixed Shipping Orders</s:link></h3>
+
     <h3><s:link
             beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction">Search Subscriptions</s:link></h3>
 
@@ -164,6 +167,8 @@
             beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
+
+     <h3><s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="reviewBatches">Batches To Review</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Replacement Order</s:link></h3>
@@ -367,6 +372,9 @@
     <h3>
         <s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction"
                 title="Download AccountingInvoice PDFs">Download AccountingInvoice PDFs</s:link></h3>
+                
+                <h3>
+        <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
 </div>
 

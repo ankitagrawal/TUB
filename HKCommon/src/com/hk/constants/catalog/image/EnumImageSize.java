@@ -6,6 +6,7 @@ public enum EnumImageSize {
   Original(null, "o"),
   LargeSize(900, "l"),
   MediumSize(320, "m"),
+  BigThumbSize(180, "bt"),
   SmallSize(128, "s"),
   TinySize(48, "t"),
   ;
@@ -25,5 +26,15 @@ public enum EnumImageSize {
   public String getSuffix() {
     return suffix;
   }
+
+public static EnumImageSize getEnumImageSize(String imageSize){
+    for (EnumImageSize enumImageSize : EnumImageSize.values()) {
+      if(enumImageSize.getSuffix().equals(imageSize)){
+        return enumImageSize;
+      }
+    }
+    return null;
+  }
+
 
 }

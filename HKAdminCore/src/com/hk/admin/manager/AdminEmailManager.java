@@ -5,6 +5,8 @@ import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
+
 import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.cache.RoleCache;
 import com.hk.constants.catalog.category.CategoryConstants;
@@ -85,6 +87,7 @@ public class AdminEmailManager {
 
     public static final String GOOGLE_BANNED_WORD_LIST = "googleBannedWordList";
     public static final String PURCHASE_REPORTING_EMAIL = "purchase.reporting@healthkart.com";
+    public static final String WAREHOUSE_PURCHASE_EMAIL = "warehouse.purchase@healthkart.com";
 
     private Set<String> hkReportAdminEmails = null;
     private Set<String> marketingAdminEmails = null;
@@ -132,9 +135,12 @@ public class AdminEmailManager {
     @Autowired
     SkuGroupService skuGroupService;
     @Autowired
+    ProductVariantNotifyMeEmailService productVariantNotifyMeEmailService;
+    @Autowired
     private PurchaseOrderManager purchaseOrderManager;
     @Autowired
     PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
+
 
     private File  pdfFile;
     private File  xlsFile;
@@ -316,7 +322,8 @@ public class AdminEmailManager {
 
     public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
-        List<SkuGroup> skuGroups = skuGroupService.getAllCheckedInBatchForGrn(grn);;
+        List<SkuGroup> skuGroups = skuGroupService.getAllCheckedInBatchForGrn(grn);
+        ;
         valuesMap.put("grn", grn);
         valuesMap.put("skuGroups", skuGroups);
         boolean success = true;
@@ -333,8 +340,8 @@ public class AdminEmailManager {
             }
             boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, PURCHASE_REPORTING_EMAIL,
                     category.getName() + " Purchase Report Admin");
-            if(!sent){
-            	success = false;
+            if (!sent) {
+                success = false;
             }
             return success;
         } else {
@@ -343,10 +350,87 @@ public class AdminEmailManager {
     }
 
 
-    public void sendNotifyUsersMails(Map<String, List<NotifyMe>> userNotifyMeListMap) {
-
+    public int sendNotifyUserMailsForDeletedOOSHiddenProducts(Map<String, List<NotifyMe>> userNotifyMeListMap) {
         HashMap valuesMap = new HashMap();
-        User notifedByuser = userService.getAdminUser();
+        User notifedByuser = userService.getLoggedInUser();
+        int countOfSentMail = 0;
+        for (String emailId : userNotifyMeListMap.keySet()) {
+            Boolean mailSentSuccessfully = false;
+            List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);
+            NotifyMe notifyMeObject = notifyMeListPerUser.get(0);
+            User user = userService.findByLogin(emailId);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String currentDate = sdf.format(new Date());
+            Map<String, ProductVariant> productPriceRangeMap = new HashMap<String, ProductVariant>();
+            valuesMap.put("currentDate", currentDate);
+            /* find existing recipients or create recipients through the emails ids passed */
+            EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
+            if (user != null) {
+                valuesMap.put("unsubscribeLink", getLinkManager().getUnsubscribeLink(user));
+            } else {
+                valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
+            }
+            valuesMap.put("notifiedUser", notifyMeObject);
+            if (notifyMeListPerUser.size() > 1) {
+                /*User has asked for multiple variant notification  */
+                Map<String, List<Product>> productSimilarProductMap = new HashMap<String, List<Product>>();
+                List<NotifyMe> notifyMeListFinal = new ArrayList<NotifyMe>();
+                for (NotifyMe notifyMe : notifyMeListPerUser) {
+                    List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMe.getProductVariant(), 3);
+                    if (similarProductList != null && similarProductList.size() > 0) {
+                        notifyMeListFinal.add(notifyMe);
+                        productSimilarProductMap.put(notifyMe.getProductVariant().getProduct().getId(), similarProductList);
+                        for (Product product : similarProductList) {
+                            productPriceRangeMap.put(product.getId(), product.getMaximumDiscountProducVariant());
+                            valuesMap.put("productPriceMap", productPriceRangeMap);
+                        }
+
+                    }
+                }
+                valuesMap.put("productNotifyList", notifyMeListFinal);
+                /*similarProductMap  KEY: OOS product user asked for notification   VALUE: list of  3 similar products(first three max inv products) */
+                if (productSimilarProductMap.size() > 0) {
+                    valuesMap.put("similarProductMap", productSimilarProductMap);
+                    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserForSimilarProductsForMultipleVariants);
+                    mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
+                }
+
+            } else {
+                /*Single variant notification*/
+                valuesMap.put("product", notifyMeObject.getProductVariant().getProduct());
+                List<Product> similarProductList = productVariantNotifyMeEmailService.getSimilarProductsWithMaxUnbookedInvn(notifyMeObject.getProductVariant(), 3);
+                if (similarProductList != null && similarProductList.size() > 0) {
+                    valuesMap.put("similarProductList", similarProductList);
+                    for (Product product : similarProductList) {
+                        productPriceRangeMap.put(product.getId(), product.getMaximumDiscountProducVariant());
+                        valuesMap.put("productPriceMap", productPriceRangeMap);
+                    }
+                    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserForSimilarProductsForSingleVariants);
+                    mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
+                }
+            }
+
+            if (mailSentSuccessfully) {
+                countOfSentMail++;
+                for (NotifyMe notifyMe : notifyMeListPerUser) {
+                    {
+                        notifyMe.setNotifiedByUser(notifedByuser);
+                        notifyMe.setNotifiedDate(new Date());
+                        getNotifyMeDao().save(notifyMe);
+                    }
+                }
+            }
+
+        }
+        return countOfSentMail;
+
+    }
+
+
+    public int sendNotifyUsersMails(Map<String, List<NotifyMe>> userNotifyMeListMap) {
+        int countOfSentMail = 0;
+        HashMap valuesMap = new HashMap();
+        User notifedByuser = userService.getLoggedInUser();
 
         for (String emailId : userNotifyMeListMap.keySet()) {
 
@@ -354,6 +438,9 @@ public class AdminEmailManager {
             List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);
             NotifyMe notifyMeObject = notifyMeListPerUser.get(0);
             User user = userService.findByLogin(emailId);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String currentDate = sdf.format(new Date());
+            valuesMap.put("currentDate", currentDate);
             // find existing recipients or create recipients through the emails ids passed
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
             if (user != null) {
@@ -375,6 +462,7 @@ public class AdminEmailManager {
                 mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
             }
             if (mailSentSuccessfully) {
+                countOfSentMail++;
                 for (NotifyMe notifyMe : notifyMeListPerUser) {
                     {
                         notifyMe.setNotifiedByUser(notifedByuser);
@@ -385,6 +473,7 @@ public class AdminEmailManager {
             }
 
         }
+        return countOfSentMail;
     }
 
 
@@ -1053,7 +1142,7 @@ public class AdminEmailManager {
             categoryAdmins = emailManager.categoryAdmins(category);
         }
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        
+        categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
         try {
         	
             pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".pdf");

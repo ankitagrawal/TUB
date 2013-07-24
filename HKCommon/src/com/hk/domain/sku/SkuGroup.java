@@ -6,25 +6,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 @Entity
@@ -82,11 +70,15 @@ public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
 	@Column (name = "create_date", nullable = false, length = 19)
 	private Date createDate;
 
-	@Column (name = "cost_price")
+	@Column (name = "cost_price",nullable = false)
 	private Double costPrice;
 
-	@Column (name = "mrp")
+	@Column (name = "mrp",nullable = false)
 	private Double mrp;
+
+    @Column (name="status", nullable=false)
+    @Enumerated(EnumType.STRING)
+    private EnumSkuGroupStatus status = EnumSkuGroupStatus.NA;
 
 	@JsonSkip
 	@OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuGroup")
@@ -223,7 +215,15 @@ public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
 		this.mrp = mrp;
 	}
 
-	@Override
+    public EnumSkuGroupStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EnumSkuGroupStatus status) {
+        this.status = status;
+    }
+
+    @Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;

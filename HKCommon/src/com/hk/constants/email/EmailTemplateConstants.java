@@ -41,6 +41,8 @@ public class EmailTemplateConstants {
 	public static final String poApprovedEmail = "/poApprovedEmail.ftl";
 	public static final String notifyUserEmail = "/notifyUserEmailProductNew.ftl";
     public static final String notifyUserEmailForMultipleVariants = "/notifyUserForMultipleVariants.ftl";
+    public static final String notifyUserForSimilarProductsForMultipleVariants = "/notifyEmailForSimilarProductsForMultipleVariants.ftl";
+    public static final String notifyUserForSimilarProductsForSingleVariants = "/notifyUserEmailForSimilarProductsForSingleVariants.ftl";
 	public static final String notifyUserEmailOld = "/notifyUserEmailProduct.ftl";
 	public static final String dailyGoogleBannedWordReport = "/dailyGoogleBannedWordReport.ftl";
 	public static final String grnEmail = "/grnEmail.ftl";
@@ -71,5 +73,7 @@ public class EmailTemplateConstants {
     public static final String adminPaymentStatusChangeEmail= "/adminPaymentStatusChangeEmail.ftl";
     public static final String adminPaymentMisMatchMail="/adminPaymentMisMatchMail.ftl";
     public static final String poMailToSupplier = "/poMailToSupplier.ftl";
+    public static final String soFixedMail = "/soFixEmail.ftl";
+    public static final String soFixFailedMail = "/soFixFailedMail.ftl";
 
 }

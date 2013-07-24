@@ -160,3 +160,7 @@ WHERE grn.pi_id = th.hk_ref_no
 AND th.vch_type=2;
 
 drop table healthkart_prod.pi_grn_date_temp;
+
+ALTER TABLE  `transaction_header` ADD  `gateway_order_id` VARCHAR( 20 ) NULL DEFAULT NULL;
+
+ALTER TABLE  `transaction_header` ADD  `awb_number` VARCHAR( 120 ) NULL DEFAULT NULL;

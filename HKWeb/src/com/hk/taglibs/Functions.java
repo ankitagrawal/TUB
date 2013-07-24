@@ -2,12 +2,14 @@ package com.hk.taglibs;
 
 import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
+import com.hk.admin.impl.service.email.ProductInventoryDto;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
@@ -74,6 +76,7 @@ import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -260,15 +263,15 @@ public class Functions {
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsAnyCollectionItem(Collection c1, Collection c2) {
-      if (c1 == null || c2 == null) {
-        return false;
-      }
-      for (Object o : c2) {
-        if (c1.contains(o)) {
-          return true;
+        if (c1 == null || c2 == null) {
+            return false;
         }
-      }
-      return false;
+        for (Object o : c2) {
+            if (c1.contains(o)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
@@ -892,8 +895,8 @@ public class Functions {
     }
 
     public static String getAppendedURL(String baseUrl, String parameter, String value) {
-      ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-      return productService.getAppendedProductURL(baseUrl, parameter, value);
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.getAppendedProductURL(baseUrl, parameter, value);
     }
 
     public static ActionItem getActionItem(ShippingOrder shippingOrder) {
@@ -904,6 +907,11 @@ public class Functions {
     public static List<ActionTask> listNextActionTasks(ActionItem actionItem) {
         BucketService bucketService = ServiceLocatorFactory.getService(BucketService.class);
         return bucketService.listNextActionTasks(actionItem);
+    }
+
+    public static List<ProductInventoryDto> similarProductWithUnbookedInventory(ProductVariant productVariant) {
+        ProductVariantNotifyMeEmailService productVariantNotifyMeEmailService = ServiceLocatorFactory.getService(ProductVariantNotifyMeEmailService.class);
+        return productVariantNotifyMeEmailService.getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(productVariant);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.hk.web.action.core.b2b;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.RoleConstants;
@@ -51,6 +52,8 @@ public class B2BCartAction extends BaseAction {
 	private B2BOrderService b2bOrderService;
 	@Autowired
 	SkuService skuService;
+	@Autowired
+	AdminInventoryService adminInventoryService;
 	private boolean cFormAvailable;
 	private List<B2BProduct> b2bProductListFromExcel;
 	private FileBean fileBean;
@@ -97,7 +100,11 @@ public class B2BCartAction extends BaseAction {
 					dataMap.put("imageUrl", null);
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant",
 							dataMap);
-					Long value = inventoryService.getAvailableUnbookedInventory(pv);
+					//Long value = inventoryService.getAvailableUnbookedInventory(pv);
+					Long value = adminInventoryService.getNetInventory(pv);
+					if(value==null){
+						value = 0L;
+					}
 					dataMap.put("inventory", value);
 
 				} catch (Exception e) {
@@ -133,8 +140,7 @@ public class B2BCartAction extends BaseAction {
 				b2bOutOfStockProductList.add(b2bProduct);
 			}
 			if (variant != null
-					&& inventoryService.getAvailableUnbookedInventory(skuService
-							.getSKUsForProductVariantAtServiceableWarehouses(variant)) <= 0) {
+					&& inventoryService.getAvailableUnbookedInventory(variant) <= 0) {
 				setExcelFileValidated(Boolean.FALSE);
 				b2bInventoryNotFoundProductList.add(b2bProduct);
 			}

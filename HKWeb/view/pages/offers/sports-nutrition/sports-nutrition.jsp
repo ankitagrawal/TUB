@@ -32,7 +32,7 @@
                     <div class="nRow">
                         <div class="bgFormCBArea"><input name="" type="checkbox" value="" id="subscribe"/></div>
                         <div class="bgFormCBMsgArea">I would like to receive updates/ new offers from
-                            HealthKart.com in future through Phone/SMS/E-Mails.
+                            HealthKart.com in future through Phone/SMS/E-Mails. By clikcing on 'Submit' you agree to receive calls from our experts.
                         </div>
                         <div class="cl"></div>
                     </div>
@@ -64,6 +64,7 @@
             var name = document.getElementById("name").value;
             var phoneNo = document.getElementById("phone").value;
             var email = document.getElementById("email").value;
+            var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             if (name == null || name == "" || phoneNo == null || phoneNo == "" || email == null || email == "") {
                 alert("Please Enter All Fields!!");
                 return false;
@@ -72,6 +73,10 @@
                 return false;
             } else if (phoneNo.length != 10) {
                 alert("Please Enter 10 digit Phone No");
+                return false;
+            }
+            else if (!filter.test(email))  {
+                alert("Please provide a valid email address!") ;
                 return false;
             }
             var subscribe = $('#subscribe').is(':checked');
@@ -89,7 +94,11 @@
                         url: "${pageContext.request.contextPath}/core/user/RequestCallback.action?getContact=",
                         success: function (response) {
                             alert(response.message);
-                            $('.greenBx').hide();
+                            beforeCls();
+                            document.getElementById("name").value = "";
+                            document.getElementById("phone").value="";
+                            document.getElementById("email").value="";
+
                         },
                         error: function onError() {
                             alert('Could not save Your details please try again');
@@ -198,9 +207,7 @@
                                          alt="MuscleBlase Whey Protein"/></div>
         <pre>Supplements are by far the best thing to<br/>have happened to the court of<br/>bodybuilding. Not only are they engines<br/>of optimum nourishment, they also add<br/>ease of use over whole foods.</pre>
         <pre>As you move toward your goal, <br/>supplements play an essential role in <br/>your diet regime. There are supplements<br/>divided according to their usage and<br/>results; pre-workout supplements,<br/>post-workout supplements, supplements<br/>for recovery etc.</pre>
-                    <pre>                                 These 6 essential<br/>                                 supplements will<br/>                                 add fuel to your<br/>                                 fire<br/>                                <strong>Whey
-                        Protein.</strong><br/>                                With 80% of protein <br/>                                and all essential amino <br/>                                acids, it is the purest<br/>form of protein for building lean muscle<br/>mass and muscle recovery<br/>Amino acids. Boost protein synthesis and <br/>decrease protein breakdown, resulting in <br/>muscle gain <br/><strong>Creatine. </strong>The water retaining ability of <br/>creatine saturates your muscles, giving <br/>them a fuller appearance <br/><strong>Casein
-                        protein.</strong> A slow release protein<br/>ideal for night time consumption, its high <br/>calcium content benefits total fat loss <br/>Beta Alanine. A pre-workout <br/>supplement that lowers muscle pH, <br/>leading to reduced muscle contraction</pre>
+                    <pre>                                 These 6 essential<br/>                                 supplements will<br/>                                 add fuel to your<br/>                                 fire<br/>                                <strong>Whey Protein.</strong><br/>                                With 80% of protein <br/>                                and all essential amino <br/>                                acids, it is the purest<br/>form of protein for building lean muscle<br/>mass and muscle recovery<br/>Amino acids. Boost protein synthesis and <br/>decrease protein breakdown, resulting in <br/>muscle gain <br/><strong>Creatine. </strong>The water retaining ability of <br/>creatine saturates your muscles, giving <br/>them a fuller appearance <br/><strong>Casein protein.</strong> A slow release protein<br/>ideal for night time consumption, its high <br/>calcium content benefits total fat loss <br/>Beta Alanine. A pre-workout <br/>supplement that lowers muscle pH, <br/>leading to reduced muscle contraction</pre>
     </div>
 
     <div class="centerBar">

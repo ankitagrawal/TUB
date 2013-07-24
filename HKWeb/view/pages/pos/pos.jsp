@@ -171,6 +171,11 @@
 			}
 			$('#receivePayment').click(function() {
 
+				var discount = parseFloat($('#discount').val());
+				if(isNaN(discount)){
+					discount = 0;
+				}
+
 				var paymentMode = $('#paymentMode').find('option:selected');
 				if(paymentMode.text() == "-Select-") {
 					alert('Please select the payment mode');
@@ -186,7 +191,11 @@
 					return false;
 				}
 
-				var discount = $('#discount').find('option:selected').val();
+				//var discount = $('#discount').find('option:selected').val();
+				var discount = parseFloat($('#discount').val());
+				if(isNaN(discount)){
+					discount = 0;
+				}
 				var grandTotal = $('.grandTotal').val();
 				var rewardPts = 0;
 				if($('#useRewardPoints').checked) {
@@ -216,7 +225,7 @@
 				$('#newAddress').val(true);
 			});
 
-			$('#discount').change(function() {
+			$('#discount').live("change", function () {
 				updateFinalPayable();
 			});
 
@@ -275,7 +284,11 @@
 		    $('#oldLoyaltyCustomer').hide();
 		    
 		    function updateFinalPayable() {
-		    	var discount = $('#discount').find('option:selected').val();
+		    	//var discount = $('#discount').find('option:selected').val();
+			    var discount = parseFloat($('#discount').val());
+			    if(isNaN(discount)){
+				    discount = 0;
+			    }
 				var grandTotal = $('.grandTotal').val();
 				var rewardPts = 0;
 				if($('#useRewardPoints').is(':checked')) {
@@ -455,10 +468,11 @@
 				<tr>
 					<td colspan="4"></td>
 					<td align="right"><b>Discount (In Rupees)</b></td>
-					<td><s:select name="discount" value="${pos.discount}" id="discount">
+					<%--<td><s:select name="discount" value="${pos.discount}" id="discount">
 						<s:option value="">-Select</s:option>
 						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="discountsForPOS" />
-					</s:select></td>
+					</s:select></td>--%>
+					<td><s:text name="discount" value="${pos.discount}" id="discount" maxlength="3"/> </td>
 				</tr>
 				<tr id="rewardPointsRow">
 					<td align="right"><b>Reward Points available</b></td>

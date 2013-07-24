@@ -179,7 +179,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 				discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
 			}
 			for (PoLineItem poLineItem : poLineItems) {
-					if (poLineItem.getQty() != null) {
+					if (poLineItem!=null && poLineItem.getQty() != null) {
 					if(poLineItem.getMrp() < poLineItem.getCostPrice()){
 						addRedirectAlertMessage(new SimpleMessage("MRP cannot be less than cost price for variant " + poLineItem.getProductVariant().getId()));
 						return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
@@ -221,12 +221,17 @@ public class EditPurchaseOrderAction extends BaseAction {
 				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
 				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
-				if(purchaseOrder.getSupplier().getEmail_id()!=null){
-				adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
+				if(purchaseOrder.getPoLineItems()!=null && purchaseOrder.getPoLineItems().size()>0){
+					if(purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem()==null){
+						if(purchaseOrder.getSupplier().getEmail_id()!=null){
+							adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
+							}
+							else{
+								adminEmailManager.sendPOMailToSupplier(purchaseOrder, supplierEmail);
+							}
+					}
 				}
-				else{
-					adminEmailManager.sendPOMailToSupplier(purchaseOrder, supplierEmail);
-				}
+				
 				purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
 				purchaseOrder.setPoPlaceDate(new Date());
 				Calendar calendar = Calendar.getInstance();

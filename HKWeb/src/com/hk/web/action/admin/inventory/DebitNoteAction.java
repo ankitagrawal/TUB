@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.admin.pact.service.accounting.DebitNoteService;
+import com.hk.admin.pact.service.courier.CourierPickupService;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -27,19 +29,25 @@ import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.constants.inventory.EnumDebitNoteStatus;
 import com.hk.constants.inventory.EnumDebitNoteType;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteLineItem;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
+import com.hk.domain.inventory.rv.RvLineItem;
+import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -64,6 +72,10 @@ public class DebitNoteAction extends BasePaginatedAction {
     DebitNoteService             debitNoteService;
     @Autowired
 	AdminEmailManager adminEmailManager;
+    @Autowired
+	CourierPickupService courierPickupService;
+    @Autowired
+    WarehouseService warehouseService;
 
     Page                            debitNotePage;
     private List<DebitNote>         debitNoteList      = new ArrayList<DebitNote>();
@@ -83,6 +95,14 @@ public class DebitNoteAction extends BasePaginatedAction {
     public PurchaseInvoice purchaseInvoice; 
     public List<RtvNote> rtvList = new ArrayList<RtvNote>();
     public List<ExtraInventoryLineItem> eiLineItem = new ArrayList<ExtraInventoryLineItem>();
+    public List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
+    private ReconciliationVoucher reconciliationVoucher;
+    private String destinationAddress;
+    private CourierPickupDetail courierPickupDetail;
+	private Long pickupStatusId;
+	private boolean returnByHand;
+	private boolean printAsRtv;
+	
 
     @DefaultHandler
     public Resolution pre() {
@@ -98,6 +118,15 @@ public class DebitNoteAction extends BasePaginatedAction {
         } else
             return new ForwardResolution("/pages/admin/debitNoteList.jsp");
     }
+    
+    public Resolution printAsRtv() {
+        if (debitNote != null) {
+        	printAsRtv = true;
+            debitNoteDto = debitNoteService.generateDebitNoteDto(debitNote);
+            return new ForwardResolution("/pages/admin/debitNotePrintView.jsp");
+        } else
+            return new ForwardResolution("/pages/admin/debitNoteList.jsp");
+    } 
 
     public Resolution view() {
         if (debitNote != null) {
@@ -113,21 +142,12 @@ public class DebitNoteAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/debitNote.jsp");
     }
 
-    @Secure(hasAnyRoles = { RoleConstants.FINANCE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.FINANCE_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution debitNoteFromPi(){
-    	Double shippingChargesOnHk= 0.0;
-		Double shippingChargesOnVendor = 0.0;
-		Double finalDebitAmount = 0.0;
     	if (purchaseInvoice != null) {
     		rtvList = purchaseInvoice.getRtvNotes();
     		eiLineItem = purchaseInvoice.getEiLineItems();
     		for(RtvNote rtv:rtvList){
-    			if(rtv.getShippingChargeHk()!=null){
-    				shippingChargesOnHk+=rtv.getShippingChargeHk();
-    			}
-    			if(rtv.getShippingChargeVendor()!=null){
-    				shippingChargesOnVendor+=rtv.getShippingChargeVendor();
-    			}
     		List<RtvNoteLineItem> rtvNoteLineItemsList = rtvNoteLineItemService.getRtvNoteLineItemsByRtvNote(rtv);
     		if(rtvNoteLineItemsList!=null && rtvNoteLineItemsList.size()>0){
     			rtvNoteLineItems.addAll(rtvNoteLineItemsList);
@@ -135,12 +155,34 @@ public class DebitNoteAction extends BasePaginatedAction {
     		}
 		debitNote = new DebitNote();
 		debitNote.setPurchaseInvoice(purchaseInvoice);
-		debitNote.setFreightForwardingCharges(shippingChargesOnVendor);
 		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
     		
     	}
     	//return new ForwardResolution("/pages/admin/debitNote.jsp");
     	return new RedirectResolution(DebitNoteAction.class).addParameter("editDebitNote").addParameter("debitNote", debitNote.getId());
+    }
+    
+    
+    @Secure(hasAnyPermissions = { PermissionConstants.DEBIT_NOTE_MANAGE }, authActionBean = AdminPermissionAction.class)
+    public Resolution debitNoteFromRV(){
+    	User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        }
+    	if(reconciliationVoucher!=null){
+    		rvLineItems = reconciliationVoucher.getRvLineItems();
+    		debitNote = new DebitNote();
+        	debitNote.setReconciliationVoucher(reconciliationVoucher);
+        	debitNote.setSupplier(reconciliationVoucher.getSupplier());
+        	/*Long id = loggedOnUser.getSelectedWarehouse().getId();
+        	warehouse = warehouseService.getWarehouseById(id);*/
+        	if(warehouse!=null){
+        		debitNote.setWarehouse(warehouse);
+        	}
+    		debitNote = debitNoteService.createDebitNoteLineItemWithRVLineItems(debitNote, rvLineItems);
+    	}
+		
+		return new RedirectResolution(DebitNoteAction.class).addParameter("editDebitNote").addParameter("debitNote", debitNote.getId());
     }
     
     public Resolution editDebitNote(){
@@ -165,6 +207,15 @@ public class DebitNoteAction extends BasePaginatedAction {
 		if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId())){
 			debitNote.setCloseDate(new Date());
 		}
+		if (courierPickupDetail != null && pickupStatusId != null && courierPickupDetail.getCourier() != null) {
+			if (courierPickupDetail.getPickupDate() == null) {
+				courierPickupDetail.setPickupDate(new Date());
+			}
+			courierPickupDetail.setPickupStatus(EnumPickupStatus.asPickupStatusById(pickupStatusId));
+			courierPickupDetail = courierPickupService.save(courierPickupDetail);
+			debitNote.setCourierPickupDetail(courierPickupDetail);
+		}
+		debitNote.setDestinationAddress(destinationAddress);
 		debitNote = (DebitNote) debitNoteService.save(debitNote);
 		debitNote = (DebitNote) debitNoteService.save(debitNote, debitNoteLineItems);
 
@@ -173,6 +224,10 @@ public class DebitNoteAction extends BasePaginatedAction {
     }
     
     public Resolution delete(){
+    	if(debitNote.getDebitNoteStatus().getId()>=EnumDebitNoteStatus.CLosed.getId()){
+    		addRedirectAlertMessage(new SimpleMessage("Cannot delete a Debit Note once it is closed"));
+    		return new RedirectResolution(DebitNoteAction.class);
+    	}
     	getBaseDao().delete(debitNote);
     	addRedirectAlertMessage(new SimpleMessage("Debit Note Deleted."));
     	return new RedirectResolution(DebitNoteAction.class);
@@ -328,4 +383,61 @@ public class DebitNoteAction extends BasePaginatedAction {
 	public void setEiLineItem(List<ExtraInventoryLineItem> eiLineItem) {
 		this.eiLineItem = eiLineItem;
 	}
+
+	public ReconciliationVoucher getReconciliationVoucher() {
+		return reconciliationVoucher;
+	}
+
+	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
+		this.reconciliationVoucher = reconciliationVoucher;
+	}
+
+	public String getDestinationAddress() {
+		return destinationAddress;
+	}
+
+	public void setDestinationAddress(String destinationAddress) {
+		this.destinationAddress = destinationAddress;
+	}
+
+	public CourierPickupDetail getCourierPickupDetail() {
+		return courierPickupDetail;
+	}
+
+	public void setCourierPickupDetail(CourierPickupDetail courierPickupDetail) {
+		this.courierPickupDetail = courierPickupDetail;
+	}
+
+	public Long getPickupStatusId() {
+		return pickupStatusId;
+	}
+
+	public void setPickupStatusId(Long pickupStatusId) {
+		this.pickupStatusId = pickupStatusId;
+	}
+
+	public boolean isReturnByHand() {
+		return returnByHand;
+	}
+
+	public void setReturnByHand(boolean returnByHand) {
+		this.returnByHand = returnByHand;
+	}
+	
+	public boolean getReturnByHand(){
+		return returnByHand;
+	}
+
+	public boolean isPrintAsRtv() {
+		return printAsRtv;
+	}
+
+	public void setPrintAsRtv(boolean printAsRtv) {
+		this.printAsRtv = printAsRtv;
+	}
+	
+	public boolean getPrintAsRtv() {
+		return printAsRtv;
+	}
+	
 }

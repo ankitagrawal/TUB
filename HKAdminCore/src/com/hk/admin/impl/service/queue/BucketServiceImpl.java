@@ -5,6 +5,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.queue.EnumTrafficState;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -101,19 +102,21 @@ public class BucketServiceImpl implements BucketService {
         return actionItemDao.searchActionItem(shippingOrder);
     }
 
-    private List<ActionItem> createActionQueue(){
-        return actionItemDao.getAll(ActionItem.class);
-    }
-
     public ActionItem autoCreateUpdateActionItem(ShippingOrder shippingOrder) {
-        ActionItem actionItem = existsActionItem(shippingOrder);
-        if (actionItem == null) {
-            actionItem = autoCreateActionItem(shippingOrder);
+        ActionItem actionItem = null;
+        if (EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())) {
+            actionItem = existsActionItem(shippingOrder);
+            if (actionItem == null) {
+                actionItem = autoCreateActionItem(shippingOrder);
+            } else {
+                actionItem = autoUpdateActionItem(actionItem, true); //normally would be called afterCodConfirmation/payment-authorization/manual-split
+            }
+            actionItem.setReporter(userService.getAdminUser());
+            return saveActionItem(actionItem);
         } else {
-            actionItem = autoUpdateActionItem(actionItem ,true); //normally would be called afterCodConfirmation/payment-authorization/manual-split
+            popFromActionQueue(shippingOrder);
         }
-        actionItem.setReporter(userService.getAdminUser());
-        return saveActionItem(actionItem);
+        return actionItem;
     }
 
     @Override
@@ -123,12 +126,12 @@ public class BucketServiceImpl implements BucketService {
         }
     }
 
-    public ActionItem autoUpdateActionItem(ActionItem actionItem , boolean autoUpdate) {
+    public ActionItem autoUpdateActionItem(ActionItem actionItem, boolean autoUpdate) {
         List<Bucket> actionableBuckets;
-        if(autoUpdate){
-         actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
-        }else {
-           actionableBuckets = actionItem.getBuckets();
+        if (autoUpdate) {
+            actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
+        } else {
+            actionableBuckets = actionItem.getBuckets();
         }
         actionItem.setBuckets(actionableBuckets);
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
@@ -151,7 +154,7 @@ public class BucketServiceImpl implements BucketService {
     protected List<EnumBucket> autoCreateDefaultBuckets(ShippingOrder shippingOrder) {
         List<EnumBucket> actionableBuckets = BucketAllocator.allocateBuckets(shippingOrder);
         Payment payment = shippingOrder.getBaseOrder().getPayment();
-        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
+        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
             actionableBuckets.addAll(getCategoryDefaultersBuckets(shippingOrder));
         }
         return actionableBuckets;
@@ -216,9 +219,9 @@ public class BucketServiceImpl implements BucketService {
         return saveActionItem(actionItem);
     }
 
-    private ActionTask computeEscalateBackActionTask(ShippingOrder shippingOrder){
+    private ActionTask computeEscalateBackActionTask(ShippingOrder shippingOrder) {
         Reason reason = shippingOrder.getReason();
-        if (reason != null){
+        if (reason != null) {
             return reason.getActionTask() != null ? reason.getActionTask() : EnumActionTask.AD_HOC.asActionTask();
         }
         return EnumActionTask.AD_HOC.asActionTask();
@@ -228,21 +231,22 @@ public class BucketServiceImpl implements BucketService {
     public void popFromActionQueue(ShippingOrder shippingOrder) {
         ActionItem actionItem = existsActionItem(shippingOrder);
         if (actionItem != null) {
+            shippingOrder.setActionItem(null);
             //release all dependencies
-           actionItem.getBuckets().clear();
-           actionItem.getWatchers().clear();
-           actionItem = saveActionItem(actionItem);
-           actionItemDao.delete(actionItem);
+            actionItem.getBuckets().clear();
+            actionItem.getWatchers().clear();
+            actionItem = saveActionItem(actionItem);
+            actionItemDao.delete(actionItem);
         }
     }
 
     @Override
-    public Bucket getBucketById(Long bucketId){
-        return actionItemDao.get(Bucket.class,bucketId);
+    public Bucket getBucketById(Long bucketId) {
+        return actionItemDao.get(Bucket.class, bucketId);
     }
 
-     @Override
-    public ActionItem getActionItemById (Long actionItemId){
+    @Override
+    public ActionItem getActionItemById(Long actionItemId) {
         return actionItemDao.get(ActionItem.class, actionItemId);
     }
 
@@ -256,8 +260,9 @@ public class BucketServiceImpl implements BucketService {
         List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
         Set<String> categoryNames = new HashSet<String>();
         for (LineItem lineItem : shippingOrder.getLineItems()) {
-            Long availableUnbookedInv = inventoryService.getAvailableUnbookedInventory(lineItem.getSku());
+            Long availableUnbookedInv = inventoryService.getUnbookedInventoryInProcessingQueue(lineItem);
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
+
             if (availableUnbookedInv < 0) {
                 categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
             }
@@ -270,9 +275,8 @@ public class BucketServiceImpl implements BucketService {
     }
 
 
+    public List<ActionItem> getActionItemsOfActionQueue() {
 
-    public List<ActionItem> getActionItemsOfActionQueue (){
-
-        return actionItemDao.getActionItemsOfActionQueue ();
+        return actionItemDao.getActionItemsOfActionQueue();
     }
 }

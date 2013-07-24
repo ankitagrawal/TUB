@@ -1,3 +1,4 @@
+<%@page import="com.hk.constants.core.PermissionConstants"%>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -5,6 +6,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" var="icBean"/>
 <c:set var="lineItemStatusId_picking" value="<%=EnumShippingOrderStatus.SO_Picking.getId()%>"/>
 <c:set var="lineItemStatusId_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 <c:set var="commentTypePacking" value="<%= MasterDataDao.USER_COMMENT_TYPE_PACKING_BASE_ORDER %>" />
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Inventory Checkout">
   <s:layout-component name="htmlHead">
@@ -204,6 +206,12 @@
           <th>Qty</th>
           <th width="50px;">Net Inventory</th>
           <th width="75px;">Checked Out Qty</th>
+          <shiro:hasPermission name="<%=PermissionConstants.SO_REVIEW%>">
+          <th>Review</th>
+          </shiro:hasPermission>
+          <shiro:hasPermission name="<%=PermissionConstants.SO_FIX%>">
+          <th>Fix</th>
+          </shiro:hasPermission>
         </tr>
         </thead>
 	    <c:set var="alertCount" value="0" />
@@ -224,7 +232,7 @@
               </c:if>
             </td>
             <c:choose><c:when
-                test="${icBean.shippingOrder.orderStatus.id == lineItemStatusId_picking || icBean.shippingOrder.orderStatus.id == lineItemStatusId_shipped}">
+                test="${icBean.shippingOrder.orderStatus.id == lineItemStatusId_picking || icBean.shippingOrder.orderStatus.id == lineItemStatusId_shipped || icBean.shippingOrder.orderStatus.id == shippingOrderStatusDropShippingAwaiting}">
               <td title="Click to fing SKU Groups/Batch">
                 <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" event="findSkuGroups">
                   ${productVariant.id}
@@ -238,7 +246,23 @@
               <td>${lineItem.markedPrice}</td>
               <td>${lineItem.qty}</td>
               <td>${hk:netInventory(lineItem.sku)}</td>
-              <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>
+	            <td><span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span></td>
+
+              <shiro:hasPermission name="<%=PermissionConstants.SO_REVIEW%>">
+              <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" target="_blank">
+                Review it  <s:param name="lineItem" value="${lineItem.id}"/>                 
+              </s:link>
+              </td>   
+              
+              </shiro:hasPermission>
+            
+              <shiro:hasPermission name="<%=PermissionConstants.SO_FIX%>">
+              <td>  <s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="fixLineItem" class="fixIt">
+                Fix it  <s:param name="lineItem" value="${lineItem.id}"/>                 
+              </s:link>
+              </td>            
+              </shiro:hasPermission>
+            
             </c:when>
               <c:otherwise>
                 <td colspan="5">${icBean.shippingOrder.orderStatus.name}</td>
@@ -253,6 +277,16 @@
 		      if(${alertCount == 0} && upc == '' && commentType == ${commentTypePacking}) {
 			      alert("User Instruction : " + $('#userComments').val());
 		      }
+		      
+		      $(document).ready(function(){
+			    	 $('.fixIt').click(function fixIt(){
+			    		 var sure = confirm("Assuming, you have marked the corrsponding batch under review.");
+		    		 	if(!sure){
+		    		 		return false;
+		    		 	}
+		    		 	$('.fixIt').attr("disabled", "disabled");
+			    	 }) 
+			      });
 	      </script>
       </table>
     </div>
