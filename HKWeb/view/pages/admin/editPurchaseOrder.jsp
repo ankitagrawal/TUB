@@ -346,7 +346,7 @@ function temp() {
 		<td>Tax</td>
 		<td>
 			<c:choose>
-				<c:when test="${pa.purchaseOrder.supplier.state == pa.purchaseOrder.warehouse.state}">
+				<c:when test="${fn:toLowerCase(pa.purchaseOrder.supplier.state) eq fn:toLowerCase(pa.purchaseOrder.warehouse.state)}">
 					<label class="state">Non - CST</label>
 				</c:when>
 				<c:otherwise>
@@ -464,6 +464,22 @@ function temp() {
 
 </table>
 
+<br>
+
+<c:if test="${pa.purchaseOrder.shippingOrders!=null && fn:length(pa.purchaseOrder.shippingOrders) >0}">
+<div id = "shippingOrderDiv">
+<strong>Shipping Order Associated with PO</strong>
+<table>
+<tr>
+<td>Ids</td>
+<c:forEach var="so" items="${pa.purchaseOrder.shippingOrders}">
+               <td><a href="${pageContext.request.contextPath}/admin/queue/ActionAwaitingQueue.action?orderId=${so.baseOrder.id}">${so.id}</a></td>
+            </c:forEach>
+</tr>
+</table>
+</div>
+</c:if>
+
 <table border="1">
 	<thead>
 	<tr>
@@ -490,6 +506,7 @@ function temp() {
 		<th>Surcharge</th>
 		<th>Payable</th>
 		<th>PO Fill Rate</th>
+		<th>Extra Remarks</th>
 
 	</tr>
 	</thead>
@@ -603,6 +620,7 @@ function temp() {
 		<td>
 				${poLineItemDto.poLineItem.fillRate}
 		</td>
+		<td>${poLineItemDto.poLineItem.remarks}</td>
 		</tr>
 	</c:forEach>
 	</tbody>
