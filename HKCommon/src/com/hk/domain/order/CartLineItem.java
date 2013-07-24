@@ -1,38 +1,24 @@
 package com.hk.domain.order;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.akube.framework.gson.JsonSkip;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
+import com.hk.domain.catalog.product.combo.ComboInstance;
+import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.marketing.ProductReferrer;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.subscription.Subscription;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.akube.framework.gson.JsonSkip;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.combo.ComboInstance;
-import com.hk.domain.core.CartLineItemType;
-import com.hk.domain.marketing.ProductReferrer;
-import com.hk.domain.subscription.Subscription;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings("serial")
 @Entity
@@ -42,44 +28,44 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
-    private Long                          id;
+    private Long id;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    private Order                         order;
+    private Order order;
 
     @Column(name = "qty", nullable = false)
-    private Long                          qty;
+    private Long qty;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id")
-    private ProductVariant                productVariant;
+    private ProductVariant productVariant;
 
     @Column(name = "marked_price", nullable = false, precision = 10)
-    private Double                        markedPrice;
+    private Double markedPrice;
 
     @Column(name = "hk_price", nullable = false, precision = 10)
-    private Double                        hkPrice;
+    private Double hkPrice;
 
     /*
      * @Deprecated @Column(name = "cost_price", nullable = false, precision = 10) private Double costPrice;
      */
 
     @Column(name = "discount_on_hk_price", nullable = false)
-    private Double                        discountOnHkPrice;
+    private Double discountOnHkPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "line_item_type_id", nullable = false)
-    private CartLineItemType              lineItemType;
+    private CartLineItemType lineItemType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "combo_instance_id")
-    private ComboInstance                 comboInstance;
+    private ComboInstance comboInstance;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_line_item_config_id")
-    private CartLineItemConfig            cartLineItemConfig;
+    private CartLineItemConfig cartLineItemConfig;
 
     /*
      * @Deprecated @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "tax_id") private Tax tax;
@@ -94,24 +80,35 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
      */
 
     @Column(name = "version", nullable = false)
-    private Long                          version                  = new Long(1);
+    private Long version = new Long(1);
 
     @SuppressWarnings("unused")
     @JsonSkip
     @OneToOne(fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "subscription_cart_line_item", joinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id"))
-    private Subscription                  subscription;
+    private Subscription subscription;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_referrer_id", nullable = true)
-    private ProductReferrer               productReferrer;
+    private ProductReferrer productReferrer;
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
-    private Date                          createDate               = new Date();
+    private Date createDate = new Date();
+
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cartLineItem")
+    private List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
+
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
+    private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
+
 
     public CartLineItem() {
 
@@ -282,8 +279,8 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
                 stringBuffer.append(cartLineItemExtraOption.getName()).append(":").append(cartLineItemExtraOption.getValue());
                 stringBuffer.append(" |");
             }
-            if(stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length()-1) == '|') {
-                return stringBuffer.substring(0, stringBuffer.length()-1);
+            if (stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length() - 1) == '|') {
+                return stringBuffer.substring(0, stringBuffer.length() - 1);
             }
         }
 
@@ -304,13 +301,13 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
                     if (configName.startsWith("L"))
                         stringBuffer.append("(L) ");
                 }
-                if(additionalParam.equals(VariantConfigOptionParam.ENGRAVING.param()))  {
+                if (additionalParam.equals(VariantConfigOptionParam.ENGRAVING.param())) {
                     stringBuffer.append(" <b>+Rs. ").append(cartLineItemConfigValue.getAdditionalPrice()).append("</b>");
                 }
                 stringBuffer.append(" |");
             }
-            if(stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length()-1) == '|') {
-                return stringBuffer.substring(0, stringBuffer.length()-1);
+            if (stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length() - 1) == '|') {
+                return stringBuffer.substring(0, stringBuffer.length() - 1);
             }
         }
         return stringBuffer.toString();
@@ -387,4 +384,20 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
         this.createDate = createDate;
     }
 
+    public List<SkuItemCLI> getSkuItemCLIs() {
+        return skuItemCLIs;
+    }
+
+    public void setSkuItemCLIs(List<SkuItemCLI> skuItemCLIs) {
+        this.skuItemCLIs = skuItemCLIs;
+    }
+
+
+    public List<SkuItemLineItem> getSkuItemLineItems() {
+        return skuItemLineItems;
+    }
+
+    public void setSkuItemLineItems(List<SkuItemLineItem> skuItemLineItems) {
+        this.skuItemLineItems = skuItemLineItems;
+    }
 }

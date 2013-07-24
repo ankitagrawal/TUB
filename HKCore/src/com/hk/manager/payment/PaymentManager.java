@@ -406,6 +406,8 @@ public class PaymentManager {
             payment.setResponseMessage(responseMessage);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
             payment = getPaymentService().save(payment);
+
+            //  todo ERP  Ankit  -- call to release Skuitems Temp booked  and hard delete entries in skuItemCLI
         }
         return payment;
     }
@@ -426,6 +428,8 @@ public class PaymentManager {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
                 payment.setErrorLog(e.getError().getMessage());
                 paymentDao.save(payment);
+                
+                 //  todo ERP Ankit -- call to release Skuitems Temp booked  and hard delete entries in skuItemCLI
             }
         }
     }

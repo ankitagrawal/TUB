@@ -707,6 +707,8 @@ public class OrderServiceImpl implements OrderService {
         }
         
         logger.info("SPLIT END ORDER-ID: " + order.getId());
+        //TODO tarun erp
+        //create sku_item_line_items for each item of each shipping order of base order
         return shippingOrderAlreadyExists;
     }
 

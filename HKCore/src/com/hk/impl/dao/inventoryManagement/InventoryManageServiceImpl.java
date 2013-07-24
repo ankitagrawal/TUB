@@ -1,18 +1,23 @@
 package com.hk.impl.dao.inventoryManagement;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.constants.sku.EnumSkuItemStatus;
 
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,36 +28,83 @@ import java.util.ArrayList;
  */
 
 @Service
-public class InventoryManageServiceImpl {
+public class InventoryManageServiceImpl implements InventoryManageService{
 
     @Autowired
     SkuService skuService;
     @Autowired
     SkuGroupService skuGroupService;
+    @Autowired
+    private BaseDao baseDao;
+    @Autowired
+    private ProductVariantInventoryDao productVariantInventoryDao ;
 
+
+    // Call this method from payment action  java
     public void bookSkuLineItemForOrder(Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems) {
-            cartLineItem.getProductVariant();
-            List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
-            List<SkuItem> skuItems = getSkuItems(skus, cartLineItem.getProductVariant().getMarkedPrice());
+           ProductVariant productVariant = cartLineItem.getProductVariant();
+           // assuming we are going to have warehouse on product variant
+            Warehouse warehouse = null;
+           Sku sku = skuService.getSKU(productVariant, warehouse); //
+            List<SkuItem> skuItems =productVariantInventoryDao.getSkuItems(sku, productVariant.getMarkedPrice());
             long qtyToBeSet = cartLineItem.getQty();
-
-            for (int i = 0; i < qtyToBeSet; i++) {
-                for (SkuItem si : skuItems) {
-                  si.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                  si.setSkuItemOwnerStatus();
+            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+            if (skuItems.size() > 0) {
+                for (int i = 0; i < qtyToBeSet; i++) {
+                    for (SkuItem skuItem : skuItems) {
+                        skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                        skuItem = (SkuItem) getBaseDao().save(skuItem);
+                        skuItemsToBeBooked.add(skuItem);
+                    }
                 }
             }
 
-
-            //   get skuItem corresponfing to this variant
+            // Call method to make new entries in SKUItemCLI
+              saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
 
         }
-
-
     }
 
+
+    //     Make Entries in new SkuItemCLI  table
+    public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem) {
+        Long count = 1L;
+        for (SkuItem si : skuItemsToBeBooked) {
+            SkuItemCLI skuItemCLI = new SkuItemCLI();
+            skuItemCLI.setCartLineItem(cartLineItem);
+            skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+            skuItemCLI.setUnitNum(count);
+            skuItemCLI.setSkuItem(si);
+            getBaseDao().save(skuItemCLI);
+            count++;
+        }
+    }
+
+
+   /// Releasing the SkuItem in case of Payment Failure  or Error
+      public void releaseSkuItemCLIForOrder(Order order){
+        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+        for (CartLineItem cartLineItem : cartLineItems){
+            // get Entries of SkuItemCLI corresponding to cartLineItem
+             List<SkuItemCLI> skuItemCLIs =  cartLineItem.getSkuItemCLIs();
+            Iterator<SkuItemCLI> iterator = skuItemCLIs.iterator();
+              while(iterator.hasNext()){
+                   SkuItemCLI skuItemCLI = iterator.next();
+                   SkuItem skuItem =  skuItemCLI.getSkuItem();
+                   skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                   getBaseDao().save(skuItem);
+                  iterator.remove();
+                  getBaseDao().delete(skuItemCLI);
+              }
+
+        }
+   }
+
+
+   // get list Of SkuItems to booked
 
     public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp) {
         List<SkuItem> skuItemList = new ArrayList<SkuItem>();
@@ -72,4 +124,15 @@ public class InventoryManageServiceImpl {
     }
 
 
+    
+
+
+
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
 }
