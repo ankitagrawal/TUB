@@ -89,7 +89,7 @@
       <div style="display:inline;float:left;">
         <s:submit name="moveToActionAwaiting" id="moveToActionAwaiting" value="Move Back to Action Awaiting"/>
       </div>
-      <div style="display:none;float:right;">
+      <div style="display:inline;float:right;">
         <s:submit name="markShippingOrdersAsShipped" id="markShippingOrdersAsShipped"
                   value="Mark Orders As Shipped"/></div>
     </s:form>
