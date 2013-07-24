@@ -316,18 +316,20 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return false;
     }
 
-    private String makeItCategoryTerm(String category){
-        if (category.equals("adult diaper") || category.equals("adult pull-up") || category.equals("adult pull up diapers") ||
-                category.equals("adult pull-up diaper") || category.equals("adult biapers") || category.equals("adult diaperes")) {
-            return "adult diapers";
+    private String makeItCategoryTerm(String term){
+        Synonym categorySynonym = getCategoryBrandSynonym(term, true, false);
+        if(categorySynonym != null){
+            term = categorySynonym.getCategoryName();
         }
-        if(category.equalsIgnoreCase("back support") || category.equalsIgnoreCase("back supports") || category.equalsIgnoreCase("backrest") || category.equalsIgnoreCase("backrests")
-                || category.equalsIgnoreCase("back rest")|| category.equalsIgnoreCase("back rests") || category.equalsIgnoreCase("back-support") || category.equalsIgnoreCase("back pain")
-                || category.equalsIgnoreCase("back-supports")|| category.equalsIgnoreCase("lower back") || category.equalsIgnoreCase("lower back support")){
-            return "Back Supports";
-        }
+        return term;
+    }
 
-        return category;
+    private String makeItBrandTerm(String term){
+        Synonym brandSynonym = getCategoryBrandSynonym(term, false, true);
+        if (brandSynonym != null) {
+            term = brandSynonym.getBrandName();
+        }
+        return term;
     }
 
     private SearchResult getSearchResult(List<SolrProduct> solrProducts, int totalResultCount) {
@@ -417,7 +419,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             query = sanitizeQuery(query);
             //Level 1 check Starts - Ajeet
             if (this.isBrandTerm(query)) {
-              return this.getBrandCatalogResults(query, null, page, perPage, null, false);
+              return this.getBrandCatalogResults(makeItBrandTerm(query), null, page, perPage, null, false);
             } else if (this.isCategoryTerm(query)) {
               return this.getCategorySearchResults(makeItCategoryTerm(query), page, perPage); // ps hack
             }
