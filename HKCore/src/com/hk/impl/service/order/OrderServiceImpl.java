@@ -747,17 +747,22 @@ public class OrderServiceImpl implements OrderService {
 	}
 
     @Override
-    public boolean isSOCanceled(Long orderId) {
-        boolean isSOCanceled = false;
+    public boolean isBOCancelable(Long orderId) {
+        boolean isBOCancelable;
+        int count=0;
         Order order = this.find(orderId);
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         for (ShippingOrder shippingOrder : shippingOrders) {
-            if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getShippingOrderStatus().getId())) {
-                isSOCanceled = true;
-                break;
+            if (EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getShippingOrderStatus().getId())) {
+                count++;
             }
         }
-        return isSOCanceled;
+        if (count != shippingOrders.size()) {
+            isBOCancelable = false;
+        } else {
+            isBOCancelable = true;
+        }
+        return isBOCancelable;
     }
 
 

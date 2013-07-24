@@ -79,6 +79,6 @@ public interface OrderService {
 	
 	public Order findCart(User user, Store store);
 
-    public boolean isSOCanceled(Long orderId);
+    public boolean isBOCancelable(Long orderId);
 }
 

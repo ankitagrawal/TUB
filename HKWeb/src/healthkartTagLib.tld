@@ -1299,11 +1299,11 @@
     </function>
     <function>
         <description>
-            returns whether any SO of a BO is cancelled or not
+            returns whether a BO is cancellable or not based on whether all SO are in action awaiting state
         </description>
-        <name>isSOCanceled</name>
+        <name>isBOCancelable</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>boolean isSOCanceled(java.lang.Long)</function-signature>
+        <function-signature>boolean isBOCancelable(java.lang.Long)</function-signature>
         <example>
             ${hk:isSOCanceled(${orderId})}
         </example>
