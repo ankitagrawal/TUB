@@ -19,6 +19,8 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
 
 import java.util.*;
 
@@ -51,7 +53,8 @@ public class InventoryManageServiceImpl implements InventoryManageService {
 
     // Call this method from payment action  java
     public void tempBookSkuLineItemForOrder(Order order) {
-        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+//        Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems) {
             ProductVariant productVariant = cartLineItem.getProductVariant();
             // assuming we are going to have warehouse on product variant
