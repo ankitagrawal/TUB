@@ -1,7 +1,5 @@
 package com.hk.dto.pos;
 
-import java.util.Set;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Nitin Kumar
@@ -14,16 +12,33 @@ public class POSSummaryDto {
   private Double cashAmountRefunded;
   private Double creditCardAmountCollected;
   private Double creditCardAmountRefunded;
+  private Double totalCollection;
+  private Double avgAmtPerInvoice;
   private Long itemsSold;
   private Long itemsReturned;
+  private Double apc;
 
-  public POSSummaryDto(Double cashAmountCollected, Double cashAmountRefunded, Double creditCardAmountCollected, Double creditCardAmountRefunded, Long itemsSold, Long itemsReturned) {
+  public POSSummaryDto(Double cashAmountCollected, Double cashAmountRefunded, Double creditCardAmountCollected,
+                       Double creditCardAmountRefunded, Long itemsSold, Long itemsReturned,
+                       Double totalCollection, Double avgAmtPerInvoice, Double apc) {
     this.cashAmountCollected = cashAmountCollected;
     this.cashAmountRefunded = cashAmountRefunded;
     this.creditCardAmountCollected = creditCardAmountCollected;
     this.creditCardAmountRefunded = creditCardAmountRefunded;
     this.itemsSold = itemsSold;
     this.itemsReturned = itemsReturned;
+    this.totalCollection = totalCollection;
+    this.avgAmtPerInvoice = avgAmtPerInvoice;
+    this.itemsReturned = itemsReturned;
+    this.apc=apc;
+  }
+
+  public Double getAvgAmtPerInvoice() {
+    return avgAmtPerInvoice;
+  }
+
+  public void setAvgAmtPerInvoice(Double avgAmtPerInvoice) {
+    this.avgAmtPerInvoice = avgAmtPerInvoice;
   }
 
   public Double getCashAmountCollected() {
@@ -72,5 +87,21 @@ public class POSSummaryDto {
 
   public void setItemsReturned(Long itemsReturned) {
     this.itemsReturned = itemsReturned;
+  }
+
+  public Double getTotalCollection() {
+    return totalCollection;
+  }
+
+  public void setTotalCollection(Double totalCollection) {
+    this.totalCollection = totalCollection;
+  }
+
+  public Double getApc() {
+    return apc;
+  }
+
+  public void setApc(Double apc) {
+    this.apc = apc;
   }
 }

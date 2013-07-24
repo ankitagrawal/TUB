@@ -6,6 +6,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.Order;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.store.Store;
+import com.hk.dto.pos.POSSaleItemDto;
 import com.hk.dto.pos.POSSummaryDto;
 import com.hk.pact.service.UserService;
 import com.hk.util.CustomDateTypeConvertor;
@@ -27,6 +28,7 @@ import java.util.List;
 public class POSReportAction extends BaseAction {
   private List<Order> saleList;
   private List<ReverseOrder> returnItemList;
+  private List<POSSaleItemDto> posSaleItems;
   private Date startDate;
   private Date endDate;
   private POSSummaryDto posSummaryDto;
@@ -49,6 +51,7 @@ public class POSReportAction extends BaseAction {
     saleList = posReportService.storeSalesReport(store.getId(), startDate, endDate);
     returnItemList = posReportService.storeReturnReport(store.getId(), startDate, endDate);
     posSummaryDto = posReportService.storeDailySalesSummaryReport(saleList, returnItemList);
+    posSaleItems =  posReportService.storeSalesReportWithDiscount(saleList);
     return new ForwardResolution("/pages/pos/posReportResult.jsp");
   }
 
@@ -118,4 +121,11 @@ public class POSReportAction extends BaseAction {
     this.endDate = endDate;
   }
 
+  public List<POSSaleItemDto> getPosSaleItems() {
+    return posSaleItems;
+  }
+
+  public void setPosSaleItems(List<POSSaleItemDto> posSaleItems) {
+    this.posSaleItems = posSaleItems;
+  }
 }
