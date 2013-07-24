@@ -287,7 +287,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
    public boolean isCategoryTerm(String term) throws SearchException {
-//       term = makeItCategoryTerm(term);
+       term = makeItCategoryTerm(term);
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + term+"\"");
         try {
