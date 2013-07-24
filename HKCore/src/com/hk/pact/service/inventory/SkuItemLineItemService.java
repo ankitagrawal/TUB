@@ -20,8 +20,7 @@ public interface SkuItemLineItemService {
 
     public SkuItemLineItem getById(Long skuItemLineItemId);
 
-    //TODO tarun erp
-    public SkuItemLineItem createNewSkuItemLineItem(LineItem lineItem, Long unitNum, SkuItemCLI skuItemCLI);
+    public SkuItemLineItem createNewSkuItemLineItem(LineItem lineItem) ;
 
     public SkuItemLineItem save(SkuItemLineItem skuItemLineItem);
 
