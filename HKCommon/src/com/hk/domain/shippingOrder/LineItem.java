@@ -87,7 +87,7 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
     private Date          createDate         = new Date();
 
     @JsonSkip
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuItemLineItem")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
     private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 
     public Long getId() {
