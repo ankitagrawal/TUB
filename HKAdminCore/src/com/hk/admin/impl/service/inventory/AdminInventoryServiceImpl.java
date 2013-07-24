@@ -8,7 +8,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
-import com.hk.constants.sku.EnumOwnerStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -203,7 +203,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
             skuItem.setSkuGroup(skuGroup);
             skuItem.setCreateDate(new Date());
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-            skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 //            skuItem = (SkuItem) getBaseDao().save(skuItem);
 
             //  generating Barcode at Skuitem level
@@ -234,13 +234,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
         if (skuItem != null && qty < 0) {
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
-            skuItem.setSkuItemOwner(EnumOwnerStatus.CUSTOMER.getSkuItemOwnerStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
             getBaseDao().save(skuItem);
         }
 
         if (skuItem != null && qty > 0) {
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-            skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
             getBaseDao().save(skuItem);
         }
 
@@ -264,7 +264,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
         if (skuItem != null && qty < 0) {
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
-            skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
             getBaseDao().save(skuItem);
         }
 

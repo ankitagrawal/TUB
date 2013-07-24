@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.constants.sku.EnumOwnerStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -155,7 +155,7 @@ public class StockTransferAction extends BasePaginatedAction {
                 return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
             }
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
-            skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
             SkuGroup skuGroup = skuItem.getSkuGroup();
             Sku sku = skuGroup.getSku();
             StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, sku, skuGroup);
@@ -233,7 +233,7 @@ public class StockTransferAction extends BasePaginatedAction {
             return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
         }
         skuItemToBeReverted.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-        skuItemToBeReverted.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+        skuItemToBeReverted.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
         baseDao.save(skuGroupToBeReverted);
 
         adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null,

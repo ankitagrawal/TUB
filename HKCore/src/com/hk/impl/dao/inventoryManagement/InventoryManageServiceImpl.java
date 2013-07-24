@@ -1,7 +1,7 @@
 package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
-import com.hk.admin.pact.service.inventory.AdminInventoryService;
+// import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItemLineItem;
@@ -48,8 +48,8 @@ public class InventoryManageServiceImpl implements InventoryManageService{
     private ProductVariantInventoryDao productVariantInventoryDao ;
     @Autowired
     SkuItemLineItemService skuItemLineItemService;
-    @Autowired
-    AdminInventoryService adminInventoryService;
+/*    @Autowired
+    AdminInventoryService adminInventoryService;*/
     @Autowired
     InventoryService inventoryService;
     @Autowired
@@ -152,7 +152,7 @@ public class InventoryManageServiceImpl implements InventoryManageService{
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
             skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
             skuItem = (SkuItem)baseDao.save(skuItem);
-            adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
+  //          adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
 
         } else {
             //If skuItem is booked
@@ -162,7 +162,7 @@ public class InventoryManageServiceImpl implements InventoryManageService{
                 toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                 skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                 skuItem = (SkuItem)baseDao.save(toReleaseSkuItem);
-                adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
+         //       adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
 
                 SkuItemLineItem skuItemLineItem = null;
                 for(SkuItemLineItem item: skuItemLineItems){

@@ -8,7 +8,7 @@ import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.util.ReconciliationVoucherParser;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationType;
-import com.hk.constants.sku.EnumOwnerStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
@@ -154,7 +154,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                         adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
                                 EnumInvTxnType.RV_ADD_EXPIRED_AUTOMATIC_DELETION.asInvTxnType(), -1L, userService.getLoggedInUser());
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
-                        skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                         skuGroupService.saveSkuItem(skuItem);
                     }
                 }
@@ -304,7 +304,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 invTxnType, -1L, userService.getLoggedInUser());
         if (skuItemStatus != null) {
             skuItem.setSkuItemStatus(skuItemStatus);
-            skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
         }
         skuItem = skuGroupService.saveSkuItem(skuItem);
         if (reconciliationType.getId().equals(EnumReconciliationType.SubtractDamage.getId())) {
@@ -334,7 +334,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
             //set sku item status to Product_variant_ Audited
             skuItem.setSkuItemStatus(EnumSkuItemStatus.ProductVariantAudited.getSkuItemStatus());
-            skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
             skuItem = skuGroupService.saveSkuItem(skuItem);
         }
 

@@ -24,7 +24,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumStockTransferStatus;
-import com.hk.constants.sku.EnumOwnerStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
@@ -400,7 +400,7 @@ public class InventoryCheckinAction extends BaseAction {
 
             if (stockTransferLineItem.getCheckedinQty() == null || (!stockTransferLineItem.getCheckedinQty().equals(stockTransferLineItem.getCheckedoutQty()))) {
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                 skuItem.setSkuGroup(checkinSkuGroup);
                 stockTransfer.setCheckinDate(HKDateUtil.getNow());
                 stockTransfer.setReceivedBy(loggedOnUser);
