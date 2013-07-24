@@ -112,7 +112,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         return skuItemLineItem;
     }
 
-    boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse){
+    @Override
+    public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse){
         Sku sku = null;
         List<SkuItem> availableUnbookedSkuItems = null;
         List<Sku> skuList = new ArrayList<Sku>();
