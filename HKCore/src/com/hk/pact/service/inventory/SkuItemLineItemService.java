@@ -1,9 +1,11 @@
 package com.hk.pact.service.inventory;
 
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.warehouse.Warehouse;
 
 import java.util.List;
 
@@ -20,8 +22,9 @@ public interface SkuItemLineItemService {
 
     public SkuItemLineItem getById(Long skuItemLineItemId);
 
-    //TODO tarun erp
-    public SkuItemLineItem createNewSkuItemLineItem(SkuItem skuItem, LineItem lineItem, Long unitNum, SkuItemCLI skuItemCLI);
+    public SkuItemLineItem createNewSkuItemLineItem(LineItem lineItem) ;
+
+    public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse);
 
     public SkuItemLineItem save(SkuItemLineItem skuItemLineItem);
 

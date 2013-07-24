@@ -132,9 +132,20 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", id);
         return query.list();
     }
-    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners){
+    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp){
         String sql = "from SkuItem si where si.skuGroup.sku in (:skuList) and si.skuItemStatus.id in (:statusIds) and si.skuItemOwner in (:skuItemOwners)";
-        Query query = getSession().createQuery(sql).setParameterList("skuList", skuList).setParameterList("statusIds", statusIds).setParameterList("skuItemOwners", skuItemOwners);
+        String orderByClause = " order by si.skuGroup.expiryDate asc";
+        Query query;
+        if(mrp != null){
+            sql += " and si.skuGroup.mrp = :mrp " + orderByClause;
+            query = getSession().createQuery(sql).setParameterList("skuList", skuList).setParameterList("statusIds", statusIds)
+                    .setParameterList("skuItemOwners", skuItemOwners).setParameter("mrp", mrp);
+        }
+        else {
+            sql += orderByClause;
+            query = getSession().createQuery(sql).setParameterList("skuList", skuList).setParameterList("statusIds", statusIds)
+                    .setParameterList("skuItemOwners", skuItemOwners);
+        }
         return query.list();
     }
 

@@ -1,19 +1,12 @@
 package com.hk.domain.shippingOrder;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
+import com.hk.domain.sku.SkuItemLineItem;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -92,6 +85,10 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date          createDate         = new Date();
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
+    private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 
     public Long getId() {
         return this.id;
@@ -189,6 +186,14 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
 
     public void setSku(Sku sku) {
         this.sku = sku;
+    }
+
+    public List<SkuItemLineItem> getSkuItemLineItems() {
+        return skuItemLineItems;
+    }
+
+    public void setSkuItemLineItems(List<SkuItemLineItem> skuItemLineItems) {
+        this.skuItemLineItems = skuItemLineItems;
     }
 
     @Override

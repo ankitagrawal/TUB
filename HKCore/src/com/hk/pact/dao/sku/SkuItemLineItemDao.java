@@ -2,6 +2,7 @@ package com.hk.pact.dao.sku;
 
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.pact.dao.BaseDao;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Time: 12:20 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface SkuItemLineItemDao {
+public interface SkuItemLineItemDao extends BaseDao {
 
     public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId);
 }
