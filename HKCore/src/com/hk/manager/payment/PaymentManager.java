@@ -279,6 +279,7 @@ public class PaymentManager {
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
             order = processOrder(payment);
+            inventoryManageService.tempBookSkuLineItemForOrder(order);
         }
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;

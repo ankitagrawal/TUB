@@ -87,7 +87,7 @@ public class PaymentSuccessAction extends BaseAction {
         if (this.payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(this.payment.getPaymentStatus().getId())) {
 
             // todo Ankit ERP booking the inventory in case of payment
-            inventoryManageService.tempBookSkuLineItemForOrder(this.payment.getOrder());
+            /*inventoryManageService.tempBookSkuLineItemForOrder(this.payment.getOrder());*/
 
             Long paymentStatusId = this.payment.getPaymentStatus() != null ? this.payment.getPaymentStatus().getId() : null;
 
