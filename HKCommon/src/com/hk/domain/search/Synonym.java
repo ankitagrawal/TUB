@@ -26,7 +26,7 @@ public class Synonym {
     @Column(name = "brand_name")
     private String brandName;
 
-    @Column(name = "deleted")
+    @Column(name = "active")
     private boolean active;
 
     @Column(name = "deleted")
