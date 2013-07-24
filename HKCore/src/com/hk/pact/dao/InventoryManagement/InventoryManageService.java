@@ -1,5 +1,13 @@
 package com.hk.pact.dao.InventoryManagement;
 
+import com.hk.domain.order.Order;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.Sku;
+
+import java.util.Set;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Ankit
@@ -7,8 +15,14 @@ package com.hk.pact.dao.InventoryManagement;
  * Time: 4:05:33 PM
  * To change this template use File | Settings | File Templates.
  */
-public class InventoryManageService {
+public interface InventoryManageService {
 
+     public void bookSkuLineItemForOrder(Order order);
 
+     public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
+
+     public void releaseSkuItemCLIForOrder(Order order);
+
+    public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp);
     
 }

@@ -90,4 +90,22 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
     }
 
 
+
+    public Long getAvailableUnbookedInventory(List<Sku> skuList,Double mrp ,boolean addBrightInventory) {
+           Long netInventory = getNetInventory(skuList, mrp);
+           logger.debug("net inventory " + netInventory);
+
+           Long bookedInventory = 0L;
+           if (!skuList.isEmpty()) {
+               ProductVariant productVariant = skuList.get(0).getProductVariant();
+               bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
+               logger.debug("booked inventory " + bookedInventory);
+           }
+
+           return (netInventory - bookedInventory);
+
+       }
+
+
+
 }

@@ -7,6 +7,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.Sku;
@@ -27,7 +28,7 @@ import java.util.*;
  */
 
 @Service
-public class InventoryManageServiceImpl {
+public class InventoryManageServiceImpl implements InventoryManageService{
 
     @Autowired
     SkuService skuService;
@@ -84,7 +85,7 @@ public class InventoryManageServiceImpl {
 
 
    /// Releasing the SkuItem in case of Payment Failure  or Error
-      public void releaseSkuLineItemForOrder(Order order){
+      public void releaseSkuItemCLIForOrder(Order order){
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems){
             // get Entries of SkuItemCLI corresponding to cartLineItem
