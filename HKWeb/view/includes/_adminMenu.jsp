@@ -61,11 +61,11 @@ pageContext.setAttribute("projectEnv", projectEnv);
                 <s:link class="invert" beanclass="com.hk.web.action.report.ReportAction">Report Manager</s:link></li>
 
 	        <li class='lvl1 menuItem trimPadding' title="">
-	        <%--<shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">--%>
+	        <shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">
 	            <c:if test="${whAction.userService.warehouseForLoggedInUser.store != null}">
 		            <a href="${pageContext.request.contextPath}/pages/pos/posAdminHome.jsp">Store Manager</a>
 	            </c:if>
-	        <%--</shiro:hasPermission>--%>
+	        </shiro:hasPermission>
 	        </li>
             <li class='lvl1 menuItem trimPadding' title="" style="float:right;">
                 <s:link beanclass="com.hk.web.action.HomeAction">Site Home</s:link>

@@ -22,12 +22,7 @@
 
 			<h3>
 				<s:link class="invert"
-				        beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search BO</s:link>
-			</h3>
-
-			<h3>
-				<s:link class="invert"
-				        beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search SO</s:link>
+				        beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search Base Order</s:link>
 			</h3>
 
 		</div>
@@ -46,9 +41,6 @@
 						class="sml gry">(Create PO or Raise a Debit Note)</span></s:link>
 			</h3>
 
-			<h3>
-				<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">Purchase Invoice List</s:link>
-			</h3>
 		</div>
 
 		<div class="cl"></div>
@@ -56,15 +48,6 @@
 		<div class="float roundBox">
 			<h2>Receiving Issues</h2>
 
-				<%--<h3>
-					<s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction"
-							event="searchExtraInventory">ExtraInventory List</s:link>
-				</h3>
-
-				<h3>
-					<s:link beanclass="com.hk.web.action.admin.rtv.RTVAction">RTV(Return To Vendor) List</s:link>
-				</h3>
-	--%>
 			<h3>
 				<s:link beanclass="com.hk.web.action.admin.inventory.GRNAction">GRN List <span
 						class="sml gry">(Checkin against GRN)</span></s:link>
@@ -78,11 +61,11 @@
 			<h2>Inventory</h2>
 
 			<h3>
-				<s:link beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Check Inventory</s:link>
+				<s:link beanclass="com.hk.web.action.admin.pos.PosProductSearchAction">Product Search</s:link>
 			</h3>
 
 			<h3>
-				<s:link beanclass="com.hk.web.action.admin.pos.PosProductSearchAction">Product Search</s:link>
+				<s:link beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link>
 			</h3>
 
 			<h3>
@@ -94,7 +77,6 @@
 			</h3>
 
 		</div>
-
 
 	</s:layout-component>
 </s:layout-render>

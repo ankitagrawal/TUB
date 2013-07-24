@@ -323,11 +323,9 @@
 				if($(this).prop('checked')){
 					var value = $(this).parent().siblings('.totAmnt').children('.total').val();
 					$(this).parent().siblings('.totAmnt').children('.total').val(0);
-					//$(this).parent().siblings('.totAmnt').children('.totAmntHid').val(value);
 					updateTotal('.total', '.grandTotal', 0);
 					updateFinalPayable();
 				} else{
-					//var hidTotalAmount = $(this).parent().siblings('.totAmnt').children('.totAmntHid').val();
 					var hidTotalAmount = $(this).parent().siblings('.offerPriceTD').children('.offerPrice').val();
 					$(this).parent().siblings('.totAmnt').children('.total').val(hidTotalAmount);
 					updateTotal('.total', '.grandTotal', 0);

@@ -51,7 +51,6 @@
 
 				});
 
-
 				$("#brandSelect").autocomplete({
 					url: "${pageContext.request.contextPath}/core/autocomplete/AutoComplete.action?populateBrand=&q="
 				});
@@ -67,7 +66,6 @@
 		<fieldset class="right_label">
 			<legend>Search Product</legend>
 			<s:form beanclass="com.hk.web.action.admin.pos.PosProductSearchAction">
-				<%--<input type="hidden" name="brandList" value="${ps.brandList}" id="brandList">--%>
 				<label>Category Name:</label>
 				<s:select name="primaryCategory">
 					<option value="">All categories</option>
@@ -87,7 +85,6 @@
 			</s:form>
 		</fieldset>
 
-		<%--<div style="display:inline;float:left;">--%>
 		<table class="zebra_vert" style="width: 50%; float: left;">
 			<thead>
 			<tr>
@@ -133,41 +130,7 @@
 			</tr>
 			</thead>
 			<tbody></tbody>
-				<%--<c:forEach items="${ps.skuGroupList}" var="skuGroup" varStatus="ctr">
-					<c:set var="batchInv" value="${fn:length(hk:getInStockSkuItems(skuGroup))}"/>
-					<tr>
-						<td>
-							<c:if test="${skuGroup.goodsReceivedNote != null}">
-								<s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view"
-										target="_blank">
-									<s:param name="grn" value="${skuGroup.goodsReceivedNote.id}"/>
-									${skuGroup.goodsReceivedNote.id}
-								</s:link>
-							</c:if>
-							<c:if test="${skuGroup.reconciliationVoucher != null}">
-								<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
-										event="view" target="_blank">
-									<s:param name="reconciliationVoucher" value="${skuGroup.reconciliationVoucher.id}"/>
-									${skuGroup.reconciliationVoucher.id}
-								</s:link>
-							</c:if>
-
-						</td>
-						<td>${skuGroup.batchNumber}</td>
-						<td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="MM/yyyy"/></td>
-						<td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="MM/yyyy"/></td>
-						<td>${skuGroup.costPrice}</td>
-						<td>${skuGroup.mrp}</td>
-						<td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
-						<td>${fn:length(skuGroup.skuItems)}</td>
-						<td>${batchInv}</td>
-					</tr>
-				</c:forEach>--%>
 		</table>
-		<%--</div>--%>
-		<%--<div style="display:inline;float:right;">--%>
-
-		<%--</div>--%>
 
 	</s:layout-component>
 </s:layout-render>
