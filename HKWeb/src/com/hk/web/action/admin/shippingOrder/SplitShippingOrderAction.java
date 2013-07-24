@@ -2,6 +2,10 @@ package com.hk.web.action.admin.shippingOrder;
 
 import java.util.*;
 
+import com.hk.admin.manager.AdminEmailManager;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.pact.service.order.OrderService;
@@ -23,6 +27,8 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.helper.ShippingOrderHelper;
@@ -52,6 +58,8 @@ public class SplitShippingOrderAction extends BaseAction {
     ShippingOrderDao shippingOrderDao;
     @Autowired
     ShipmentService shipmentService;
+    @Autowired
+    AdminShippingOrderService adminShippingOrderService;
 
     private boolean dropShipItemPresentInSelectedItems;
     private boolean dropShipItemPresentInRemainingItems;
@@ -168,7 +176,12 @@ public class SplitShippingOrderAction extends BaseAction {
             shippingOrder = shippingOrderService.save(shippingOrder);
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
-
+            
+            //Handling the PO against the shipping Orders
+            if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
+            adminShippingOrderService.adjustPurchaseOrderForSplittedShippingOrder(shippingOrder, newShippingOrder);
+            }
+           
             addRedirectAlertMessage(new SimpleMessage("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
             return new RedirectResolution(ActionAwaitingQueueAction.class);
         } else {

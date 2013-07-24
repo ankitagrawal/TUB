@@ -8,6 +8,7 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.sku.EnumOwnerStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
@@ -224,6 +225,7 @@ public class POSServiceImpl implements POSService {
                     skuItem = inStockSkuItemList.get(0);
                 }
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumOwnerStatus.SELF.getSkuItemOwnerStatus());
                 baseDao.save(skuItem);
                 LineItem lineItemToBeInsertedInPVI = null;
                 for (LineItem lineItem : shippingOrder.getLineItems()) {

@@ -63,7 +63,9 @@ public enum EnumShippingOrderLifecycleActivity {
   AI_ACTION_TASK_CHANGED(820L,"Action Task Changed for AI"),
   SO_Cancelled(999L, "SO  Cancelled"),
   SO_LineItemFixed(1001l, "SO Line Item fixed"),
-  SO_LineItemCouldNotFixed(1002l, "SO Line Item could not be fixed");
+  SO_LineItemCouldNotFixed(1002l, "SO Line Item could not be fixed"),
+  SO_AUTO_PO_CREATED(1003l, "PO for SO created Automatically"),
+  SO_PO_RECEIVED(1004l, "PO for SO Received");
 
   private String name;
   private Long id;

@@ -1,18 +1,14 @@
 package com.hk.impl.dao.inventoryManagement;
 
+import com.hk.constants.sku.EnumSkuGroupStatus;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.sku.Sku;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.CartLineItem;
-import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.sku.EnumSkuGroupStatus;
-import com.hk.constants.order.EnumOrderStatus;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,7 +24,7 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         return getNetInventory(Arrays.asList(sku));
     }
 
-    // checked in as always with  heritor self
+    // checked in as always with  owner self
     public Long getNetInventory(List<Sku> skuList) {
         Long netInv = 0L;
         if (skuList != null && !skuList.isEmpty()) {
@@ -91,19 +87,12 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         if (!skuList.isEmpty()) {
             ProductVariant productVariant = skuList.get(0).getProductVariant();
             bookedInventory = getBookedQtyOfProductVariantInQueue(productVariant) + getActualBookedQtyOfProductVariant(productVariant);
-            logger.debug("booked inventory " + bookedInventory);          }
+            logger.debug("booked inventory " + bookedInventory);
+        }
 
-          return (netInventory - bookedInventory);
+        return (netInventory - bookedInventory);
 
     }
-
-
-   ////////
-
-    
-    
-
-
 
 
 

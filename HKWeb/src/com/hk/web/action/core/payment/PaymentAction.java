@@ -88,6 +88,9 @@ public class PaymentAction extends BaseAction {
 //                }
 //                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
 //            }
+
+            // todo   -- ERP --Call to make entries in SkuItemCLI --for temp booked method
+
             BillingAddress billingAddress = null;
             if(billingAddressId != null){
                 billingAddress = addressDao.getBillingAddressById(billingAddressId);

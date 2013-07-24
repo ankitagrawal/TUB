@@ -1,13 +1,10 @@
 package com.hk.impl.service.inventory;
 
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.sku.*;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuItemStatus;
-import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
@@ -133,6 +130,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
     public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn) {	
     	return skuGroupDao.getAllCheckedInBatchForGrn(grn);
+    }
+
+    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners){
+        return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners);
     }
 
 }
