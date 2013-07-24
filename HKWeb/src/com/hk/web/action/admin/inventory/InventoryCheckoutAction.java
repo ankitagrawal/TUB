@@ -248,6 +248,8 @@ public class InventoryCheckoutAction extends BaseAction {
     }
 
     public Resolution selectItemFromSkuGroup() {
+    	
+    	//TODO: ERP Checkout
         /*
          * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser =
          * userDao.getUserById(getPrincipal().getId()); }

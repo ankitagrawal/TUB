@@ -1,6 +1,14 @@
 package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.pact.service.inventory.SkuService;
@@ -38,6 +46,14 @@ public class InventoryManageServiceImpl implements InventoryManageService{
     private BaseDao baseDao;
     @Autowired
     private ProductVariantInventoryDao productVariantInventoryDao ;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
+    @Autowired
+    AdminInventoryService adminInventoryService;
+    @Autowired
+    InventoryService inventoryService;
+    @Autowired
+    UserService userService;
 
 
     // Call this method from payment action  java
@@ -123,10 +139,83 @@ public class InventoryManageServiceImpl implements InventoryManageService{
         return skuItemList;
     }
 
+    public void checkoutMethod(LineItem lineItem, SkuItem skuItem) {
+        User loggedOnUser = userService.getLoggedInUser();
+        List<SkuItemLineItem> skuItemLineItems = skuItemLineItemService.getSkuItemLineItem(lineItem, EnumSkuItemStatus.BOOKED.getId());
+        List<SkuItem> skuItemInSkuItemLineItems = new ArrayList<SkuItem>();
+        for(SkuItemLineItem item : skuItemLineItems){
+            SkuItem si = item.getSkuItem();
+            skuItemInSkuItemLineItems.add(si);
+        }
+        if (skuItemInSkuItemLineItems.contains(skuItem)) {
+            // TODO:
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
+            skuItem = (SkuItem)baseDao.save(skuItem);
+            adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
 
-    
+        } else {
+            //If skuItem is booked
+
+            if (skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.BOOKED.getSkuItemStatus())) {
+                SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
+                toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                skuItem = (SkuItem)baseDao.save(toReleaseSkuItem);
+                adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
+
+                SkuItemLineItem skuItemLineItem = null;
+                for(SkuItemLineItem item: skuItemLineItems){
+                         if(item.getSkuItem().equals(skuItem)){
+                             skuItemLineItem = item;
+                         }
+                }
+                SkuItemLineItem item = new SkuItemLineItem();
+                item.setSkuItem(skuItem);
+                item.setProductVariant(lineItem.getSku().getProductVariant());
+                item.setUnitNum(skuItemLineItem.getUnitNum());
+                item.setLineItem(lineItem);
+                baseDao.save(item);
+
+                //release the already present
+
+                //delete the entry from table t1
+                baseDao.delete(toReleaseSkuItem);
+            }
+            if (skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.Checked_IN.getSkuItemStatus())) {
+                // flip skuItem with a booked SI.
+                // 1. Find a booked SI for this one
+
+                //release the already present
+                SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
+                toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                baseDao.save(toReleaseSkuItem);
+
+                //book the CSI
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                skuItem = (SkuItem) baseDao.save(skuItem);
+
+                SkuItemLineItem skuItemLineItem = null;
+                for(SkuItemLineItem item: skuItemLineItems){
+                    if(item.getSkuItem().equals(skuItem)){
+                        skuItemLineItem = item;
+                    }
+                }
+                SkuItemLineItem item = new SkuItemLineItem();
+                item.setSkuItem(skuItem);
+                item.setProductVariant(lineItem.getSku().getProductVariant());
+                item.setUnitNum(skuItemLineItem.getUnitNum());
+                item.setLineItem(lineItem);
+                baseDao.save(item);
 
 
+                //delete the entry from table t1
+                baseDao.delete(toReleaseSkuItem);
+            }
+        }
+    }
 
     public BaseDao getBaseDao() {
         return baseDao;
