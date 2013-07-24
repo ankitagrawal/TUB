@@ -47,8 +47,6 @@ public class InventoryManageServiceImpl implements InventoryManageService{
     private  InventoryManageDao inventoryManageDao ;
     @Autowired
     SkuItemLineItemService skuItemLineItemService;
-/*    @Autowired
-    AdminInventoryService adminInventoryService;*/
     @Autowired
     InventoryService inventoryService;
     @Autowired
@@ -61,14 +59,20 @@ public class InventoryManageServiceImpl implements InventoryManageService{
         for (CartLineItem cartLineItem : cartLineItems) {
            ProductVariant productVariant = cartLineItem.getProductVariant();
            // assuming we are going to have warehouse on product variant
+            /*
             Warehouse warehouse = null;
            Sku sku = skuService.getSKU(productVariant, warehouse); //
-            List<SkuItem> skuItems =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
+             */
+
+          List<Sku> skus =  skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+          Sku sku = skus.get(0);
+
+//            List<SkuItem> skuItems =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
             long qtyToBeSet = cartLineItem.getQty();
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-            if (skuItems.size() > 0) {
+
                 for (int i = 0; i < qtyToBeSet; i++) {
-                    for (SkuItem skuItem : skuItems) {
+                       SkuItem skuItem =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
                         skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                         // todo Pvi entries
@@ -76,8 +80,8 @@ public class InventoryManageServiceImpl implements InventoryManageService{
                         // todo UpdatePrice and Mrp qyt
                         skuItemsToBeBooked.add(skuItem);
                     }
-                }
-            }
+
+
 
             // Call method to make new entries in SKUItemCLI
               saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
