@@ -2,7 +2,6 @@ package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
 // import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.User;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.InventoryManagement.ProductVariantInventoryDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
@@ -45,7 +44,7 @@ public class InventoryManageServiceImpl implements InventoryManageService{
     @Autowired
     private BaseDao baseDao;
     @Autowired
-    private ProductVariantInventoryDao productVariantInventoryDao ;
+    private  InventoryManageDao inventoryManageDao ;
     @Autowired
     SkuItemLineItemService skuItemLineItemService;
 /*    @Autowired
@@ -57,14 +56,14 @@ public class InventoryManageServiceImpl implements InventoryManageService{
 
 
     // Call this method from payment action  java
-    public void bookSkuLineItemForOrder(Order order) {
+    public void tempBookSkuLineItemForOrder(Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems) {
            ProductVariant productVariant = cartLineItem.getProductVariant();
            // assuming we are going to have warehouse on product variant
             Warehouse warehouse = null;
            Sku sku = skuService.getSKU(productVariant, warehouse); //
-            List<SkuItem> skuItems =productVariantInventoryDao.getSkuItems(sku, productVariant.getMarkedPrice());
+            List<SkuItem> skuItems =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
             long qtyToBeSet = cartLineItem.getQty();
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
             if (skuItems.size() > 0) {
@@ -72,7 +71,9 @@ public class InventoryManageServiceImpl implements InventoryManageService{
                     for (SkuItem skuItem : skuItems) {
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
                         skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                        // todo Pvi entries
                         skuItem = (SkuItem) getBaseDao().save(skuItem);
+                        // todo UpdatePrice and Mrp qyt
                         skuItemsToBeBooked.add(skuItem);
                     }
                 }
@@ -110,8 +111,10 @@ public class InventoryManageServiceImpl implements InventoryManageService{
               while(iterator.hasNext()){
                    SkuItemCLI skuItemCLI = iterator.next();
                    SkuItem skuItem =  skuItemCLI.getSkuItem();
+                     // todo Pvi entries
                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                    getBaseDao().save(skuItem);
+                    // todo UpdatePrice and Mrp qyt
                   iterator.remove();
                   getBaseDao().delete(skuItemCLI);
               }
