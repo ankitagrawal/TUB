@@ -35,6 +35,9 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
+import com.hk.core.fliter.CartLineItemFilter;
+
+import java.util.Set;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {
@@ -83,8 +86,9 @@ public class PaymentSuccessAction extends BaseAction {
         this.payment = this.paymentDao.findByGatewayOrderId(this.gatewayOrderId);
         if (this.payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(this.payment.getPaymentStatus().getId())) {
 
-            // todo Ankit ERP booking the inventory in case of payment 
-            inventoryManageService.tempBookSkuLineItemForOrder(order);
+            // todo Ankit ERP booking the inventory in case of payment
+
+            inventoryManageService.tempBookSkuLineItemForOrder(this.payment.getOrder());
 
             Long paymentStatusId = this.payment.getPaymentStatus() != null ? this.payment.getPaymentStatus().getId() : null;
 
