@@ -68,7 +68,7 @@ public class JitShippingOrderAction extends BaseAction {
 	@DefaultHandler
 	public Resolution pre() {
 		//Warehouse warehouse = warehouseService.getWarehouseById(10l);
-		boolean filterJit = false;
+		boolean filterJit = true;
 		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
