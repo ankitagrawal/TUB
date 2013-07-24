@@ -557,11 +557,6 @@ public class POSAction extends BaseAction {
     return new ForwardResolution("/pages/pos/posCustomerOrderHistory.jsp");
   }
 
-
-  public Resolution posReportGenerate() {
-    return new ForwardResolution("/pages/pos/posReport.jsp");
-  }
-
   /**
    * Setters and getters begin
    */

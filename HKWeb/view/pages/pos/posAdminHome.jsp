@@ -25,6 +25,11 @@
 				        beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search Base Order</s:link>
 			</h3>
 
+			<h3>
+				<s:link class="invert"
+				        beanclass="com.hk.web.action.admin.pos.POSReportAction">Reports</s:link>
+			</h3>
+
 		</div>
 
 		<div class="cl"></div>

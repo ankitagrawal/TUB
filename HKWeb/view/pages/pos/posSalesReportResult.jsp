@@ -13,11 +13,7 @@
 
   </s:layout-component>
 
-  <s:layout-component name="heading">Report Master : Orders# ${reportActionBean.totalOrders}
-    &nbsp;|&nbsp; MRP:<fmt:formatNumber value="${reportActionBean.sumOfMrp}" type="currency" currencySymbol=" "
-    maxFractionDigits="0"/>
-    &nbsp;|&nbsp; HKPrice:<fmt:formatNumber value="${reportActionBean.sumOfHkPrice}" type="currency" currencySymbol=" "
-    maxFractionDigits="0"/>
+  <s:layout-component name="heading">Report Sales Result
   </s:layout-component>
   <s:layout-component name="content">
     <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSReportAction" event="pre" var="posBean"/>

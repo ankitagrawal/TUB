@@ -3,6 +3,7 @@ package com.hk.web.action.admin.pos;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.pos.POSReportService;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.constants.core.Keys;
 import com.hk.domain.sku.Sku;
@@ -63,6 +64,8 @@ public class PosProductSearchAction extends BaseAction {
 	private ProductService productService;
 	@Autowired
 	private AdminInventoryService adminInventoryService;
+	@Autowired
+	private POSReportService posReportService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -128,54 +131,12 @@ public class PosProductSearchAction extends BaseAction {
 	}
 
 	public Resolution downloadBatches() {
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		List<PosSkuGroupSearchDto> posSkuGroupSearchDtoList = posService.searchBatchesInStore(productVariantId, primaryCategory, productName, brand, flavor, size, color, form, userService.getWarehouseForLoggedInUser().getId());
 
 		xlsFile = new File(adminDownloads + "/reports/PosStockReport.xls");
-		HkXlsWriter xlsWriter = new HkXlsWriter();
+		xlsFile = posReportService.generatePosStockReport(xlsFile, posSkuGroupSearchDtoList);
 
-		if (posSkuGroupSearchDtoList != null) {
-			int xlsRow = 1;
-			xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
-			xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
-			xlsWriter.addHeader("SIZE", "SIZE");
-			xlsWriter.addHeader("FLAVOR", "FLAVOR");
-			xlsWriter.addHeader("COLOR", "COLOR");
-			xlsWriter.addHeader("FORM", "FORM");
-			xlsWriter.addHeader("BATCH NUMBER", "BATCH NUMBER");
-			xlsWriter.addHeader("COST PRICE", "COST PRICE");
-			xlsWriter.addHeader("MRP", "MRP");
-			xlsWriter.addHeader("MFG DATE", "MFG DATE");
-			xlsWriter.addHeader("EXPIRY DATE", "EXPIRY DATE");
-			xlsWriter.addHeader("AVAILABLE INVENTORY", "AVAILABLE INVENTORY");
-
-			for (PosSkuGroupSearchDto posSkuGroupSearchDto : posSkuGroupSearchDtoList) {
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductVariantId());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductName());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getSize());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getFlavor());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getColor());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getForm());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getBatchNumber());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getCostPrice());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getMrp());
-				if (posSkuGroupSearchDto.getMfgDate() == null) {
-					xlsWriter.addCell(xlsRow, "");
-				} else {
-					xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getMfgDate()));
-				}
-				if (posSkuGroupSearchDto.getExpiryDate() == null) {
-					xlsWriter.addCell(xlsRow, "");
-				} else {
-					xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getExpiryDate()));
-				}
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getAvailableInventory());
-				xlsRow++;
-			}
-		}
-		xlsWriter.writeData(xlsFile, "Pos_Stock_Report");
 		addRedirectAlertMessage(new SimpleMessage("Download complete"));
-
 		return new HTTPResponseResolution();
 	}
 

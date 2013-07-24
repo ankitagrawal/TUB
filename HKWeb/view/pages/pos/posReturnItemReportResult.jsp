@@ -11,7 +11,7 @@
 
   </s:layout-component>
 
-  <s:layout-component name="heading">Report Master
+  <s:layout-component name="heading">Return Items
   </s:layout-component>
   <s:layout-component name="content">
     <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSReportAction" event="pre" var="posBean"/>
@@ -34,8 +34,10 @@
         <td>${fn:length(returnItem.reverseLineItems)}</td>
         <td><c:forEach items="${returnItem.reverseLineItems}" var="reverseItem">
           <table>
-            <td>${reverseItem.referredLineItem.cartLineItem.productVariant.id}</td>
-            <td>${reverseItem.referredLineItem.cartLineItem.productVariant.product.name}</td>
+	          <tr>
+		          <td>${reverseItem.referredLineItem.cartLineItem.productVariant.id}</td>
+		          <td>${reverseItem.referredLineItem.cartLineItem.productVariant.product.name}</td>
+	          </tr>
           </table>
         </c:forEach></td>
       </tr>
