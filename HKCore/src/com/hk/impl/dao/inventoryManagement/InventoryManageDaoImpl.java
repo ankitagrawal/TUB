@@ -62,7 +62,7 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
 
 
     public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, Long skuItemStatusId, Long skuItemOwnerStatusId) {
-        String query = "select count(*) from SkuItem si where si.skugroup.productVariant = :productVariant and si.skuItemStatus.id= :skuItemStatusId and  si.skuItemOwner.id= :skuItemOwnerStatusId";
+        String query = "select count(si) from SkuItem si where si.skugroup.productVariant = :productVariant and si.skuItemStatus.id= :skuItemStatusId and  si.skuItemOwner.id= :skuItemOwnerStatusId";
         return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", skuItemStatusId).setParameter("skuItemOwnerStatusId", skuItemOwnerStatusId).uniqueResult();
 
     }
@@ -85,7 +85,7 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
 
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp) {
-        String sql = " from SkuItem si where si.skuGroup.sku =:sku and si.skuGroup.sku.mrp =:mrp and si.skuItemStatus.id = :skuItemStatusId and (si.skuGropu.status != :reviewStatus or si.skGroup.status is null)";
+        String sql = " from SkuItem si where si.skuGroup.sku =:sku and si.skuGroup.mrp =:mrp and si.skuItemStatus.id = :skuItemStatusId and (si.skuGroup.status != :reviewStatus or si.skuGroup.status is null)";
         Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("mrp", mrp).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
         return query.list();
 

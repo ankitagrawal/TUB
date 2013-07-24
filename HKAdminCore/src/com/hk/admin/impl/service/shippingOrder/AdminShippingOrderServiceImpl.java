@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     UserService userService;
     @Autowired
 	AdminEmailManager adminEmailManager;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
     
     @Autowired
     private LoyaltyProgramService loyaltyProgramService;
@@ -158,6 +161,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 					shouldUpdate = false;
 				}
 			}
+
+            shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
 			
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);

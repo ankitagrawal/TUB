@@ -27,6 +27,7 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -50,8 +51,8 @@ public class PaymentSuccessAction extends BaseAction {
     private String purchaseDate;
     private String couponCode;
     private int couponAmount = 0;
-    private double loyaltyPointsEarned=0;
-    
+    private double loyaltyPointsEarned = 0;
+
     @Autowired
     private PaymentDao paymentDao;
     @Autowired
@@ -68,16 +69,22 @@ public class PaymentSuccessAction extends BaseAction {
     OrderService orderService;
     @Autowired
     OrderLoggingService orderLoggingService;
-	@Autowired
-	LoyaltyProgramService loyaltyProgramService;
+    @Autowired
+    LoyaltyProgramService loyaltyProgramService;
     @Autowired
     OrderEventPublisher orderEventPublisher;
-    
-    @Autowired InventoryService inventoryService;
+
+    @Autowired
+    InventoryService inventoryService;
+    @Autowired
+    InventoryManageService inventoryManageService;
 
     public Resolution pre() {
         this.payment = this.paymentDao.findByGatewayOrderId(this.gatewayOrderId);
         if (this.payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(this.payment.getPaymentStatus().getId())) {
+
+            // todo Ankit ERP booking the inventory in case of payment 
+            inventoryManageService.tempBookSkuLineItemForOrder(order);
 
             Long paymentStatusId = this.payment.getPaymentStatus() != null ? this.payment.getPaymentStatus().getId() : null;
 
@@ -94,16 +101,16 @@ public class PaymentSuccessAction extends BaseAction {
             if (offerInstance != null) {
                 Coupon coupon = offerInstance.getCoupon();
                 if (coupon != null) {
-                	this.couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                    this.couponCode = coupon.getCode() + "@" + offerInstance.getId();
                 }
                 this.couponAmount = this.pricingDto.getTotalPromoDiscount().intValue();
             }
         }
 
-	    //Loyalty program
+        //Loyalty program
         UserOrderKarmaProfile karmaProfile = loyaltyProgramService.getUserOrderKarmaProfile(order.getId());
-        if (karmaProfile!=null) {
-        	loyaltyPointsEarned = karmaProfile.getKarmaPoints(); 
+        if (karmaProfile != null) {
+            loyaltyPointsEarned = karmaProfile.getKarmaPoints();
         }
 
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
@@ -169,17 +176,17 @@ public class PaymentSuccessAction extends BaseAction {
         return this.couponAmount;
     }
 
-	/**
-	 * @return the loyaltyPointsEarned
-	 */
-	public double getLoyaltyPointsEarned() {
-		return this.loyaltyPointsEarned;
-	}
+    /**
+     * @return the loyaltyPointsEarned
+     */
+    public double getLoyaltyPointsEarned() {
+        return this.loyaltyPointsEarned;
+    }
 
-	/**
-	 * @param loyaltyPointsEarned the loyaltyPointsEarned to set
-	 */
-	public void setLoyaltyPointsEarned(double loyaltyPointsEarned) {
-		this.loyaltyPointsEarned = loyaltyPointsEarned;
-	}
+    /**
+     * @param loyaltyPointsEarned the loyaltyPointsEarned to set
+     */
+    public void setLoyaltyPointsEarned(double loyaltyPointsEarned) {
+        this.loyaltyPointsEarned = loyaltyPointsEarned;
+    }
 }

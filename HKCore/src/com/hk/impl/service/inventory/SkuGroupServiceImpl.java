@@ -132,8 +132,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     	return skuGroupDao.getAllCheckedInBatchForGrn(grn);
     }
 
-    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners){
-        return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners);
+    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp){
+        return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners, mrp);
     }
 
     public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner){

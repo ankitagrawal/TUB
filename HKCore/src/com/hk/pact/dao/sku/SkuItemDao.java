@@ -23,7 +23,7 @@ public interface SkuItemDao extends BaseDao {
     
     public List<SkuItem> getSkuItem(Sku sku, Long id);
 
-    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners);
+    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp);
 
     public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner);
 
