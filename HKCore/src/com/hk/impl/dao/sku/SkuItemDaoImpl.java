@@ -138,6 +138,10 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         return query.list();
     }
 
+    public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner){
+        String sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus and si.skuItemOwner = :skuItemOwner";
+    }
+
     
 }
 

@@ -136,4 +136,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners);
     }
 
+    public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner){
+        return skuItemDao.getSkuItemWithStatusAndOwner(skuGroup, skuItemStatus, skuItemOwner);
+    }
+
 }
