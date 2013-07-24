@@ -1,21 +1,33 @@
 package com.hk.web.action.admin.pos;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
+import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
+import com.hk.constants.core.Keys;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.dto.pos.PosProductSearchDto;
+import com.hk.dto.pos.PosSkuGroupDto;
+import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.pact.service.UserService;
-import com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.util.io.HkXlsWriter;
+import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.action.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,13 +49,20 @@ public class PosProductSearchAction extends BaseAction {
 	private Sku searchSku;
 	private List<SkuGroup> skuGroupList;
 	private String primaryCategory;
+	private String productVariantId;
+
+	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+	String adminDownloads;
+	File xlsFile;
 
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private POSService posService;
 	@Autowired
-	private AdminSkuItemDao adminSkuItemDao;
+	private ProductService productService;
+	@Autowired
+	private AdminInventoryService adminInventoryService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -55,17 +74,109 @@ public class PosProductSearchAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Please select a warehouse"));
 			return new ForwardResolution("/pages/pos/posProductSearch.jsp");
 		}
-		posProductSearchDtoList = posService.searchProductInStore(primaryCategory, productName, brand, flavor, size, color, form, userService.getWarehouseForLoggedInUser().getId());
+		posProductSearchDtoList = posService.searchProductInStore(productVariantId, primaryCategory, productName, brand, flavor, size, color, form, userService.getWarehouseForLoggedInUser().getId());
 		return new ForwardResolution("/pages/pos/posProductSearch.jsp");
 	}
 
+	@JsonHandler
 	public Resolution showBatches() {
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		Map dataMap = new HashMap();
 		if (searchSku == null) {
 			addRedirectAlertMessage(new SimpleMessage("Please select an item"));
 			return new ForwardResolution("/pages/pos/posProductSearch.jsp");
 		}
-		skuGroupList = adminSkuItemDao.getInStockSkuGroups(searchSku);
-		return new ForwardResolution("/pages/pos/posSkuBatchDetail.jsp");
+		skuGroupList = adminInventoryService.getInStockSkuGroup(searchSku);
+		if (skuGroupList == null || skuGroupList.size() == 0) {
+			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "No batch found", dataMap);
+			noCache();
+			return new JsonResolution(healthkartResponse);
+		}
+		List<PosSkuGroupDto> posSkuGroupDtoList = new ArrayList<PosSkuGroupDto>(0);
+		for (SkuGroup skuGroup : skuGroupList) {
+			PosSkuGroupDto posSkuGroupDto = new PosSkuGroupDto();
+			if (skuGroup.getGoodsReceivedNote() == null) {
+				posSkuGroupDto.setGrnId(null);
+			} else {
+				posSkuGroupDto.setGrnId(skuGroup.getGoodsReceivedNote().getId());
+			}
+
+			posSkuGroupDto.setBatchNumber(skuGroup.getBatchNumber());
+			posSkuGroupDto.setCostPrice(skuGroup.getCostPrice());
+			posSkuGroupDto.setMrp(skuGroup.getMrp());
+			if (skuGroup.getMfgDate() == null) {
+				posSkuGroupDto.setMfgDate("");
+			} else {
+				posSkuGroupDto.setMfgDate(dateFormat.format(skuGroup.getMfgDate()));
+			}
+
+			if (skuGroup.getExpiryDate() == null) {
+				posSkuGroupDto.setExpiryDate("");
+			} else {
+				posSkuGroupDto.setExpiryDate(dateFormat.format(skuGroup.getExpiryDate()));
+			}
+
+			posSkuGroupDto.setCheckInDate(dateFormat.format(skuGroup.getCreateDate()));
+			posSkuGroupDto.setInStockQty(adminInventoryService.getInStockSkuItems(skuGroup).size());
+			posSkuGroupDto.setCheckedInQty(skuGroup.getSkuItems().size());
+			posSkuGroupDtoList.add(posSkuGroupDto);
+		}
+		dataMap.put("skuGroupList", posSkuGroupDtoList);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Sku Groups", dataMap);
+		noCache();
+		return new JsonResolution(healthkartResponse);
+	}
+
+	public Resolution downloadBatches() {
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		List<PosSkuGroupSearchDto> posSkuGroupSearchDtoList = posService.searchBatchesInStore(productVariantId, primaryCategory, productName, brand, flavor, size, color, form, userService.getWarehouseForLoggedInUser().getId());
+
+		xlsFile = new File(adminDownloads + "/reports/PosStockReport.xls");
+		HkXlsWriter xlsWriter = new HkXlsWriter();
+
+		if (posSkuGroupSearchDtoList != null) {
+			int xlsRow = 1;
+			xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
+			xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+			xlsWriter.addHeader("SIZE", "SIZE");
+			xlsWriter.addHeader("FLAVOR", "FLAVOR");
+			xlsWriter.addHeader("COLOR", "COLOR");
+			xlsWriter.addHeader("FORM", "FORM");
+			xlsWriter.addHeader("BATCH NUMBER", "BATCH NUMBER");
+			xlsWriter.addHeader("COST PRICE", "COST PRICE");
+			xlsWriter.addHeader("MRP", "MRP");
+			xlsWriter.addHeader("MFG DATE", "MFG DATE");
+			xlsWriter.addHeader("EXPIRY DATE", "EXPIRY DATE");
+			xlsWriter.addHeader("AVAILABLE INVENTORY", "AVAILABLE INVENTORY");
+
+			for (PosSkuGroupSearchDto posSkuGroupSearchDto : posSkuGroupSearchDtoList) {
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductVariantId());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductName());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getSize());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getFlavor());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getColor());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getForm());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getBatchNumber());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getCostPrice());
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getMrp());
+				if (posSkuGroupSearchDto.getMfgDate() == null) {
+					xlsWriter.addCell(xlsRow, "");
+				} else {
+					xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getMfgDate()));
+				}
+				if (posSkuGroupSearchDto.getExpiryDate() == null) {
+					xlsWriter.addCell(xlsRow, "");
+				} else {
+					xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getExpiryDate()));
+				}
+				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getAvailableInventory());
+				xlsRow++;
+			}
+		}
+		xlsWriter.writeData(xlsFile, "Pos_Stock_Report");
+		addRedirectAlertMessage(new SimpleMessage("Download complete"));
+
+		return new HTTPResponseResolution();
 	}
 
 	public String getBrand() {
@@ -147,4 +258,31 @@ public class PosProductSearchAction extends BaseAction {
 	public void setForm(String form) {
 		this.form = form;
 	}
+
+	public String getProductVariantId() {
+		return productVariantId;
+	}
+
+	public void setProductVariantId(String productVariantId) {
+		this.productVariantId = productVariantId;
+	}
+
+	public class HTTPResponseResolution implements Resolution {
+		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+			OutputStream out = null;
+			InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
+			res.setContentLength((int) xlsFile.length());
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
+			out = res.getOutputStream();
+
+			// Copy the contents of the file to the output stream
+			byte[] buf = new byte[4096];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0) {
+				out.write(buf, 0, count);
+			}
+		}
+
+	}
+
 }

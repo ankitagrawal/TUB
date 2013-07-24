@@ -8,6 +8,7 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.pos.PosProductSearchDto;
+import com.hk.dto.pos.PosSkuGroupSearchDto;
 
 import java.util.List;
 
@@ -38,6 +39,8 @@ public interface POSService {
 
 	public void applyOrderLevelDiscountOnCartLineItems(Order order, Double orderLevelDiscount);
 
-	public List<PosProductSearchDto> searchProductInStore(String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
+	public List<PosProductSearchDto> searchProductInStore(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
+
+	public List<PosSkuGroupSearchDto> searchBatchesInStore(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
 
 }

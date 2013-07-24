@@ -23,6 +23,7 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.pos.PosProductSearchDto;
+import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.pact.dao.BaseDao;
@@ -282,8 +283,12 @@ public class POSServiceImpl implements POSService {
 		return address;
 	}
 
-	public List<PosProductSearchDto> searchProductInStore(String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId) {
-		return skuItemDao.getCheckedInSkuItems(primaryCategory, productName, brand, flavor, size, color, form, warehouseId);
+	public List<PosProductSearchDto> searchProductInStore(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId) {
+		return skuItemDao.getCheckedInSkuItems(productVariantId, primaryCategory, productName, brand, flavor, size, color, form, warehouseId);
+	}
+
+	public List<PosSkuGroupSearchDto> searchBatchesInStore(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId) {
+		return skuItemDao.getCheckedInSkuItemsByGroup(productVariantId, primaryCategory, productName, brand, flavor, size, color, form, userService.getWarehouseForLoggedInUser().getId());
 	}
 
 	private String generatePasswordForStoreUser() {

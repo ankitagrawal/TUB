@@ -1,4 +1,5 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Product Search">
 	<s:useActionBean beanclass="com.hk.web.action.admin.pos.PosProductSearchAction" var="ps"/>
@@ -6,6 +7,51 @@
 		<script type="text/javascript">
 
 			$(document).ready(function () {
+
+				$('.searchSkuBatches').click(function () {
+					$("#skuGroupTable > tbody").html("");
+					var selectedSku = $(this).parent().siblings('.selectedSku').children('.selectedSkuHid').val();
+					$.getJSON(
+							$('#getDetailsLink').attr('href'), {searchSku: selectedSku},
+							function (res) {
+								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+									var skuGroupList = res.data.skuGroupList;
+									for (var i = 0; i < skuGroupList.length; i++) {
+										var grnId = skuGroupList[i].grnId;
+										var rvId = skuGroupList[i].rvId;
+										var batchNumber = skuGroupList[i].batchNumber;
+										var mfgDate = skuGroupList[i].mfgDate;
+										var expiryDate = skuGroupList[i].expiryDate;
+										var checkInDate = skuGroupList[i].checkInDate;
+										var costPrice = skuGroupList[i].costPrice;
+										var mrp = skuGroupList[i].mrp;
+										var inStock = skuGroupList[i].inStockQty;
+										var checkedInQty = skuGroupList[i].checkedInQty;
+										var rowValue = $('<tr></tr>');
+										if(grnId != null) {
+											rowValue.append($('<td><a target="_blank" href="${pageContext.request.contextPath}/admin/inventory/GRN.action?grn='+grnId+'&view=">' + grnId + '</a></td>'));
+										}  else{
+											rowValue.append($('<td></td>'));
+										}
+										rowValue.append($('<td>' + batchNumber + '</td>'));
+										rowValue.append($('<td>' + mfgDate + '</td>'));
+										rowValue.append($('<td>' + expiryDate + '</td>'));
+										rowValue.append($('<td>' + costPrice + '</td>'));
+										rowValue.append($('<td>' + mrp + '</td>'));
+										rowValue.append($('<td>' + checkInDate + '</td>'));
+										rowValue.append($('<td>' + checkedInQty + '</td>'));
+										rowValue.append($('<td>' + inStock + '</td>'));
+
+										$('#skuGroupTable').append(rowValue);
+									}
+
+								}
+							}
+					);
+
+				});
+
+
 				$("#brandSelect").autocomplete({
 					url: "${pageContext.request.contextPath}/core/autocomplete/AutoComplete.action?populateBrand=&q="
 				});
@@ -14,15 +60,21 @@
 	</s:layout-component>
 
 	<s:layout-component name="content">
+		<div style="display: none;">
+			<s:link beanclass="com.hk.web.action.admin.pos.PosProductSearchAction" id="getDetailsLink"
+			        event="showBatches"></s:link>
+		</div>
 		<fieldset class="right_label">
 			<legend>Search Product</legend>
 			<s:form beanclass="com.hk.web.action.admin.pos.PosProductSearchAction">
+				<%--<input type="hidden" name="brandList" value="${ps.brandList}" id="brandList">--%>
 				<label>Category Name:</label>
 				<s:select name="primaryCategory">
 					<option value="">All categories</option>
-					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="categoriesForPOS"
 					                           value="name" label="displayName"/>
 				</s:select>
+				<label>Variant Id:</label><s:text name="productVariantId"/>
 				<label>Brand:</label><s:text name="brand" id="brandSelect" autocomplete="off"/>
 				<label>Product Name:</label><s:text name="productName"/>
 				<br>
@@ -31,11 +83,12 @@
 				<label>Color:</label><s:text name="color"/>
 				<label>Form:</label><s:text name="form"/>
 				<s:submit name="search" value="Search"/>
+				<s:submit name="downloadBatches" value="Download"/>
 			</s:form>
 		</fieldset>
 
 		<%--<div style="display:inline;float:left;">--%>
-		<table class="zebra_vert">
+		<table class="zebra_vert" style="width: 50%; float: left;">
 			<thead>
 			<tr>
 				<th>Variant Id</th>
@@ -57,14 +110,60 @@
 					<td>${product.color}</td>
 					<td>${product.form}</td>
 					<td>${product.countId}</td>
-					<td><s:link beanclass="com.hk.web.action.admin.pos.PosProductSearchAction" event="showBatches"
-					            target="_blank">
-						Get Details<s:param name="searchSku" value="${product.sku}"/>
-					</s:link></td>
+					<td class="searchSkuBatchesTD"><a href="javascript:void(0)" class="searchSkuBatches"> Get
+						Details</a></td>
+					<td class="selectedSku" style="display: none;"><input type="hidden" class="selectedSkuHid"
+					                                                      value="${product.sku}"></td>
 				</tr>
 			</c:forEach>
 		</table>
 
+		<table class="zebra_vert" id="skuGroupTable" style="width: 45%; float: right;">
+			<thead>
+			<tr>
+				<th>GRN/RV No.</th>
+				<th>Batch No.</th>
+				<th>Mfg. <br>Date</th>
+				<th>Expiry<br> Date</th>
+				<th>Cost Price</th>
+				<th>MRP</th>
+				<th>Checkin<br> Date</th>
+				<th>Checked-In<br> Units</th>
+				<th>In-stock<br> Units</th>
+			</tr>
+			</thead>
+			<tbody></tbody>
+				<%--<c:forEach items="${ps.skuGroupList}" var="skuGroup" varStatus="ctr">
+					<c:set var="batchInv" value="${fn:length(hk:getInStockSkuItems(skuGroup))}"/>
+					<tr>
+						<td>
+							<c:if test="${skuGroup.goodsReceivedNote != null}">
+								<s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view"
+										target="_blank">
+									<s:param name="grn" value="${skuGroup.goodsReceivedNote.id}"/>
+									${skuGroup.goodsReceivedNote.id}
+								</s:link>
+							</c:if>
+							<c:if test="${skuGroup.reconciliationVoucher != null}">
+								<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+										event="view" target="_blank">
+									<s:param name="reconciliationVoucher" value="${skuGroup.reconciliationVoucher.id}"/>
+									${skuGroup.reconciliationVoucher.id}
+								</s:link>
+							</c:if>
+
+						</td>
+						<td>${skuGroup.batchNumber}</td>
+						<td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="MM/yyyy"/></td>
+						<td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="MM/yyyy"/></td>
+						<td>${skuGroup.costPrice}</td>
+						<td>${skuGroup.mrp}</td>
+						<td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
+						<td>${fn:length(skuGroup.skuItems)}</td>
+						<td>${batchInv}</td>
+					</tr>
+				</c:forEach>--%>
+		</table>
 		<%--</div>--%>
 		<%--<div style="display:inline;float:right;">--%>
 

@@ -4,25 +4,32 @@ import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Rohit
- * Date: 7/18/13
- * Time: 6:53 PM
+ * Date: 7/23/13
+ * Time: 7:27 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PosProductSearchDto {
+public class PosSkuGroupSearchDto {
 
 	private String productName;
 	private String size;
 	private String flavor;
 	private String color;
 	private String form;
-	private Integer countId;
+	private Integer availableInventory;
 	private String productVariantId;
 	private Sku sku;
+	private SkuGroup skuGroup;
+	private Double costPrice;
+	private Double mrp;
+	private Date mfgDate;
+	private Date expiryDate;
+	private String batchNumber;
 
 	public String getProductName() {
 		return productName;
@@ -48,12 +55,12 @@ public class PosProductSearchDto {
 		this.sku = sku;
 	}
 
-	public Integer getCountId() {
-		return countId;
+	public Integer getAvailableInventory() {
+		return availableInventory;
 	}
 
-	public void setCountId(Integer countId) {
-		this.countId = countId;
+	public void setAvailableInventory(Integer availableInventory) {
+		this.availableInventory = availableInventory;
 	}
 
 	public String getFlavor() {
@@ -94,5 +101,53 @@ public class PosProductSearchDto {
 			}
 		}
 		return "";
+	}
+
+	public SkuGroup getSkuGroup() {
+		return skuGroup;
+	}
+
+	public void setSkuGroup(SkuGroup skuGroup) {
+		this.skuGroup = skuGroup;
+	}
+
+	public Double getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
+	}
+
+	public Double getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(Double mrp) {
+		this.mrp = mrp;
+	}
+
+	public Date getMfgDate() {
+		return mfgDate;
+	}
+
+	public void setMfgDate(Date mfgDate) {
+		this.mfgDate = mfgDate;
+	}
+
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	public String getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(String batchNumber) {
+		this.batchNumber = batchNumber;
 	}
 }

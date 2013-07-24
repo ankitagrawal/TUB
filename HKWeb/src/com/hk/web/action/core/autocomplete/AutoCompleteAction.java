@@ -106,12 +106,12 @@ public class AutoCompleteAction extends BaseAction {
 	}
 
 	@DontValidate
-		@JsonHandler
-		public Resolution populateBrand() {
-			List<String> brandList = productService.getAllBrands(q);
-			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "done", brandList);
-			return new JsonResolution(healthkartResponse);
-		}
+	@JsonHandler
+	public Resolution populateBrand() {
+		List<String> brandList = productService.getAllBrands(q);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "done", brandList);
+		return new JsonResolution(healthkartResponse);
+	}
 
 	public String getQ() {
 		return q;

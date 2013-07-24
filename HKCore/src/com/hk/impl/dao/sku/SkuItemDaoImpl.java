@@ -9,16 +9,14 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.pos.PosProductSearchDto;
+import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.warehouse.WarehouseDao;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -133,7 +131,8 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		return query.list();
 	}
 
-	public List<PosProductSearchDto> getCheckedInSkuItems(String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId) {
+	public List<PosProductSearchDto> getCheckedInSkuItems(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId) {
+
 		DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
 		skuItemCriteria.add(Restrictions.eq("skuItemStatus", EnumSkuItemStatus.Checked_IN.getSkuItemStatus()));
 		DetachedCriteria skuGroupCriteria = skuItemCriteria.createCriteria("skuGroup", "skuGrp");
@@ -141,6 +140,11 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		DetachedCriteria warehouseCriteria = skuCriteria.createCriteria("warehouse");
 		warehouseCriteria.add(Restrictions.eq("id", warehouseId));
 		DetachedCriteria productVariantCriteria = skuCriteria.createCriteria("productVariant", "productVariant");
+
+		if (!StringUtils.isBlank(productVariantId)) {
+			productVariantCriteria.add(Restrictions.eq("id", productVariantId));
+		}
+
 		DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product", "product");
 
 		if (!StringUtils.isBlank(productName)) {
@@ -181,7 +185,76 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
 		skuItemCriteria.setProjection(Projections.projectionList().add(Projections.countDistinct("id").as("countId"))
 				.add(Projections.property("product.name").as("productName")).add(Projections.groupProperty("skuGrp.sku").as("sku"))
-				.add(Projections.property("productVariant.id").as("productVariantId"))).setResultTransformer(Transformers.aliasToBean(PosProductSearchDto.class));
+				.add(Projections.property("productVariant.id").as("productVariantId")))
+				.addOrder(Order.asc("productVariantId"))
+				.setResultTransformer(Transformers.aliasToBean(PosProductSearchDto.class));
+
+		return findByCriteria(skuItemCriteria);
+	}
+
+	public List<PosSkuGroupSearchDto> getCheckedInSkuItemsByGroup(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId) {
+
+		DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
+		skuItemCriteria.add(Restrictions.eq("skuItemStatus", EnumSkuItemStatus.Checked_IN.getSkuItemStatus()));
+		DetachedCriteria skuGroupCriteria = skuItemCriteria.createCriteria("skuGroup", "skuGrp");
+		DetachedCriteria skuCriteria = skuGroupCriteria.createCriteria("sku", "sku");
+		DetachedCriteria warehouseCriteria = skuCriteria.createCriteria("warehouse");
+		warehouseCriteria.add(Restrictions.eq("id", warehouseId));
+		DetachedCriteria productVariantCriteria = skuCriteria.createCriteria("productVariant", "productVariant");
+		if (!StringUtils.isBlank(productVariantId)) {
+			productVariantCriteria.add(Restrictions.eq("id", productVariantId));
+		}
+
+		DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product", "product");
+
+		if (!StringUtils.isBlank(productName)) {
+			productCriteria.add(Restrictions.like("name", "%" + productName + "%"));
+		}
+
+		if (!StringUtils.isBlank(brand)) {
+			productCriteria.add(Restrictions.eq("brand", brand));
+		}
+
+		if (!StringUtils.isBlank(primaryCategory)) {
+			DetachedCriteria categoryCriteria = productCriteria.createCriteria("primaryCategory", "primaryCategory");
+			categoryCriteria.add(Restrictions.eq("name", primaryCategory));
+		}
+
+		productVariantCriteria.createAlias("productOptions", "option", CriteriaSpecification.LEFT_JOIN);
+
+		if (!StringUtils.isBlank(flavor)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "flavor"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + flavor + "%"));
+		}
+
+		if (!StringUtils.isBlank(size)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "size"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + size + "%"));
+		}
+
+		if (!StringUtils.isBlank(color)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "color"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + color + "%"));
+		}
+
+		if (!StringUtils.isBlank(form)) {
+			productVariantCriteria.add(Restrictions.eq("option.name", "form"));
+			productVariantCriteria.add(Restrictions.like("option.value", "%" + form + "%"));
+		}
+
+		skuItemCriteria.setProjection(Projections.projectionList().add(Projections.countDistinct("id").as("availableInventory"))
+				.add(Projections.property("product.name").as("productName"))
+				.add(Projections.groupProperty("skuGroup").as("skuGroup"))
+				.add(Projections.property("skuGrp.costPrice").as("costPrice"))
+				.add(Projections.property("skuGrp.mrp").as("mrp"))
+				.add(Projections.property("skuGrp.batchNumber").as("batchNumber"))
+				.add(Projections.property("skuGrp.mfgDate").as("mfgDate"))
+				.add(Projections.property("skuGrp.expiryDate").as("expiryDate"))
+				.add(Projections.property("skuGrp.sku").as("sku"))
+				.add(Projections.property("productVariant.id").as("productVariantId")))
+				.addOrder(Order.asc("productVariantId"))
+				.addOrder(Order.asc("skuGroup"))
+				.setResultTransformer(Transformers.aliasToBean(PosSkuGroupSearchDto.class));
 
 		return findByCriteria(skuItemCriteria);
 	}

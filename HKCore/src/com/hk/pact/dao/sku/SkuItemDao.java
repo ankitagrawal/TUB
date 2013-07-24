@@ -9,6 +9,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.dto.pos.PosProductSearchDto;
+import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.pact.dao.BaseDao;
 
 public interface SkuItemDao extends BaseDao {
@@ -26,6 +27,7 @@ public interface SkuItemDao extends BaseDao {
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku);
 
-	public List<PosProductSearchDto> getCheckedInSkuItems(String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
+	public List<PosProductSearchDto> getCheckedInSkuItems(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
 
+	public List<PosSkuGroupSearchDto> getCheckedInSkuItemsByGroup(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
 }
