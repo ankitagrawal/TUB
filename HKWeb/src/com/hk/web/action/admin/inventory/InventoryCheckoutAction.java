@@ -315,8 +315,10 @@ public class InventoryCheckoutAction extends BaseAction {
                                       return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
                                 }
                                 // MRP check ends --
-                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
-                                        getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
+                                getAdminInventoryService().checkoutMethod(lineItem, skuItem);
+
+//                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
+//                                        getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
                                 binManager.removeBinAllocated(skuItem);
                                 addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
