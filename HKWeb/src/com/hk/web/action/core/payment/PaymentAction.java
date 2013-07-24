@@ -94,8 +94,6 @@ public class PaymentAction extends BaseAction {
 //                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
 //            }
 
-            //  todo ERP  Ankit --Call to make entries in SkuItemCLI --for temp booked method
-            inventoryManageService.tempBookSkuLineItemForOrder(order);
 
             BillingAddress billingAddress = null;
             if (billingAddressId != null) {
@@ -132,6 +130,7 @@ public class PaymentAction extends BaseAction {
                     //this is a very crude away, although this code should not fail, but as a worse case scenario, redirecting customer to icici no matter what since it gives max option
                     logger.error("Routing Multiple gateways failed due to some exception" + e);
                     gateway = EnumGateway.ICICI.asGateway();
+
                 }
             }
 
