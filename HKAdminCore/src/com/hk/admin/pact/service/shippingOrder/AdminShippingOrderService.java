@@ -55,5 +55,7 @@ public interface AdminShippingOrderService {
 
 	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReason);
 
+	public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder order1, ShippingOrder order2);
+
 	public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages);
 }

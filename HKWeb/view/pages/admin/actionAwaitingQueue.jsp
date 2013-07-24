@@ -16,6 +16,7 @@
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -86,6 +87,14 @@
         table.row_border tr {
             outline: 1px solid #cccccc;
         }
+        
+        #closeButtonDiv{
+			float: left;
+			position: relative;
+			left: 14%;
+			margin-bottom: 2px;
+			margin-top: 2px;
+}
     </style>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -399,10 +408,27 @@
                     <%--<label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>--%>
                     <s:submit name="search" value="Search (No Default)"/>
                 </div>
+                 
             </s:form>
+            
+            
+            <shiro:hasPermission name="<%=PermissionConstants.CREATE_JIT_PO%>">
+            <div id="closeButtonDiv">
+<s:form beanclass = "com.hk.web.action.admin.queue.JitShippingOrderAction">
+<s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form></div>
+
+<div id="closeButtonDiv">
+<s:form beanclass = "com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
+<s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
+            </shiro:hasPermission>
         </div>
     </ul>
 </fieldset>
+
+<div>
+
+</div>
+
 
 <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>

@@ -5,6 +5,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.shippingOrder.LineItem;
@@ -109,6 +110,15 @@ public class ShippingOrder implements java.io.Serializable {
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private Set<ShippingOrderCategory> shippingOrderCategories = new HashSet<ShippingOrderCategory>();
+    
+    @JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy="shippingOrders")
+	@JoinTable(
+	    name = "shipping_order_has_purchase_order",
+	    joinColumns = {@JoinColumn(name = "shipping_order_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "purchase_order_id", nullable = false, updatable = false)}
+	)
+	private List<PurchaseOrder> purchaseOrders = new ArrayList<PurchaseOrder>();
 
     public boolean containsJitProducts() {
         return containsJitProducts;
@@ -331,4 +341,11 @@ public class ShippingOrder implements java.io.Serializable {
     public void setActionItem(ActionItem actionItem) {
         this.actionItem = actionItem;
     }
+    public List<PurchaseOrder> getPurchaseOrders() {
+		return purchaseOrders;
+	}
+
+	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+		this.purchaseOrders = purchaseOrders;
+	}
 }

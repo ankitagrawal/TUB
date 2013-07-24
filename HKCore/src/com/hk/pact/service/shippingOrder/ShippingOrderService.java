@@ -5,6 +5,7 @@ import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Zone;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -12,13 +13,11 @@ import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.shippingOrder.LifecycleReason;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author vaibhav.adlakha
@@ -71,5 +70,7 @@ public interface ShippingOrderService {
 	public ShippingOrderLifecycle logShippingOrderActivityByAdmin(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason);
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
+	
+	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant, Double mrp);
 	
 }

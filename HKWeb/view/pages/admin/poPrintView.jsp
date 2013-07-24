@@ -133,6 +133,13 @@
 			          <br/>
 		          </c:if>
 	          </c:forEach>
+	          <c:if test="${poLineItemDto.remarks!=null && fn:length(poLineItemDto.remarks) >0}">
+	           <br/><strong>Specifications Required:</strong>
+	          <c:forEach items="${poLineItemDto.remarks}" var = "remarks" varStatus="ctr">
+	          <br/>${ctr.index+1}. ${remarks}&nbsp;
+	          </c:forEach>
+	          
+	          </c:if>
           </td>
           <td>${poLineItemDto.poLineItem.qty}
           </td>
