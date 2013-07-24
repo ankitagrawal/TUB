@@ -10,7 +10,7 @@ import com.hk.domain.inventory.rtv.ExtraInventoryLineItemType;
 
 public enum EnumExtraInventoryLineItemType {
 
-	Normal(10L, "Normal"), Short(20L, "Short");
+	Normal(10L, "Normal"), Short(20L, "Short"), RTV(30L, "RTV");
 
 	private String name;
 	private Long id;

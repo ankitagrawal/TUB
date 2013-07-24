@@ -262,9 +262,6 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			}
 			extraInventory = getExtraInventoryService().save(extraInventory);
 		}
-		// creating Extra Inventory Line Items
-		// Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D,
-		// totalPayable = 0.0D;
 		for (ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems) {
 			if (extraInventoryLineItem.getId() == null && extraInventoryLineItem.getReceivedQty() != 0) {
 				extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Normal
@@ -349,7 +346,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 				} 
 				extraInventoryLineItem.setRtvCreated(true);
 				rtvamount+=extraInventoryLineItem.getPayableAmount();
-				extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Normal
+				extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.RTV
 						.asEnumExtraInventoryLineItemType());
 				extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
 				extraLineItems.add(extraInventoryLineItem);
@@ -469,27 +466,6 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	public Resolution editRtv() {
 		rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventoryId);
 		if (rtvNote == null) {
-			// extraInventory =
-			// getExtraInventoryService().getExtraInventoryById(extraInventoryId);
-			// if(extraInventory!=null){
-			// extraInventoryLineItems =
-			// getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-			// if(extraInventory != null){
-			// rtvNote =
-			// getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-			// if(rtvNote!=null){
-			// if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId())
-			// || rtvNote.isReconciled()){
-			// reconciledStatus = "reconciled";
-			// }
-			// }
-			// }
-			// purchaseOrder =
-			// getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-			// if(purchaseOrder!=null){
-			// newPurchaseOrderId = purchaseOrder.getId();
-			// }
-			// }
 			addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
 			return new RedirectResolution(ExtraInventoryAction.class, "pre").addParameter("purchaseOrderId",
 					purchaseOrderId).addParameter("wareHouseId", wareHouseId);
@@ -516,7 +492,6 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 				}
 			}
 		}
-		// List<Long> skus = new ArrayList<Long>();
 		// checking if one of sku is null
 		for (ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected) {
 			if (extraInventoryLineItem != null) {
@@ -529,7 +504,6 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 					return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
 							.addParameter("wareHouseId", wareHouseId);
 				}
-				// skus.add(extraInventoryLineItem.getSku().getId());
 			}
 		}
 		generatePO();
