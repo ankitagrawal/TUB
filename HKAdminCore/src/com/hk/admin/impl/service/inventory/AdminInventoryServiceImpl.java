@@ -39,7 +39,10 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.web.action.admin.inventory.ReconciliationVoucherAction;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +54,7 @@ import java.util.*;
 @Service
 public class AdminInventoryServiceImpl implements AdminInventoryService {
 
+	private static Logger logger = Logger.getLogger(AdminInventoryServiceImpl.class);
     @Autowired
     private BaseDao baseDao;
     @Autowired
@@ -85,6 +89,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     SkuItemLineItemDao skuItemLineItemDao;
 
 
+    
     @Override
     public List<SkuGroup> getInStockSkuGroups(String upc) {
         // ProductVariant productVariant = productVariantDaoProvider.get().findVariantFromUPC(upc);
@@ -409,22 +414,24 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
             skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
             skuItem = (SkuItem)baseDao.save(skuItem);
             inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
-
+            logger.debug("Checking Out SkuItem - "+skuItem.getId()+" at Checkout");
+            
         } else {
             //If skuItem is booked
-
             if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId()) || skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
                 SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
                 
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
                 skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
                 skuItem = (SkuItem)baseDao.save(skuItem);
+                logger.debug("Checking Out SkuItem - "+skuItem.getId()+" at Checkout");
                 
                 toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                 toReleaseSkuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                 toReleaseSkuItem = (SkuItem)baseDao.save(toReleaseSkuItem);
                 inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
-
+                logger.debug("Releasing SkuItem - "+toReleaseSkuItem.getId()+" at Checkout");
+                
                 SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(toReleaseSkuItem);
                 skuItemCLI.setSkuItem(skuItem);
                 skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
