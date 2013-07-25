@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -52,8 +53,9 @@ public class SearchHKBatchAction extends BaseAction {
 
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
+        List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
         if (StringUtils.isNotBlank(hkBarcode)) {
-            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), null);
+            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList);
             if (skuItemBarcode != null) {
                 skuGroupList.add(skuItemBarcode.getSkuGroup());
             } else {

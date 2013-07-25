@@ -5,6 +5,8 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,6 +41,9 @@ public class SkuItemCLI implements java.io.Serializable {
 
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
+    private SkuItemLineItem skuItemLineItem;
 
 	public Long getId() {
 		return id;
@@ -79,4 +84,12 @@ public class SkuItemCLI implements java.io.Serializable {
 	public void setUnitNum(Long unitNumber) {
 		this.unitNum = unitNumber;
 	}
+
+    public SkuItemLineItem getSkuItemLineItem() {
+        return skuItemLineItem;
+    }
+
+    public void setSkuItemLineItem(SkuItemLineItem skuItemLineItem) {
+        this.skuItemLineItem = skuItemLineItem;
+    }
 }
