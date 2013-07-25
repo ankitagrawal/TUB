@@ -26,6 +26,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
@@ -46,6 +47,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -113,6 +115,8 @@ public class OrderServiceImpl implements OrderService {
     BucketService bucketService;
     @Autowired
     SubscriptionService subscriptionService;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
 
     @Autowired OrderSplitter orderSplitter;
 
@@ -707,6 +711,17 @@ public class OrderServiceImpl implements OrderService {
         }
         
         logger.info("SPLIT END ORDER-ID: " + order.getId());
+
+        //create sku_item_line_items for each item of each shipping order of base order
+        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
+            for (ShippingOrder shippingOrder : order.getShippingOrders()){
+                for (LineItem lineItem : shippingOrder.getLineItems()){
+                    skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+                }
+            }
+        }
+
+
         return shippingOrderAlreadyExists;
     }
 

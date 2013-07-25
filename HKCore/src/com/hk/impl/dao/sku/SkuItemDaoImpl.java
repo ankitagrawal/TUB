@@ -3,11 +3,8 @@ package com.hk.impl.dao.sku;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.*;
 
-import com.hk.domain.sku.SkuItemStatus;
-import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
@@ -129,6 +126,30 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
         return query.list();
     }
+    
+    public List<SkuItem> getSkuItem(Sku sku, Long id){
+        String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
+        Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", id);
+        return query.list();
+    }
+    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp){
+        String sql = "from SkuItem si where si.skuGroup.sku in (:skuList) and si.skuItemStatus.id in (:statusIds) and si.skuItemOwner in (:skuItemOwners)";
+        String orderByClause = " order by si.skuGroup.expiryDate asc";
+        Query query;
+        if(mrp != null){
+            sql += " and si.skuGroup.mrp = :mrp " + orderByClause;
+            query = getSession().createQuery(sql).setParameterList("skuList", skuList).setParameterList("statusIds", statusIds)
+                    .setParameterList("skuItemOwners", skuItemOwners).setParameter("mrp", mrp);
+        }
+        else {
+            sql += orderByClause;
+            query = getSession().createQuery(sql).setParameterList("skuList", skuList).setParameterList("statusIds", statusIds)
+                    .setParameterList("skuItemOwners", skuItemOwners);
+        }
+        return query.list();
+    }
+
+    
 }
 
 

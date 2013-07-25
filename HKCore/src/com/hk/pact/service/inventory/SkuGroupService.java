@@ -1,10 +1,7 @@
 package com.hk.pact.service.inventory;
 
 import com.hk.domain.inventory.GrnLineItem;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.*;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
@@ -65,6 +62,17 @@ public interface SkuGroupService {
     public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup);
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku);
+    
+    public List<SkuItem> getSkuItem(Sku sku, Long id);
+
+    /**
+     *  A generic method for fetching List of SkuItems with given Sku, status and SkuItemOwners
+     * @param skuList
+     * @param statusIds
+     * @param skuItemOwners
+     * @return
+     */
+    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp);
 
 
 }

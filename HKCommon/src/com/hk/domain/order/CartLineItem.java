@@ -105,11 +105,6 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
     private List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
 
 
-    @JsonSkip
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
-    private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
-
-
     public CartLineItem() {
 
     }
@@ -390,14 +385,5 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
 
     public void setSkuItemCLIs(List<SkuItemCLI> skuItemCLIs) {
         this.skuItemCLIs = skuItemCLIs;
-    }
-
-
-    public List<SkuItemLineItem> getSkuItemLineItems() {
-        return skuItemLineItems;
-    }
-
-    public void setSkuItemLineItems(List<SkuItemLineItem> skuItemLineItems) {
-        this.skuItemLineItems = skuItemLineItems;
     }
 }
