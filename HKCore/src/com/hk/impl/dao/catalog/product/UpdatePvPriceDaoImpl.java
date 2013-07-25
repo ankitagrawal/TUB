@@ -36,7 +36,7 @@ public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDa
     }
 
     public UpdatePvPrice getPVForPriceUpdate(ProductVariant productVariant, Long status) {
-        List<UpdatePvPrice> updatePvPriceList = (List<UpdatePvPrice>) findByNamedParams("from UpdatePvPrice upp where upp.productVariant =  :productVariant and upp.status = :status", new String[]{"productVariant", "status"}, new Object[]{productVariant, status});
+        List<UpdatePvPrice> updatePvPriceList = (List<UpdatePvPrice>) findByNamedParams("from y upp where upp.productVariant =  :productVariant and upp.status = :status", new String[]{"productVariant", "status"}, new Object[]{productVariant, status});
         if (updatePvPriceList != null && !updatePvPriceList.isEmpty()) {
             return updatePvPriceList.get(0);
         }

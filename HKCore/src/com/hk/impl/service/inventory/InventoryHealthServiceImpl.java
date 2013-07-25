@@ -279,6 +279,78 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return skuList;
 	}
+
+
+  // Ankit code starts  
+
+private static final String netCheckedInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
+			" count(a.id) as qty, b.create_date as checkinDate" +
+			" from sku_item as a" +
+			" inner join sku_group as b on a.sku_group_id = b.id" +
+			" inner join sku as c on b.sku_id = c.id" +
+			" where c.product_variant_id = :pvId" +
+			" and c.warehouse_id in (:whIds)" +
+            " and (b.status != :reviewStatus or b.status is null)" +
+			" and a.sku_item_status_id in (:itemStatus)" +
+			" and b.mrp is not null" +
+			" group by b.id" +
+			" order by checkinDate asc";
+
+	@Override
+	public Collection<SkuInfo> getNetCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
+		String sql = netCheckedInInvSql;
+		SQLQuery query = baseDao.createSqlQuery(sql);
+
+		query.addScalar("skuId", Hibernate.LONG);
+		query.addScalar("mrp", Hibernate.DOUBLE);
+		query.addScalar("qty", Hibernate.LONG);
+		query.addScalar("costPrice", Hibernate.DOUBLE);
+		query.addScalar("checkinDate", Hibernate.DATE);
+
+
+        List<Long> statusIds = new ArrayList<Long>();
+        statusIds.add(EnumSkuItemStatus.TEMP_BOOKED.getId());
+        statusIds.add(EnumSkuItemStatus.BOOKED.getId());
+        statusIds.add(EnumSkuItemStatus.Checked_IN.getId());
+
+		query.setParameter("pvId", productVariant.getId());
+		query.setParameterList("whIds", toWarehouseIds(whs));
+		query.setParameter("itemStatus", statusIds);
+        query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
+
+
+
+		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
+
+		@SuppressWarnings("unchecked")
+		List<SkuInfo> list = query.list();
+
+		LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
+		for (SkuInfo skuInfo : list) {
+			SkuInfo info = getLast(skuList);
+			if(info != null && skuInfo.getSkuId() == info.getSkuId() && skuInfo.getMrp() == info.getMrp()) {
+				info.setQty(info.getQty() + skuInfo.getQty());
+				info.setUnbookedQty(info.getQty());
+			} else {
+				skuInfo.setUnbookedQty(skuInfo.getQty());
+				skuList.add(skuInfo);
+			}
+		}
+		return skuList;
+	}
+
+
+
+
+
+
+    
+
+   //  Ankit code -ends
+
+
+
+
 	
 	private List<Long> toWarehouseIds(List<Warehouse> whs) {
 		List<Long> list = new ArrayList<Long>();

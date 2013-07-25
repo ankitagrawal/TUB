@@ -22,11 +22,14 @@ public interface InventoryHealthService {
 	
 	Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter);
 	
-	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
+	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);   
 	
 	long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
 
 	long getUnbookedInventoryForActionQueue(LineItem lineItem);
+
+    public Collection<SkuInfo> getNetCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
+
 
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

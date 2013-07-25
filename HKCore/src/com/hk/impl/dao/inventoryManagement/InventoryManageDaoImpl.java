@@ -9,11 +9,13 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
+import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.admin.dto.inventory.SkuGroupInfoDto;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.hibernate.Query;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,6 +48,21 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
     }
 
 
+    public Long getNetInventory(List<Sku> skuList, List<EnumSkuItemStatus> skuItemStatuses){
+          Long netInv = 0L;
+        if (skuList != null && !skuList.isEmpty()) {
+            //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
+            String query = "select count(si) from SkuItem si where si.skuGroup.status != :skuStatus and si.skuGroup.sku in (:skuList) and si.skuItemStatus.id in (:skuItemStatuses) " ;
+            netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("skuItemStatuses", skuItemStatuses).uniqueResult();
+            if (netInv == null) {
+                netInv = 0L;
+            }
+        }
+        return netInv;
+     }
+
+
+
     public Long getNetInventory(List<Sku> skuList, Double mrp) {
         Long netInv = 0L;
         if (skuList != null && !skuList.isEmpty()) {
@@ -61,7 +78,9 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
     }
 
 
-    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, Long skuItemStatusId, Long skuItemOwnerStatusId) {
+
+
+    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> skuItemStatusId, List <Long> skuItemOwnerStatusId) {
         String query = "select count(si) from SkuItem si where si.skugroup.productVariant = :productVariant and si.skuItemStatus.id= :skuItemStatusId and  si.skuItemOwner.id= :skuItemOwnerStatusId";
         return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", skuItemStatusId).setParameter("skuItemOwnerStatusId", skuItemOwnerStatusId).uniqueResult();
 
@@ -75,7 +94,7 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
         Long bookedInventory = 0L;
         if (!skuList.isEmpty()) {
             ProductVariant productVariant = skuList.get(0).getProductVariant();
-            bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
+//            bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
             logger.debug("booked inventory " + bookedInventory);
         }
 
@@ -100,13 +119,75 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
            Long bookedInventory = 0L;
            if (!skuList.isEmpty()) {
                ProductVariant productVariant = skuList.get(0).getProductVariant();
-               bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
+//               bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
                logger.debug("booked inventory " + bookedInventory);
            }
 
            return (netInventory - bookedInventory);
 
        }
+
+
+    
+ /*
+    private List<Long> toWarehouseIds(List<Warehouse> whs) {
+		List<Long> list = new ArrayList<Long>();
+		for (Warehouse wh : whs) {
+			list.add(wh.getId());
+		}
+
+		return list;
+	}
+
+
+
+
+    public Collection<InventoryHealthService.SkuInfo> getNetPhysicalInventory(ProductVariant productVariant, List<Warehouse> whs) {
+
+           String sql = "select  sg as skuGroup , count(si.id) as qty"
+                   + " from SkuItem si " +
+                   "  join si.skuGroup sg " +
+                   " join sg.sku s "   +
+                   " where s.productVariant = :pvId" +
+                   " and s.warehouse in (:whIds)" +
+                   " and (sg.status != :reviewStatus or sg.status is null)" +
+                   " and si.skuItemStatus  in(:itemStatus)" +
+                   " and sg.mrp is not null" +
+                   " group by sg.id" +
+                   " order by sg.createDate asc";
+
+
+
+           Query query = getSession().createQuery(sql);
+
+           query.setParameter("pvId", productVariant.getId());
+           query.setParameterList("whIds", toWarehouseIds(whs));
+           query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
+           query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
+
+           query.setResultTransformer(Transformers.aliasToBean(SkuGroupInfoDto.class));
+
+           @SuppressWarnings("unchecked")
+           List<SkuGroupInfoDto> list = query.list();
+
+           LinkedList<SkuGroupInfoDto> skuList = new LinkedList<SkuGroupInfoDto>();
+           for (SkuGroupInfoDto skuGroupInfo : list) {
+               InventoryHealthService.SkuInfo info = getLast(skuList);
+               if(info != null && skuGroupInfo.getSkuGroup().getSku().getId() == info.getSkuId() && skuGroupInfo.getSkuGroup().getMrp() == info.getMrp()) {
+                   info.setQty(info.getQty() + skuGroupInfo.getQty());
+                   info.setUnbookedQty(info.getQty());
+               } else {
+                   skuInfo.setUnbookedQty(skuInfo.getQty());
+                   skuList.add(skuInfo);
+               }
+           }
+           return skuList;
+       }
+
+
+        */
+
+
 
 
 }
