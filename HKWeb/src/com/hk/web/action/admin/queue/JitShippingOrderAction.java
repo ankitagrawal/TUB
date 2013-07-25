@@ -1,17 +1,5 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.*;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
@@ -29,7 +17,23 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.constants.core.PermissionConstants;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+@Secure(hasAnyPermissions = {PermissionConstants.CREATE_JIT_PO})
 @Component
 public class JitShippingOrderAction extends BaseAction {
 
@@ -66,8 +70,8 @@ public class JitShippingOrderAction extends BaseAction {
 	private List<PurchaseOrder> purchaseOrders;
 
 	@DefaultHandler
-	public Resolution pre() {
-		//Warehouse warehouse = warehouseService.getWarehouseById(10l);
+	public synchronized Resolution pre() {
+		logger.debug("Calling JitShippingOrderAction");
 		boolean filterJit = true;
 		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
