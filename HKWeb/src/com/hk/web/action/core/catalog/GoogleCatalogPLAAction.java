@@ -1,6 +1,7 @@
 package com.hk.web.action.core.catalog;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.marketing.EnumMarketingFeed;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -72,13 +73,8 @@ public class GoogleCatalogPLAAction extends BaseAction {
         Map<String, Product> productMap = new HashMap<String, Product>();
         //Need to ensure that there are not duplicate items
         for (Product product : catProducts) {
-            productVariantList = product.getProductVariants();
-            for (ProductVariant productVariant : productVariantList) {
-                if (productVariant.getHkPrice() < priceConstant) {
-                    priceBool = false;
-                }
-            }
-            if (!productMap.containsKey(product.getId()) && priceBool) {
+            if (!productMap.containsKey(product.getId()) && product.getMinimumHKPriceProductVariant().getHkPrice() >= priceConstant
+		            && !product.isGoogleAdDisallowed() && !product.getPrimaryCategory().getName().equals(CategoryConstants.HOME_LIVING)) {
                 products.add(product);
                 productMap.put(product.getId(), product);
             }

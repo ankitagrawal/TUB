@@ -139,6 +139,16 @@ public class CartLineItemConfig implements java.io.Serializable {
   public int hashCode() {
     return new HashCodeBuilder().append(this.id).append(this.cartLineItemConfigValues).toHashCode();
   }
+  
+  public String getConfigDetails(){
+	  StringBuilder details = new StringBuilder("");
+	  for(CartLineItemConfigValues config: this.cartLineItemConfigValues){
+		  String name = config.getVariantConfigOption().getName();
+		  String value = config.getValue();
+		  details.append(name+" : "+value+", ");
+	  }
+	  return details.append("::").toString();
+  }
 }
 
 
