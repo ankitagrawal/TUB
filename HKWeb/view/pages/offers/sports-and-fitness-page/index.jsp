@@ -10,7 +10,7 @@
                  pageTitle="sports offer">
 
 <s:layout-component name="htmlHead">
-	<link href="${pageContext.request.contextPath}/css/eye-style.css"
+	<link href="${pageContext.request.contextPath}/pages/offers/sports-and-fitness-page/css/sports-page-stylesheet.css"
 	      rel="stylesheet" type="text/css"/>
 </s:layout-component>
 
@@ -26,6 +26,9 @@
 
 
 <s:layout-component name="content">
+
+<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="js/jqajax.js"></script>
 <div class="sportsContainr">
     	<div class="content">
 			<div class="rm_wrapper">
@@ -130,7 +133,7 @@
         <div class="dashedBrdr1"></div>
     	<div class="row">
             <div class="spPopUpImgBox">
-                <p><img src="images/vector-X-shoes.jpg" alt="" /></p>
+                <p><img src="images/vector-x-shoes.jpg" alt="" /></p>
                 <p class="spOfferProNames">Vector X Shoes</p>
                 <p align="center"><a href="http://www.healthkart.com/sports/footwear?brand=Vector+X" target="_blank"><img src="images/order-now.jpg" alt="Order Now" /></a></p>
             </div>
@@ -294,7 +297,7 @@
         <div class="dashedBrdr1"></div>
     	<div class="row">
             <div class="spPopUpImgBox">
-                <p><img src="images/vector-X-shoes.jpg" alt="" /></p>
+                <p><img src="images/vector-x-shoes.jpg" alt="" /></p>
                 <p class="spOfferProNames">Vector X Shoes</p>
                 <p align="center"><a href="http://www.healthkart.com/sports/footwear?brand=Vector+X" target="_blank"><img src="images/order-now.jpg" alt="Order Now" /></a></p>
             </div>
@@ -521,7 +524,6 @@
     	<div class="cl"></div>
     </div>
 </div>
-
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.transform-0.9.3.min.js"></script>
 <script type="text/javascript" src="js/jquery.mousewheel.js"></script>

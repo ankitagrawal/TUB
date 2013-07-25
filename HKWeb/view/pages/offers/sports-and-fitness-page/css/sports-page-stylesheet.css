@@ -1,22 +1,23 @@
 body			{ height:auto;}
 
-.row			{ 
-				width:100%; 
+.row			{
+				width:100%;
 				clear:both;
 				font-family:Arial, Helvetica, sans-serif;
+                font-size:15px;
 				}
 
-.cl				{ 
+.cl				{
 				clear:both;
 				}
-				
+
 p				{
-				font-family:Arial, Helvetica, sans-serif;	
+				font-family:Arial, Helvetica, sans-serif;
 				font-size:13px;
-				}				
-				
-.sportsContainr	{ 
-				width:960px; 
+				}
+
+.sportsContainr	{
+				width:960px;
 				clear:both;
 				margin:0px auto;
 				}
@@ -25,7 +26,7 @@ p				{
 				width:960px;
 				margin:0 auto;
 				position:relative;
-				
+
 }
 
 .rm_container	{
@@ -38,6 +39,7 @@ p				{
 
 .rm_container ul{
 				width:960px;
+                margin:0px;
 				}
 
 .rm_container ul li					{
@@ -51,7 +53,7 @@ p				{
 									border-width:20px 0px 0px 10px;
 									background-color:#fff;
 									}
-									
+
 .rm_container ul li img				{
 									position:absolute;
 									top:0px;
@@ -107,32 +109,32 @@ p				{
 									cursor:pointer;
 									opacity:0.7;
 									}
-									
+
 .rm_nav a:hover						{
 									opacity:1.0;
 									}
 
-.rm_nav								{ 
-									position:absolute; 
-									width:1100px; 
-									height:10px; 
-									background:none; 
-									margin:0px 0px 0px 50px; 
+.rm_nav								{
+									position:absolute;
+									width:1100px;
+									height:10px;
+									background:none;
+									margin:0px 0px 0px 50px;
 									z-index:10000;
 									}
 
 .rm_nav a.rm_next					{
-									background:transparent url(images/next.png) no-repeat top left;
+									background:transparent url(../images/next.png) no-repeat top left;
 									position:absolute;
-									height:90px; 
+									height:90px;
 									width:40px;
-									display:block; 
+									display:block;
 									margin:30px 0px 0px 910px;
 									z-index:10001;
 									}
 
 .rm_nav a.rm_prev					{
-									background:transparent url(images/prev.png) no-repeat top left;
+									background:transparent url(../images/prev.png) no-repeat top left;
 									height:90px;
 									width:40px;
 									position:absolute;
@@ -165,64 +167,64 @@ p				{
 
 .rm_controls a.rm_play				{
 									display:none;
-									background:transparent url(images/play.png) no-repeat center left;
+									background:transparent url(../images/play.png) no-repeat center left;
 									}
 
 .rm_controls a.rm_pause				{
-									background:transparent url(images/pause.png) no-repeat center left;
+									background:transparent url(../images/pause.png) no-repeat center left;
 									}
 
 .BannerOneOuter						{
-									height:85px;	
+									height:85px;
 									}
 .BannerOneInr						{
 									position:absolute;
 									width:960px;
 									margin:-85px 0px 0px 0px;
 									}
-													
-.separatorLines						{ 
-									clear:both; 
+
+.separatorLines						{
+									clear:both;
 									margin:10px 0px 10px 0px;
 									text-aling:center;
-									}				
-				
-				
-				
-				
-.hideOffers				{ 
+									}
+
+
+
+
+.hideOffers				{
 						display:none;
 						}
-						
-												
+
+
 .ppBx1					{
-						padding:20px;			
-						}						
+						padding:20px;
+						}
 .couponCodeBx1			{
-						width:300px; 
-						clear:both; 
+						width:300px;
+						clear:both;
 						margin:10px auto 10px auto;
 						padding:10px 0px 10px 0px;
 						border:1px dashed #adadad;
 						text-align:center;
 						font-family:Arial, Helvetica, sans-serif;
 						}
-						
+
 .couponCodeBx1 p		{
-						margin:0px;
+						margin:5px;
 						font-family:Arial, Helvetica, sans-serif;
 						font-size:13px;
 						color:#000;
-						}						
+						}
 
-.couponCodeBx1 h5		{ 
+.couponCodeBx1 h5		{
 						color:#c92c0d;
 						margin:0px;
-						padding:0px;
+						padding:5px;
 						font-family:Arial, Helvetica, sans-serif;
 						font-size:13px;
 						}
-												
+
 .couponCodeBx1 h1		{
 						margin:0px;
 						padding:0px;
@@ -230,182 +232,182 @@ p				{
 						color:#c92c0d;
 						font-weight:normal;
 						font-family:Arial, Helvetica, sans-serif;
-						}							
-						
-				
-				
-				
-				
-				
-.ppBx2					{
-						padding:10px 20px 10px 20px;			
-						}			
-						
-.offerTxt 				{
-						padding:0px 0px 10px 0px;	
 						}
-										
+
+
+
+
+
+
+.ppBx2					{
+						padding:10px 20px 10px 20px;
+						}
+
+.offerTxt 				{
+						padding:0px 0px 10px 0px;
+						}
+
 .offerTxt h3			{
 						margin:0px;
 						padding:0px;
 						font-size:15px;
 						font-weight:normal;
 						color:#c92c0d;
-						}				
-						
+						}
+
 .offerTxt h3 span		{
 						color:#000;
 						font-size:18px;
-						}		
+						}
 
 .dashedBrdr1			{
 						border-top:1px dashed #adadad;
-						height:1px; 
+						height:1px;
 						line-height:1px;
 						font-size:1px;
 						}
 .dashedBrdr2			{
 						border-top:1px dashed #adadad;
-						height:1px; 
+						height:1px;
 						line-height:1px;
 						font-size:1px;
 						margin-bottom:10px;
-						}					
-						
-						
-.spPopUpImgBox			{ 
-						width:165px; 
-						float:left; 
-						padding:10px 15px 10px 15px; 
+						}
+
+
+.spPopUpImgBox			{
+						width:165px;
+						float:left;
+						padding:10px 15px 10px 15px;
 						border-right:1px dashed #adadad;
 						}
 
 .spPopUpImgBox p		{
-						text-align:center;	
-						margin:0px 0px 5px 0px;		
-						}						
-						
-						
-.spPopUpImgBoxNoBrdr	{ 
-						width:165px; 
-						float:left; 
-						padding:0px 15px 20px 15px; 
-						}						
-						
+						text-align:center;
+						margin:0px 0px 5px 0px;
+						}
+
+
+.spPopUpImgBoxNoBrdr	{
+						width:165px;
+						float:left;
+						padding:0px 15px 20px 15px;
+						}
+
 .spPopUpImgBoxNoBrdr p	{
-						text-align:center;			
-						}							
-						
-						
-.spOfferProNames		{ 
-						font-size:15px; 
-						font-weight:bold;
-						line-height:17px; 
-						margin:5px 0px 0px 0px; 
-						color:#000; 
 						text-align:center;
 						}
-						
-.spProPrice				{ 
-						font-size:18px; 
-						font-weight:bold; 
-						color:#c92c0d; 
-						text-align:center; 
+
+
+.spOfferProNames		{
+						font-size:15px;
+						font-weight:bold;
+						line-height:17px;
+						margin:5px 0px 0px 0px;
+						color:#000;
+						text-align:center;
+						}
+
+.spProPrice				{
+						font-size:18px;
+						font-weight:bold;
+						color:#c92c0d;
+						text-align:center;
 						margin:3px 0px 3px 0px;
 						}
-						
-.spProDiscounts			{ 
-						font-size:13px; 
-						font-weight:bold; 
-						color:#c92c0d; 
+
+.spProDiscounts			{
+						font-size:13px;
+						font-weight:bold;
+						color:#c92c0d;
 						}
-						
-						
-						
-.spProPrice span		{ 
-						font-size:14px; 
-						color:#000; 
+
+
+
+.spProPrice span		{
+						font-size:14px;
+						color:#000;
 						font-weight:normal;
 						}
-						
+
 .spBuyNowBtnArea		{
-						width:105px; 
+						width:105px;
 						margin:0 auto;
 						clear:both;
 						padding-top:6px;
-						}				
-						
-a.spBuyNowBtn			{ 
-						padding:6px; 
-						width:90px; 
-						background:#111; 
-						color:#fff;  
-						display:block; 
-						font-size:15px; 
-						font-weight:normal; 
-						text-decoration:none; 
-						text-align:center; 
-						opacity:0.6; 
-						-webkit-transition:opacity 0.6s; 
-						-moz-transition:opacity 0.6s; 
+						}
+
+a.spBuyNowBtn			{
+						padding:6px;
+						width:90px;
+						background:#111;
+						color:#fff;
+						display:block;
+						font-size:15px;
+						font-weight:normal;
+						text-decoration:none;
+						text-align:center;
+						opacity:0.6;
+						-webkit-transition:opacity 0.6s;
+						-moz-transition:opacity 0.6s;
 						-o-transition:opacity 0.6s;
 						}
-						
-a.spBuyNowBtn:hover		{ 
-						display:block; 
-						text-decoration:none; 
-						opacity:1; 
+
+a.spBuyNowBtn:hover		{
+						display:block;
+						text-decoration:none;
+						opacity:1;
 						background:#c92c0d;
 						}
 
-.spVDashedBrdr1			{ 
-						border-top:1px dashed #adadad; 
-						width:785px; 
-						margin:0 auto; 
-						clear:both; 
-						height:20px; 
+.spVDashedBrdr1			{
+						border-top:1px dashed #adadad;
+						width:785px;
+						margin:0 auto;
+						clear:both;
+						height:20px;
 						line-height:20px;
 						}
 
-.spLeftBx				{ 
-						width:500px; 
-						float:right; 
-						padding:3px 10px 15px 0px; 
-						font-size:15px; 
-						font-weight:normal; 
-						text-align:right; 
+.spLeftBx				{
+						width:500px;
+						float:right;
+						padding:3px 10px 15px 0px;
+						font-size:15px;
+						font-weight:normal;
+						text-align:right;
 						color:#666;
 						}
-						
-.spRightBx				{ 
-						width:210px; 
-						float:right; 
-						font-size:17px; 
-						font-weight:normal; 
-						text-align:center; 
+
+.spRightBx				{
+						width:210px;
+						float:right;
+						font-size:17px;
+						font-weight:normal;
+						text-align:center;
 						margin-right:7px;
-						}						
+						}
 
 
 .cpnBx2Left				{
-						width:92px; 
+						width:92px;
 						float:left;
-						line-height:33px;	
+						line-height:33px;
 						font-size:13px;
 						color:#c92c0d;
 						font-weight:bold;
-						}				
-						
+						}
+
 .cpnBx2Mid				{
-						width:auto; 
-						float:left; 
+						width:auto;
+						float:left;
 						padding:5px 10px 3px 10px;
 						margin-bottom:10px;
 						border:1px dashed #adadad;
 						text-align:center;
 						font-family:Arial, Helvetica, sans-serif;
-						}						
-						
+						}
+
 .cpnBx2Mid h1			{
 						margin:0px;
 						padding:0px;
@@ -413,10 +415,10 @@ a.spBuyNowBtn:hover		{
 						font-weight:bold;
 						font-family:Arial, Helvetica, sans-serif;
 						color:#c92c0d;
-						}						
-						
+						}
+
 .cpnBx2Right			{
-						width:auto; 
+						width:auto;
 						float:left;
 						line-height:33px;
 						padding-left:5px;
@@ -425,10 +427,10 @@ a.spBuyNowBtn:hover		{
 
 a.sportsEmail			{
 						text-decoration:underline;
-						color:#c92c0d;	
+						color:#c92c0d;
 						}
-						
+
 a.sportsEmail:hover		{
 						text-decoration:underline;
 						color:#000;
-						}						
+						}
