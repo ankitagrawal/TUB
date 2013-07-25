@@ -261,12 +261,20 @@
                         <%--</div>--%>
                 </td>
                 <td width="70%" style="border:1px solid darkgreen; padding:3px;">
-                    <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction"
-                            event="searchOrders"
-                            target="_blank">
-                        <s:param name="orderId" value="${actionItem.shippingOrder.baseOrder.id}"/>
-                        ${actionItem.shippingOrder.baseOrder.payment.gatewayOrderId}
-                    </s:link>
+                    <div class="headingLabel">
+                        <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction"
+                                event="searchOrders"
+                                target="_blank">
+                            <s:param name="orderId" value="${actionItem.shippingOrder.baseOrder.id}"/>
+                            ${actionItem.shippingOrder.baseOrder.payment.gatewayOrderId}
+                        </s:link>
+                        <s:link beanclass="com.hk.web.action.admin.crm.OrderDetailsAction"
+                                style="float:right;background:#EEE;padding:3px;color:black;border:2px solid #AAA"
+                                target="_blank">
+                            <s:param name="gatewayOrderId"
+                                     value="${actionItem.shippingOrder.baseOrder.payment.gatewayOrderId}"/>
+                            View Details
+                        </s:link></div>
                     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                      shippingOrder="${actionItem.shippingOrder}"
                                      isActionQueue="true"/>

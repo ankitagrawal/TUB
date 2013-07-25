@@ -8,7 +8,7 @@ import com.hk.domain.inventory.StockTransferLineItem;
  */
 public interface StockTransferService {
 
-	public StockTransferLineItem updateStockTransferLineItem(Long itemId, String actionType);
+	public StockTransferLineItem updateStockTransferLineItem(StockTransferLineItem stockTransferLineItem, String actionType);
 
 }
 

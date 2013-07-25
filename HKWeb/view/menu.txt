@@ -78,7 +78,7 @@
 -/health-nutrition/dietary-supplements: Shop by Product
 --/health-nutrition/dietary-supplements/multivitamins
 --/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
---/health-nutrition/dietary-supplements/vitamins A-Z
+--/health-nutrition/dietary-supplements/vitamin-a-z
 --/health-nutrition/dietary-supplements/minerals
 --/health-nutrition/dietary-supplements/herbs
 --/health-nutrition/dietary-supplements/anti-oxidants:Anti-Oxidants
@@ -367,6 +367,7 @@
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
 -/health-devices/medical-care : Medical Care
+--/health-devices/medical-care/innovative-health-devices:Innovative Health Devices
 --/health-devices/medical-care/weighing-scales
 ---/health-devices/medical-care/weighing-scales/digital
 ---/health-devices/medical-care/weighing-scales/analog
