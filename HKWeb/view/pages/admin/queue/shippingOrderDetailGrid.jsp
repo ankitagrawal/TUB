@@ -14,6 +14,9 @@
 <%@ page import="java.util.HashSet" %>
 <%@ page import="java.util.Collection" %>
 <%@ page import="com.hk.domain.queue.ActionTask" %>
+<%@ page import="com.hk.constants.payment.EnumGateway" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationActionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -98,6 +101,12 @@
 <c:set var="BRANDTH" value="<%=VariantConfigOptionParam.BRANDTH.param()%>"/>
 <c:set var="BRANDTHBF" value="<%=VariantConfigOptionParam.BRANDTHBF.param()%>"/>
 
+<c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
+<c:set var="rewardPoints" value="<%=EnumReconciliationActionType.RewardPoints.getId()%>"/>
+<c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
+<c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
+<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+<c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
@@ -313,6 +322,14 @@
              <br>
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
+                <c:if test="${hk:collectionContains(reconciliationModes, shippingOrder.baseOrder.payment.paymentMode.id)
+                                                    and shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess}">
+                    <br/>
+                    Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
+                    <br/>
+                    <c:if test="${hk:collectionContains(refundEnabledGatedways, shippingOrder.baseOrder.payment.gateway.id)}">
+                        Refund Payment: <s:radio value="${refundPoints}" name="reconciliationType"/> </c:if>
+                </c:if>
                 <div class="buttons">
                    <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO"/>
                 </div>
@@ -632,6 +649,12 @@
                                 ${actionItem.currentActionTask.name}
                             </c:if>
                         </c:if>
+                        <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
+                        <span>
+                      <c:forEach items="${shippingOrder.purchaseOrders}" var="po">
+                     PO# <a href="${pageContext.request.contextPath}/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${po.id}" target="_blank">${po.id}</a>
+                      </c:forEach>
+                      </span></c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>

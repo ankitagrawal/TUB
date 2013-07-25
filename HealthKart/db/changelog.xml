@@ -13589,4 +13589,57 @@
         <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" defaultNullValue="0.0" tableName="sku_group"/>
     </changeSet>
     
+    <changeSet author="Nihal (generated)" id="1372681593125-1">
+		<createTable tableName="purchase_order_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-2">
+        <createTable tableName="shipping_order_has_purchase_order">
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-4">
+        <addColumn tableName="purchase_order">
+            <column name="purchase_order_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-5">
+        <addPrimaryKey columnNames="shipping_order_id, purchase_order_id" tableName="shipping_order_has_purchase_order"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-12">
+        <addForeignKeyConstraint baseColumnNames="purchase_order_type_id" baseTableName="purchase_order" constraintName="fk_purchase_order_purchase_order_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-15">
+        <addForeignKeyConstraint baseColumnNames="purchase_order_id" baseTableName="shipping_order_has_purchase_order" constraintName="fk_shipping_order_has_purchase_order_purchase_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-16">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipping_order_has_purchase_order" constraintName="fk_shipping_order_has_purchase_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1372681593125-18">
+        <addColumn tableName="po_line_item">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130724-1">
+        <addColumn tableName="payment">
+            <column name="refund_amount" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130724-2">
+        <modifyDataType columnName="value" newDataType="DOUBLE" tableName="reward_point"/>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130724-3">
+        <modifyDataType columnName="value" newDataType="DOUBLE" tableName="reward_point_txn"/>
+    </changeSet>
 </databaseChangeLog>
