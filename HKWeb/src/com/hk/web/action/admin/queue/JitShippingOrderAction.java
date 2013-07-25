@@ -68,27 +68,28 @@ public class JitShippingOrderAction extends BaseAction {
 	private List<LineItem> jitLineItems = new ArrayList<LineItem>();
 	private HashMap<Supplier, List<LineItem>> supplierLineItemListMap = new HashMap<Supplier, List<LineItem>>();
 	private List<PurchaseOrder> purchaseOrders;
-
+	
 	@DefaultHandler
 	public synchronized Resolution pre() {
 		logger.debug("Calling JitShippingOrderAction");
-		boolean filterJit = true;
-		List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
-		if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
-			List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
-			Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
-			List<PurchaseOrder> purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
-			if(purchaseOrders.size()>0){
-			addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()+" Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+		synchronized (JitShippingOrderAction.class) {
+			boolean filterJit = true;
+			List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
+			if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
+				List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
+				Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
+				List<PurchaseOrder> purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
+				if(purchaseOrders.size()>0){
+				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()+" Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+				}
+				else{
+				addRedirectAlertMessage(new SimpleMessage("(0) Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+				}
+				return new RedirectResolution(ActionAwaitingQueueAction.class);
 			}
-			else{
-			addRedirectAlertMessage(new SimpleMessage("(0) Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
-			}
+			addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
 			return new RedirectResolution(ActionAwaitingQueueAction.class);
 		}
-		addRedirectAlertMessage(new SimpleMessage("No Po Created Against This Action"));
-		return new RedirectResolution(ActionAwaitingQueueAction.class);
-
 	}
 
 	public Resolution jitPoActionForBright() {
