@@ -49,7 +49,6 @@
 
         <c:forEach  items="${cpa.hkPaymentResponseList}" var="response">
             Gateway Order Id --> ${response.gatewayOrderId}  <br/>
-            Gateway Reference Id --> ${response.gatewayReferenceId} <br/>
             Transaction Type --> ${response.transactionType}<br/>
             Amount --> ${response.amount} <br/>
             Payment Status --> ${response.HKPaymentStatus.name}<br/>
@@ -65,7 +64,6 @@
 
         <c:if test="${not empty cpa.payment}">
             Gateway Order Id --> ${cpa.payment.gatewayOrderId}  <br/>
-            Gateway Reference Id --> ${cpa.payment.gatewayReferenceId} <br/>
             Transaction Type --> ${cpa.payment.transactionType}<br/>
             Amount --> ${cpa.payment.amount} <br/>
             Payment Status --> ${cpa.payment.paymentStatus.name}<br/>
@@ -83,7 +81,6 @@
                 For : ${content.key}  <br/>
                 <c:forEach items="${content.value}" var="response">
                     Gateway Order Id --> ${response.gatewayOrderId}  <br/>
-                    Gateway Reference Id --> ${response.gatewayReferenceId} <br/>
                     Transaction Type --> ${response.transactionType}<br/>
                     Amount --> ${response.amount} <br/>
                     Payment Status --> ${response.HKPaymentStatus.name}<br/>
