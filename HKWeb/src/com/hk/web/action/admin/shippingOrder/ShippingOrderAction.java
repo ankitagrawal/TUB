@@ -12,6 +12,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
@@ -120,19 +121,30 @@ public class ShippingOrderAction extends BaseAction {
         if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getOrderStatus().getId())) {
             if (paymentService.isValidReconciliation(shippingOrder.getBaseOrder().getPayment()) && reconciliationType != null) {
                 if (shippingOrder.getAmount() > 0) {
-                    boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
-                    if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType) && flag) {
-                        shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
-                        addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
-                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && flag) {
-                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.AmountRefundedOrderCancel);
-                        addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
-                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && !flag){
-                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountFailed);
-                        addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
-                    } else {
+                    Map<Long,Object> reconMap = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
+
+                    if(reconMap.get(reconciliationType) == null) {
                         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountExceedsFailed);
                         addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
+                    } else {
+                        if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
+                            if ((Boolean)reconMap.get(reconciliationType)) {
+                                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
+                                addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
+                            }
+                        } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
+                            PaymentStatus paymentStatus = (PaymentStatus) reconMap.get(reconciliationType);
+                            if(EnumPaymentStatus.REFUNDED.getId().equals(paymentStatus.getId())) {
+                                shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.AmountRefundedOrderCancel);
+                                addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
+                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(paymentStatus.getId())) {
+                                shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RefundAmountFailed);
+                                addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user, Please contact tech support"));
+                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(paymentStatus.getId())) {
+                                shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RefundAmountInProcess);
+                                addRedirectAlertMessage(new SimpleMessage("Refund is in process, Please contact tech support"));
+                            }
+                        }
                     }
                 }
             }

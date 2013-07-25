@@ -449,7 +449,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public boolean reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) {
+    public Map<Long,Object> reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) {
+        Map<Long,Object> reconMap = new HashMap<Long,Object>();
         User loggedOnUser =  userService.getLoggedInUser();
         if (isValidRefundableAmount(order.getPayment(), amount)) {
             if(EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
@@ -459,22 +460,29 @@ public class PaymentServiceImpl implements PaymentService {
 
                 rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(12).toDate());
                 setRefundAmount(order.getPayment(), amount);
-                return true;
+                reconMap.put(reconciliationType,true);
+                //return true;
+                return reconMap;
 
             } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
                 try {
                     Payment payment = refundPayment(order.getPayment().getGatewayOrderId(), amount);
-                    return EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId());
+                    reconMap.put(reconciliationType,payment.getPaymentStatus());
+                    return reconMap;
                 } catch (HealthkartPaymentGatewayException e) {
                    logger.debug("HealthKart Payment Gateway Exception occurred during reconciliation",e);
-                   return false;
+                   reconMap.put(reconciliationType,EnumPaymentStatus.REFUND_FAILURE.asPaymenStatus());
+                   return reconMap;
                 } catch (Exception e) {
                     logger.debug("Exception occurred during reconciliation",e);
-                    return false;
+                    reconMap.put(reconciliationType,EnumPaymentStatus.REFUND_FAILURE.asPaymenStatus());
+                    return reconMap;
                 }
             }
+        } else {
+            reconMap.put(reconciliationType, null);
         }
-        return false;
+        return reconMap;
     }
 
     @Override
