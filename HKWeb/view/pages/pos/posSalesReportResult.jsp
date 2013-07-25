@@ -56,12 +56,12 @@
         <c:forEach items="${sale.order.shippingOrders}" var="saleOrder">
           <td>${saleOrder.shippingOrderStatus.name} </td>
         </c:forEach>
-        <td>${sale.order.amount}</td>
+        <td><fmt:formatNumber value="${sale.order.amountt}" maxFractionDigits="2"/></td>
         <c:forEach items="${sale.order.payments}" var="payment">
           <td>${payment.paymentMode.name} </td>
         </c:forEach>
         <td>${fn:length(sale.order.cartLineItems)}</td>
-        <td>${sale.discount}</td>
+        <td><fmt:formatNumber value="${sale.discount}" maxFractionDigits="2"/></td>
         <td>${sale.order.rewardPointsUsed}</td>
       </tr>
 

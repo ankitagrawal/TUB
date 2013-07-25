@@ -34,10 +34,10 @@
         <td>${fn:length(returnItem.reverseLineItems)}</td>
         <td><c:forEach items="${returnItem.reverseLineItems}" var="reverseItem">
           <table>
-	          <tr>
-		          <td>${reverseItem.referredLineItem.cartLineItem.productVariant.id}</td>
-		          <td>${reverseItem.referredLineItem.cartLineItem.productVariant.product.name}</td>
-	          </tr>
+            <tr>
+              <td>${reverseItem.referredLineItem.cartLineItem.productVariant.id}</td>
+              <td>${reverseItem.referredLineItem.cartLineItem.productVariant.product.name}</td>
+            </tr>
           </table>
         </c:forEach></td>
       </tr>
