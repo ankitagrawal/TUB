@@ -1,14 +1,19 @@
 package com.hk.impl.service.payment;
 
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.payment.*;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.ProductVariantPaymentType;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.SMSManager;
@@ -16,16 +21,20 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pojo.HkPaymentResponse;
 import com.hk.service.ServiceLocatorFactory;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.*;
 
@@ -45,6 +54,10 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentDao       paymentDao;
 	@Autowired
 	SMSManager smsManager;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RewardPointService rewardPointService;
 
 
     public List<Payment> listByOrderId(Long orderId) {
@@ -320,6 +333,17 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setAuthIdCode(authIdCode);
             payment.setResponseMessage(respMsg);
             payment.setPaymentStatus(EnumPaymentStatus.REFUNDED.asPaymenStatus());
+            Payment parent = payment.getParent();
+            if(parent != null && payment.getAmount() != null){
+                double refundAmount;
+                if (parent.getRefundAmount() != null) {
+                    refundAmount = parent.getRefundAmount() + payment.getAmount();
+                } else {
+                    refundAmount = payment.getAmount();
+                }
+                parent.setRefundAmount(refundAmount);
+                save(parent);
+            }
             save(payment);
         }
     }
@@ -332,7 +356,7 @@ public class PaymentServiceImpl implements PaymentService {
     private void error(String gatewayOrderId, String errorLog){
         Payment payment = findByGatewayOrderId(gatewayOrderId);
         if(payment != null){
-            payment.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+            payment.setPaymentStatus(EnumPaymentStatus.REFUND_FAILURE.asPaymenStatus());
             payment.setErrorLog(errorLog);
             save(payment);
         }
@@ -386,6 +410,87 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentFamilyList;
     }
 
+    /*@Override
+    public boolean isRefundAmountValid(String gatewayOrderId, Double amount) {
+        Payment payment = findByGatewayOrderId(gatewayOrderId);
+        if (payment != null && payment.getAmount() != null) {
+            double remainAmt = -1;
+            if (payment.getRefundAmount() != null) {
+                remainAmt = payment.getAmount() - (payment.getRefundAmount() + amount);
+            } else {
+                remainAmt = payment.getAmount() - amount;
+            }
+            if (remainAmt >= 0f) {
+                return true;
+            }
+        }
+        return false;
+    }*/
+
+    @Override
+    public boolean isValidRefundableAmount(Payment payment, Double orderAmt) {
+        double refundedAmount = 0;
+        if (payment.getRefundAmount() != null) {
+            refundedAmount = payment.getRefundAmount();
+        }
+        return ((payment.getAmount() - refundedAmount - orderAmt) >= 0);
+    }
+
+
+    @Transactional
+    private void setRefundAmount(Payment payment, Double amount) {
+        double refundPayment = 0;
+        if (payment.getRefundAmount() != null) {
+            refundPayment = payment.getRefundAmount();
+        }
+        Double updatedAmount = refundPayment + amount;
+        payment.setRefundAmount(updatedAmount);
+        save(payment);
+    }
+
+    @Override
+    public boolean reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) {
+        User loggedOnUser =  userService.getLoggedInUser();
+        if (isValidRefundableAmount(order.getPayment(), amount)) {
+            if(EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
+
+                RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(order.getUser(),loggedOnUser,
+                        order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+                rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(12).toDate());
+                setRefundAmount(order.getPayment(), amount);
+                return true;
+
+            } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
+                try {
+                    Payment payment = refundPayment(order.getPayment().getGatewayOrderId(), amount);
+                    return EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId());
+                } catch (HealthkartPaymentGatewayException e) {
+                   logger.debug("HealthKart Payment Gateway Exception occurred during reconciliation",e);
+                   return false;
+                } catch (Exception e) {
+                    logger.debug("Exception occurred during reconciliation",e);
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isValidReconciliation(Payment payment) {
+        return EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId());
+
+    }
+
+    @Override
+    public double getRefundableAmount(Payment payment) {
+        double refundedAmount = 0;
+        if(payment.getRefundAmount() != null) {
+            refundedAmount = payment.getRefundAmount();
+        }
+        return payment.getAmount() - refundedAmount;
+    }
 
     private List<Map<String, Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) {
         List<Map<String, Object>> requestRespList = new ArrayList<Map<String, Object>>();
@@ -572,12 +677,12 @@ public class PaymentServiceImpl implements PaymentService {
         return orderService;
     }
 
-    public PaymentManager getPaymentManager() {
-        return ServiceLocatorFactory.getBean(PaymentManager.class);
-    }
-
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    public PaymentManager getPaymentManager() {
+        return ServiceLocatorFactory.getBean(PaymentManager.class);
     }
 
     public PaymentDao getPaymentDao() {

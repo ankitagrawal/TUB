@@ -3,6 +3,9 @@ package com.hk.web.action.admin.reward;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.hk.constants.discount.RewardPointConstants;
+import com.hk.domain.order.Order;
+import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -42,6 +45,9 @@ public class AddRewardPointAction extends BaseAction {
     @Autowired
     private RewardPointService rewardPointService;
 
+    @Autowired
+    private OrderService orderService;
+
     @Validate(required = true, on = "add")
     private Double             value;
 
@@ -56,6 +62,9 @@ public class AddRewardPointAction extends BaseAction {
 
     @Validate(required = true, on = "add")
     private Date               expiryDate;
+
+    @Validate(required = true, on = "add")
+    private Long orderId;
 
     @DefaultHandler
     public Resolution pre() {
@@ -73,7 +82,11 @@ public class AddRewardPointAction extends BaseAction {
         }
         RewardPoint rewardPoint = new RewardPoint();
         try {
-            rewardPoint = rewardPointDao.addRewardPoints(user, referredUser, null, value, comment, EnumRewardPointStatus.APPROVED, rewardPointMode);
+            Order order = orderService.find(orderId);
+            if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
+                throw new InvalidRewardPointsException(value);
+            }
+            rewardPoint = rewardPointDao.addRewardPoints(user, referredUser, order, value, comment, EnumRewardPointStatus.APPROVED, rewardPointMode);
         } catch (InvalidRewardPointsException e) {
             logger.error("Reward point cannot be added", e);
             rewardPointsAdded = false;
@@ -132,4 +145,11 @@ public class AddRewardPointAction extends BaseAction {
         return rewardPointService;
     }
 
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 }

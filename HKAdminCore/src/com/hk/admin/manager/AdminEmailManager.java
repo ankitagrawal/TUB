@@ -146,8 +146,7 @@ public class AdminEmailManager {
     PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
 
 
-    private File  pdfFile;
-    private File  xlsFile;
+
     private PurchaseOrderDto purchaseOrderDto;
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
@@ -1110,65 +1109,64 @@ public class AdminEmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
     }
 
-    public boolean sendPOMailToSupplier(PurchaseOrder purchaseOrder, String supplierEmail) {
-    	//TODO
-    	HashMap valuesMap = new HashMap();
-    	String warehouseName = "" , warehouseAddress = "";
-    	DateTime dt = new DateTime();
+	public boolean sendPOMailToSupplier(PurchaseOrder purchaseOrder, String supplierEmail) {
+		//TODO
+		HashMap valuesMap = new HashMap();
+		String warehouseName = "", warehouseAddress = "";
+		DateTime dt = new DateTime();
 		LocalDate ld = dt.toLocalDate();
-		String date = ld.getDayOfMonth()+"-"+ld.getMonthOfYear()+"-"+ld.getYear();;
-        valuesMap.put("purchaseOrder", purchaseOrder);
-        valuesMap.put("date", date);
-        if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
-        	warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
-        	warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
-        }
-        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())){
-        	warehouseName = "Bright Lifecare Private Limited, Mumbai Warehouse";
-        	warehouseAddress = "Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
-        }
-        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Punjabi_Bagh_Aqua_Store.getName())){
-        	warehouseName = "Aquamarine Healthcare Private Limited, Delhi Punjabi Bagh Warehouse";
-        	warehouseAddress = "Shop No 15, Ground Floor, North west Avenue, Club road, Punjabi Bagh Extn, Delhi- 110026, Delhi";
-        }
-        else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Kapashera_Bright_Warehouse.getName())){
-        	warehouseName = "Bright Lifecare Private Limited, Delhi Kapashera Warehouse";
-        	warehouseAddress = "2nd Floor, Safexpress Cargo Complex , 971/1, Opposite Fun and Food Village, Kapashera, New Delhi, Delhi- 110037, Delhi";
-        }
-        valuesMap.put("warehouseName", warehouseName);
-        valuesMap.put("warehouseAddress", warehouseAddress);
-        
-        String fromPurchaseEmail = "purchase@healthkart.com";
-        Set<String> categoryAdmins = new HashSet<String>();
-        if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
-            Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
-            categoryAdmins = emailManager.categoryAdmins(category);
-        }
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        //categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
-        try {
-        	String purchaseOrdertype = "";
-        	if(purchaseOrder.getPurchaseOrderType()!=null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.JIT.getId())){
-        		purchaseOrdertype= "JIT";
-        	}
-        	else if(purchaseOrder.getPurchaseOrderType()!= null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.DROP_SHIP.getId())){
-        		purchaseOrdertype = "DS";
-        	}
-            pdfFile = new File(adminDownloads + "/reports/PO-"+purchaseOrder.getId() +purchaseOrdertype+"-"+" -Dt- "+date+ ".pdf");
-            pdfFile.getParentFile().mkdirs();
-            purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
-            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
-            
-            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +purchaseOrdertype+"-"+ purchaseOrder.getId() +" -Dt- "+date+ ".xls");
-            xlsFile.getParentFile().mkdirs();
-            xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
-        } catch (Exception e) {
-            e.printStackTrace(); 
-        }
-        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+		String date = ld.getDayOfMonth() + "-" + ld.getMonthOfYear() + "-" + ld.getYear();
+		valuesMap.put("purchaseOrder", purchaseOrder);
+		valuesMap.put("date", date);
+		if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())) {
+			warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
+			warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
+		} else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())) {
+			warehouseName = "Bright Lifecare Private Limited, Mumbai Warehouse";
+			warehouseAddress = "Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
+		} else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Punjabi_Bagh_Aqua_Store.getName())) {
+			warehouseName = "Aquamarine Healthcare Private Limited, Delhi Punjabi Bagh Warehouse";
+			warehouseAddress = "Shop No 15, Ground Floor, North west Avenue, Club road, Punjabi Bagh Extn, Delhi- 110026, Delhi";
+		} else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Kapashera_Bright_Warehouse.getName())) {
+			warehouseName = "Bright Lifecare Private Limited, Delhi Kapashera Warehouse";
+			warehouseAddress = "2nd Floor, Safexpress Cargo Complex , 971/1, Opposite Fun and Food Village, Kapashera, New Delhi, Delhi- 110037, Delhi";
+		}
+		valuesMap.put("warehouseName", warehouseName);
+		valuesMap.put("warehouseAddress", warehouseAddress);
+
+		String fromPurchaseEmail = "purchase@healthkart.com";
+		Set<String> categoryAdmins = new HashSet<String>();
+		if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+			Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+			categoryAdmins = emailManager.categoryAdmins(category);
+		}
+		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
+		//categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
+		File pdfFile = null;
+		File xlsFile = null;
+		try {
+			String purchaseOrdertype = "";
+			if (purchaseOrder.getPurchaseOrderType() != null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.JIT.getId())) {
+				purchaseOrdertype = "JIT";
+			} else if (purchaseOrder.getPurchaseOrderType() != null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.DROP_SHIP.getId())) {
+				purchaseOrdertype = "DS";
+			}
+			pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + purchaseOrdertype + "-" + " -Dt- " + date + ".pdf");
+			pdfFile.getParentFile().mkdirs();
+			purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
+			getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
+
+			xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + purchaseOrdertype + "-" + purchaseOrder.getId() + " -Dt- " + date + ".xls");
+			xlsFile.getParentFile().mkdirs();
+			xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
 	}
-    
-    public boolean sendDebitNoteMail(DebitNote debitNote){
+
+
+	public boolean sendDebitNoteMail(DebitNote debitNote){
     	HashMap valuesMap = new HashMap();
     	valuesMap.put("debitNote", debitNote);
     	return false;
