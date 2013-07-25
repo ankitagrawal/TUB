@@ -210,6 +210,10 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         }
         return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
     }
+    
+    public SkuItemLineItem getBySkuItemId(Long skuItemId){
+    	return null;
+    }
 
     
 }

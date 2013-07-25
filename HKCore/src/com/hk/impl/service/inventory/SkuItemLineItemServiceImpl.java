@@ -185,6 +185,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+    
+    public SkuItemLineItem getBySkuItemId(Long skuItemId){
+    	return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);
+    }
 
     public SkuItemLineItemDao getSkuItemLineItemDao() {
         return skuItemLineItemDao;

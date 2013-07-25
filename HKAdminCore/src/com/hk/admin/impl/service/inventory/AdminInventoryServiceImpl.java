@@ -416,6 +416,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
             logger.debug("Checking Out SkuItem - "+skuItem.getId()+" at Checkout");
             
         } else {
+        	//If item has been booked by other orders
+        	SkuItem item = baseDao.find
+        	
+        	
+        	
             //If skuItem is booked
             if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId()) || skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
                 SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);

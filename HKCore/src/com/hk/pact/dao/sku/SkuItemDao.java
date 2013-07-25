@@ -32,6 +32,8 @@ public interface SkuItemDao extends BaseDao {
     public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner);
 
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner);
+    
+    public SkuItemLineItem getBySkuItemId(Long skuItemId);
 
 
 }
