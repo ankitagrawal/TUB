@@ -1148,10 +1148,10 @@ public class AdminEmailManager {
         //categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
         try {
         	String purchaseOrdertype = "";
-        	if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.JIT.asEnumPurchaseOrderType())){
+        	if(purchaseOrder.getPurchaseOrderType()!=null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.JIT.getId())){
         		purchaseOrdertype= "JIT";
         	}
-        	else if(purchaseOrder.getPurchaseOrderType().equals(EnumPurchaseOrderType.DROP_SHIP.asEnumPurchaseOrderType())){
+        	else if(purchaseOrder.getPurchaseOrderType()!= null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.DROP_SHIP.getId())){
         		purchaseOrdertype = "DS";
         	}
             pdfFile = new File(adminDownloads + "/reports/PO-"+purchaseOrder.getId() +purchaseOrdertype+"-"+" -Dt- "+date+ ".pdf");
