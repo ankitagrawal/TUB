@@ -1093,11 +1093,11 @@ public class AdminEmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
         //Mail to Ajeet if anyone  approves PO  other than Sachin Hans
-        User user = userService.getLoggedInUser();
+        User user = purchaseOrder.getApprovedBy();
         Role poApproverRole = RoleCache.getInstance().getRoleByName(EnumRole.PO_APPROVER).getRole();
         List<User> approverUserList = userService.findByRole(poApproverRole);
         if (user != null) {
-            if (!(approverUserList.contains(user))) {
+            if (!(approverUserList.contains(user) && !user.equals(userService.getAdminUser()))) {
                 HashMap valuesMapAt = new HashMap();
                 valuesMapAt.put("purchaseOrder", purchaseOrder);
                 valuesMapAt.put("user", user);
