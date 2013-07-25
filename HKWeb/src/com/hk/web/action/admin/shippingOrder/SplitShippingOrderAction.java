@@ -14,7 +14,6 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -22,7 +21,8 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.pact.service.splitter.ShippingOrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -34,8 +34,7 @@ public class SplitShippingOrderAction extends BaseAction {
     private ShippingOrder shippingOrder;
     private List<LineItem> lineItems;
 
-    @Autowired
-    ShippingOrderSplitter shippingOrderSplitter;
+    ShippingOrderProcessor shippingOrderProcessor;
 
     @DontValidate
     @DefaultHandler
@@ -55,7 +54,7 @@ public class SplitShippingOrderAction extends BaseAction {
                 selectedLineItems.add(lineItem);
             }
         }
-    	boolean orderSplitSuccess = shippingOrderSplitter.autoSplitSO(shippingOrder, selectedLineItems, messages);
+    	boolean orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems, messages);
     	
     	if(orderSplitSuccess) {
     		addRedirectAlertMessage(new SimpleMessage(messages.get(0)));
@@ -85,17 +84,13 @@ public class SplitShippingOrderAction extends BaseAction {
     }
 
 	/**
-	 * @return the shippingOrderSplitter
+	 * @return the shippingOrderProcessor
 	 */
-	public ShippingOrderSplitter getShippingOrderSplitter() {
-		return shippingOrderSplitter;
-	}
-
-	/**
-	 * @param shippingOrderSplitter the shippingOrderSplitter to set
-	 */
-	public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
-		this.shippingOrderSplitter = shippingOrderSplitter;
+	public ShippingOrderProcessor getShippingOrderProcessor() {
+		if (shippingOrderProcessor == null) {
+            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+        }
+        return shippingOrderProcessor;
 	}
 
 }

@@ -42,7 +42,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.splitter.ShippingOrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.util.HKDateUtil;
 import com.hk.util.SOFirewall;
 
@@ -50,9 +50,9 @@ import com.hk.util.SOFirewall;
  * @author Ankit Chhabra
  *
  */
-public class ShippingOrderSplitterImpl implements ShippingOrderSplitter {
+public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
-	private Logger						logger = LoggerFactory.getLogger(ShippingOrderSplitter.class);
+	private Logger						logger = LoggerFactory.getLogger(ShippingOrderProcessor.class);
 
 	@Autowired
 	private UserService					userService;

@@ -41,7 +41,8 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.splitter.ShippingOrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**
@@ -92,8 +93,7 @@ public class ShipmentResolutionAction extends BaseAction {
     @Autowired
     OrderService orderService;
     
-    @Autowired
-    ShippingOrderSplitter shippingOrderSplitter;
+    ShippingOrderProcessor shippingOrderProcessor;
 
     @DefaultHandler
     public Resolution pre() {
@@ -127,7 +127,7 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution resolveCase(){
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,"Case Resolved");
-        shippingOrderSplitter.autoEscalateShippingOrder(shippingOrder, false);
+        shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, false);
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 
@@ -325,17 +325,13 @@ public class ShipmentResolutionAction extends BaseAction {
         this.newAwbNumber = newAwbNumber;
     }
 
-	/**
-	 * @return the shippingOrderSplitter
+    /**
+	 * @return the shippingOrderProcessor
 	 */
-	public ShippingOrderSplitter getShippingOrderSplitter() {
-		return shippingOrderSplitter;
-	}
-
-	/**
-	 * @param shippingOrderSplitter the shippingOrderSplitter to set
-	 */
-	public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
-		this.shippingOrderSplitter = shippingOrderSplitter;
+	public ShippingOrderProcessor getShippingOrderProcessor() {
+		if (shippingOrderProcessor == null) {
+            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+        }
+        return shippingOrderProcessor;
 	}
 }

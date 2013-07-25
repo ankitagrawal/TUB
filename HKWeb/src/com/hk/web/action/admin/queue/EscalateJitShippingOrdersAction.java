@@ -36,7 +36,8 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.pact.service.splitter.ShippingOrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 
 @Component
 public class EscalateJitShippingOrdersAction extends BaseAction {
@@ -55,8 +56,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	ShippingOrderSplitter shippingOrderSplitter;
+	ShippingOrderProcessor shippingOrderProcessor;
 
 	List<ShippingOrder> sortedShippingOrderList;
 
@@ -106,7 +106,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				flag = false;
 			}
 			if (flag) {
-				shippingOrder = shippingOrderSplitter.manualEscalateShippingOrder(shippingOrder);
+				shippingOrder = shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
 				ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
 				shippingOrderLifecycle.setOrder(shippingOrder);
 				shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
@@ -171,17 +171,13 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	}
 
 	/**
-	 * @return the shippingOrderSplitter
+	 * @return the shippingOrderProcessor
 	 */
-	public ShippingOrderSplitter getShippingOrderSplitter() {
-		return shippingOrderSplitter;
-	}
-
-	/**
-	 * @param shippingOrderSplitter the shippingOrderSplitter to set
-	 */
-	public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
-		this.shippingOrderSplitter = shippingOrderSplitter;
+	public ShippingOrderProcessor getShippingOrderSplitter() {
+		if (this.shippingOrderProcessor == null) {
+            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+        }
+		return this.shippingOrderProcessor;
 	}
 
 }

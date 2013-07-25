@@ -55,9 +55,10 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.splitter.OrderSplitter;
-import com.hk.pact.service.splitter.ShippingOrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import org.hibernate.criterion.DetachedCriteria;
@@ -117,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired OrderSplitter orderSplitter;
     
-    @Autowired ShippingOrderSplitter shippingOrderSplitter;
+    ShippingOrderProcessor shippingOrderProcessor;
 
     @Transactional
     public Order save(Order order) {
@@ -682,7 +683,7 @@ public class OrderServiceImpl implements OrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                	shippingOrderSplitter.autoEscalateShippingOrder(shippingOrder, true);
+                	shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, true);
                 }
             }
 
@@ -750,18 +751,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * @return the shippingOrderSplitter
+	 * @return the shippingOrderProcessor
 	 */
-	public ShippingOrderSplitter getShippingOrderSplitter() {
-		return shippingOrderSplitter;
+	public ShippingOrderProcessor getShippingOrderProcessor() {
+		if (shippingOrderProcessor == null) {
+            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+        }
+        return shippingOrderProcessor;
 	}
-
-	/**
-	 * @param shippingOrderSplitter the shippingOrderSplitter to set
-	 */
-	public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
-		this.shippingOrderSplitter = shippingOrderSplitter;
-	}
-
 
 }

@@ -53,7 +53,8 @@ import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.splitter.ShippingOrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -94,8 +95,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     BucketService bucketService;
 
-    @Autowired
-    ShippingOrderSplitter shippingOrderSplitter;
+    ShippingOrderProcessor shippingOrderProcessor;
     
     private Long orderId;
     private Long shippingOrderId;
@@ -314,7 +314,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     public Resolution escalate() {
         if (!shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
-            	shippingOrderSplitter.manualEscalateShippingOrder(shippingOrder);
+            	shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
@@ -655,16 +655,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     }
 
 	/**
-	 * @return the shippingOrderSplitter
+	 * @return the shippingOrderProcessor
 	 */
-	public ShippingOrderSplitter getShippingOrderSplitter() {
-		return shippingOrderSplitter;
+	public ShippingOrderProcessor getShippingOrderProcessor() {
+		if (shippingOrderProcessor == null) {
+            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+        }
+        return shippingOrderProcessor;
 	}
 
-	/**
-	 * @param shippingOrderSplitter the shippingOrderSplitter to set
-	 */
-	public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
-		this.shippingOrderSplitter = shippingOrderSplitter;
-	}
 }

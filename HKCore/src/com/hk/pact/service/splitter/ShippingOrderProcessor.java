@@ -13,7 +13,7 @@ import com.hk.domain.shippingOrder.LineItem;
  * @author Ankit Chhabra
  *
  */
-public interface ShippingOrderSplitter {
+public interface ShippingOrderProcessor {
 
 
     public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall);
