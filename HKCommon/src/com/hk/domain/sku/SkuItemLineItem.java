@@ -42,7 +42,7 @@ public class SkuItemLineItem implements java.io.Serializable {
 
 
     @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_item_cart_line_item_id", nullable = false)
     private SkuItemCLI skuItemCLI;
 
