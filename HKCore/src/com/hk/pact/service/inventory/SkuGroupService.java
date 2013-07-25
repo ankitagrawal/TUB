@@ -53,9 +53,13 @@ public interface SkuGroupService {
 
     public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
 
+    public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList);
+
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
 
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList);
 
     public SkuItem saveSkuItem(SkuItem skuItem);
 

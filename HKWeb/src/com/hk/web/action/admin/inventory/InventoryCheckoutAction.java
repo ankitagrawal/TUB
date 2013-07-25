@@ -21,6 +21,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.OrderManager;
@@ -298,15 +299,19 @@ public class InventoryCheckoutAction extends BaseAction {
 
                         if (Math.abs(checkedOutItemCount) < lineItem.getQty() && (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId()) ||shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()) )) {
                             SkuItem skuItem;
+                            List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+                            skuItemStatusList.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                            skuItemStatusList.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                            skuItemStatusList.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
                             if (skuItemBarcode != null) {
                               //skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
-                                skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+                                skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList);
                                  if (skuItem == null){
                                      addRedirectAlertMessage(new SimpleMessage("You are doing something wrong, Please scan properly with barcode"));
                                      return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
                                  }
                             } else {
-                                skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                                skuItem = skuGroupService.getSkuItem(skuGroup, skuItemStatusList);
                             }
                             if (skuItem != null) {
                                  // Mrp check --starts

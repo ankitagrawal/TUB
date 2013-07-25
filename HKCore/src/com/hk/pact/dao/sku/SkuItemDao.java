@@ -17,7 +17,11 @@ public interface SkuItemDao extends BaseDao {
 
     public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
 
+    public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
+
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList);
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku);
     
