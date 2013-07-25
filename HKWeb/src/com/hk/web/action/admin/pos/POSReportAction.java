@@ -39,7 +39,7 @@ public class POSReportAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		return new ForwardResolution("/pages/pos/posSalesReportResult.jsp");
+		return new ForwardResolution("/pages/pos/posReport.jsp");
 	}
 
 	public Resolution generateSalesReportByDate() {
