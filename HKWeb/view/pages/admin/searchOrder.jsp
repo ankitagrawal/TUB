@@ -7,6 +7,8 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.payment.EnumGateway" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationActionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -170,6 +172,12 @@
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
 <c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
+<c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
+<c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
+<c:set var="rewardPoints" value="<%=EnumReconciliationActionType.RewardPoints.getId()%>"/>
+<c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
+<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+<c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
@@ -292,7 +300,7 @@
     </s:link>
   </c:if>
   <br/>
-  <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart)}">
+  <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart) and (hk:isBOCancelable(order.id))}">
     <br/>
     <s:form beanclass="com.hk.web.action.admin.order.CancelOrderAction" class="cancelOrderForm">
       <s:param name="order" value="${order.id}"/>
@@ -304,6 +312,14 @@
       <br/>
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
+      <c:if test="${hk:collectionContains(reconciliationModes, order.payment.paymentMode.id)
+                                                and order.payment.paymentStatus.id eq paymentStatusSuccess}">
+      <br/>
+      Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
+      <br/>
+      <c:if test="${hk:collectionContains(refundEnabledGatedways, order.payment.gateway.id)}">
+      Refund Payment: <s:radio  value="${refundPoints}" name="reconciliationType" /></c:if>
+      </c:if>
       <div class="buttons">
         <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
       </div>
@@ -324,6 +340,7 @@
           }
         }
       }
+
     </script>
 
   </c:if>
