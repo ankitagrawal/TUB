@@ -131,6 +131,8 @@ p				{
 									display:block;
 									margin:30px 0px 0px 910px;
 									z-index:10001;
+                                    outline:none;
+                                    border:none;
 									}
 
 .rm_nav a.rm_prev					{
@@ -141,6 +143,8 @@ p				{
 									display:block;
 									margin:30px 0px 0px -100px;
 									z-index:10002;
+                                    outline:none;
+                                    border:none;
 									}
 
 .rm_controls						{
