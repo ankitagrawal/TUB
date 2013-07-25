@@ -23,10 +23,10 @@ import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.admin.pact.service.inventory.StockTransferService;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumStockTransferStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.sku.Sku;
@@ -40,13 +40,18 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.log4j.Logger;
+import org.jsoup.helper.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
 
 public class StockTransferAction extends BasePaginatedAction {
 
     private static Logger logger = Logger.getLogger(StockTransferAction.class);
-    private static final String ADD_STOCK_TRANSFER_LINE_ITEM = "add";
-    private static final String REVERT_STOCK_TRANSFER_LINE_ITEM = "revert";
-    
+
     @Autowired
     StockTransferDao stockTransferDao;
     @Autowired
@@ -67,9 +72,7 @@ public class StockTransferAction extends BasePaginatedAction {
     BaseDao baseDao;
     @Autowired
     SkuGroupService skuGroupService;
-    @Autowired
-    private StockTransferService stockTransferService;
-    
+
     private StockTransfer stockTransfer;
     private String userLogin;
     Page stockTransferPage;
@@ -164,15 +167,20 @@ public class StockTransferAction extends BasePaginatedAction {
                 stockTransferLineItem.setStockTransfer(stockTransfer);
                 stockTransferLineItem.setSku(sku);
                 stockTransferLineItem.setCheckedOutSkuGroup(skuGroup);
-                stockTransferLineItem.setBatchNumber(skuGroup.getBatchNumber());
-                stockTransferLineItem.setMrp(skuGroup.getMrp());
-                stockTransferLineItem.setCostPrice(skuGroup.getCostPrice());
-                stockTransferLineItem.setTax(sku.getTax());
-                stockTransferLineItem.setMfgDate(skuGroup.getMfgDate());
-                stockTransferLineItem.setExpiryDate(skuGroup.getExpiryDate());
-                stockTransferDao.save(stockTransferLineItem);
-            } 
-            stockTransferLineItem = stockTransferService.updateStockTransferLineItem(stockTransferLineItem.getId(), ADD_STOCK_TRANSFER_LINE_ITEM);
+	              stockTransferLineItem.setBatchNumber(skuGroup.getBatchNumber());
+	              stockTransferLineItem.setMrp(skuGroup.getMrp());
+	              stockTransferLineItem.setCostPrice(skuGroup.getCostPrice());
+	              stockTransferLineItem.setTax(sku.getTax());
+	              stockTransferLineItem.setMfgDate(skuGroup.getMfgDate());
+	              stockTransferLineItem.setExpiryDate(skuGroup.getExpiryDate());
+            }
+
+            if (stockTransferLineItem.getCheckedoutQty() != null) {
+                stockTransferLineItem.setCheckedoutQty(stockTransferLineItem.getCheckedoutQty() + 1L);
+            } else {
+                stockTransferLineItem.setCheckedoutQty(1L);
+            }
+            stockTransferLineItem = (StockTransferLineItem) baseDao.save(stockTransferLineItem);
 
             if (stockTransfer.getStockTransferStatus().equals(EnumStockTransferStatus.Generated.getStockTransferStatus())) {
                 stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getStockTransferStatus());
@@ -236,14 +244,11 @@ public class StockTransferAction extends BasePaginatedAction {
         skuItemToBeReverted.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
         baseDao.save(skuGroupToBeReverted);
 
-        adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null,
-        		stliToBeReduced, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+        adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null, stliToBeReduced, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
 
         getInventoryService().checkInventoryHealth(skuGroupToBeReverted.getSku().getProductVariant());
-        
-        // to control concurrency and avoid dirty read
-        stliToBeReduced = stockTransferService.updateStockTransferLineItem(stliToBeReduced.getId(), REVERT_STOCK_TRANSFER_LINE_ITEM);
-        
+        stliToBeReduced.setCheckedoutQty(stliToBeReduced.getCheckedoutQty() - 1);
+        baseDao.save(stliToBeReduced);
         addRedirectAlertMessage(new SimpleMessage("Qty reduced by 1."));
         return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
     }
@@ -409,18 +414,4 @@ public class StockTransferAction extends BasePaginatedAction {
     public void setIdentifiedSkuItemToRevert(SkuItem identifiedSkuItemToRevert) {
         this.identifiedSkuItemToRevert = identifiedSkuItemToRevert;
     }
-
-	/**
-	 * @return the stockTransferService
-	 */
-	public StockTransferService getStockTransferService() {
-		return stockTransferService;
-	}
-
-	/**
-	 * @param stockTransferService the stockTransferService to set
-	 */
-	public void setStockTransferService(StockTransferService stockTransferService) {
-		this.stockTransferService = stockTransferService;
-	}
 }
