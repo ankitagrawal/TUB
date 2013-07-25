@@ -154,6 +154,26 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         }
         return false;
     }
+
+    public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder){
+        List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+        List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+        List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+
+        for(LineItem lineItem : shippingORder.getLineItems()){
+            for (SkuItemLineItem skuItemLineItem: lineItem.getSkuItemLineItems()){
+                SkuItem skuItem = skuItemLineItem.getSkuItem();
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItemsToBeFreed.add(skuItem);
+            }
+            skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
+            skuItemCLIsToBeDeleted.addAll(lineItem.getCartLineItem().getSkuItemCLIs());
+        }
+        getSkuItemDao().saveOrUpdate(skuItemsToBeFreed);
+        getSkuItemDao().deleteAll(skuItemLineItemsToBeDeleted);
+        getSkuItemDao().deleteAll(skuItemCLIsToBeDeleted);
+        return true;
+    }
     
     
     @Override

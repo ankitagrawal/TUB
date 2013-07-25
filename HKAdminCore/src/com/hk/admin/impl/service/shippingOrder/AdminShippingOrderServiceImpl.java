@@ -112,6 +112,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+            skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
             //shippingOrder = getShippingOrderService().save(shippingOrder);
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
