@@ -10,7 +10,7 @@
                  pageTitle="sports offer">
 
 <s:layout-component name="htmlHead">
-	<link href="${pageContext.request.contextPath}/css/bats-offers-stylesheet.css"
+	<link href="${pageContext.request.contextPath}/pages/offers/sports-and-fitness-page/css/bats-offers-stylesheet.css"
 	      rel="stylesheet" type="text/css"/>
 </s:layout-component>
 
