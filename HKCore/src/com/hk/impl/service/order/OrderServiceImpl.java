@@ -750,14 +750,33 @@ public class OrderServiceImpl implements OrderService {
 		return null;
 	}
 
-	/**
-	 * @return the shippingOrderProcessor
-	 */
-	public ShippingOrderProcessor getShippingOrderProcessor() {
-		if (shippingOrderProcessor == null) {
-            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+    @Override
+    public boolean isBOCancelable(Long orderId) {
+        boolean isBOCancelable;
+        int count=0;
+        Order order = this.find(orderId);
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        for (ShippingOrder shippingOrder : shippingOrders) {
+            if (EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getShippingOrderStatus().getId())) {
+                count++;
+            }
         }
-        return shippingOrderProcessor;
-	}
+        if (count != shippingOrders.size()) {
+            isBOCancelable = false;
+        } else {
+            isBOCancelable = true;
+        }
+        return isBOCancelable;
+    }
+
+    /**
+     * @return the shippingOrderProcessor
+     */
+    public ShippingOrderProcessor getShippingOrderProcessor() {
+    	if (shippingOrderProcessor == null) {
+    		this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+    	}
+    	return shippingOrderProcessor;
+    }
 
 }

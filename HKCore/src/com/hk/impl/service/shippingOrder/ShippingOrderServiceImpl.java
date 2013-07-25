@@ -1,21 +1,26 @@
 package com.hk.impl.service.shippingOrder;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
@@ -34,6 +39,7 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
@@ -68,6 +74,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     BucketService bucketService;
     private OrderService               orderService;
 	private ShipmentService 				shipmentService;
+    @Autowired
+    private RewardPointService rewardPointService;
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -249,6 +257,29 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		return false;
 		
 	}
+
+    @Override
+    public void revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) {
+        User loggedOnUser = getUserService().getLoggedInUser();
+        double totalRewardPoints = 0;
+        Set<LineItem> lineItems = shippingOrder.getLineItems();
+        for (LineItem lineItem : lineItems) {
+            double rewardPoints = lineItem.getRewardPoints();
+            if (rewardPoints > 0) {
+                totalRewardPoints += rewardPoints;
+            }
+        }
+        if (totalRewardPoints > 0) {
+
+            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(shippingOrder.getBaseOrder().getUser(),loggedOnUser,
+                    shippingOrder.getBaseOrder(), totalRewardPoints, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+            //TODO: expiry date should be on the basis of previous reward points
+            rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(3).toDate());
+            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RewardPointsRevertBack);
+
+        }
+    }
 	
     public UserService getUserService() {
         return userService;
