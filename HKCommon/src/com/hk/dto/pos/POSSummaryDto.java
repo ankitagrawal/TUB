@@ -16,11 +16,11 @@ public class POSSummaryDto {
   private Double avgAmtPerInvoice;
   private Long itemsSold;
   private Long itemsReturned;
-  private Double apc;
+  private Long noOfBills;
 
   public POSSummaryDto(Double cashAmountCollected, Double cashAmountRefunded, Double creditCardAmountCollected,
                        Double creditCardAmountRefunded, Long itemsSold, Long itemsReturned,
-                       Double totalCollection, Double avgAmtPerInvoice, Double apc) {
+                       Double totalCollection, Double avgAmtPerInvoice, Long noOfBills) {
     this.cashAmountCollected = cashAmountCollected;
     this.cashAmountRefunded = cashAmountRefunded;
     this.creditCardAmountCollected = creditCardAmountCollected;
@@ -30,7 +30,7 @@ public class POSSummaryDto {
     this.totalCollection = totalCollection;
     this.avgAmtPerInvoice = avgAmtPerInvoice;
     this.itemsReturned = itemsReturned;
-    this.apc=apc;
+    this.noOfBills=noOfBills;
   }
 
   public Double getAvgAmtPerInvoice() {
@@ -97,11 +97,11 @@ public class POSSummaryDto {
     this.totalCollection = totalCollection;
   }
 
-  public Double getApc() {
-    return apc;
+  public Long getNoOfBills() {
+    return noOfBills;
   }
 
-  public void setApc(Double apc) {
-    this.apc = apc;
+  public void setNoOfBills(Long noOfBills) {
+    this.noOfBills = noOfBills;
   }
 }

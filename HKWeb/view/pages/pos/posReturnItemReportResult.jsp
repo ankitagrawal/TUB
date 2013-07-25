@@ -30,7 +30,7 @@
         <td>${returnItem.shippingOrder.id} </td>
         <td>${returnItem.shippingOrder.baseOrder.id} </td>
         <td>${returnItem.returnReason}</td>
-        <td>${returnItem.amount}</td>
+        <td><fmt:formatNumber value="${returnItem.amount}" maxFractionDigits="2"/></td>
         <td>${fn:length(returnItem.reverseLineItems)}</td>
         <td><c:forEach items="${returnItem.reverseLineItems}" var="reverseItem">
           <table>

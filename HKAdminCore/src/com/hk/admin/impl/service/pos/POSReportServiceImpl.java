@@ -66,7 +66,8 @@ public class POSReportServiceImpl implements POSReportService {
 		double avgAmtPerInvoice = 0.0;
 		Long itemsSold = 0L;
 		Long itemReturned = 0L;
-		double apc = 0.0;
+    Long noOfBills = 0L;
+		//double apc = 0.0;
 		for (Order order : saleList) {
 			itemsSold = itemsSold + order.getCartLineItems().size();
 			for (Payment payment : order.getPayments()) {
@@ -79,13 +80,14 @@ public class POSReportServiceImpl implements POSReportService {
 		}
 		totalAmountCollected = cashAmtCollected + creditCardAmtCollected;
 		avgAmtPerInvoice = totalAmountCollected / saleList.size();
-		apc = (Double.valueOf(itemsSold)) / saleList.size();
+		//apc = (Double.valueOf(itemsSold)) / saleList.size();
+    noOfBills=Long.valueOf(saleList.size());
 
 		for (ReverseOrder reverseOrder : returnList) {
 			cashAmtRefunded = cashAmtRefunded + reverseOrder.getAmount();
 			itemReturned = itemReturned + reverseOrder.getReverseLineItems().size();
 		}
-		return (new POSSummaryDto(cashAmtCollected, cashAmtRefunded, creditCardAmtCollected, creditCardAmtRefunded, itemsSold, itemReturned, totalAmountCollected, avgAmtPerInvoice, apc));
+		return (new POSSummaryDto(cashAmtCollected, cashAmtRefunded, creditCardAmtCollected, creditCardAmtRefunded, itemsSold, itemReturned, totalAmountCollected, avgAmtPerInvoice, noOfBills));
 	}
 
 	public List<ReverseOrder> storeReturnReport(Long storeId, Date startDate, Date endDate) {
@@ -125,6 +127,7 @@ public class POSReportServiceImpl implements POSReportService {
 			xlsWriter.addHeader("COST PRICE", "COST PRICE");
 			xlsWriter.addHeader("MRP", "MRP");
 			xlsWriter.addHeader("MFG DATE", "MFG DATE");
+
 			xlsWriter.addHeader("EXPIRY DATE", "EXPIRY DATE");
 			xlsWriter.addHeader("AVAILABLE INVENTORY", "AVAILABLE INVENTORY");
 
