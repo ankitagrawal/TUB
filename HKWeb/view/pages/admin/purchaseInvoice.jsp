@@ -501,17 +501,17 @@ width: 80px;
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <br/>
 <table>
-	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
+	<c:if test="${fn:length(pia.toImportRtvExtraInventoryLineItemList) gt 0}">
 	There are rtvs attached with the PI.<br/>
 	
 	<c:forEach items="${pia.toImportRtvExtraInventoryLineItemList}" var="rtv" varStatus="ctr">
 	<tr>
 	<td>${ctr.index+1}. PO No. ${rtv.id}, <a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?editRtvNoteLineItems=&purchaseOrderId=${rtv.extraInventory.purchaseOrder.id}&extraInventoryId=${rtv.extraInventory.id }&rtvNoteId=${rtv.id}" target="_blank">RTV Id. ${rtv.id}</a></td>
-	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
+	<td><s:checkbox name="rtvEiLiId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
 	</tr>
 	</c:forEach>
 	</c:if>
-	<c:if test="${fn:length(pia.toImportRtvList) eq 0}">
+	<c:if test="${fn:length(pia.toImportRtvExtraInventoryLineItemList) eq 0}">
 		No rtvs attached with the PI.
 	</c:if>
 </table>
@@ -529,7 +529,7 @@ width: 80px;
 		No short inventory attached with the PI.
 	</c:if>
 </table>
-<c:if test="${fn:length(pia.toImportRtvList) gt 0 || fn:length(pia.toImportShortEiLiList) gt 0}">
+<c:if test="${fn:length(pia.toImportRtvExtraInventoryLineItemList) gt 0 || fn:length(pia.toImportShortEiLiList) gt 0}">
 	<s:submit name="importRtv" value="Import"/>
 	</c:if>
 </s:form>

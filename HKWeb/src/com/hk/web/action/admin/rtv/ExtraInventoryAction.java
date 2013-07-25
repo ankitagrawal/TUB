@@ -174,7 +174,6 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 					}
 				}
 			}
-			
 		}
 		taxList = taxDao.getLocalTaxList();
 		return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",
@@ -390,7 +389,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 		if (rtvNoteLineItems1 != null && rtvNoteLineItems1.size() != 0) {
 			rtvNoteLineItems.addAll(rtvNoteLineItems1);
 		}
-		if (rtvNote != null) {
+		/*if (rtvNote != null) {
 			if (rtvNote.getPurchaseInvoices() != null && rtvNote.getPurchaseInvoices().size() > 0) {
 				for (PurchaseInvoice pi : rtvNote.getPurchaseInvoices()) {
 					pi.setRtvAmount(pi.getRtvAmount()+rtvamount);
@@ -398,7 +397,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 					purchaseInvoiceService.save(pi);
 					}
 			}
-		}
+		}*/
 		noCache();
 		addRedirectAlertMessage(new SimpleMessage("Rtv Created !!!!"));
 		return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId", purchaseOrderId)
