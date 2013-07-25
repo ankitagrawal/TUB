@@ -1233,7 +1233,7 @@ width: 80px;
 	</tr>
 	</tfoot>
 </table>
-<s:submit name="saveRtv" value="Save" class="requiredFieldValidator" id="save-button"/>
+<s:submit name="saveShort" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
 
 <hr>

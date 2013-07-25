@@ -189,12 +189,18 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			//show the ones which are not imported(intersection of the two)
 			for (ExtraInventoryLineItem eili : rtvExtraInventoryLineItemList) {
 	            if(!purchaseInvoice.getEiLineItems().contains(eili)) {
+	            	boolean otherCorrespondingPIsContainThisEILI = purchaseInvoiceService.otherCorrespondingPIsContainThisEILI(purchaseInvoice, eili);
+	            	if(!otherCorrespondingPIsContainThisEILI){
                     toImportRtvExtraInventoryLineItemList.add(eili);
+	            	}
 	            }
 	        }
 			for (ExtraInventoryLineItem lineItem : shortEiLiList) {
 	            if(!purchaseInvoice.getEiLineItems().contains(lineItem)) {
-	                toImportShortEiLiList.add(lineItem);
+	            	boolean otherCorrespondingPIsContainThisEILI = purchaseInvoiceService.otherCorrespondingPIsContainThisEILI(purchaseInvoice, lineItem);
+	            	if(!otherCorrespondingPIsContainThisEILI){
+	            		toImportShortEiLiList.add(lineItem);
+	            	}
 	            }
 	        }
 			isRtvReconciled=Boolean.FALSE;
@@ -294,10 +300,10 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
 			extraInventoryLineItem.setExtraInventory(extraInventory);
 			extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.RTV.asEnumExtraInventoryLineItemType());
-			extraInventoryLineItemService.save(extraInventoryLineItem);
+			extraInventoryLineItem = extraInventoryLineItemService.save(extraInventoryLineItem);
 		}
 		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
-		getPurchaseInvoiceService().save(purchaseInvoice);
+		purchaseInvoice = getPurchaseInvoiceService().save(purchaseInvoice);
 		addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
@@ -380,11 +386,19 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	public Resolution saveShort() {
 		List<PurchaseInvoice> invoices = new ArrayList<PurchaseInvoice>();
 		invoices.add(purchaseInvoice);
-		for (ExtraInventoryLineItem extraInventoryLineItem : extraInventoryShortLineItems) {
+		List<ExtraInventoryLineItem> extraInventoryLineItemsToSave = new ArrayList<ExtraInventoryLineItem>();
+		if(extraInventoryShortLineItems!=null && extraInventoryShortLineItems.size()>0){
+			extraInventoryLineItemsToSave.addAll(extraInventoryShortLineItems);
+		}
+		if(extraInventoryLineItems!=null && extraInventoryLineItems.size()>0){
+			extraInventoryLineItemsToSave.addAll(extraInventoryLineItems);
+		}
+		for (ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsToSave) {
 			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
+			ExtraInventoryLineItem eili = extraInventoryLineItemService.getExtraInventoryLineItemById(extraInventoryLineItem.getId());
 			extraInventoryLineItem.setExtraInventory(extraInventory);
 			extraInventoryLineItem.setPurchaseInvoices(invoices);
-			extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Short.asEnumExtraInventoryLineItemType());
+			extraInventoryLineItem.setExtraInventoryLineItemType(eili.getExtraInventoryLineItemType());
 			extraInventoryLineItemService.save(extraInventoryLineItem);
 		}
 		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount() + purchaseInvoice.getShortAmount()
