@@ -293,23 +293,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
 
-	public Resolution saveRtv(){
-
-		for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems)
-		{
-			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
-			extraInventoryLineItem.setExtraInventory(extraInventory);
-			extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.RTV.asEnumExtraInventoryLineItemType());
-			extraInventoryLineItem = extraInventoryLineItemService.save(extraInventoryLineItem);
-		}
-		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
-		purchaseInvoice = getPurchaseInvoiceService().save(purchaseInvoice);
-		addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
-		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
-	}
-	
 	public Resolution paymentDetails() {
-
 		return new ForwardResolution("/pages/admin/purchaseInvoicePaymentDetails.jsp");
 	}
 
