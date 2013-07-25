@@ -1297,4 +1297,15 @@
             ${hk:similarProductWithUnbookedInventory(${productVariant})}
         </example>
     </function>
+    <function>
+        <description>
+            returns whether a BO is cancellable or not based on whether all SO are in action awaiting state
+        </description>
+        <name>isBOCancelable</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isBOCancelable(java.lang.Long)</function-signature>
+        <example>
+            ${hk:isSOCanceled(${orderId})}
+        </example>
+    </function>
 </taglib>
