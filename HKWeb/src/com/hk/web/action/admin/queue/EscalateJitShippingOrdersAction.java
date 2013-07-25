@@ -1,6 +1,17 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,12 +36,7 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.web.action.admin.AdminHomeAction;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.hk.pact.service.splitter.ShippingOrderSplitter;
 
 @Component
 public class EscalateJitShippingOrdersAction extends BaseAction {
@@ -48,6 +54,9 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	ShippingOrderLifecycleDao shippingOrderLifecycleDao;
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private ShippingOrderSplitter shippingOrderSplitter;
 
 	List<ShippingOrder> sortedShippingOrderList;
 
@@ -97,7 +106,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				flag = false;
 			}
 			if (flag) {
-				shippingOrder = shippingOrderService.manualEscalateShippingOrder(shippingOrder);
+				shippingOrder = shippingOrderSplitter.manualEscalateShippingOrder(shippingOrder);
 				ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
 				shippingOrderLifecycle.setOrder(shippingOrder);
 				shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
@@ -159,6 +168,20 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	public List<ShippingOrder> getSortedShippingOrders() {
 		Collections.sort(sortedShippingOrderList, new ShippingOrderComparator());
 		return sortedShippingOrderList;
+	}
+
+	/**
+	 * @return the shippingOrderSplitter
+	 */
+	public ShippingOrderSplitter getShippingOrderSplitter() {
+		return shippingOrderSplitter;
+	}
+
+	/**
+	 * @param shippingOrderSplitter the shippingOrderSplitter to set
+	 */
+	public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
+		this.shippingOrderSplitter = shippingOrderSplitter;
 	}
 
 }

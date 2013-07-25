@@ -2,13 +2,11 @@ package com.hk.admin.pact.service.shippingOrder;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminShippingOrderService {
@@ -56,6 +54,4 @@ public interface AdminShippingOrderService {
 	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReason);
 
 	public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder order1, ShippingOrder order2);
-
-	public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages);
 }

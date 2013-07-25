@@ -15,6 +15,7 @@ import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderSplitter;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.*;
@@ -45,6 +46,9 @@ public class ShippingOrderAction extends BaseAction {
   private AdminShippingOrderService adminShippingOrderService;
   @Autowired
   SkuService skuService;
+  
+  @Autowired
+  private ShippingOrderSplitter shippingOrderSplitter;
 
   private ReplacementOrderReason rtoReason;
 
@@ -114,7 +118,7 @@ public class ShippingOrderAction extends BaseAction {
 
   @JsonHandler
   public Resolution manualEscalateShippingOrder() {
-    shippingOrderService.manualEscalateShippingOrder(shippingOrder);
+	  shippingOrderSplitter.manualEscalateShippingOrder(shippingOrder);
     Map<String, Object> data = new HashMap<String, Object>(1);
     data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
     HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
@@ -123,7 +127,7 @@ public class ShippingOrderAction extends BaseAction {
 
   @JsonHandler
   public Resolution autoEscalateShippingOrder() {
-    shippingOrderService.autoEscalateShippingOrder(shippingOrder, firewall);
+	  shippingOrderSplitter.autoEscalateShippingOrder(shippingOrder, firewall);
     Map<String, Object> data = new HashMap<String, Object>(1);
     data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
     HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
@@ -137,7 +141,7 @@ public class ShippingOrderAction extends BaseAction {
     shippingOrderSearchCriteria.setDropShipping(false);
     List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
     for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
-      shippingOrderService.automateManualEscalation(toBeEscalateShippingOrder);
+    	shippingOrderSplitter.automateManualEscalation(toBeEscalateShippingOrder);
     }
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
@@ -189,4 +193,18 @@ public class ShippingOrderAction extends BaseAction {
   public void setFirewall(boolean firewall) {
     this.firewall = firewall;
   }
+
+/**
+ * @return the shippingOrderSplitter
+ */
+public ShippingOrderSplitter getShippingOrderSplitter() {
+	return shippingOrderSplitter;
+}
+
+/**
+ * @param shippingOrderSplitter the shippingOrderSplitter to set
+ */
+public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
+	this.shippingOrderSplitter = shippingOrderSplitter;
+}
 }

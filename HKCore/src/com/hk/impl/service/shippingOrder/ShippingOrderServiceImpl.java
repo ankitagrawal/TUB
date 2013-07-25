@@ -1,22 +1,26 @@
 package com.hk.impl.service.shippingOrder;
 
-import com.hk.util.SOFirewall;
-import java.util.*;
-import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.akube.framework.dao.Page;
-import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.order.*;
-import com.hk.domain.payment.Payment;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
+import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
@@ -36,27 +40,13 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
-import com.hk.util.SOFirewall;
 import com.hk.util.TokenUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * @author vaibhav.adlakha
  */
 @Service
 public class ShippingOrderServiceImpl implements ShippingOrderService {
-
-    private Logger                     logger = LoggerFactory.getLogger(ShippingOrderService.class);
 
     @Autowired
     private UserService                userService;
@@ -155,199 +145,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         //todo need to write correct logic for targetDeliveryDate, based on historical TAT
         shippingOrder.setTargetDelDate(targetDispatchDate);
         getShippingOrderDao().save(shippingOrder);
-    }
-
-
-    private boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder, boolean firewall) {
-        Payment payment = shippingOrder.getBaseOrder().getPayment();
-        List<Reason> reasons = new ArrayList<Reason>();
-        if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
-            if(firewall && SOFirewall.isAmountMismatch(payment.getOrder())){
-              reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
-            }
-            if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-                if(shippingOrder.isServiceOrder()){
-                    return true;
-                }
-                if (shippingOrder.isDropShipping()) {
-                    reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
-                }
-                List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
-                if (!enumBuckets.isEmpty()) {
-                    reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
-                }
-                if (shippingOrder.getShipment() == null) {
-                    reasons.add(EnumReason.ShipmentNotCreated.asReason());
-                } else {
-                    //putting checks for shipping cost
-                    Double estimatedShippingCharges = shippingOrder.getShipment().getEstmShipmentCharge();
-                    if (firewall && estimatedShippingCharges != null && estimatedShippingCharges > SOFirewall.minAllowedShippingCharges && estimatedShippingCharges >= SOFirewall.calculateCutoffAmount(shippingOrder)) {
-                        reasons.add(EnumReason.HighShippingCost.asReason());
-                    }
-                }
-                if (!reasons.isEmpty()) {
-                    for (Reason reason : reasons) {
-                        logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, reason);
-                    }
-                    return false;
-                }
-                return true;
-            }
-        } else {
-            logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,  EnumReason.InvalidPaymentStatus.asReason());
-            return false;
-        }
-        return false;
-    }
-
-    private boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
-    	if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
-    		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-    			if(!(shippingOrder.isServiceOrder())){
-    				User adminUser = getUserService().getAdminUser();
-    				Set<LineItem> selectedItems = new HashSet<LineItem>();
-
-    				for (LineItem lineItem : shippingOrder.getLineItems()) {
-    					Long availableUnbookedInv = 0L;
-
-    					if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-    						continue;
-    						// return true;
-    						//availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
-    					}else{
-    						availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
-    					}
-
-    					Long orderedQty = lineItem.getQty();
-
-    					// It cannot be = as for last order/unit unbooked will always be ZERO
-    					if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()) {
-    						String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
-    						logShippingOrderActivity(shippingOrder, adminUser,
-    								getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
-    								EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
-    						//return false;
-    						selectedItems.add(lineItem);
-    					}
-    				}
-
-    				if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
-    					Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
-    					if (newShipment == null) {
-    						logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,
-    								EnumReason.ShipmentNotCreatedManual.asReason());
-    						return false;
-    					}
-    				}
-    			}
-    			return true;
-    		}
-    	} else {
-    		logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, EnumReason.InvalidPaymentStatusManual.asReason());
-    		return false;
-    	}
-    	return false;
-    }
-
-    private boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
-        logger.debug("Trying to autoEscalate order#" + shippingOrder.getId());
-        Payment payment = shippingOrder.getBaseOrder().getPayment();
-        User adminUser = getUserService().getAdminUser();
-        if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
-            if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-                if (shippingOrder.isDropShipping()) {
-                    logShippingOrderActivity(shippingOrder, adminUser,
-                            getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
-                    return false;
-                }
-                if (shippingOrder.isServiceOrder()) {
-                    return true;
-                }
-                if (shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()) {
-                    Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
-                    if (newShipment == null) {
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.ShipmentNotCreated.asReason(), null);
-                        return false;
-                    }
-                }
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    CartLineItem cartLineItem = lineItem.getCartLineItem();
-                    if (cartLineItem.getCartLineItemConfig() != null) {
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
-                        return false;
-                    }
-                    if(cartLineItem.getProductVariant().getProductExtraOptions() != null && !cartLineItem.getProductVariant().getProductExtraOptions().isEmpty()){
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
-                        return false;
-                    }
-                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(lineItem); // This
-                    
-                    if (availableUnbookedInv < 0) {
-                        String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
-                        logger.debug(comments);
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.InsufficientUnbookedInventory.asReason(), comments);
-                        return false;
-                    }
-                }
-                return true;
-            }
-        } else {
-            logShippingOrderActivity
-                    (shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue),
-                            EnumReason.InvalidPaymentStatus.asReason(), null);
-            return false;
-        }
-        return false;
-    }
-
-    @Transactional
-    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
-        if(isShippingOrderAutoEscalable(shippingOrder, firewall)){
-            User activityUser = getUserService().getAdminUser();
-            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
-            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
-        }
-        return shippingOrder;
-    }
-
-    @Transactional
-    public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder) {
-        if(isShippingOrderManuallyEscalable(shippingOrder)){
-            User activityUser = userService.getLoggedInUser();
-            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
-            bucketService.escalateOrderFromActionQueue(shippingOrder);
-            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
-        }
-        return shippingOrder;
-    }
-
-    @Transactional
-    public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder) {
-        if(isShippingOrderAutomaticallyManuallyEscalable(shippingOrder)){
-            User activityUser = getUserService().getAdminUser();
-            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
-            bucketService.escalateOrderFromActionQueue(shippingOrder);
-            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
-        }
-        return shippingOrder;
-    }
-
-    @Transactional
-    private ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder) {
-        EnumShippingOrderStatus applicableStatus = shippingOrder.isDropShipping() ? EnumShippingOrderStatus.SO_ReadyForDropShipping : EnumShippingOrderStatus.SO_ReadyForProcess;
-        shippingOrder.setLastEscDate(HKDateUtil.getNow());
-        shippingOrder.setOrderStatus(applicableStatus.asShippingOrderStatus());
-        shippingOrder.setLastEscDate(HKDateUtil.getNow());
-        if (shippingOrder.isDropShipping()) {
-            emailManager.sendEscalationToDropShipEmail(shippingOrder);
-        }
-        shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
-        getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
-        return shippingOrder;
     }
 
     /**

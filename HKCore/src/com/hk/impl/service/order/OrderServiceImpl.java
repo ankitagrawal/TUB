@@ -55,6 +55,7 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.splitter.OrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderSplitter;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
@@ -115,6 +116,9 @@ public class OrderServiceImpl implements OrderService {
     SubscriptionService subscriptionService;
 
     @Autowired OrderSplitter orderSplitter;
+    
+    @Autowired
+    private ShippingOrderSplitter shippingOrderSplitter;
 
     @Transactional
     public Order save(Order order) {
@@ -679,7 +683,7 @@ public class OrderServiceImpl implements OrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder, true);
+                	shippingOrderSplitter.autoEscalateShippingOrder(shippingOrder, true);
                 }
             }
 
@@ -744,6 +748,20 @@ public class OrderServiceImpl implements OrderService {
 			return orders.iterator().next();
 		}
 		return null;
+	}
+
+	/**
+	 * @return the shippingOrderSplitter
+	 */
+	public ShippingOrderSplitter getShippingOrderSplitter() {
+		return shippingOrderSplitter;
+	}
+
+	/**
+	 * @param shippingOrderSplitter the shippingOrderSplitter to set
+	 */
+	public void setShippingOrderSplitter(ShippingOrderSplitter shippingOrderSplitter) {
+		this.shippingOrderSplitter = shippingOrderSplitter;
 	}
 
 
