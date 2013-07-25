@@ -96,5 +96,11 @@ public enum EnumPaymentMode {
 		}
 		return paymenLModeIds;
 	}
+
+    public static List<Long> getReconciliationModeIds() {
+        return Arrays.asList(
+                EnumPaymentMode.ONLINE_PAYMENT.getId()
+                );
+    }
 }
 

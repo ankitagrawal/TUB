@@ -914,4 +914,9 @@ public class Functions {
         return productVariantNotifyMeEmailService.getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(productVariant);
     }
 
+    public static boolean isBOCancelable(Long orderId) {
+        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.isBOCancelable(orderId);
+    }
+
 }

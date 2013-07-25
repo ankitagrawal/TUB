@@ -165,7 +165,8 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
     }
 
     private void setRefundPaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse){
-        if (respCode != null && respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REFUND_SEEK_SUCCESS_CODE.getKey())) {
+        if (respCode != null && (respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REFUND_SEEK_SUCCESS_CODE.getKey())
+                || respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REFUND_SEEK_IN_PROCESS_CODE.getKey()))) {
             hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.SUCCESS);
         }  else {
             hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
