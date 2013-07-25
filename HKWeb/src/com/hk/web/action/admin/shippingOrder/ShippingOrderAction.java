@@ -48,7 +48,7 @@ public class ShippingOrderAction extends BaseAction {
   SkuService skuService;
   
   @Autowired
-  private ShippingOrderSplitter shippingOrderSplitter;
+  ShippingOrderSplitter shippingOrderSplitter;
 
   private ReplacementOrderReason rtoReason;
 

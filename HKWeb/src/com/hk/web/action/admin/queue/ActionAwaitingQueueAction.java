@@ -95,7 +95,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     BucketService bucketService;
 
     @Autowired
-    private ShippingOrderSplitter shippingOrderSplitter;
+    ShippingOrderSplitter shippingOrderSplitter;
     
     private Long orderId;
     private Long shippingOrderId;

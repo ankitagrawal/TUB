@@ -300,8 +300,8 @@ public class ShippingOrderSplitterImpl implements ShippingOrderSplitter {
 
 
 	/**
-	 *  This method is used to split orders, if successful it creates a new SO and process the new as well as old shipping order by
-	 *  recalculating its amount and other data and saves them into the database.
+	 * This method is used to split orders, if successful it creates a new SO and process the new as well as old shipping order by
+	 * recalculating its amount and other data and saves them into the database.
 	 * @param shippingOrder -  SO to split
 	 * @param selectedLineItems - selected line items which needs to be split 
 	 * @param messages - success/error messages

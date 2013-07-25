@@ -93,7 +93,7 @@ public class ShipmentResolutionAction extends BaseAction {
     OrderService orderService;
     
     @Autowired
-    private ShippingOrderSplitter shippingOrderSplitter;
+    ShippingOrderSplitter shippingOrderSplitter;
 
     @DefaultHandler
     public Resolution pre() {

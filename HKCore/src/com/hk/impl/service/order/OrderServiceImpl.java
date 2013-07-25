@@ -117,8 +117,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired OrderSplitter orderSplitter;
     
-    @Autowired
-    private ShippingOrderSplitter shippingOrderSplitter;
+    @Autowired ShippingOrderSplitter shippingOrderSplitter;
 
     @Transactional
     public Order save(Order order) {

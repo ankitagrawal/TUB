@@ -35,7 +35,7 @@ public class SplitShippingOrderAction extends BaseAction {
     private List<LineItem> lineItems;
 
     @Autowired
-    private ShippingOrderSplitter shippingOrderSplitter;
+    ShippingOrderSplitter shippingOrderSplitter;
 
     @DontValidate
     @DefaultHandler

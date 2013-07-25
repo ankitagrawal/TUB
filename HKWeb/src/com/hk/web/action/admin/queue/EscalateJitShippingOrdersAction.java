@@ -56,7 +56,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	private UserService userService;
 	
 	@Autowired
-	private ShippingOrderSplitter shippingOrderSplitter;
+	ShippingOrderSplitter shippingOrderSplitter;
 
 	List<ShippingOrder> sortedShippingOrderList;
 
