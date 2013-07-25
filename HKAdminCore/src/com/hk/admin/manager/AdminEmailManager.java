@@ -1161,7 +1161,11 @@ public class AdminEmailManager {
       } catch (Exception e) {
         e.printStackTrace();
       }
-      return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+      if(pdfFile.getName().contains(purchaseOrder.getId().toString())&& xlsFile.getName().contains(purchaseOrder.getId().toString())){
+    	  return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+      }
+      else
+    	  return false;
     }
     
     public boolean sendDebitNoteMail(DebitNote debitNote){
