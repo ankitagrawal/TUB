@@ -28,8 +28,6 @@ public interface InventoryHealthService {
 
 	long getUnbookedInventoryForActionQueue(LineItem lineItem);
 
-    public Collection<SkuInfo> getNetCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
-
     public void InventoryHealthCheck(ProductVariant productVariant);
 
 
