@@ -222,75 +222,82 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	
 	public Resolution importRtv(){
 		
-		//fetch all rtv notes
-		Set<ExtraInventoryLineItem> rtvExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
-		Set<ExtraInventoryLineItem> shortExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
-		populateRtvShort(rtvExtraInventoryLineItemSet,shortExtraInventoryLineItemSet);
-		//rtvList.addAll(rtvExtraInventoryLineItemSet);
-        rtvExtraInventoryLineItemList.addAll(rtvExtraInventoryLineItemSet);
-		shortEiLiList.addAll(shortExtraInventoryLineItemSet);
-		
-		//choose the ones which has been selected
-        List<ExtraInventoryLineItem> piHasRtvEiLiList = new ArrayList<ExtraInventoryLineItem>();
-		if(rtvEiLiId!=null && !rtvEiLiId.isEmpty()){
-			for(Long id : rtvEiLiId){
-				for(ExtraInventoryLineItem eili:rtvExtraInventoryLineItemSet){
-					if(eili.getId().equals(id)){
-                        piHasRtvEiLiList.add(eili);
+		try{
+			Set<ExtraInventoryLineItem> rtvExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
+			Set<ExtraInventoryLineItem> shortExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
+			populateRtvShort(rtvExtraInventoryLineItemSet,shortExtraInventoryLineItemSet);
+			//rtvList.addAll(rtvExtraInventoryLineItemSet);
+	        rtvExtraInventoryLineItemList.addAll(rtvExtraInventoryLineItemSet);
+			shortEiLiList.addAll(shortExtraInventoryLineItemSet);
+			
+			//choose the ones which has been selected
+	        List<ExtraInventoryLineItem> piHasRtvEiLiList = new ArrayList<ExtraInventoryLineItem>();
+			if(rtvEiLiId!=null && !rtvEiLiId.isEmpty()){
+				for(Long id : rtvEiLiId){
+					for(ExtraInventoryLineItem eili:rtvExtraInventoryLineItemList){
+						if(eili.getId().equals(id)){
+	                        piHasRtvEiLiList.add(eili);
+						}
 					}
 				}
 			}
-		}
-		
-		List<ExtraInventoryLineItem> piHasShortEiLiList = new ArrayList<ExtraInventoryLineItem>();
-		if(eiliId!=null && !eiliId.isEmpty()){
-			for(Long id : eiliId){
-				for(ExtraInventoryLineItem lineItem:shortEiLiList){
-					if(lineItem.getId().equals(id)){
-						piHasShortEiLiList.add(lineItem);
+			
+			List<ExtraInventoryLineItem> piHasShortEiLiList = new ArrayList<ExtraInventoryLineItem>();
+			if(eiliId!=null && !eiliId.isEmpty()){
+				for(Long id : eiliId){
+					for(ExtraInventoryLineItem lineItem:shortEiLiList){
+						if(lineItem.getId().equals(id)){
+							piHasShortEiLiList.add(lineItem);
+						}
 					}
 				}
 			}
-		}
-		
-        if(purchaseInvoice.getEiLineItems()!=null && purchaseInvoice.getEiLineItems().size()>0){
-            for(ExtraInventoryLineItem eili : purchaseInvoice.getEiLineItems()){
-                if(eili.getRtvCreated()!=null && eili.isRtvCreated()){
-                    piHasRtvEiLiList.add(eili);
-                }
-                if(eili.getExtraInventoryLineItemType().getId().equals(EnumExtraInventoryLineItemType.Short.getId())){
-                	piHasShortEiLiList.add(eili);
-                }
-            }
-        }
+			
+	        if(purchaseInvoice.getEiLineItems()!=null && purchaseInvoice.getEiLineItems().size()>0){
+	            for(ExtraInventoryLineItem eili : purchaseInvoice.getEiLineItems()){
+	                if(eili.getRtvCreated()!=null && eili.isRtvCreated()){
+	                    piHasRtvEiLiList.add(eili);
+	                }
+	                if(eili.getExtraInventoryLineItemType().getId().equals(EnumExtraInventoryLineItemType.Short.getId())){
+	                	piHasShortEiLiList.add(eili);
+	                }
+	            }
+	        }
 
-		Double rtvAmount  =0.0;
+			Double rtvAmount=0.0;
 
-        for (ExtraInventoryLineItem eili : piHasRtvEiLiList) {
-                    if (eili.isRtvCreated()!=null && eili.isRtvCreated().equals(Boolean.TRUE)) {
-                        extraInventoryLineItems.add(eili);
-                        if(eili.getPayableAmount()!=null){
-                            rtvAmount+=eili.getPayableAmount();
-                        }
-                    }
-        }
+	        for (ExtraInventoryLineItem eili : piHasRtvEiLiList) {
+	                    if (eili.isRtvCreated()!=null && eili.isRtvCreated().equals(Boolean.TRUE)) {
+	                        extraInventoryLineItems.add(eili);
+	                        if(eili.getPayableAmount()!=null){
+	                            rtvAmount+=eili.getPayableAmount();
+	                        }
+	                    }
+	        }
 
-		Double shortAmount = 0.0;
-		if (piHasShortEiLiList.size() > 0) {
-			for (ExtraInventoryLineItem lineItems : piHasShortEiLiList) {
-				if (lineItems.getPayableAmount() != null) {
-					shortAmount += lineItems.getPayableAmount();
+			Double shortAmount = 0.0;
+			if (piHasShortEiLiList!=null && piHasShortEiLiList.size() > 0) {
+				for (ExtraInventoryLineItem lineItems : piHasShortEiLiList) {
+					if (lineItems.getPayableAmount() != null) {
+						shortAmount += lineItems.getPayableAmount();
+					}
 				}
 			}
+			purchaseInvoice.setShortAmount(shortAmount);
+	        piHasShortEiLiList.addAll(piHasRtvEiLiList);
+			purchaseInvoice.setEiLineItems(piHasShortEiLiList);
+			purchaseInvoice.setRtvAmount(rtvAmount);
+			purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+shortAmount+rtvAmount);
+			getPurchaseInvoiceService().save(purchaseInvoice);
+			addRedirectAlertMessage(new SimpleMessage("Items Imported!!"));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 		}
-		purchaseInvoice.setShortAmount(shortAmount);
-        piHasShortEiLiList.addAll(piHasRtvEiLiList);
-		purchaseInvoice.setEiLineItems(piHasShortEiLiList);
-		purchaseInvoice.setRtvAmount(rtvAmount);
-		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+shortAmount+rtvAmount);
-		getPurchaseInvoiceService().save(purchaseInvoice);
-		addRedirectAlertMessage(new SimpleMessage("Items Imported!!"));
-		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+		catch(Exception e){
+			logger.debug(e.toString());
+			addRedirectAlertMessage(new SimpleMessage("could not import, please try refreshing the page and then import again."));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+		
 	}
 
 	public Resolution paymentDetails() {
