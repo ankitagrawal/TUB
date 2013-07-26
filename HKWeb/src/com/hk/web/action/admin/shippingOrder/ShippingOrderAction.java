@@ -1,20 +1,5 @@
 package com.hk.web.action.admin.shippingOrder;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
@@ -24,6 +9,8 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.core.PaymentStatus;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
@@ -33,9 +20,16 @@ import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
-import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class ShippingOrderAction extends BaseAction {
@@ -122,29 +116,44 @@ public class ShippingOrderAction extends BaseAction {
     @JsonHandler
     public Resolution cancelShippingOrder() {
         adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark);
-        shippingOrderService.revertRewardPointsOnSOCancel(shippingOrder, cancellationRemark);
-        if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getOrderStatus().getId())) {
-            if (paymentService.isValidReconciliation(shippingOrder.getBaseOrder().getPayment()) && reconciliationType != null) {
-                if (shippingOrder.getAmount() > 0) {
-                    boolean flag = paymentService.reconciliationOnCancel(reconciliationType,shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
-                    if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType) && flag) {
-                        shippingOrderService.logShippingOrderActivity(shippingOrder,EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
-                        addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
-                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && flag) {
-                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.AmountRefundedOrderCancel);
-                        addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
-                    } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType) && !flag){
-                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountFailed);
-                        addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user"));
-                    } else {
-                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountExceedsFailed);
-                        addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
+        if (shippingOrder instanceof ReplacementOrder) {
+            //do nothing for replacement orders
+        } else {
+            shippingOrderService.revertRewardPointsOnSOCancel(shippingOrder, cancellationRemark);
+            if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                if (paymentService.isValidReconciliation(shippingOrder.getBaseOrder().getPayment()) && reconciliationType != null) {
+                    if (shippingOrder.getAmount() > 0) {
+                        Map<Long, Object> reconMap = paymentService.reconciliationOnCancel(reconciliationType, shippingOrder.getBaseOrder(), shippingOrder.getAmount(), cancellationRemark);
+
+                        if (reconMap.get(reconciliationType) == null) {
+                            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountExceedsFailed);
+                            addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
+                        } else {
+                            if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
+                                if ((Boolean) reconMap.get(reconciliationType)) {
+                                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RewardPointOrderCancel);
+                                    addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
+                                }
+                            } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
+                                PaymentStatus paymentStatus = (PaymentStatus) reconMap.get(reconciliationType);
+                                if (EnumPaymentStatus.REFUNDED.getId().equals(paymentStatus.getId())) {
+                                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.AmountRefundedOrderCancel);
+                                    addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
+                                } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(paymentStatus.getId())) {
+                                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountFailed);
+                                    addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user, Please contact tech support"));
+                                } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(paymentStatus.getId())) {
+                                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RefundAmountInProcess);
+                                    addRedirectAlertMessage(new SimpleMessage("Refund is in process, Please contact tech support"));
+                                }
+                            }
+                        }
                     }
                 }
+                addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Please Try again Later!!!"));
             }
-            addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Please Try again Later!!!"));
         }
         return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderGatewayId", shippingOrder.getGatewayOrderId());
     }
