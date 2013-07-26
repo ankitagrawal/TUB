@@ -72,7 +72,7 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
 
     @Override
     public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
-        HkPaymentResponse hkPaymentResponse = null;
+        HkPaymentResponse hkPaymentResponse = createPayment(null,null,null,null,EnumPaymentTransactionType.REFUND.getName(), null, null);
         Gateway gateway = basePayment.getGateway();
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ICICI_LIVE_PROPERTIES;
         if(gateway != null && EnumGateway.CITRUS.getId().equals(gateway.getId())){
@@ -88,14 +88,20 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
                     null, null, null, null, null, null);
 
             PGResponse oPgResp = oPostLib.postRelatedTxn(oMerchant);
+
             if (oPgResp != null) {
-                hkPaymentResponse = createPayment(oPgResp.getTxnId(), oPgResp.getEpgTxnId(), oPgResp.getRRN(), oPgResp.getRespMessage(),
-                                                  EnumPaymentTransactionType.REFUND.getName(), null, oPgResp.getAuthIdCode());
+                //hkPaymentResponse = createPayment(oPgResp.getTxnId(), oPgResp.getEpgTxnId(), oPgResp.getRRN(), oPgResp.getRespMessage(),
+                //                                  EnumPaymentTransactionType.REFUND.getName(), null, oPgResp.getAuthIdCode());
+                hkPaymentResponse.setGatewayOrderId(oPgResp.getTxnId());
+                hkPaymentResponse.setGatewayReferenceId(oPgResp.getEpgTxnId());
+                hkPaymentResponse.setRrn(oPgResp.getRRN());
+                hkPaymentResponse.setResponseMsg(oPgResp.getRespMessage());
+                hkPaymentResponse.setAuthIdCode(oPgResp.getAuthIdCode());
                 setRefundPaymentStatus(oPgResp.getRespCode(),hkPaymentResponse);
             }
 
         } catch (Exception e) {
-            logger.debug("There is an error while processing refund from Icici " + basePayment.getGatewayOrderId(), e);
+            logger.debug("There is an error while processing refund from ICICI" + basePayment.getGatewayOrderId(), e);
             hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
         }
         return hkPaymentResponse;
