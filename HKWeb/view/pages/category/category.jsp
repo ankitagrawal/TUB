@@ -174,7 +174,7 @@
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
-                    <img src="${pageContext.request.contextPath}/images/banners/brandOf wewk_nut_banner.jpg"
+                    <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek_sports.jpg"
                          alt="Brand Of the Week - Gaspari Nutrition!"
                          class="small_banner"/>
                 </a>
