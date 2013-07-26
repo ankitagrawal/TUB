@@ -2,7 +2,6 @@ package com.hk.pact.service.inventory;
 
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.warehouse.Warehouse;
@@ -34,5 +33,4 @@ public interface SkuItemLineItemService {
     
     public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
     
-
 }

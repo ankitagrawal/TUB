@@ -50,5 +50,10 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
     	return (SkuItemLineItem) getSession().createQuery(sql).setParameter("skuItem", skuItem).uniqueResult();
     }
     
+    public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem){
+    	String sql = "from SkuItemCLI s where s.cartLineItem = :cartLineItem";
+    	return (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).uniqueResult();
+    }
+    
     
 }

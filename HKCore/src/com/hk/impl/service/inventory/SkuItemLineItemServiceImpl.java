@@ -7,7 +7,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
@@ -189,7 +188,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     public SkuItemLineItem getBySkuItemId(Long skuItemId){
     	return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);
     }
-
+    
     public SkuItemLineItemDao getSkuItemLineItemDao() {
         return skuItemLineItemDao;
     }
