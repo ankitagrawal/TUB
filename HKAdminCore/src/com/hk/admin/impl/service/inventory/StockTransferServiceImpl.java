@@ -18,20 +18,20 @@ public class StockTransferServiceImpl implements StockTransferService {
 	StockTransferDao stockTransferDao;
 
 	@Override
-	public synchronized StockTransferLineItem updateStockTransferLineItem(Long itemId, String actionType) {
+	public synchronized StockTransferLineItem updateStockTransferLineItem(StockTransferLineItem stockTransferLineItem, String actionType) {
 		
-		StockTransferLineItem lineItem = stockTransferDao.get(StockTransferLineItem.class, itemId);
+		stockTransferDao.refresh(stockTransferLineItem);
 		
 		if(("add").equalsIgnoreCase(actionType)) {
-			if (lineItem.getCheckedoutQty()!=null) {
-				lineItem.setCheckedoutQty(lineItem.getCheckedoutQty() + 1);
+			if (stockTransferLineItem.getCheckedoutQty()!=null) {
+				stockTransferLineItem.setCheckedoutQty(stockTransferLineItem.getCheckedoutQty() + 1);
 			} else {
-				lineItem.setCheckedoutQty(1l);
+				stockTransferLineItem.setCheckedoutQty(1l);
 			}
 		} else if (("revert").equalsIgnoreCase(actionType)) {
-			lineItem.setCheckedoutQty(lineItem.getCheckedoutQty() - 1);
+			stockTransferLineItem.setCheckedoutQty(stockTransferLineItem.getCheckedoutQty() - 1);
 		}
-		return (StockTransferLineItem) stockTransferDao.save(lineItem);
+		return (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
 
 	}
 

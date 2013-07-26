@@ -635,6 +635,12 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
+        //for some orders userCodCall object is not created, a last check to create one
+        if (order.getUserCodCall() == null) {
+            UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+            saveUserCodCall(userCodCall);
+        }
+
         logger.debug("Trying to split order " + order.getId());
 
         User adminUser = getUserService().getAdminUser();
