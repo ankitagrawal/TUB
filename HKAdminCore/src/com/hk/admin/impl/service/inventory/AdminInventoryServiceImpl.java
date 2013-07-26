@@ -398,98 +398,105 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		return skuItemBarcodeMap;
 	}
 
-	public void checkoutMethod(LineItem lineItem, SkuItem skuItem) {
+	public boolean checkoutMethod(LineItem lineItem, SkuItem skuItem) {
 		User loggedOnUser = userService.getLoggedInUser();
 		List<SkuItemLineItem> skuItemLineItems = skuItemLineItemService.getSkuItemLineItem(lineItem, EnumSkuItemStatus.BOOKED.getId());
-		List<SkuItem> skuItemInSkuItemLineItems = new ArrayList<SkuItem>();
-		SkuItemLineItem skuItemLineItem = skuItemLineItemService.getBySkuItemId(skuItem.getId());
-		SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
-		for (SkuItemLineItem item : skuItemLineItems) {
-			SkuItem si = item.getSkuItem();
-			skuItemInSkuItemLineItems.add(si);
-		}
+		if (skuItemLineItems != null && skuItemLineItems.size() > 0) {
+			List<SkuItem> skuItemInSkuItemLineItems = new ArrayList<SkuItem>();
+			SkuItemLineItem skuItemLineItem = skuItemLineItemService.getBySkuItemId(skuItem.getId());
+			SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
+			for (SkuItemLineItem item : skuItemLineItems) {
+				SkuItem si = item.getSkuItem();
+				skuItemInSkuItemLineItems.add(si);
+			}
 
-		if (skuItemCLI != null && skuItemCLI.getCartLineItem().equals(lineItem.getCartLineItem())) {
-			// if it is the same SkuItem
-			if (skuItemInSkuItemLineItems.contains(skuItem)) {
-				skuItem = checkoutSkuItem(lineItem, skuItem);
-			} else {
-				if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())
-						|| skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
-					SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
+			if (skuItemCLI != null && skuItemCLI.getCartLineItem().equals(lineItem.getCartLineItem())) {
+				// if it is the same SkuItem
+				if (skuItemInSkuItemLineItems.contains(skuItem)) {
 					skuItem = checkoutSkuItem(lineItem, skuItem);
-					toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-					toReleaseSkuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-					toReleaseSkuItem = (SkuItem) baseDao.save(toReleaseSkuItem);
-					inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null,
-							inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l, loggedOnUser);
-					logger.debug("Releasing SkuItem - " + toReleaseSkuItem.getId() + " at Checkout");
-
-					SkuItemCLI cli = skuItemLineItemDao.getSkuItemCLI(toReleaseSkuItem);
-					cli.setSkuItem(skuItem);
-					cli = (SkuItemCLI) baseDao.save(cli);
-
-					SkuItemLineItem skuItemLineItemToRelease = skuItemLineItemDao.getSkuItemLineItem(toReleaseSkuItem);
-					skuItemCLI.setSkuItem(skuItem);
-					skuItemLineItemToRelease = (SkuItemLineItem) baseDao.save(skuItemLineItemToRelease);
+					return true;
 				} else {
-					// Temp-booked
-					if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+					if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())
+							|| skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
+						SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
 						skuItem = checkoutSkuItem(lineItem, skuItem);
+						toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+						toReleaseSkuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+						toReleaseSkuItem = (SkuItem) baseDao.save(toReleaseSkuItem);
+						inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null,
+								inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l, loggedOnUser);
+						logger.debug("Releasing SkuItem - " + toReleaseSkuItem.getId() + " at Checkout");
 
-						List<SkuItemCLI> skuCliList = skuItemLineItemDao.getSkuItemCLI(lineItem.getCartLineItem(), null);
-						SkuItemCLI cli = skuCliList.get(0);
+						SkuItemCLI cli = skuItemLineItemDao.getSkuItemCLI(toReleaseSkuItem);
 						cli.setSkuItem(skuItem);
 						cli = (SkuItemCLI) baseDao.save(cli);
-						if (cli.getSkuItemLineItem() != null) {
-							SkuItemLineItem skuli = cli.getSkuItemLineItem();
-							skuli.setSkuItem(skuItem);
-							skuli = (SkuItemLineItem) baseDao.save(skuli);
-						}
 
-						if (skuItemCLI != null) {
-							SkuItem fromLineItemSkuItem = cli.getSkuItem();
-							skuItemCLI.setSkuItem(fromLineItemSkuItem);
-							skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
-							if (skuItemCLI.getSkuItemLineItem() != null) {
-								SkuItemLineItem skuli = skuItemCLI.getSkuItemLineItem();
-								skuli.setSkuItem(fromLineItemSkuItem);
+						SkuItemLineItem skuItemLineItemToRelease = skuItemLineItemDao.getSkuItemLineItem(toReleaseSkuItem);
+						skuItemCLI.setSkuItem(skuItem);
+						skuItemLineItemToRelease = (SkuItemLineItem) baseDao.save(skuItemLineItemToRelease);
+						return true;
+					} else {
+						// Temp-booked
+						if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+							skuItem = checkoutSkuItem(lineItem, skuItem);
+
+							List<SkuItemCLI> skuCliList = skuItemLineItemDao.getSkuItemCLI(lineItem.getCartLineItem(), null);
+							SkuItemCLI cli = skuCliList.get(0);
+							cli.setSkuItem(skuItem);
+							cli = (SkuItemCLI) baseDao.save(cli);
+							if (cli.getSkuItemLineItem() != null) {
+								SkuItemLineItem skuli = cli.getSkuItemLineItem();
+								skuli.setSkuItem(skuItem);
 								skuli = (SkuItemLineItem) baseDao.save(skuli);
 							}
+
+							if (skuItemCLI != null) {
+								SkuItem fromLineItemSkuItem = cli.getSkuItem();
+								skuItemCLI.setSkuItem(fromLineItemSkuItem);
+								skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+								if (skuItemCLI.getSkuItemLineItem() != null) {
+									SkuItemLineItem skuli = skuItemCLI.getSkuItemLineItem();
+									skuli.setSkuItem(fromLineItemSkuItem);
+									skuli = (SkuItemLineItem) baseDao.save(skuli);
+								}
+							}
 						}
+						return true;
 					}
 				}
-			}
-		} else {
-			List<SkuItemCLI> skuCliList = skuItemLineItemDao.getSkuItemCLI(lineItem.getCartLineItem(), null);
-			SkuItemCLI cli = skuCliList.get(0);
-			SkuItem searchedSkuItem = skuItemCLI.getSkuItem();
-			SkuItem fromLineItemSkuItem = cli.getSkuItem();
-			// checkout the searchedSkuItem
-			searchedSkuItem = checkoutSkuItem(lineItem, searchedSkuItem);
+			} else {
+				List<SkuItemCLI> skuCliList = skuItemLineItemDao.getSkuItemCLI(lineItem.getCartLineItem(), null);
+				SkuItemCLI cli = skuCliList.get(0);
+				SkuItem searchedSkuItem = skuItemCLI.getSkuItem();
+				SkuItem fromLineItemSkuItem = cli.getSkuItem();
+				// checkout the searchedSkuItem
+				searchedSkuItem = checkoutSkuItem(lineItem, searchedSkuItem);
 
-			SkuItem tempSkuItem;
-			tempSkuItem = searchedSkuItem;
-			searchedSkuItem = fromLineItemSkuItem;
-			fromLineItemSkuItem = tempSkuItem;
-			cli.setSkuItem(searchedSkuItem);
-			cli = (SkuItemCLI) baseDao.save(cli);
+				SkuItem tempSkuItem;
+				tempSkuItem = searchedSkuItem;
+				searchedSkuItem = fromLineItemSkuItem;
+				fromLineItemSkuItem = tempSkuItem;
+				cli.setSkuItem(searchedSkuItem);
+				cli = (SkuItemCLI) baseDao.save(cli);
 
-			if (cli.getSkuItemLineItem() != null) {
-				SkuItemLineItem skuli = cli.getSkuItemLineItem();
-				skuli.setSkuItem(searchedSkuItem);
-				skuli = (SkuItemLineItem) baseDao.save(skuli);
-			}
-			if (skuItemCLI != null) {
-				skuItemCLI.setSkuItem(fromLineItemSkuItem);
-				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
-				if (skuItemCLI.getSkuItemLineItem() != null) {
-					SkuItemLineItem skuli = skuItemCLI.getSkuItemLineItem();
-					skuli.setSkuItem(fromLineItemSkuItem);
+				if (cli.getSkuItemLineItem() != null) {
+					SkuItemLineItem skuli = cli.getSkuItemLineItem();
+					skuli.setSkuItem(searchedSkuItem);
 					skuli = (SkuItemLineItem) baseDao.save(skuli);
 				}
+				if (skuItemCLI != null) {
+					skuItemCLI.setSkuItem(fromLineItemSkuItem);
+					skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+					if (skuItemCLI.getSkuItemLineItem() != null) {
+						SkuItemLineItem skuli = skuItemCLI.getSkuItemLineItem();
+						skuli.setSkuItem(fromLineItemSkuItem);
+						skuli = (SkuItemLineItem) baseDao.save(skuli);
+					}
+				}
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public SkuItem checkoutSkuItem(LineItem lineItem, SkuItem skuItem) {

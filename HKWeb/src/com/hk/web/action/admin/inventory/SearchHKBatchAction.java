@@ -22,6 +22,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
 import com.hk.web.action.error.AdminPermissionAction;
 
 import java.util.List;
@@ -54,8 +55,9 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
         if (StringUtils.isNotBlank(hkBarcode)) {
-            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList);
+            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwners);
             if (skuItemBarcode != null) {
                 skuGroupList.add(skuItemBarcode.getSkuGroup());
             } else {
