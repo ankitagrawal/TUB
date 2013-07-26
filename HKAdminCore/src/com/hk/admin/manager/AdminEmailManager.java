@@ -1183,7 +1183,7 @@ public class AdminEmailManager {
 		}
 		String fromPurchaseEmail = "purchase@healthkart.com";
 		User user = userService.getAdminUser();
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailNotSentToSupplier);
         return emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),user.getName() ,"nihal@healthkart.com", "nihal", null, null, categoryAdmins, null, null, null);
     }
 
