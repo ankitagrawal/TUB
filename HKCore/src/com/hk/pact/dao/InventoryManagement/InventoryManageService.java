@@ -18,8 +18,6 @@ import java.util.List;
  */
 public interface InventoryManageService {
 
-     public void tempBookSkuLineItemForOrder(Order order);
-
      public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
 
      public void releaseSkuItemCLIForOrder(Order order);

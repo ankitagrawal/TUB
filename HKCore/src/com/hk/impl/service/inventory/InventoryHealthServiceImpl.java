@@ -11,15 +11,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.CartLineItem;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
@@ -28,6 +33,8 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.SkuService;
+import com.hk.core.fliter.CartLineItemFilter;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -39,6 +46,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Autowired UpdatePvPriceDao updatePvPriceDao;
     @Autowired InventoryManageDao inventoryManageDao;
     @Autowired InventoryManageService inventoryManageService;
+    @Autowired SkuService skuService;
 
 
 
@@ -47,13 +55,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	public void checkInventoryHealth(ProductVariant variant) {
 
 		Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
-		
+
 		InventoryInfo selectedInfo = null;
 		long netInventory = 0l;
 		if(infos != null && infos.size() != 0) {
 			selectedInfo = removeFirst((List<InventoryInfo>)infos);
 		}
-		
+
 		if(selectedInfo != null) {
 			netInventory = selectedInfo.getQty();
 			for (InventoryInfo inventoryInfo : infos) {
@@ -63,7 +71,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				}
 			}
 		}
-		
+
 		VariantUpdateInfo vInfo = new VariantUpdateInfo();
 		vInfo.netQty = netInventory;
 
@@ -76,7 +84,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		updateVariant(variant, vInfo);
 	}
-	
+
 	@Override
 	public long getAvailableUnbookedInventory(ProductVariant productVariant) {
 		if(productVariant.getMrpQty() == null) {
@@ -97,9 +105,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		double mrp;
 		double costPrice;
 		boolean inStock;
-		
+
 	}
-	
+
 	private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 		double newHkPrice = 0d;
         Product product = variant.getProduct();
@@ -122,7 +130,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
             baseDao.save(updatePvPrice);
 		}
-		
+
 		if(vInfo.inStock) {
 			variant.setMarkedPrice(vInfo.mrp);
 		}
@@ -140,7 +148,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		if(newHkPrice != 0d){
 			variant.setHkPrice(newHkPrice);
 		}
-		
+
 		productVariantService.save(variant);
         //neither do we alter corresponding product status
         if (updateStockStatus) {
@@ -162,16 +170,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			  " where a.product_variant_id = :pvId " +
 			  " and b.order_status_id in (:statusIds) " +
 			  " group by a.marked_price";
-	
+
 	private Map<Double, Long> getBookedInventoryQty(ProductVariant productVariant) {
 		String sql = bookedInventorySql;
 		SQLQuery query = baseDao.createSqlQuery(sql);
 		query.addScalar("mrp", Hibernate.DOUBLE);
 		query.addScalar("qty", Hibernate.LONG);
-		
+
 		query.setParameter("pvId", productVariant.getId());
 		query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.Placed.getId()));
-		
+
 		Map<Double, Long> map = new LinkedHashMap<Double, Long>();
 		@SuppressWarnings("unchecked")
 		List<Object[]> list = query.list();
@@ -182,8 +190,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return map;
 	}
-	
-	
+
+
 	private static final String inProcessInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty, a.sku_id as skuId" +
 			" from line_item as a inner join shipping_order as b on a.shipping_order_id = b.id" +
 			" inner join base_order as c on b.base_order_id = c.id" +
@@ -193,21 +201,21 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			" and c.order_status_id in (:statusIds)" +
 			" and b.shipping_order_status_id in (:sosIds)" +
 			" group by a.marked_price, a.sku_id";
-	
+
 	private List<SkuInfo> getInProcessInventory(ProductVariant productVariant, List<Warehouse> whs) {
 		String sql = inProcessInventorySql;
 		SQLQuery query = baseDao.createSqlQuery(sql);
 		query.addScalar("mrp", Hibernate.DOUBLE);
 		query.addScalar("qty", Hibernate.LONG);
 		query.addScalar("skuId", Hibernate.LONG);
-		
+
 		query.setParameter("pvId", productVariant.getId());
 		query.setParameterList("whIds", toWarehouseIds(whs));
 		query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
 		query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
-		
+
 		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
-		
+
 		@SuppressWarnings("unchecked")
 		List<SkuInfo> list = query.list();
 		return list;
@@ -245,28 +253,28 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			" and b.mrp is not null" +
 			" group by b.id" +
 			" order by checkinDate asc";
-	
+
 	@Override
 	public Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
 		String sql = checkedInInvSql;
 		SQLQuery query = baseDao.createSqlQuery(sql);
-		
+
 		query.addScalar("skuId", Hibernate.LONG);
 		query.addScalar("mrp", Hibernate.DOUBLE);
 		query.addScalar("qty", Hibernate.LONG);
 		query.addScalar("costPrice", Hibernate.DOUBLE);
 		query.addScalar("checkinDate", Hibernate.DATE);
-		
+
 		query.setParameter("pvId", productVariant.getId());
 		query.setParameterList("whIds", toWarehouseIds(whs));
 		query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
         query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
-		
+
 		query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
-		
+
 		@SuppressWarnings("unchecked")
 		List<SkuInfo> list = query.list();
-		
+
 		LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
 		for (SkuInfo skuInfo : list) {
 			SkuInfo info = getLast(skuList);
@@ -280,21 +288,21 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return skuList;
 	}
-	
+
 	private List<Long> toWarehouseIds(List<Warehouse> whs) {
 		List<Long> list = new ArrayList<Long>();
 		for (Warehouse wh : whs) {
 			list.add(wh.getId());
 		}
-		
+
 		return list;
 	}
-	
+
 	private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
 		Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
-		
+
 		Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
-		
+
 		List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
 		if(inProcessList !=null) {
 			for (SkuInfo inProcessInfo : inProcessList) {
@@ -314,10 +322,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				}
 			}
 		}
-		
+
 		List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
 		Map<Double, List<InventoryInfo>> mrpMap = new LinkedHashMap<Double, List<InventoryInfo>>();
-		
+
 		for (SkuInfo skuInfo : checkedInInvList) {
 			InventoryInfo info = getLast(invList);
 			if(info != null && skuInfo.getMrp() == info.getMrp()) {
@@ -327,7 +335,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				info.setMrp(skuInfo.getMrp());
 				info.setQty(skuInfo.getQty());
 				invList.add(info);
-				
+
 				List<InventoryInfo> infos = mrpMap.get(skuInfo.getMrp());
 				if(infos == null) {
 					infos = new ArrayList<InventoryInfo>();
@@ -337,7 +345,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 			}
 			info.addSkuInfo(skuInfo);
 		}
-		
+
 		for(Map.Entry<Double, List<InventoryInfo>> entry: mrpMap.entrySet()) {
 			Double mrp = entry.getKey();
 			Long bookedQty = bookedQtyMap.get(mrp);
@@ -363,7 +371,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return invList;
 	}
-	
+
 	@Override
 	public long getUnbookedInventoryInProcessingQueue(LineItem lineItem) {
 		long qty = 0l;
@@ -376,7 +384,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 				}
 			}
 		}
-		
+
 		List<SkuInfo> inProcessList = getInProcessInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
 		for (SkuInfo skuInfo : inProcessList) {
 			if(lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
@@ -407,7 +415,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
         return qty;
     }
-	
+
 	private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list,  long skuId, double mrp) {
 		List<SkuInfo> infos = new ArrayList<SkuInfo>();
 		for (SkuInfo info : list) {
@@ -417,12 +425,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return infos;
 	}
-	
+
 	@Override
 	public Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant) {
 		return getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses());
 	}
-	
+
 	@Override
 	public Collection<InventoryInfo> getAvailableInventory(List<Sku> skus) {
 		List<Warehouse> whs = new ArrayList<Warehouse>();
@@ -431,7 +439,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return getAvailableInventory(skus.get(0).getProductVariant(), whs);
 	}
-	
+
 	@Override
 	public Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter) {
 		List<SkuInfo> skus = new ArrayList<SkuInfo>();
@@ -455,26 +463,26 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return skus;
 	}
-	
+
 	private static <T> T removeFirst(List<T> list) {
 		if(list == null || list.size() == 0) return null;
 		if(list instanceof LinkedList) {
 			try {
 				return ((LinkedList<T>) list).removeFirst();
 			} catch (Exception e) {
-				
+
 			}
 		}
 		return list.remove(0);
 	}
-	
+
 	private static <T> T getLast(List<T> list) {
 		if(list == null || list.size() == 0) return null;
 		if(list instanceof LinkedList) {
 			try {
 				return ((LinkedList<T>) list).getLast();
 			} catch (Exception e) {
-				
+
 			}
 		}
 		return list.get(list.size() -1);
@@ -566,11 +574,45 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
            productVariant.setMarkedPrice(selectedInfo.getMrp());
            productVariant.setCostPrice(selectedInfo.getCostPrice());
            long skuId = selectedInfo.getSkuId();
-           Sku sku = getBaseDao().get(Sku.class,skuId );            
+           Sku sku = getBaseDao().get(Sku.class,skuId );
            productVariant.setWarehouse(sku.getWarehouse());
            getBaseDao().save(productVariant);
        }
-    
+
+
+
+    // Call this method from payment action  java
+      public void tempBookSkuLineItemForOrder(Order order) {
+          Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+//        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+          for (CartLineItem cartLineItem : cartLineItems) {
+              ProductVariant productVariant = cartLineItem.getProductVariant();
+
+              // picking the  sku for current MRP available at max qty on product variant
+              Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+
+              long qtyToBeSet = cartLineItem.getQty();
+              Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+
+              for (int i = 0; i < qtyToBeSet; i++) {
+                  SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
+                  skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                  skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                  // todo Pvi entries
+                  skuItem = (SkuItem) getBaseDao().save(skuItem);
+                  // inventoryHealthCheck call
+                  inventoryHealthCheck(productVariant);
+
+                  // todo UpdatePrice and Mrp qyt
+                  skuItemsToBeBooked.add(skuItem);
+              }
+              // Call method to make new entries in SKUItemCLI
+              inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+
+
+          }
+      }
+
 
      public BaseDao getBaseDao() {
         return baseDao;

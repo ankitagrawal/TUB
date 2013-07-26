@@ -21,6 +21,7 @@ import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
@@ -67,7 +68,7 @@ public class PaymentManager {
     @Autowired
     EmailManager emailManager;
     @Autowired
-    InventoryManageService inventoryManageService;
+    InventoryHealthService inventoryHealthService;
 
     @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
     private Double cashBackLimit;
@@ -279,7 +280,7 @@ public class PaymentManager {
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
             order = processOrder(payment);
-            inventoryManageService.tempBookSkuLineItemForOrder(order);
+            inventoryHealthService.tempBookSkuLineItemForOrder(order);
         }
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;

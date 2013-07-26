@@ -9,6 +9,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.Order;
 
 public interface InventoryHealthService {
 
@@ -29,6 +30,8 @@ public interface InventoryHealthService {
 	long getUnbookedInventoryForActionQueue(LineItem lineItem);
 
     public void inventoryHealthCheck(ProductVariant productVariant);
+
+     public void tempBookSkuLineItemForOrder(Order order);
 
 
 	public static class InventoryInfo {

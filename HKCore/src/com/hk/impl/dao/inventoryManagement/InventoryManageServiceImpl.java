@@ -62,34 +62,6 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     UpdatePvPriceDao updatePvPriceDao;
 
 
-    // Call this method from payment action  java
-    public void tempBookSkuLineItemForOrder(Order order) {
-        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-//        Set<CartLineItem> cartLineItems = order.getCartLineItems();
-        for (CartLineItem cartLineItem : cartLineItems) {
-            ProductVariant productVariant = cartLineItem.getProductVariant();
-
-            // picking the  sku for current MRP available at max qty on product variant
-            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-
-            long qtyToBeSet = cartLineItem.getQty();
-            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-
-            for (int i = 0; i < qtyToBeSet; i++) {
-                SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
-                skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                // todo Pvi entries
-                skuItem = (SkuItem) getBaseDao().save(skuItem);
-                // todo UpdatePrice and Mrp qyt
-                skuItemsToBeBooked.add(skuItem);
-            }
-            // Call method to make new entries in SKUItemCLI
-            saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-
-        }
-    }
-
 
     //     Make Entries in new SkuItemCLI  table
     public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem) {
