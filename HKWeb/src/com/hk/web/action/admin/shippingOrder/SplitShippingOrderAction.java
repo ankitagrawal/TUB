@@ -51,7 +51,8 @@ public class SplitShippingOrderAction extends BaseAction {
                 selectedLineItems.add(lineItem);
             }
         }
-    	boolean orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems, null, messages);
+    	boolean orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems,
+                splittedOrders, messages);
     	
     	if(orderSplitSuccess) {
             shippingOrder = splittedOrders.get("oldShippingOrder");
