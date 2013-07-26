@@ -76,5 +76,6 @@ public class EmailTemplateConstants {
     public static final String soFixedMail = "/soFixEmail.ftl";
     public static final String soFixFailedMail = "/soFixFailedMail.ftl";
     public static final String jitShippingOrderStatusChangeMail = "/jitShippingOrderStatusChangeMail.ftl";
+    public static final String poMailNotSentToSupplier = "/poMailNotSentToSupplier.ftl";
 
 }

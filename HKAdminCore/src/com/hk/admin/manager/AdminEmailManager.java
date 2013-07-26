@@ -1162,8 +1162,28 @@ public class AdminEmailManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+		 if(pdfFile.getName().contains(purchaseOrder.getId().toString())&& xlsFile.getName().contains(purchaseOrder.getId().toString())){
+			 return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath()); 
+		 }
+		 else{
+			 return poMailNotSentToSupplier(purchaseOrder);
+		 }
+		
 	}
+	
+	public boolean poMailNotSentToSupplier(PurchaseOrder purchaseOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("purchaseOrder", purchaseOrder);
+        Set<String> categoryAdmins = new HashSet<String>();
+		if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+			Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+			categoryAdmins = emailManager.categoryAdmins(category);
+		}
+		String fromPurchaseEmail = "purchase@healthkart.com";
+		User user = userService.getAdminUser();
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),user.getName() , null, fromPurchaseEmail, null, null, categoryAdmins, null, null, null);
+    }
 
 
 	public boolean sendDebitNoteMail(DebitNote debitNote){

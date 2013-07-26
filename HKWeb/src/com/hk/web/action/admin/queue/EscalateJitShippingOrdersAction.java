@@ -85,7 +85,6 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 			sortedShippingOrderList = getSortedShippingOrders();
 			Set<ShippingOrder> sortedShippingOrdersSet = new HashSet<ShippingOrder>(sortedShippingOrderList);
 
-			int ctr = 0;
 
 			for (ShippingOrder shippingOrder : sortedShippingOrdersSet) {
 				if(shippingOrder.getId().intValue()==1639052){
@@ -107,10 +106,10 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 					logger.debug("Trying to manually escalate SO -"+shippingOrder.getId());
 					shippingOrder = shippingOrderService.manualEscalateShippingOrder(shippingOrder);
 					if(shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())){
-						notEscalated +=", "+shippingOrder.getId().toString();
+						notEscalated +=shippingOrder.getId().toString()+", ";
 					}
 					else{
-						escalated +=", "+shippingOrder.getId().toString();
+						escalated +=shippingOrder.getId().toString()+", ";
 					}
 					ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
 					shippingOrderLifecycle.setOrder(shippingOrder);
@@ -120,10 +119,17 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 					shippingOrderLifecycle.setComments("Tried to manually escalate as PO against the shipping order served.");
 					shippingOrderLifecycle.setActivityDate(new Date());
 					shippingOrderLifecycleDao.save(shippingOrderLifecycle);
-					ctr++;
 				}
 			}
-			addRedirectAlertMessage(new SimpleMessage("Shipping Orders - "+escalated+" were escalated. <br/>"+"Shipping Orders - "+notEscalated+" could not be escalated <br/>"));
+			if(escalated.length()>0&&notEscalated.length()>0){
+			addRedirectAlertMessage(new SimpleMessage("Shipping Order(s) - "+escalated+" were escalated. <br/>"+"Shipping Order(s) - "+notEscalated+" could not be escalated <br/>"));
+			}
+			else if(escalated.length()>0&&!(notEscalated.length()>0)){
+				addRedirectAlertMessage(new SimpleMessage("Shipping Order(s) - "+escalated+" were escalated."));
+			}
+			else if(notEscalated.length()>0&&!(escalated.length()>0)){
+				addRedirectAlertMessage(new SimpleMessage("Shipping Order(s) - "+notEscalated+" were not escalated."));
+			}
 			return new RedirectResolution(ActionAwaitingQueueAction.class);
 		}
 	}
