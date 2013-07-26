@@ -1151,18 +1151,20 @@ public class AdminEmailManager {
 			} else if (purchaseOrder.getPurchaseOrderType() != null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.DROP_SHIP.getId())) {
 				purchaseOrdertype = "DS";
 			}
-			pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + purchaseOrdertype + "-" + " -Dt- " + date + ".pdf");
+			pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + " "+purchaseOrdertype + " -Dt- " + date + ".pdf");
 			pdfFile.getParentFile().mkdirs();
 			purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
 			getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
 
-			xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + purchaseOrdertype + "-" + purchaseOrder.getId() + " -Dt- " + date + ".xls");
+			xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + " "+purchaseOrdertype +" -Dt- " + date + ".xls");
 			xlsFile.getParentFile().mkdirs();
 			xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		 if(pdfFile.getName().contains(purchaseOrder.getId().toString())&& xlsFile.getName().contains(purchaseOrder.getId().toString())){
+		File newPdfFile = new File(pdfFile.getAbsolutePath());
+		File newXlsFile = new File(xlsFile.getAbsolutePath());
+		 if(newPdfFile.exists()&& newXlsFile.exists() && newPdfFile.getName().contains(purchaseOrder.getId().toString())&& newXlsFile.getName().contains(purchaseOrder.getId().toString())){
 			 return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath()); 
 		 }
 		 else{
@@ -1182,7 +1184,7 @@ public class AdminEmailManager {
 		String fromPurchaseEmail = "purchase@healthkart.com";
 		User user = userService.getAdminUser();
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
-        return emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),user.getName() , null, fromPurchaseEmail, null, null, categoryAdmins, null, null, null);
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),user.getName() ,fromPurchaseEmail, fromPurchaseEmail, null, null, categoryAdmins, null, null, null);
     }
 
 
