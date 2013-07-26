@@ -21,7 +21,7 @@ public interface SkuItemLineItemService {
 
     public SkuItemLineItem getById(Long skuItemLineItemId);
 
-    public SkuItemLineItem createNewSkuItemLineItem(LineItem lineItem) ;
+    public Boolean createNewSkuItemLineItem(LineItem lineItem) ;
 
     public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse);
 
