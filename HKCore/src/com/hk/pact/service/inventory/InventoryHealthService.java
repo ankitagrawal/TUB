@@ -30,6 +30,8 @@ public interface InventoryHealthService {
 
     public Collection<SkuInfo> getNetCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
 
+    public void InventoryHealthCheck(ProductVariant productVariant);
+
 
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

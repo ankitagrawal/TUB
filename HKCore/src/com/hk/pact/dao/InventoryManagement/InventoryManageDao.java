@@ -20,7 +20,7 @@ public interface InventoryManageDao {
 
     public Long getNetInventory(List<Sku> skuList);
 
-    public Long getNetInventory(List<Sku> skuList, List<EnumSkuItemStatus> skuItemStatusIds);
+    public Long getNetInventory(List<Sku> skuList, List<Long> skuItemStatusIds);
 
 
     public Long getNetInventory(List<Sku> skuList, Double mrp);
@@ -32,6 +32,8 @@ public interface InventoryManageDao {
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp);
+
+    public Double getFirstcheckedInBatchMRP(ProductVariant productVariant);
 
 
 

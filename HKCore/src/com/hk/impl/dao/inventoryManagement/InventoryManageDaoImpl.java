@@ -2,15 +2,13 @@ package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
-import com.hk.domain.warehouse.Warehouse;
+
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
-import com.hk.pact.service.inventory.InventoryHealthService;
-import com.hk.admin.dto.inventory.SkuGroupInfoDto;
+
 
 import java.util.*;
 
@@ -48,12 +46,12 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
     }
 
 
-    public Long getNetInventory(List<Sku> skuList, List<EnumSkuItemStatus> skuItemStatuses){
+    public Long getNetInventory(List<Sku> skuList, List<Long> skuItemStatuses){
           Long netInv = 0L;
         if (skuList != null && !skuList.isEmpty()) {
             //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
             String query = "select count(si) from SkuItem si where si.skuGroup.status != :skuStatus and si.skuGroup.sku in (:skuList) and si.skuItemStatus.id in (:skuItemStatuses) " ;
-            netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("skuItemStatuses", skuItemStatuses).uniqueResult();
+            netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("skuItemStatuses", skuItemStatuses).setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW).uniqueResult();
             if (netInv == null) {
                 netInv = 0L;
             }
@@ -186,6 +184,15 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
 
 
         */
+
+
+     public Double getFirstcheckedInBatchMRP(ProductVariant productVariant) {
+        String sql = "Select si.skuGroup.mrp from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and si.skuGroup.status != :reviewStatus or si.skuGroup.status is null  order by si.skuGroup.createDate asc  ";
+        Query query = getSession().createQuery(sql).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
+        return (Double)query.list().get(0);
+
+    }
+
 
 
 
