@@ -79,7 +79,9 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     @Transactional
     public void checkInventoryHealth(ProductVariant productVariant) {
-    	inventoryHealthService.checkInventoryHealth(productVariant);
+//        comment by Ankit
+//    	inventoryHealthService.checkInventoryHealth(productVariant);
+        inventoryHealthService.InventoryHealthCheck(productVariant);
     	lowInventoryAction(productVariant);
     }
 

@@ -1,13 +1,6 @@
 package com.hk.impl.service.inventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
@@ -28,6 +21,8 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -42,6 +37,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Autowired WarehouseService warehouseService;
 	@Autowired BaseDao baseDao;
 	@Autowired UpdatePvPriceDao updatePvPriceDao;
+    @Autowired InventoryManageDao inventoryManageDao;
+    @Autowired InventoryManageService inventoryManageService;
+
+
 
 	@Override
 	@Transactional
@@ -81,7 +80,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Override
 	public long getAvailableUnbookedInventory(ProductVariant productVariant) {
 		if(productVariant.getMrpQty() == null) {
-			checkInventoryHealth(productVariant);
+//            comment By ankit
+//			checkInventoryHealth(productVariant);
+            InventoryHealthCheck(productVariant);
+
+
 		}
 		productVariant = productVariantService.getVariantById(productVariant.getId());
 		if(productVariant.getMrpQty() == null) {
@@ -478,4 +481,105 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		}
 		return list.get(list.size() -1);
 	}
+
+
+
+    public void InventoryHealthCheck(ProductVariant productVariant) {
+           Long availableBookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
+
+           if (availableBookedInventory > 0) {
+               Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
+               Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
+               // Available unbooked inventory list se update marna hai cuurent variant ki qty
+               if (availableUnBookedInvnList != null && availableUnBookedInvnList.size() > 0) {
+                   for (InventoryHealthService.SkuInfo info : availableUnBookedInvnList) {
+                       if (priceMap.containsKey(info.getMrp())) {
+                           priceMap.get(info.getMrp()).add(info);
+                       } else {
+                           Set<InventoryHealthService.SkuInfo> samePriceSkuInfo = new HashSet<InventoryHealthService.SkuInfo>();
+                           samePriceSkuInfo.add(info);
+                           priceMap.put(info.getMrp(), samePriceSkuInfo);
+                       }
+                   }
+               }
+
+
+               Set<InventoryHealthService.SkuInfo> skuInfosForCurrentMrp = priceMap.get(productVariant.getMarkedPrice());
+               if (skuInfosForCurrentMrp != null && skuInfosForCurrentMrp.size() > 0) {
+
+                   updateVariantInfo(productVariant, skuInfosForCurrentMrp);
+               } else {
+                   // if i am not getting any entry that means need to update variant with new mrp  need to get oldest checkin batch
+                   Double mrp = inventoryManageDao.getFirstcheckedInBatchMRP(productVariant);
+                   if (mrp != null) {
+                       Set<InventoryHealthService.SkuInfo> newBatchSkuInfo = priceMap.get(productVariant.getMarkedPrice());
+                       updateVariantInfo(productVariant, newBatchSkuInfo);
+                   }
+               }
+           } else {
+               Product product = productVariant.getProduct();
+               boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+               if (!updateStockStatus) {
+                   productVariant.setOutOfStock(false);
+               } else {
+                   productVariant.setOutOfStock(true);
+                   List<ProductVariant> inStockVariants = product.getInStockVariants();
+                   if (inStockVariants != null && inStockVariants.isEmpty()) {
+                       product.setOutOfStock(true);
+                       getBaseDao().save(product);
+                   }
+               }
+               productVariant.setNetQty(0L);
+               getBaseDao().save(productVariant);
+           }
+       }
+
+
+       public void updateVariantInfo(ProductVariant productVariant, Set<InventoryHealthService.SkuInfo> skuInfos) {
+           double newHkPrice = 0d;
+           Iterator<InventoryHealthService.SkuInfo> iterator = skuInfos.iterator();
+           InventoryHealthService.SkuInfo selectedInfo = iterator.next();
+           Long maxQty = selectedInfo.getQty();
+           for (InventoryHealthService.SkuInfo info : skuInfos) {
+               if (maxQty.compareTo(info.getQty()) < 0) {
+                   maxQty = info.getQty();
+                   selectedInfo = info;
+               }
+           }
+//              Now set Product Variant.mrp qty
+
+
+           if (selectedInfo.getMrp() != 0d && !productVariant.getMarkedPrice().equals(Double.valueOf(selectedInfo.getMrp()))) {
+               UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
+               if (updatePvPrice == null) {
+                   updatePvPrice = new UpdatePvPrice();
+               }
+               updatePvPrice.setProductVariant(productVariant);
+               updatePvPrice.setOldCostPrice(productVariant.getCostPrice());
+               updatePvPrice.setNewCostPrice(selectedInfo.getCostPrice());
+               updatePvPrice.setOldMrp(productVariant.getMarkedPrice());
+               updatePvPrice.setNewMrp(selectedInfo.getMrp());
+               updatePvPrice.setOldHkprice(productVariant.getHkPrice());
+               newHkPrice = selectedInfo.getMrp() * (1 - productVariant.getDiscountPercent());
+               updatePvPrice.setNewHkprice(newHkPrice);
+               updatePvPrice.setTxnDate(new Date());
+               updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
+               baseDao.save(updatePvPrice);
+           }
+
+           productVariant.setMrpQty(maxQty);
+           productVariant.setMarkedPrice(selectedInfo.getMrp());
+           productVariant.setCostPrice(selectedInfo.getCostPrice());
+           getBaseDao().save(productVariant);
+       }
+
+     public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.catalog.product.ProductVariant;
 
 import java.util.Set;
 import java.util.List;
@@ -24,5 +25,7 @@ public interface InventoryManageService {
      public void releaseSkuItemCLIForOrder(Order order);
 
     public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp);
+
+    public Long getAvailableUnBookedInventory(ProductVariant productVariant);
 
 }
