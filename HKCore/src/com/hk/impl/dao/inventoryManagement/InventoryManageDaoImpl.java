@@ -126,68 +126,8 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
        }
 
 
-    
- /*
-    private List<Long> toWarehouseIds(List<Warehouse> whs) {
-		List<Long> list = new ArrayList<Long>();
-		for (Warehouse wh : whs) {
-			list.add(wh.getId());
-		}
-
-		return list;
-	}
-
-
-
-
-    public Collection<InventoryHealthService.SkuInfo> getNetPhysicalInventory(ProductVariant productVariant, List<Warehouse> whs) {
-
-           String sql = "select  sg as skuGroup , count(si.id) as qty"
-                   + " from SkuItem si " +
-                   "  join si.skuGroup sg " +
-                   " join sg.sku s "   +
-                   " where s.productVariant = :pvId" +
-                   " and s.warehouse in (:whIds)" +
-                   " and (sg.status != :reviewStatus or sg.status is null)" +
-                   " and si.skuItemStatus  in(:itemStatus)" +
-                   " and sg.mrp is not null" +
-                   " group by sg.id" +
-                   " order by sg.createDate asc";
-
-
-
-           Query query = getSession().createQuery(sql);
-
-           query.setParameter("pvId", productVariant.getId());
-           query.setParameterList("whIds", toWarehouseIds(whs));
-           query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
-           query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
-
-           query.setResultTransformer(Transformers.aliasToBean(SkuGroupInfoDto.class));
-
-           @SuppressWarnings("unchecked")
-           List<SkuGroupInfoDto> list = query.list();
-
-           LinkedList<SkuGroupInfoDto> skuList = new LinkedList<SkuGroupInfoDto>();
-           for (SkuGroupInfoDto skuGroupInfo : list) {
-               InventoryHealthService.SkuInfo info = getLast(skuList);
-               if(info != null && skuGroupInfo.getSkuGroup().getSku().getId() == info.getSkuId() && skuGroupInfo.getSkuGroup().getMrp() == info.getMrp()) {
-                   info.setQty(info.getQty() + skuGroupInfo.getQty());
-                   info.setUnbookedQty(info.getQty());
-               } else {
-                   skuInfo.setUnbookedQty(skuInfo.getQty());
-                   skuList.add(skuInfo);
-               }
-           }
-           return skuList;
-       }
-
-
-        */
-
-
      public Double getFirstcheckedInBatchMRP(ProductVariant productVariant) {
-        String sql = "Select si.skuGroup.mrp from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and si.skuGroup.status != :reviewStatus or si.skuGroup.status is null  order by si.skuGroup.createDate asc  ";
+        String sql = "Select si.skuGroup.mrp from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and ( si.skuGroup.status != :reviewStatus or si.skuGroup.status is null ) order by si.skuGroup.createDate asc  ";
         Query query = getSession().createQuery(sql).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
         return (Double)query.list().get(0);
 
