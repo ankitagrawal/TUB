@@ -85,7 +85,7 @@ public class ProductVariant implements java.io.Serializable {
     private Double                    orderRanking;
 
     @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "warehouse_id", nullable = false)
+	@JoinColumn(name = "warehouse_id")
 	private Warehouse warehouse;
 
     @Transient
