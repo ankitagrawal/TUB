@@ -95,7 +95,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     BucketService bucketService;
 
-    ShippingOrderProcessor shippingOrderProcessor;
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
     
     private Long orderId;
     private Long shippingOrderId;
@@ -653,15 +653,4 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     public void setCodCallStatus(int codCallStatus) {
         this.codCallStatus = codCallStatus;
     }
-
-	/**
-	 * @return the shippingOrderProcessor
-	 */
-	public ShippingOrderProcessor getShippingOrderProcessor() {
-		if (shippingOrderProcessor == null) {
-            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
-        }
-        return shippingOrderProcessor;
-	}
-
 }

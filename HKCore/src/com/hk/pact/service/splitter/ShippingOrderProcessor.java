@@ -4,6 +4,7 @@
 package com.hk.pact.service.splitter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.hk.domain.order.ShippingOrder;
@@ -22,6 +23,7 @@ public interface ShippingOrderProcessor {
 
     public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder);
     
-	public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, List<String> messages);
+	public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems,
+                               Map<String, ShippingOrder> splittedOrders, List<String> messages);
 	
 }

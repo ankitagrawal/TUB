@@ -117,8 +117,8 @@ public class OrderServiceImpl implements OrderService {
     SubscriptionService subscriptionService;
 
     @Autowired OrderSplitter orderSplitter;
-    
-    ShippingOrderProcessor shippingOrderProcessor;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
     @Transactional
     public Order save(Order order) {
@@ -767,16 +767,6 @@ public class OrderServiceImpl implements OrderService {
             isBOCancelable = true;
         }
         return isBOCancelable;
-    }
-
-    /**
-     * @return the shippingOrderProcessor
-     */
-    public ShippingOrderProcessor getShippingOrderProcessor() {
-    	if (shippingOrderProcessor == null) {
-    		this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
-    	}
-    	return shippingOrderProcessor;
     }
 
 }

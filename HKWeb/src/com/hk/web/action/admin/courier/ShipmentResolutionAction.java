@@ -92,8 +92,8 @@ public class ShipmentResolutionAction extends BaseAction {
     BucketService bucketService;
     @Autowired
     OrderService orderService;
-    
-    ShippingOrderProcessor shippingOrderProcessor;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
     @DefaultHandler
     public Resolution pre() {
@@ -325,13 +325,4 @@ public class ShipmentResolutionAction extends BaseAction {
         this.newAwbNumber = newAwbNumber;
     }
 
-    /**
-	 * @return the shippingOrderProcessor
-	 */
-	public ShippingOrderProcessor getShippingOrderProcessor() {
-		if (shippingOrderProcessor == null) {
-            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
-        }
-        return shippingOrderProcessor;
-	}
 }

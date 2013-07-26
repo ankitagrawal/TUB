@@ -60,8 +60,8 @@ public class ShippingOrderAction extends BaseAction {
     private PaymentService paymentService;
 
     private ReplacementOrderReason rtoReason;
-    
-    ShippingOrderProcessor shippingOrderProcessor;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
     private String customerSatisfyReason;
 
@@ -235,14 +235,4 @@ public class ShippingOrderAction extends BaseAction {
         this.reconciliationType = reconciliationType;
     }
     
-    /**
-     * @return the shippingOrderProcessor
-     */
-    public ShippingOrderProcessor getShippingOrderProcessor() {
-  	  if (shippingOrderProcessor == null) {
-  		  this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
-  	  }
-  	  return shippingOrderProcessor;
-    }
-
 }

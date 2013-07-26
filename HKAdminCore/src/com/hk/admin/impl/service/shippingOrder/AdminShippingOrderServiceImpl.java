@@ -530,11 +530,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     public OrderService getOrderService() {
+        if (orderService == null) {
+            this.orderService = ServiceLocatorFactory.getService(OrderService.class);
+        }
         return orderService;
-    }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
     }
 
 	public UserService getUserService() {

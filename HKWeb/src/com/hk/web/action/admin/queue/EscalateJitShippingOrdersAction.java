@@ -55,8 +55,8 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	ShippingOrderLifecycleDao shippingOrderLifecycleDao;
 	@Autowired
 	private UserService userService;
-	
-	ShippingOrderProcessor shippingOrderProcessor;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
 	List<ShippingOrder> sortedShippingOrderList;
 
@@ -168,16 +168,6 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	public List<ShippingOrder> getSortedShippingOrders() {
 		Collections.sort(sortedShippingOrderList, new ShippingOrderComparator());
 		return sortedShippingOrderList;
-	}
-
-	/**
-	 * @return the shippingOrderProcessor
-	 */
-	public ShippingOrderProcessor getShippingOrderSplitter() {
-		if (this.shippingOrderProcessor == null) {
-            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
-        }
-		return this.shippingOrderProcessor;
 	}
 
 }

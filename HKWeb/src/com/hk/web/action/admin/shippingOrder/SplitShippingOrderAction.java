@@ -1,30 +1,21 @@
 package com.hk.web.action.admin.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
-import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 @Component
 public class SplitShippingOrderAction extends BaseAction {
@@ -34,6 +25,10 @@ public class SplitShippingOrderAction extends BaseAction {
     private ShippingOrder shippingOrder;
     private List<LineItem> lineItems;
 
+    @Autowired
+    AdminShippingOrderService adminShippingOrderService;
+
+    @Autowired
     ShippingOrderProcessor shippingOrderProcessor;
 
     @DontValidate
@@ -47,16 +42,25 @@ public class SplitShippingOrderAction extends BaseAction {
     public Resolution splitShippingOrder() {
 
     	List<String> messages = new ArrayList<String>();
-    	Set<LineItem> selectedLineItems = new HashSet<LineItem>();
+        Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
+        Set<LineItem> selectedLineItems = new HashSet<LineItem>();
+
         for (LineItem lineItem : lineItems) {
             if (lineItem != null) {
                 logger.debug("lineItem: " + lineItem.getSku().getProductVariant());
                 selectedLineItems.add(lineItem);
             }
         }
-    	boolean orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems, messages);
+    	boolean orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems, null, messages);
     	
     	if(orderSplitSuccess) {
+            shippingOrder = splittedOrders.get("oldShippingOrder");
+            ShippingOrder newShippingOrder = splittedOrders.get("newShippingOrder");
+
+            //Handling the PO against the shipping Orders
+            if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()> 0) {
+                adminShippingOrderService.adjustPurchaseOrderForSplittedShippingOrder(shippingOrder, newShippingOrder);
+            }
     		addRedirectAlertMessage(new SimpleMessage(messages.get(0)));
             return new RedirectResolution(ActionAwaitingQueueAction.class);
     	} else {
@@ -82,15 +86,5 @@ public class SplitShippingOrderAction extends BaseAction {
     public void setLineItems(List<LineItem> lineItems) {
         this.lineItems = lineItems;
     }
-
-	/**
-	 * @return the shippingOrderProcessor
-	 */
-	public ShippingOrderProcessor getShippingOrderProcessor() {
-		if (shippingOrderProcessor == null) {
-            this.shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
-        }
-        return shippingOrderProcessor;
-	}
 
 }
