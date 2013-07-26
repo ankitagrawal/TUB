@@ -1,6 +1,11 @@
 package com.hk.constants.sku;
 
 import com.hk.domain.sku.SkuItemStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -56,4 +61,20 @@ public enum EnumSkuItemStatus {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+    public static List<EnumSkuItemStatus> getStatusForNetPhysicalInventory() {
+          return Arrays.asList(EnumSkuItemStatus.Checked_IN,EnumSkuItemStatus.TEMP_BOOKED,EnumSkuItemStatus.BOOKED);
+
+      }
+
+
+      public static List<Long> getSkuItemStatusIDs(List<EnumSkuItemStatus> enumSkuItemStatuses) {
+        List<Long> skuItemStatusIds = new ArrayList<Long>();
+        for (EnumSkuItemStatus enumOrderStatus : enumSkuItemStatuses) {
+            skuItemStatusIds.add(enumOrderStatus.getId());
+        }
+        return skuItemStatusIds;
+    }
+
 }

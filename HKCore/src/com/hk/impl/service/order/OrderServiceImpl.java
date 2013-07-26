@@ -639,6 +639,12 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
+        //for some orders userCodCall object is not created, a last check to create one
+        if (order.getUserCodCall() == null) {
+            UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+            saveUserCodCall(userCodCall);
+        }
+
         logger.debug("Trying to split order " + order.getId());
 
         User adminUser = getUserService().getAdminUser();
@@ -705,6 +711,14 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
+        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
+            for (ShippingOrder shippingOrder : order.getShippingOrders()){
+                for (LineItem lineItem : shippingOrder.getLineItems()){
+                    skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+                }
+            }
+        }
+
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
@@ -713,13 +727,6 @@ public class OrderServiceImpl implements OrderService {
         logger.info("SPLIT END ORDER-ID: " + order.getId());
 
         //create sku_item_line_items for each item of each shipping order of base order
-        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
-            for (ShippingOrder shippingOrder : order.getShippingOrders()){
-                for (LineItem lineItem : shippingOrder.getLineItems()){
-                    skuItemLineItemService.createNewSkuItemLineItem(lineItem);
-                }
-            }
-        }
 
 
         return shippingOrderAlreadyExists;
@@ -760,6 +767,25 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return null;
 	}
+
+    @Override
+    public boolean isBOCancelable(Long orderId) {
+        boolean isBOCancelable;
+        int count=0;
+        Order order = this.find(orderId);
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        for (ShippingOrder shippingOrder : shippingOrders) {
+            if (EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getShippingOrderStatus().getId())) {
+                count++;
+            }
+        }
+        if (count != shippingOrders.size()) {
+            isBOCancelable = false;
+        } else {
+            isBOCancelable = true;
+        }
+        return isBOCancelable;
+    }
 
 
 }

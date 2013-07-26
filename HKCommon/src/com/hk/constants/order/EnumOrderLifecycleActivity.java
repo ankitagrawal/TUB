@@ -49,7 +49,13 @@ public enum EnumOrderLifecycleActivity {
   RewardPointLineItemAdded(240L, "Reward Point Line Item Added"),
   RewardPointsApproved(250L, "Pending Reward Point Associated With Order Approved"),
   EmailSentToServiceProvider(260L, "Email Sent to Service Provider for Service Order"),
-  OrderCancelled(500L, "Order Cancelled");
+  OrderCancelled(500L, "Order Cancelled"),
+  RewardPointOrderCancel(270L,"Reward Point given on order cancellation"),
+  AmountRefundedOrderCancel(280L,"Amount Refunded on order cancellation"),
+  RefundAmountFailed(290L,"Amount couldn't be refunded to user, Please contact tech support"),
+  RefundAmountExceedsFailed(300L,"Amount exceeds the refundable amount"),
+  RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
+  ;
 
   private String name;
   private Long id;

@@ -47,7 +47,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     private Date startPushDate;
     private Date endPushDate;
     private List<User> reporters;
-    private Integer defaultPerPage = 40;
+    private Integer defaultPerPage = 50;
     Map<String, Object> bucketParameters = new HashMap<String, Object>();
     private ActionItem actionItem;
     Long actionTaskId;
