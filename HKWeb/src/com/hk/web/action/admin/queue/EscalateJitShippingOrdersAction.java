@@ -2,6 +2,8 @@ package com.hk.web.action.admin.queue;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +52,8 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	private UserService userService;
 
 	List<ShippingOrder> sortedShippingOrderList;
+	
+	private static Logger logger = LoggerFactory.getLogger(EscalateJitShippingOrdersAction.class);
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -97,6 +101,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				flag = false;
 			}
 			if (flag) {
+				logger.debug("Trying to manually escalate SO -"+shippingOrder.getId());
 				shippingOrder = shippingOrderService.manualEscalateShippingOrder(shippingOrder);
 				ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
 				shippingOrderLifecycle.setOrder(shippingOrder);
