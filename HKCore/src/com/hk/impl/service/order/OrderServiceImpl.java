@@ -639,6 +639,12 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
+        //for some orders userCodCall object is not created, a last check to create one
+        if (order.getUserCodCall() == null) {
+            UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+            saveUserCodCall(userCodCall);
+        }
+
         logger.debug("Trying to split order " + order.getId());
 
         User adminUser = getUserService().getAdminUser();
@@ -760,6 +766,25 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return null;
 	}
+
+    @Override
+    public boolean isBOCancelable(Long orderId) {
+        boolean isBOCancelable;
+        int count=0;
+        Order order = this.find(orderId);
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        for (ShippingOrder shippingOrder : shippingOrders) {
+            if (EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getShippingOrderStatus().getId())) {
+                count++;
+            }
+        }
+        if (count != shippingOrders.size()) {
+            isBOCancelable = false;
+        } else {
+            isBOCancelable = true;
+        }
+        return isBOCancelable;
+    }
 
 
 }

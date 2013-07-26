@@ -1,5 +1,7 @@
 package com.hk.admin.engine;
 
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import org.slf4j.Logger;
@@ -132,9 +134,9 @@ public class ShipmentPricingEngine {
             if (payment.isCODPayment()) {
                 reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
-            }else{
-                GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),payment.getGateway(),null);
-                if(gatewayIssuerMapping == null){
+            } else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.ONLINE_PAYMENT.getId())) {
+                GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(), payment.getGateway(), null);
+                if (gatewayIssuerMapping == null) {
                     return 0D;
                 }
                 reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();

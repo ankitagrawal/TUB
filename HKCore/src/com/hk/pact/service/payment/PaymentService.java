@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.ProductVariantPaymentType;
+import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
@@ -59,5 +61,13 @@ public interface PaymentService {
     public boolean sendPaymentEmailForOrder(Order order);
 
     public List<Payment> listPaymentFamily(String gatewayOrderId);
+
+    public boolean isValidRefundableAmount(Payment amount, Double orderAmount);
+
+    public Map<Long,Object> reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) ;
+
+    public boolean isValidReconciliation(Payment payment) ;
+
+    public double getRefundableAmount(Payment payment);
 
 }
