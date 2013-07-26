@@ -123,6 +123,12 @@ public class BusyPopulateRtoData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
       date = accountingInvoice.return_date;	    
 
@@ -216,6 +222,12 @@ public class BusyPopulateRtoData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
