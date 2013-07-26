@@ -54,7 +54,7 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     SkuItemLineItemService skuItemLineItemService;
 
     @Autowired
-    UserService userService;       
+    UserService userService;
     @Autowired
     WarehouseService warehouseService;
 
@@ -68,16 +68,10 @@ public class InventoryManageServiceImpl implements InventoryManageService {
 //        Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem cartLineItem : cartLineItems) {
             ProductVariant productVariant = cartLineItem.getProductVariant();
-            // assuming we are going to have warehouse on product variant
-            /*
-            Warehouse warehouse = null;
-           Sku sku = skuService.getSKU(productVariant, warehouse); //
-             */
 
-            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-            Sku sku = skus.get(0);
+            // picking the  sku for current MRP available at max qty on product variant
+            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
 
-//            List<SkuItem> skuItems =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
             long qtyToBeSet = cartLineItem.getQty();
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
@@ -90,8 +84,6 @@ public class InventoryManageServiceImpl implements InventoryManageService {
                 // todo UpdatePrice and Mrp qyt
                 skuItemsToBeBooked.add(skuItem);
             }
-
-
             // Call method to make new entries in SKUItemCLI
             saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
 
@@ -156,8 +148,6 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     }
 
 
-
-
     /*
     // Inventory Health Check
 
@@ -173,28 +163,13 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     */
 
 
-
     public Long getAvailableUnBookedInventory(ProductVariant productVariant) {
         // get Net physical inventory
         List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-//        List<EnumSkuItemStatus> statuses = EnumSkuItemStatus.getStatusForNetPhysicalInventory();
         List<Long> statuses = new ArrayList<Long>();
         statuses.add(EnumSkuItemStatus.Checked_IN.getId());
-        Long availableUnBookedInventory = inventoryManageDao.getNetInventory(skuList, statuses);
-        return availableUnBookedInventory;
-        /*
-        // get Booked Inventory
-        List<Long> skuItemBookedStatus = new ArrayList<Long>();
-        skuItemBookedStatus.add(EnumSkuItemStatus.BOOKED.getId());
-        skuItemBookedStatus.add(EnumSkuItemStatus.TEMP_BOOKED.getId());
+        return  inventoryManageDao.getNetInventory(skuList, statuses);
 
-        List<Long> skuItemOwnerStatus = new ArrayList<Long>();
-        skuItemOwnerStatus.add(EnumSkuItemOwner.SELF.getId());
-        Long bookedInventory = inventoryManageDao.getTempOrBookedQtyOfProductVariantInQueue(productVariant, skuItemBookedStatus, skuItemOwnerStatus);
-
-        return (netInventory - bookedInventory);
-
-        */
     }
 
 

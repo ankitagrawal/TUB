@@ -28,7 +28,7 @@ public interface InventoryHealthService {
 
 	long getUnbookedInventoryForActionQueue(LineItem lineItem);
 
-    public void InventoryHealthCheck(ProductVariant productVariant);
+    public void inventoryHealthCheck(ProductVariant productVariant);
 
 
 	public static class InventoryInfo {

@@ -81,7 +81,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void checkInventoryHealth(ProductVariant productVariant) {
 //        comment by Ankit
 //    	inventoryHealthService.checkInventoryHealth(productVariant);
-        inventoryHealthService.InventoryHealthCheck(productVariant);
+        inventoryHealthService.inventoryHealthCheck(productVariant);
     	lowInventoryAction(productVariant);
     }
 

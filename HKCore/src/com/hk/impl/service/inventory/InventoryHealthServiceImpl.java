@@ -80,11 +80,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	@Override
 	public long getAvailableUnbookedInventory(ProductVariant productVariant) {
 		if(productVariant.getMrpQty() == null) {
-//            comment By ankit
+//          comment By ankit
 //			checkInventoryHealth(productVariant);
-            InventoryHealthCheck(productVariant);
-
-
+            inventoryHealthCheck(productVariant);
 		}
 		productVariant = productVariantService.getVariantById(productVariant.getId());
 		if(productVariant.getMrpQty() == null) {
@@ -484,10 +482,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
 
-    public void InventoryHealthCheck(ProductVariant productVariant) {
-           Long availableBookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
+    public void inventoryHealthCheck(ProductVariant productVariant) {
+           Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
 
-           if (availableBookedInventory > 0) {
+           if (availableUnbookedInventory > 0) {
                Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
                Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
                // Available unbooked inventory list se update marna hai cuurent variant ki qty
@@ -502,7 +500,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                        }
                    }
                }
-
 
                Set<InventoryHealthService.SkuInfo> skuInfosForCurrentMrp = priceMap.get(productVariant.getMarkedPrice());
                if (skuInfosForCurrentMrp != null && skuInfosForCurrentMrp.size() > 0) {
@@ -546,8 +543,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                    selectedInfo = info;
                }
            }
-//              Now set Product Variant.mrp qty
-
 
            if (selectedInfo.getMrp() != 0d && !productVariant.getMarkedPrice().equals(Double.valueOf(selectedInfo.getMrp()))) {
                UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
@@ -570,8 +565,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
            productVariant.setMrpQty(maxQty);
            productVariant.setMarkedPrice(selectedInfo.getMrp());
            productVariant.setCostPrice(selectedInfo.getCostPrice());
+           long skuId = selectedInfo.getSkuId();
+           Sku sku = getBaseDao().get(Sku.class,skuId );            
+           productVariant.setWarehouse(sku.getWarehouse());
            getBaseDao().save(productVariant);
        }
+    
 
      public BaseDao getBaseDao() {
         return baseDao;

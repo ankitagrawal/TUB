@@ -22,9 +22,7 @@ public interface InventoryManageDao {
 
     public Long getNetInventory(List<Sku> skuList, List<Long> skuItemStatusIds);
 
-
     public Long getNetInventory(List<Sku> skuList, Double mrp);
-
 
     // Method to get temp Booked and Booked qty
      public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> skuItemStatusId, List <Long> skuItemOwnerStatusId);
@@ -34,8 +32,6 @@ public interface InventoryManageDao {
     public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp);
 
     public Double getFirstcheckedInBatchMRP(ProductVariant productVariant);
-
-
 
 
 }

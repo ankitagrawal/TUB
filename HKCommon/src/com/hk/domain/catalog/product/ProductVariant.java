@@ -9,6 +9,7 @@ import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.domain.courier.BoxSize;
+import com.hk.domain.warehouse.Warehouse;
 
 import javax.persistence.*;
 import java.util.*;
@@ -82,6 +83,10 @@ public class ProductVariant implements java.io.Serializable {
 
     @Column(name = "order_ranking", nullable = true)
     private Double                    orderRanking;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "warehouse_id", nullable = false)
+	private Warehouse warehouse;
 
     @Transient
     private Long                      qty;
@@ -761,5 +766,14 @@ public class ProductVariant implements java.io.Serializable {
 
     public void setCommission(Double commission) {
         this.commission = commission;
+    }
+
+
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
     }
 }
