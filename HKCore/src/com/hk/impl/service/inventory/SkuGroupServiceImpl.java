@@ -97,6 +97,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
     }
 
+    public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList) {
+        return skuItemDao.getSkuItem(skuGroup, skuItemStatusList);
+    }
+
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
         return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);
     }
@@ -105,6 +109,13 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
         return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, statusId);
     }
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList) {
+        return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, skuItemStatusList);
+    }
+
+
+
 
     public SkuItem saveSkuItem(SkuItem skuItem) {
         return (SkuItem) skuItemDao.save(skuItem);
@@ -134,6 +145,14 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
     public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp){
         return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners, mrp);
+    }
+
+    public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner){
+        return skuItemDao.getSkuItemWithStatusAndOwner(skuGroup, skuItemStatus, skuItemOwner);
+    }
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner){
+        return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, statusId, skuItemOwner);
     }
 
 }

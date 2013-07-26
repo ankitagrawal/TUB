@@ -17,12 +17,21 @@ public interface SkuItemDao extends BaseDao {
 
     public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
 
+    public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
+
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList);
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku);
     
     public List<SkuItem> getSkuItem(Sku sku, Long id);
 
     public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp);
+
+    public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner);
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner);
+
 
 }

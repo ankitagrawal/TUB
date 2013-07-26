@@ -1,10 +1,6 @@
 package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
-// import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +13,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.Sku;

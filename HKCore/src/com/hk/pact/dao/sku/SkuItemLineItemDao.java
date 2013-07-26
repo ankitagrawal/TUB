@@ -1,7 +1,11 @@
 package com.hk.pact.dao.sku;
 
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.pact.dao.BaseDao;
 
 import java.util.List;
@@ -16,4 +20,10 @@ import java.util.List;
 public interface SkuItemLineItemDao extends BaseDao {
 
     public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId);
+    
+    public List<SkuItemCLI> getSkuItemCLI(CartLineItem cartLineItem, List<SkuItemStatus> skuItemStatusIds);
+    
+    public SkuItemCLI getSkuItemCLI(SkuItem skuItem);
+    
+    public SkuItemLineItem getSkuItemLineItem(SkuItem skuItem);
 }

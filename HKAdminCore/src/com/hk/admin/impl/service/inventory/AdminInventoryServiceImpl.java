@@ -22,6 +22,9 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.UserManager;
@@ -29,12 +32,16 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +53,7 @@ import java.util.*;
 @Service
 public class AdminInventoryServiceImpl implements AdminInventoryService {
 
+	private static Logger logger = Logger.getLogger(AdminInventoryServiceImpl.class);
     @Autowired
     private BaseDao baseDao;
     @Autowired
@@ -74,7 +82,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     private SkuGroupService skuGroupService;
     @Autowired
     GrnLineItemService grnLineItemService;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
+    @Autowired
+    SkuItemLineItemDao skuItemLineItemDao;
 
+
+    
     @Override
     public List<SkuGroup> getInStockSkuGroups(String upc) {
         // ProductVariant productVariant = productVariantDaoProvider.get().findVariantFromUPC(upc);
@@ -383,6 +397,50 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
         }
         return skuItemBarcodeMap;
+    }
+
+    public void checkoutMethod(LineItem lineItem, SkuItem skuItem) {
+        User loggedOnUser = userService.getLoggedInUser();
+        List<SkuItemLineItem> skuItemLineItems = skuItemLineItemService.getSkuItemLineItem(lineItem, EnumSkuItemStatus.BOOKED.getId());
+        List<SkuItem> skuItemInSkuItemLineItems = new ArrayList<SkuItem>();
+        for(SkuItemLineItem item : skuItemLineItems){
+            SkuItem si = item.getSkuItem();
+            skuItemInSkuItemLineItems.add(si);
+        }
+        if (skuItemInSkuItemLineItems.contains(skuItem)) {
+            // TODO:
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
+            skuItem = (SkuItem)baseDao.save(skuItem);
+            inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
+            logger.debug("Checking Out SkuItem - "+skuItem.getId()+" at Checkout");
+            
+        } else {
+            //If skuItem is booked
+            if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId()) || skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
+                SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
+                
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
+                skuItem = (SkuItem)baseDao.save(skuItem);
+                logger.debug("Checking Out SkuItem - "+skuItem.getId()+" at Checkout");
+                
+                toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                toReleaseSkuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                toReleaseSkuItem = (SkuItem)baseDao.save(toReleaseSkuItem);
+                inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
+                logger.debug("Releasing SkuItem - "+toReleaseSkuItem.getId()+" at Checkout");
+                
+                SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(toReleaseSkuItem);
+                skuItemCLI.setSkuItem(skuItem);
+                skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+                
+                
+                SkuItemLineItem skuItemLineItem = skuItemLineItemDao.getSkuItemLineItem(toReleaseSkuItem);
+                skuItemCLI.setSkuItem(skuItem);
+                skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
+            }
+        }
     }
 
 
