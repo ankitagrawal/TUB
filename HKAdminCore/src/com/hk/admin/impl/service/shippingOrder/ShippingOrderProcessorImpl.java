@@ -181,14 +181,14 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
     			if(!(shippingOrder.isServiceOrder())){
     				User adminUser = getUserService().getAdminUser();
-    				Set<LineItem> selectedItems = new HashSet<LineItem>();
+    				//Set<LineItem> selectedItems = new HashSet<LineItem>();
 
     				for (LineItem lineItem : shippingOrder.getLineItems()) {
     					Long availableUnbookedInv = 0L;
 
     					if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-    						continue;
-    						// return true;
+    					//	continue;
+    						 return true;
     						//availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
     					}else{
     						availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
@@ -202,8 +202,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     						shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
     								shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
     								EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
-    						//return false;
-    						selectedItems.add(lineItem);
+    						return false;
+    						//selectedItems.add(lineItem);
     					}
     				}
 
