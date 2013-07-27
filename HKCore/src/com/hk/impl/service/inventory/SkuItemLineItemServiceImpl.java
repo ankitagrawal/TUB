@@ -168,9 +168,21 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                 skuItemsToBeFreed.add(skuItem);
             }
+            for (SkuItemCLI skuItemCLI : lineItem.getCartLineItem().getSkuItemCLIs()){
+                skuItemCLI.setSkuItemLineItem(null);
+                skuItemCLIsToBeDeleted.add(skuItemCLI);
+            }
+
+     /*       for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()){
+                skuItemLineItem.setSkuItemCLI(null);
+                skuItemLineItemsToBeDeleted.add(skuItemLineItem);
+            }
+*/
             skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
-            skuItemCLIsToBeDeleted.addAll(lineItem.getCartLineItem().getSkuItemCLIs());
+//            skuItemCLIsToBeDeleted.addAll(lineItem.getCartLineItem().getSkuItemCLIs());
         }
+
+        getSkuItemDao().saveOrUpdate(skuItemCLIsToBeDeleted);
         getSkuItemDao().saveOrUpdate(skuItemsToBeFreed);
         getSkuItemDao().deleteAll(skuItemLineItemsToBeDeleted);
         getSkuItemDao().deleteAll(skuItemCLIsToBeDeleted);
