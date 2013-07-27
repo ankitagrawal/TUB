@@ -24,7 +24,7 @@ public class SkuItemLineItem implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id", nullable = false)
     private ProductVariant productVariant;
 
@@ -42,7 +42,7 @@ public class SkuItemLineItem implements java.io.Serializable {
 
 
     @JsonSkip
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "sku_item_cart_line_item_id", nullable = false)
     private SkuItemCLI skuItemCLI;
 

@@ -25,7 +25,7 @@ public class SkuItemCLI implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_variant_id", nullable = false)
 	private ProductVariant productVariant;
 
@@ -42,7 +42,7 @@ public class SkuItemCLI implements java.io.Serializable {
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
     private SkuItemLineItem skuItemLineItem;
 
 	public Long getId() {
