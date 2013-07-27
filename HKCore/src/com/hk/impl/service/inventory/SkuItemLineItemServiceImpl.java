@@ -48,10 +48,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     }
 
     @Override
-    public SkuItemLineItem createNewSkuItemLineItem(LineItem lineItem) {
+    public Boolean createNewSkuItemLineItem(LineItem lineItem) {
         Long unitNum = 0L;
         CartLineItem cartLineItem = lineItem.getCartLineItem();
         unitNum = 0L;
+        if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <=0){
+            return false;
+        }
         for(SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
             unitNum ++;
             SkuItemLineItem skuItemLineItem= new SkuItemLineItem();
@@ -107,7 +110,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
             //todo tarun erp
             //make entry in product variant inventory
         }
-        return null;
+        return true;
     }
 
     @Override
