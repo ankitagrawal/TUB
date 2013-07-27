@@ -127,7 +127,7 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
 
 
      public Double getFirstcheckedInBatchMRP(ProductVariant productVariant) {
-        String sql = "Select si.skuGroup.mrp from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and ( si.skuGroup.status != :reviewStatus or si.skuGroup.status is null ) order by si.skuGroup.createDate asc  ";
+        String sql = "Select si.skuGroup.mrp from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and ( si.skuGroup.status != :reviewStatus or si.skuGroup.status is null ) group by si.skuGroup.id order by si.skuGroup.createDate asc  ";
         Query query = getSession().createQuery(sql).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
         return (Double)query.list().get(0);
 
