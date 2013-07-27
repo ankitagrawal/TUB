@@ -28,11 +28,11 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
 
 
     public Long getNetInventory(Sku sku) {
-        return getNetInventory(Arrays.asList(sku));
+        return getAvailableUnBookedInventory(Arrays.asList(sku));
     }
 
     // checked in as always with  owner self
-    public Long getNetInventory(List<Sku> skuList) {
+    public Long getAvailableUnBookedInventory(List<Sku> skuList) {
         Long netInv = 0L;
         if (skuList != null && !skuList.isEmpty()) {
             //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
@@ -86,7 +86,7 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
 
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
-        Long netInventory = getNetInventory(skuList);
+        Long netInventory = getAvailableUnBookedInventory(skuList);
         logger.debug("net inventory " + netInventory);
 
         Long bookedInventory = 0L;

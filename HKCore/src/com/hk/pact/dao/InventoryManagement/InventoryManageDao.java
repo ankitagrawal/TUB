@@ -18,7 +18,7 @@ public interface InventoryManageDao {
 
      public Long getNetInventory(Sku sku);
 
-    public Long getNetInventory(List<Sku> skuList);
+    public Long getAvailableUnBookedInventory(List<Sku> skuList);
 
     public Long getNetInventory(List<Sku> skuList, List<Long> skuItemStatusIds);
 
