@@ -7,7 +7,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
@@ -49,10 +48,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     }
 
     @Override
-    public SkuItemLineItem createNewSkuItemLineItem(LineItem lineItem) {
+    public Boolean createNewSkuItemLineItem(LineItem lineItem) {
         Long unitNum = 0L;
         CartLineItem cartLineItem = lineItem.getCartLineItem();
         unitNum = 0L;
+        if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <=0){
+            return false;
+        }
         for(SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
             unitNum ++;
             SkuItemLineItem skuItemLineItem= new SkuItemLineItem();
@@ -108,7 +110,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
             //todo tarun erp
             //make entry in product variant inventory
         }
-        return null;
+        return true;
     }
 
     @Override
@@ -154,6 +156,26 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         }
         return false;
     }
+
+    public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder){
+        List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+        List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+        List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+
+        for(LineItem lineItem : shippingORder.getLineItems()){
+            for (SkuItemLineItem skuItemLineItem: lineItem.getSkuItemLineItems()){
+                SkuItem skuItem = skuItemLineItem.getSkuItem();
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItemsToBeFreed.add(skuItem);
+            }
+            skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
+            skuItemCLIsToBeDeleted.addAll(lineItem.getCartLineItem().getSkuItemCLIs());
+        }
+        getSkuItemDao().saveOrUpdate(skuItemsToBeFreed);
+        getSkuItemDao().deleteAll(skuItemLineItemsToBeDeleted);
+        getSkuItemDao().deleteAll(skuItemCLIsToBeDeleted);
+        return true;
+    }
     
     
     @Override
@@ -165,7 +187,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
+    
+    public SkuItemLineItem getBySkuItemId(Long skuItemId){
+    	return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);
+    }
+    
     public SkuItemLineItemDao getSkuItemLineItemDao() {
         return skuItemLineItemDao;
     }

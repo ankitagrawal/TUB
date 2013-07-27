@@ -105,6 +105,15 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
     }
 
+    public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
+        criteria.add(Restrictions.eq("skuGroup", skuGroup));
+        criteria.add(Restrictions.in("skuItemStatus", skuItemStatusList));
+        List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
+        return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
+    }
+
+
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
         String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
         if (statusId != null) {
@@ -121,6 +130,29 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
     }
 
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners) {
+        String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
+        if (skuItemStatusList != null && skuItemStatusList.size() > 0) {
+            sql = sql + "and si.skuItemStatus  in (:skuItemStatusList) ";
+        }
+        if(skuItemOwners!=null &&skuItemOwners.size()>0){
+        	sql = sql+ "and si.skuItemOwner in (:skuItemOwners)";
+        }
+        Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
+        if (skuItemStatusList != null && skuItemStatusList.size() > 0) {
+            query.setParameter("skuItemStatusList", skuItemStatusList);
+        }
+        if(skuItemOwners!=null &&skuItemOwners.size()>0){
+        	query.setParameter("skuItemOwners", skuItemOwners);
+        }
+       
+        List<SkuItem> skuItems = query.list();
+        if(skuItems != null && skuItems.size() > 1){
+            logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
+        }
+        return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
+    }
+
     public List<SkuItem> getCheckedInSkuItems(Sku sku) {
         String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
         Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
@@ -133,22 +165,68 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         return query.list();
     }
     public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp){
-        String sql = "from SkuItem si where si.skuGroup.sku in (:skuList) and si.skuItemStatus.id in (:statusIds) and si.skuItemOwner in (:skuItemOwners)";
-        String orderByClause = " order by si.skuGroup.expiryDate asc";
-        Query query;
-        if(mrp != null){
-            sql += " and si.skuGroup.mrp = :mrp " + orderByClause;
-            query = getSession().createQuery(sql).setParameterList("skuList", skuList).setParameterList("statusIds", statusIds)
-                    .setParameterList("skuItemOwners", skuItemOwners).setParameter("mrp", mrp);
+        String sql = "from SkuItem si where si.skuGroup.sku in (:skuList)";
+        
+        if(statusIds!=null && statusIds.size()>0){
+        	sql+="and si.skuItemStatus.id in (:statusIds)";
         }
-        else {
-            sql += orderByClause;
-            query = getSession().createQuery(sql).setParameterList("skuList", skuList).setParameterList("statusIds", statusIds)
-                    .setParameterList("skuItemOwners", skuItemOwners);
+        if(skuItemOwners!=null && skuItemOwners.size()>0){
+        	sql+="and si.skuItemOwner in (:skuItemOwners)";
+        }
+        if(mrp != null){
+        	sql += " and si.skuGroup.mrp = :mrp " ;
+        }
+        String orderByClause = " order by si.skuGroup.expiryDate asc";
+        sql+=orderByClause;
+        Query query = getSession().createQuery(sql).setParameterList("skuList", skuList);
+        if(statusIds!=null && statusIds.size()>0){
+        	query.setParameterList("statusIds", statusIds);
+        }
+        if(skuItemOwners!=null && skuItemOwners.size()>0){
+        	query.setParameterList("skuItemOwners", skuItemOwners);
+        }
+        if(mrp!=null){
+        	query.setParameter("mrp", mrp);
         }
         return query.list();
     }
 
+    public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner){
+        String sql;
+        Query query = null;
+        if(skuItemOwner!=null){
+            sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus and si.skuItemOwner = :skuItemOwner";
+            query = getSession().createQuery(sql).setParameter("skuGroup", skuGroup).setParameter("skuItemStatus", skuItemStatus).setParameter("skuItemOwner", skuItemOwner);
+        }
+        else{
+            sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus";
+            query = getSession().createQuery(sql).setParameter("skuGroup", skuGroup).setParameter("skuItemStatus", skuItemStatus);
+        }
+        List<SkuItem> skuItems = query.list();
+        return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
+    }
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner){
+        String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
+        if (statusId != null) {
+            sql = sql + "and si.skuItemStatus.id = :statusId ";
+        }
+        if(skuItemOwner != null){
+            sql = sql + "and si.skuItemOwner = :skuItemOwner";
+        }
+        Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
+        if (statusId != null) {
+            query.setParameter("statusId", statusId);
+        }
+        if(skuItemOwner != null){
+            query.setParameter("skuItemOwner",skuItemOwner);
+        }
+        List<SkuItem> skuItems = query.list();
+        if(skuItems != null && skuItems.size() > 1){
+            logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
+        }
+        return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
+    }
     
 }
 

@@ -1,29 +1,32 @@
 package com.hk.impl.dao.inventoryManagement;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
-// import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuItemLineItemService;
+import com.hk.pact.service.core.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.inventory.SkuGroupService;
+import org.hibernate.SQLQuery;
+import org.hibernate.Hibernate;
+import org.hibernate.transform.Transformers;
+import com.hk.pact.service.inventory.*;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.UpdatePvPrice;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 
 import java.util.*;
@@ -49,47 +52,15 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     private InventoryManageDao inventoryManageDao;
     @Autowired
     SkuItemLineItemService skuItemLineItemService;
-    @Autowired
-    InventoryService inventoryService;
+
     @Autowired
     UserService userService;
+    @Autowired
+    WarehouseService warehouseService;
 
+    @Autowired
+    UpdatePvPriceDao updatePvPriceDao;
 
-    // Call this method from payment action  java
-    public void tempBookSkuLineItemForOrder(Order order) {
-        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-//        Set<CartLineItem> cartLineItems = order.getCartLineItems();
-        for (CartLineItem cartLineItem : cartLineItems) {
-            ProductVariant productVariant = cartLineItem.getProductVariant();
-            // assuming we are going to have warehouse on product variant
-            /*
-            Warehouse warehouse = null;
-           Sku sku = skuService.getSKU(productVariant, warehouse); //
-             */
-
-            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-            Sku sku = skus.get(0);
-
-//            List<SkuItem> skuItems =inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
-            long qtyToBeSet = cartLineItem.getQty();
-            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-
-            for (int i = 0; i < qtyToBeSet; i++) {
-                SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
-                skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                // todo Pvi entries
-                skuItem = (SkuItem) getBaseDao().save(skuItem);
-                // todo UpdatePrice and Mrp qyt
-                skuItemsToBeBooked.add(skuItem);
-            }
-
-
-            // Call method to make new entries in SKUItemCLI
-            saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-
-        }
-    }
 
 
     //     Make Entries in new SkuItemCLI  table
@@ -148,83 +119,31 @@ public class InventoryManageServiceImpl implements InventoryManageService {
         return skuItemList;
     }
 
-    public void checkoutMethod(LineItem lineItem, SkuItem skuItem) {
-        User loggedOnUser = userService.getLoggedInUser();
-        List<SkuItemLineItem> skuItemLineItems = skuItemLineItemService.getSkuItemLineItem(lineItem, EnumSkuItemStatus.BOOKED.getId());
-        List<SkuItem> skuItemInSkuItemLineItems = new ArrayList<SkuItem>();
-        for (SkuItemLineItem item : skuItemLineItems) {
-            SkuItem si = item.getSkuItem();
-            skuItemInSkuItemLineItems.add(si);
-        }
-        if (skuItemInSkuItemLineItems.contains(skuItem)) {
-            // TODO:
-            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
-            skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
-            skuItem = (SkuItem) baseDao.save(skuItem);
-            //          adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
 
-        } else {
-            //If skuItem is booked
-
-            if (skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.BOOKED.getSkuItemStatus())) {
-                SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
-                toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                skuItem = (SkuItem) baseDao.save(toReleaseSkuItem);
-                //       adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l,loggedOnUser );
-
-                SkuItemLineItem skuItemLineItem = null;
-                for (SkuItemLineItem item : skuItemLineItems) {
-                    if (item.getSkuItem().equals(skuItem)) {
-                        skuItemLineItem = item;
-                    }
-                }
-                SkuItemLineItem item = new SkuItemLineItem();
-                item.setSkuItem(skuItem);
-                item.setProductVariant(lineItem.getSku().getProductVariant());
-                item.setUnitNum(skuItemLineItem.getUnitNum());
-                item.setLineItem(lineItem);
-                baseDao.save(item);
-
-                //release the already present
-
-                //delete the entry from table t1
-                baseDao.delete(toReleaseSkuItem);
-            }
-            if (skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.Checked_IN.getSkuItemStatus())) {
-                // flip skuItem with a booked SI.
-                // 1. Find a booked SI for this one
-
-                //release the already present
-                SkuItem toReleaseSkuItem = skuItemInSkuItemLineItems.get(0);
-                toReleaseSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                baseDao.save(toReleaseSkuItem);
-
-                //book the CSI
-                skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                skuItem = (SkuItem) baseDao.save(skuItem);
-
-                SkuItemLineItem skuItemLineItem = null;
-                for (SkuItemLineItem item : skuItemLineItems) {
-                    if (item.getSkuItem().equals(skuItem)) {
-                        skuItemLineItem = item;
-                    }
-                }
-                SkuItemLineItem item = new SkuItemLineItem();
-                item.setSkuItem(skuItem);
-                item.setProductVariant(lineItem.getSku().getProductVariant());
-                item.setUnitNum(skuItemLineItem.getUnitNum());
-                item.setLineItem(lineItem);
-                baseDao.save(item);
+    /*
+    // Inventory Health Check
 
 
-                //delete the entry from table t1
-                baseDao.delete(toReleaseSkuItem);
-            }
-        }
+    1.       Get Net inventory of (product_variant) physical  --> checked in , temp-booked - booked
+    2.       Available unbooked inventory   -->    those are in checked in status
+    3.       if 2 is + ve  instock else out of stock
+    4.       if instock -- current variant --- maximum qty in all warehouses at current mrp price.
+    5.       if current batch finishes then  search first check in batch at all warehouse  and set its maximum qty  and prices.
+
+    6.    if variant is out of stock  then need to make instock at inventory check in time aand updating all the prices and info
+
+    */
+
+
+    public Long getAvailableUnBookedInventory(ProductVariant productVariant) {
+        // get Net physical inventory
+        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+        List<Long> statuses = new ArrayList<Long>();
+        statuses.add(EnumSkuItemStatus.Checked_IN.getId());
+        return  inventoryManageDao.getNetInventory(skuList, statuses);
+
     }
+
 
     public BaseDao getBaseDao() {
         return baseDao;

@@ -92,4 +92,6 @@ public interface AdminInventoryService {
     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem);
 
     public List<SkuGroup> getSkuGroupsInReviewState();
+
+    public boolean checkoutMethod(LineItem lineItem, SkuItem skuItem);
 }

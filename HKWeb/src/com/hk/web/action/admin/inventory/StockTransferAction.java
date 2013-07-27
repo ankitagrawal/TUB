@@ -170,9 +170,11 @@ public class StockTransferAction extends BasePaginatedAction {
                 stockTransferLineItem.setTax(sku.getTax());
                 stockTransferLineItem.setMfgDate(skuGroup.getMfgDate());
                 stockTransferLineItem.setExpiryDate(skuGroup.getExpiryDate());
-                stockTransferDao.save(stockTransferLineItem);
-            } 
-            stockTransferLineItem = stockTransferService.updateStockTransferLineItem(stockTransferLineItem.getId(), ADD_STOCK_TRANSFER_LINE_ITEM);
+                stockTransferLineItem.setCheckedoutQty(1l);
+                stockTransferLineItem = (StockTransferLineItem)stockTransferDao.save(stockTransferLineItem);
+            } else {
+            	stockTransferLineItem = stockTransferService.updateStockTransferLineItem(stockTransferLineItem, ADD_STOCK_TRANSFER_LINE_ITEM);
+            }
 
             if (stockTransfer.getStockTransferStatus().equals(EnumStockTransferStatus.Generated.getStockTransferStatus())) {
                 stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getStockTransferStatus());
@@ -242,7 +244,7 @@ public class StockTransferAction extends BasePaginatedAction {
         getInventoryService().checkInventoryHealth(skuGroupToBeReverted.getSku().getProductVariant());
         
         // to control concurrency and avoid dirty read
-        stliToBeReduced = stockTransferService.updateStockTransferLineItem(stliToBeReduced.getId(), REVERT_STOCK_TRANSFER_LINE_ITEM);
+        stliToBeReduced = stockTransferService.updateStockTransferLineItem(stliToBeReduced, REVERT_STOCK_TRANSFER_LINE_ITEM);
         
         addRedirectAlertMessage(new SimpleMessage("Qty reduced by 1."));
         return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");

@@ -9,6 +9,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.Order;
 
 public interface InventoryHealthService {
 
@@ -22,11 +23,16 @@ public interface InventoryHealthService {
 	
 	Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter);
 	
-	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
+	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);   
 	
 	long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
 
 	long getUnbookedInventoryForActionQueue(LineItem lineItem);
+
+    public void inventoryHealthCheck(ProductVariant productVariant);
+
+     public void tempBookSkuLineItemForOrder(Order order);
+
 
 	public static class InventoryInfo {
 		private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

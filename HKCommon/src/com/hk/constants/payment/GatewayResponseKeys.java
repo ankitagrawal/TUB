@@ -93,7 +93,8 @@ public class GatewayResponseKeys {
         GOOD_ENQ_COD("200"),
         BAD_ENQ_COD("401"),
         INR("INR"),
-        REFUND_SEEK_SUCCESS_CODE("11"),
+        REFUND_SEEK_SUCCESS_CODE("0"),
+        REFUND_SEEK_IN_PROCESS_CODE("11"),
         REJECTED_BY_ISSUER_MSG("Rejected By Issuer"),
         REJECTED_BY_GATEWAY_MSG("Rejected By Gateway"),
         ;

@@ -2,7 +2,6 @@ package com.hk.pact.service.inventory;
 
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.warehouse.Warehouse;
@@ -22,7 +21,7 @@ public interface SkuItemLineItemService {
 
     public SkuItemLineItem getById(Long skuItemLineItemId);
 
-    public SkuItemLineItem createNewSkuItemLineItem(LineItem lineItem) ;
+    public Boolean createNewSkuItemLineItem(LineItem lineItem) ;
 
     public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse);
 
@@ -30,4 +29,8 @@ public interface SkuItemLineItemService {
 
     public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem);
 
+    public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder);
+    
+    public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
+    
 }
