@@ -42,7 +42,7 @@ public class SkuItemCLI implements java.io.Serializable {
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
     private SkuItemLineItem skuItemLineItem;
 
 	public Long getId() {
