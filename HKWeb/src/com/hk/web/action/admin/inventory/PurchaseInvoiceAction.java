@@ -85,8 +85,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private List<PurchaseInvoice> purchaseInvoiceList = new ArrayList<PurchaseInvoice>();
     private List<ExtraInventoryLineItem> rtvExtraInventoryLineItemList;
 	private List<ExtraInventoryLineItem> shortEiLiList;
-    private List<Long> rtvEiLiId = new ArrayList<Long>();
-	private List<Long> eiliId = new ArrayList<Long>();
+    private List<Long> rtvEiLiId;
+	private List<Long> eiliId;
     private List<ExtraInventoryLineItem> toImportRtvExtraInventoryLineItemList;
 	private List<ExtraInventoryLineItem> toImportShortEiLiList;
 	private PurchaseInvoice purchaseInvoice;
