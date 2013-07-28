@@ -290,18 +290,20 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 						}
 					}
 				}
-				purchaseInvoice.setShortAmount(shortAmount);
+				
 		        piHasShortEiLiList.addAll(piHasRtvEiLiList);
 				purchaseInvoice.setEiLineItems(piHasShortEiLiList);
+				purchaseInvoice = getPurchaseInvoiceService().save(purchaseInvoice);
 				purchaseInvoice.setRtvAmount(rtvAmount);
 				purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+shortAmount+rtvAmount);
-				getPurchaseInvoiceService().save(purchaseInvoice);
+				purchaseInvoice.setShortAmount(shortAmount);
+				purchaseInvoice = getPurchaseInvoiceService().save(purchaseInvoice);
 				addRedirectAlertMessage(new SimpleMessage("Items Imported!!"));
 				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 			}
 			catch(Exception e){
 				logger.debug(e.toString());
-				addRedirectAlertMessage(new SimpleMessage("could not import, please try refreshing the page and then import again."));
+				addRedirectAlertMessage(new SimpleMessage("Could not import, please try refreshing the page and then import again."));
 				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 			}
 		}
