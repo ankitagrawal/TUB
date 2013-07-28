@@ -3,6 +3,7 @@ package com.hk.web.action.admin.shippingOrder;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
@@ -55,8 +56,8 @@ public class SplitShippingOrderAction extends BaseAction {
                 splittedOrders, messages);
     	
     	if(orderSplitSuccess) {
-            shippingOrder = splittedOrders.get("oldShippingOrder");
-            ShippingOrder newShippingOrder = splittedOrders.get("newShippingOrder");
+            shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+            ShippingOrder newShippingOrder = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
 
             //Handling the PO against the shipping Orders
             if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()> 0) {

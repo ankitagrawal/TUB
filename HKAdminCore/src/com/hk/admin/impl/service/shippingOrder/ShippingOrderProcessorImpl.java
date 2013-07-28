@@ -5,6 +5,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
@@ -181,14 +182,16 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
     			if(!(shippingOrder.isServiceOrder())){
     				User adminUser = getUserService().getAdminUser();
-    				//Set<LineItem> selectedItems = new HashSet<LineItem>();
+                    Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
+                    List<String> messages = new ArrayList<String>();
+    				Set<LineItem> selectedItems = new HashSet<LineItem>();
 
     				for (LineItem lineItem : shippingOrder.getLineItems()) {
     					Long availableUnbookedInv = 0L;
 
     					if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-    					//	continue;
-    						 return true;
+    						continue;
+    					//	 return true;
     						//availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
     					}else{
     						availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
@@ -200,13 +203,18 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     					if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()) {
     						String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
     						shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
-    								shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
+    								shippingOrderService
+                                            .getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
     								EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
-    						return false;
-    						//selectedItems.add(lineItem);
+    						//return false;
+    						selectedItems.add(lineItem);
     					}
     				}
 
+                    if (selectedItems.size() > 0) {
+                        this.autoSplitSO(shippingOrder, selectedItems, splittedOrders, messages);
+
+                    }
     				if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
     					Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
     					if (newShipment == null) {
@@ -374,8 +382,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
 
             if (splittedOrders != null) {
-                splittedOrders.put("oldShippingOrder", shippingOrder);
-                splittedOrders.put("newShippingOrder", newShippingOrder);
+                splittedOrders.put(ShippingOrderConstants.OLD_SHIPPING_ORDER, shippingOrder);
+                splittedOrders.put(ShippingOrderConstants.NEW_SHIPPING_ORDER, newShippingOrder);
             }
 			/*//Handling the PO against the shipping Orders
 			if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
