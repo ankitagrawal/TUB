@@ -83,12 +83,12 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	Page purchaseInvoicePage;
 
 	private List<PurchaseInvoice> purchaseInvoiceList = new ArrayList<PurchaseInvoice>();
-    private List<ExtraInventoryLineItem> rtvExtraInventoryLineItemList = new ArrayList<ExtraInventoryLineItem>();
-	private List<ExtraInventoryLineItem> shortEiLiList = new ArrayList<ExtraInventoryLineItem>();
+    private List<ExtraInventoryLineItem> rtvExtraInventoryLineItemList;
+	private List<ExtraInventoryLineItem> shortEiLiList;
     private List<Long> rtvEiLiId = new ArrayList<Long>();
 	private List<Long> eiliId = new ArrayList<Long>();
-    private List<ExtraInventoryLineItem> toImportRtvExtraInventoryLineItemList = new ArrayList<ExtraInventoryLineItem>();
-	private List<ExtraInventoryLineItem> toImportShortEiLiList = new ArrayList<ExtraInventoryLineItem>();
+    private List<ExtraInventoryLineItem> toImportRtvExtraInventoryLineItemList;
+	private List<ExtraInventoryLineItem> toImportShortEiLiList;
 	private PurchaseInvoice purchaseInvoice;
 	private Boolean piHasRtv;
 	private Boolean piHasShortEiLi;
@@ -183,10 +183,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
             Set<ExtraInventoryLineItem> rtvExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
 			Set<ExtraInventoryLineItem> shortExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
 			populateRtvShort(rtvExtraInventoryLineItemSet,shortExtraInventoryLineItemSet);
+			
+			rtvExtraInventoryLineItemList = new ArrayList<ExtraInventoryLineItem>();
+			shortEiLiList = new ArrayList<ExtraInventoryLineItem>();
             rtvExtraInventoryLineItemList.addAll(rtvExtraInventoryLineItemSet);
 			shortEiLiList.addAll(shortExtraInventoryLineItemSet);
 			
 			//show the ones which are not imported(intersection of the two)
+			toImportRtvExtraInventoryLineItemList = new ArrayList<ExtraInventoryLineItem>();
 			for (ExtraInventoryLineItem eili : rtvExtraInventoryLineItemList) {
 	            if(!purchaseInvoice.getEiLineItems().contains(eili)) {
 	            	boolean otherCorrespondingPIsContainThisEILI = purchaseInvoiceService.otherCorrespondingPIsContainThisEILI(purchaseInvoice, eili);
@@ -195,6 +199,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	            	}
 	            }
 	        }
+			toImportShortEiLiList = new ArrayList<ExtraInventoryLineItem>();
 			for (ExtraInventoryLineItem lineItem : shortEiLiList) {
 	            if(!purchaseInvoice.getEiLineItems().contains(lineItem)) {
 	            	boolean otherCorrespondingPIsContainThisEILI = purchaseInvoiceService.otherCorrespondingPIsContainThisEILI(purchaseInvoice, lineItem);
@@ -227,6 +232,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				Set<ExtraInventoryLineItem> shortExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
 				populateRtvShort(rtvExtraInventoryLineItemSet,shortExtraInventoryLineItemSet);
 				//rtvList.addAll(rtvExtraInventoryLineItemSet);
+				rtvExtraInventoryLineItemList = new ArrayList<ExtraInventoryLineItem>();
+				shortEiLiList = new ArrayList<ExtraInventoryLineItem>();
 		        rtvExtraInventoryLineItemList.addAll(rtvExtraInventoryLineItemSet);
 				shortEiLiList.addAll(shortExtraInventoryLineItemSet);
 				

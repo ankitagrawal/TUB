@@ -506,7 +506,7 @@ width: 80px;
 	
 	<c:forEach items="${pia.toImportRtvExtraInventoryLineItemList}" var="rtv" varStatus="ctr">
 	<tr>
-	<td>${ctr.index+1}. PO No. ${rtv.id}, <a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?editRtvNoteLineItems=&purchaseOrderId=${rtv.extraInventory.purchaseOrder.id}&extraInventoryId=${rtv.extraInventory.id }&rtvNoteId=${rtv.id}" target="_blank">RTV Id. ${rtv.id}</a></td>
+	<td>${ctr.index+1}. PO No. ${rtv.extraInventory.purchaseOrder.id}, <a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${rtv.extraInventory.purchaseOrder.id}&wareHouseId=${pia.purchaseInvoice.goodsReceivedNotes[0].warehouse.id}" target="_blank">RTV Id. ${rtv.id}</a></td>
 	<td><s:checkbox name="rtvEiLiId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
 	</tr>
 	</c:forEach>
