@@ -95,7 +95,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private List<PurchaseInvoiceLineItem> purchaseInvoiceLineItems;
 	private List<PurchaseInvoiceLineItem> purchaseInvoiceShortLineItems;
 	private List<ExtraInventoryLineItem> extraInventoryShortLineItems;
-	private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
+	private List<ExtraInventoryLineItem> extraInventoryLineItems;;
 	private Date startDate;
 	private Date endDate;
 	private String tinNumber;
@@ -165,6 +165,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			//fetch all existing RTV
 			piHasRtv = Boolean.FALSE;
 			piHasShortEiLi = Boolean.FALSE;
+			extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
 			extraInventoryShortLineItems= new ArrayList<ExtraInventoryLineItem>();
 			if (purchaseInvoice.getEiLineItems() != null && purchaseInvoice.getEiLineItems().size() > 0) {
 				for (ExtraInventoryLineItem eili : purchaseInvoice.getEiLineItems()) {
@@ -226,7 +227,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	}
 	
 	public Resolution importRtv(){
-		synchronized (PurchaseInvoiceAction.class) {
 			try{
 				Set<ExtraInventoryLineItem> rtvExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
 				Set<ExtraInventoryLineItem> shortExtraInventoryLineItemSet = new HashSet<ExtraInventoryLineItem>();
@@ -275,7 +275,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 		        for (ExtraInventoryLineItem eili : piHasRtvEiLiList) {
 		                    if (eili.isRtvCreated()!=null && eili.isRtvCreated().equals(Boolean.TRUE)) {
-		                        extraInventoryLineItems.add(eili);
+		                        //extraInventoryLineItems.add(eili);
 		                        if(eili.getPayableAmount()!=null){
 		                            rtvAmount+=eili.getPayableAmount();
 		                        }
@@ -306,7 +306,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				addRedirectAlertMessage(new SimpleMessage("Could not import, please try refreshing the page and then import again."));
 				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 			}
-		}
 	}
 
 	public Resolution paymentDetails() {
