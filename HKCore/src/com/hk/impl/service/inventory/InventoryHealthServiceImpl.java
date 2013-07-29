@@ -505,6 +505,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             Map<String, SkuInfo> m1 = new HashMap<String, SkuInfo>();
 
             Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = new ArrayList<SkuInfo>();
+            
             for (SkuInfo skuinfo : availableCheckedInInvnList) {
                 String key = Long.toString(skuinfo.getSkuId()) + Double.toString(skuinfo.getMrp());
                 if (!m1.containsKey(key)) {
