@@ -21,8 +21,8 @@
 			</h3>
 
 			<h3>
-				<s:link class="invert"
-				        beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search Base Order</s:link>
+        <s:link
+            beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link>
 			</h3>
 
 			<h3>
