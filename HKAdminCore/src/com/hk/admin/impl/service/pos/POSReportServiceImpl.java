@@ -48,10 +48,12 @@ public class POSReportServiceImpl implements POSReportService {
     List<POSSaleItemDto> posSaleItems = new ArrayList<POSSaleItemDto>();
     for (Order order : orders) {
       double discount = 0.0;
-      for (CartLineItem lineItem : order.getCartLineItems()) {
-        discount = discount + lineItem.getDiscountOnHkPrice();
+      if (order.getCartLineItems() != null) {
+        for (CartLineItem lineItem : order.getCartLineItems()) {
+          discount = discount + lineItem.getDiscountOnHkPrice();
+        }
+        posSaleItems.add(new POSSaleItemDto(discount, order));
       }
-      posSaleItems.add(new POSSaleItemDto(discount, order));
     }
     return posSaleItems;
   }
@@ -67,9 +69,11 @@ public class POSReportServiceImpl implements POSReportService {
     Long itemReturned = 0L;
     Long noOfBills = 0L;
     for (Order order : saleList) {
-      Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-      for (ShippingOrder shippingOrder : shippingOrders) {
-        itemsSold = itemsSold + shippingOrder.getLineItems().size();
+      if (order.getShippingOrders() != null) {
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        for (ShippingOrder shippingOrder : shippingOrders) {
+          itemsSold = itemsSold + shippingOrder.getLineItems().size();
+        }
       }
       for (Payment payment : order.getPayments()) {
         if (payment.getPaymentMode().getId().equals(EnumPaymentMode.COUNTER_CASH.getId())) {
@@ -80,14 +84,18 @@ public class POSReportServiceImpl implements POSReportService {
       }
     }
     totalAmountCollected = cashAmtCollected + creditCardAmtCollected;
-    if (saleList != null && saleList.size()>0) {
-        avgAmtPerInvoice = totalAmountCollected / saleList.size();
-        noOfBills = Long.valueOf(saleList.size());
+    if (saleList != null && saleList.size() > 0) {
+      avgAmtPerInvoice = totalAmountCollected / saleList.size();
+      noOfBills = Long.valueOf(saleList.size());
     }
 
     for (ReverseOrder reverseOrder : returnList) {
-      cashAmtRefunded = cashAmtRefunded + reverseOrder.getAmount();
-      itemReturned = itemReturned + reverseOrder.getReverseLineItems().size();
+      if (reverseOrder.getAmount() != null) {
+        cashAmtRefunded = cashAmtRefunded + reverseOrder.getAmount();
+      }
+      if (reverseOrder.getReverseLineItems() != null) {
+        itemReturned = itemReturned + reverseOrder.getReverseLineItems().size();
+      }
     }
     return (new POSSummaryDto(cashAmtCollected, cashAmtRefunded, creditCardAmtCollected, creditCardAmtRefunded, itemsSold, itemReturned, totalAmountCollected, avgAmtPerInvoice, noOfBills));
   }
