@@ -1,12 +1,5 @@
 package com.hk.dto.pos;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Nitin Kumar
- * Date: 7/21/13
- * Time: 8:29 PM
- * To change this template use File | Settings | File Templates.
- */
 public class POSSummaryDto {
   private Double cashAmountCollected;
   private Double cashAmountRefunded;

@@ -4,18 +4,14 @@
 <s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportActionBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
-
   <s:layout-component name="htmlHead">
-
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
-
   </s:layout-component>
 
   <s:layout-component name="heading">Return Items
   </s:layout-component>
   <s:layout-component name="content">
     <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSReportAction" event="pre" var="posBean"/>
-
     <table class="cont" width="100%">
     <tr>
       <th>Return ID</th>
@@ -41,9 +37,7 @@
           </table>
         </c:forEach></td>
       </tr>
-
     </c:forEach>
     <table>
-
   </s:layout-component>
 </s:layout-render>

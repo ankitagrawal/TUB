@@ -45,7 +45,6 @@ public class POSReportServiceImpl implements POSReportService {
   }
 
   public List<POSSaleItemDto> storeSalesReportWithDiscount(List<Order> orders) {
-
     List<POSSaleItemDto> posSaleItems = new ArrayList<POSSaleItemDto>();
     for (Order order : orders) {
       double discount = 0.0;
@@ -58,7 +57,6 @@ public class POSReportServiceImpl implements POSReportService {
   }
 
   public POSSummaryDto storeDailySalesSummaryReport(List<Order> saleList, List<ReverseOrder> returnList) {
-
     double creditCardAmtCollected = 0.0;
     double creditCardAmtRefunded = 0.0;
     double cashAmtCollected = 0.0;
@@ -68,7 +66,6 @@ public class POSReportServiceImpl implements POSReportService {
     Long itemsSold = 0L;
     Long itemReturned = 0L;
     Long noOfBills = 0L;
-    //double apc = 0.0;
     for (Order order : saleList) {
       Set<ShippingOrder> shippingOrders = order.getShippingOrders();
       for (ShippingOrder shippingOrder : shippingOrders) {
@@ -83,11 +80,9 @@ public class POSReportServiceImpl implements POSReportService {
       }
     }
     totalAmountCollected = cashAmtCollected + creditCardAmtCollected;
-    if (saleList != null) {
-      if(totalAmountCollected != 0)   {
-      avgAmtPerInvoice = totalAmountCollected / saleList.size();
-      }
-      noOfBills = Long.valueOf(saleList.size());
+    if (saleList != null && saleList.size()>0) {
+        avgAmtPerInvoice = totalAmountCollected / saleList.size();
+        noOfBills = Long.valueOf(saleList.size());
     }
 
     for (ReverseOrder reverseOrder : returnList) {
