@@ -71,33 +71,5 @@
         </fieldset>
       </s:form>
     </div>
-
-    <div class="reportBox">
-      <s:form beanclass="com.hk.web.action.admin.pos.POSReportAction" target="_blank">
-        <fieldset class="right_label">
-          <legend>Return Reports</legend>
-          <ul>
-            <li>
-              <s:submit name="generateDailyReturnReport" value="Generate Daily Report"/>
-            </li>
-          </ul>
-          <ul>
-            <li>
-              <label>Start
-                date</label><s:text class="date_input startDate" style="width:150px"
-                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-            </li>
-            <li>
-              <label>End
-                date</label><s:text class="date_input endDate" style="width:150px"
-                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-            </li>
-            <li>
-              <s:submit name="generateReturnReportByDate" value="Generate Sales-by Date Report"/>
-            </li>
-          </ul>
-        </fieldset>
-      </s:form>
-    </div>
   </s:layout-component>
 </s:layout-render>

@@ -51,7 +51,7 @@
           <td>${sale.order.id}</td>
           <c:forEach items="${sale.order.shippingOrders}" var="saleOrder">
             <td>${saleOrder.shippingOrderStatus.name} </td>
-            <td>${fn:length(saleOrder.lineItems)}</td>
+            <td>${hk:countLineItemQty(saleOrder)}</td>
           </c:forEach>
           <td><fmt:formatNumber value="${sale.order.amount}" maxFractionDigits="2"/></td>
           <c:forEach items="${sale.order.payments}" var="payment">
