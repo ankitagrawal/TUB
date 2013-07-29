@@ -7,6 +7,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
@@ -15,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +39,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     
     @Autowired
     SkuService skuService;
+    @Autowired
+    BaseDao baseDao;
 
     @Override
     public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId) {
@@ -157,35 +162,45 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         return false;
     }
 
-    public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder){
+    public Boolean freeInventoryForSOCancellation(ShippingOrder shippingOrder){
         List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
         List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
         List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
 
-        for(LineItem lineItem : shippingORder.getLineItems()){
+        Set<LineItem> lineItems = shippingOrder.getLineItems();
+        for(LineItem lineItem : lineItems){
             for (SkuItemLineItem skuItemLineItem: lineItem.getSkuItemLineItems()){
                 SkuItem skuItem = skuItemLineItem.getSkuItem();
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItem = (SkuItem)getSkuItemDao().save(skuItem);
                 skuItemsToBeFreed.add(skuItem);
             }
             for (SkuItemCLI skuItemCLI : lineItem.getCartLineItem().getSkuItemCLIs()){
                 skuItemCLI.setSkuItemLineItem(null);
+                skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
                 skuItemCLIsToBeDeleted.add(skuItemCLI);
             }
 
-     /*       for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()){
-                skuItemLineItem.setSkuItemCLI(null);
-                skuItemLineItemsToBeDeleted.add(skuItemLineItem);
-            }
-*/
             skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
-//            skuItemCLIsToBeDeleted.addAll(lineItem.getCartLineItem().getSkuItemCLIs());
         }
-
-        getSkuItemDao().saveOrUpdate(skuItemCLIsToBeDeleted);
-        getSkuItemDao().saveOrUpdate(skuItemsToBeFreed);
-        getSkuItemDao().deleteAll(skuItemLineItemsToBeDeleted);
-        getSkuItemDao().deleteAll(skuItemCLIsToBeDeleted);
+        for(LineItem lineItem : shippingOrder.getLineItems()){
+        	CartLineItem cartLineItem = lineItem.getCartLineItem();
+        	cartLineItem.setSkuItemCLIs(null);
+        	cartLineItem = (CartLineItem) baseDao.save(cartLineItem);
+        	lineItem.setSkuItemLineItems(null);
+        	lineItem.setCartLineItem(cartLineItem);
+        	lineItem = (LineItem) baseDao.save(lineItem);
+        }
+        for (Iterator<SkuItemLineItem> iterator = skuItemLineItemsToBeDeleted.iterator(); iterator.hasNext();) {
+			SkuItemLineItem skuItemLineItem = (SkuItemLineItem) iterator.next();
+			baseDao.delete(skuItemLineItem);
+			iterator.remove();
+		}
+        for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext();) {
+			SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+			baseDao.delete(skuItemCLI);
+			iterator.remove();
+		}
         return true;
     }
     
