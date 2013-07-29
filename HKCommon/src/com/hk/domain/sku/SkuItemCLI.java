@@ -92,4 +92,22 @@ public class SkuItemCLI implements java.io.Serializable {
     public void setSkuItemLineItem(SkuItemLineItem skuItemLineItem) {
         this.skuItemLineItem = skuItemLineItem;
     }
+    @Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof SkuItemCLI) {
+			SkuItemCLI skuLineItem = (SkuItemCLI) obj;
+			if (this.id.equals(skuLineItem.getId()))
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
 }
