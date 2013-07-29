@@ -26,4 +26,10 @@ public interface InventoryManageService {
 
     public Long getAvailableUnBookedInventory(ProductVariant productVariant);
 
+     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
+
+    
+
+    
+
 }

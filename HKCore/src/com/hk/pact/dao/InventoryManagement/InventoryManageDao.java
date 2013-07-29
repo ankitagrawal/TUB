@@ -3,6 +3,7 @@ package com.hk.pact.dao.InventoryManagement;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
 import com.hk.constants.sku.EnumSkuItemStatus;
 
 import java.util.List;
@@ -32,6 +33,10 @@ public interface InventoryManageDao {
     public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp);
 
     public Double getFirstcheckedInBatchMRP(ProductVariant productVariant);
+
+     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
+
+     public List<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant) ;
 
 
 }
