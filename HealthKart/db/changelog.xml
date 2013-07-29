@@ -13631,4 +13631,15 @@
             <column name="remarks" type="TEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130724-1">
+        <addColumn tableName="payment">
+            <column name="refund_amount" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130724-2">
+        <modifyDataType columnName="value" newDataType="DOUBLE" tableName="reward_point"/>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130724-3">
+        <modifyDataType columnName="value" newDataType="DOUBLE" tableName="reward_point_txn"/>
+    </changeSet>
 </databaseChangeLog>

@@ -52,8 +52,6 @@ import com.hk.util.OfferTriggerMatcher;
 public class RewardPointServiceImpl implements RewardPointService {
 
     @Autowired
-    private PaymentService      paymentService;
-    @Autowired
     private RewardPointDao      rewardPointDao;
     @Autowired
     private OfferInstanceDao    offerInstanceDao;
@@ -349,14 +347,6 @@ public class RewardPointServiceImpl implements RewardPointService {
 
     public List<RewardPoint> findByReferredOrder(Order order) {
         return getRewardPointDao().findByReferredOrder(order);
-    }
-
-    public PaymentService getPaymentService() {
-        return paymentService;
-    }
-
-    public void setPaymentService(PaymentService paymentService) {
-        this.paymentService = paymentService;
     }
 
     public RewardPointDao getRewardPointDao() {

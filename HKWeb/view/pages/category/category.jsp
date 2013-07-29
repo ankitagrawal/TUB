@@ -173,8 +173,8 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Gaspari+Nutrition">
-                    <img src="${pageContext.request.contextPath}/images/banners/Gaspari-Nutrition_static.jpg"
+                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
+                    <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek_sports.jpg"
                          alt="Brand Of the Week - Gaspari Nutrition!"
                          class="small_banner"/>
                 </a>
@@ -226,10 +226,10 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/eye/Geek+Boy%27s">
-                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week(geek).jpg" alt="eye"
+
+                    <img src="<hk:vhostImage/>/images/banners/static-banner.jpg" alt="eye"
                          class="small_banner"/>
-                </a>
+
             </c:when>
 
             <c:when test="${categoryBean.category.name eq parenting}">
@@ -243,10 +243,8 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq beauty}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                    <img src="<hk:vhostImage/>/images/banners/Surprise-gift.jpg" alt="surpeise-gift"
                          class="small_banner"/>
-                </a>
                 <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
                     <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
                          class="small_banner"/>

@@ -92,6 +92,11 @@ public class BusyPopulatePurchaseData {
                     warehouseName = "Corporate Office";
                 } else if (warehouseId == 401) {
                     warehouseName = "Kapashera Warehouse";
+                } else if(warehouseId == 1000 ){
+                    warehouseName = "Chandigarh Aqua Store";
+                }
+                else if(warehouseId == 1001){
+                    warehouseName = "Greater Kailash Aqua Store";
                 }
 
                 String series = '';
@@ -109,6 +114,11 @@ public class BusyPopulatePurchaseData {
                     series = "HR";
                 } else if (warehouseId == 401) {
                     series = "DL";
+                } else if(warehouseId == 1000 ){
+                    series = "CHD";
+                }
+                else if(warehouseId == 1001){
+                    series = "GK";
                 }
 
                 int sameState = 0;
