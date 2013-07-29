@@ -38,15 +38,15 @@
       <td><fmt:formatNumber value="${posBean.posSummaryDto.noOfBills}" maxFractionDigits="2"/></td>
       <td><fmt:formatNumber value="${posBean.posSummaryDto.avgAmtPerInvoice}" maxFractionDigits="2"/></td>
     </tr>
-    <table>
+    </table>
 
     <table class="cont" width="100%">
     <tr>
       <th>Order No</th>
       <th>Status</th>
+      <th>Items Total</th>
       <th>Amt</th>
       <th>Payment Mode</th>
-      <th>Items Total</th>
       <th>Discount</th>
       <th>Loyalty Points Redeemed</th>
     </tr>
@@ -55,18 +55,18 @@
         <td>${sale.order.id}</td>
         <c:forEach items="${sale.order.shippingOrders}" var="saleOrder">
           <td>${saleOrder.shippingOrderStatus.name} </td>
+          <td>${fn:length(saleOrder.lineItems)}</td>
         </c:forEach>
         <td><fmt:formatNumber value="${sale.order.amount}" maxFractionDigits="2"/></td>
         <c:forEach items="${sale.order.payments}" var="payment">
           <td>${payment.paymentMode.name} </td>
         </c:forEach>
-        <td>${fn:length(sale.order.cartLineItems)}</td>
         <td><fmt:formatNumber value="${sale.discount}" maxFractionDigits="2"/></td>
         <td>${sale.order.rewardPointsUsed}</td>
       </tr>
 
     </c:forEach>
-    <table>
+    </table>
 
   </s:layout-component>
 </s:layout-render>

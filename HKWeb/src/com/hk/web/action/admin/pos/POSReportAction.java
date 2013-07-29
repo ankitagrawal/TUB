@@ -53,7 +53,7 @@ public class POSReportAction extends BaseAction {
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
 		saleList = posReportService.storeSalesReport(store.getId(), startDate, endDate);
-		returnItemList = posReportService.storeReturnReport(store.getId(), startDate, endDate);
+    returnItemList = posReportService.storeReturnReport(userService.getWarehouseForLoggedInUser().getId(), startDate, endDate);
 		posSummaryDto = posReportService.storeDailySalesSummaryReport(saleList, returnItemList);
 		posSaleItems = posReportService.storeSalesReportWithDiscount(saleList);
 		return new ForwardResolution("/pages/pos/posSalesReportResult.jsp");

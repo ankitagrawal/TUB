@@ -7,6 +7,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.dto.pos.POSSaleItemDto;
@@ -25,137 +26,143 @@ import java.util.*;
 @Service
 public class POSReportServiceImpl implements POSReportService {
 
-	@Autowired
-	private AdminOrderDao adminOrderDao;
-	@Autowired
-	private ReverseOrderDao reverseOrderDao;
+  @Autowired
+  private AdminOrderDao adminOrderDao;
+  @Autowired
+  private ReverseOrderDao reverseOrderDao;
 
-	public List<Order> storeSalesReport(Long storeId, Date startDate, Date endDate) {
-		if (startDate == null) {
-			startDate = getStartDate();
-		}
-		if (endDate == null) {
-			endDate = new Date();
-		}
-		OrderStatus orderStatusReturned = EnumOrderStatus.Delivered.asOrderStatus();
-		List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
-		orderStatusList.add(orderStatusReturned);
-		return adminOrderDao.findSaleForTimeFrame(storeId, startDate, endDate, orderStatusList);
-	}
+  public List<Order> storeSalesReport(Long storeId, Date startDate, Date endDate) {
+    if (startDate == null) {
+      startDate = getStartDate();
+    }
+    if (endDate == null) {
+      endDate = new Date();
+    }
+    OrderStatus orderStatusReturned = EnumOrderStatus.Delivered.asOrderStatus();
+    List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
+    orderStatusList.add(orderStatusReturned);
+    return adminOrderDao.findSaleForTimeFrame(storeId, startDate, endDate, orderStatusList);
+  }
 
-	public List<POSSaleItemDto> storeSalesReportWithDiscount(List<Order> orders) {
+  public List<POSSaleItemDto> storeSalesReportWithDiscount(List<Order> orders) {
 
-		List<POSSaleItemDto> posSaleItems = new ArrayList<POSSaleItemDto>();
-		for (Order order : orders) {
-			double discount = 0.0;
-			for (CartLineItem lineItem : order.getCartLineItems()) {
-				discount = discount + lineItem.getDiscountOnHkPrice();
-			}
-			posSaleItems.add(new POSSaleItemDto(discount, order));
-		}
-		return posSaleItems;
-	}
+    List<POSSaleItemDto> posSaleItems = new ArrayList<POSSaleItemDto>();
+    for (Order order : orders) {
+      double discount = 0.0;
+      for (CartLineItem lineItem : order.getCartLineItems()) {
+        discount = discount + lineItem.getDiscountOnHkPrice();
+      }
+      posSaleItems.add(new POSSaleItemDto(discount, order));
+    }
+    return posSaleItems;
+  }
 
-	public POSSummaryDto storeDailySalesSummaryReport(List<Order> saleList, List<ReverseOrder> returnList) {
+  public POSSummaryDto storeDailySalesSummaryReport(List<Order> saleList, List<ReverseOrder> returnList) {
 
-		double creditCardAmtCollected = 0.0;
-		double creditCardAmtRefunded = 0.0;
-		double cashAmtCollected = 0.0;
-		double cashAmtRefunded = 0.0;
-		double totalAmountCollected = 0.0;
-		double avgAmtPerInvoice = 0.0;
-		Long itemsSold = 0L;
-		Long itemReturned = 0L;
+    double creditCardAmtCollected = 0.0;
+    double creditCardAmtRefunded = 0.0;
+    double cashAmtCollected = 0.0;
+    double cashAmtRefunded = 0.0;
+    double totalAmountCollected = 0.0;
+    double avgAmtPerInvoice = 0.0;
+    Long itemsSold = 0L;
+    Long itemReturned = 0L;
     Long noOfBills = 0L;
-		//double apc = 0.0;
-		for (Order order : saleList) {
-			itemsSold = itemsSold + order.getCartLineItems().size();
-			for (Payment payment : order.getPayments()) {
-				if (payment.getPaymentMode().getId().equals(EnumPaymentMode.COUNTER_CASH.getId())) {
-					cashAmtCollected = cashAmtCollected + payment.getAmount();
-				} else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
-					creditCardAmtCollected = creditCardAmtCollected + payment.getAmount();
-				}
-			}
-		}
-		totalAmountCollected = cashAmtCollected + creditCardAmtCollected;
-		avgAmtPerInvoice = totalAmountCollected / saleList.size();
-		//apc = (Double.valueOf(itemsSold)) / saleList.size();
-    noOfBills=Long.valueOf(saleList.size());
+    //double apc = 0.0;
+    for (Order order : saleList) {
+      Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+      for (ShippingOrder shippingOrder : shippingOrders) {
+        itemsSold = itemsSold + shippingOrder.getLineItems().size();
+      }
+      for (Payment payment : order.getPayments()) {
+        if (payment.getPaymentMode().getId().equals(EnumPaymentMode.COUNTER_CASH.getId())) {
+          cashAmtCollected = cashAmtCollected + payment.getAmount();
+        } else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
+          creditCardAmtCollected = creditCardAmtCollected + payment.getAmount();
+        }
+      }
+    }
+    totalAmountCollected = cashAmtCollected + creditCardAmtCollected;
+    if (saleList != null) {
+      if(totalAmountCollected != 0)   {
+      avgAmtPerInvoice = totalAmountCollected / saleList.size();
+      }
+      noOfBills = Long.valueOf(saleList.size());
+    }
 
-		for (ReverseOrder reverseOrder : returnList) {
-			cashAmtRefunded = cashAmtRefunded + reverseOrder.getAmount();
-			itemReturned = itemReturned + reverseOrder.getReverseLineItems().size();
-		}
-		return (new POSSummaryDto(cashAmtCollected, cashAmtRefunded, creditCardAmtCollected, creditCardAmtRefunded, itemsSold, itemReturned, totalAmountCollected, avgAmtPerInvoice, noOfBills));
-	}
+    for (ReverseOrder reverseOrder : returnList) {
+      cashAmtRefunded = cashAmtRefunded + reverseOrder.getAmount();
+      itemReturned = itemReturned + reverseOrder.getReverseLineItems().size();
+    }
+    return (new POSSummaryDto(cashAmtCollected, cashAmtRefunded, creditCardAmtCollected, creditCardAmtRefunded, itemsSold, itemReturned, totalAmountCollected, avgAmtPerInvoice, noOfBills));
+  }
 
-	public List<ReverseOrder> storeReturnReport(Long storeId, Date startDate, Date endDate) {
-		if (startDate == null) {
-			startDate = getStartDate();
-		}
-		if (endDate == null) {
-			endDate = new Date();
-		}
-		return reverseOrderDao.findReverseOrderForTimeFrame(storeId, startDate, endDate);
-	}
+  public List<ReverseOrder> storeReturnReport(Long storeId, Date startDate, Date endDate) {
+    if (startDate == null) {
+      startDate = getStartDate();
+    }
+    if (endDate == null) {
+      endDate = new Date();
+    }
+    return reverseOrderDao.findReverseOrderForTimeFrame(storeId, startDate, endDate);
+  }
 
-	public Date getStartDate() {
-		Date date = new Date();
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
-	}
+  public Date getStartDate() {
+    Date date = new Date();
+    Calendar cal = new GregorianCalendar();
+    cal.setTime(date);
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    return cal.getTime();
+  }
 
-	public File generatePosStockReport(File xlsFile, List<PosSkuGroupSearchDto> posSkuGroupSearchDtoList) {
-		HkXlsWriter xlsWriter = new HkXlsWriter();
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+  public File generatePosStockReport(File xlsFile, List<PosSkuGroupSearchDto> posSkuGroupSearchDtoList) {
+    HkXlsWriter xlsWriter = new HkXlsWriter();
+    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-		if (posSkuGroupSearchDtoList != null) {
-			int xlsRow = 1;
-			xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
-			xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
-			xlsWriter.addHeader("SIZE", "SIZE");
-			xlsWriter.addHeader("FLAVOR", "FLAVOR");
-			xlsWriter.addHeader("COLOR", "COLOR");
-			xlsWriter.addHeader("FORM", "FORM");
-			xlsWriter.addHeader("BATCH NUMBER", "BATCH NUMBER");
-			xlsWriter.addHeader("COST PRICE", "COST PRICE");
-			xlsWriter.addHeader("MRP", "MRP");
-			xlsWriter.addHeader("MFG DATE", "MFG DATE");
+    if (posSkuGroupSearchDtoList != null) {
+      int xlsRow = 1;
+      xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
+      xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+      xlsWriter.addHeader("SIZE", "SIZE");
+      xlsWriter.addHeader("FLAVOR", "FLAVOR");
+      xlsWriter.addHeader("COLOR", "COLOR");
+      xlsWriter.addHeader("FORM", "FORM");
+      xlsWriter.addHeader("BATCH NUMBER", "BATCH NUMBER");
+      xlsWriter.addHeader("COST PRICE", "COST PRICE");
+      xlsWriter.addHeader("MRP", "MRP");
+      xlsWriter.addHeader("MFG DATE", "MFG DATE");
 
-			xlsWriter.addHeader("EXPIRY DATE", "EXPIRY DATE");
-			xlsWriter.addHeader("AVAILABLE INVENTORY", "AVAILABLE INVENTORY");
+      xlsWriter.addHeader("EXPIRY DATE", "EXPIRY DATE");
+      xlsWriter.addHeader("AVAILABLE INVENTORY", "AVAILABLE INVENTORY");
 
-			for (PosSkuGroupSearchDto posSkuGroupSearchDto : posSkuGroupSearchDtoList) {
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductVariantId());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductName());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getSize());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getFlavor());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getColor());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getForm());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getBatchNumber());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getCostPrice());
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getMrp());
-				if (posSkuGroupSearchDto.getMfgDate() == null) {
-					xlsWriter.addCell(xlsRow, "");
-				} else {
-					xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getMfgDate()));
-				}
-				if (posSkuGroupSearchDto.getExpiryDate() == null) {
-					xlsWriter.addCell(xlsRow, "");
-				} else {
-					xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getExpiryDate()));
-				}
-				xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getAvailableInventory());
-				xlsRow++;
-			}
-			xlsWriter.writeData(xlsFile, "Pos_Stock_Report");
-		}
-		return xlsFile;
-	}
+      for (PosSkuGroupSearchDto posSkuGroupSearchDto : posSkuGroupSearchDtoList) {
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductVariantId());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getProductName());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getSize());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getFlavor());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getColor());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getForm());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getBatchNumber());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getCostPrice());
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getMrp());
+        if (posSkuGroupSearchDto.getMfgDate() == null) {
+          xlsWriter.addCell(xlsRow, "");
+        } else {
+          xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getMfgDate()));
+        }
+        if (posSkuGroupSearchDto.getExpiryDate() == null) {
+          xlsWriter.addCell(xlsRow, "");
+        } else {
+          xlsWriter.addCell(xlsRow, dateFormat.format(posSkuGroupSearchDto.getExpiryDate()));
+        }
+        xlsWriter.addCell(xlsRow, posSkuGroupSearchDto.getAvailableInventory());
+        xlsRow++;
+      }
+      xlsWriter.writeData(xlsFile, "Pos_Stock_Report");
+    }
+    return xlsFile;
+  }
 }
