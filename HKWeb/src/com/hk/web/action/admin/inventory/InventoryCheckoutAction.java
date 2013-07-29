@@ -202,7 +202,14 @@ public class InventoryCheckoutAction extends BaseAction {
             //TODO: Fetch available sku groups
 
 //   first check for skuitem Barcode
-            skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+            List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+            skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+            skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+            skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+
+            List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+            skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+            skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwnerList);
 //       SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),);
             if (skuItemBarcode != null) {
                 skuGroupBarcode = skuItemBarcode.getSkuGroup();
