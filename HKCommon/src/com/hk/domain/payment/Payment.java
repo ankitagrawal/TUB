@@ -118,6 +118,9 @@ public class Payment implements java.io.Serializable {
     @JoinColumn(name="parent_id")
     private Payment parent;
 
+    @Column(name = "refund_amount", precision = 8)
+    private Double refundAmount;
+
 	@Transient
 	private boolean selected;
 
@@ -361,6 +364,14 @@ public class Payment implements java.io.Serializable {
 
     public void setParent(Payment parent) {
         this.parent = parent;
+    }
+
+    public Double getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(Double refundAmount) {
+        this.refundAmount = refundAmount;
     }
 
     public String getPaymentDetails() {

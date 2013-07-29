@@ -30,7 +30,8 @@ public enum EnumReconciliationType {
     AddExpired(160L, "Expired-Add"),
     AddBatchMismatch(170L, "Batch Mismatch-Add"),
     AddFreeVariant(180L, "Free Variant-Add"),
-    RVForDebitNote(190L, "RV For Debit Note");
+    RVForDebitNote(190L, "RV For Debit Note"),
+    ;
 
 
     private java.lang.String name;

@@ -70,6 +70,11 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
                         Element ele = callPaymentGateway(gatewayOrderId, payment.getGatewayReferenceId(),payment.getRrn(),null,EbsPaymentGatewayWrapper.TXN_ACTION_STATUS_PAYMENT_ID);
                         HkPaymentResponse childPayment = verifyAndCreateHkResponsePayment(ele, payment.getGatewayOrderId(),EnumPaymentTransactionType.REFUND.getName());
                         gatewayPaymentList.add(childPayment);
+                    } else {
+                        HkPaymentResponse hkPaymentResponse = createPayment(payment.getGatewayOrderId(),null,null, payment.getErrorLog(),
+                                EnumPaymentTransactionType.REFUND.getName(),payment.getAmount().toString(),null);
+                        hkPaymentResponse.setHKPaymentStatus(EnumHKPaymentStatus.FAILURE);
+                        gatewayPaymentList.add(hkPaymentResponse);
                     }
 
                 }
