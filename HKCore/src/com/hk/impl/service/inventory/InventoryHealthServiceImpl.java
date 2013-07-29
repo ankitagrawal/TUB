@@ -502,62 +502,70 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         if (availableUnbookedInventory > 0) {
             Collection<InventoryHealthService.SkuInfo> availableCheckedInInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
 
-            Map<String, SkuInfo> m1 = new HashMap<String, SkuInfo>();
+            Set<SkuInfo> availableUnBookedInvnList = new HashSet<SkuInfo>();
+            Set<SkuInfo> differentMrpCheckedinBatch = new HashSet<SkuInfo>();
 
-            Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = new ArrayList<SkuInfo>();
-            
-            for (SkuInfo skuinfo : availableCheckedInInvnList) {
-                String key = Long.toString(skuinfo.getSkuId()) + Double.toString(skuinfo.getMrp());
-                if (!m1.containsKey(key)) {
-                    m1.put(key, skuinfo);
+
+            Iterator it = availableCheckedInInvnList.iterator();
+            SkuInfo sk = (SkuInfo) it.next();
+            availableUnBookedInvnList.add(sk);
+            for (SkuInfo skuInfo : availableCheckedInInvnList) {
+                if (sk.getMrp() == skuInfo.getMrp() && sk.getSkuId() != skuInfo.getSkuId()) {
+                    availableUnBookedInvnList.add(skuInfo);
+                } else {
+                    differentMrpCheckedinBatch.add(skuInfo);
                 }
             }
 
-            for (Map.Entry<String, SkuInfo> entry : m1.entrySet()) {
-                availableUnBookedInvnList.add(entry.getValue());
-            }
-
-
-            Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
-            // map will helps me to  enter details of skuinfo in  map in ascending order
-            Map<Double, Set<Long>> priceSkuIdMap = new HashMap<Double, Set<Long>>();
-
-//
-            // Available unbooked inventory list se update marna hai cuurent variant ki qty
-
-            if (availableUnBookedInvnList != null && availableUnBookedInvnList.size() > 0) {
-                for (InventoryHealthService.SkuInfo info : availableUnBookedInvnList) {
-                    if (priceMap.containsKey(info.getMrp())) {
-
-                        if (!priceSkuIdMap.get(info.getMrp()).contains(info.getSkuId())) {
-                            priceMap.get(info.getMrp()).add(info);
-                            priceSkuIdMap.get(info.getMrp()).add(info.getSkuId());
-                        }
-                    } else {
-                        Set<InventoryHealthService.SkuInfo> samePriceSkuInfo = new HashSet<InventoryHealthService.SkuInfo>();
-                        samePriceSkuInfo.add(info);
-
-                        Set<Long> skuIdToBeReferred = new HashSet<Long>();
-                        skuIdToBeReferred.add(info.getSkuId());
-
-                        priceSkuIdMap.put(info.getMrp(), skuIdToBeReferred);
-                        priceMap.put(info.getMrp(), samePriceSkuInfo);
+            differentMrpCheckedinBatch.remove(sk);
+            Iterator itetaror = differentMrpCheckedinBatch.iterator();
+            SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
+            Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
+            if (differentCheckedInBatchFirstElement != null) {
+                for (SkuInfo info : availableUnBookedInvnList) {
+                    if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {                         
+                        availableUnBookedInvnListToUpdate.add(info);
                     }
                 }
-            }
-
-            Set<InventoryHealthService.SkuInfo> skuInfosForCurrentMrp = priceMap.get(productVariant.getMarkedPrice());
-            if (skuInfosForCurrentMrp != null && skuInfosForCurrentMrp.size() > 0) {
-
-                updateVariantInfo(productVariant, skuInfosForCurrentMrp);
             } else {
-                // if i am not getting any entry that means need to update variant with new mrp  need to get oldest checkin batch
-                Double mrp = inventoryManageDao.getFirstcheckedInBatchMRP(productVariant);
-                if (mrp != null) {
-                    Set<InventoryHealthService.SkuInfo> newBatchSkuInfo = priceMap.get(mrp);
-                    updateVariantInfo(productVariant, newBatchSkuInfo);
-                }
+                availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
             }
+
+            if (availableUnBookedInvnListToUpdate != null && availableUnBookedInvnListToUpdate.size() > 0) {
+                updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
+            }
+            /*
+
+          Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
+
+//
+          // Available unbooked inventory list se update marna hai cuurent variant ki qty
+
+          if (availableUnBookedInvnList != null && availableUnBookedInvnList.size() > 0) {
+              for (InventoryHealthService.SkuInfo info : availableUnBookedInvnList) {
+                  if (priceMap.containsKey(info.getMrp())) {
+                      priceMap.get(info.getMrp()).add(info);
+
+                  } else {
+                      Set<InventoryHealthService.SkuInfo> samePriceSkuInfo = new HashSet<InventoryHealthService.SkuInfo>();
+                      samePriceSkuInfo.add(info);
+                      priceMap.put(info.getMrp(), samePriceSkuInfo);
+                  }
+              }
+          }
+
+          Set<InventoryHealthService.SkuInfo> skuInfosForCurrentMrp = priceMap.get(productVariant.getMarkedPrice());
+          if (skuInfosForCurrentMrp != null && skuInfosForCurrentMrp.size() > 0) {
+
+              updateVariantInfo(productVariant, skuInfosForCurrentMrp);
+          } else {
+              // if i am not getting any entry that means need to update variant with new mrp  need to get oldest checkin batch
+              Double mrp = inventoryManageDao.getFirstcheckedInBatchMRP(productVariant);
+              if (mrp != null) {
+                  Set<InventoryHealthService.SkuInfo> newBatchSkuInfo = priceMap.get(mrp);
+                  updateVariantInfo(productVariant, newBatchSkuInfo);
+              }
+          }  */
         } else {
             Product product = productVariant.getProduct();
             boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
