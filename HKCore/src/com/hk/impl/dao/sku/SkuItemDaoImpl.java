@@ -140,10 +140,10 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         }
         Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
         if (skuItemStatusList != null && skuItemStatusList.size() > 0) {
-            query.setParameter("skuItemStatusList", skuItemStatusList);
+            query.setParameterList("skuItemStatusList", skuItemStatusList);
         }
         if(skuItemOwners!=null &&skuItemOwners.size()>0){
-        	query.setParameter("skuItemOwners", skuItemOwners);
+        	query.setParameterList("skuItemOwners", skuItemOwners);
         }
        
         List<SkuItem> skuItems = query.list();
