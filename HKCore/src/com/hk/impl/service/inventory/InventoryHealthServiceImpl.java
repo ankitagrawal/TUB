@@ -282,8 +282,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         @SuppressWarnings("unchecked")
         List<SkuInfo> list = query.list();
 
-        Set<Long> skuIdsTobeRevisit = new HashSet<Long>();
-
         LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
         for (SkuInfo skuInfo : list) {
             SkuInfo info = getLast(skuList);
@@ -291,11 +289,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 info.setQty(info.getQty() + skuInfo.getQty());
                 info.setUnbookedQty(info.getQty());
             } else {
-                if (skuIdsTobeRevisit == null || !skuIdsTobeRevisit.contains(skuInfo.getSkuId())){
-                    skuInfo.setUnbookedQty(skuInfo.getQty());
-                    skuList.add(skuInfo);
-                    skuIdsTobeRevisit.add(skuInfo.getSkuId());
-                }
+                skuInfo.setUnbookedQty(skuInfo.getQty());
+                skuList.add(skuInfo);
             }
         }
         return skuList;
@@ -505,7 +500,23 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
 
         if (availableUnbookedInventory > 0) {
-            Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
+            Collection<InventoryHealthService.SkuInfo> availableCheckedInInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
+
+            Map<String, SkuInfo> m1 = new HashMap<String, SkuInfo>();
+
+            Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = new ArrayList<SkuInfo>();
+            for (SkuInfo skuinfo : availableCheckedInInvnList) {
+                String key = Long.toString(skuinfo.getSkuId()) + Double.toString(skuinfo.getMrp());
+                if (!m1.containsKey(key)) {
+                    m1.put(key, skuinfo);
+                }
+            }
+
+            for (Map.Entry<String, SkuInfo> entry : m1.entrySet()) {
+                availableUnBookedInvnList.add(entry.getValue());
+            }
+
+
             Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
             // map will helps me to  enter details of skuinfo in  map in ascending order
             Map<Double, Set<Long>> priceSkuIdMap = new HashMap<Double, Set<Long>>();
