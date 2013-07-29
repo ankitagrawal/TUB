@@ -282,6 +282,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         @SuppressWarnings("unchecked")
         List<SkuInfo> list = query.list();
 
+        Set<Long> skuIdsTobeRevisit = new HashSet<Long>();
+
         LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
         for (SkuInfo skuInfo : list) {
             SkuInfo info = getLast(skuList);
@@ -289,8 +291,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 info.setQty(info.getQty() + skuInfo.getQty());
                 info.setUnbookedQty(info.getQty());
             } else {
-                skuInfo.setUnbookedQty(skuInfo.getQty());
-                skuList.add(skuInfo);
+                if (skuIdsTobeRevisit == null || !skuIdsTobeRevisit.contains(skuInfo.getSkuId())){
+                    skuInfo.setUnbookedQty(skuInfo.getQty());
+                    skuList.add(skuInfo);
+                    skuIdsTobeRevisit.add(skuInfo.getSkuId());
+                }
             }
         }
         return skuList;
@@ -502,14 +507,28 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         if (availableUnbookedInventory > 0) {
             Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
             Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
+            // map will helps me to  enter details of skuinfo in  map in ascending order
+            Map<Double, Set<Long>> priceSkuIdMap = new HashMap<Double, Set<Long>>();
+
+//
             // Available unbooked inventory list se update marna hai cuurent variant ki qty
+
             if (availableUnBookedInvnList != null && availableUnBookedInvnList.size() > 0) {
                 for (InventoryHealthService.SkuInfo info : availableUnBookedInvnList) {
                     if (priceMap.containsKey(info.getMrp())) {
-                        priceMap.get(info.getMrp()).add(info);
+
+                        if (!priceSkuIdMap.get(info.getMrp()).contains(info.getSkuId())) {
+                            priceMap.get(info.getMrp()).add(info);
+                            priceSkuIdMap.get(info.getMrp()).add(info.getSkuId());
+                        }
                     } else {
                         Set<InventoryHealthService.SkuInfo> samePriceSkuInfo = new HashSet<InventoryHealthService.SkuInfo>();
                         samePriceSkuInfo.add(info);
+
+                        Set<Long> skuIdToBeReferred = new HashSet<Long>();
+                        skuIdToBeReferred.add(info.getSkuId());
+
+                        priceSkuIdMap.put(info.getMrp(), skuIdToBeReferred);
                         priceMap.put(info.getMrp(), samePriceSkuInfo);
                     }
                 }
@@ -581,8 +600,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         productVariant.setMrpQty(maxQty);
         productVariant.setMarkedPrice(selectedInfo.getMrp());
         productVariant.setCostPrice(selectedInfo.getCostPrice());
-        if (!productVariant.getDeleted()) {
+        if (!productVariant.getDeleted() && productVariant.getMrpQty() > 0) {
             productVariant.setOutOfStock(false);
+        } else {
+            productVariant.setOutOfStock(true);
         }
         long skuId = selectedInfo.getSkuId();
         Sku sku = getBaseDao().get(Sku.class, skuId);
