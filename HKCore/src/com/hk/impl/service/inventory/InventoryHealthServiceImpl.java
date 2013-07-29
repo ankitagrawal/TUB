@@ -657,13 +657,19 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 } else {
                     Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
                     // Available unbooked inventory list se update marna hai cuurent variant ki qty
+                    Set<Long> skuIdToBeReferred = new HashSet<Long>();
+
                     if (availableUnBookedInvnList != null && availableUnBookedInvnList.size() > 0) {
                         for (InventoryHealthService.SkuInfo info : availableUnBookedInvnList) {
                             if (priceMap.containsKey(info.getMrp())) {
-                                priceMap.get(info.getMrp()).add(info);
+                                if (!skuIdToBeReferred.contains(info.getSkuId())){
+                                     priceMap.get(info.getMrp()).add(info);
+                                }
+
                             } else {
                                 Set<InventoryHealthService.SkuInfo> samePriceSkuInfo = new HashSet<InventoryHealthService.SkuInfo>();
                                 samePriceSkuInfo.add(info);
+                                skuIdToBeReferred.add(info.getSkuId());
                                 priceMap.put(info.getMrp(), samePriceSkuInfo);
                             }
                         }
