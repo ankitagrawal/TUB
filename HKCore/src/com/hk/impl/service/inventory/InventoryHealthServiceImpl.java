@@ -483,16 +483,58 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         List<SkuInfo> skus = new ArrayList<SkuInfo>();
 
         List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
-        Sku tempBookedSku = skuItemCLIs.get(0).getSkuItem().getSkuGroup().getSku();
+        SkuItem tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
 
         Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
         boolean invAdded = false;
+        boolean newSkuInfoFlag = false;
+        boolean updateSkuInfoFlag = false;
+        //
         for (InventoryInfo inventoryInfo : infos) {
             if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
                 for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-                    if(skuInfo.getSkuId() == tempBookedSku.getId().longValue()){
+                    if(skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()){
                         skuInfo.setUnbookedQty(skuInfo.getUnbookedQty()+cartLineItem.getQty());
+                        updateSkuInfoFlag = true;
+                        break;
                     }
+                }
+                if(!updateSkuInfoFlag){
+                    SkuInfo newSkuInfo = new SkuInfo();
+                    newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
+                    newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
+                    newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
+                    newSkuInfo.setUnbookedQty(cartLineItem.getQty());
+                    newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
+                    newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+                    inventoryInfo.getSkuInfoList().add(newSkuInfo);
+                    newSkuInfoFlag = true;
+                    break;
+                }
+            }
+        }
+
+        if(!updateSkuInfoFlag && !newSkuInfoFlag){
+            InventoryInfo newInventoryInfo = new InventoryInfo();
+            List<SkuInfo> skuInfoList = new ArrayList<SkuInfo>();
+            SkuInfo newSkuInfo = new SkuInfo();
+            newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
+            newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
+            newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
+            newSkuInfo.setUnbookedQty(cartLineItem.getQty());
+            newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
+            newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+
+            skuInfoList.add(newSkuInfo);
+            newInventoryInfo.setMrp(newSkuInfo.getMrp());
+            newInventoryInfo.setQty(newSkuInfo.getUnbookedQty());
+            newInventoryInfo.getSkuInfoList().add(newSkuInfo);
+            infos.add(newInventoryInfo);
+        }
+
+        for (InventoryInfo inventoryInfo : infos) {
+            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
                     if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
                         Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
                         if (filter.getWarehouseId() == null
