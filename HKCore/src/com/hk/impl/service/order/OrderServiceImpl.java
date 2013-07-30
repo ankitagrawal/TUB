@@ -714,9 +714,11 @@ public class OrderServiceImpl implements OrderService {
         if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
             for (ShippingOrder shippingOrder : order.getShippingOrders()){
                 for (LineItem lineItem : shippingOrder.getLineItems()){
-                    Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
-                    if(!skuItemLineItemStatus){
-                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+                    if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
+                        Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+                        if(!skuItemLineItemStatus){
+                            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+                        }
                     }
                 }
             }
