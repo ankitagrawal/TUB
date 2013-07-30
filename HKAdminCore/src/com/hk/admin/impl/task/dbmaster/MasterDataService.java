@@ -148,6 +148,8 @@ public class MasterDataService {
 	DebitNoteTypeSeedData debitNoteTypeSeedData;
 	@Autowired
 	PurchaseOrderTypeSeedData purchaseOrderTypeSeedData;
+    @Autowired
+    ReversePickupStatusSeedData reversePickupStatusSeedData;
 	
 
 	public void insert() {
@@ -327,5 +329,8 @@ public class MasterDataService {
 		
 		logger.debug("inserting Purchase Order type");
 		purchaseOrderTypeSeedData.invokeInsert();
+
+        logger.debug("inserting Reverse Pickup Status");
+        reversePickupStatusSeedData.invokeInsert();
 	}
 }
