@@ -113,74 +113,74 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
         return productVariant.getMrpQty();
     }
- /*
-    private static class VariantUpdateInfo {
-        long mrpQty;
-        long netQty;
-        double mrp;
-        double costPrice;
-        boolean inStock;
+    /*
+private static class VariantUpdateInfo {
+   long mrpQty;
+   long netQty;
+   double mrp;
+   double costPrice;
+   boolean inStock;
 
-    }
+}
 
-    private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
-        double newHkPrice = 0d;
-        Product product = variant.getProduct();
-        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
+   double newHkPrice = 0d;
+   Product product = variant.getProduct();
+   boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
 
-        if (vInfo.mrp != 0d && !variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
-            UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
-            if (updatePvPrice == null) {
-                updatePvPrice = new UpdatePvPrice();
-            }
-            updatePvPrice.setProductVariant(variant);
-            updatePvPrice.setOldCostPrice(variant.getCostPrice());
-            updatePvPrice.setNewCostPrice(vInfo.costPrice);
-            updatePvPrice.setOldMrp(variant.getMarkedPrice());
-            updatePvPrice.setNewMrp(vInfo.mrp);
-            updatePvPrice.setOldHkprice(variant.getHkPrice());
-            newHkPrice = vInfo.mrp * (1 - variant.getDiscountPercent());
-            updatePvPrice.setNewHkprice(newHkPrice);
-            updatePvPrice.setTxnDate(new Date());
-            updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
-            baseDao.save(updatePvPrice);
-        }
+   if (vInfo.mrp != 0d && !variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
+       UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
+       if (updatePvPrice == null) {
+           updatePvPrice = new UpdatePvPrice();
+       }
+       updatePvPrice.setProductVariant(variant);
+       updatePvPrice.setOldCostPrice(variant.getCostPrice());
+       updatePvPrice.setNewCostPrice(vInfo.costPrice);
+       updatePvPrice.setOldMrp(variant.getMarkedPrice());
+       updatePvPrice.setNewMrp(vInfo.mrp);
+       updatePvPrice.setOldHkprice(variant.getHkPrice());
+       newHkPrice = vInfo.mrp * (1 - variant.getDiscountPercent());
+       updatePvPrice.setNewHkprice(newHkPrice);
+       updatePvPrice.setTxnDate(new Date());
+       updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
+       baseDao.save(updatePvPrice);
+   }
 
-        if (vInfo.inStock) {
-            variant.setMarkedPrice(vInfo.mrp);
-        }
-        variant.setNetQty(vInfo.netQty);
-        variant.setMrpQty(vInfo.mrpQty);
+   if (vInfo.inStock) {
+       variant.setMarkedPrice(vInfo.mrp);
+   }
+   variant.setNetQty(vInfo.netQty);
+   variant.setMrpQty(vInfo.mrpQty);
 
-        // for jit/drop-ship we don't alter stock status
-        if (updateStockStatus) {
-            variant.setOutOfStock(!vInfo.inStock);
-        }
+   // for jit/drop-ship we don't alter stock status
+   if (updateStockStatus) {
+       variant.setOutOfStock(!vInfo.inStock);
+   }
 
-        if (vInfo.costPrice != 0l) {
-            variant.setCostPrice(vInfo.costPrice);
-        }
-        if (newHkPrice != 0d) {
-            variant.setHkPrice(newHkPrice);
-        }
+   if (vInfo.costPrice != 0l) {
+       variant.setCostPrice(vInfo.costPrice);
+   }
+   if (newHkPrice != 0d) {
+       variant.setHkPrice(newHkPrice);
+   }
 
-        productVariantService.save(variant);
-        //neither do we alter corresponding product status
-        if (updateStockStatus) {
-            if (!vInfo.inStock) {
-                List<ProductVariant> inStockVariants = product.getInStockVariants();
-                if (inStockVariants != null && inStockVariants.isEmpty()) {
-                    product.setOutOfStock(true);
-                    productService.save(product);
-                }
-            } else {
-                product.setOutOfStock(false);
-                productService.save(product);
-            }
-        }
-    }
-         */
-    
+   productVariantService.save(variant);
+   //neither do we alter corresponding product status
+   if (updateStockStatus) {
+       if (!vInfo.inStock) {
+           List<ProductVariant> inStockVariants = product.getInStockVariants();
+           if (inStockVariants != null && inStockVariants.isEmpty()) {
+               product.setOutOfStock(true);
+               productService.save(product);
+           }
+       } else {
+           product.setOutOfStock(false);
+           productService.save(product);
+       }
+   }
+}
+    */
+
     private static final String bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty" +
             " from cart_line_item as a inner join base_order as b on a.order_id = b.id" +
             " where a.product_variant_id = :pvId " +
@@ -709,35 +709,34 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty) {
 
         for (CartLineItem cartLineItem : cartLineItems) {
+            if (lineItemDao.getLineItem(cartLineItem) != null) {
 
-            ProductVariant productVariant = cartLineItem.getProductVariant();
-            // picking the  sku for current MRP available at max qty on product variant
-            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-            long qtyToBeSet = cartLineItem.getQty();
-            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-            if (maxQty >= qtyToBeSet) {
-                for (int i = 0; i < qtyToBeSet; i++) {
-                    SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
-                    skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                    skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                    // todo Pvi entries
-                    skuItem = (SkuItem) getBaseDao().save(skuItem);
-                    // inventoryHealthCheck call
+                ProductVariant productVariant = cartLineItem.getProductVariant();
+                // picking the  sku for current MRP available at max qty on product variant
+                Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+                long qtyToBeSet = cartLineItem.getQty();
+                Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+                if (maxQty >= qtyToBeSet) {
+                    for (int i = 0; i < qtyToBeSet; i++) {
+                        SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
+                        skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                        // todo Pvi entries
+                        skuItem = (SkuItem) getBaseDao().save(skuItem);
+                        // inventoryHealthCheck call
 //                    inventoryHealthCheck(productVariant);
 
-                    // todo UpdatePrice and Mrp qyt
-                    skuItemsToBeBooked.add(skuItem);
+                        // todo UpdatePrice and Mrp qyt
+                        skuItemsToBeBooked.add(skuItem);
+                    }
+                    // Call method to make new entries in SKUItemCLI  only those for which inventory availa
+
+                    inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+                    skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
+                    maxQty = maxQty - qtyToBeSet;
                 }
-                // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-
-                inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-                skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
-                maxQty = maxQty - qtyToBeSet;
             }
-
         }
-
-
         return maxQty;
     }
 
