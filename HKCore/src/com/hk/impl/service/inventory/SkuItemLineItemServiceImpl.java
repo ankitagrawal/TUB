@@ -115,6 +115,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
             //todo tarun erp
             //make entry in product variant inventory
         }
+    //    getSkuItemDao().save(lineItem);
+        getSkuItemDao().save(lineItem.getShippingOrder());
         return true;
     }
 

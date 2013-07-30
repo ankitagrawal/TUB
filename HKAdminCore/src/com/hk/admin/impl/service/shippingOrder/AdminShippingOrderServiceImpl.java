@@ -223,7 +223,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	        // auto escalate shipping orders if possible
 	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
-			orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
+	//		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
             return shippingOrder;
         }
         return null;
