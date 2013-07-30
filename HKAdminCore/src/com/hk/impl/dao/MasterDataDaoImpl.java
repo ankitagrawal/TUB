@@ -7,21 +7,25 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.pos.DiscountConstants;
+import com.hk.constants.reversePickup.EnumReversePickupStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.review.Mail;
 import com.hk.pact.service.review.MailService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -112,6 +116,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private ConsignmentService consignmentService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    ShippingOrderService shippingOrderService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -220,7 +226,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(DebitNoteStatus.class);
     }
 
-  public List<CreditNoteStatus> getCreditNoteStatusList() {
+    public List<CreditNoteStatus> getCreditNoteStatusList() {
         return getBaseDao().getAll(CreditNoteStatus.class);
     }
 
@@ -235,9 +241,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<ReconciliationType> getReconciliationTypeList() {
         return EnumReconciliationType.getSubtractReconciliationType();
     }
-    
-    public List<ReconciliationType> getDebitNoteReconciliationType(){
-    	return EnumReconciliationType.getDebitNoteReconciliationType();
+
+    public List<ReconciliationType> getDebitNoteReconciliationType() {
+        return EnumReconciliationType.getDebitNoteReconciliationType();
     }
 
     public List<Mail> getAllMailType() {
@@ -532,7 +538,27 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<EnumUserCodCalling> getUserCodCallStatus() {
-        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO,EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
     }
+
+
+    public List<Reason> getCustomerReasonForReversePickup() {
+        List<Long> reasonsIds = Arrays.asList(EnumReason.ProductDamaged.getId(), EnumReason.ProductExpired.getId(), EnumReason.WrongColor.getId(), EnumReason.WrongSize.getId());
+        return shippingOrderService.getReasonForReversePickup(reasonsIds);
+    }
+
+    public List<Reason> getWarehouseReceivedCondition() {
+        List<Long> reasonsIds = Arrays.asList(EnumReason.Good.getId(), EnumReason.Damaged.getId(), EnumReason.Non_Functional.getId(), EnumReason.Near_Expiry.getId(), EnumReason.Expired.getId());
+        return shippingOrderService.getReasonForReversePickup(reasonsIds);
+    }
+
+    public List<Courier> getCouriersForReversePickup() {
+        return Arrays.asList(EnumCourier.FedEx.asCourier());
+    }
+
+    public List<EnumReversePickupStatus> getAllReversePickUpStatus() {
+        return Arrays.asList(EnumReversePickupStatus.RPU_Initiated, EnumReversePickupStatus.RPU_Picked, EnumReversePickupStatus.RPU_Received, EnumReversePickupStatus.RPU_QC_Checked_In);
+    }
+
 
 }
