@@ -4,10 +4,30 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Product Search">
 	<s:useActionBean beanclass="com.hk.web.action.admin.pos.PosProductSearchAction" var="ps"/>
 	<s:layout-component name="htmlHead">
+		<style type="text/css">
+			.prdct-tbl th, .prdct-tbl td {
+				max-width: 72px;
+			}
+
+			.prdct-tbl th.large-td, .prdct-tbl td.large-td {
+				max-width: 108px;
+			}
+
+			.prdct-tbl td.selectedSku {
+				width: 0%;
+			}
+
+			.sku-grp-table th, .sku-grp-table td {
+				max-width: 60px;
+				word-wrap: break-word;
+			}
+
+
+		</style>
+
 		<script type="text/javascript">
 
 			$(document).ready(function () {
-
 				$('.searchSkuBatches').click(function () {
 					$("#skuGroupTable > tbody").html("");
 					var selectedSku = $(this).parent().siblings('.selectedSku').children('.selectedSkuHid').val();
@@ -28,9 +48,9 @@
 										var inStock = skuGroupList[i].inStockQty;
 										var checkedInQty = skuGroupList[i].checkedInQty;
 										var rowValue = $('<tr></tr>');
-										if(grnId != null) {
-											rowValue.append($('<td><a target="_blank" href="${pageContext.request.contextPath}/admin/inventory/GRN.action?grn='+grnId+'&view=">' + grnId + '</a></td>'));
-										}  else{
+										if (grnId != null) {
+											rowValue.append($('<td><a target="_blank" href="${pageContext.request.contextPath}/admin/inventory/GRN.action?grn=' + grnId + '&view=">' + grnId + '</a></td>'));
+										} else {
 											rowValue.append($('<td></td>'));
 										}
 										rowValue.append($('<td>' + batchNumber + '</td>'));
@@ -85,12 +105,12 @@
 			</s:form>
 		</fieldset>
 
-		<table class="zebra_vert" style="width: 50%; float: left;">
+		<table class="zebra_vert prdct-tbl" style="max-width: 50%; float: left;">
 			<thead>
 			<tr>
-				<th>Variant Id</th>
-				<th>Product Name</th>
-				<th>Flavor</th>
+				<th class="large-td">Variant Id</th>
+				<th class="large-td">Product Name</th>
+				<th class="large-td">Flavor</th>
 				<th>Size</th>
 				<th>Color</th>
 				<th>Form</th>
@@ -100,9 +120,9 @@
 			</thead>
 			<c:forEach items="${ps.posProductSearchDtoList}" var="product" varStatus="ctr">
 				<tr>
-					<td>${product.productVariantId}</td>
-					<td>${product.productName}</td>
-					<td>${product.flavor}</td>
+					<td class="large-td">${product.productVariantId}</td>
+					<td class="large-td">${product.productName}</td>
+					<td class="large-td">${product.flavor}</td>
 					<td>${product.size}</td>
 					<td>${product.color}</td>
 					<td>${product.form}</td>
@@ -115,10 +135,10 @@
 			</c:forEach>
 		</table>
 
-		<table class="zebra_vert" id="skuGroupTable" style="width: 45%; float: right;">
+		<table class="zebra_vert sku-grp-table" id="skuGroupTable" style="width: 40%; float: right;">
 			<thead>
 			<tr>
-				<th>GRN/RV No.</th>
+				<th>GRN No.</th>
 				<th>Batch No.</th>
 				<th>Mfg. <br>Date</th>
 				<th>Expiry<br> Date</th>
