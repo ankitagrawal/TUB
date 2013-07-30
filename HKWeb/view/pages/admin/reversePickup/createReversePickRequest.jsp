@@ -7,7 +7,6 @@
 <%@ page import="com.hk.domain.analytics.Reason" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.domain.courier.Courier" %>
-<%@ page import="com.hk.constants.core.EnumPermission" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" var="rev"/>
