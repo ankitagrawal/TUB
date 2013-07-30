@@ -1,5 +1,7 @@
 package com.hk.domain.sku;
 
+import java.util.Date;
+
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.shippingOrder.LineItem;
@@ -41,6 +43,15 @@ public class SkuItemLineItem implements java.io.Serializable {
 
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
+	
+	@JsonSkip
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date          createDate         = new Date();
+	
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "update_dt", length = 19)
+	private Date updateDate;
 
 	public Long getId() {
 		return id;
@@ -88,6 +99,22 @@ public class SkuItemLineItem implements java.io.Serializable {
 
 	public void setSkuItemCLI(SkuItemCLI skuItemCLI) {
 		this.skuItemCLI = skuItemCLI;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	@Override

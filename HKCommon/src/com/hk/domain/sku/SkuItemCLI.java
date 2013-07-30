@@ -5,7 +5,9 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,6 +46,15 @@ public class SkuItemCLI implements java.io.Serializable {
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
     private SkuItemLineItem skuItemLineItem;
+    
+    @JsonSkip
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date          createDate         = new Date();
+    
+    @Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "update_dt", length = 19)
+	private Date updateDate;
 
 	public Long getId() {
 		return id;
@@ -92,7 +103,24 @@ public class SkuItemCLI implements java.io.Serializable {
     public void setSkuItemLineItem(SkuItemLineItem skuItemLineItem) {
         this.skuItemLineItem = skuItemLineItem;
     }
-    @Override
+    
+    public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
 			return false;
