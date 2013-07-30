@@ -147,13 +147,23 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
     }
 
 
-    public List<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant) {
+    public Set<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant) {
 
         String query = "from CartLineItem c  where c.order.orderStatus.id in (:orderStatusIds) and c.productVariant = :productVariant and c.productVariant.markedPrice = :mrp"
                 + " and c.skuItemCLIs.size < 0  order by c.order.createDate  asc ";
-        List<CartLineItem> clis = getSession().createQuery(query).setParameterList("orderStatusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId())).setParameter("productVariant", productVariant).setParameter("mrp", productVariant.getMarkedPrice()).list();
+        Set<CartLineItem> clis =(Set<CartLineItem>) getSession().createQuery(query).setParameterList("orderStatusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId())).setParameter("productVariant", productVariant).setParameter("mrp", productVariant.getMarkedPrice()).list();
 
         return clis;
+    }
+
+
+    public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant){
+
+         String sql = "Select count(si) from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and ( si.skuGroup.status != :reviewStatus or si.skuGroup.status is null ) group by si.skuGroup.id order by si.skuGroup.createDate desc  ";
+        Query query = getSession().createQuery(sql).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
+        return (Long) query.list().get(0);
+
+
     }
 
 }

@@ -651,6 +651,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
             if (!skus.isEmpty()) {
                 Long unbookedInventory = inventoryManageService.getAvailableUnbookedInventory(skus, false);
+                Long countOfJustCheckedInBatch =  inventoryManageService.getLatestcheckedInBatchInventoryCount(productVariant);
+                  unbookedInventory = unbookedInventory - countOfJustCheckedInBatch;
                 // it means we had booked some orders on zero inventory and now i need to create sicli for that
                 if (unbookedInventory < 0) {
                     pendingOrdersInventoryHealthCheck(productVariant);
@@ -716,7 +718,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
         Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
         if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
-            Set<CartLineItem> cartLineItems = (Set<CartLineItem>) inventoryManageDao.getClisForInPlacedOrder(productVariant);
+            Set<CartLineItem> cartLineItems = inventoryManageDao.getClisForInPlacedOrder(productVariant);
             Iterator it = availableUnBookedInvnList.iterator();
             SkuInfo newSkuInfo = (SkuInfo) it.next();
             it.remove();
@@ -745,7 +747,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                     // todo Pvi entries
                     skuItem = (SkuItem) getBaseDao().save(skuItem);
                     // inventoryHealthCheck call
-                    inventoryHealthCheck(productVariant);
+//                    inventoryHealthCheck(productVariant);
 
                     // todo UpdatePrice and Mrp qyt
                     skuItemsToBeBooked.add(skuItem);

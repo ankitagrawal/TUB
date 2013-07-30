@@ -188,6 +188,10 @@ public class InventoryManageServiceImpl implements InventoryManageService {
 
 
 
+     public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant){
+         return inventoryManageDao.getLatestcheckedInBatchInventoryCount(productVariant);
+     }
+
 
     public BaseDao getBaseDao() {
         return baseDao;

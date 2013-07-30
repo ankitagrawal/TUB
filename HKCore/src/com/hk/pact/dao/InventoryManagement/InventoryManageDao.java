@@ -7,6 +7,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.constants.sku.EnumSkuItemStatus;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public interface InventoryManageDao {
 
-     public Long getNetInventory(Sku sku);
+    public Long getNetInventory(Sku sku);
 
     public Long getAvailableUnBookedInventory(List<Sku> skuList);
 
@@ -26,7 +27,7 @@ public interface InventoryManageDao {
     public Long getNetInventory(List<Sku> skuList, Double mrp);
 
     // Method to get temp Booked and Booked qty
-     public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> skuItemStatusId, List <Long> skuItemOwnerStatusId);
+    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> skuItemStatusId, List<Long> skuItemOwnerStatusId);
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
@@ -34,9 +35,11 @@ public interface InventoryManageDao {
 
     public Double getFirstcheckedInBatchMRP(ProductVariant productVariant);
 
-     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
+    public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
 
-     public List<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant) ;
+    public Set<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant);
+
+    public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
 
 }

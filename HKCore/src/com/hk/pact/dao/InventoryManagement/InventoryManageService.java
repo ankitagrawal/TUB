@@ -28,6 +28,8 @@ public interface InventoryManageService {
 
      public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
+    public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+
     
 
     
