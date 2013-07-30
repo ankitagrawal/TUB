@@ -13717,6 +13717,11 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-6">
+    <sql>
+    INSERT INTO sku_item_owner values(10, "SELF"), (20, "CUSTOMER"), (30, "SUPPLIER"), (40, "BRIGHT");
+    </sql>
+    </changeSet>
     <changeSet author="Nihal (generated)" id="1375185803482-23">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="product_variant" constraintName="fk_product_variant_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
