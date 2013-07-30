@@ -37,9 +37,11 @@ public interface InventoryManageDao {
 
     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
 
-    public Set<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant);
+    public List<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant, Double mrp);
 
     public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+
+    public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
 
 
 }

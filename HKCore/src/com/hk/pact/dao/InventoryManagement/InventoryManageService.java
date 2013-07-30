@@ -5,6 +5,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.shippingOrder.LineItem;
 
 import java.util.Set;
 import java.util.List;
@@ -29,6 +30,11 @@ public interface InventoryManageService {
      public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
     public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+
+      public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
+
+
+
 
     
 

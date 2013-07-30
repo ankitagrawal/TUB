@@ -193,6 +193,10 @@ public class InventoryManageServiceImpl implements InventoryManageService {
      }
 
 
+      public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp){
+          return inventoryManageDao.getClisForOrderInProcessingState(productVariant,  skuId, mrp);
+      }
+
     public BaseDao getBaseDao() {
         return baseDao;
     }

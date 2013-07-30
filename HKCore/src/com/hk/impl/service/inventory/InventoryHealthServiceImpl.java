@@ -26,6 +26,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.CartLineItem;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
@@ -34,6 +35,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.core.fliter.CartLineItemFilter;
 
 @Service
@@ -55,6 +57,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     InventoryManageService inventoryManageService;
     @Autowired
     SkuService skuService;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
+    @Autowired
+    LineItemDao lineItemDao;
 
 
     @Override
@@ -651,8 +657,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
             if (!skus.isEmpty()) {
                 Long unbookedInventory = inventoryManageService.getAvailableUnbookedInventory(skus, false);
-                Long countOfJustCheckedInBatch =  inventoryManageService.getLatestcheckedInBatchInventoryCount(productVariant);
-                  unbookedInventory = unbookedInventory - countOfJustCheckedInBatch;
+                Long countOfJustCheckedInBatch = inventoryManageService.getLatestcheckedInBatchInventoryCount(productVariant);
+                unbookedInventory = unbookedInventory - countOfJustCheckedInBatch;
                 // it means we had booked some orders on zero inventory and now i need to create sicli for that
                 if (unbookedInventory < 0) {
                     pendingOrdersInventoryHealthCheck(productVariant);
@@ -664,8 +670,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                     if (availableUnBookedInvnList != null && availableUnBookedInvnList.size() > 0) {
                         for (InventoryHealthService.SkuInfo info : availableUnBookedInvnList) {
                             if (priceMap.containsKey(info.getMrp())) {
-                                if (!skuIdToBeReferred.contains(info.getSkuId())){
-                                     priceMap.get(info.getMrp()).add(info);
+                                if (!skuIdToBeReferred.contains(info.getSkuId())) {
+                                    priceMap.get(info.getMrp()).add(info);
                                 }
 
                             } else {
@@ -718,11 +724,32 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
         Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
         if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
-            Set<CartLineItem> cartLineItems = inventoryManageDao.getClisForInPlacedOrder(productVariant);
+
             Iterator it = availableUnBookedInvnList.iterator();
             SkuInfo newSkuInfo = (SkuInfo) it.next();
+            Long remainingQty = newSkuInfo.getQty();
+            Double newMrp = newSkuInfo.getMrp();
             it.remove();
-            Long remainingQty = tempBookSkuLineItemForPendingOrder(cartLineItems, newSkuInfo.getQty());
+            long skuId = newSkuInfo.getSkuId();
+            Sku sku = getBaseDao().get(Sku.class, skuId);
+            productVariant.setWarehouse(sku.getWarehouse());
+            getBaseDao().save(productVariant);
+            List<CartLineItem> cartLineItems = inventoryManageDao.getClisForInPlacedOrder(productVariant, newMrp);
+            Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
+            if (clis.size() > 0) {
+                remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty());
+            }
+            //
+
+//       considering scenario of orders in  processing queue
+            if (remainingQty > 0) {
+                List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
+                Set<CartLineItem> clisInProcessing = new HashSet<CartLineItem>(cartLineItemsInProcessing);
+                if (cartLineItemsInProcessing.size() > 0) {
+                    remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, remainingQty);
+                }
+            }
+//   end scenario
             newSkuInfo.setQty(remainingQty);
             Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
             newBatchSkuInfo.add(newSkuInfo);
@@ -734,31 +761,35 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty) {
 
         for (CartLineItem cartLineItem : cartLineItems) {
-            ProductVariant productVariant = cartLineItem.getProductVariant();
-            // picking the  sku for current MRP available at max qty on product variant
-            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-            long qtyToBeSet = cartLineItem.getQty();
-            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-            if (maxQty >= qtyToBeSet) {
-                for (int i = 0; i < qtyToBeSet; i++) {
-                    SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
-                    skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                    skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                    // todo Pvi entries
-                    skuItem = (SkuItem) getBaseDao().save(skuItem);
-                    // inventoryHealthCheck call
+
+                ProductVariant productVariant = cartLineItem.getProductVariant();
+                // picking the  sku for current MRP available at max qty on product variant
+                Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+                long qtyToBeSet = cartLineItem.getQty();
+                Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+                if (maxQty >= qtyToBeSet) {
+                    for (int i = 0; i < qtyToBeSet; i++) {
+                        SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
+                        skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                        // todo Pvi entries
+                        skuItem = (SkuItem) getBaseDao().save(skuItem);
+                        // inventoryHealthCheck call
 //                    inventoryHealthCheck(productVariant);
 
-                    // todo UpdatePrice and Mrp qyt
-                    skuItemsToBeBooked.add(skuItem);
+                        // todo UpdatePrice and Mrp qyt
+                        skuItemsToBeBooked.add(skuItem);
+                    }
+                    // Call method to make new entries in SKUItemCLI  only those for which inventory availa
+
+                    inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+                    skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
+                    maxQty = maxQty - qtyToBeSet;
                 }
-                // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-                inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-                maxQty = maxQty - qtyToBeSet;
 
             }
 
-        }
+
         return maxQty;
     }
 
