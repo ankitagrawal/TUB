@@ -47,14 +47,14 @@ public class SkuItemCLI implements java.io.Serializable {
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
     private SkuItemLineItem skuItemLineItem;
     
-    @JsonSkip
+   /* @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date          createDate         = new Date();
     
     @Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "update_dt", length = 19)
-	private Date updateDate;
+	private Date updateDate;*/
 
 	public Long getId() {
 		return id;
@@ -104,7 +104,7 @@ public class SkuItemCLI implements java.io.Serializable {
         this.skuItemLineItem = skuItemLineItem;
     }
     
-    public Date getCreateDate() {
+   /* public Date getCreateDate() {
 		return createDate;
 	}
 
@@ -118,7 +118,7 @@ public class SkuItemCLI implements java.io.Serializable {
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
-	}
+	}*/
 
 	@Override
 	public boolean equals(Object obj) {

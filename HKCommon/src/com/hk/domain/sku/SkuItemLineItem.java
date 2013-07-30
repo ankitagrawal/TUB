@@ -44,7 +44,7 @@ public class SkuItemLineItem implements java.io.Serializable {
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
 	
-	@JsonSkip
+	/*@JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date          createDate         = new Date();
@@ -52,7 +52,7 @@ public class SkuItemLineItem implements java.io.Serializable {
 	@Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "update_dt", length = 19)
 	private Date updateDate;
-
+*/
 	public Long getId() {
 		return id;
 	}
@@ -101,6 +101,7 @@ public class SkuItemLineItem implements java.io.Serializable {
 		this.skuItemCLI = skuItemCLI;
 	}
 
+/*
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -116,6 +117,7 @@ public class SkuItemLineItem implements java.io.Serializable {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
+*/
 
 	@Override
 	public boolean equals(Object obj) {
