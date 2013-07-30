@@ -59,7 +59,7 @@ public interface SkuGroupService {
 
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
 
-    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList);
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners);
 
     public SkuItem saveSkuItem(SkuItem skuItem);
 

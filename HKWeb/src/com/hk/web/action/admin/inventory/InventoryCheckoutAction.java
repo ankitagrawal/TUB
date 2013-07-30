@@ -14,6 +14,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -21,6 +22,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -200,7 +202,14 @@ public class InventoryCheckoutAction extends BaseAction {
             //TODO: Fetch available sku groups
 
 //   first check for skuitem Barcode
-            skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+            List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+            skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+            skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+            skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+
+            List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+            skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+            skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwnerList);
 //       SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),);
             if (skuItemBarcode != null) {
                 skuGroupBarcode = skuItemBarcode.getSkuGroup();
@@ -303,9 +312,12 @@ public class InventoryCheckoutAction extends BaseAction {
                             skuItemStatusList.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                             skuItemStatusList.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
                             skuItemStatusList.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                            List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+                            skuItemOwners.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                            
                             if (skuItemBarcode != null) {
                               //skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
-                                skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList);
+                                skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwners);
                                  if (skuItem == null){
                                      addRedirectAlertMessage(new SimpleMessage("You are doing something wrong, Please scan properly with barcode"));
                                      return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
@@ -320,15 +332,19 @@ public class InventoryCheckoutAction extends BaseAction {
                                       return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
                                 }
                                 // MRP check ends --
-                                getAdminInventoryService().checkoutMethod(lineItem, skuItem);
-
-//                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
-//                                        getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
+                                boolean checkedOut= getAdminInventoryService().checkoutMethod(lineItem, skuItem);
+                                
+                                if(checkedOut){
                                 binManager.removeBinAllocated(skuItem);
                                 addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
-
                                 String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
                                 shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, null, comments);
+                                }
+                                else{
+                                	addRedirectAlertMessage(new SimpleMessage("Could Not check out sku item"));
+                                }
+
+                                
                             } else {
                                 addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
                             }
