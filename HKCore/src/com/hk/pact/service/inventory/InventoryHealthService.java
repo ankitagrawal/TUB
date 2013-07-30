@@ -10,7 +10,7 @@ import com.hk.domain.order.Order;
 
 public interface InventoryHealthService {
 
-    void checkInventoryHealth(ProductVariant productVariant);
+//    void checkInventoryHealth(ProductVariant productVariant);
 
     long getAvailableUnbookedInventory(ProductVariant productVariant);
 

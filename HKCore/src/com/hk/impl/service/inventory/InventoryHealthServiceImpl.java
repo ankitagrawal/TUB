@@ -57,6 +57,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     SkuService skuService;
 
 
+    /*
     @Override
     @Transactional
     public void checkInventoryHealth(ProductVariant variant) {
@@ -92,6 +93,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         updateVariant(variant, vInfo);
     }
 
+
+ */
     @Override
     public long getAvailableUnbookedInventory(ProductVariant productVariant) {
         if (productVariant.getMrpQty() == null) {
@@ -106,6 +109,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         return productVariant.getMrpQty();
     }
 
+    /*
     private static class VariantUpdateInfo {
         long mrpQty;
         long netQty;
@@ -171,6 +175,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
         }
     }
+
+     */
 
     private static final String bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty" +
             " from cart_line_item as a inner join base_order as b on a.order_id = b.id" +
@@ -523,7 +529,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
             if (differentCheckedInBatchFirstElement != null) {
                 for (SkuInfo info : availableUnBookedInvnList) {
-                    if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {                         
+                    if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
                         availableUnBookedInvnListToUpdate.add(info);
                     }
                 }
@@ -534,38 +540,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             if (availableUnBookedInvnListToUpdate != null && availableUnBookedInvnListToUpdate.size() > 0) {
                 updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
             }
-            /*
 
-          Map<Double, Set<SkuInfo>> priceMap = new HashMap<Double, Set<InventoryHealthService.SkuInfo>>();
-
-//
-          // Available unbooked inventory list se update marna hai cuurent variant ki qty
-
-          if (availableUnBookedInvnList != null && availableUnBookedInvnList.size() > 0) {
-              for (InventoryHealthService.SkuInfo info : availableUnBookedInvnList) {
-                  if (priceMap.containsKey(info.getMrp())) {
-                      priceMap.get(info.getMrp()).add(info);
-
-                  } else {
-                      Set<InventoryHealthService.SkuInfo> samePriceSkuInfo = new HashSet<InventoryHealthService.SkuInfo>();
-                      samePriceSkuInfo.add(info);
-                      priceMap.put(info.getMrp(), samePriceSkuInfo);
-                  }
-              }
-          }
-
-          Set<InventoryHealthService.SkuInfo> skuInfosForCurrentMrp = priceMap.get(productVariant.getMarkedPrice());
-          if (skuInfosForCurrentMrp != null && skuInfosForCurrentMrp.size() > 0) {
-
-              updateVariantInfo(productVariant, skuInfosForCurrentMrp);
-          } else {
-              // if i am not getting any entry that means need to update variant with new mrp  need to get oldest checkin batch
-              Double mrp = inventoryManageDao.getFirstcheckedInBatchMRP(productVariant);
-              if (mrp != null) {
-                  Set<InventoryHealthService.SkuInfo> newBatchSkuInfo = priceMap.get(mrp);
-                  updateVariantInfo(productVariant, newBatchSkuInfo);
-              }
-          }  */
         } else {
             Product product = productVariant.getProduct();
             boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
