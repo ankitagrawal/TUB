@@ -10,6 +10,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.transform.Transformers;
 import com.hk.pact.service.inventory.*;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
@@ -27,6 +29,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 
 import java.util.*;
@@ -60,6 +63,12 @@ public class InventoryManageServiceImpl implements InventoryManageService {
 
     @Autowired
     UpdatePvPriceDao updatePvPriceDao;
+
+    @Autowired
+    OrderDao orderDao;
+
+    @Autowired
+    ShippingOrderDao shippingOrderDao;
 
 
 
@@ -140,10 +149,53 @@ public class InventoryManageServiceImpl implements InventoryManageService {
         List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         List<Long> statuses = new ArrayList<Long>();
         statuses.add(EnumSkuItemStatus.Checked_IN.getId());
+        // only considering CheckedInInventory
         return  inventoryManageDao.getNetInventory(skuList, statuses);
 
     }
 
+
+
+
+    @Override
+     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
+
+      List<Long> statusIds =  EnumSkuItemStatus.getSkuItemStatusIDs(EnumSkuItemStatus.getStatusForNetPhysicalInventory());
+      // considering Checcked in , temp booked , booked ie physical inventory
+      Long netInventory = inventoryManageDao.getNetInventory(skuList,statusIds);
+
+
+       Long bookedInventory = 0L;
+       if (!skuList.isEmpty()) {
+           ProductVariant productVariant = skuList.get(0).getProductVariant();
+         bookedInventory = orderDao.getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
+
+       }
+        return( netInventory - bookedInventory);
+       
+     }
+    
+
+    public Long getBookedQty(List<Sku> skuList) {
+    Long bookedInventory = 0L;
+    if (skuList != null && !skuList.isEmpty()) {
+      Long bookedInventoryForSKUs =  inventoryManageDao.getBookedQtyOfSkuInQueue(skuList);
+
+      bookedInventory = bookedInventoryForSKUs;
+    }
+    return bookedInventory;
+  }
+
+
+
+     public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant){
+         return inventoryManageDao.getLatestcheckedInBatchInventoryCount(productVariant);
+     }
+
+
+      public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp){
+          return inventoryManageDao.getClisForOrderInProcessingState(productVariant,  skuId, mrp);
+      }
 
     public BaseDao getBaseDao() {
         return baseDao;
