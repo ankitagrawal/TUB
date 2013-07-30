@@ -3,6 +3,7 @@ package com.hk.pact.service.inventory;
 import java.util.*;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
@@ -16,13 +17,15 @@ public interface InventoryHealthService {
 
     Collection<InventoryInfo> getAvailableInventory(List<Sku> skus);
 
+    Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem);
+	
+	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);   
+	
+	long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
+
     Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant);
 
     Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter);
-
-    Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);
-
-    long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
 
     long getUnbookedInventoryForActionQueue(LineItem lineItem);
 

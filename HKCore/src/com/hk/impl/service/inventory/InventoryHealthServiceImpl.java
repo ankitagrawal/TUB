@@ -2,6 +2,7 @@ package com.hk.impl.service.inventory;
 
 import java.util.*;
 
+import com.hk.domain.sku.SkuItemCLI;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
@@ -462,6 +463,36 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         for (InventoryInfo inventoryInfo : infos) {
             if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
                 for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                    if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
+                        Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+                        if (filter.getWarehouseId() == null
+                                || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
+                            skus.add(skuInfo);
+                            invAdded = true;
+                        }
+                    }
+                }
+            }
+            if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
+        }
+        return skus;
+    }
+
+    @Override
+    public Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem) {
+        List<SkuInfo> skus = new ArrayList<SkuInfo>();
+
+        List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+        Sku tempBookedSku = skuItemCLIs.get(0).getSkuItem().getSkuGroup().getSku();
+
+        Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
+        boolean invAdded = false;
+        for (InventoryInfo inventoryInfo : infos) {
+            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                    if(skuInfo.getSkuId() == tempBookedSku.getId().longValue()){
+                        skuInfo.setUnbookedQty(skuInfo.getUnbookedQty()+cartLineItem.getQty());
+                    }
                     if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
                         Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
                         if (filter.getWarehouseId() == null
