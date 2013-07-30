@@ -162,9 +162,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 					shouldUpdate = false;
 				}
 			}
+            if(shouldUpdate){
+                shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
+            }
 
-            shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
-			
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);
 				shipmentService.recreateShipment(shippingOrder);

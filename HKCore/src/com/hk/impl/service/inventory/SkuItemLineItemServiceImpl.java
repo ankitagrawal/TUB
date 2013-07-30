@@ -143,6 +143,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     SkuItem skuItem = availableUnbookedSkuItems.get(skuItemLineItem.getUnitNum().intValue()-1);
                     skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
+
                     skuItemLineItem.setSkuItem(skuItem);
                     skuItemLineItem.getSkuItemCLI().setSkuItem(skuItem);
 
