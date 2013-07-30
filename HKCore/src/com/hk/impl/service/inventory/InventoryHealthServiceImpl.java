@@ -524,14 +524,19 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
 
             differentMrpCheckedinBatch.remove(sk);
-            Iterator itetaror = differentMrpCheckedinBatch.iterator();
-            SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
             Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
-            if (differentCheckedInBatchFirstElement != null) {
-                for (SkuInfo info : availableUnBookedInvnList) {
-                    if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
-                        availableUnBookedInvnListToUpdate.add(info);
+            Iterator itetaror = differentMrpCheckedinBatch.iterator();
+            if (differentMrpCheckedinBatch.size() > 1) {
+                SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
+
+                if (differentCheckedInBatchFirstElement != null) {
+                    for (SkuInfo info : availableUnBookedInvnList) {
+                        if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
+                            availableUnBookedInvnListToUpdate.add(info);
+                        }
                     }
+                } else {
+                    availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
                 }
             } else {
                 availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
