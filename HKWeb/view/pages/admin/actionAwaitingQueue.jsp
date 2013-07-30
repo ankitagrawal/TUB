@@ -410,17 +410,17 @@
                 </div>
                  
             </s:form>
-            
-            
-            <shiro:hasPermission name="<%=PermissionConstants.CREATE_JIT_PO%>">
-            <div id="closeButtonDiv">
-<s:form beanclass = "com.hk.web.action.admin.queue.JitShippingOrderAction">
-<s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form></div>
 
-<div id="closeButtonDiv">
-<s:form beanclass = "com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
-<s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
-            </shiro:hasPermission>
+
+          <shiro:hasPermission name="<%=PermissionConstants.CREATE_JIT_PO%>">
+            <div id="closeButtonDiv">
+              <s:form beanclass="com.hk.web.action.admin.queue.JitShippingOrderAction">
+                <s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form></div>
+
+            <div id="closeButtonDiv">
+              <s:form beanclass="com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
+                <s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
+          </shiro:hasPermission>
         </div>
     </ul>
 </fieldset>
