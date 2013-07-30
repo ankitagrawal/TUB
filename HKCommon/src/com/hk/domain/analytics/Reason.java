@@ -87,4 +87,9 @@ public class Reason {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return this.id != null ? this.id.toString() : "";
+    }
 }
