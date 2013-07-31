@@ -1151,19 +1151,41 @@ public class AdminEmailManager {
 			} else if (purchaseOrder.getPurchaseOrderType() != null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.DROP_SHIP.getId())) {
 				purchaseOrdertype = "DS";
 			}
-			pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + purchaseOrdertype + "-" + " -Dt- " + date + ".pdf");
+			pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + " "+purchaseOrdertype + " -Dt- " + date + ".pdf");
 			pdfFile.getParentFile().mkdirs();
 			purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
 			getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
 
-			xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + purchaseOrdertype + "-" + purchaseOrder.getId() + " -Dt- " + date + ".xls");
+			xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + " "+purchaseOrdertype +" -Dt- " + date + ".xls");
 			xlsFile.getParentFile().mkdirs();
 			xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+		File newPdfFile = new File(pdfFile.getAbsolutePath());
+		File newXlsFile = new File(xlsFile.getAbsolutePath());
+		 if(newPdfFile.exists()&& newXlsFile.exists() && newPdfFile.getName().contains(purchaseOrder.getId().toString())&& newXlsFile.getName().contains(purchaseOrder.getId().toString())){
+			 return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath()); 
+		 }
+		 else{
+			 return poMailNotSentToSupplier(purchaseOrder);
+		 }
+		
 	}
+	
+	public boolean poMailNotSentToSupplier(PurchaseOrder purchaseOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("purchaseOrder", purchaseOrder);
+        Set<String> categoryAdmins = new HashSet<String>();
+		if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+			Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+			categoryAdmins = emailManager.categoryAdmins(category);
+		}
+		String fromPurchaseEmail = "purchase@healthkart.com";
+		User user = userService.getAdminUser();
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailNotSentToSupplier);
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),user.getName() ,fromPurchaseEmail, fromPurchaseEmail, null, null, categoryAdmins, null, null, null);
+    }
 
 
 	public boolean sendDebitNoteMail(DebitNote debitNote){
