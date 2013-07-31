@@ -5,15 +5,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.inventory.EnumReconciliationActionType;
-import com.hk.constants.order.EnumOrderLifecycleActivity;
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.core.PaymentStatus;
-import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
@@ -26,7 +22,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -117,7 +112,7 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution cancelShippingOrder() {
-        adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark);
+        adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark, null);
         if (shippingOrder instanceof ReplacementOrder) {
             //do nothing for replacement orders
         } else {

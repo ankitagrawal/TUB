@@ -1,12 +1,14 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.discount.EnumRewardPointTxnType;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.domain.offer.rewardPoint.RewardPointTxn;
+import com.hk.pact.dao.reward.RewardPointTxnDao;
+import com.hk.pact.service.order.RewardPointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +96,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     UserService userService;
     @Autowired
 	AdminEmailManager adminEmailManager;
-    
+
+    @Autowired
+    private RewardPointTxnDao rewardPointTxnDao;
+    @Autowired
+    RewardPointService rewardPointService;
+
     @Autowired
     private LoyaltyProgramService loyaltyProgramService;
     
@@ -104,7 +111,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
 	PurchaseOrderService purchaseOrderService;
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder, String cancellationRemark, String reconcile) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
@@ -128,11 +135,56 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
             	adminEmailManager.sendJitShippingCancellationMail(shippingOrder,null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
             }
+
+            reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
+
             getBucketService().popFromActionQueue(shippingOrder);
         }
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
         }
+    }
+
+
+    public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order){
+
+        Double refundValue = 0D;
+
+        if(shippingOrder == null){
+            refundValue = order.getPayment().getAmount();
+        }else{
+            refundValue = shippingOrder.getAmount(); //handle for free cases
+        }
+
+        Double percentageAmount = refundValue/order.getPayment().getAmount() * -1;
+
+        List<RewardPointTxn> currentRewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.ADD, order);
+
+        for (RewardPointTxn rewardPointTxn : currentRewardPointTxnList) {
+
+            RewardPoint cashBackRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
+                    order, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
+                    EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
+
+            rewardPointService.approveRewardPoints(Arrays.asList(cashBackRewardPoints), rewardPointTxn.getExpiryDate());
+
+        }
+
+        List<RewardPointTxn> redeemedRewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
+
+
+        for (RewardPointTxn rewardPointTxn : redeemedRewardPointTxnList) {
+
+            Order concernedOrder = rewardPointTxn.getRewardPoint().getReferredOrder();
+
+            RewardPoint refundRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
+                    concernedOrder, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
+                    EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
+
+            rewardPointService.approveRewardPoints(Arrays.asList(refundRewardPoints), rewardPointTxn.getExpiryDate());
+
+        }
+
     }
 
 	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
