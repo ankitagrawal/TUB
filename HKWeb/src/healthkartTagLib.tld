@@ -1308,4 +1308,15 @@
             ${hk:isSOCanceled(${orderId})}
         </example>
     </function>
+  <function>
+    <description>
+      returns count of LineItem quantity
+    </description>
+    <name>countLineItemQty</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>java.lang.Long countLineItemQty( com.hk.domain.order.ShippingOrder)</function-signature>
+    <example>
+      ${hk:countLineItemQty(${shipingOrder})}
+    </example>
+  </function>
 </taglib>

@@ -193,4 +193,6 @@ public interface MasterDataDao {
     public List<EnumUserCodCalling> getUserCodCallStatus();
     
     public List<ReconciliationType> getDebitNoteReconciliationType();
+
+		public List<Category> getCategoriesForPOS();
 }
