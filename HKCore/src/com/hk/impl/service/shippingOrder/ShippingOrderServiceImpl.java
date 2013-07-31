@@ -339,4 +339,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public ReplacementOrderDao getReplacementOrderDao() {
         return replacementOrderDao;
     }
+
+    public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds){
+        return  shippingOrderDao.getReasonForReversePickup(listOfReasonIds);
+    }
 }

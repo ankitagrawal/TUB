@@ -12,7 +12,8 @@ public enum  EnumReasonType {
     NotManualEscalated(40L, "SO Could not be Manually-escalated"),
     CourierChange(50L, "Courier Change Reason"),
     AwbChange(60L, "Awb Change Reason"),
-    So_Cancelled(410L,"SO  Cancelled");
+    So_Cancelled(410L,"SO  Cancelled"),
+    Reverse_Pickup_Customer(420L,"Reverse Pickup Customer Reason For Return");
     private String name;
 
     private Long id;

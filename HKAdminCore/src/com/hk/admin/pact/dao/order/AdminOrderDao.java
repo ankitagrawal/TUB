@@ -1,7 +1,9 @@
 package com.hk.admin.pact.dao.order;
 
+import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,6 +15,8 @@ import java.util.List;
  */
 public interface AdminOrderDao {
 
-	public List<Order> getOrdersByGatewayOrderList(List<String> gatewayOrderIdList);
+  public List<Order> getOrdersByGatewayOrderList(List<String> gatewayOrderIdList);
+
+  public List<Order> findSaleForTimeFrame(Long storeId, Date startDate, Date endDate, List<OrderStatus> orderStatusList);
 
 }

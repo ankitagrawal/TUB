@@ -1,12 +1,14 @@
 package com.hk.admin.impl.dao.order;
 
 import com.hk.admin.pact.dao.order.AdminOrderDao;
+import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,5 +26,19 @@ public class AdminOrderDaoImpl extends BaseDaoImpl implements AdminOrderDao {
 		criteria.add(Restrictions.in("gatewayOrderId", gatewayOrderIdList));
 		return findByCriteria(criteria);
 	}
+
+  @Override
+  public List<Order> findSaleForTimeFrame(Long storeId, Date startDate, Date endDate, List<OrderStatus> orderStatusList) {
+
+    DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+    criteria.add(Restrictions.eq("store.id", storeId));
+    if (startDate != null)
+      criteria.add(Restrictions.ge("createDate", startDate));
+    if (endDate != null)
+      criteria.add(Restrictions.le("createDate", endDate));
+    if (orderStatusList != null)
+      criteria.add(Restrictions.in("orderStatus", orderStatusList));
+    return findByCriteria(criteria);
+  }
 
 }
