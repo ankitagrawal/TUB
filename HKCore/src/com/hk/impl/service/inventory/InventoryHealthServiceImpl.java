@@ -408,7 +408,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             }
         }
         //add inventory booked for lineItem
-        if(lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0 ){
+        if (lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0) {
             qty += lineItem.getQty();
         }
         return qty;
@@ -436,7 +436,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
         //adding booked qty from skulineItem
 
-        if(lineItem.getSkuItemLineItems() != null && lineItem.getSkuItemLineItems().size() >0){
+        if (lineItem.getSkuItemLineItems() != null && lineItem.getSkuItemLineItems().size() > 0) {
             qty += lineItem.getSkuItemLineItems().size();
         }
         return qty;
@@ -495,7 +495,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         List<SkuInfo> skus = new ArrayList<SkuInfo>();
         SkuItem tempBookedSkuItem = null;
         List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
-        if(skuItemCLIs != null && skuItemCLIs.size() > 0){
+        if (skuItemCLIs != null && skuItemCLIs.size() > 0) {
             tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
         }
 
@@ -507,20 +507,20 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         for (InventoryInfo inventoryInfo : infos) {
             if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
                 for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-                    if(tempBookedSkuItem != null && skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()){
-                        skuInfo.setUnbookedQty(skuInfo.getUnbookedQty()+cartLineItem.getQty());
+                    if (tempBookedSkuItem != null && skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()) {
+                        skuInfo.setUnbookedQty(skuInfo.getUnbookedQty() + cartLineItem.getQty());
                         updateSkuInfoFlag = true;
                         break;
                     }
                 }
-                if(!updateSkuInfoFlag && tempBookedSkuItem != null){
+                if (!updateSkuInfoFlag && tempBookedSkuItem != null) {
                     SkuInfo newSkuInfo = new SkuInfo();
                     newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
                     newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
                     newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
                     newSkuInfo.setUnbookedQty(cartLineItem.getQty());
                     newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
-                    if(tempBookedSkuItem.getSkuGroup().getQty() != null){
+                    if (tempBookedSkuItem.getSkuGroup().getQty() != null) {
                         newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
                     }
                     inventoryInfo.getSkuInfoList().add(newSkuInfo);
@@ -530,7 +530,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             }
         }
 
-        if(!updateSkuInfoFlag && !newSkuInfoFlag && tempBookedSkuItem != null){
+        if (!updateSkuInfoFlag && !newSkuInfoFlag && tempBookedSkuItem != null) {
             InventoryInfo newInventoryInfo = new InventoryInfo();
             List<SkuInfo> skuInfoList = new ArrayList<SkuInfo>();
             SkuInfo newSkuInfo = new SkuInfo();
@@ -539,7 +539,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
             newSkuInfo.setUnbookedQty(cartLineItem.getQty());
             newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
-            if(tempBookedSkuItem.getSkuGroup().getQty() != null){
+            if (tempBookedSkuItem.getSkuGroup().getQty() != null) {
                 newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
             }
 
@@ -642,9 +642,13 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         } else {
             product.setOutOfStock(false);
         }
-        getBaseDao().save(product);
 
-
+        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+        if (!updateStockStatus) {
+            productVariant.setOutOfStock(false);
+            getBaseDao().save(productVariant);
+        }
+          getBaseDao().save(product);
     }
 
 
@@ -831,7 +835,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         }
         return maxQty;
     }
-   
+
 
     public BaseDao getBaseDao() {
         return baseDao;
