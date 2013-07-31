@@ -833,16 +833,19 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                 Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
                 if (maxQty >= qtyToBeSet) {
                     for (int i = 0; i < qtyToBeSet; i++) {
-                        SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
-                        skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                        // todo Pvi entries
-                        skuItem = (SkuItem) getBaseDao().save(skuItem);
-                        // inventoryHealthCheck call
-//                    inventoryHealthCheck(productVariant);
+                    	List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
+                    	if(skuItemList!=null && skuItemList.size()>0){
+                    		SkuItem skuItem = skuItemList.get(0);
+                            skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                            // todo Pvi entries
+                            skuItem = (SkuItem) getBaseDao().save(skuItem);
+                            // inventoryHealthCheck call
+//                        inventoryHealthCheck(productVariant);
 
-                        // todo UpdatePrice and Mrp qyt
-                        skuItemsToBeBooked.add(skuItem);
+                            // todo UpdatePrice and Mrp qyt
+                            skuItemsToBeBooked.add(skuItem);
+                    	}
                     }
                     // Call method to make new entries in SKUItemCLI  only those for which inventory availa
 
