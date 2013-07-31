@@ -44,26 +44,19 @@
       </c:forEach>
 
 
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT3155'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1571'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1573'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1577'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1585'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2889'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1449'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT898'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2966'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1713'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2021'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2930'/>
 
-
-      <div class="container01">
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/hnCS.jsp"><img id="box1" class="space-r" src="${pageContext.request.contextPath}/images/clearance/healthNutrition.jpg" /></a>
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/devicesCS.jsp"><img id="box1" src="${pageContext.request.contextPath}/images/clearance/HealthDevices.jpg" /></a>
-        <div class="cl"></div>
-
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/diabetesCS.jsp"><img id="box1" class="space-r" src="${pageContext.request.contextPath}/images/clearance/Diabtese.jpg" /></a>
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/careCS.jsp"><img id="box1" class="space-r" src="${pageContext.request.contextPath}/images/clearance/Personalcare.jpg" /></a>
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/fitnessCS.jsp"><img id="box1" src="${pageContext.request.contextPath}/images/clearance/sports.jpg" /></a>
-        <div class="cl"></div>
-
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/parentingCS.jsp"><img id="box1" class="space-r" src="${pageContext.request.contextPath}/images/clearance/parenting.jpg" /></a>
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/beautyCS.jsp"><img id="box1" src="${pageContext.request.contextPath}/images/clearance/beauty.jpg" /></a>
-
-        <div class="cl"></div>
-
-        <a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/eyeCS.jsp"><img id="box1" class="space-r" src="${pageContext.request.contextPath}/images/clearance/eye.jpg" /></a>
-
-      </div>
 
 
       <jsp:include page="/includes/_footerClearanceAug.jsp"/>
