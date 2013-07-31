@@ -369,7 +369,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             this.updateSplittedSODetails(flagMapOldSO, shippingOrder);
             newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
             newShippingOrder = shippingOrderService.save(newShippingOrder);
-            shipmentService.createShipment(newShippingOrder, true);
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);
 
