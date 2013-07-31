@@ -100,7 +100,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 	private String aquaBrightSeparateDate;
 	
 	List<String> warehouseIdList = new ArrayList<String>();
-	static int count = 0;
 	
 	public List<ShippingOrder> getShippingOrderListToProcess(boolean filterJit) {
 		List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
@@ -155,7 +154,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 			PurchaseOrder po = entry.getKey();
 			if(!purchaseOrders.contains(po)){
 				purchaseOrders.add(po);
-				count++;
 			}
 			if(entry.getValue()!=null && entry.getValue().size()>0){
 			createPOLineItemsForPO(po, entry.getValue(), shippingOrders);
@@ -445,7 +443,6 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 				productVariantMrpQtyLineItems.removeAll(setToProcess);
 				if (setToProcess != null && setToProcess.size() > 0) {
 					PurchaseOrder po = createPO(sup, wh);
-					count++;
 					createPOLineItemsForPO(po, setToProcess, shippingOrders);
 					approveAllPos(po, purchaseOrderStatus);
 				}

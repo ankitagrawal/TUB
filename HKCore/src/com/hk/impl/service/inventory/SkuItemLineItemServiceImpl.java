@@ -115,6 +115,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
             //todo tarun erp
             //make entry in product variant inventory
         }
+    //    getSkuItemDao().save(lineItem);
+        getSkuItemDao().save(lineItem.getShippingOrder());
         return true;
     }
 
@@ -142,6 +144,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     SkuItem toBeFreedSkuItem = skuItemLineItem.getSkuItem();
                     SkuItem skuItem = availableUnbookedSkuItems.get(skuItemLineItem.getUnitNum().intValue()-1);
                     skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+
 
                     skuItemLineItem.setSkuItem(skuItem);
                     skuItemLineItem.getSkuItemCLI().setSkuItem(skuItem);

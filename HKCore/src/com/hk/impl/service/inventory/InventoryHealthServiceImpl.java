@@ -407,6 +407,10 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                 qty -= skuInfo.getQty();
             }
         }
+        //add inventory booked for lineItem
+        if(lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0 ){
+            qty += lineItem.getQty();
+        }
         return qty;
     }
 
@@ -428,6 +432,12 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
                 qty -= skuInfo.getQty();
             }
+        }
+
+        //adding booked qty from skulineItem
+
+        if(lineItem.getSkuItemLineItems() != null && lineItem.getSkuItemLineItems().size() >0){
+            qty += lineItem.getSkuItemLineItems().size();
         }
         return qty;
     }
@@ -462,6 +472,82 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
         Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
         boolean invAdded = false;
+        for (InventoryInfo inventoryInfo : infos) {
+            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                    if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
+                        Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+                        if (filter.getWarehouseId() == null
+                                || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
+                            skus.add(skuInfo);
+                            invAdded = true;
+                        }
+                    }
+                }
+            }
+            if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
+        }
+        return skus;
+    }
+
+    @Override
+    public Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem) {
+        List<SkuInfo> skus = new ArrayList<SkuInfo>();
+
+        List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+        SkuItem tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
+
+        Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
+        boolean invAdded = false;
+        boolean newSkuInfoFlag = false;
+        boolean updateSkuInfoFlag = false;
+        //
+        for (InventoryInfo inventoryInfo : infos) {
+            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                    if(skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()){
+                        skuInfo.setUnbookedQty(skuInfo.getUnbookedQty()+cartLineItem.getQty());
+                        updateSkuInfoFlag = true;
+                        break;
+                    }
+                }
+                if(!updateSkuInfoFlag){
+                    SkuInfo newSkuInfo = new SkuInfo();
+                    newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
+                    newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
+                    newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
+                    newSkuInfo.setUnbookedQty(cartLineItem.getQty());
+                    newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
+                    if(tempBookedSkuItem.getSkuGroup().getQty() != null){
+                        newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+                    }
+                    inventoryInfo.getSkuInfoList().add(newSkuInfo);
+                    newSkuInfoFlag = true;
+                    break;
+                }
+            }
+        }
+
+        if(!updateSkuInfoFlag && !newSkuInfoFlag){
+            InventoryInfo newInventoryInfo = new InventoryInfo();
+            List<SkuInfo> skuInfoList = new ArrayList<SkuInfo>();
+            SkuInfo newSkuInfo = new SkuInfo();
+            newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
+            newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
+            newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
+            newSkuInfo.setUnbookedQty(cartLineItem.getQty());
+            newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
+            if(tempBookedSkuItem.getSkuGroup().getQty() != null){
+                newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+            }
+
+            skuInfoList.add(newSkuInfo);
+            newInventoryInfo.setMrp(newSkuInfo.getMrp());
+            newInventoryInfo.setQty(newSkuInfo.getUnbookedQty());
+            newInventoryInfo.getSkuInfoList().add(newSkuInfo);
+            infos.add(newInventoryInfo);
+        }
+
         for (InventoryInfo inventoryInfo : infos) {
             if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
                 for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
@@ -743,37 +829,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         }
         return maxQty;
     }
-
-
-    @Override
-    public Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem) {
-        List<SkuInfo> skus = new ArrayList<SkuInfo>();
-
-        List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
-        Sku tempBookedSku = skuItemCLIs.get(0).getSkuItem().getSkuGroup().getSku();
-
-        Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
-        boolean invAdded = false;
-        for (InventoryInfo inventoryInfo : infos) {
-            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
-                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-                    if (skuInfo.getSkuId() == tempBookedSku.getId().longValue()) {
-                        skuInfo.setUnbookedQty(skuInfo.getUnbookedQty() + cartLineItem.getQty());
-                    }
-                    if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
-                        Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
-                        if (filter.getWarehouseId() == null
-                                || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
-                            skus.add(skuInfo);
-                            invAdded = true;
-                        }
-                    }
-                }
-            }
-            if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
-        }
-        return skus;
-    }
+   
 
     public BaseDao getBaseDao() {
         return baseDao;

@@ -162,9 +162,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 					shouldUpdate = false;
 				}
 			}
+            if(shouldUpdate){
+                shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
+            }
 
-            shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
-			
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);
 				shipmentService.recreateShipment(shippingOrder);
@@ -222,7 +223,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	        // auto escalate shipping orders if possible
 	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
-			orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
+	//		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
             return shippingOrder;
         }
         return null;
