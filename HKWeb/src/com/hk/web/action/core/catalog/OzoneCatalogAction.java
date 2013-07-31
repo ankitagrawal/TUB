@@ -56,17 +56,17 @@ public class OzoneCatalogAction extends BaseAction {
         //Only products with MRP > 5 will get added.
         for (Product product : diabetesProducts){
             if (product.getMinimumHKPriceProductVariant().getHkPrice() > 5.0){
-                diabetesProducts.add(product);
+                finalProductList.add(product);
             }
         }
         for (Product product : healthDevicesProduct){
             if (product.getMinimumHKPriceProductVariant().getHkPrice() > 5.0){
-                diabetesProducts.add(product);
+                finalProductList.add(product);
             }
         }
 
         //diabetesProducts.addAll(healthDevicesProduct);
-        products = diabetesProducts;
+        products = finalProductList;
         return new ForwardResolution("/pages/ozoneCatalog.jsp");
     }
 
