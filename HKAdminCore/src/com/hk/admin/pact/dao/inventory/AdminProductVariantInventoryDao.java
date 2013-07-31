@@ -55,5 +55,8 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public void deletePVIBySkuItem(List<SkuItem> skuItemList);
 
+    public ProductVariantInventory getCheckedOutLineItem(SkuItem skuItem);
+
+    public List<SkuItem> getCheckedOutSkuItems(LineItem lineItem);
 
 }

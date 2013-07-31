@@ -92,4 +92,8 @@ public interface AdminInventoryService {
     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem);
 
     public List<SkuGroup> getSkuGroupsInReviewState();
+
+    public List<SkuItem> getCheckedOutSkuItems(LineItem lineItem);
+
+    public LineItem getCheckedOutLineItem(SkuItem skuItem);
 }
