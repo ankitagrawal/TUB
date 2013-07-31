@@ -260,6 +260,8 @@ public class PaymentManager {
             payment.setBankCity(backCity);
             payment.setChequeNumber(chequeNumber);
             order = processOrder(payment);
+            // calling health check
+            inventoryHealthService.tempBookSkuLineItemForOrder(order);
             orderEventPublisher.publishOrderPlacedEvent(order);
         }
         return order;

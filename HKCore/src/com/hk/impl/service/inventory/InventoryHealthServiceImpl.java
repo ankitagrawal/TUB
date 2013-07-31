@@ -762,16 +762,20 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                 productVariant.setOutOfStock(false);
             } else {
                 productVariant.setOutOfStock(true);
-                List<ProductVariant> inStockVariants = product.getInStockVariants();
-                if (inStockVariants != null && inStockVariants.isEmpty()) {
-                    product.setOutOfStock(true);
-                } else {
-                    product.setOutOfStock(false);
-                }
-                getBaseDao().save(product);
+                productVariant.setNetQty(0L);
+                productVariant.setMrpQty(0L);
+
             }
-            productVariant.setNetQty(0L);
+
             getBaseDao().save(productVariant);
+
+            List<ProductVariant> inStockVariants = product.getInStockVariants();
+            if (inStockVariants != null && inStockVariants.isEmpty()) {
+                product.setOutOfStock(true);
+            } else {
+                product.setOutOfStock(false);
+            }
+            getBaseDao().save(product);
         }
 
     }
