@@ -70,9 +70,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
     public Long getCheckedInPVIAgainstReturn(LineItem lineItem) {
-        return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem " + "and pvi.invTxnType.id " +
-                "in(" + EnumInvTxnType.RETURN_CHECKIN_GOOD.getId() + "," + EnumInvTxnType.RETURN_CHECKIN_DAMAGED.getId() + "," +
-                EnumInvTxnType.RETURN_CHECKIN_EXPIRED.getId() + ")").setParameter("lineItem", lineItem).uniqueResult();
+        return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem " +	"and pvi.invTxnType.id " +
+				"in(" + EnumInvTxnType.RETURN_CHECKIN_GOOD.getId() + "," + EnumInvTxnType.RETURN_CHECKIN_DAMAGED.getId() + "," +
+				EnumInvTxnType.RETURN_CHECKIN_EXPIRED.getId() + ")").setParameter("lineItem",lineItem).uniqueResult();
     }
 
     public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem) {
@@ -90,7 +90,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         boolean isCheckedForSkuItem = false;
         List<ProductVariantInventory> checkedOutPVI = new ArrayList<ProductVariantInventory>();
         Long netInvForSkuItem = (Long) getSession().createQuery("select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku = :sku and pvi.shippingOrder = :shippingOrder and pvi.lineItem = :lineItem").setParameter(
-                "sku", lineItem.getSku()).setParameter("shippingOrder", shippingOrder).setParameter("lineItem", lineItem).uniqueResult();
+                "sku", lineItem.getSku()).setParameter("shippingOrder", shippingOrder).setParameter("lineItem",lineItem).uniqueResult();
         if (netInvForSkuItem != null && netInvForSkuItem <= -1L) {
             isCheckedForSkuItem = true;
         }
@@ -98,7 +98,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         if (isCheckedForSkuItem) {
             checkedOutPVI = (List<ProductVariantInventory>) getSession().createQuery(
                     "from ProductVariantInventory pvi where pvi.sku = :sku and pvi.qty = :qty and pvi.shippingOrder = :shippingOrder and pvi.lineItem = :lineItem order by pvi.id desc").setParameter("sku",
-                    lineItem.getSku()).setParameter("qty", -1L).setParameter("shippingOrder", shippingOrder).setParameter("lineItem", lineItem).setMaxResults(lineItem.getQty().intValue()).list();
+                    lineItem.getSku()).setParameter("qty", -1L).setParameter("shippingOrder", shippingOrder).setParameter("lineItem",lineItem).setMaxResults(lineItem.getQty().intValue()).list();
         }
 
         return checkedOutPVI;

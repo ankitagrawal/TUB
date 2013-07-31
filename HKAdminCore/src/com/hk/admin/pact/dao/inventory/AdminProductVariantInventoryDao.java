@@ -55,4 +55,5 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public void deletePVIBySkuItem(List<SkuItem> skuItemList);
 
+
 }

@@ -89,14 +89,17 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
 
-    public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem) {
+
+
+     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem) {
         return getAdminSkuItemDao().getInStockSkuGroupsForReview(lineItem);
     }
 
 
+
     public List<SkuGroup> getSkuGroupsInReviewState() {
-        return getAdminSkuItemDao().getSkuGroupsInReviewState();
-    }
+           return getAdminSkuItemDao().getSkuGroupsInReviewState();
+       }
 
     /**
      * @param sku
@@ -522,9 +525,5 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
         }
     }
-
-
-
-
 
 }

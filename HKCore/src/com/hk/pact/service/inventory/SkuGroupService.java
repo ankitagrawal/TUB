@@ -64,8 +64,6 @@ public interface SkuGroupService {
 
     public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup);
 
-    public List<SkuItem> getSkuItemsByGroupBarcode(String barcode, Long warehouseId, Long statusId);
-
     public List<SkuItem> getCheckedInSkuItems(Sku sku);
 
 

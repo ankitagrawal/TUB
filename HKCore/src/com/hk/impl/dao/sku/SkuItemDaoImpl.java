@@ -63,14 +63,14 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
 
     public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
-        List<Warehouse> warehouseList = warehouseDao.getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
+        List<Warehouse> warehouseList =  warehouseDao.getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
         SkuGroup minMRPUnbookedSkuGroup = null;
         String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi " +
-                "where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.warehouse in (:warehouseList) and pvi.sku.productVariant = :productVariant " +
-                "group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
+            "where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.warehouse in (:warehouseList) and pvi.sku.productVariant = :productVariant " +
+            "group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
         List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
-                .setParameter("productVariant", productVariant)
-                .setParameterList("warehouseList", warehouseList).list();
+            .setParameter("productVariant", productVariant)
+            .setParameterList("warehouseList", warehouseList).list();
         if (skuItemIdList != null && skuItemIdList.size() > bookedQty) {
             List<Long> firstUnBookedSkuItem = skuItemIdList.subList(bookedQty.intValue(), bookedQty.intValue() + 1);
             String query = "select distinct si.skuGroup from SkuItem si where si.id = :skuItemId order by si.skuGroup.mrp asc";
@@ -118,22 +118,10 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
             query.setParameter("statusId", statusId);
         }
         List<SkuItem> skuItems = query.list();
-        if (skuItems != null && skuItems.size() > 1) {
-            logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
-        }
+	      if(skuItems != null && skuItems.size() > 1){
+		      logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
+	      }
         return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
-    }
-
-    public List<SkuItem> getSkuItemsByGroupBarcode(String barcode, Long warehouseId, Long statusId) {
-        String hql = "select si from SkuItem si where si.skuGroup.sku.warehouse.id = :warehouseId and si.skuGroup.barcode = :barcode ";
-        if (statusId != null) {
-            hql = hql + " and si.skuItemStatus.id = :statusId  ";
-        }
-        Query query = getSession().createQuery(hql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
-        if (statusId != null) {
-            query.setParameter("statusId", statusId);
-        }
-        return query.list();
     }
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku) {
