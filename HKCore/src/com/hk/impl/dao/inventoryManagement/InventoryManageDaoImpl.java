@@ -169,7 +169,7 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
 
     public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp) {
         String query = " select c from CartLineItem c inner join c.order as o inner join o.shippingOrders as so  inner join so.lineItems as li where  c.productVariant = :productVariant and c.markedPrice = :mrp and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.sku.id = :skuId  "
-                + " and c.skuItemCLIs.size <= 0  order by so.createDate  asc ";
+                + " and c.skuItemCLIs.size <= 0  order by so.targetDispatchDate,so.createDate  asc ";
         return (List<CartLineItem>) getSession().createQuery(query).setParameterList("shippingOrderStatusIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory())).setParameter("productVariant", productVariant).setParameter("mrp", mrp).setParameter("skuId", skuId).list();
 
     }

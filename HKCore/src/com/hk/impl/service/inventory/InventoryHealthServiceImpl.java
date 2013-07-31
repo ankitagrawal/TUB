@@ -574,23 +574,25 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                 // picking the  sku for current MRP available at max qty on product variant
                 Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
                 long qtyToBeSet = cartLineItem.getQty();
-                Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+//                long availableCheckedInInventory = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).size();
+                if (availableUnBookedInventory >= qtyToBeSet) {
+                    Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
-                for (int i = 0; i < qtyToBeSet; i++) {
-                    SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
-                    skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                    skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                    // todo Pvi entries
-                    skuItem = (SkuItem) getBaseDao().save(skuItem);
-                    // inventoryHealthCheck call
-                    inventoryHealthCheck(productVariant);
+                    for (int i = 0; i < qtyToBeSet; i++) {
+                        SkuItem skuItem = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).get(0);
+                        skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                        // todo Pvi entries
+                        skuItem = (SkuItem) getBaseDao().save(skuItem);
+                        // inventoryHealthCheck call
+                        inventoryHealthCheck(productVariant);
 
-                    // todo UpdatePrice and Mrp qyt
-                    skuItemsToBeBooked.add(skuItem);
+                        // todo UpdatePrice and Mrp qyt
+                        skuItemsToBeBooked.add(skuItem);
+                    }
+                    // Call method to make new entries in SKUItemCLI  only those for which inventory availa
+                    inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
                 }
-                // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-                inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-
 
             }
         }
@@ -685,7 +687,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             List<CartLineItem> cartLineItems = inventoryManageDao.getClisForInPlacedOrder(productVariant, newMrp);
             Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
             if (clis.size() > 0) {
-                remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty());
+                remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty(), false);
             }
             //
 
@@ -694,7 +696,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                 List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
                 Set<CartLineItem> clisInProcessing = new HashSet<CartLineItem>(cartLineItemsInProcessing);
                 if (cartLineItemsInProcessing.size() > 0) {
-                    remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, remainingQty);
+                    remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, remainingQty, true);
                 }
             }
 //   end scenario
@@ -706,7 +708,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
     }
 
 
-    public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty) {
+    public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
 
         for (CartLineItem cartLineItem : cartLineItems) {
             if (lineItemDao.getLineItem(cartLineItem) != null) {
@@ -732,7 +734,9 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                     // Call method to make new entries in SKUItemCLI  only those for which inventory availa
 
                     inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-                    skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
+                    if (siliToBeCreated) {
+                        skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
+                    }
                     maxQty = maxQty - qtyToBeSet;
                 }
             }
