@@ -90,6 +90,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
 
     public Resolution checkInRPLineItem() {
         HealthkartResponse healthkartResponse = null;
+        String message = "";
         if (rpLineItems != null) {
             Map dataMap = new HashMap();
             RpLineItem itemToBeSaved = null;
@@ -100,13 +101,15 @@ public class RPWarehouseCheckinAction extends BaseAction {
                 }
             }
             if (itemToBeSaved == null || itemToBeSaved.getItemBarcode() == null) {
-                addRedirectAlertMessage(new SimpleMessage("Plz Scan Barcode"));
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "", dataMap);
+                message = "Plz Scan Barcode";
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, message, dataMap);
+            } else if (itemToBeSaved.getWarehouseReceivedCondition() == null) {
+                message = "Plz Select Warehouse Condition Also";
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, message, dataMap);
             } else {
-
-                addRedirectAlertMessage(new SimpleMessage("Item Saved"));
                 reversePickupService.checkInRpLineItem(itemToBeSaved);
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", dataMap);
+                message = "Item Saved";
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, dataMap);
             }
         }
         return new JsonResolution(healthkartResponse);
@@ -114,7 +117,19 @@ public class RPWarehouseCheckinAction extends BaseAction {
 
     public Resolution completeWarehouseCheckIn() {
         ReversePickupOrder reversePickupOrderFromDb = reversePickupService.getReversePickupOrderById(reversePickupOrder.getId());
-        if (reversePickupOrder.getCourierManagedBy().equals(EnumCourierConstant.HealthKart_Managed.getId())) {
+        /*check at least one of rp is checkedIn*/
+        boolean genuineChecked = false;
+        for (RpLineItem rpLineItem : reversePickupOrderFromDb.getRpLineItems()) {
+            if (rpLineItem.getWarehouseReceivedCondition() != null) {
+                genuineChecked = true;
+                break;
+            }
+        }
+        if (!genuineChecked) {
+            addRedirectAlertMessage(new SimpleMessage("Select and checkin at least one Item"));
+            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
+        }
+        if (EnumReversePickupStatus.getHealthKartManagedRPStatus().contains(reversePickupOrder.getReversePickupStatus())) {
             reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.RPU_QC_Checked_In.asReversePickupStatus());
         } else {
             reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus());
