@@ -426,7 +426,8 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                 }
             }
         }
-
+   /*
+      // commented by Ankit
         List<SkuInfo> inProcessList = getPostActionQueueInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
         for (SkuInfo skuInfo : inProcessList) {
             if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
@@ -439,6 +440,8 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         if (lineItem.getSkuItemLineItems() != null && lineItem.getSkuItemLineItems().size() > 0) {
             qty += lineItem.getSkuItemLineItems().size();
         }
+
+      */
         return qty;
     }
 
