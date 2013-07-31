@@ -493,9 +493,11 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
     @Override
     public Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem) {
         List<SkuInfo> skus = new ArrayList<SkuInfo>();
-
+        SkuItem tempBookedSkuItem = null;
         List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
-        SkuItem tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
+        if(skuItemCLIs != null && skuItemCLIs.size() > 0){
+            tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
+        }
 
         Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
         boolean invAdded = false;
@@ -505,13 +507,13 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         for (InventoryInfo inventoryInfo : infos) {
             if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
                 for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-                    if(skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()){
+                    if(tempBookedSkuItem != null && skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()){
                         skuInfo.setUnbookedQty(skuInfo.getUnbookedQty()+cartLineItem.getQty());
                         updateSkuInfoFlag = true;
                         break;
                     }
                 }
-                if(!updateSkuInfoFlag){
+                if(!updateSkuInfoFlag && tempBookedSkuItem != null){
                     SkuInfo newSkuInfo = new SkuInfo();
                     newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
                     newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
@@ -528,7 +530,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             }
         }
 
-        if(!updateSkuInfoFlag && !newSkuInfoFlag){
+        if(!updateSkuInfoFlag && !newSkuInfoFlag && tempBookedSkuItem != null){
             InventoryInfo newInventoryInfo = new InventoryInfo();
             List<SkuInfo> skuInfoList = new ArrayList<SkuInfo>();
             SkuInfo newSkuInfo = new SkuInfo();
