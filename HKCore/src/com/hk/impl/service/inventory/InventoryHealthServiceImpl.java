@@ -646,9 +646,10 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
         if (!updateStockStatus) {
             productVariant.setOutOfStock(false);
+            product.setOutOfStock(false);
             getBaseDao().save(productVariant);
         }
-          getBaseDao().save(product);
+        getBaseDao().save(product);
     }
 
 
