@@ -213,7 +213,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
             if(purchaseInvoice.getEiLineItems()!=null && purchaseInvoice.getEiLineItems().size()>0){
                 for(ExtraInventoryLineItem eili : purchaseInvoice.getEiLineItems()){
                     RtvNote rtvNote = rtvNoteService.getRtvNoteByExtraInventory(eili.getExtraInventory().getId());
-                    if(rtvNote.getReconciled()!=null && rtvNote.isReconciled()){
+                    if(rtvNote!=null && rtvNote.getReconciled()!=null && rtvNote.isReconciled()){
                         isRtvReconciled = Boolean.TRUE;
                     }
                 }
