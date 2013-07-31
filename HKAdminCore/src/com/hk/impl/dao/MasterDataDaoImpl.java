@@ -1,18 +1,30 @@
 package com.hk.impl.dao;
 
-import java.util.*;
-
-import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
-<<<<<<< HEAD
-import com.hk.constants.analytics.EnumReason;
-=======
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.cache.CategoryCache;
+import com.hk.cache.RoleCache;
+import com.hk.cache.vo.RoleVO;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.catalog.category.CategoryConstants;
->>>>>>> pre-release
+import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumCancellationType;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.EnumUserCodCalling;
-import com.hk.constants.courier.*;
+import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumCourierOperations;
+import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import com.hk.constants.inventory.EnumCycleCountStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.pos.DiscountConstants;
 import com.hk.constants.reversePickup.EnumReversePickupStatus;
@@ -20,40 +32,18 @@ import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
-import com.hk.domain.analytics.Reason;
-import com.hk.domain.courier.*;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.service.core.WarehouseService;
-import com.hk.domain.review.Mail;
-import com.hk.pact.service.review.MailService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import com.hk.admin.pact.dao.courier.CourierDao;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.admin.pact.service.hkDelivery.RunSheetService;
-import com.hk.cache.RoleCache;
-import com.hk.cache.vo.RoleVO;
-import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
-import com.hk.constants.core.EnumRole;
-import com.hk.constants.hkDelivery.EnumRunsheetStatus;
-import com.hk.constants.inventory.EnumPurchaseOrderStatus;
-import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.constants.inventory.EnumReconciliationType;
-import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.*;
+import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -66,11 +56,13 @@ import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.review.Mail;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
@@ -78,8 +70,15 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.CityService;
 import com.hk.pact.service.core.StateService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.marketing.MarketingService;
+import com.hk.pact.service.review.MailService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.*;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
