@@ -320,7 +320,7 @@ public class OrderServiceImpl implements OrderService {
           logger.error(e.getMessage());
           orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         } catch (Exception e) {
-          logger.error("Order could not be split due to some exception ", e.getMessage());
+          logger.error("Order could not be split due to some exception ", e);
           orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         }
         return shippingOrders;
