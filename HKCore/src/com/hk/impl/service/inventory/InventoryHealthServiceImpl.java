@@ -595,6 +595,15 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
     public void updateVariantInfo(ProductVariant productVariant, Set<InventoryHealthService.SkuInfo> skuInfos) {
         double newHkPrice = 0d;
+        if (skuInfos == null || skuInfos.isEmpty()) {
+            SkuInfo skuInfo = new SkuInfo();
+            skuInfo.setSkuId(0l);
+            skuInfo.setCostPrice(productVariant.getCostPrice());
+            skuInfo.setMrp(productVariant.getMarkedPrice());
+            skuInfo.setQty(0l);
+            skuInfo.setUnbookedQty(0l);
+            skuInfos.add(skuInfo);
+        }
         Iterator<InventoryHealthService.SkuInfo> iterator = skuInfos.iterator();
         InventoryHealthService.SkuInfo selectedInfo = iterator.next();
         Long maxQty = selectedInfo.getQty();
@@ -632,8 +641,10 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             productVariant.setOutOfStock(true);
         }
         long skuId = selectedInfo.getSkuId();
-        Sku sku = getBaseDao().get(Sku.class, skuId);
-        productVariant.setWarehouse(sku.getWarehouse());
+        if (skuId != 0) {
+            Sku sku = getBaseDao().get(Sku.class, skuId);
+            productVariant.setWarehouse(sku.getWarehouse());
+        }
         getBaseDao().save(productVariant);
         Product product = productVariant.getProduct();
         List<ProductVariant> inStockVariants = product.getInStockVariants();
@@ -743,25 +754,26 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                         updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
                     }
                 }
-            } else {
-                Product product = productVariant.getProduct();
-                boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-                if (!updateStockStatus) {
-                    productVariant.setOutOfStock(false);
-                } else {
-                    productVariant.setOutOfStock(true);
-                    List<ProductVariant> inStockVariants = product.getInStockVariants();
-                    if (inStockVariants != null && inStockVariants.isEmpty()) {
-                        product.setOutOfStock(true);
-                    } else {
-                        product.setOutOfStock(false);
-                    }
-                    getBaseDao().save(product);
-                }
-                productVariant.setNetQty(0L);
-                getBaseDao().save(productVariant);
             }
+        } else {
+            Product product = productVariant.getProduct();
+            boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+            if (!updateStockStatus) {
+                productVariant.setOutOfStock(false);
+            } else {
+                productVariant.setOutOfStock(true);
+                List<ProductVariant> inStockVariants = product.getInStockVariants();
+                if (inStockVariants != null && inStockVariants.isEmpty()) {
+                    product.setOutOfStock(true);
+                } else {
+                    product.setOutOfStock(false);
+                }
+                getBaseDao().save(product);
+            }
+            productVariant.setNetQty(0L);
+            getBaseDao().save(productVariant);
         }
+
     }
 
     public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
