@@ -356,6 +356,25 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
 
     }
 
+    private List<ProductVariantInventory> getProductVariantInventory(SkuItem skuItem, Long qty) {
+        String hql = "from ProductVariantInventory pvi where pvi.id is not null";
+        if (skuItem != null) {
+            hql = hql + " and  pvi.skuItem.id = :skuItemId ";
+        }
+        if (qty != null) {
+            hql = hql + " and  pvi.qty = :qty";
+        }
+        Query query = getSession().createQuery(hql);
+
+        if (skuItem != null) {
+            query.setParameter("skuItemId", skuItem.getId());
+        }
+        if (qty != null) {
+            query.setParameter("qty", qty);
+        }
+        return query.list();
+    }
+
     public ProductVariantInventory getCheckedOutLineItem(SkuItem skuItem) {
         List<ProductVariantInventory> pVIList = getProductVariantInventory(skuItem, -1l);
         return pVIList != null && pVIList.size() > 0 ? pVIList.get(0) : null;
