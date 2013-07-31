@@ -146,45 +146,34 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
 
-    public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order){
-
+    public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order) {
         Double refundValue = 0D;
-
-        if(shippingOrder == null){
+        if (shippingOrder == null) {
             refundValue = order.getPayment().getAmount();
-        }else{
+        } else {
             refundValue = shippingOrder.getAmount(); //handle for free cases
         }
-
-        Double percentageAmount = refundValue/order.getPayment().getAmount() * -1;
-
-        List<RewardPointTxn> currentRewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.ADD, order);
-
-        for (RewardPointTxn rewardPointTxn : currentRewardPointTxnList) {
-
-            RewardPoint cashBackRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
-                    order, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
-                    EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
-
-            rewardPointService.approveRewardPoints(Arrays.asList(cashBackRewardPoints), rewardPointTxn.getExpiryDate());
-
+        Double percentageAmount = refundValue / order.getPayment().getAmount() * -1;
+        List<RewardPoint> currentRewardPoints = rewardPointService.findRewardPoints(order, EnumRewardPointMode.getCashBackModes());
+        for (RewardPoint currentRewardPoint : currentRewardPoints) {
+            List<RewardPointTxn> currentRewardPointTxnList = rewardPointTxnDao.findByRewardPoint(currentRewardPoint);
+            for (RewardPointTxn rewardPointTxn : currentRewardPointTxnList) {
+                if (rewardPointTxn.isType(EnumRewardPointTxnType.ADD)) {
+                    RewardPoint cashBackRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
+                            order, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
+                            EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
+                    rewardPointService.approveRewardPoints(Arrays.asList(cashBackRewardPoints), rewardPointTxn.getExpiryDate());
+                }
+            }
         }
-
         List<RewardPointTxn> redeemedRewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
-
-
         for (RewardPointTxn rewardPointTxn : redeemedRewardPointTxnList) {
-
             Order concernedOrder = rewardPointTxn.getRewardPoint().getReferredOrder();
-
             RewardPoint refundRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
                     concernedOrder, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
                     EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
-
             rewardPointService.approveRewardPoints(Arrays.asList(refundRewardPoints), rewardPointTxn.getExpiryDate());
-
         }
-
     }
 
 	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
