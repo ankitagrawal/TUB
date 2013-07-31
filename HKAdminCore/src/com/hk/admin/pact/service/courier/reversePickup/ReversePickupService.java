@@ -44,5 +44,5 @@ public interface ReversePickupService {
 
     public ReversePickupOrder getByReversePickupId(String reversePickupId);
 
-    public void checkedInRpLineItems(List<RpLineItem> rpLineItemList);
+    public void checkInRpLineItem(RpLineItem rpLineItem);
 }
