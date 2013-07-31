@@ -262,7 +262,7 @@
                             </c:if>
                         </c:forEach>
                         <c:set value="<%=EnumReverseAction.Pending_Approval.getId()%>" var="pending"/>
-                        <c:if test="${rpLineitem.customerActionStatus == pending && rpLineitem.actionTakenOnStatus != null}">
+                        <c:if test="${rpLineitem.customerActionStatus == pending}">
                             <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                     event="approveCSAction"><span class="approve">(Approve)</span>
                                 <s:param name="rpLineitem" value="${rpLineitem.id}"/>
