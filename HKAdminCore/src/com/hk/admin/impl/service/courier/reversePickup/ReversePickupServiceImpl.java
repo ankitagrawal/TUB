@@ -66,11 +66,11 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                 }
                 if (rpLineItem.getCustomerActionStatus() == null) {
                     /** the first status has to be Pending Approval.The action  taken  should be entered **/
-                    if (rpLineItem.getActionTaken() != null && (!(rpLineItem.getActionTaken().equals(EnumReverseActionOnStatus.Decide_Later.getId())))) {
+                    if (rpLineItem.getActionTaken() != null && (!(rpLineItem.getActionTaken().equals(EnumReverseAction.Decide_Later.getId())))) {
                         rpLineItem.setCustomerActionStatus(EnumReverseAction.Pending_Approval.getId());
                     }
                 } else {
-                    if (customerActionStatus == null || rpLineItem.getActionTaken().equals(EnumReverseActionOnStatus.Decide_Later.getId())) {
+                    if (rpLineItem.getActionTaken() == null || rpLineItem.getActionTaken().equals(EnumReverseAction.Decide_Later.getId())) {
                         rpLineItem.setCustomerActionStatus(null);
                     } else {
                         rpLineItem.setCustomerActionStatus(customerActionStatus);
