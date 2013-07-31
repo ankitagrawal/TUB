@@ -1,13 +1,15 @@
 package com.hk.impl.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+<<<<<<< HEAD
 import com.hk.constants.analytics.EnumReason;
+=======
+import com.hk.cache.CategoryCache;
+import com.hk.constants.catalog.category.CategoryConstants;
+>>>>>>> pre-release
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.*;
@@ -561,4 +563,19 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
 
+		public List<Category> getCategoriesForPOS() {
+				List<Category> posCategoryList = new ArrayList<Category>();
+				String categoryNames = CategoryConstants.HEALTH_DEVICES + "," + CategoryConstants.SPORTS_NUTRITION + "," + CategoryConstants.HEALTH_NUTRITION + "," + CategoryConstants.SPORTS;
+
+				Set<Category> categorySet = new HashSet<Category>();
+
+				for (String categoryName : categoryNames.split(",")) {
+					categorySet.add(CategoryCache.getInstance().getCategoryByName(categoryName).getCategory());
+				}
+
+				for (Category category : categorySet) {
+					posCategoryList.add(category);
+				}
+				return posCategoryList;
+		}
 }

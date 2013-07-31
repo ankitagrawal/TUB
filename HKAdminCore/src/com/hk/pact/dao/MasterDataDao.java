@@ -204,4 +204,5 @@ public interface MasterDataDao {
 
     public List<EnumReversePickupStatus> getAllReversePickUpStatus();
 
+		public List<Category> getCategoriesForPOS();
 }

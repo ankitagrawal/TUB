@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
 import com.hk.pact.service.core.CityService;
@@ -38,6 +39,8 @@ public class AutoCompleteAction extends BaseAction {
 	AddressService addressService;
 	@Autowired
 	SkuService skuService;
+	@Autowired
+	ProductService productService;
 
 	private String q = "";
 	private String pincode;
@@ -99,6 +102,14 @@ public class AutoCompleteAction extends BaseAction {
 			//dataMap.put("productDetailList", productDetailList);
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Warehouse", productDetailList);
 		}
+		return new JsonResolution(healthkartResponse);
+	}
+
+	@DontValidate
+	@JsonHandler
+	public Resolution populateBrand() {
+		List<String> brandList = productService.getAllBrands(q);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "done", brandList);
 		return new JsonResolution(healthkartResponse);
 	}
 
