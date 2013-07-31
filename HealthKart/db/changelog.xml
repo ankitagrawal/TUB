@@ -13769,4 +13769,9 @@
             insert into role_has_permission (role_name , permission_name) values ('REVERSE_PICKUP','VIEW_REVERSE_PICKUP');
         </sql>
     </changeSet>
+	<changeSet author="Nihal(Generated)" id="01-08-2013(1)">
+		<createIndex indexName="extra_inventory_line_item_id_UNIQUE" tableName="purchase_invoice_has_extra_inventory_line_item" unique="true">
+			<column name="extra_inventory_line_item_id"/>
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>
