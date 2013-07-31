@@ -11,17 +11,21 @@ import com.hk.constants.reversePickup.EnumCourierConstant;
 import com.hk.constants.reversePickup.EnumReversePickupStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.ReversePickupException;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuGroupService;
 
 import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*User: Seema
 * Date: 7/27/13
@@ -100,22 +101,28 @@ public class RPWarehouseCheckinAction extends BaseAction {
                     break;
                 }
             }
-            if (itemToBeSaved == null || itemToBeSaved.getItemBarcode() == null) {
+            if (itemToBeSaved == null || itemToBeSaved.getItemBarcode() == null || StringUtils.isEmpty(itemToBeSaved.getItemBarcode())) {
                 message = "Plz Scan Barcode";
                 healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, message, dataMap);
             } else if (itemToBeSaved.getWarehouseReceivedCondition() == null) {
                 message = "Plz Select Warehouse Condition Also";
                 healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, message, dataMap);
             } else {
-                reversePickupService.checkInRpLineItem(itemToBeSaved);
-                message = "Item Saved";
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, dataMap);
+                try {
+                    reversePickupService.checkInRpLineItem(itemToBeSaved);
+                    message = "Item Saved";
+                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, dataMap);
+                } catch (ReversePickupException rpe) {
+                    String errMsg = rpe.getMessage() + "  for  " + rpe.getProductVariant();
+                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errMsg, dataMap);
+                }
+
             }
         }
         return new JsonResolution(healthkartResponse);
     }
 
-    public Resolution completeWarehouseCheckIn() {
+    public Resolution closeWarehouseCheckIn() {
         ReversePickupOrder reversePickupOrderFromDb = reversePickupService.getReversePickupOrderById(reversePickupOrder.getId());
         /*check at least one of rp is checkedIn*/
         boolean genuineChecked = false;
@@ -138,89 +145,42 @@ public class RPWarehouseCheckinAction extends BaseAction {
         return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
     }
 
-
-    public Resolution verifyScannedBarcode() {
-        String errorMsg = "";
-        boolean error = false;
-        HealthkartResponse healthkartResponse = null;
-        if (scannedBarcode != null) {
-            Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-            Map dataMap = new HashMap();
-            try {
-                SkuItem skuItem = skuGroupService.getSkuItemByBarcode(scannedBarcode, warehouse.getId(), null);
-                if (skuItem != null) {
-                    if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())) {
-                        LineItem lineItem = adminInventoryService.getCheckedOutLineItem(skuItem);
-                        if (lineItem != null) {
-                            boolean validLineItem = isRPLineItemsListContainsLineItem(reversePickupOrder.getRpLineItems(), lineItem);
-                            if (validLineItem) {
-                                dataMap.put("lineItemId", lineItem.getId());
-                                dataMap.put("scannedBarcode", scannedBarcode);
-                                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", dataMap);
-                            } else {
-                                error = true;
-                                errorMsg = "Invalid barcode : Reverse pickup does not created for :::  " + scannedBarcode + " ::: Barcode";
-                            }
-                        } else {
-                            error = true;
-                            errorMsg = "Invalid barcode : Inventory is never checked out with  " + scannedBarcode + "  Barcode";
-                        }
-                    } else {
-                        error = true;
-                        String productName = skuItem.getSkuGroup().getSku().getProductVariant().getProduct().getName();
-                        errorMsg = "Invalid barcode : " + scannedBarcode + " Inventory for product :::  " + productName + " ::: is in Checked Status";
-                    }
-                } else {
-                    error = true;
-                    errorMsg = "Invalid Barcode : No Such Barcode Found in the System";
-                }
-            } catch (Exception e) {
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getLocalizedMessage(), "");
-                return new JsonResolution(healthkartResponse);
-            }
-            if (error) {
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errorMsg, "");
-            }
-        } else {
-            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Empty Barcode", "");
-        }
-        return new JsonResolution(healthkartResponse);
-    }
-
-
     public Resolution downloadBarcode() {
-        if (lineItem != null) {
-            List<SkuItem> skuItemList = adminInventoryService.getCheckedOutSkuItems(lineItem);
-            List<SkuItem> skuItemListForBarcode = new ArrayList<SkuItem>();
-            if (skuItemList != null && skuItemList.size() > 0) {
-                skuItemListForBarcode.add(skuItemList.get(0));
-                Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(skuItemListForBarcode);
-                String barcodeFilePath = null;
-                Warehouse userWarehouse = userService.getWarehouseForLoggedInUser();
-                if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
-                    barcodeFilePath = barcodeGurgaon;
-                } else {
-                    barcodeFilePath = barcodeMumbai;
-                }
-                barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "RP_" + lineItem.getSku().getProductVariant().getProduct().getName() + ".txt";
-                try {
-                    barcodeFile = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
-                } catch (IOException e) {
-                    logger.error("Exception while appending on barcode file", e);
-                }
-                addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("No Barcodes with checkout status with SO are available for downloading"));
-            }
-        }
-        if (barcodeFile != null) {
-            return new HTTPResponseResolution();
+        List<SkuItem> checkedOutSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, -1L);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
+
+        checkedOutSkuItems.removeAll(checkedInSkuItems);
+        List<SkuItem> singleBarcodeList = Arrays.asList(checkedOutSkuItems.get(0));
+        ProductVariant productVariant = lineItem.getSku().getProductVariant();
+        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(singleBarcodeList);
+
+        String barcodeFilePath = null;
+        Warehouse userWarehouse = null;
+        if (getUserService().getWarehouseForLoggedInUser() != null) {
+            userWarehouse = userService.getWarehouseForLoggedInUser();
         } else {
-            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupId);
+            addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+            return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
         }
+        if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+            barcodeFilePath = barcodeGurgaon;
+        } else {
+            barcodeFilePath = barcodeMumbai;
+        }
+        barcodeFilePath = barcodeFilePath + "/" + "print_" + "RP" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+
+        try {
+            barcodeFile = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+        } catch (IOException e) {
+            logger.error("Exception while appending on barcode file", e);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+        return new HTTPResponseResolution();
+
     }
 
-    class HTTPResponseResolution implements Resolution {
+
+    public class HTTPResponseResolution implements Resolution {
         public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
             InputStream in = new BufferedInputStream(new FileInputStream(barcodeFile));
             res.setContentType("text/plain");
@@ -239,6 +199,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
             out.flush();
             out.close();
         }
+
     }
 
 

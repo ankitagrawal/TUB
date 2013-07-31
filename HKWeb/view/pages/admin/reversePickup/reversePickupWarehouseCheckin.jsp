@@ -3,7 +3,6 @@
 <%@ page import="com.hk.domain.analytics.Reason" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.reversePickup.EnumReverseAction" %>
 <%@ page import="com.hk.constants.reversePickup.EnumWarehouseQAStatus" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
@@ -80,55 +79,49 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.barcode-scan').focus();
-            var alreadyScannedCodeList = [];
-            $('.barcode-scan').live("change", function () {
-                var scannedVal = $(this).val();
-                if (scannedVal == null || scannedVal.trim() == '') {
-                    return false;
-                }
-//                if ($.inArray(scannedVal, alreadyScannedCodeList) > -1) {
-//                    alert('Barcode Already Scanned');
-//                    return false;
-//                }
-//                alreadyScannedCodeList.push(scannedVal);
 
-                $(this).attr("disable", "disable");
-                var rpOrderId = $('.rpvalue').val();
-                $.getJSON(
-                        $('.barcode-link').attr('href'), {scannedBarcode:scannedVal, reversePickupOrder:rpOrderId, scannedBarcodeList:alreadyScannedCodeList},
-                        function (res) {
-                            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                                var test = scannedVal;
-                                var rcvItemId = res.data.lineItemId;
-                                var extraCode = true;
-                                $('.barcode-text').each(function (index) {
-                                    var lineId = $(this).attr("lineItemId");
-                                    var checkedIn = $(this).attr("checkedIn");
-                                    var currentBarcode = $(this).val();
-                                    if ((currentBarcode == null || currentBarcode == '') && lineId == rcvItemId && checkedIn != 'true') {
-                                        extraCode = false;
-                                        $(this).val("" + scannedVal);
-                                        return false;
-                                    }
-                                });
-                                if (extraCode) {
-                                    $('.errordiv').empty();
-                                    $('.errordiv').html('<h2>RP order created for qty ' + ' , all are  already scanned. ' +
-                                            'this is extra Item for same product </h2>');
-                                    $('.errordiv').css("display", "block");
-                                }
-                            }
-                            else {
-//                                alreadyScannedCodeList.pop(scannedVal);
-                                $('.errordiv').empty();
-                                $('.errordiv').html('<h2>' + res.message + '</h2>');
-                            }
-                            $(this).removeAttr("disabled", "disabled");
-                        }
-                );
 
-            });
+            <%--$('.barcode-scan').focus();--%>
+            <%--var alreadyScannedCodeList = [];--%>
+            <%--$('.barcode-scan').live("change", function () {--%>
+            <%--var scannedVal = $(this).val();--%>
+            <%--if (scannedVal == null || scannedVal.trim() == '') {--%>
+            <%--return false;--%>
+            <%--}--%>
+            <%--$(this).attr("disable", "disable");--%>
+            <%--var rpOrderId = $('.rpvalue').val();--%>
+            <%--$.getJSON(--%>
+            <%--$('.barcode-link').attr('href'), {scannedBarcode:scannedVal, reversePickupOrder:rpOrderId, scannedBarcodeList:alreadyScannedCodeList},--%>
+            <%--function (res) {--%>
+            <%--if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {--%>
+            <%--var test = scannedVal;--%>
+            <%--var rcvItemId = res.data.lineItemId;--%>
+            <%--var extraCode = true;--%>
+            <%--$('.barcode-text').each(function (index) {--%>
+            <%--var lineId = $(this).attr("lineItemId");--%>
+            <%--var checkedIn = $(this).attr("checkedIn");--%>
+            <%--var currentBarcode = $(this).val();--%>
+            <%--if ((currentBarcode == null || currentBarcode == '') && lineId == rcvItemId && checkedIn != 'true') {--%>
+            <%--extraCode = false;--%>
+            <%--$(this).val("" + scannedVal);--%>
+            <%--return false;--%>
+            <%--}--%>
+            <%--});--%>
+            <%--if (extraCode) {--%>
+            <%--$('.errordiv').empty();--%>
+            <%--$('.errordiv').html('<h2>RP order created for qty ' + ' , all are  already scanned. ' +--%>
+            <%--'this is extra Item for same product </h2>');--%>
+            <%--$('.errordiv').css("display", "block");--%>
+            <%--}--%>
+            <%--}--%>
+            <%--else {--%>
+            <%--$('.errordiv').empty();--%>
+            <%--$('.errordiv').html('<h2>' + res.message + '</h2>');--%>
+            <%--}--%>
+            <%--$(this).removeAttr("disabled", "disabled");--%>
+            <%--}--%>
+            <%--);--%>
+            <%--});--%>
 
             $('.save-rp').live("click", function () {
                 var curEle = $(this);
@@ -296,7 +289,6 @@
                                             disabled="${rplineitem.warehouseReceivedCondition != null? 'disabled' : ''}"
                                             checkedIn="${rplineitem.warehouseReceivedCondition != null}"
                                             lineItemId="${rplineitem.lineItem.id}" class="barcode-text"/>
-
                                 </td>
                                 <td>
                                     <s:select name="rpLineItems[${index}].warehouseReceivedCondition"
@@ -355,21 +347,11 @@
                         </c:forEach>
                     </table>
                 </div>
-
                 <div class="check-in">
-                    <s:submit name="completeWarehouseCheckIn" value="Mark Checked"/>
+                    <s:submit name="closeWarehouseCheckIn" value="Close & Mark RP as ChechedIn"/>
                 </div>
             </s:form>
 
-            <div class="margin-7">
-                <div style="float: left;">
-                    <label>Scan Barcode Here</label>
-                    <s:form partial="true" beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction">
-                        <s:text name="scannedBarcode" class="barcode-scan" title="scan barcode here"/>
-                    </s:form>
-                </div>
-
-            </div>
         </div>
     </c:if>
 </s:layout-component>

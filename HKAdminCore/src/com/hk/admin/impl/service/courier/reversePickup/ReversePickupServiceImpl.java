@@ -2,25 +2,35 @@ package com.hk.admin.impl.service.courier.reversePickup;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.reversePickup.ReversePickupDao;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.service.courier.reversePickup.ReversePickupService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.reversePickup.EnumReverseActionOnStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 import com.hk.domain.reversePickupOrder.RpLineItem;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
+import com.hk.exception.ReversePickupException;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +56,16 @@ public class ReversePickupServiceImpl implements ReversePickupService {
     UserService userService;
     @Autowired
     AdminInventoryService adminInvService;
+    @Autowired
+    private AdminProductVariantInventoryDao adminProductVariantInventoryDao;
+    @Autowired
+    private AdminInventoryService adminInventoryService;
+    @Autowired
+    private InventoryService inventoryService;
+    @Autowired
+    private SkuItemDao skuItemDao;
+    @Autowired
+    private ShippingOrderService shippingOrderService;
 
     @Transactional
     public ReversePickupOrder saveReversePickupOrder(ReversePickupOrder reversePickupOrder) {
@@ -145,48 +165,129 @@ public class ReversePickupServiceImpl implements ReversePickupService {
     }
 
     @Transactional
-    public void checkInRpLineItem(RpLineItem rpLineItem) {
+    public Boolean checkInRpLineItem(RpLineItem rpLineItem) throws ReversePickupException {
+        boolean warehouseChecked = false;
         if (rpLineItem != null) {
             Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+            ShippingOrder shippingOrder = rpLineItem.getReversePickupOrder().getShippingOrder();
+            LineItem lineItem = rpLineItem.getLineItem();
+            String recheckInBarcode = rpLineItem.getItemBarcode();
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
             User user = userService.getLoggedInUser();
-            SkuItem skuItem = skuGroupService.getSkuItemByBarcode(rpLineItem.getItemBarcode(), warehouse.getId(), null);
-            SkuItemStatus skuItemStatus = setSkuItemStatusByWarehouseCondition(rpLineItem.getWarehouseReceivedCondition().getId());
-            skuItem.setSkuItemStatus(skuItemStatus);
-            /*change status of skuItem to checkIn*/
-            skuItem = skuGroupService.saveSkuItem(skuItem);
-            Sku sku = rpLineItem.getLineItem().getSku();
-            ShippingOrder shippingOrder = rpLineItem.getLineItem().getShippingOrder();
-            /*add invn checkIn entry in PVI*/
-            Long qty = -1l;
-            if (skuItemStatus.getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
-                qty = 1l;
+            List<ProductVariantInventory> pviCheckoutEntries = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
+            SkuItem findSkuItemByBarcode = null;
+            String skuGroupBarcode, skuItemBarcode;
+            User loggedOnUser = userService.getLoggedInUser();
+            if (pviCheckoutEntries != null && !pviCheckoutEntries.isEmpty()) {
+                findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckInBarcode, warehouse.getId(), EnumSkuItemStatus.Checked_OUT.getId());
+                for (ProductVariantInventory pvi : pviCheckoutEntries) {
+                    SkuItem skuItem;
+                    if (findSkuItemByBarcode != null) {
+                        skuItem = findSkuItemByBarcode;
+                        skuItemBarcode = findSkuItemByBarcode.getBarcode();
+                    } else {
+                        skuItem = pvi.getSkuItem();
+                        skuGroupBarcode = pvi.getSkuItem().getSkuGroup().getBarcode();
+                        skuItemBarcode = skuGroupBarcode;
+                    }
+                    if (skuItemBarcode != null && skuItemBarcode.equalsIgnoreCase(recheckInBarcode)) {
+                        if (skuItem.getId().equals(pvi.getSkuItem().getId()) &&
+                                pvi.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
+                            EnumReason enumReason = EnumReason.getById(rpLineItem.getWarehouseReceivedCondition().getId());
+                            SkuItemStatus skuItemStatus = null;
+                            switch (enumReason) {
+                                case Good:
+                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null,
+                                            null, getInventoryService().getInventoryTxnType(EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN), 1L, loggedOnUser);
+                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                                    skuItemDao.save(skuItem);
+                                    inventoryService.checkInventoryHealth(productVariant);
+                                    warehouseChecked = true;
+                                    break;
+
+                                case Damaged:
+                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null,
+                                            null, getInventoryService().getInventoryTxnType(EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN), 0L, loggedOnUser);
+                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
+                                    skuItemDao.save(skuItem);
+                                    inventoryService.checkInventoryHealth(productVariant);
+                                    warehouseChecked = true;
+                                    break;
+                                case Non_Functional:
+                                    /**/
+                                case Near_Expiry:
+                                    /**/
+                                case Expired:
+                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null,
+                                            null, getInventoryService().getInventoryTxnType(EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN), 0L, loggedOnUser);
+                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
+                                    skuItemDao.save(skuItem);
+                                    inventoryService.checkInventoryHealth(productVariant);
+                                    warehouseChecked = true;
+                                    break;
+                            }
+
+
+                        }
+
+
+                    }
+
+                }
+
+            } else {
+                throw new ReversePickupException("No Items remains  Checkout for ", productVariant);
             }
-            adminInvService.inventoryCheckinCheckout(sku, skuItem, rpLineItem.getLineItem(), shippingOrder, null, null, null,
-                    EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), qty, user);
-            saveRpLineItem(rpLineItem);
-
+            if (warehouseChecked) {
+                saveRpLineItem(rpLineItem);
+                String comments = "Inventory checked in : " + rpLineItem.getWarehouseReceivedCondition().getClassification().getPrimary() + " for Product " + productVariant.getProduct().getName() + "<br/>" +
+                        productVariant.getOptionsCommaSeparated();
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
+            } else {
+                throw new ReversePickupException("The Barcode entered doesn't match any of the items OR item not in correct status   ", productVariant);
+            }
         }
+        return warehouseChecked;
     }
 
-    private SkuItemStatus setSkuItemStatusByWarehouseCondition(Long id) {
-        EnumReason enumReason = EnumReason.getById(id);
-        SkuItemStatus skuItemStatus = null;
-        switch (enumReason) {
-            case Good:
-                skuItemStatus = EnumSkuItemStatus.Checked_IN.getSkuItemStatus();
-                break;
-            case Damaged:
-                skuItemStatus = EnumSkuItemStatus.Damaged.getSkuItemStatus();
-                break;
-            case Non_Functional:
-                skuItemStatus = null;
-            case Near_Expiry:
-                skuItemStatus = null;
-            case Expired:
-                skuItemStatus = EnumSkuItemStatus.Expired.getSkuItemStatus();
-        }
-        return skuItemStatus;
+    public AdminProductVariantInventoryDao getAdminProductVariantInventoryDao() {
+        return adminProductVariantInventoryDao;
+    }
+
+    public void setAdminProductVariantInventoryDao(AdminProductVariantInventoryDao adminProductVariantInventoryDao) {
+        this.adminProductVariantInventoryDao = adminProductVariantInventoryDao;
     }
 
 
+    public AdminInventoryService getAdminInventoryService() {
+        return adminInventoryService;
+    }
+
+    public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
+        this.adminInventoryService = adminInventoryService;
+    }
+
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
+
+    public void setInventoryService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
+
+    public SkuItemDao getSkuItemDao() {
+        return skuItemDao;
+    }
+
+    public void setSkuItemDao(SkuItemDao skuItemDao) {
+        this.skuItemDao = skuItemDao;
+    }
+
+    public ShippingOrderService getShippingOrderService() {
+        return shippingOrderService;
+    }
+
+    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+        this.shippingOrderService = shippingOrderService;
+    }
 }

@@ -89,17 +89,14 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
 
-
-
-     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem) {
+    public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem) {
         return getAdminSkuItemDao().getInStockSkuGroupsForReview(lineItem);
     }
 
 
-
     public List<SkuGroup> getSkuGroupsInReviewState() {
-           return getAdminSkuItemDao().getSkuGroupsInReviewState();
-       }
+        return getAdminSkuItemDao().getSkuGroupsInReviewState();
+    }
 
     /**
      * @param sku
@@ -526,18 +523,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
     }
 
-    public List<SkuItem> getCheckedOutSkuItems(LineItem lineItem) {
-        return adminPVIDao.getCheckedOutSkuItems(lineItem);
-    }
 
-    public LineItem getCheckedOutLineItem(SkuItem skuItem) {
-        LineItem lineItem = null;
-        ProductVariantInventory pvi = adminPVIDao.getCheckedOutLineItem(skuItem);
-        if (pvi != null) {
-            lineItem = pvi.getLineItem();
-        }
-        return lineItem;
-    }
+
 
 
 }

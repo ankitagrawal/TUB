@@ -5,6 +5,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 import com.hk.domain.reversePickupOrder.RpLineItem;
+import com.hk.exception.ReversePickupException;
 
 import java.util.Date;
 import java.util.List;
@@ -44,5 +45,7 @@ public interface ReversePickupService {
 
     public ReversePickupOrder getByReversePickupId(String reversePickupId);
 
-    public void checkInRpLineItem(RpLineItem rpLineItem);
+    public Boolean checkInRpLineItem(RpLineItem rpLineItem) throws ReversePickupException;
+
+
 }

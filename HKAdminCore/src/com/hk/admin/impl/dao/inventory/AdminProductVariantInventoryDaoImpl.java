@@ -356,37 +356,4 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
 
     }
 
-    private List<ProductVariantInventory> getProductVariantInventory(SkuItem skuItem, Long qty) {
-        String hql = "from ProductVariantInventory pvi where pvi.id is not null";
-        if (skuItem != null) {
-            hql = hql + " and  pvi.skuItem.id = :skuItemId ";
-        }
-        if (qty != null) {
-            hql = hql + " and  pvi.qty = :qty";
-        }
-        Query query = getSession().createQuery(hql);
-
-        if (skuItem != null) {
-            query.setParameter("skuItemId", skuItem.getId());
-        }
-        if (qty != null) {
-            query.setParameter("qty", qty);
-        }
-        return query.list();
-    }
-
-    public ProductVariantInventory getCheckedOutLineItem(SkuItem skuItem) {
-        List<ProductVariantInventory> pVIList = getProductVariantInventory(skuItem, -1l);
-        return pVIList != null && pVIList.size() > 0 ? pVIList.get(0) : null;
-    }
-
-    public List<SkuItem> getCheckedOutSkuItems(LineItem lineItem) {
-        String hql = " select si from ProductVariantInventory  pvi join pvi.skuItem si where pvi.lineItem.id is not null and  " +
-                "   pvi.lineItem.id = :lineItemId   and si.skuItemStatus.id = :checkedOutId and pvi.qty = :qtyId ";
-        Query query = getSession().createQuery(hql).setParameter("checkedOutId", EnumSkuItemStatus.Checked_OUT.getId()).setParameter("qtyId", -1l)
-                .setParameter("lineItemId", lineItem.getId());
-        return query.list();
-
-    }
-
 }
