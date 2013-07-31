@@ -406,8 +406,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
         }
         //add inventory booked for lineItem
-        if(lineItem.getSkuItemLineItems() != null && lineItem.getSkuItemLineItems().size() > 0 ){
-            qty += lineItem.getSkuItemLineItems().size();
+        if(lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0 ){
+            qty += lineItem.getQty();
         }
         return qty;
     }
