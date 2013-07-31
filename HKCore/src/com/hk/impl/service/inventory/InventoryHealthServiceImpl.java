@@ -506,7 +506,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                     newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
                     newSkuInfo.setUnbookedQty(cartLineItem.getQty());
                     newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
-                    newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+                    if(tempBookedSkuItem.getSkuGroup().getQty() != null){
+                        newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+                    }
                     inventoryInfo.getSkuInfoList().add(newSkuInfo);
                     newSkuInfoFlag = true;
                     break;
@@ -523,7 +525,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
             newSkuInfo.setUnbookedQty(cartLineItem.getQty());
             newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
-            newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+            if(tempBookedSkuItem.getSkuGroup().getQty() != null){
+                newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+            }
 
             skuInfoList.add(newSkuInfo);
             newInventoryInfo.setMrp(newSkuInfo.getMrp());
