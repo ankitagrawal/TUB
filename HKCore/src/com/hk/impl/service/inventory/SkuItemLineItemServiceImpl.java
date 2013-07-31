@@ -116,7 +116,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
             //make entry in product variant inventory
         }
     //    getSkuItemDao().save(lineItem);
-        getSkuItemDao().save(lineItem.getShippingOrder());
+    //    getSkuItemDao().save(lineItem.getShippingOrder());
         return true;
     }
 
