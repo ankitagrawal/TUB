@@ -401,16 +401,21 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             }
         }
 
+        /*
         List<SkuInfo> inProcessList = getInProcessInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
         for (SkuInfo skuInfo : inProcessList) {
             if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
                 qty -= skuInfo.getQty();
             }
         }
+
+        */
         //add inventory booked for lineItem
         if (lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0) {
             qty += lineItem.getQty();
         }
+
+
         return qty;
     }
 
@@ -434,6 +439,8 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                 qty -= skuInfo.getQty();
             }
         }
+           */
+
 
         //adding booked qty from skulineItem
 
@@ -441,7 +448,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             qty += lineItem.getSkuItemLineItems().size();
         }
 
-      */
+
         return qty;
     }
 
