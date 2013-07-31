@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.reversePickup.EnumReverseAction" %>
 <%@ page import="com.hk.constants.reversePickup.EnumReverseActionOnStatus" %>
@@ -20,6 +21,25 @@
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('.save-link').live("click", function () {
+                var curEle = $(this);
+                var queryString = '';
+                var sep = '';
+                $(this).parents('tr').find('input,select,textarea').each(function () {
+                    queryString = queryString + sep + $(this).attr('name') + '=' + escape($(this).attr('value'));
+                    sep = '&'
+                });
+                var href = $('.mainform').attr('action');
+                $.ajax({
+                    url:href + '?changeCustomerActionAndStatus=',
+                    type:'post',
+                    data:queryString,
+                    dataType:'json'
+                });
+            });
+
+
             var courierName = $('.selected-courier-name').val();
             if (courierName == '-1') {
                 $('.other-courier').css("display", "block");
@@ -107,6 +127,14 @@
         background-color: #FFFAB2;
     }
 
+    .link {
+        font-size: 11px;
+        color: white;
+        font-weight: bolder;
+        border: 1px transparent;
+        padding: 0;
+    }
+
 </style>
 <div style="height: 50px;" class="heading">
     <p>Edit Reverse Pickup No. ${rev.reversePickupOrder.reversePickupId}</p>
@@ -144,17 +172,15 @@
                     <c:set value="${fn:length(rpLineSavedList)}" var="savedLength"/>
                     <!-- Loop for RPLineItem !-->
                     <c:forEach items="${rpLineSavedList}" var="savedRpLineItem" varStatus="ctr">
-                        <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
-                            <s:hidden name="rpLineItems[${index}]" value="${savedRpLineItem.id}"/>
-                            <s:hidden name="rpLineItems[${index}].lineItem" value="${savedRpLineItem.lineItem.id}"/>
-                        </c:if>
                         <tr class="${ ctr.last ? 'btm-solid' : 'btm-dshed' } saved  ">
+                            <input type="hidden" name="rpLineItems[${index}]" value="${savedRpLineItem.id}"/>
+                            <input type="hidden" name="reversePickupOrder" value="${savedRpLineItem.reversePickupOrder.id}"/>
                             <c:if test="${ctr.first}">
                                 <td rowspan="${savedLength}">${ctr.index+1}</td>
                             </c:if>
                             <td>${ctr.index+1}</td>
-                            <td>${savedRpLineItem.lineItem.sku.productVariant.product.name}    ${savedRpLineItem.lineItem.sku.productVariant}
-                                      ${savedRpLineItem.lineItem.sku.productVariant.optionsPipeSeparated}</td>
+                            <td>${savedRpLineItem.lineItem.sku.productVariant.product.name} ${savedRpLineItem.lineItem.sku.productVariant}
+                                    ${savedRpLineItem.lineItem.sku.productVariant.optionsPipeSeparated}</td>
                             <td>
                                 <s:select name="rpLineItems[${index}].customerReasonForReturn"
                                           value="${savedRpLineItem.customerReasonForReturn.id}"
@@ -197,10 +223,6 @@
                                         ${customerActionStatusenum.name}
                                     </c:if>
                                 </c:forEach>
-                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}}">
-                                    <s:hidden name="rpLineItems[${index}].customerActionStatus"
-                                              value="${savedRpLineItem.customerActionStatus}"/>
-                                </c:if>
                             </td>
                             <td>
                                 <s:textarea style="width: 300px; height: 60px;"
@@ -210,17 +232,19 @@
                             </td>
                             <td>
                                 <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
+                                    <a href="javascript:void(0)" class="save-link"
+                                       style="background-color: green;">
+                                        <span class="link">Save</span> <br><br><br>
+                                    </a>
+                                </c:if>
+                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
                                     <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction"
-                                            event="deleteRpLineItem" style="color:#d81215; font-size:10px;">Delete Item
+                                            style="background-color: #ff8123"
+                                            event="deleteRpLineItem"> <span class="link">Delete</span>
                                         <s:param name="reversePickupOrder" value="${rev.reversePickupOrder.id}"/>
                                         <s:param name="rpLineItem" value="${savedRpLineItem.id}"/>
                                     </s:link> <br><br>
                                 </c:if>
-                                 <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
-                                <s:submit name="changeCustomerActionAndStatus"
-                                          style="font:10px;padding:0;background-color: #ffffff;color:#008000"
-                                          value="saveItem"/>
-                                 </c:if>
                             </td>
                         </tr>
                         <c:set var="index" value="${index+1}"/>

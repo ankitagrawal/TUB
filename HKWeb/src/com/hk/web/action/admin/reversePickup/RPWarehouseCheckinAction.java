@@ -61,7 +61,6 @@ public class RPWarehouseCheckinAction extends BaseAction {
     AdminInventoryService adminInventoryService;
     @Autowired
     SkuGroupService skuGroupService;
-
     @Autowired
     UserService userService;
 
@@ -125,57 +124,70 @@ public class RPWarehouseCheckinAction extends BaseAction {
     public Resolution closeWarehouseCheckIn() {
         ReversePickupOrder reversePickupOrderFromDb = reversePickupService.getReversePickupOrderById(reversePickupOrder.getId());
         /*check at least one of rp is checkedIn*/
-        boolean genuineChecked = false;
+        boolean validCheckin = false;
         for (RpLineItem rpLineItem : reversePickupOrderFromDb.getRpLineItems()) {
             if (rpLineItem.getWarehouseReceivedCondition() != null) {
-                genuineChecked = true;
+                validCheckin = true;
                 break;
             }
         }
-        if (!genuineChecked) {
-            addRedirectAlertMessage(new SimpleMessage("Select and checkin at least one Item"));
-            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
+        if (!validCheckin) {
+            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
+                    .addParameter("errorMessage", "Select and checkIn at least one Item");
         }
-        if (EnumReversePickupStatus.getHealthKartManagedRPStatus().contains(reversePickupOrder.getReversePickupStatus())) {
-            reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.RPU_QC_Checked_In.asReversePickupStatus());
+        Long pickedStatus = EnumReversePickupStatus.RPU_Picked.getId();
+        Long returnInitiated = EnumReversePickupStatus.Return_Initiated.getId();
+        Long currentStatus = reversePickupOrder.getReversePickupStatus().getId();
+        if (currentStatus.equals(returnInitiated) || currentStatus.equals(pickedStatus)) {
+            if (currentStatus.equals(returnInitiated)) {
+                reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus());
+            } else {
+                reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.RPU_QC_Checked_In.asReversePickupStatus());
+            }
+
         } else {
-            reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus());
+            return new RedirectResolution(RPWarehouseCheckinAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
+                    .addParameter("errorMessage", "Reverse Order is not in RPU_Picked or Return_Initiated status");
         }
+
         reversePickupService.saveReversePickupOrder(reversePickupOrderFromDb);
         return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
     }
 
     public Resolution downloadBarcode() {
-        List<SkuItem> checkedOutSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, -1L);
-        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
-
-        checkedOutSkuItems.removeAll(checkedInSkuItems);
-        List<SkuItem> singleBarcodeList = Arrays.asList(checkedOutSkuItems.get(0));
-        ProductVariant productVariant = lineItem.getSku().getProductVariant();
-        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(singleBarcodeList);
-
-        String barcodeFilePath = null;
         Warehouse userWarehouse = null;
         if (getUserService().getWarehouseForLoggedInUser() != null) {
             userWarehouse = userService.getWarehouseForLoggedInUser();
         } else {
             addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
-            return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
+            return new RedirectResolution(RPWarehouseCheckinAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
         }
-        if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
-            barcodeFilePath = barcodeGurgaon;
+        ProductVariant productVariant = lineItem.getSku().getProductVariant();
+        List<SkuItem> checkedOutSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, -1L);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
+        checkedOutSkuItems.removeAll(checkedInSkuItems);
+        List<SkuItem> singleBarcodeList = new ArrayList<SkuItem>();
+        if (checkedOutSkuItems.size() > 0) {
+            singleBarcodeList.add(checkedOutSkuItems.get(0));
+            Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(singleBarcodeList);
+            String barcodeFilePath = null;
+            if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+                barcodeFilePath = barcodeGurgaon;
+            } else {
+                barcodeFilePath = barcodeMumbai;
+            }
+            barcodeFilePath = barcodeFilePath + "/" + "print_" + "RP" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+            try {
+                barcodeFile = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+            } catch (IOException e) {
+                logger.error("Exception while appending on barcode file", e);
+            }
+            addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+            return new HTTPResponseResolution();
         } else {
-            barcodeFilePath = barcodeMumbai;
+            return new RedirectResolution(RPWarehouseCheckinAction.class).addParameter("reversePickupId", reversePickupId)
+                    .addParameter("errorMessage", "The line item is in wrong state , it has no barcode to delete");
         }
-        barcodeFilePath = barcodeFilePath + "/" + "print_" + "RP" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
-
-        try {
-            barcodeFile = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
-        } catch (IOException e) {
-            logger.error("Exception while appending on barcode file", e);
-        }
-        addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
-        return new HTTPResponseResolution();
 
     }
 

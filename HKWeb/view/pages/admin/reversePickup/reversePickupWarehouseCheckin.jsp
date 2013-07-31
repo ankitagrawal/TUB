@@ -58,7 +58,7 @@
         }
 
         .download-link {
-            color: red;
+            color: #000000;
             font-size: 10px;
             font-weight: bolder;
         }
@@ -74,6 +74,14 @@
             color: #3379BB;
             font-weight: bolder;
             line-height: 18px;
+        }
+        .save {
+            font-size: 14px;
+            color: white;
+            font-weight: bolder;
+            border: 2px solid;
+            padding: 1;
+            background-color: #ff8123;
         }
     </style>
 
@@ -181,7 +189,7 @@
             </c:if>
         </p>
     </div>
-    <div class="errordiv" style="margin: 0 auto; color:#ff0000; font-size:13px;">
+    <div class="errordiv" style="margin: 0 auto; color:#ff0000; font-size:10px;">
         <span style="color:red;">${rpw.errorMessage}</span>
     </div>
     <c:if test="${rpw.showSearchBox}">
@@ -195,10 +203,7 @@
     </c:if>
 
 
-    <div style="display: none;">
-        <s:link beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction" class="barcode-link"
-                event="verifyScannedBarcode"></s:link>
-    </div>
+
     <div class="clear"></div>
     <c:if test="${rpw.reversePickupOrder != null}">
         <div class="margin-2">
@@ -218,7 +223,7 @@
                             <th>Warehouse Comment</th>
                             <th>Warehouse Remark</th>
                             <th>Barcode</th>
-                            <th>Action</th>
+                            <th style="padding: 16px;">Action</th>
                             <th>Courier Name/AWB</th>
                         </tr>
                         </thead>
@@ -329,7 +334,7 @@
                                 </td>
                                 <td>
                                     <c:if test="${rplineitem.warehouseReceivedCondition == null}">
-                                        <a class="save-rp" href="javascript:void(0)"> (Save)</a>
+                                        <a class="save-rp" href="javascript:void(0)"> <span class="save"> Save </span></a>
                                     </c:if>
                                 </td>
 
@@ -348,7 +353,7 @@
                     </table>
                 </div>
                 <div class="check-in">
-                    <s:submit name="closeWarehouseCheckIn" value="Close & Mark RP as ChechedIn"/>
+                    <s:submit name="closeWarehouseCheckIn" value="Close & Mark RP as CheckedIn"/>
                 </div>
             </s:form>
 

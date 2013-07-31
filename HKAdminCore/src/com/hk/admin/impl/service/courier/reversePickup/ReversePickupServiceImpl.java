@@ -191,8 +191,8 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                         skuItemBarcode = skuGroupBarcode;
                     }
                     if (skuItemBarcode != null && skuItemBarcode.equalsIgnoreCase(recheckInBarcode)) {
-                        if (skuItem.getId().equals(pvi.getSkuItem().getId()) &&
-                                pvi.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
+                        if (skuItem.getId().equals(pvi.getSkuItem().getId()) &&  pvi.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
+
                             EnumReason enumReason = EnumReason.getById(rpLineItem.getWarehouseReceivedCondition().getId());
                             SkuItemStatus skuItemStatus = null;
                             switch (enumReason) {
@@ -226,7 +226,9 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                                     warehouseChecked = true;
                                     break;
                             }
-
+                           if(warehouseChecked){
+                               break;
+                           }
 
                         }
 
