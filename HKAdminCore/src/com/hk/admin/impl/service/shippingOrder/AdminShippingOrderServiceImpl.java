@@ -1,12 +1,9 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.shippingOrder.ShippingOrderConstants;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +102,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired BaseDao baseDao;
     @Autowired
 	PurchaseOrderService purchaseOrderService;
+
+    ShippingOrderProcessor shippingOrderProcessor;
 
     @Autowired LineItemDao lineItemDao;
     @Autowired ShippingOrderDao shippingOrderDao;
@@ -342,7 +341,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public ShippingOrder moveShippingOrderToPickingQueue(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Picking));
         getShippingOrderService().save(shippingOrder);
-
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_InPicking);
 
         return shippingOrder;
@@ -353,9 +351,49 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
         shippingOrder = getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
+        // check for that reason thing and simply cancel
+        //auto cancellation
+
+        if (shippingOrder.getShippingOrderLifecycles()
+                .contains(EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed)) {
+            // then only allow escalate back
+
+            Set<LineItem> selectedLineItems = new HashSet<LineItem>();
+            List<String> messages = new ArrayList<String>();
+            Map<String, ShippingOrder> splittedOrders =  new HashMap<String, ShippingOrder>();
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                if (lineItem.isUnFixed()) {
+                    selectedLineItems.add(lineItem);
+                }
+            }
+            if (!selectedLineItems.isEmpty()) {
+                // if all elements can't be fixed then cancel complete SO
+                if (selectedLineItems.size() == shippingOrder.getLineItems().size()) {
+                    this.cancelShippingOrder(shippingOrder,null);
+                    return shippingOrder;
+                } else {
+                    // split the order and cancel only the unfixed line items
+                    boolean splitSuccess = getShippingOrderProcessor().autoSplitSO(shippingOrder, selectedLineItems,
+                            splittedOrders, messages);
+                    if (splitSuccess) {
+                        this.cancelShippingOrder(splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER),null);
+                        shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+                    }
+                }
+            }
+        } else {
+            // order can't  be escalated back
+            // throw exception or
+            return  shippingOrder;
+        }
+        getShippingOrderService().logShippingOrderActivity(shippingOrder,
+                EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue,
+                shippingOrder.getReason(), null);
         getBucketService().escalateBackToActionQueue(shippingOrder);
+        // auto escalate on success
+        getShippingOrderProcessor().manualEscalateShippingOrder(shippingOrder);
+
         return shippingOrder;
     }
 
@@ -563,4 +601,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void setCancellationRemark(String cancellationRemark) {
         this.cancellationRemark = cancellationRemark;
     }
+
+    public ShippingOrderProcessor getShippingOrderProcessor() {
+        if (this.shippingOrderProcessor == null) {
+            this.shippingOrderProcessor =  ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+        }
+        return this.shippingOrderProcessor;
+    }
+
 }

@@ -93,6 +93,9 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date          createDate         = new Date();
 
+    @Column(name = "unfixed", nullable = true)
+    private boolean unFixed;
+
     public Long getId() {
         return this.id;
     }
@@ -325,4 +328,11 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
         this.createDate = createDate;
     }
 
+    public boolean isUnFixed() {
+        return unFixed;
+    }
+
+    public void setUnFixed(boolean unFixed) {
+        this.unFixed = unFixed;
+    }
 }

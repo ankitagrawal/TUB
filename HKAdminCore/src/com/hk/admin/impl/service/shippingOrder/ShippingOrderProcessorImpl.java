@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.queue.EnumBucket;
@@ -83,7 +84,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     @Autowired
 	private ShipmentService 			shipmentService;
 
-	
+    private AdminShippingOrderService adminShippingOrderService;
+
 	@Transactional
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
 		if(isShippingOrderAutoEscalable(shippingOrder, firewall)){
@@ -133,16 +135,20 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                 if (shippingOrder.isDropShipping()) {
                     reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
-                List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
-                if (!enumBuckets.isEmpty()) {
-                    reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
-                }
+               // List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
+                //if (!enumBuckets.isEmpty()) {
+                    //reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
+
+                //}
+                // finding line items with inventory mismatch
+                shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
                 if (shippingOrder.getShipment() == null) {
                     reasons.add(EnumReason.ShipmentNotCreated.asReason());
                 } else {
                     //putting checks for shipping cost
                     Double estimatedShippingCharges = shippingOrder.getShipment().getEstmShipmentCharge();
-                    if (firewall && estimatedShippingCharges != null && estimatedShippingCharges > SOFirewall.minAllowedShippingCharges && estimatedShippingCharges >= SOFirewall.calculateCutoffAmount(shippingOrder)) {
+                    if (firewall && estimatedShippingCharges != null && estimatedShippingCharges > SOFirewall.minAllowedShippingCharges
+                            && estimatedShippingCharges >= SOFirewall.calculateCutoffAmount(shippingOrder)) {
                         reasons.add(EnumReason.HighShippingCost.asReason());
                     }
                 }
@@ -157,7 +163,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             }
         } else {
         	shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder,
-        			EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,  EnumReason.InvalidPaymentStatus.asReason());
+        			EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,
+                    EnumReason.InvalidPaymentStatus.asReason());
             return false;
         }
         return false;
@@ -165,7 +172,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
     @Transactional
     private ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder) {
-        EnumShippingOrderStatus applicableStatus = shippingOrder.isDropShipping() ? EnumShippingOrderStatus.SO_ReadyForDropShipping : EnumShippingOrderStatus.SO_ReadyForProcess;
+        EnumShippingOrderStatus applicableStatus = shippingOrder.isDropShipping() ?
+                EnumShippingOrderStatus.SO_ReadyForDropShipping : EnumShippingOrderStatus.SO_ReadyForProcess;
         shippingOrder.setLastEscDate(HKDateUtil.getNow());
         shippingOrder.setOrderStatus(applicableStatus.asShippingOrderStatus());
         shippingOrder.setLastEscDate(HKDateUtil.getNow());
@@ -182,39 +190,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
     			if(!(shippingOrder.isServiceOrder())){
     				User adminUser = getUserService().getAdminUser();
-                    Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
-                    List<String> messages = new ArrayList<String>();
-    				Set<LineItem> selectedItems = new HashSet<LineItem>();
-
-    				for (LineItem lineItem : shippingOrder.getLineItems()) {
-    					Long availableUnbookedInv = 0L;
-
-    					if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-    						continue;
-    					//	 return true;
-    						//availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
-    					}else{
-    						availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
-    					}
-
-    					Long orderedQty = lineItem.getQty();
-
-    					// It cannot be = as for last order/unit unbooked will always be ZERO
-    					if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()) {
-    						String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
-    						shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
-    								shippingOrderService
-                                            .getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
-    								EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
-    						//return false;
-    						selectedItems.add(lineItem);
-    					}
-    				}
-
-                    if (selectedItems.size() > 0) {
-                        this.autoSplitSO(shippingOrder, selectedItems, splittedOrders, messages);
-
-                    }
+                    shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, adminUser);
     				if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
     					Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
     					if (newShipment == null) {
@@ -235,9 +211,55 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     	return false;
     }
 
-  
+    private ShippingOrder autoProcessInventoryMismatch(ShippingOrder shippingOrder, User user) {
+        Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
+        List<String> messages = new ArrayList<String>();
+        Set<LineItem> selectedItems = new HashSet<LineItem>();
 
-	private boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            Long availableUnbookedInv = 0L;
+
+            if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
+                continue;
+                //	 return true;
+                //availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
+            }else{
+                availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
+            }
+            Long orderedQty = lineItem.getQty();
+
+            // It cannot be = as for last order/unit unbooked will always be ZERO
+            if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()) {
+                String comments = lineItem.getSku().getProductVariant().getProduct().getName()
+                        + " at this instant was = " + availableUnbookedInv;
+                shippingOrderService.logShippingOrderActivity(shippingOrder, user,
+                        shippingOrderService.getShippingOrderLifeCycleActivity(
+                                EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
+                        EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
+                //return false;
+                selectedItems.add(lineItem);
+            }
+        }
+
+        if (selectedItems.size() > 0) {
+            if (selectedItems.size() == shippingOrder.getLineItems().size()) {
+                this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null);
+            } else {
+                boolean splitSuccess = this.autoSplitSO(shippingOrder, selectedItems, splittedOrders,
+                        messages);
+                if (splitSuccess) {
+                    ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
+                    this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null);
+                    // TODO order cancellation mail to be sent and refund
+                    shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+                }
+            }
+        }
+        return shippingOrder;
+    }
+
+
+    private boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
 		logger.debug("Trying to autoEscalate order#" + shippingOrder.getId());
 		Payment payment = shippingOrder.getBaseOrder().getPayment();
 		User adminUser = getUserService().getAdminUser();
@@ -559,10 +581,21 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 	 * @return the orderService
 	 */
 	public OrderService getOrderService() {
-        if (orderService == null) {
+        if (this.orderService == null) {
             this.orderService = ServiceLocatorFactory.getService(OrderService.class);
-        }return orderService;
+        }
+        return this.orderService;
 	}
+
+    /**
+     * @return the orderService
+     */
+    public AdminShippingOrderService getAdminShippingOrderService() {
+        if (this.adminShippingOrderService == null) {
+            this.adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
+        }
+        return this.adminShippingOrderService;
+    }
 
 	/**
 	 * @return the shipmentService
