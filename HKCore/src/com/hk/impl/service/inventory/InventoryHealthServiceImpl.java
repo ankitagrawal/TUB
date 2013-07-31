@@ -783,7 +783,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             if (remainingQty > 0) {
                 List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
                 Set<CartLineItem> clisInProcessing = new HashSet<CartLineItem>(cartLineItemsInProcessing);
-                if (cartLineItemsInProcessing.size() > 0) {
+                if (clisInProcessing.size() > 0) {
                     remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, remainingQty, true);
                 }
             }
