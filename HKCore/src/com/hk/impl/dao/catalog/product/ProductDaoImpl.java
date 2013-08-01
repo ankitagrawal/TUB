@@ -404,4 +404,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     return getSession().createQuery("from ProductOption po where po.id in(:options) order by upper(po.name), po.value asc").setParameterList("options", options).list();
   }
 
+	@Override
+	public List<String> getAllBrands(String brandLike) {
+		return findByQuery("select distinct(p.brand) from Product p where p.deleted = 0 and p.brand like '%" + brandLike + "%'");
+	}
+
 }
