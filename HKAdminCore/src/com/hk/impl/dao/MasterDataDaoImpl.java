@@ -548,7 +548,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<Reason> getWarehouseReceivedCondition() {
-        List<Long> reasonsIds = Arrays.asList(EnumReason.Good.getId(), EnumReason.Damaged.getId(), EnumReason.Non_Functional.getId(), EnumReason.Near_Expiry.getId(), EnumReason.Expired.getId());
+        List<Long> reasonsIds = Arrays.asList(EnumReason.Good.getId(), EnumReason.Damaged.getId(),EnumReason.Expired.getId());
         return shippingOrderService.getReasonForReversePickup(reasonsIds);
     }
 

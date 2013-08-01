@@ -89,55 +89,12 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-
-            <%--$('.barcode-scan').focus();--%>
-            <%--var alreadyScannedCodeList = [];--%>
-            <%--$('.barcode-scan').live("change", function () {--%>
-            <%--var scannedVal = $(this).val();--%>
-            <%--if (scannedVal == null || scannedVal.trim() == '') {--%>
-            <%--return false;--%>
-            <%--}--%>
-            <%--$(this).attr("disable", "disable");--%>
-            <%--var rpOrderId = $('.rpvalue').val();--%>
-            <%--$.getJSON(--%>
-            <%--$('.barcode-link').attr('href'), {scannedBarcode:scannedVal, reversePickupOrder:rpOrderId, scannedBarcodeList:alreadyScannedCodeList},--%>
-            <%--function (res) {--%>
-            <%--if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {--%>
-            <%--var test = scannedVal;--%>
-            <%--var rcvItemId = res.data.lineItemId;--%>
-            <%--var extraCode = true;--%>
-            <%--$('.barcode-text').each(function (index) {--%>
-            <%--var lineId = $(this).attr("lineItemId");--%>
-            <%--var checkedIn = $(this).attr("checkedIn");--%>
-            <%--var currentBarcode = $(this).val();--%>
-            <%--if ((currentBarcode == null || currentBarcode == '') && lineId == rcvItemId && checkedIn != 'true') {--%>
-            <%--extraCode = false;--%>
-            <%--$(this).val("" + scannedVal);--%>
-            <%--return false;--%>
-            <%--}--%>
-            <%--});--%>
-            <%--if (extraCode) {--%>
-            <%--$('.errordiv').empty();--%>
-            <%--$('.errordiv').html('<h2>RP order created for qty ' + ' , all are  already scanned. ' +--%>
-            <%--'this is extra Item for same product </h2>');--%>
-            <%--$('.errordiv').css("display", "block");--%>
-            <%--}--%>
-            <%--}--%>
-            <%--else {--%>
-            <%--$('.errordiv').empty();--%>
-            <%--$('.errordiv').html('<h2>' + res.message + '</h2>');--%>
-            <%--}--%>
-            <%--$(this).removeAttr("disabled", "disabled");--%>
-            <%--}--%>
-            <%--);--%>
-            <%--});--%>
-
             $.ajaxSetup({
                 cache:false
             });
-            $('.errordiv').empty();
             $('.save-rp').live("click", function () {
                 var curEle = $(this);
+                var barcdLink = curEle.parents('tr').find('.download-link');
                 var queryString = '';
                 var sep = '';
                 $(this).parents('tr').find('input,select,textarea').each(function () {
@@ -146,6 +103,7 @@
                 });
                 var href = $('.mainform').attr('action');
                 curEle.css("display", "none");
+                barcdLink.css("display", "none");
                 $.ajax({
                     url:href + '?checkInRPLineItem=',
                     type:'post',
@@ -166,16 +124,18 @@
                                 }
                             });
                             $('.errordiv').empty();
-                            curEle.parents('tr').find('.download-link').css("display", "none");
+                            barcdLink.css("display", "none");
                         }
                         else {
                             curEle.css("display", "block");
-                            curEle.parents('tr').find('.download-link').css("display", "block");
+                            barcdLink.css("display", "block");
                             $('.errordiv').empty();
                             $('.errordiv').html('<h2>' + res.message + '</h2>');
                         }
                     },
                     error:function onError() {
+                        curEle.css("display", "block");
+                        barcdLink.css("display", "block");
                         $('.errordiv').empty();
                         alert('Error In submitting request');
                     }
@@ -196,7 +156,7 @@
             </c:if>
         </p>
     </div>
-    <div class="errordiv" style="margin: 0 auto; color:#ff0000; font-size:10px;">
+    <div class="errordiv" style="margin: 0 auto; color:#ff0000; font-size:12px;">
         <span style="color:red;">${rpw.errorMessage}</span>
     </div>
     <c:if test="${rpw.showSearchBox}">
@@ -362,6 +322,15 @@
                 </div>
                 <div class="check-in">
                     <s:submit name="closeWarehouseCheckIn" value="Close & Mark RP as CheckedIn"/>
+                </div>
+
+                <div style="display: inline-block;float: left;margin-top: 10px;color: #ffffff;padding: 15px;"
+                     class="save">
+                    <s:link style="color:white;" beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction"
+                            event="downloadAllBarcode">
+                        Download Barcode For All Items
+                        <s:param name="reversePickupId" value="${rpw.reversePickupOrder.reversePickupId}"/>
+                    </s:link>
                 </div>
             </s:form>
 

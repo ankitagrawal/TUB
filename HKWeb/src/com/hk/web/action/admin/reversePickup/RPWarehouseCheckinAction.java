@@ -23,6 +23,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuGroupService;
 
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.admin.inventory.InventoryCheckinAction;
 import net.sourceforge.stripes.action.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -147,11 +148,54 @@ public class RPWarehouseCheckinAction extends BaseAction {
 
         } else {
             return new RedirectResolution(RPWarehouseCheckinAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
-                    .addParameter("errorMessage", "Reverse Order is not in RPU_Picked or Return_Initiated status");
+                    .addParameter("errorMessage", "ERROR : Reverse Order is not in RPU_Picked or Return_Initiated status. Mark RP as Picked ");
         }
 
         reversePickupService.saveReversePickupOrder(reversePickupOrderFromDb);
         return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
+    }
+
+    public Resolution downloadAllBarcode() {
+        ReversePickupOrder reversePickupOrder = reversePickupService.getByReversePickupId(reversePickupId);
+        Warehouse userWarehouse = userService.getWarehouseForLoggedInUser();
+        List<SkuItem> validSkuItemList = new ArrayList<SkuItem>();
+        List<LineItem> lineItemList = getUniqueLineItems(reversePickupOrder.getRpLineItems());
+        if (lineItemList != null) {
+            for (LineItem lineItem : lineItemList) {
+                List<SkuItem> checkedOutSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, -1L);
+                List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
+                checkedOutSkuItems.removeAll(checkedInSkuItems);
+
+                if (checkedOutSkuItems.size() > 0) {
+                    for (SkuItem skuItem : checkedOutSkuItems) {
+                        if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())) {
+                            validSkuItemList.add(skuItem);
+                        }
+                    }
+                }
+            }
+        }
+        if (validSkuItemList.size() > 0) {
+            Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(validSkuItemList);
+            String barcodeFilePath = null;
+            if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+                barcodeFilePath = barcodeGurgaon;
+            } else {
+                barcodeFilePath = barcodeMumbai;
+            }
+            barcodeFilePath = barcodeFilePath + "/" + "print_" + "RP" + reversePickupOrder.getReversePickupId() + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+            try {
+                barcodeFile = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+            } catch (IOException e) {
+                logger.error("Exception while appending on barcode file", e);
+            }
+            addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+            return new HTTPResponseResolution();
+        } else {
+            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
+                    .addParameter("errorMessage", "No more barcode , Plz contact Admin");
+
+        }
     }
 
     public Resolution downloadBarcode() {
@@ -224,15 +268,18 @@ public class RPWarehouseCheckinAction extends BaseAction {
     }
 
 
-    private boolean isRPLineItemsListContainsLineItem(List<RpLineItem> rpLineItemList, LineItem lineItem) {
+    private List<LineItem> getUniqueLineItems(List<RpLineItem> rpLineItemList) {
+        List<LineItem> lineItems = new ArrayList<LineItem>();
+        List<Long> longItemsIds = new ArrayList<Long>();
         if (rpLineItemList != null) {
             for (RpLineItem rpLineItem : rpLineItemList) {
-                if (rpLineItem.getLineItem().getId().equals(lineItem.getId())) {
-                    return true;
+                if (!(longItemsIds.contains(rpLineItem.getLineItem().getId()))) {
+                    longItemsIds.add(rpLineItem.getLineItem().getId());
+                    lineItems.add(rpLineItem.getLineItem());
                 }
             }
         }
-        return false;
+        return lineItems;
     }
 
     public String getReversePickupId() {
