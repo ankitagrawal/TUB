@@ -48,7 +48,7 @@ public class RpLineItem {
     @Column(name = "warehouse_remark", length = 100)
     private String warehouseRemark;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "warehouse_condition_id")
     private Reason warehouseReceivedCondition;
 

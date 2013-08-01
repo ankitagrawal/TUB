@@ -265,7 +265,7 @@
                                 <td>
                                     <s:select name="rpLineItems[${index}].warehouseReceivedCondition"
                                               disabled="${rplineitem.warehouseReceivedCondition != null? 'disabled' : ''}"
-                                              value="${rplineitem.warehouseReceivedCondition}">
+                                              value="${rplineitem.warehouseReceivedCondition.id}">
                                         <s:option value="">--Select-- </s:option>
                                         <c:forEach items="${warehouseReceivedConditionList}" var="wreason">
                                             <s:option value="${wreason.id}">${wreason.classification.primary}</s:option>

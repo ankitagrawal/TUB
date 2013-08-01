@@ -133,12 +133,10 @@ public class RPWarehouseCheckinAction extends BaseAction {
                 break;
             }
         }
-        if (!validCheckin) {
+        if (!(validCheckin)) {
             return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
                     .addParameter("errorMessage", "Select and Save  at least one Row");
         }
-        Long pickedStatus = EnumReversePickupStatus.RPU_Picked.getId();
-        Long returnInitiated = EnumReversePickupStatus.Return_Initiated.getId();
         ReversePickupStatus currentStatus = reversePickupOrder.getReversePickupStatus();
         if (EnumReversePickupStatus.getHealthKartManagedRPStatus().contains(currentStatus)) {
             reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.RPU_QC_Checked_In.asReversePickupStatus());
