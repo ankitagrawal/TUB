@@ -172,6 +172,11 @@ public class RewardPointServiceImpl implements RewardPointService {
     }
 
     @Override
+    public List<RewardPoint> findRewardPoints(Order order, List<RewardPointMode> rewardPointModes) {
+        return  getRewardPointDao().findRewardPoints(order,rewardPointModes);
+    }
+
+    @Override
     public void approvePendingRewardPointsForOrder(Order order) {
         List<RewardPoint> rewardPointList = getRewardPointDao().findByReferredOrder(order);
         RewardPointStatus rewardPointPendingStatus = getRewardPointStatus(EnumRewardPointStatus.PENDING);
