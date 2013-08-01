@@ -168,7 +168,11 @@ public class RPWarehouseCheckinAction extends BaseAction {
         checkedOutSkuItems.removeAll(checkedInSkuItems);
         List<SkuItem> singleBarcodeList = new ArrayList<SkuItem>();
         if (checkedOutSkuItems.size() > 0) {
-            singleBarcodeList.add(checkedOutSkuItems.get(0));
+            for(SkuItem skuItem : checkedOutSkuItems){
+                if(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())){
+                    singleBarcodeList.add(skuItem);
+                }
+            }
             Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(singleBarcodeList);
             String barcodeFilePath = null;
             if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {

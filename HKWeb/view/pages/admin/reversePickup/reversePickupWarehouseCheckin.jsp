@@ -132,7 +132,9 @@
             <%--);--%>
             <%--});--%>
 
-
+            $.ajaxSetup({
+                cache:false
+            });
 
             $('.save-rp').live("click", function () {
                 var curEle = $(this);
@@ -143,6 +145,7 @@
                     sep = '&'
                 });
                 var href = $('.mainform').attr('action');
+                curEle.css("display", "none");
                 $.ajax({
                     url:href + '?checkInRPLineItem=',
                     type:'post',
@@ -162,7 +165,7 @@
                                     $(this).replaceWith($(this).val());
                                 }
                             });
-                            curEle.css("display", "none");
+
                             curEle.parents('tr').find('.download-link').css("display", "none");
                         }
                         else {
