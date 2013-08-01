@@ -19,25 +19,23 @@ import java.util.List;
  */
 public interface InventoryManageService {
 
-     public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
+    public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
 
-     public void releaseSkuItemCLIForOrder(Order order);
+    public void releaseSkuItemCLIForOrder(Order order);
 
     public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp);
 
     public Long getAvailableUnBookedInventory(ProductVariant productVariant);
 
-     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
+    public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
     public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
-      public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
+    public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
 
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem,  Long unitNum);
 
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem);
 
-
-    
-
-    
 
 }

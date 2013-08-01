@@ -14,7 +14,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "sku_item_line_item")
+@Table(name = "sku_item_line_item",uniqueConstraints = @UniqueConstraint(columnNames = {"line_item_id", "unit_num"}))
 public class SkuItemLineItem implements java.io.Serializable {
 
 	@Id

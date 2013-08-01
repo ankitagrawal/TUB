@@ -24,9 +24,11 @@ import com.hk.domain.user.User;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -105,6 +107,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 
 	    order=orderService.save(order);
         //creating entries in sku_item_CLI
+
         inventoryHealthService.tempBookSkuLineItemForOrder(order);
         orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
