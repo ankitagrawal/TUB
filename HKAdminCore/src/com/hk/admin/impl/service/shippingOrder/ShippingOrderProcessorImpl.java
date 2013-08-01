@@ -229,7 +229,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             Long orderedQty = lineItem.getQty();
 
             // It cannot be = as for last order/unit unbooked will always be ZERO
-            if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()) {
+            if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()
+                    && !lineItem.getSku().getProductVariant().getProduct().isJit()) {
                 String comments = lineItem.getSku().getProductVariant().getProduct().getName()
                         + " at this instant was = " + availableUnbookedInv;
                 shippingOrderService.logShippingOrderActivity(shippingOrder, user,
@@ -407,10 +408,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                 splittedOrders.put(ShippingOrderConstants.OLD_SHIPPING_ORDER, shippingOrder);
                 splittedOrders.put(ShippingOrderConstants.NEW_SHIPPING_ORDER, newShippingOrder);
             }
-			/*//Handling the PO against the shipping Orders
+			//Handling the PO against the shipping Orders
 			if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
-				adminShippingOrderService.adjustPurchaseOrderForSplittedShippingOrder(shippingOrder, newShippingOrder);
-			}*/
+				this.getAdminShippingOrderService().adjustPurchaseOrderForSplittedShippingOrder(shippingOrder,
+                        newShippingOrder);
+			}
 
             messages.add(("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
             return true;
