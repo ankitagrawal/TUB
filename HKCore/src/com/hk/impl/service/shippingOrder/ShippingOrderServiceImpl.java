@@ -1,5 +1,6 @@
 package com.hk.impl.service.shippingOrder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +18,8 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -28,14 +31,22 @@ import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.manager.EmailManager;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
@@ -76,6 +87,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	private ShipmentService 				shipmentService;
     @Autowired
     private RewardPointService rewardPointService;
+    @Autowired
+    SkuItemDao skuItemDao;
+    @Autowired
+    BaseDao baseDao;
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -280,6 +295,109 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
         }
     }
+    
+    public void validateShippingOrder(ShippingOrder shippingOrder) {
+
+		Set<LineItem> lineItems = shippingOrder.getLineItems();
+		for (LineItem item : lineItems) {
+			List<Sku> skuList = new ArrayList<Sku>();
+			List<Long> skuStatusIdList = new ArrayList<Long>();
+			List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+
+			skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+			skuList.add(item.getSku());
+			skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+
+			if (item.getCartLineItem().getSkuItemCLIs() == null
+					|| (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() == 0)) {
+				Long qty = item.getQty();
+				int i = 0;
+				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
+				List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
+				while (i < qty) {
+					SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+					SkuItemCLI skuItemCLI = new SkuItemCLI();
+					// get available skuitems warehouse at given mrp
+					List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+					if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
+						SkuItem skuItem = availableUnbookedSkuItems.get(0);
+						// Book the sku item first
+						skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+						// create skuItemCLI entry
+						skuItemCLI.setSkuItem(skuItem);
+						skuItemCLI.setCartLineItem(item.getCartLineItem());
+						skuItemCLI.setUnitNum(qty);
+						skuItemCLI.setProductVariant(item.getSku().getProductVariant());
+						// create skuItemLineItem entry
+						skuItemLineItem.setSkuItem(skuItem);
+						skuItemLineItem.setLineItem(item);
+						skuItemLineItem.setUnitNum(qty);
+						skuItemLineItem.setSkuItemCLI(skuItemCLI);
+						skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
+						skuItemLineItems.add(skuItemLineItem);
+						skuItemCLIs.add(skuItemCLI);
+					}
+					++i;
+				}
+				baseDao.saveOrUpdate(skuItemCLIs);
+				baseDao.saveOrUpdate(skuItemLineItems);
+				item.getCartLineItem().setSkuItemCLIs(skuItemCLIs);
+				baseDao.save(item.getCartLineItem());
+				item.setSkuItemLineItems(skuItemLineItems);
+				baseDao.save(item);
+			}
+
+			else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
+					&& item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() > 0) {
+				int entries = item.getSkuItemLineItems().size();
+				int j = 0;
+				while (j < entries) {
+					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j);
+					List<SkuItemStatus> skuItemStatus = new ArrayList<SkuItemStatus>();
+					skuItemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+					skuItemStatus.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+
+					if (!skuItemLineItem.getSkuItem().getSkuGroup().getMrp().equals(item.getMarkedPrice())
+							|| !skuItemStatus.contains(skuItemLineItem.getSkuItem().getSkuItemStatus())) {
+						// get sku items of the given warehouse at mrp
+						List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+						if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
+							SkuItem skuItem = skuItemLineItem.getSkuItem();
+							skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+							skuItem = (SkuItem) baseDao.save(skuItem);
+
+							SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
+							skuItemToBeSet.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+							skuItemToBeSet = (SkuItem) baseDao.save(skuItemToBeSet);
+
+							skuItemLineItem.getSkuItemCLI().setSkuItem(skuItemToBeSet);
+							baseDao.save(skuItemLineItem.getSkuItemCLI());
+							skuItemLineItem.setSkuItem(skuItemToBeSet);
+							skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
+						}
+					}
+					++j;
+				}
+			} else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
+					&& (item.getSkuItemLineItems() == null || (item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() == 0))) {
+				// create the table skuItemLineItem here
+				List<SkuItemCLI> skuItemCLIs = item.getCartLineItem().getSkuItemCLIs();
+				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
+				for (SkuItemCLI cli : skuItemCLIs) {
+					SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+					skuItemLineItem.setLineItem(item);
+					skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
+					skuItemLineItem.setSkuItem(cli.getSkuItem());
+					skuItemLineItem.setSkuItemCLI(cli);
+					skuItemLineItem.setUnitNum(cli.getUnitNum());
+					skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
+					skuItemLineItems.add(skuItemLineItem);
+				}
+				item.setSkuItemLineItems(skuItemLineItems);
+				baseDao.save(item);
+			}
+		}
+	}
 	
     public UserService getUserService() {
         return userService;
