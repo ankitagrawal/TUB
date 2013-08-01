@@ -6,6 +6,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuItemCLI;
 
 import java.util.Set;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public interface InventoryManageService {
 
-    public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
+    public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
 
     public void releaseSkuItemCLIForOrder(Order order);
 
