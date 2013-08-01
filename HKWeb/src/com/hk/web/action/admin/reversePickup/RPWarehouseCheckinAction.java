@@ -171,6 +171,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
             for(SkuItem skuItem : checkedOutSkuItems){
                 if(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())){
                     singleBarcodeList.add(skuItem);
+                    break;
                 }
             }
             Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(singleBarcodeList);
