@@ -36,6 +36,11 @@
                     type:'post',
                     data:queryString,
                     dataType:'json'
+//                    success:function (res) {
+//                        alert('sucess');
+//                        var rpVal = ('.rp-value').val();
+//                        location.href = href + '?editApprovedPickup=&reversePickupOrder=' + rpVal;
+//                    }
                 });
             });
 
@@ -143,8 +148,8 @@
 
 <div>
     <s:form beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" class="mainform">
-
-        <s:hidden name="reversePickupOrder" value="${rev.reversePickupOrder.reversePickupId}"/>
+        <s:hidden name="reversePickupOrder" value="${rev.reversePickupOrder.id}" class="rp-value"/>
+        <s:hidden name="reversePickupId" value="${rev.reversePickupOrder.reversePickupId}"/>
         <table class="rline-items">
             <thead>
             <tr>
@@ -174,7 +179,8 @@
                     <c:forEach items="${rpLineSavedList}" var="savedRpLineItem" varStatus="ctr">
                         <tr class="${ ctr.last ? 'btm-solid' : 'btm-dshed' } saved  ">
                             <input type="hidden" name="rpLineItems[${index}]" value="${savedRpLineItem.id}"/>
-                            <input type="hidden" name="reversePickupOrder" value="${savedRpLineItem.reversePickupOrder.id}"/>
+                            <input type="hidden" name="reversePickupOrder"
+                                   value="${savedRpLineItem.reversePickupOrder.id}"/>
                             <c:if test="${ctr.first}">
                                 <td rowspan="${savedLength}">${ctr.index+1}</td>
                             </c:if>

@@ -81,7 +81,7 @@
             color: white;
             font-weight: bolder;
             border: 2px solid;
-            padding: 1;
+            padding: 1px;
             background-color: #ff8123;
         }
     </style>

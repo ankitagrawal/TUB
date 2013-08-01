@@ -13,6 +13,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
+import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
@@ -134,23 +135,16 @@ public class RPWarehouseCheckinAction extends BaseAction {
         }
         if (!validCheckin) {
             return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
-                    .addParameter("errorMessage", "Select and checkIn at least one Item");
+                    .addParameter("errorMessage", "Select and Save  at least one Row");
         }
         Long pickedStatus = EnumReversePickupStatus.RPU_Picked.getId();
         Long returnInitiated = EnumReversePickupStatus.Return_Initiated.getId();
-        Long currentStatus = reversePickupOrder.getReversePickupStatus().getId();
-        if (currentStatus.equals(returnInitiated) || currentStatus.equals(pickedStatus)) {
-            if (currentStatus.equals(returnInitiated)) {
-                reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus());
-            } else {
-                reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.RPU_QC_Checked_In.asReversePickupStatus());
-            }
-
+        ReversePickupStatus currentStatus = reversePickupOrder.getReversePickupStatus();
+        if (EnumReversePickupStatus.getHealthKartManagedRPStatus().contains(currentStatus)) {
+            reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.RPU_QC_Checked_In.asReversePickupStatus());
         } else {
-            return new RedirectResolution(RPWarehouseCheckinAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
-                    .addParameter("errorMessage", "ERROR : Reverse Order is not in RPU_Picked or Return_Initiated status. Mark RP as Picked ");
+            reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus());
         }
-
         reversePickupService.saveReversePickupOrder(reversePickupOrderFromDb);
         return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
     }
