@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @Entity
-@Table(name = "sku_item_cart_line_item")
+@Table(name = "sku_item_cart_line_item" , uniqueConstraints = @UniqueConstraint(columnNames = {"cart_line_item_id", "unit_num"}))
 public class SkuItemCLI implements java.io.Serializable {
 
 	@Id

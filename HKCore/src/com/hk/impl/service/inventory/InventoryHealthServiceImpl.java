@@ -393,12 +393,14 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         long qty = 0l;
         Sku sku = lineItem.getSku();
         Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
-        if (checkedInInvList != null) {
+        if (checkedInInvList != null && !checkedInInvList.isEmpty()) {
             for (SkuInfo skuInfo : checkedInInvList) {
                 if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
                     qty += skuInfo.getQty();
                 }
             }
+        }else{
+            qty = -1 * lineItem.getQty();
         }
 
         /*
@@ -411,9 +413,9 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
         */
         //add inventory booked for lineItem
-        if (lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0) {
+        /*if (lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0) {
             qty += lineItem.getQty();
-        }
+        }*/
 
 
         return qty;
@@ -681,39 +683,41 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
     public void tempBookSkuLineItemForOrder(Order order) {
         Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         for (CartLineItem cartLineItem : cartLineItems) {
-            ProductVariant productVariant = cartLineItem.getProductVariant();
+            if (!inventoryManageDao.sicliAlreadyExists(cartLineItem)) {
+                ProductVariant productVariant = cartLineItem.getProductVariant();
 
-            // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
-            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-            Long availableUnBookedInventory = inventoryManageDao.getAvailableUnBookedInventory(skus);
+                // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
+                List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+                Long availableUnBookedInventory = inventoryManageDao.getAvailableUnBookedInventory(skus);
 
-            if (availableUnBookedInventory > 0) {
-                // picking the  sku for current MRP available at max qty on product variant
-                Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-                long qtyToBeSet = cartLineItem.getQty();
-                //long availableCheckedInInventory = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).size();
-                if (availableUnBookedInventory >= qtyToBeSet) {
-                    Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+                if (availableUnBookedInventory > 0) {
+                    // picking the  sku for current MRP available at max qty on product variant
+                    Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+                    long qtyToBeSet = cartLineItem.getQty();
+                    //long availableCheckedInInventory = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).size();
+                    if (availableUnBookedInventory >= qtyToBeSet) {
+                        Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
-                    for (int i = 0; i < qtyToBeSet; i++) {
-                        List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
-                        if (skuItemList != null && skuItemList.size() > 0) {
-                            SkuItem skuItem = skuItemList.get(0);
-                            skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                            // todo Pvi entries
-                            skuItem = (SkuItem) getBaseDao().save(skuItem);
-                            // inventoryHealthCheck call
-                            inventoryHealthCheck(productVariant);
+                        for (int i = 0; i < qtyToBeSet; i++) {
+                            List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
+                            if (skuItemList != null && skuItemList.size() > 0) {
+                                SkuItem skuItem = skuItemList.get(0);
+                                skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                                // todo Pvi entries
+                                skuItem = (SkuItem) getBaseDao().save(skuItem);
+                                // inventoryHealthCheck call
+                                inventoryHealthCheck(productVariant);
 
-                            // todo UpdatePrice and Mrp qyt
-                            skuItemsToBeBooked.add(skuItem);
+                                // todo UpdatePrice and Mrp qyt
+                                skuItemsToBeBooked.add(skuItem);
+                            }
                         }
+                        // Call method to make new entries in SKUItemCLI  only those for which inventory availa
+                        inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
                     }
-                    // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-                    inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-                }
 
+                }
             }
         }
     }

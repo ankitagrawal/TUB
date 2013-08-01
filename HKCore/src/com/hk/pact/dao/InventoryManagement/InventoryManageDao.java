@@ -43,5 +43,11 @@ public interface InventoryManageDao {
 
     public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
 
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem,  Long unitNum);
+
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem);
+
+
+
 
 }

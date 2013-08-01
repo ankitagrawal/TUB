@@ -23,9 +23,11 @@ import com.hk.domain.user.User;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -59,6 +61,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
     private PaymentStatusDao paymentStatusDao;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private InventoryHealthService inventoryHealthService;
 
     /**
      * creates base orders from within the code rather than through the usual UI flow.
@@ -101,6 +105,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
 	    order=orderService.save(order);
+        // temp booking Inventory
+        inventoryHealthService.tempBookSkuLineItemForOrder(order);
         orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
        return  order;
