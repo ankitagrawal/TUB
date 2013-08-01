@@ -695,7 +695,20 @@
                 <div class="floatleft">
                     <s:link beanclass="com.hk.web.action.admin.courier.CreateReverseOrderAction"
                             target="_blank">
-                        <s:param name="shippingOrder" value="${shippingOrder.id}"/>Reverse Pickup</s:link>
+                        <s:param name="shippingOrder" value="${shippingOrder.id}"/>Reverse Pickup</s:link><br><br><br>
+                    <shiro:hasPermission name="<%=PermissionConstants.CREATE_REVERSE_PICKUP%>">
+                        <div style="margin: 1em auto;">
+                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction"
+                                    target="_blank">
+                                <s:param name="shippingOrder"
+                                         value="${shippingOrder.id}"/>Create Reverse Pickup</s:link><br>
+                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                    target="_blank">
+                                <s:param name="shippingOrder"
+                                         value="${shippingOrder.id}"/>View Reverse Pickups</s:link>
+                        </div>
+                    </shiro:hasPermission>
+
                 </div>
                 <div class="clear"></div>
             </c:if>

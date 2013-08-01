@@ -16,7 +16,7 @@ Product Id | Name | Category | Catgeory URL | Parent Category | Parent Category 
     http://www.healthkart.com${adsProductMetaDataDto.menuNode.parentNode.url} |
     http://www.healthkart.com/product/${adsProductMetaDataDto.product.slug}/${adsProductMetaDataDto.product.id} |
     ${adsProductMetaDataDto.product.maximumDiscountProducVariant.markedPrice} |
-    ${adsProductMetaDataDto.product.maximumDiscountProducVariant.hkPrice} |
+    <fmt:formatNumber value="${adsProductMetaDataDto.product.maximumDiscountProducVariant.hkPrice}" maxFractionDigits="0"/>|
     ${adsProductMetaDataDto.product.maximumDiscountProducVariant.markedPrice - adsProductMetaDataDto.product.maximumDiscountProducVariant.hkPrice} |
     <fmt:formatNumber value="${(adsProductMetaDataDto.product.maximumDiscountProducVariant.markedPrice - adsProductMetaDataDto.product.maximumDiscountProducVariant.hkPrice)/adsProductMetaDataDto.product.maximumDiscountProducVariant.markedPrice}" type="percent"/> |
     ${adsProductMetaDataDto.product.maximumDiscountProducVariant.outOfStock ? 'Out of stock' : 'In stock'} |

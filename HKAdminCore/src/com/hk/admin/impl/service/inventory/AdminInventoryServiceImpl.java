@@ -596,4 +596,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		}
 	}
 
+		public List<SkuGroup> getInStockSkuGroup(Sku sku) {
+			return adminSkuItemDao.getInStockSkuGroups(sku);
+		}
 }

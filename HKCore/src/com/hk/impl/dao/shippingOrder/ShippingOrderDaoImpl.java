@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
@@ -101,5 +102,11 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
 		}
 		return qtyInQueue;
 	}
-	
+
+    public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds) {
+        String query = " from Reason where id in (:reasonList) ";
+        return getSession().createQuery(query).setParameterList("reasonList", listOfReasonIds).list();
+    }
+
+
 }
