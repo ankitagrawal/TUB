@@ -112,7 +112,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
                     message = "Item Saved";
                     healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, dataMap);
                 } catch (ReversePickupException rpe) {
-                    String errMsg = rpe.getMessage() + "  for  " + rpe.getProductVariant();
+                    String errMsg = rpe.getMessage() ;
                     healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errMsg, dataMap);
                 }
 

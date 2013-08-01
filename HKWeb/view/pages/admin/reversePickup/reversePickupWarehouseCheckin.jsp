@@ -75,6 +75,7 @@
             font-weight: bolder;
             line-height: 18px;
         }
+
         .save {
             font-size: 14px;
             color: white;
@@ -130,6 +131,8 @@
             <%--}--%>
             <%--);--%>
             <%--});--%>
+
+
 
             $('.save-rp').live("click", function () {
                 var curEle = $(this);
@@ -201,7 +204,6 @@
             </s:form>
         </div>
     </c:if>
-
 
 
     <div class="clear"></div>
@@ -334,7 +336,8 @@
                                 </td>
                                 <td>
                                     <c:if test="${rplineitem.warehouseReceivedCondition == null}">
-                                        <a class="save-rp" href="javascript:void(0)"> <span class="save"> Save </span></a>
+                                        <a class="save-rp" href="javascript:void(0)"> <span
+                                                class="save"> Save </span></a>
                                     </c:if>
                                 </td>
 
