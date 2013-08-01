@@ -353,7 +353,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
     }
 
-}
+
 
     public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList) {
            DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
