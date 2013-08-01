@@ -30,17 +30,21 @@
                     queryString = queryString + sep + $(this).attr('name') + '=' + escape($(this).attr('value'));
                     sep = '&'
                 });
+                curEle.css("display", "none");
                 var href = $('.mainform').attr('action');
                 $.ajax({
                     url:href + '?changeCustomerActionAndStatus=',
                     type:'post',
                     data:queryString,
-                    dataType:'json'
-//                    success:function (res) {
-//                        alert('sucess');
-//                        var rpVal = ('.rp-value').val();
-//                        location.href = href + '?editApprovedPickup=&reversePickupOrder=' + rpVal;
-//                    }
+                    dataType:'json',
+                    success:function (res) {
+                        $('.msg').html('<h2>' + res.message + '</h2>');
+                        var rpVal = $('.rp-value').val();
+                        location.href = href + '?editApprovedPickup=&reversePickupOrder=' + rpVal;
+                    },
+                    error:function onError() {
+                        curEle.css("display", "inline");
+                    }
                 });
             });
 
@@ -133,18 +137,17 @@
     }
 
     .link {
-        font-size: 11px;
-        color: white;
+        font-size: 15px;
         font-weight: bolder;
-        border: 1px transparent;
-        padding: 0;
     }
 
 </style>
 <div style="height: 50px;" class="heading">
     <p>Edit Reverse Pickup No. ${rev.reversePickupOrder.reversePickupId}</p>
 </div>
+<div style="text-align: left; font-size: 13px;color: green;" class="msg">
 
+</div>
 
 <div>
     <s:form beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" class="mainform">
@@ -161,7 +164,7 @@
                 <th>Action On Status</th>
                 <th>CS Action Status</th>
                 <th>Customer Care Comment</th>
-                <th>Action</th>
+                <th style="padding:10px">Action</th>
             </tr>
 
             </thead>
@@ -238,15 +241,14 @@
                             </td>
                             <td>
                                 <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
-                                    <a href="javascript:void(0)" class="save-link"
-                                       style="background-color: green;">
-                                        <span class="link">Save</span> <br><br><br>
+                                    <a href="javascript:void(0)" class="save-link" style="color: green;" >
+                                        <span class="link">(Save)</span> <br><br><br>
                                     </a>
                                 </c:if>
                                 <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
                                     <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction"
-                                            style="background-color: #ff8123"
-                                            event="deleteRpLineItem"> <span class="link">Delete</span>
+                                            style="color:red;"
+                                            event="deleteRpLineItem"> <span class="link">(Delete)</span>
                                         <s:param name="reversePickupOrder" value="${rev.reversePickupOrder.id}"/>
                                         <s:param name="rpLineItem" value="${savedRpLineItem.id}"/>
                                     </s:link> <br><br>

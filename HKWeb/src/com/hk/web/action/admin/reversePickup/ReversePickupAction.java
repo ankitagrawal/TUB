@@ -18,6 +18,7 @@ import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.TokenUtils;
+import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -212,7 +213,7 @@ public class ReversePickupAction extends BaseAction {
                 reversePickupService.updateRpLineItems(rpItems, EnumReverseAction.Pending_Approval.getId());
             }
         }
-        return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
+        return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Changes Saved", ""));
     }
 
 
