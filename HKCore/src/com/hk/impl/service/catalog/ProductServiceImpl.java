@@ -643,10 +643,10 @@ public class ProductServiceImpl implements ProductService {
     if (productVO == null) {
       SolrProduct solrProduct = productSearchService.getProduct(productId);
       if (solrProduct != null) {
-        logger.debug("Getting ProductVO from SOLR for Product=" +productId);
+//        logger.debug("Getting ProductVO from SOLR for Product=" +productId);
         productVO = this.createProductVO(solrProduct);
       } else {
-        logger.debug("Getting ProductVO from DB for Product=" +productId);
+//        logger.debug("Getting ProductVO from DB for Product=" +productId);
         Product product = this.getProductById(productId);
         productVO = this.createProductVO(product);
       }
