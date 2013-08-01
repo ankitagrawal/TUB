@@ -38,9 +38,9 @@
                     data:queryString,
                     dataType:'json',
                     success:function (res) {
-                        $('.msg').html('<h2>' + res.message + '</h2>');
-                        var rpVal = $('.rp-value').val();
-                        location.href = href + '?editApprovedPickup=&reversePickupOrder=' + rpVal;
+                        var listUrl = "${pageContext.request.contextPath}/admin/reversePickup/ReversePickupList.action" ;
+                        var rppickupId = $('.rp-pickup-id').val();
+                        location.href = listUrl + '?pre=&reversePickupId=' + rppickupId;
                     },
                     error:function onError() {
                         curEle.css("display", "inline");
@@ -152,7 +152,7 @@
 <div>
     <s:form beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" class="mainform">
         <s:hidden name="reversePickupOrder" value="${rev.reversePickupOrder.id}" class="rp-value"/>
-        <s:hidden name="reversePickupId" value="${rev.reversePickupOrder.reversePickupId}"/>
+        <s:hidden name="reversePickupId" value="${rev.reversePickupOrder.reversePickupId}" class="rp-pickup-id"/>
         <table class="rline-items">
             <thead>
             <tr>
