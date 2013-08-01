@@ -1,0 +1,60 @@
+package com.hk.constants.reversePickup;
+
+import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Seema
+ * Date: 7/19/13
+ * Time: 2:42 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public enum EnumReversePickupStatus {
+
+    RPU_Initiated(10L, "RPU Initiated"),
+    RPU_Picked(20L, "RPU Picked"),
+    RPU_Received(30L, "RPU Received"),
+    RPU_QC_Checked_In(40L, "RPU_QC_Checked_In"),
+    /* Status If Return By Customer*/
+    Return_Initiated(50L, "Return Initiated"),
+    Return_Received(60L, "Return Received"),
+    Return_QC_Checkin(70L, "Return QC checkin");
+
+    private Long id;
+    private String status;
+
+    EnumReversePickupStatus(Long id, String actionTaken) {
+        this.id = id;
+        status = actionTaken;
+    }
+
+    public static ReversePickupStatus getAsReversePickupStatus(EnumReversePickupStatus enumReversePickupStatus) {
+        ReversePickupStatus reversePickupStatus = new ReversePickupStatus();
+        reversePickupStatus.setId(enumReversePickupStatus.getId());
+        reversePickupStatus.setStatus(enumReversePickupStatus.getStatus());
+        return reversePickupStatus;
+    }
+
+    public  ReversePickupStatus asReversePickupStatus() {
+        ReversePickupStatus reversePickupStatus = new ReversePickupStatus();
+        reversePickupStatus.setId(this.getId());
+        reversePickupStatus.setStatus(this.getStatus());
+        return reversePickupStatus;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
