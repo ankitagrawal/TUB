@@ -22,10 +22,6 @@ public interface InventoryManageService {
 
     public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
 
-    public void releaseSkuItemCLIForOrder(Order order);
-
-    public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp);
-
     public Long getAvailableUnBookedInventory(ProductVariant productVariant);
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
@@ -33,8 +29,6 @@ public interface InventoryManageService {
     public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
     public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
-
-    public boolean sicliAlreadyExists(CartLineItem cartLineItem,  Long unitNum);
 
     public boolean sicliAlreadyExists(CartLineItem cartLineItem);
 
