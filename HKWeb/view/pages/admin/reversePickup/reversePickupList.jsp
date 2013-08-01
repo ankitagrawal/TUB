@@ -175,11 +175,11 @@
     </s:form>
 </div>
 
-<div>
+
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${revList}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${revList}"/>
-</div>
-<div class="rline-items">
+
+
     <table class="rline-items">
         <thead>
         <tr>
@@ -372,7 +372,6 @@
         </c:forEach>
     </table>
 
-</div>
 
 <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${revList}"/>
 <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${revList}"/>
