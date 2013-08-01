@@ -112,7 +112,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
                     message = "Item Saved";
                     healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, dataMap);
                 } catch (ReversePickupException rpe) {
-                    String errMsg = rpe.getMessage() ;
+                    String errMsg = rpe.getMessage();
                     healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, errMsg, dataMap);
                 }
 
@@ -122,7 +122,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
     }
 
     public Resolution closeWarehouseCheckIn() {
-        ReversePickupOrder reversePickupOrderFromDb = reversePickupService.getReversePickupOrderById(reversePickupOrder.getId());
+        ReversePickupOrder reversePickupOrderFromDb = reversePickupService.getByReversePickupId(reversePickupId);
         /*check at least one of rp is checkedIn*/
         boolean validCheckin = false;
         for (RpLineItem rpLineItem : reversePickupOrderFromDb.getRpLineItems()) {
@@ -168,36 +168,40 @@ public class RPWarehouseCheckinAction extends BaseAction {
         checkedOutSkuItems.removeAll(checkedInSkuItems);
         List<SkuItem> singleBarcodeList = new ArrayList<SkuItem>();
         if (checkedOutSkuItems.size() > 0) {
-            for(SkuItem skuItem : checkedOutSkuItems){
-                if(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())){
+            for (SkuItem skuItem : checkedOutSkuItems) {
+                if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())) {
                     singleBarcodeList.add(skuItem);
                     break;
                 }
             }
-            Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(singleBarcodeList);
-            String barcodeFilePath = null;
-            if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
-                barcodeFilePath = barcodeGurgaon;
+            if (singleBarcodeList.size() > 0) {
+                Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(singleBarcodeList);
+                String barcodeFilePath = null;
+                if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+                    barcodeFilePath = barcodeGurgaon;
+                } else {
+                    barcodeFilePath = barcodeMumbai;
+                }
+                barcodeFilePath = barcodeFilePath + "/" + "print_" + "RP" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+                try {
+                    barcodeFile = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+                } catch (IOException e) {
+                    logger.error("Exception while appending on barcode file", e);
+                }
+                addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+                return new HTTPResponseResolution();
             } else {
-                barcodeFilePath = barcodeMumbai;
+                return new RedirectResolution(RPWarehouseCheckinAction.class).addParameter("reversePickupId", reversePickupId)
+                        .addParameter("errorMessage", "The line item is in wrong state , it has no barcode to delete");
             }
-            barcodeFilePath = barcodeFilePath + "/" + "print_" + "RP" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
-            try {
-                barcodeFile = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
-            } catch (IOException e) {
-                logger.error("Exception while appending on barcode file", e);
-            }
-            addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
-            return new HTTPResponseResolution();
         } else {
             return new RedirectResolution(RPWarehouseCheckinAction.class).addParameter("reversePickupId", reversePickupId)
                     .addParameter("errorMessage", "The line item is in wrong state , it has no barcode to delete");
         }
-
     }
 
 
-    public class HTTPResponseResolution implements Resolution {
+    class HTTPResponseResolution implements Resolution {
         public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
             InputStream in = new BufferedInputStream(new FileInputStream(barcodeFile));
             res.setContentType("text/plain");

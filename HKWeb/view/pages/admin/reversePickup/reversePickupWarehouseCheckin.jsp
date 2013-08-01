@@ -214,6 +214,7 @@
         <div class="margin-2">
             <s:form beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction" class="mainform">
                 <s:hidden name="reversePickupOrder" value="${rpw.reversePickupOrder.id}" class="rpvalue"/>
+                <s:hidden name="reversePickupId" value="${rpw.reversePickupOrder.reversePickupId}" class="rpvalue"/>
                 <div>
                     <table class="rline-items">
                         <thead>
