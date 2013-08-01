@@ -220,5 +220,8 @@
         <mapping class="com.hk.domain.inventory.creditNote.CreditNote"/>
         <mapping class="com.hk.domain.inventory.creditNote.CreditNoteStatus"/>
         <mapping class="com.hk.domain.inventory.creditNote.CreditNoteLineItem"/>
+        <mapping class="com.hk.domain.reversePickupOrder.ReversePickupOrder"/>
+        <mapping class="com.hk.domain.reversePickupOrder.RpLineItem"/>
+        <mapping class="com.hk.domain.reversePickupOrder.ReversePickupStatus"/>
     </session-factory>
 </hibernate-configuration>

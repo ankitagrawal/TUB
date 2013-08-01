@@ -3,6 +3,7 @@ package com.hk.admin.impl.dao.inventory;
 import java.util.List;
 import java.util.Date;
 
+import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;

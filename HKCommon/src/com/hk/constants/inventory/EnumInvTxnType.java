@@ -38,7 +38,8 @@ public enum EnumInvTxnType {
     RV_ADD_EXPIRED(230L, "Expired against Reconciliation Voucher-Add"),
     RV_ADD_FREE_VARIANT_RECONCILE(240L, "Inventory Checkin for Free Variant-RV Add"),
     RV_ADD_BATCH_MISMATCH(250L, "Inventory Checkin for Batch Mismatch-RV Add"),
-    RV_ADD_EXPIRED_AUTOMATIC_DELETION(260L, "RV Add automatic deletion for Expired"),;
+    RV_ADD_EXPIRED_AUTOMATIC_DELETION(260L, "RV Add automatic deletion for Expired"),
+    REVERSE_PICKUP_INVENTORY_CHECKIN(270L, "Reverse Pickup Inventory CheckIn");
 
 
     private String name;

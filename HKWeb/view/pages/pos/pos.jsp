@@ -109,9 +109,11 @@
 								'<td>' + Math.round(nextIndex + 1) + '.</td>' +
 								'<td class="item"></td>' +
 								'<td><input type="text" class="mrp" name="posLineItems[' + nextIndex + '].mrp" readonly="readonly"/></td>' +
-								'<td><input type="text" class="offerPrice" name="posLineItems[' + nextIndex + '].offerPrice" readonly="readonly"/></td>' +
+								'<td class="offerPriceTD"><input type="text" class="offerPrice" name="posLineItems[' + nextIndex + '].offerPrice" readonly="readonly"/></td>' +
 								'<td><input type="text" class="qty" name="posLineItems[' + nextIndex + '].qty" readonly="readonly"/></td>' +
-								'<td><input type="text" class="total" name="posLineItems[' + nextIndex + '].total" readonly="readonly"/></td>' +
+								'<td><input type="checkbox" class="freebie" name="posLineItems[' + nextIndex + '].freebie"/></td>' +
+								'<td class="totAmnt"><input type="text" class="total" name="posLineItems[' + nextIndex + '].total" readonly="readonly"/>' +
+								'<input type="hidden" class="totAmntHid" value="" /></td>' +
 								'<td><input type="hidden" class="skuItemId" name="posLineItems[' + nextIndex + '].skuItem"/></td>' +
 								'<td><input type="hidden" class="itemHidden" name="posLineItems[' + nextIndex + '].productName"/></td>' +
 								'<td><input type="hidden" class="pvBarcodeHidden" name="posLineItems[' + nextIndex + '].productVariantBarcode"/></td>' +
@@ -316,6 +318,20 @@
 					$('#oldLoyaltyCustomer').hide();
 				}
 		    }
+
+			$('.freebie').live("change", function () {
+				if($(this).prop('checked')){
+					var value = $(this).parent().siblings('.totAmnt').children('.total').val();
+					$(this).parent().siblings('.totAmnt').children('.total').val(0);
+					updateTotal('.total', '.grandTotal', 0);
+					updateFinalPayable();
+				} else{
+					var hidTotalAmount = $(this).parent().siblings('.offerPriceTD').children('.offerPrice').val();
+					$(this).parent().siblings('.totAmnt').children('.total').val(hidTotalAmount);
+					updateTotal('.total', '.grandTotal', 0);
+					updateFinalPayable();
+				}
+			});
 		});
 	</script>
 </s:layout-component>
@@ -439,7 +455,7 @@
 			<input type="hidden" name="address" value="${pos.address.id}" id="address" />
 			<table width="100%" border="1" >
 				<thead>
-				<tr><th>S.No.</th><th>Item</th><th>MRP</th><th>Offer Price</th><th>Qty</th><th>Total</th></tr>
+				<tr><th>S.No.</th><th>Item</th><th>MRP</th><th>Offer Price</th><th>Qty</th><th>Is Freebie</th><th>Total</th></tr>
 				</thead>
 				<tbody id="orderTable">
 				<div class="skuItemSelect" style="display: none;">
@@ -450,9 +466,13 @@
 						<td>${ctr.index + 1}</td>
 						<td class="item">${posLineItemDto.productName}</td>
 						<td><s:text name="posLineItems[${ctr.index}].mrp" value="${posLineItemDto.mrp}" class="mrp" readonly="readonly"/></td>
-						<td><s:text name="posLineItems[${ctr.index}].offerPrice" value="${posLineItemDto.offerPrice}" class="offerPrice" readonly="readonly"/></td>
+						<td class="offerPriceTD"><s:text name="posLineItems[${ctr.index}].offerPrice" value="${posLineItemDto.offerPrice}" class="offerPrice" readonly="readonly"/></td>
 						<td><s:text name="posLineItems[${ctr.index}].qty" value="${posLineItemDto.mrp}" class="qty" readonly="readonly"/></td>
-						<td><s:text name="posLineItems[${ctr.index}].total" value="${posLineItemDto.total}" class="total" readonly="readonly"/></td>
+						<td><s:checkbox name="posLineItems[${ctr.index}].freebie" value="${posLineItemDto.freebie}" class="freebie"/></td>
+						<td class="totAmnt">
+							<s:text name="posLineItems[${ctr.index}].total" value="${posLineItemDto.total}" class="total" readonly="readonly"/>
+						     <input type="hidden" class="totAmntHid" value="" />
+						</td>
 						<td><s:hidden class="skuItemId" name="posLineItems[${ctr.index}].skuItem" value="${posLineItemDto.skuItem.id}"/></td>
 						<td><s:hidden class="itemHidden" name="posLineItems[${ctr.index}].productName" value="${posLineItemDto.productName}"/></td>
 						<td><s:hidden class="pvBarcodeHidden" name="posLineItems[${ctr.index}].productVariantBarcode" value="${posLineItemDto.productVariantBarcode}"/></td>
@@ -461,11 +481,11 @@
 				</tbody>
 				<tfoot>
 				<tr>
-					<td colspan="5" align="right"><b>Total</b></td>
+					<td colspan="6" align="right"><b>Total</b></td>
 					<td><s:text name="grandTotal" value="${pos.grandTotal}" class="grandTotal" readonly="readonly"/></td>
 				</tr>
 				<tr>
-					<td colspan="4"></td>
+					<td colspan="5"></td>
 					<td align="right"><b>Discount (In Rupees)</b></td>
 					<%--<td><s:select name="discount" value="${pos.discount}" id="discount">
 						<s:option value="">-Select</s:option>
@@ -475,16 +495,16 @@
 				</tr>
 				<tr id="rewardPointsRow">
 					<td align="right"><b>Reward Points available</b></td>
-					<td colspan="3"><span id="rewardPoints" class="rewardPoints"> </span></td>
+					<td colspan="4"><span id="rewardPoints" class="rewardPoints"> </span></td>
                     <td> Use Reward Points</td><td> <s:checkbox name="useRewardPoints" id="useRewardPoints" /></td>
 					
 				</tr>
 				
 				<tr>
-					<td colspan="5" align="right"><b>Final Payable</b></td>
+					<td colspan="6" align="right"><b>Final Payable</b></td>
 					<td><input type="text" id="finalPayable" readonly="readonly"/></td>
 				</tr>
-				<tr><td><b>Order ID</b></td><td colspan="3">${pos.order.id}</td>
+				<tr><td><b>Order ID</b></td><td colspan="4">${pos.order.id}</td>
 					<td align="right"><b>Payment Mode</b></td>
 					<td>
 					<s:select name="paymentMode" id="paymentMode">
@@ -501,7 +521,7 @@
 			<div id="paymentRemarksDiv" style="display: none;">
 				<table>
 					<tr>
-						<td colspan="3" align="right">Payment Reference No.</td><td><s:text name="paymentReferenceNumber"/></td>
+						<td colspan="4" align="right">Payment Reference No.</td><td><s:text name="paymentReferenceNumber"/></td>
 						<td align="right">Last four digit card No.</td><td><s:text name="lastFourDigitCardNo"/></td>
 						<td>Card/Bank Name(Remarks)</td><td><s:text name="paymentRemarks" style="width:300px; height:50px" maxlength="45" /></td>
 					</tr>

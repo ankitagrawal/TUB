@@ -719,4 +719,8 @@ public class ProductServiceImpl implements ProductService {
       }
       return baseUrl;
     }
+
+	public List<String> getAllBrands(String brandLike) {
+		return productDAO.getAllBrands(brandLike);
+	}
 }

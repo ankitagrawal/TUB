@@ -6,6 +6,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -28,6 +29,9 @@ public class SplitShippingOrderAction extends BaseAction {
 
     @Autowired
     AdminShippingOrderService adminShippingOrderService;
+
+    @Autowired
+    OrderService orderService;
 
     @Autowired
     ShippingOrderProcessor shippingOrderProcessor;
@@ -58,6 +62,9 @@ public class SplitShippingOrderAction extends BaseAction {
     	if(orderSplitSuccess) {
             shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
             ShippingOrder newShippingOrder = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
+
+            //master method to handle all new shipping orders
+            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());
 
             //Handling the PO against the shipping Orders
             if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()> 0) {
