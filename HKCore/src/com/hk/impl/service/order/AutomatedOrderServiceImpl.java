@@ -2,6 +2,7 @@ package com.hk.impl.service.order;
 
 import java.util.Set;
 
+import com.hk.pact.service.inventory.InventoryHealthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +60,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
     private PaymentStatusDao paymentStatusDao;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private InventoryHealthService inventoryHealthService;
 
     /**
      * creates base orders from within the code rather than through the usual UI flow.
@@ -101,6 +104,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
 	    order=orderService.save(order);
+        //creating entries in sku_item_CLI
+        inventoryHealthService.tempBookSkuLineItemForOrder(order);
         orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
        return  order;
