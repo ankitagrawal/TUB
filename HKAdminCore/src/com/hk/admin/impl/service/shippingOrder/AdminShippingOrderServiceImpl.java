@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.sound.sampled.Line;
 
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
@@ -39,6 +42,11 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
@@ -46,6 +54,7 @@ import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
@@ -106,6 +115,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired BaseDao baseDao;
     @Autowired
 	PurchaseOrderService purchaseOrderService;
+    @Autowired
+    SkuItemDao skuItemDao;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
@@ -456,7 +467,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         
 	}
 
-
     public ShippingOrderService getShippingOrderService() {
         return shippingOrderService;
     }
@@ -567,4 +577,5 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void setCancellationRemark(String cancellationRemark) {
         this.cancellationRemark = cancellationRemark;
     }
+
 }
