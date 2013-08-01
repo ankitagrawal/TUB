@@ -135,7 +135,7 @@
             $.ajaxSetup({
                 cache:false
             });
-
+            $('.errordiv').empty();
             $('.save-rp').live("click", function () {
                 var curEle = $(this);
                 var queryString = '';
@@ -165,7 +165,7 @@
                                     $(this).replaceWith($(this).val());
                                 }
                             });
-
+                            $('.errordiv').empty();
                             curEle.parents('tr').find('.download-link').css("display", "none");
                         }
                         else {
@@ -176,6 +176,7 @@
                         }
                     },
                     error:function onError() {
+                        $('.errordiv').empty();
                         alert('Error In submitting request');
                     }
 
