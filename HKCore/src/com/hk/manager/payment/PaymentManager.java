@@ -261,7 +261,9 @@ public class PaymentManager {
             payment.setChequeNumber(chequeNumber);
             order = processOrder(payment);
             // calling health check
-            inventoryHealthService.tempBookSkuLineItemForOrder(order);
+            if(!order.isSubscriptionOrder()){
+                inventoryHealthService.tempBookSkuLineItemForOrder(order);
+            }
             orderEventPublisher.publishOrderPlacedEvent(order);
         }
         return order;
@@ -282,7 +284,9 @@ public class PaymentManager {
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
             order = processOrder(payment);
-            inventoryHealthService.tempBookSkuLineItemForOrder(order);
+            if(!order.isSubscriptionOrder()){
+                inventoryHealthService.tempBookSkuLineItemForOrder(order);
+            }
         }
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;

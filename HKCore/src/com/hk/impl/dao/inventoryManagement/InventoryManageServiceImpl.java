@@ -72,17 +72,20 @@ public class InventoryManageServiceImpl implements InventoryManageService {
 
 
     //     Make Entries in new SkuItemCLI  table
-    public void saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem) {
+    public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem) {
         Long count = 1L;
+        List<SkuItemCLI> skuItemCLIList = new ArrayList<SkuItemCLI>();
         for (SkuItem si : skuItemsToBeBooked) {
             SkuItemCLI skuItemCLI = new SkuItemCLI();
             skuItemCLI.setCartLineItem(cartLineItem);
             skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
             skuItemCLI.setUnitNum(count);
             skuItemCLI.setSkuItem(si);
-            getBaseDao().save(skuItemCLI);
+            skuItemCLIList.add(skuItemCLI);
             count++;
         }
+        baseDao.saveOrUpdate(skuItemCLIList);
+        return  skuItemCLIList;
     }
 
 
