@@ -117,7 +117,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
                     skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-                    skuList.add(skuItemCLI.getSkuItem().getSkuGroup().getSku());
+                    skuList.add(lineItem.getSku());
                     skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
                     //get available sku items of the given warehouse at given mrp
