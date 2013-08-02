@@ -399,6 +399,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	}
 
 	public boolean checkoutMethod(LineItem lineItem, SkuItem skuItem) {
+		logger.debug("Checking Out SkuItem - "+skuItem.getId()+"against Line Item - "+lineItem.getId());
         SkuItemCLI cliToBeCheckedOut = null;
         SkuItemLineItem liToBeCheckout = null;
         List<SkuItemCLI> skuCliList =  lineItem.getCartLineItem().getSkuItemCLIs();

@@ -13852,7 +13852,7 @@
     <changeSet author="Nihal (generated)" id="1375185803482-6">
         <sql>
             INSERT INTO sku_item_owner values(10, "SELF"), (20, "CUSTOMER"), (30, "SUPPLIER"), (40, "BRIGHT");
-            INSERT INTO `healthkart_test`.`sku_item_status` (`id`, `name`) VALUES ('150', 'TEMP BOOKED'), ('160', 'BOOKED');
+            INSERT INTO sku_item_status (`id`, `name`) VALUES ('150', 'TEMP BOOKED'), ('160', 'BOOKED');
         </sql>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1375185803482-23">
