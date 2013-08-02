@@ -119,7 +119,11 @@ public enum EnumPermission {
   VIEW_NDR                                       (PermissionConstants.VIEW_NDR),
   CONSIGNMENT_TRACKING_REPORT                    (PermissionConstants.CONSIGNMENT_TRACKING_REPORT),
   EDIT_NDR                                       (PermissionConstants.EDIT_NDR),
-  BULK_SEEK                                      (PermissionConstants.BULK_SEEK);
+  BULK_SEEK                                      (PermissionConstants.BULK_SEEK),
+  CREATE_REVERSE_PICKUP                          (PermissionConstants.CREATE_REVERSE_PICKUP),
+  VIEW_REVERSE_PICKUP                            (PermissionConstants.VIEW_REVERSE_PICKUP),
+  EDIT_REVERSE_PICKUP                            (PermissionConstants.EDIT_REVERSE_PICKUP),
+  APPROVE_REVERSE_PICKUP                         (PermissionConstants.APPROVE_REVERSE_PICKUP);
 
   String permissionName;
 

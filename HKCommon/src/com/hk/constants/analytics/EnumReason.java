@@ -39,7 +39,16 @@ public enum EnumReason {
     B2bOrder(760L,"B2b Order",EnumReasonType.AwbChange),
     ChangedByCourier(770L,"Changed By Courier",EnumReasonType.AwbChange),
     DuplicateAwb(780L,"Duplicate Awb",EnumReasonType.AwbChange),
-    TechIssue(790L,"Tech Issue",EnumReasonType.AwbChange);
+    TechIssue(790L,"Tech Issue",EnumReasonType.AwbChange),
+    ProductDamaged(800L, "Product Damaged", EnumReasonType.Reverse_Pickup_Customer),
+    ProductExpired(810L, "Product Expired", EnumReasonType.Reverse_Pickup_Customer),
+    WrongColor(820L, "Wrong Color", EnumReasonType.Reverse_Pickup_Customer),
+    WrongSize(830L, "Wrong Size", EnumReasonType.Reverse_Pickup_Customer),
+    Good(900L, "Good", EnumReasonType.Reverse_Pickup_Customer),
+    Damaged(910L, "Damaged", EnumReasonType.Reverse_Pickup_Customer),
+    Non_Functional(920L, "Non Functional", EnumReasonType.Reverse_Pickup_Customer),
+    Near_Expiry(930L, "Near Expiry", EnumReasonType.Reverse_Pickup_Customer),
+    Expired(940L, "Expired", EnumReasonType.Reverse_Pickup_Customer);
 
 
 
