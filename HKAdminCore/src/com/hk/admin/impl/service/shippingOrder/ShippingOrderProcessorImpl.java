@@ -271,7 +271,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 					}
 					Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(lineItem); // This
 
-					if (availableUnbookedInv == 0) {
+					if (availableUnbookedInv <= 0) {
 						String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
 						logger.debug(comments);
 						shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
