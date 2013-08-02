@@ -311,33 +311,36 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			if (item.getCartLineItem().getSkuItemCLIs() == null
 					|| (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() == 0)) {
 				Long qty = item.getQty();
-				int i = 0;
 				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 				List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
-				while (i < qty) {
-					SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
-					SkuItemCLI skuItemCLI = new SkuItemCLI();
-					// get available skuitems warehouse at given mrp
-					List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
-					if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
-						SkuItem skuItem = availableUnbookedSkuItems.get(0);
-						// Book the sku item first
-						skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-						// create skuItemCLI entry
-						skuItemCLI.setSkuItem(skuItem);
-						skuItemCLI.setCartLineItem(item.getCartLineItem());
-						skuItemCLI.setUnitNum((long) i);
-						skuItemCLI.setProductVariant(item.getSku().getProductVariant());
-						// create skuItemLineItem entry
-						skuItemLineItem.setSkuItem(skuItem);
-						skuItemLineItem.setLineItem(item);
-						skuItemLineItem.setUnitNum((long) i);
-						skuItemLineItem.setSkuItemCLI(skuItemCLI);
-						skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
-						skuItemLineItems.add(skuItemLineItem);
-						skuItemCLIs.add(skuItemCLI);
+				List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+				if (checkAvailableUnbookedSkuItems.size() >= qty) {
+					int i = 1;
+					while (i <= qty) {
+						SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+						SkuItemCLI skuItemCLI = new SkuItemCLI();
+						// get available skuitems warehouse at given mrp
+						List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+						if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
+							SkuItem skuItem = availableUnbookedSkuItems.get(0);
+							// Book the sku item first
+							skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+							// create skuItemCLI entry
+							skuItemCLI.setSkuItem(skuItem);
+							skuItemCLI.setCartLineItem(item.getCartLineItem());
+							skuItemCLI.setUnitNum((long) i);
+							skuItemCLI.setProductVariant(item.getSku().getProductVariant());
+							// create skuItemLineItem entry
+							skuItemLineItem.setSkuItem(skuItem);
+							skuItemLineItem.setLineItem(item);
+							skuItemLineItem.setUnitNum((long) i);
+							skuItemLineItem.setSkuItemCLI(skuItemCLI);
+							skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
+							skuItemLineItems.add(skuItemLineItem);
+							skuItemCLIs.add(skuItemCLI);
+						}
+						++i;
 					}
-					++i;
 				}
 				baseDao.saveOrUpdate(skuItemCLIs);
 				baseDao.saveOrUpdate(skuItemLineItems);
@@ -350,8 +353,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
 					&& item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() > 0) {
 				int entries = item.getSkuItemLineItems().size();
-				int j = 0;
-				while (j < entries) {
+				int j = 1;
+				while (j <= entries) {
 					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j);
 					List<SkuItemStatus> skuItemStatus = new ArrayList<SkuItemStatus>();
 					skuItemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());

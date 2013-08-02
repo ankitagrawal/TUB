@@ -17,7 +17,6 @@ import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.*;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
@@ -25,7 +24,6 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.UserManager;
@@ -403,41 +401,45 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         SkuItemCLI cliToBeCheckedOut = null;
         SkuItemLineItem liToBeCheckout = null;
         List<SkuItemCLI> skuCliList =  lineItem.getCartLineItem().getSkuItemCLIs();
-        for(SkuItemCLI skuItemCLI : skuCliList){
-            if(skuItemCLI.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())){
-                cliToBeCheckedOut = skuItemCLI;
-                liToBeCheckout = cliToBeCheckedOut.getSkuItemLineItem();
-                break;
-            }
+        List<SkuItemCLI> bookedSkuCliList = new ArrayList<SkuItemCLI>();
+        if (skuCliList != null && skuCliList.size() > 0) {
+        	for(SkuItemCLI skuItemCLI : skuCliList){
+        		if (skuItemCLI.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())){
+        			bookedSkuCliList.add(skuItemCLI);
+        		}
+        	}
         }
+		if (bookedSkuCliList != null && bookedSkuCliList.size() > 0) {
+			cliToBeCheckedOut = bookedSkuCliList.get(0);
+			liToBeCheckout = cliToBeCheckedOut.getSkuItemLineItem();
+			if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
+				SkuItem tempSkuItem;
+				tempSkuItem = cliToBeCheckedOut.getSkuItem();
+				tempSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+				baseDao.save(tempSkuItem);
+			} else if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
+				SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
+				SkuItemLineItem skuItemLineItem = skuItemCLI.getSkuItemLineItem();
+				skuItemCLI.setSkuItem(cliToBeCheckedOut.getSkuItem());
+				skuItemLineItem.setSkuItem(cliToBeCheckedOut.getSkuItem());
+				baseDao.save(skuItemCLI);
+				baseDao.save(skuItemLineItem);
 
-        if(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())){
-            SkuItem tempSkuItem;
-            tempSkuItem = cliToBeCheckedOut.getSkuItem();
-            tempSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-            baseDao.save(tempSkuItem);
-        }
-        else if(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())){
-            SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
-            SkuItemLineItem skuItemLineItem = skuItemCLI.getSkuItemLineItem();
-            skuItemCLI.setSkuItem(cliToBeCheckedOut.getSkuItem());
-            skuItemLineItem.setSkuItem(cliToBeCheckedOut.getSkuItem());
-            baseDao.save(skuItemCLI);
-            baseDao.save(skuItemLineItem);
+			} else if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+				SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
+				skuItemCLI.setSkuItem(cliToBeCheckedOut.getSkuItem());
+				baseDao.save(skuItemCLI);
+			}
 
-        }
-        else if(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())){
-            SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
-            skuItemCLI.setSkuItem(cliToBeCheckedOut.getSkuItem());
-            baseDao.save(skuItemCLI);
-        }
-
-        cliToBeCheckedOut.setSkuItem(skuItem);
-        liToBeCheckout.setSkuItem(skuItem);
-        baseDao.save(liToBeCheckout);
-        baseDao.save(cliToBeCheckedOut);
-        skuItem = checkoutSkuItem(lineItem, skuItem);
-        return true;
+			cliToBeCheckedOut.setSkuItem(skuItem);
+			liToBeCheckout.setSkuItem(skuItem);
+			baseDao.save(liToBeCheckout);
+			baseDao.save(cliToBeCheckedOut);
+			skuItem = checkoutSkuItem(lineItem, skuItem);
+			return true;
+		}
+        else 
+        	return false;
 
 	}
 
