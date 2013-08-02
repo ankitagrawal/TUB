@@ -90,9 +90,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                 skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
                 skuItemLineItem = save(skuItemLineItem);
                 unitNum++;
-                return true;
             }
-
+            return true;
         }
         else{
             for(SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
