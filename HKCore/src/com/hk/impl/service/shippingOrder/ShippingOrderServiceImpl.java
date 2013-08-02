@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,7 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
@@ -65,6 +68,7 @@ import com.hk.util.TokenUtils;
 @Service
 public class ShippingOrderServiceImpl implements ShippingOrderService {
 
+	private Logger						logger = LoggerFactory.getLogger(ShippingOrderServiceImpl.class);
     @Autowired
     private UserService                userService;
     @Autowired
@@ -314,6 +318,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 				List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
 				List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+				logger.debug("Available Unbooked Inventory For Sku - "+item.getSku()+"at MRP - "+item.getMarkedPrice());
 				if (checkAvailableUnbookedSkuItems.size() >= qty) {
 					int i = 1;
 					while (i <= qty) {
@@ -349,6 +354,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					baseDao.save(item.getCartLineItem());
 					item.setSkuItemLineItems(skuItemLineItems);
 					baseDao.save(item);
+					logger.debug("Populated Table SkuItemLineItem for Line Item - "+item.getId());
+					logger.debug("Populated Table SkuItemCartLineItem for Line Item - "+item.getCartLineItem().getId());
 				}
 			}
 
