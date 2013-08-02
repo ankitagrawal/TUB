@@ -329,25 +329,27 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 							skuItemCLI.setSkuItem(skuItem);
 							skuItemCLI.setCartLineItem(item.getCartLineItem());
 							skuItemCLI.setUnitNum((long) i);
+							skuItemCLI.setCreateDate(new Date());
 							skuItemCLI.setProductVariant(item.getSku().getProductVariant());
 							// create skuItemLineItem entry
 							skuItemLineItem.setSkuItem(skuItem);
 							skuItemLineItem.setLineItem(item);
 							skuItemLineItem.setUnitNum((long) i);
 							skuItemLineItem.setSkuItemCLI(skuItemCLI);
+							skuItemLineItem.setCreateDate(new Date());
 							skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
 							skuItemLineItems.add(skuItemLineItem);
 							skuItemCLIs.add(skuItemCLI);
 						}
 						++i;
 					}
+					baseDao.saveOrUpdate(skuItemCLIs);
+					baseDao.saveOrUpdate(skuItemLineItems);
+					item.getCartLineItem().setSkuItemCLIs(skuItemCLIs);
+					baseDao.save(item.getCartLineItem());
+					item.setSkuItemLineItems(skuItemLineItems);
+					baseDao.save(item);
 				}
-				baseDao.saveOrUpdate(skuItemCLIs);
-				baseDao.saveOrUpdate(skuItemLineItems);
-				item.getCartLineItem().setSkuItemCLIs(skuItemCLIs);
-				baseDao.save(item.getCartLineItem());
-				item.setSkuItemLineItems(skuItemLineItems);
-				baseDao.save(item);
 			}
 
 			else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
@@ -355,7 +357,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				int entries = item.getSkuItemLineItems().size();
 				int j = 1;
 				while (j <= entries) {
-					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j);
+					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j-1);
 					List<SkuItemStatus> skuItemStatus = new ArrayList<SkuItemStatus>();
 					skuItemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 					skuItemStatus.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
@@ -393,6 +395,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					skuItemLineItem.setSkuItem(cli.getSkuItem());
 					skuItemLineItem.setSkuItemCLI(cli);
 					skuItemLineItem.setUnitNum(cli.getUnitNum());
+					skuItemLineItem.setCreateDate(new Date());
 					skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
 					skuItemLineItems.add(skuItemLineItem);
 				}

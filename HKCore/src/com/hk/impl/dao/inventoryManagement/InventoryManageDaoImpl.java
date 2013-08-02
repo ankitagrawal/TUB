@@ -31,10 +31,6 @@ import org.springframework.stereotype.Service;
 public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryManageDao {
 
 
-    public Long getNetInventory(Sku sku) {
-        return getAvailableUnBookedInventory(Arrays.asList(sku));
-    }
-
     // checked in as always with  owner self
     public Long getAvailableUnBookedInventory(List<Sku> skuList) {
         Long netInv = 0L;
@@ -153,8 +149,6 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
         String query = "from CartLineItem c  where  c.productVariant = :productVariant and c.markedPrice = :mrp and c.order.orderStatus.id in (:orderStatusIds)"
                 + " and c.skuItemCLIs.size <= 0  order by c.order.createDate  asc ";
         return (List<CartLineItem>) getSession().createQuery(query).setParameterList("orderStatusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId())).setParameter("productVariant", productVariant).setParameter("mrp", mrp).list();
-
-
     }
 
 
@@ -163,8 +157,6 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
         String sql = "Select count(si) from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and ( si.skuGroup.status != :reviewStatus or si.skuGroup.status is null ) group by si.skuGroup.id order by si.skuGroup.createDate desc  ";
         Query query = getSession().createQuery(sql).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
         return (Long) query.list().get(0);
-
-
     }
 
 
@@ -180,22 +172,12 @@ public class InventoryManageDaoImpl extends BaseDaoImpl implements InventoryMana
     }
 
 
-    public boolean sicliAlreadyExists(CartLineItem cartLineItem, Long unitNum) {
-        String sql = " select sicli from SkuItemCLI sicli where sicli.cartLineItem = :cartlineItem  and sicli.unitNum = :unitNum ";
-        List<SkuItemCLI> siclis = (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartlineItem", cartLineItem).setParameter("unitNum", unitNum).list();
-        if (siclis.size() > 0) {
-            return true;
-        }
-        return false;
-    }
-
-
     public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
         String sql = " from SkuItemCLI sicli where sicli.cartLineItem = :cartlineItem ";
         List<SkuItemCLI> siclis = (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartlineItem", cartLineItem).list();
         if (siclis != null && siclis.size() > 0) {
             if (siclis.size() == cartLineItem.getQty()) {
-                   return true;
+                return true;
             }
         }
         return false;
