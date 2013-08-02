@@ -132,7 +132,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
                    }
                }
                if (shippingOrdersWithoutReason.size() > 0) {
-                   addRedirectAlertMessage(new SimpleMessage("Reasons must be slected for shipping order -> " + shippingOrderIds));
+                   addRedirectAlertMessage(new SimpleMessage("Reasons must be selected for shipping order -> " + shippingOrderIds));
                     return new RedirectResolution(PackingAwaitingQueueAction.class);
                }
 

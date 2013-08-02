@@ -49,9 +49,11 @@ public interface ShippingOrderService {
 	public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder);
 
 
-	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
+	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder,
+                                              EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
 
-	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason, String comments);
+	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder,
+                 EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason, String comments);
 
 	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, Reason reason, String comments);
 

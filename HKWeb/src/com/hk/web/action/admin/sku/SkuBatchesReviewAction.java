@@ -84,12 +84,11 @@ public class SkuBatchesReviewAction extends BaseAction {
     	try {
     		orderReviewService.fixLineItem(lineItem);
     		lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
-            lineItem.setUnFixed(false);
     		addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
     	} catch (Exception e) {
     		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
     				EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed, null, e.getMessage());
-            lineItem.setUnFixed(true);
+            lineItem.setError(true);
     		logger.error("Error while fixing the line item", e.getMessage());
     		addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
     	}

@@ -72,6 +72,7 @@ public enum EnumShippingOrderLifecycleActivity {
   RefundAmountExceedsFailed(1008L,"Amount exceeds the refundable amount"),
   RewardPointsRevertBack(1009L,"Reward Points given back to user in SO cancellation"),
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
+  SO_CancelledInventoryMismatch(1020L, "SO  Cancelled due to inventory mismatch"),
   ;
 
   private String name;

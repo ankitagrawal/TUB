@@ -135,6 +135,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                 if (shippingOrder.isDropShipping()) {
                     reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
+                if (shippingOrder.containsJitProducts()) {
+                    reasons.add(EnumReason.Contains_Jit_Products.asReason());
+                }
                // List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
                 //if (!enumBuckets.isEmpty()) {
                     //reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
@@ -250,9 +253,13 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                         messages);
                 if (splitSuccess) {
                     ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
+                    shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+                            shippingOrderService.getShippingOrderLifeCycleActivity(
+                                    EnumShippingOrderLifecycleActivity.SO_Cancelled),
+                            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
                     this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null);
-                    // TODO order cancellation mail to be sent and refund
                     shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+
                 }
             }
         }

@@ -66,10 +66,6 @@ public class SplitShippingOrderAction extends BaseAction {
             //master method to handle all new shipping orders
             orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());
 
-            //Handling the PO against the shipping Orders
-            if(shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()> 0) {
-                adminShippingOrderService.adjustPurchaseOrderForSplittedShippingOrder(shippingOrder, newShippingOrder);
-            }
     		addRedirectAlertMessage(new SimpleMessage(messages.get(0)));
             return new RedirectResolution(ActionAwaitingQueueAction.class);
     	} else {
