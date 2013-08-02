@@ -66,6 +66,11 @@ public class ShippingOrderValidatorAction extends BaseAction{
 		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
 		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
 		soStatusList.add(EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus());
+		soStatusList.add(EnumShippingOrderStatus.SO_Picking.asShippingOrderStatus());
+		soStatusList.add(EnumShippingOrderStatus.SO_ReadyForDropShipping.asShippingOrderStatus());
+		soStatusList.add(EnumShippingOrderStatus.SO_ReadyForProcess.asShippingOrderStatus());
+		soStatusList.add(EnumShippingOrderStatus.SO_MarkedForPrinting.asShippingOrderStatus());
+		soStatusList.add(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus());
 		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
 		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
 		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
