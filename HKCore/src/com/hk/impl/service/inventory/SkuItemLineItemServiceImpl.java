@@ -13,6 +13,8 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ import java.util.Set;
 @Service
 public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
+    private Logger logger = LoggerFactory.getLogger(SkuItemLineItemServiceImpl.class);
     @Autowired
     SkuItemLineItemDao skuItemLineItemDao;
 
@@ -73,14 +76,17 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
             //get available sku items of the given warehouse at given mrp
             List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-            if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0){
+            if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0
+                    || availableUnbookedSkuItems.size() < lineItem.getQty()){
                 return false;
             }
             for(int i = 1; i<= lineItem.getQty(); i++){
+                unitNum++;
                 SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
                 SkuItem skuItem = availableUnbookedSkuItems.get(i-1);
                 //Book the sku item first
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                skuItem = (SkuItem)getSkuItemDao().save(skuItem);
 
                 //create skuItemLineItem entry
                 skuItemLineItem.setSkuItem(skuItem);
@@ -89,7 +95,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                 skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i-1));
                 skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
                 skuItemLineItem = save(skuItemLineItem);
-                unitNum++;
+
             }
             return true;
         }
@@ -98,6 +104,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                 unitNum ++;
                 SkuItemLineItem skuItemLineItem= new SkuItemLineItem();
                 if(lineItem.getShippingOrder().getWarehouse().equals(skuItemCLI.getSkuItem().getSkuGroup().getSku().getWarehouse())){
+                    logger.debug("Creating sku_item_line_item without swapping warehouse (same wh before and after split)");
 
                     //Make skuItemLine item as copy of skuItemCLI
                     skuItemLineItem.setSkuItem(skuItemCLI.getSkuItem());
@@ -109,9 +116,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     //Book the sku item
                     skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
-                    skuItemLineItem = save(skuItemLineItem);
+                    getSkuItemDao().save(skuItemLineItem.getSkuItem());
                }
                 else{
+                    logger.debug("Creating sku_item_line_item. Wh after split was diff than before split booking.");
                     List<Sku> skuList = new ArrayList<Sku>();
                     List<Long> skuStatusIdList = new ArrayList<Long>();
                     List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
@@ -129,7 +137,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     SkuItem skuItem = availableUnbookedSkuItems.get(0);
                     //Book the sku item first
                     skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-
+                    getSkuItemDao().save(skuItem);
                     //create skuItemLineItem entry
                     skuItemLineItem.setSkuItem(skuItem);
                     skuItemLineItem.setLineItem(lineItem);
@@ -138,7 +146,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
 
                     //Free existing skuitem on skuItemCLI
-                    skuItemCLI.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                    skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 
                     //save the state
                     skuItemLineItem = save(skuItemLineItem);
@@ -147,11 +155,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     skuItemCLI.setSkuItem(skuItem);
                     getSkuItemDao().save(skuItemCLI);
                     skuItemLineItem.setSkuItemCLI(skuItemCLI);
-
-                    skuItemLineItem = save(skuItemLineItem);
                 }
-                //todo tarun erp
-                //make entry in product variant inventory
+                skuItemLineItem = save(skuItemLineItem);
             }
         }
         return true;
