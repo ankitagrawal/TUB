@@ -428,6 +428,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 			} else if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
 				SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
 				skuItemCLI.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
+                skuItemLineItemToBeCheckedOut.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                baseDao.save(skuItemLineItemToBeCheckedOut.getSkuItem());
 				baseDao.save(skuItemCLI);
 			}
 
