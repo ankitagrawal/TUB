@@ -6,6 +6,7 @@ import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Classification;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Set;
 */
 @Entity
 @Table(name = "reason")
-public class Reason {
+public class Reason implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -68,7 +69,7 @@ public class Reason {
         this.buckets = buckets;
     }
 
-    public ActionTask getActionTask(){
+    public ActionTask getActionTask() {
         return this.actionTasks != null && !this.actionTasks.isEmpty() ? this.actionTasks.get(0) : null;
     }
 
@@ -86,6 +87,25 @@ public class Reason {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) {
+            return true;
+        }
+        if (!(o instanceof Reason)) {
+            return false;
+        }
+        Reason reason = (Reason) o;
+        return this.getId() != null && reason.getId() != null && this.getId().equals(reason.getId());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
     @Override

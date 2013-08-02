@@ -175,7 +175,7 @@
         <div class="margin-2">
             <s:form beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction" class="mainform">
                 <s:hidden name="reversePickupOrder" value="${rpw.reversePickupOrder.id}" class="rpvalue"/>
-                <s:hidden name="reversePickupId" value="${rpw.reversePickupOrder.reversePickupId}" class="rpvalue"/>
+                <s:hidden name="reversePickupId" value="${rpw.reversePickupOrder.reversePickupId}" class="rpIdvalue"/>
                 <div>
                     <table class="rline-items">
                         <thead>
@@ -199,6 +199,7 @@
                         <c:set value="1" var="unitNo"/>
                         <c:forEach items="${rpw.reversePickupOrder.rpLineItems}" var="rplineitem" varStatus="ctr">
                             <c:set value="${ctr.index}" var="index"/>
+                            <s:hidden name="rpLineItems[${index}]" value="${rplineitem.id}"/>
                             <c:set value="${rplineitem.lineItem.id}" var="currentLineId"/>
                             <tr class="${prevLineId == currentLineId || ctr.first ? 'btm-dshed' : 'btm-solid'}">
                                 <td>
@@ -320,10 +321,13 @@
                         </c:forEach>
                     </table>
                 </div>
-                <div class="check-in">
-                    <s:submit name="closeWarehouseCheckIn" value="Close & Mark RP as CheckedIn"/>
+                <div  style="text-align:center; font-size: 14px; font-weight: bolder; margin-top: 2em;" >
+                    <s:link beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction"
+                            event="closeWarehouseCheckIn"> <span style="border: 2px solid; background-color: #ff8123;color: #ffffff;padding: 15px;">Close & Mark RP as CheckedIn </span>
+                        <s:param name="reversePickupId" value="${rpw.reversePickupOrder.reversePickupId}"/>
+                    </s:link>
                 </div>
-
+                <div class="clear" style="height: 50px;"></div>
                 <div style="display: inline-block;float: left;margin-top: 10px;color: #ffffff;padding: 15px;"
                      class="save">
                     <s:link style="color:white;" beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction"

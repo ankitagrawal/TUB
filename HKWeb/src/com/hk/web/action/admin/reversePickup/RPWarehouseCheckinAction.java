@@ -40,6 +40,7 @@ import java.util.*;
 /*User: Seema
 * Date: 7/27/13
 */
+
 public class RPWarehouseCheckinAction extends BaseAction {
     private static Logger logger = Logger.getLogger(RPWarehouseCheckinAction.class);
     private String reversePickupId;
@@ -133,18 +134,18 @@ public class RPWarehouseCheckinAction extends BaseAction {
                 break;
             }
         }
-        if (!(validCheckin)) {
+        if (!validCheckin) {
             return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
                     .addParameter("errorMessage", "Select and Save  at least one Row");
         }
-        ReversePickupStatus currentStatus = reversePickupOrder.getReversePickupStatus();
+        ReversePickupStatus currentStatus = reversePickupOrderFromDb.getReversePickupStatus();
         if (EnumReversePickupStatus.getHealthKartManagedRPStatus().contains(currentStatus)) {
             reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.RPU_QC_Checked_In.asReversePickupStatus());
         } else {
             reversePickupOrderFromDb.setReversePickupStatus(EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus());
         }
         reversePickupService.saveReversePickupOrder(reversePickupOrderFromDb);
-        return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrder.getReversePickupId());
+        return new RedirectResolution(ReversePickupListAction.class).addParameter("reversePickupId", reversePickupOrderFromDb.getReversePickupId());
     }
 
     public Resolution downloadAllBarcode() {

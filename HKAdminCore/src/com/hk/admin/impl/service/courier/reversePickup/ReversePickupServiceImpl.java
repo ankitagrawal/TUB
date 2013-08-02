@@ -155,11 +155,11 @@ public class ReversePickupServiceImpl implements ReversePickupService {
     public RpLineItem getRpLineItemById(Long id) {
         return reversePickupDao.get(RpLineItem.class, id);
     }
-    @Transactional
+
     public ReversePickupOrder getReversePickupOrderById(Long id) {
         return reversePickupDao.get(ReversePickupOrder.class, id);
     }
-    @Transactional
+
     public ReversePickupOrder getByReversePickupId(String reversePickupId) {
         return reversePickupDao.getByReversePickupId(reversePickupId);
     }

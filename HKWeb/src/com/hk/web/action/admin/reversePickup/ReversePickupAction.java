@@ -151,6 +151,20 @@ public class ReversePickupAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.EDIT_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution editReversePickup() {
         shippingOrder = reversePickupOrder.getShippingOrder();
+        /**check If Warehouse has started checkIn**/
+        List<RpLineItem> rpLineItemList = reversePickupOrder.getRpLineItems();
+        boolean startedCheckIn = false;
+        if (rpLineItemList != null) {
+            for (RpLineItem rpLineItem : rpLineItemList) {
+                if (rpLineItem.getWarehouseReceivedCondition() != null) {
+                    startedCheckIn = true;
+                    break;
+                }
+            }
+        }
+        if (startedCheckIn) {
+            return new RedirectResolution(ReversePickupAction.class, "editReversePickup").addParameter("reversePickupOrder", reversePickupOrder.getId());
+        }
         /* put all the lineItems in another RP orders of current SO in map "rpLineDisabledMap" , this will be displayed  readOnly to user.*/
         List<ReversePickupOrder> reversePickupOrdersAlreadyCreatedList = reversePickupService.getReversePickupsExcludeCurrentRP(shippingOrder, reversePickupOrder);
         rpLineDisabledMap = reversePickupHelper.populateAlreadyCreatedRpLineItemsInfo(reversePickupOrdersAlreadyCreatedList);
