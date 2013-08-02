@@ -3,6 +3,7 @@ package com.hk.impl.service.inventory;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
@@ -60,39 +61,24 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <=0){
             return false;
         }
-        for(SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
-            unitNum ++;
-            SkuItemLineItem skuItemLineItem= new SkuItemLineItem();
-            if(lineItem.getShippingOrder().getWarehouse().equals(skuItemCLI.getSkuItem().getSkuGroup().getSku().getWarehouse())){
 
-                //Make skuItemLine item as copy of skuItemCLI
-                skuItemLineItem.setSkuItem(skuItemCLI.getSkuItem());
-                skuItemLineItem.setLineItem(lineItem);
-                skuItemLineItem.setUnitNum(unitNum);
-                skuItemLineItem.setSkuItemCLI(skuItemCLI);
-                skuItemLineItem.setProductVariant(skuItemCLI.getSkuItem().getSkuGroup().getSku().getProductVariant());
+        if(lineItem.getShippingOrder() instanceof ReplacementOrder){
+            List<Sku> skuList = new ArrayList<Sku>();
+            List<Long> skuStatusIdList = new ArrayList<Long>();
+            List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
-                //Book the sku item
-                skuItemCLI.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+            skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+            skuList.add(lineItem.getSku());
+            skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
-                skuItemLineItem = save(skuItemLineItem);
-           }
-            else{
-                List<Sku> skuList = new ArrayList<Sku>();
-                List<Long> skuStatusIdList = new ArrayList<Long>();
-                List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
-
-                skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-                skuList.add(skuItemCLI.getSkuItem().getSkuGroup().getSku());
-                skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-
-                //get available sku items of the given warehouse at given mrp
-                List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-                if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0){
-                    return false;
-                }
-
-                SkuItem skuItem = availableUnbookedSkuItems.get(0);
+            //get available sku items of the given warehouse at given mrp
+            List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+            if(availableUnbookedSkuItems.size() < lineItem.getQty()){
+                return false;
+            }
+            for(int i = 1; i<= lineItem.getQty(); i++){
+                SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+                SkuItem skuItem = availableUnbookedSkuItems.get(i);
                 //Book the sku item first
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
@@ -100,26 +86,73 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                 skuItemLineItem.setSkuItem(skuItem);
                 skuItemLineItem.setLineItem(lineItem);
                 skuItemLineItem.setUnitNum(unitNum);
-                skuItemLineItem.setSkuItemCLI(skuItemCLI);
+                skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i-1));
                 skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
-
-                //Free existing skuitem on skuItemCLI
-                skuItemCLI.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-
-                //save the state
                 skuItemLineItem = save(skuItemLineItem);
-
-                //set new sku item on skuItemCLI as well
-                skuItemCLI.setSkuItem(skuItem);
-                skuItemLineItem.setSkuItemCLI(skuItemCLI);
-
-                skuItemLineItem = save(skuItemLineItem);
+                return true;
             }
-            //todo tarun erp
-            //make entry in product variant inventory
+
         }
-    //    getSkuItemDao().save(lineItem);
-    //    getSkuItemDao().save(lineItem.getShippingOrder());
+        else{
+            for(SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
+                unitNum ++;
+                SkuItemLineItem skuItemLineItem= new SkuItemLineItem();
+                if(lineItem.getShippingOrder().getWarehouse().equals(skuItemCLI.getSkuItem().getSkuGroup().getSku().getWarehouse())){
+
+                    //Make skuItemLine item as copy of skuItemCLI
+                    skuItemLineItem.setSkuItem(skuItemCLI.getSkuItem());
+                    skuItemLineItem.setLineItem(lineItem);
+                    skuItemLineItem.setUnitNum(unitNum);
+                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+                    skuItemLineItem.setProductVariant(skuItemCLI.getSkuItem().getSkuGroup().getSku().getProductVariant());
+
+                    //Book the sku item
+                    skuItemCLI.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+
+                    skuItemLineItem = save(skuItemLineItem);
+               }
+                else{
+                    List<Sku> skuList = new ArrayList<Sku>();
+                    List<Long> skuStatusIdList = new ArrayList<Long>();
+                    List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+
+                    skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+                    skuList.add(skuItemCLI.getSkuItem().getSkuGroup().getSku());
+                    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+
+                    //get available sku items of the given warehouse at given mrp
+                    List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+                    if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0){
+                        return false;
+                    }
+
+                    SkuItem skuItem = availableUnbookedSkuItems.get(0);
+                    //Book the sku item first
+                    skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+
+                    //create skuItemLineItem entry
+                    skuItemLineItem.setSkuItem(skuItem);
+                    skuItemLineItem.setLineItem(lineItem);
+                    skuItemLineItem.setUnitNum(unitNum);
+                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+                    skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
+
+                    //Free existing skuitem on skuItemCLI
+                    skuItemCLI.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+
+                    //save the state
+                    skuItemLineItem = save(skuItemLineItem);
+
+                    //set new sku item on skuItemCLI as well
+                    skuItemCLI.setSkuItem(skuItem);
+                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+
+                    skuItemLineItem = save(skuItemLineItem);
+                }
+                //todo tarun erp
+                //make entry in product variant inventory
+            }
+        }
         return true;
     }
 
