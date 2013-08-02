@@ -108,7 +108,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
                     //Book the sku item
                     skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-
+                    getSkuItemDao().save(skuItemLineItem.getSkuItem());
                     skuItemLineItem = save(skuItemLineItem);
                }
                 else{
@@ -129,7 +129,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     SkuItem skuItem = availableUnbookedSkuItems.get(0);
                     //Book the sku item first
                     skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-
+                    getSkuItemDao().save(skuItem);
                     //create skuItemLineItem entry
                     skuItemLineItem.setSkuItem(skuItem);
                     skuItemLineItem.setLineItem(lineItem);
@@ -138,7 +138,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
 
                     //Free existing skuitem on skuItemCLI
-                    skuItemCLI.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                    skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 
                     //save the state
                     skuItemLineItem = save(skuItemLineItem);
