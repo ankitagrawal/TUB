@@ -140,7 +140,11 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
   public boolean isBrandTerm(String term) throws SearchException {
-        SolrQuery query = new SolrQuery("*:*");
+      SolrQuery query = new SolrQuery("*:*");
+      Synonym brandSynonym = getCategoryBrandSynonym(term, true, false);
+      if (brandSynonym != null) {
+          term = brandSynonym.getBrandName();
+      }
         //query.addFilterQuery("{!field f= brand}" + term);
         query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + term+"\"");
     
@@ -286,7 +290,16 @@ class ProductSearchServiceImpl implements ProductSearchService {
       return solrProductList != null && !solrProductList.isEmpty() ? solrProductList.get(0) : null;
     }
 
-   public boolean isCategoryTerm(String term) throws SearchException {
+    @Override
+    public Synonym getCategoryBrandSynonym(String searchTerm, boolean categorySearch, boolean brandSearch) {
+        return getSearchLogDao().getCategoryBrandSynonym(searchTerm, categorySearch, brandSearch);
+    }
+
+    public boolean isCategoryTerm(String term) throws SearchException {
+        Synonym categorySynonym = getCategoryBrandSynonym(term, true, false);
+        if(categorySynonym != null){
+            term = categorySynonym.getCategoryName();
+        }
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + term+"\"");
         try {
@@ -296,10 +309,27 @@ class ProductSearchServiceImpl implements ProductSearchService {
             if(resultCount > 0)
               return true;
         } catch (SolrServerException ex) {
+            logger.error("unable to get result ", ex);
             SearchException e = wrapException("Unable to get category term results", ex);
             throw e;
         }
         return false;
+    }
+
+    private String makeItCategoryTerm(String term){
+        Synonym categorySynonym = getCategoryBrandSynonym(term, true, false);
+        if(categorySynonym != null){
+            term = categorySynonym.getCategoryName();
+        }
+        return term;
+    }
+
+    private String makeItBrandTerm(String term){
+        Synonym brandSynonym = getCategoryBrandSynonym(term, false, true);
+        if (brandSynonym != null) {
+            term = brandSynonym.getBrandName();
+        }
+        return term;
     }
 
     private SearchResult getSearchResult(List<SolrProduct> solrProducts, int totalResultCount) {
@@ -389,9 +419,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
             query = sanitizeQuery(query);
             //Level 1 check Starts - Ajeet
             if (this.isBrandTerm(query)) {
-              return this.getBrandCatalogResults(query, null, page, perPage, null, false);
+              return this.getBrandCatalogResults(makeItBrandTerm(query), null, page, perPage, null, false);
             } else if (this.isCategoryTerm(query)) {
-              return this.getCategorySearchResults(query, page, perPage);
+              return this.getCategorySearchResults(makeItCategoryTerm(query), page, perPage); // ps hack
             }
             //End - Ajeet
             response = solr.query(getResultsQuery(query, searchFilters, page, perPage));

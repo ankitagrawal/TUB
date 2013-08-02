@@ -13631,6 +13631,28 @@
             <column name="remarks" type="TEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-07-24-01">
+        <createTable tableName="synonym">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="search_synonym" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(450)">
+                 <constraints nullable="false"/>
+            </column>
+            <column name="brand_name" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
     <changeSet author="Shakti Singh (generated)" id="20130724-1">
         <addColumn tableName="payment">
             <column name="refund_amount" type="DECIMAL(8,2)"/>

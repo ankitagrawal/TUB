@@ -644,9 +644,13 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //for some orders userCodCall object is not created, a last check to create one
-        if (order.getUserCodCall() == null) {
-            UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
-            saveUserCodCall(userCodCall);
+        try{
+            if (order.getUserCodCall() == null) {
+                UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                saveUserCodCall(userCodCall);
+            }
+        } catch (Exception e){
+            logger.info("User Cod Call already exists for " + order.getId());
         }
 
         logger.debug("Trying to split order " + order.getId());
