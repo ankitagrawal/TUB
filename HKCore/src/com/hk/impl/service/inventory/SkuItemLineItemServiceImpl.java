@@ -107,7 +107,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     skuItemLineItem.setProductVariant(skuItemCLI.getSkuItem().getSkuGroup().getSku().getProductVariant());
 
                     //Book the sku item
-                    skuItemCLI.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                    skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
                     skuItemLineItem = save(skuItemLineItem);
                }
