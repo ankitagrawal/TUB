@@ -13776,7 +13776,7 @@
 	</changeSet>
     <changeSet author="Nihal (generated)" id="1375185803482-1">
         <createTable tableName="sku_item_cart_line_item">
-            <column name="id" type="INT">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="product_variant_id" type="VARCHAR(20)">
@@ -13801,7 +13801,7 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1375185803482-2">
         <createTable tableName="sku_item_line_item">
-            <column name="id" type="INT">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="product_variant_id" type="VARCHAR(20)">
@@ -13852,6 +13852,7 @@
     <changeSet author="Nihal (generated)" id="1375185803482-6">
         <sql>
             INSERT INTO sku_item_owner values(10, "SELF"), (20, "CUSTOMER"), (30, "SUPPLIER"), (40, "BRIGHT");
+            INSERT INTO `healthkart_test`.`sku_item_status` (`id`, `name`) VALUES ('150', 'TEMP BOOKED'), ('160', 'BOOKED');
         </sql>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1375185803482-23">
@@ -13878,7 +13879,20 @@
     <changeSet author="Nihal (generated)" id="1375185803482-32">
         <addForeignKeyConstraint baseColumnNames="sku_item_cart_line_item_id" baseTableName="sku_item_line_item" constraintName="fk_sku_item_line_item_sku_item_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item_cart_line_item"  referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1375185803482-33">
+        <changeSet author="Nihal (generated)" id="1375185803482-33">
         <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="sku_item_line_item" constraintName="fk_sku_item_line_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    </changeSet>
+
+    <changeSet author="tarun (generated)" id="1375420269033-18">
+        <createIndex indexName="cart_line_item_unit_num_unique" tableName="sku_item_cart_line_item" unique="true">
+            <column name="unit_num"/>
+            <column name="cart_line_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1375420269033-19">
+        <createIndex indexName="line_item_unit_num_unique" tableName="sku_item_line_item" unique="true">
+            <column name="unit_num"/>
+            <column name="line_item_id"/>
+        </createIndex>
     </changeSet>
 </databaseChangeLog>
