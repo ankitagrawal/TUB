@@ -1,19 +1,5 @@
 package com.hk.impl.service.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.akube.framework.dao.Page;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
@@ -26,19 +12,10 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ReplacementOrder;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.sku.SkuItemOwner;
-import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.*;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.service.queue.BucketService;
@@ -56,11 +33,18 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import com.hk.util.TokenUtils;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * @author vaibhav.adlakha
@@ -398,6 +382,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				List<SkuItemCLI> skuItemCLIs = item.getCartLineItem().getSkuItemCLIs();
 				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 				for (SkuItemCLI cli : skuItemCLIs) {
+					cli.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+					baseDao.save(cli.getSkuItem());
 					SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
 					skuItemLineItem.setLineItem(item);
 					skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
