@@ -357,7 +357,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				int entries = item.getSkuItemLineItems().size();
 				int j = 1;
 				while (j <= entries) {
-					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j);
+					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j-1);
 					List<SkuItemStatus> skuItemStatus = new ArrayList<SkuItemStatus>();
 					skuItemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 					skuItemStatus.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
