@@ -288,9 +288,10 @@ public class RewardPointServiceImpl implements RewardPointService {
 
     }
 
-    
+
+    @Override
     @Transactional
-    private void cancelRewardPoints(User user, Double cancelRewardPoints) {
+    public void cancelRewardPoints(User user, Double cancelRewardPoints) {
         redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType.REFERRED_ORDER_CANCELLED, user, cancelRewardPoints, null);
     }
 

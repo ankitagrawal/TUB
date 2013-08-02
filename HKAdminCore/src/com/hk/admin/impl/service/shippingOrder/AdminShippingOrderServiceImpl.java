@@ -7,7 +7,10 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.EnumRewardPointTxnType;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
+import com.hk.domain.user.UserAccountInfo;
+import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.reward.RewardPointTxnDao;
+import com.hk.pact.dao.user.UserAccountInfoDao;
 import com.hk.pact.service.order.RewardPointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,6 +113,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired BaseDao baseDao;
     @Autowired
 	PurchaseOrderService purchaseOrderService;
+    @Autowired
+    private UserAccountInfoDao userAccountInfoDao;
+    @Autowired
+    private RewardPointDao rewardPointDao;
+
 
     public void cancelShippingOrder(ShippingOrder shippingOrder, String cancellationRemark, String reconcile) {
         // Check if Order is in Action Queue before cancelling it.
@@ -151,10 +159,18 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         if (shippingOrder == null) {
             refundValue = order.getPayment().getAmount();
         } else {
-            refundValue = shippingOrder.getAmount(); //handle for free cases
+            refundValue = shippingOrder.getAmount(); //TODO: handle for free cases
         }
-        Double percentageAmount = refundValue / order.getPayment().getAmount() * -1;
-        List<RewardPoint> currentRewardPoints = rewardPointService.findRewardPoints(order, EnumRewardPointMode.getCashBackModes());
+        Double percentageAmount = refundValue / order.getPayment().getAmount();
+
+        // first redeem redeem points used by this SO/BO
+        List<RewardPointTxn> rewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
+        for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
+            rewardPointTxnDao.createRefundTxn(rewardPointTxn, rewardPointTxn.getValue()*percentageAmount);
+        }
+
+
+        /*List<RewardPoint> currentRewardPoints = rewardPointService.findRewardPoints(order, EnumRewardPointMode.getCashBackModes());
         for (RewardPoint currentRewardPoint : currentRewardPoints) {
             List<RewardPointTxn> currentRewardPointTxnList = rewardPointTxnDao.findByRewardPoint(currentRewardPoint);
             for (RewardPointTxn rewardPointTxn : currentRewardPointTxnList) {
@@ -165,15 +181,79 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                     rewardPointService.approveRewardPoints(Arrays.asList(cashBackRewardPoints), rewardPointTxn.getExpiryDate());
                 }
             }
+        }*/
+
+        // cancel reward points in partial manner
+        List<RewardPoint> currentRewardPoints = rewardPointService.findByReferredOrder(order);
+
+        for (RewardPoint rewardPoint : currentRewardPoints) {
+
+            List<RewardPointTxn> txnList = rewardPointTxnDao.findByRewardPoint(rewardPoint);
+            Double totalAddedRewardPoints = 0D;
+            Double totalUsedRewardPoints = 0D;
+            for (RewardPointTxn rewardPointTxn : txnList) {
+                if (!rewardPointTxn.isType(EnumRewardPointTxnType.REFERRED_ORDER_CANCELLED)) {
+                    totalUsedRewardPoints += rewardPointTxn.getValue();
+                    if (rewardPointTxn.isType(EnumRewardPointTxnType.ADD)) {
+                        totalAddedRewardPoints = rewardPointTxn.getValue();
+                    }
+                }
+            }
+
+            // if total used is zero then, reward point has not been used yet, simple cancel totalRewardPointAdded
+            if(totalUsedRewardPoints == 0 && totalAddedRewardPoints > 0) {
+                rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, percentageAmount*totalAddedRewardPoints,txnList.get(0).getExpiryDate());
+            } else {
+
+                Double remainingRewardPoints = totalAddedRewardPoints - totalUsedRewardPoints;
+                // now first cancel remaining reward points
+                if (remainingRewardPoints > 0) {
+                    rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, percentageAmount*totalAddedRewardPoints,txnList.get(0).getExpiryDate());
+                }
+
+                // cancel reward points from user total redeemable reward points in lieu of reward points used
+                Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(rewardPoint.getUser());
+                if (redeemablePoints >= totalUsedRewardPoints) {
+                    rewardPointService.cancelRewardPoints(rewardPoint.getUser(), percentageAmount*totalUsedRewardPoints);
+                } else {
+
+                    if(redeemablePoints > 0) {
+                        rewardPointService.cancelRewardPoints(rewardPoint.getUser(), percentageAmount*redeemablePoints);
+                    }
+
+                    // intimate user that redeemable reward points are being canceled from his account at last SO cancel
+                    UserAccountInfo userAccountInfo = getUserAccountInfoDao().getOrCreateUserAccountInfo(rewardPoint.getUser());
+                    userAccountInfo.setOverusedRewardPoints(userAccountInfo.getOverusedRewardPoints() + percentageAmount*totalUsedRewardPoints);
+                    getUserAccountInfoDao().save(userAccountInfo);
+                }
+            }
+
+            // now cancel reward Point when its amount has been zero
+            if(isZeroRewardPointBalance(rewardPoint)) {
+               rewardPointDao.cancelRewardPoint(rewardPoint);
+            }
         }
-        List<RewardPointTxn> redeemedRewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
+
+
+
+        /*List<RewardPointTxn> redeemedRewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
         for (RewardPointTxn rewardPointTxn : redeemedRewardPointTxnList) {
             Order concernedOrder = rewardPointTxn.getRewardPoint().getReferredOrder();
             RewardPoint refundRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
                     concernedOrder, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
                     EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
             rewardPointService.approveRewardPoints(Arrays.asList(refundRewardPoints), rewardPointTxn.getExpiryDate());
+        }*/
+
+    }
+
+    private boolean isZeroRewardPointBalance(RewardPoint rewardPoint) {
+        Double totalBalance = 0D;
+        List<RewardPointTxn> txnList = rewardPointTxnDao.findByRewardPoint(rewardPoint);
+        for (RewardPointTxn rewardPointTxn : txnList) {
+            totalBalance += rewardPointTxn.getValue();
         }
+        return (totalBalance == 0);
     }
 
 	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
@@ -600,5 +680,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     public void setCancellationRemark(String cancellationRemark) {
         this.cancellationRemark = cancellationRemark;
+    }
+
+    public UserAccountInfoDao getUserAccountInfoDao() {
+        return userAccountInfoDao;
+    }
+
+    public void setUserAccountInfoDao(UserAccountInfoDao userAccountInfoDao) {
+        this.userAccountInfoDao = userAccountInfoDao;
     }
 }

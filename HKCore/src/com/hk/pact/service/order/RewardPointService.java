@@ -50,4 +50,6 @@ public interface RewardPointService {
     
     public void redeemRewardPoints(Order order, Double rewardPointsUsed);
 
+    public void cancelRewardPoints(User user,  Double cancelRewardPoints);
+
 }
