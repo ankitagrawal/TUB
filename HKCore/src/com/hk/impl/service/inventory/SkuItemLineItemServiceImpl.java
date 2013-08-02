@@ -73,12 +73,12 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
             //get available sku items of the given warehouse at given mrp
             List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-            if(availableUnbookedSkuItems.size() < lineItem.getQty()){
+            if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0){
                 return false;
             }
             for(int i = 1; i<= lineItem.getQty(); i++){
                 SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
-                SkuItem skuItem = availableUnbookedSkuItems.get(i);
+                SkuItem skuItem = availableUnbookedSkuItems.get(i-1);
                 //Book the sku item first
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
