@@ -145,6 +145,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
                     //set new sku item on skuItemCLI as well
                     skuItemCLI.setSkuItem(skuItem);
+                    getSkuItemDao().save(skuItemCLI);
                     skuItemLineItem.setSkuItemCLI(skuItemCLI);
 
                     skuItemLineItem = save(skuItemLineItem);
