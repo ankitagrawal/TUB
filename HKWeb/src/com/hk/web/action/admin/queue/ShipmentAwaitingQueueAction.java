@@ -11,12 +11,8 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hk.constants.analytics.EnumReason;
-import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.courier.Zone;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
-import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -76,9 +72,6 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     private CourierService             courierService;
     @Autowired
     InvoicePDFGenerator                invoicePDFgenerator;
-
-    @Autowired
-    ShippingOrderProcessor              shippingOrderProcessor;
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
 
@@ -140,74 +133,9 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution moveToActionAwaiting() {
         logger.info("shipment queue move to action awaiting");
-        Set<Long> acceptableReasons = new HashSet<Long>();
-        acceptableReasons.add(EnumReason.PROD_DAMAGE.getId());
-        acceptableReasons.add(EnumReason.PROD_EXPIRE.getId());
-        acceptableReasons.add(EnumReason.PROD_INV_MISMATCH.getId());
-        acceptableReasons.add(EnumReason.MRP_LESS.getId());
-        acceptableReasons.add(EnumReason.MRP_MORE.getId());
-
-        boolean isEscalatebackAllowed;
-        List<Long> shippingOrderIdsWithInvalidReason = new ArrayList<Long>();
-        List<Long> shippingOrdersWithoutFixedLI = new ArrayList<Long>();
-
         for (ShippingOrder shippingOrder : shippingOrderList) {
-            isEscalatebackAllowed = false;
-            if (shippingOrder.getReason() != null && acceptableReasons.contains(shippingOrder.getReason().getId())) {
-                if (shippingOrderService.getShippingOrderLifeCycleActivity(
-                        EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed) != null ) {
-                    // then only allow escalate back
-                    isEscalatebackAllowed = true;
-                } else {
-                    shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
-                }
-            } else {
-                  shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
-            }
-            if (isEscalatebackAllowed) {
-                Set<LineItem> selectedLineItems = new HashSet<LineItem>();
-                List<String> messages = new ArrayList<String>();
-                Map<String, ShippingOrder> splittedOrders =  new HashMap<String, ShippingOrder>();
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    if (lineItem.getError()) {
-                        selectedLineItems.add(lineItem);
-                    }
-                }
-                if (!selectedLineItems.isEmpty()) {
-                    // if all elements can't be fixed then cancel complete SO
-                    if (selectedLineItems.size() == shippingOrder.getLineItems().size()) {
-                        shippingOrderService.logShippingOrderActivity(shippingOrder,
-                                EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch, shippingOrder.getReason(),
-                                "SO cancelled due to inventory mismatch.");
-                        adminShippingOrderService.cancelShippingOrder(shippingOrder,null);
-                        //return shippingOrder;
-                    } else {
-                        // split the order and cancel only the unfixed line items
-                        boolean splitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems,
-                                splittedOrders, messages);
-                        if (splitSuccess) {
-                            ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
-                            shippingOrderService.logShippingOrderActivity(cancelledSO,
-                                    EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch, cancelledSO.getReason(),
-                                    "SO cancelled due to inventory mismatch.");
-                            adminShippingOrderService.cancelShippingOrder(cancelledSO, null);
-                            shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
-                            shippingOrder = adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
-
-                            // auto escalate the SO
-                            shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
-                        }
-                    }
-                } else {
-                    //no line items which are unfixed
-                }
-            }
-
+            adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
         }
-
-        addRedirectAlertMessage(new SimpleMessage("Add valid Reasons for shipping order ids -> "
-                + shippingOrderIdsWithInvalidReason));
-        //return  shippingOrder;
         addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));
         return new RedirectResolution(ShipmentAwaitingQueueAction.class);
     }

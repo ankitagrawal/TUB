@@ -48,6 +48,7 @@ public enum EnumReason {
     Damaged(910L, "Damaged", EnumReasonType.Reverse_Pickup_Customer),
     Non_Functional(920L, "Non Functional", EnumReasonType.Reverse_Pickup_Customer),
     Near_Expiry(930L, "Near Expiry", EnumReasonType.Reverse_Pickup_Customer),
+    Expired(940L, "Expired", EnumReasonType.Reverse_Pickup_Customer),
 
     PROD_CHANGE_CR(310L, EnumClassification.CUSTOMER_REQUEST_PRODUCT_CHANGE, EnumReasonType.Escalate_Back),
     CANCEL_CR(320L, EnumClassification.CUSTOMER_REQUEST_CANCEL, EnumReasonType.Escalate_Back),

@@ -340,8 +340,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
      */
     @Override
     @Transactional
-    public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, Map<String, ShippingOrder> splittedOrders,
-                               List<String> messages ) {
+    public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems, Map<String,
+            ShippingOrder> splittedOrders, List<String> messages ) {
 
         Map<String, Boolean> flagMapOldSO = new HashMap<String, Boolean>();
         Map<String, Boolean> flagMapNewSO = new HashMap<String, Boolean>();
@@ -375,7 +375,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             }
 
             // Create a new shipping order to split
-            ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
+            ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(),
+                    shippingOrder.getWarehouse());
             newShippingOrder.setServiceOrder(false);
             newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
             newShippingOrder = shippingOrderService.save(newShippingOrder);
@@ -420,7 +421,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                         newShippingOrder);
 			}
 
-            messages.add(("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split manually."));
+            messages.add(("Shipping Order : " + shippingOrder.getGatewayOrderId() + " was split."));
             return true;
         } else {
             messages.add("Shipping Order : " + shippingOrder.getGatewayOrderId() + " is in incorrect status cannot be split.");
