@@ -648,6 +648,10 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
             baseDao.save(updatePvPrice);
         }
+     // get Net quantity for product variant
+        List<Sku> variantSkus = skuService.getSKUsForProductVariant(productVariant);
+        long netQty = inventoryManageDao.getAvailableUnBookedInventory(variantSkus);
+        productVariant.setNetQty(netQty);
 
         productVariant.setMrpQty(maxQty);
         productVariant.setMarkedPrice(selectedInfo.getMrp());
