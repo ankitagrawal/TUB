@@ -318,7 +318,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 				List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
 				List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
-				logger.debug("Available Unbooked Inventory For Sku - "+item.getSku()+"at MRP - "+item.getMarkedPrice()+" is "+checkAvailableUnbookedSkuItems.size());
+				logger.debug("Available Unbooked Inventory For Sku - "+item.getSku()+" at MRP - "+item.getMarkedPrice()+" is "+checkAvailableUnbookedSkuItems.size());
 				if (checkAvailableUnbookedSkuItems.size() >= qty) {
 					int i = 1;
 					while (i <= qty) {
@@ -354,10 +354,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					baseDao.save(item.getCartLineItem());
 					item.setSkuItemLineItems(skuItemLineItems);
 					baseDao.save(item);
-					logger.debug("Populated Table SkuItemLineItem for Line Item - "+item.getId()+"for Cart Line Item - "+item.getCartLineItem().getId()+" of Shipping Order - "+item.getShippingOrder().getId());
+					logger.debug("Populated Table SkuItemLineItem for Line Item - "+item.getId()+" for Cart Line Item - "+item.getCartLineItem().getId()+" of Shipping Order - "+item.getShippingOrder().getId());
 				}
 				else{
-					logger.debug("Could Not Populate Tables for Line Item - "+item.getId()+"for Cart Line Item - "+item.getCartLineItem().getId()+" of Shipping Order - "+item.getShippingOrder().getId());
+					logger.debug("Could Not Populate Tables for Line Item - "+item.getId()+" for Cart Line Item - "+item.getCartLineItem().getId()+" of Shipping Order - "+item.getShippingOrder().getId());
 				}
 			}
 
