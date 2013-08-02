@@ -326,12 +326,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 						// create skuItemCLI entry
 						skuItemCLI.setSkuItem(skuItem);
 						skuItemCLI.setCartLineItem(item.getCartLineItem());
-						skuItemCLI.setUnitNum(qty);
+						skuItemCLI.setUnitNum((long) i);
 						skuItemCLI.setProductVariant(item.getSku().getProductVariant());
 						// create skuItemLineItem entry
 						skuItemLineItem.setSkuItem(skuItem);
 						skuItemLineItem.setLineItem(item);
-						skuItemLineItem.setUnitNum(qty);
+						skuItemLineItem.setUnitNum((long) i);
 						skuItemLineItem.setSkuItemCLI(skuItemCLI);
 						skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
 						skuItemLineItems.add(skuItemLineItem);
