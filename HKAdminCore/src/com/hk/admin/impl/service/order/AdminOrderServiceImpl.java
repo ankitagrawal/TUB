@@ -179,8 +179,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                         SkuItem skuItem = skuItemCLI.getSkuItem();
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                         skuItemsToBeFreed.add(skuItem);
-                        if(skuItemCLI.getSkuItemLineItem()!=null){
-                        	skuItemLineItemsToBeDeleted.add(skuItemCLI.getSkuItemLineItem());
+                        if(skuItemCLI.getSkuItemLineItems()!=null){
+                        	skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
                         }
                     }
                     skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());

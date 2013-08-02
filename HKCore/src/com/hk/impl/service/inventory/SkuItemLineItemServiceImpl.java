@@ -182,7 +182,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                 skuItemsToBeFreed.add(skuItem);
             }
             for (SkuItemCLI skuItemCLI : lineItem.getCartLineItem().getSkuItemCLIs()){
-                skuItemCLI.setSkuItemLineItem(null);
+                skuItemCLI.setSkuItemLineItems(null);
                 skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
                 skuItemCLIsToBeDeleted.add(skuItemCLI);
             }

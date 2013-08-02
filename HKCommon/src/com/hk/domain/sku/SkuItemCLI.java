@@ -44,8 +44,8 @@ public class SkuItemCLI implements java.io.Serializable {
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
-    private SkuItemLineItem skuItemLineItem;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
+    private List<SkuItemLineItem> skuItemLineItems;
     
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
@@ -96,14 +96,14 @@ public class SkuItemCLI implements java.io.Serializable {
 		this.unitNum = unitNumber;
 	}
 
-    public SkuItemLineItem getSkuItemLineItem() {
-        return skuItemLineItem;
+    public List<SkuItemLineItem> getSkuItemLineItems() {
+        return skuItemLineItems;
     }
 
-    public void setSkuItemLineItem(SkuItemLineItem skuItemLineItem) {
-        this.skuItemLineItem = skuItemLineItem;
+    public void setSkuItemLineItems(List<SkuItemLineItem> skuItemLineItems) {
+        this.skuItemLineItems = skuItemLineItems;
     }
-    
+
     public Date getCreateDate() {
 		return createDate;
 	}
