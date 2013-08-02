@@ -86,6 +86,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 	@Transactional
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
 		if(isShippingOrderAutoEscalable(shippingOrder, firewall)){
+			shippingOrderService.validateShippingOrder(shippingOrder);
 			User activityUser = getUserService().getAdminUser();
 			shippingOrderService.logShippingOrderActivity(shippingOrder, activityUser,
 					EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
@@ -97,6 +98,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 	@Transactional
 	public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder) {
 		if(isShippingOrderManuallyEscalable(shippingOrder)){
+			shippingOrderService.validateShippingOrder(shippingOrder);
 			User activityUser = userService.getLoggedInUser();
 			shippingOrderService.logShippingOrderActivity(shippingOrder, activityUser,
 					EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
