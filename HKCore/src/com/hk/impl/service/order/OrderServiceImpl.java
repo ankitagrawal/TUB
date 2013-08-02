@@ -19,11 +19,13 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
-import com.hk.domain.order.*;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
@@ -57,7 +59,6 @@ import com.hk.pact.service.splitter.OrderSplitter;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
-import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import org.hibernate.criterion.DetachedCriteria;
@@ -713,6 +714,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
+	        logger.debug("post split will create sku item line item");
             for (ShippingOrder shippingOrder : order.getShippingOrders()){
                 for (LineItem lineItem : shippingOrder.getLineItems()){
                     if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){

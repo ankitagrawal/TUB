@@ -1,43 +1,43 @@
 package com.hk.impl.service.inventory;
 
-import java.util.*;
-
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
-import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
-import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.CartLineItem;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
 import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
-import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
-import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.pact.service.inventory.SkuService;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -62,6 +62,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     SkuItemLineItemService skuItemLineItemService;
     @Autowired
     LineItemDao lineItemDao;
+
+	private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
     /*
     @Override
@@ -876,9 +878,10 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                         }
                     }
                     // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-
+	                logger.debug("calling saveSICLI line 881 from InventoryHealthServiceImpl");
                     inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
                     if (siliToBeCreated) {
+	                    logger.debug("calling createNewSkuItemLineItem from InventoryHealthServiceImpl");
                         skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
                     }
                     maxQty = maxQty - qtyToBeSet;
