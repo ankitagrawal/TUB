@@ -1,0 +1,401 @@
+body			{ height:auto;}
+
+.row			{ 
+				width:100%; 
+				clear:both;
+				font-family:Arial, Helvetica, sans-serif;
+				}
+			
+.rowGap			{
+				width:100%;
+				clear:both;
+				height:10px;
+				line-height:10px;
+				}				
+
+.cl				{ 
+				clear:both;
+				}
+				
+p				{
+				font-family:Arial, Helvetica, sans-serif;	
+				font-size:13px;
+				}				
+				
+.container		{ 
+				background:#464243;
+				width:960px; 
+				clear:both;
+				margin:0 auto;
+				}
+				
+.inrContainer	{
+				width:940px;
+				clear:both;
+				margin:0 auto;
+				padding:10px 0px 10px 0px;
+				}				
+				
+.bx1			{
+				background:#dc6e4c;
+				width:640px;
+				float:left;
+				height:200px;
+				}	
+
+.bx1 img			{
+				margin:25px 0px 0px 28px;
+				}
+								
+.bx2			{
+				background:#fff;
+				width:290px;
+				float:right;
+				height:200px;
+				}								
+
+.bx2 img			{
+				margin:25px 0px 0px 20px;
+				}
+				
+				
+.bx3And4Outer	{
+				width:290px;
+				float:left;
+				height:417px;
+				}
+.bx3			{
+				background:#fff;
+				width:290px;
+				height:110px;
+				margin-bottom:10px;
+				}				
+				
+				
+.bx4			{
+				background:#fff;
+				width:100%;
+				clear:both;
+				}				
+								
+				
+.bx5And6Outer	{
+				width:640px;
+				float:right;
+				height:417px;					
+				}		
+
+.bx5			{	
+				background:#fff;
+				width:100% ;
+				clear:both;
+				height:222px;
+				margin-bottom:10px;
+				}
+.bx5 img		{
+				margin:40px 0px 0px 50px;
+				}				
+				
+				
+.bx6			{
+				background:#fcb854;
+				width:100%;
+				clear:both;
+				height:100px;
+				height:185px;
+				}
+.bx6 img		{
+				margin:35px 0px 0px 27px;
+				}				
+				
+				
+.bx7			{
+				background:#fff;
+				width:640px;
+				float:left;
+				height:200px;
+				}	
+
+.bx7 img		{
+				margin:39px 0px 0px 39px;
+				}
+								
+.bx8			{
+				background:#fff;
+				width:290px;
+				float:right;
+				height:200px;
+				}								
+			
+			
+.bx9			{
+				background:#fff;
+				width:290px;
+				float:left;
+				height:200px;
+				}	
+								
+.bx10			{
+				background:#67b2e7;
+				width:640px;
+				float:right;
+				height:200px;
+				}
+.bx10 img		{
+				margin:29px 0px 0px 42px;
+				}				
+					
+			
+.bx11To17		{
+				width:640px;
+				float:left;				
+				}
+
+.bx11			{
+				width:100%;
+				clear:both;
+				background:#fff;
+				height:50px;
+				margin-bottom:10px;
+				}
+.bx11 img		{
+				margin:12px 0px 0px 28px;
+				}	
+				
+				
+				
+.bxsGap1		{
+				width:10px;
+				float:left;
+				height:10px;
+				}		
+				
+.bx12			{
+				background:#fff;
+				width:206px;
+				float:left;
+				height:200px;
+				}
+.bx12 img		{
+				margin:15px 0px 0px 16px;
+				}				
+				
+				
+.bx13			{
+				background:#fff;
+				width:207px;
+				float:left;
+				height:200px;
+				}
+.bx13 img		{
+				margin:15px 0px 0px 16px;
+				}				
+				
+.bx14			{
+				background:#fff;
+				width:207px;
+				float:left;
+				height:200px;
+				}
+.bx14 img		{
+				margin:15px 0px 0px 16px;
+				}					
+				
+.bx15			{
+				width:100%;
+				clear:both;
+				height:210px;
+				margin-bottom:10px;
+				}
+				
+.bx16And17		{
+				background:#fff;
+				width:315px;
+				float:left;
+				height:210px;
+				}					
+							
+							
+.bx18			{
+				background:#94d440;
+				width:290px;
+				float:right;
+				height:700px;
+				}	
+.bx18 img		{
+				margin:28px 0px 0px 25px;
+				}				
+							
+		
+.bx19To21		{
+				width:640px;
+				float:left;
+				}
+		
+.bx19			{
+				background:#f6ce39;
+				width:100%;
+				clear:both;
+				height:50px;	
+				margin-bottom:10px;
+				}
+.bx19 img		{
+				margin:13px 0px 0px 47px;
+				}				
+				
+				
+.bx20And21		{
+				background:#f6ce39;
+				width:315px;
+				float:left;
+				height:640px;
+				}
+.bx20And21 img	{
+				margin:23px 0px 0px 42px;
+				}				
+				
+				
+				
+.bx22To24		{	
+				width:290px; 
+				float:right;
+				}		
+
+.bx22			{
+				background:#fff;
+				width:100%;
+				clear:both;
+				height:226px;
+				}
+
+.bx23			{
+				background:#e070b6;
+				width:100%;
+				clear:both;
+				height:227px;
+				margin:10px 0px 10px 0px;
+				}
+.bx23 img		{
+				margin:15px 0px 0px 30px;
+				}				
+				
+				
+.bx24			{
+				background:#fff;
+				width:100%;
+				clear:both;
+				height:227px;
+				}
+.bx24 img		{
+				margin:33px 0px 0px 31px;
+				}				
+								
+.bx25			{
+				background:#00bdcc;
+				width:100%;
+				clear:both;
+				height:310px;
+				}		
+					
+.bx25 img		{
+				margin:21px 0px 0px 53px;
+				}
+
+.breastfeedingProducts		{
+							background:#fff;
+							padding:30px 0px 20px 0px;
+							text-align:center;
+							}				
+			
+.btnsArea		{
+				background:#fff;
+				padding:10px 0px 10px 0px;
+				}
+								
+.btn1			{
+				background:#be3100;
+				width:470px;
+				float:left;
+				}
+.btn1 a			{
+				background:#be3100;
+				text-decoration:none;
+				color:#fff;
+				font-family:Arial, Helvetica, sans-serif !important;
+				font-size:21px !important;
+				text-align:center;
+				display:block;
+				padding:10px 0px 10px 0px;
+				}
+.btn1 a:hover	{
+				background:#be3100;
+				text-decoration:none;
+				color:#fff;
+				font-size:21px !important;
+				display:block;
+				}	
+			
+.btn2			{
+				background:#be3100;
+				width:470px;
+				float:right;
+				}
+.btn2 a			{
+				background:#be3100;
+				text-decoration:none;
+				color:#fff;
+				font-family:Arial, Helvetica, sans-serif !important;
+				font-size:21px !important;
+				text-align:center;
+				display:block;
+				padding:10px 0px 10px 0px;
+				}
+.btn2 a:hover	{
+				background:#be3100;
+				text-decoration:none;
+				color:#fff;
+				font-size:21px !important;
+				display:block;
+				padding:10px 0px 0px 0px;
+				}	
+				
+.ftrBtns		{ 
+				background:#fff;
+				text-align:center;
+				padding-bottom:30px;
+				}						
+.ftrBtns img	{
+				margin-bottom:10px;
+				}			
+			
+.abc{}			
+
+.yellowBx				{ 
+						position:absolute; 
+						width:1px; 
+						height:1px; 
+						overflow:hidden; 
+						display:none; 
+						z-index:10001; 
+						margin:0px 0px 0px 39px;  
+						text-align:left; 
+						background:#fff; 
+						}
+
+.greenBx				{
+						right:0; 
+						position:absolute; 
+						width:175px; 
+						height:200px; 
+						margin-top:0px;
+                        margin-left:190px;
+						z-index:10000; 
+						color:#fff;
+						}
+						
+.greenBx div			{ 
+						margin-bottom:10px;
+                        margin-left: 190px;
+						}					
+												
+						
