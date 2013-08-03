@@ -167,7 +167,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
                     skuItemLineItem.setSkuItemCLI(skuItemCLI);
                 }
-                //skuItemLineItem = save(skuItemLineItem);
+                skuItemLineItem = save(skuItemLineItem);
             }
         }
         return true;
