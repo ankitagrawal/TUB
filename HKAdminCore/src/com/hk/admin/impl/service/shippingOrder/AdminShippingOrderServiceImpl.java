@@ -161,15 +161,16 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 					lineItem.setSku(sku);
 				}
 			}
-			
-			for (LineItem lineItem : lineItems) {
-				if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
-					shouldUpdate = false;
-				}
-			}
-            if(shouldUpdate){
-                shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
-            }
+
+      for (LineItem lineItem : lineItems) {
+        if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
+          shouldUpdate = false;
+        }
+      }
+      if (shouldUpdate) {
+        shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
+        logger.debug("isWarehouseBeFlippable = "+shouldUpdate);
+      }
 
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);
@@ -229,6 +230,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
 	//		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
+
+            //Validate SO for SkuItem booking
+            shippingOrderService.validateShippingOrder(shippingOrder);
+          
             return shippingOrder;
         }
         return null;

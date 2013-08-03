@@ -1,12 +1,5 @@
 package com.hk.impl.service.order;
 
-import java.util.Set;
-
-import com.hk.pact.service.inventory.InventoryHealthService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -24,16 +17,22 @@ import com.hk.domain.user.User;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -64,6 +63,8 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
     private PaymentService paymentService;
     @Autowired
     private InventoryHealthService inventoryHealthService;
+
+	private Logger logger = LoggerFactory.getLogger(AutomatedOrderServiceImpl.class);
 
     /**
      * creates base orders from within the code rather than through the usual UI flow.
@@ -108,8 +109,15 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 	    order=orderService.save(order);
         //creating entries in sku_item_CLI
 
-        inventoryHealthService.tempBookSkuLineItemForOrder(order);
-        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+	    try {
+		    inventoryHealthService.tempBookSkuLineItemForOrder(order);
+		            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+
+	    }catch (Exception ex){
+		    logger.error(ex.getMessage());
+		    ex.printStackTrace();
+
+	    }
 
        return  order;
     }
