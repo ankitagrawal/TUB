@@ -132,14 +132,14 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired ShippingOrderDao shippingOrderDao;
 
     
-    public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark, boolean reconcileAll) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
             //shippingOrder = getShippingOrderService().save(shippingOrder);
             getAdminInventoryService().reCheckInInventory(shippingOrder);
-            // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
+            // TODO : Write a generic ROLLBACK util which will essentially release all attached liabilities i.e.
             // inventory, reward points, shipment, discount
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled,shippingOrder.getReason(),cancellationRemark);
 
@@ -157,7 +157,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             	adminEmailManager.sendJitShippingCancellationMail(shippingOrder,null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
             }
 
-            reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
+            if(!reconcileAll) {
+                reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
+
+            }
 
             getBucketService().popFromActionQueue(shippingOrder);
         }
