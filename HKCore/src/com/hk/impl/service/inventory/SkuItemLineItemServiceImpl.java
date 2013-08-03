@@ -59,7 +59,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         Long unitNum = 0L;
         CartLineItem cartLineItem = lineItem.getCartLineItem();
         unitNum = 0L;
-        if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <=0){
+        if(!(lineItem.getShippingOrder() instanceof ReplacementOrder) && (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <=0)){
             return false;
         }
 
