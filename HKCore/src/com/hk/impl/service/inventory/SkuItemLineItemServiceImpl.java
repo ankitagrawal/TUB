@@ -18,10 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -67,6 +64,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         }
 
         if(lineItem.getShippingOrder() instanceof ReplacementOrder){
+            boolean createSkuCLIFlag = false;
 	        logger.debug("instance of ro true");
             List<Sku> skuList = new ArrayList<Sku>();
             List<Long> skuStatusIdList = new ArrayList<Long>();
@@ -83,6 +81,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 	            logger.debug("about to return false from createNewSkuItemLineItem");
                 return false;
             }
+
+            if(lineItem.getCartLineItem().getSkuItemCLIs() == null || lineItem.getCartLineItem().getSkuItemCLIs().size() == 0){
+                createSkuCLIFlag = true;
+            }
+
             for(int i = 1; i<= lineItem.getQty(); i++){
                 unitNum++;
                 SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
@@ -92,11 +95,25 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 	            logger.debug("saving si to booked in replacement order ->  " + skuItem.getId() );
                 skuItem = (SkuItem)getSkuItemDao().save(skuItem);
 
+                if(createSkuCLIFlag){
+                    SkuItemCLI skuItemCLI = new SkuItemCLI();
+                    skuItemCLI.setSkuItem(skuItem);
+                    skuItemCLI.setCartLineItem(lineItem.getCartLineItem());
+                    skuItemCLI.setUnitNum(unitNum);
+                    skuItemCLI.setCreateDate(new Date());
+                    skuItemCLI.setProductVariant(lineItem.getSku().getProductVariant());
+                    skuItemCLI = (SkuItemCLI)baseDao.save(skuItemCLI);
+                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+
+                }else{
+                    skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i-1));
+                }
+
                 //create skuItemLineItem entry
                 skuItemLineItem.setSkuItem(skuItem);
                 skuItemLineItem.setLineItem(lineItem);
                 skuItemLineItem.setUnitNum(unitNum);
-                skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i-1));
+
                 skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
 	            logger.debug("saving sili in replacement order ");
                 skuItemLineItem = save(skuItemLineItem);
