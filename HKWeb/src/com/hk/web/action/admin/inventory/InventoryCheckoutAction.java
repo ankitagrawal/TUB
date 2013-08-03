@@ -214,7 +214,7 @@ public class InventoryCheckoutAction extends BaseAction {
             if (skuItemBarcode != null) {
                 skuGroupBarcode = skuItemBarcode.getSkuGroup();
             } else {
-                skuGroupBarcode = skuGroupService.getInStockSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId());
+                skuGroupBarcode = skuGroupService.getInStockSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList);
             }
             if (skuGroupBarcode != null && skuGroupBarcode.getSku() != null) {
                 productVariant = skuGroupBarcode.getSku().getProductVariant();
