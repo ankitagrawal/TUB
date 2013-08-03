@@ -65,8 +65,8 @@ public class RewardPointTxnDaoImpl extends BaseDaoImpl implements RewardPointTxn
         return save(createRewardPointTxn(rewardPoint, EnumRewardPointTxnType.REDEEM, unclaimedPoints, rewardPointExpiryDate, redeemedOrder));
     }
 
-    public RewardPointTxn createRefundTxn(RewardPointTxn rewardPointTxn,Double percentage) {
-        return save(createRewardPointTxn(rewardPointTxn.getRewardPoint(), EnumRewardPointTxnType.REFUND, Math.abs(rewardPointTxn.getValue())*percentage, rewardPointTxn.getExpiryDate(),
+    public RewardPointTxn createRefundTxn(RewardPointTxn rewardPointTxn,Double value) {
+        return save(createRewardPointTxn(rewardPointTxn.getRewardPoint(), EnumRewardPointTxnType.REFUND, Math.abs(value), rewardPointTxn.getExpiryDate(),
                 rewardPointTxn.getRedeemedOrder()));
     }
 

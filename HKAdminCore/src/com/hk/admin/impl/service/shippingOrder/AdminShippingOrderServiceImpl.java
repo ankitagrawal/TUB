@@ -10,6 +10,7 @@ import java.util.Set;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.EnumRewardPointTxnType;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
@@ -167,13 +168,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
 
     public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order) {
-        Double refundValue = 0D;
+        /*Double refundValue = 0D;
         if (shippingOrder == null) {
             refundValue = order.getPayment().getAmount();
         } else {
             refundValue = shippingOrder.getAmount(); //TODO: handle for free cases
-        }
-        Double percentageAmount = refundValue / order.getPayment().getAmount();
+        }*/
+        Double percentageAmount = calculateWeight(shippingOrder,order);
 
         // first redeem redeem points used by this SO/BO
         List<RewardPointTxn> rewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
@@ -205,7 +206,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             Double totalUsedRewardPoints = 0D;
             for (RewardPointTxn rewardPointTxn : txnList) {
                 if (!rewardPointTxn.isType(EnumRewardPointTxnType.REFERRED_ORDER_CANCELLED)) {
-                    totalUsedRewardPoints += rewardPointTxn.getValue();
+
+                    if (rewardPointTxn.isType(EnumRewardPointTxnType.REDEEM) && rewardPointTxn.isType(EnumRewardPointTxnType.REFUND)) {
+                        totalUsedRewardPoints += rewardPointTxn.getValue();
+                    }
+
                     if (rewardPointTxn.isType(EnumRewardPointTxnType.ADD)) {
                         totalAddedRewardPoints = rewardPointTxn.getValue();
                     }
@@ -265,7 +270,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         for (RewardPointTxn rewardPointTxn : txnList) {
             totalBalance += rewardPointTxn.getValue();
         }
-        return (totalBalance == 0);
+        return (totalBalance <= 0);
     }
 
     private double calculateWeight(ShippingOrder shippingOrder, Order order) {
@@ -273,10 +278,28 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         if(shippingOrder == null) {
             weightedFactor = 1D;
+
         } else {
 
-            if(EnumPaymentMode.FREE_CHECKOUT.getId().equals(order.getPayment().getPaymentMode().getId())) {
+            if (EnumPaymentMode.FREE_CHECKOUT.getId().equals(order.getPayment().getPaymentMode().getId())) {
+                double orderAmount = 0;
 
+                Set<CartLineItem> cartLineItems = order.getCartLineItems();
+                for (CartLineItem cartLineItem : cartLineItems) {
+                    if (EnumCartLineItemType.Product.getId().equals(cartLineItem.getLineItemType().getId())) {
+                        orderAmount += (cartLineItem.getHkPrice() - cartLineItem.getDiscountOnHkPrice()) * cartLineItem.getQty();
+                    }
+                }
+
+
+                double shippingOrderAmount = 0;
+                Set<LineItem> lineItems = shippingOrder.getLineItems();
+                for (LineItem lineItem : lineItems) {
+                    shippingOrderAmount += (lineItem.getHkPrice() - lineItem.getDiscountOnHkPrice()) * lineItem.getQty();
+                }
+                if (shippingOrderAmount != 0 && orderAmount != 0) {
+                    weightedFactor = shippingOrderAmount/orderAmount;
+                }
 
 
             } else {
