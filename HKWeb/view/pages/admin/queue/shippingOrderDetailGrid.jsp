@@ -685,10 +685,12 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-            Size: ${shipment.boxSize.name}, Weight: ${shipment.boxWeight}
+            Size: ${shipment.boxSize.name}, Weight: ${shipment.boxWeight},
+            <br/>
+            Est Shipping Cost:${shipment.estmShipmentCharge}
         </div>
         <div class="clear"></div>
-	    <div class="floatleft">
+	      <div class="floatleft">
             Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
