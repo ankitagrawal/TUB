@@ -189,7 +189,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
             skuList.add(sku);
             availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
             
-            if(availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > lineItem.getQty()){
+            if(availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() >= lineItem.getQty()){
                 List<SkuItemLineItem> skuItemLineItemList = lineItem.getSkuItemLineItems();
                 for(SkuItemLineItem skuItemLineItem : skuItemLineItemList){
                     SkuItem toBeFreedSkuItem = skuItemLineItem.getSkuItem();
