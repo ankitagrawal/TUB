@@ -450,17 +450,8 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             }
         }
 
-        if (checkedInInvList.isEmpty() && lineItem.getCartLineItem().getProductVariant().getProduct().isJit()){
-            Collection<SkuInfo> unCheckedOutInvList = getUnCheckedOutInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
-            if (unCheckedOutInvList != null && !unCheckedOutInvList.isEmpty()) {
-              for (SkuInfo skuInfo : unCheckedOutInvList) {
-                if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
-                  qty += skuInfo.getQty();
-                }
-              }
-            }
-            qty -= lineItem.getQty();
-
+        if (lineItem.getCartLineItem().getProductVariant().getProduct().isJit()){
+            qty = -1 * lineItem.getQty();
         }
 
         /*
