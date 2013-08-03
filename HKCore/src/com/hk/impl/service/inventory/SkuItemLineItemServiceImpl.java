@@ -40,7 +40,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
     @Autowired
     SkuItemDao skuItemDao;
-    
+
     @Autowired
     SkuService skuService;
     @Autowired
@@ -165,7 +165,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
                     skuItemLineItem.setSkuItemCLI(skuItemCLI);
                 }
-                skuItemLineItem = save(skuItemLineItem);
+                //skuItemLineItem = save(skuItemLineItem);
             }
         }
         return true;
@@ -179,16 +179,16 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
         List<Long> skuStatusIdList = new ArrayList<Long>();
         List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
-        skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());        
+        skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
         skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
         List<SkuItem> toBeFreedSkuItemList = new ArrayList<SkuItem>();
-        
+
         for(LineItem lineItem : shippingOrder.getLineItems()){
             sku = getSkuService().getSKU(lineItem.getSku().getProductVariant(), targetWarehouse);
             skuList.add(sku);
             availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-            
+
             if(availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() >= lineItem.getQty()){
                 List<SkuItemLineItem> skuItemLineItemList = lineItem.getSkuItemLineItems();
                 for(SkuItemLineItem skuItemLineItem : skuItemLineItemList){
@@ -257,8 +257,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 		}
         return true;
     }
-    
-    
+
+
     @Override
     public SkuItemLineItem save(SkuItemLineItem skuItemLineItem) {
         return (SkuItemLineItem)getSkuItemDao().save(skuItemLineItem);
@@ -268,11 +268,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-    
+
     public SkuItemLineItem getBySkuItemId(Long skuItemId){
     	return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);
     }
-    
+
     public SkuItemLineItemDao getSkuItemLineItemDao() {
         return skuItemLineItemDao;
     }
