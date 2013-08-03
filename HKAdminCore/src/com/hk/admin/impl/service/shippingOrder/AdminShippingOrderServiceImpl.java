@@ -10,6 +10,8 @@ import java.util.Set;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.EnumRewardPointTxnType;
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.user.UserAccountInfo;
@@ -128,8 +130,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired LineItemDao lineItemDao;
     @Autowired ShippingOrderDao shippingOrderDao;
 
-    @Autowired LineItemDao lineItemDao;
-    @Autowired ShippingOrderDao shippingOrderDao;
     
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
@@ -267,6 +267,28 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return (totalBalance == 0);
     }
+
+    private double calculateWeight(ShippingOrder shippingOrder, Order order) {
+        double weightedFactor = 0D;
+
+        if(shippingOrder == null) {
+            weightedFactor = 1D;
+        } else {
+
+            if(EnumPaymentMode.FREE_CHECKOUT.getId().equals(order.getPayment().getPaymentMode().getId())) {
+
+
+
+            } else {
+
+                weightedFactor = shippingOrder.getAmount() / order.getPayment().getAmount();
+
+            }
+
+        }
+        return weightedFactor;
+    }
+
 
 	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
