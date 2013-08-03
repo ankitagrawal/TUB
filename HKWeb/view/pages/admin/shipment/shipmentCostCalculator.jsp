@@ -117,14 +117,14 @@
                         <li>
                             <div class="clear"></div>
                             <label>Start
-                                date</label><s:text class="date_input startDate" style="width:150px"
+                                Ship Date</label><s:text class="date_input startDate" style="width:150px"
                                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                                     name="shippedStartDate"/>
                             <div class="clear"></div>
                         </li>
                         <li>
                             <label>End
-                                date</label><s:text class="date_input endDate" style="width:150px"
+                                Ship Date</label><s:text class="date_input endDate" style="width:150px"
                                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                                     name="shippedEndDate"/>
                         </li>
