@@ -259,6 +259,53 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
     }
 
 
+    private static final String netUnCheckedOutInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
+            " count(a.id) as qty, b.create_date as checkinDate" +
+            " from sku_item as a" +
+            " inner join sku_group as b on a.sku_group_id = b.id" +
+            " inner join sku as c on b.sku_id = c.id" +
+            " where c.product_variant_id = :pvId" +
+            " and c.warehouse_id in (:whIds)" +
+            " and (b.status != :reviewStatus or b.status is null)" +
+            " and a.sku_item_status_id in (:itemStatus)" +
+            " and b.mrp is not null" +
+            " group by b.id" +
+            " order by checkinDate asc";
+
+    public Collection<SkuInfo> getUnCheckedOutInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        String sql = netUnCheckedOutInInvSql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
+
+        query.addScalar("skuId", Hibernate.LONG);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
+        query.addScalar("costPrice", Hibernate.DOUBLE);
+        query.addScalar("checkinDate", Hibernate.DATE);
+
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("whIds", toWarehouseIds(whs));
+        query.setParameterList("itemStatus", Arrays.asList(EnumSkuItemStatus.Checked_IN.getId(), EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId()));
+        query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
+
+        query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
+
+        @SuppressWarnings("unchecked")
+        List<SkuInfo> list = query.list();
+
+        LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
+        for (SkuInfo skuInfo : list) {
+            SkuInfo info = getLast(skuList);
+            if (info != null && skuInfo.getSkuId() == info.getSkuId() && skuInfo.getMrp() == info.getMrp()) {
+                info.setQty(info.getQty() + skuInfo.getQty());
+                info.setUnbookedQty(info.getQty());
+            } else {
+                skuInfo.setUnbookedQty(skuInfo.getQty());
+                skuList.add(skuInfo);
+            }
+        }
+        return skuList;
+    }
+
     private static final String checkedInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
             " count(a.id) as qty, b.create_date as checkinDate" +
             " from sku_item as a" +
@@ -404,7 +451,16 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         }
 
         if (checkedInInvList.isEmpty() && lineItem.getCartLineItem().getProductVariant().getProduct().isJit()){
-            qty = -1 * lineItem.getQty();
+            Collection<SkuInfo> unCheckedOutInvList = getUnCheckedOutInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
+            if (unCheckedOutInvList != null && !unCheckedOutInvList.isEmpty()) {
+              for (SkuInfo skuInfo : unCheckedOutInvList) {
+                if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
+                  qty += skuInfo.getQty();
+                }
+              }
+            } else {
+              qty = -1 * lineItem.getQty();
+            }
         }
 
         /*
