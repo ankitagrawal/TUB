@@ -19,6 +19,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.*;
@@ -53,6 +54,8 @@ public class ShippingOrderAction extends BaseAction {
     private PaymentService paymentService;
 
     private ReplacementOrderReason rtoReason;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
     private String customerSatisfyReason;
 
@@ -118,7 +121,7 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution manualEscalateShippingOrder() {
-        shippingOrderService.manualEscalateShippingOrder(shippingOrder);
+    	shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
@@ -127,7 +130,7 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution autoEscalateShippingOrder() {
-        shippingOrderService.autoEscalateShippingOrder(shippingOrder, firewall);
+    	shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, firewall);
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
@@ -141,7 +144,7 @@ public class ShippingOrderAction extends BaseAction {
         shippingOrderSearchCriteria.setDropShipping(false);
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
-            shippingOrderService.automateManualEscalation(toBeEscalateShippingOrder);
+        	shippingOrderProcessor.automateManualEscalation(toBeEscalateShippingOrder);
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
@@ -201,4 +204,5 @@ public class ShippingOrderAction extends BaseAction {
     public void setReconciliationType(Long reconciliationType) {
         this.reconciliationType = reconciliationType;
     }
+    
 }

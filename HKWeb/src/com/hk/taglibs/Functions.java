@@ -919,4 +919,14 @@ public class Functions {
         return orderService.isBOCancelable(orderId);
     }
 
+    public static Long countLineItemQty(ShippingOrder shippingOrder) {
+      long qty=0;
+      if(shippingOrder.getLineItems()!=null && shippingOrder.getLineItems().size()>0)
+      for(LineItem lineItem : shippingOrder.getLineItems())
+      {
+          qty=qty+lineItem.getQty();
+      }
+      return qty;
+    }
+
 }

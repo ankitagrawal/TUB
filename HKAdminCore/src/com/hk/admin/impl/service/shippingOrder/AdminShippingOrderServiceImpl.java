@@ -128,6 +128,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired LineItemDao lineItemDao;
     @Autowired ShippingOrderDao shippingOrderDao;
 
+    @Autowired LineItemDao lineItemDao;
+    @Autowired ShippingOrderDao shippingOrderDao;
+    
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
@@ -659,10 +662,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             this.orderService = ServiceLocatorFactory.getService(OrderService.class);
         }
         return orderService;
-    }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
     }
 
 	public UserService getUserService() {

@@ -1,12 +1,13 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.hk.core.search.ShippingOrderSearchCriteria;
-import com.hk.impl.service.queue.BucketService;
-import com.hk.domain.analytics.Reason;
-import com.hk.domain.queue.Bucket;
-import com.hk.domain.user.User;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -23,11 +24,12 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
+import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -36,6 +38,9 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.user.User;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.OrderStatusDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
@@ -48,6 +53,8 @@ import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -88,6 +95,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     BucketService bucketService;
 
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
+    
     private Long orderId;
     private Long shippingOrderId;
     private Long storeId;
@@ -305,7 +314,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     public Resolution escalate() {
         if (!shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
-                shippingOrderService.manualEscalateShippingOrder(shippingOrder);
+            	shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
