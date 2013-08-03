@@ -1,12 +1,11 @@
 package com.hk.domain.sku;
 
-import java.util.Date;
-
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.shippingOrder.LineItem;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA. User: Ankit Date: Jul 23, 2013 Time: 3:25:11 PM To
@@ -43,14 +42,14 @@ public class SkuItemLineItem implements java.io.Serializable {
 
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
-	
+
 	@JsonSkip
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_dt", nullable = false, length = 19)
-    private Date          createDate         = new Date();
-	
-	@Temporal (TemporalType.TIMESTAMP)
-	@Column (name = "update_dt", length = 19)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_dt", nullable = false, length = 19)
+	private Date createDate = new Date();
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "update_dt", length = 19)
 	private Date updateDate;
 
 	public Long getId() {
@@ -101,7 +100,6 @@ public class SkuItemLineItem implements java.io.Serializable {
 		this.skuItemCLI = skuItemCLI;
 	}
 
-
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -113,11 +111,6 @@ public class SkuItemLineItem implements java.io.Serializable {
 	public Date getUpdateDate() {
 		return updateDate;
 	}
-
-/*	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
-	}*/
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -131,7 +124,7 @@ public class SkuItemLineItem implements java.io.Serializable {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		// TODO Auto-generated method stub

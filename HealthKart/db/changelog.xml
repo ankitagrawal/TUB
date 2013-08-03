@@ -13917,4 +13917,11 @@
             <column name="line_item_id"/>
         </createIndex>
     </changeSet>
+	<changeSet author="Rahul (generated)" id="8-4-2013-1">
+		<sql>
+			alter table  sku_item_cart_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+		</sql>
+	</changeSet>
+
 </databaseChangeLog>
