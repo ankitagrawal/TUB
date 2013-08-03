@@ -1,6 +1,11 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
@@ -50,6 +55,8 @@ import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
@@ -118,8 +125,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
     private RewardPointDao rewardPointDao;
 
+    @Autowired LineItemDao lineItemDao;
+    @Autowired ShippingOrderDao shippingOrderDao;
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder, String cancellationRemark, String reconcile) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
@@ -570,7 +579,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         
 	}
 
-
     public ShippingOrderService getShippingOrderService() {
         return shippingOrderService;
     }
@@ -647,6 +655,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     public OrderService getOrderService() {
+        if (orderService == null) {
+            this.orderService = ServiceLocatorFactory.getService(OrderService.class);
+        }
         return orderService;
     }
 

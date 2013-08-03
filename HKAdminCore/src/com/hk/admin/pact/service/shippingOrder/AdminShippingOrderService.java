@@ -14,7 +14,7 @@ public interface AdminShippingOrderService {
 
     //  public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder, String comment, String reconcile);
+    public void cancelShippingOrder(ShippingOrder shippingOrder, String comment);
 
     public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order);
 

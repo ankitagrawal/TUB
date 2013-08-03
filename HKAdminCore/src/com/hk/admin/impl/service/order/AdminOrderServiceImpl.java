@@ -21,6 +21,7 @@ import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -28,6 +29,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
+import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
@@ -141,7 +143,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Override
 	@Transactional
-    public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser) {
+    public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser,Long reconciliationType) {
         boolean shouldCancel = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
@@ -160,7 +162,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             Set<ShippingOrder> shippingOrders = order.getShippingOrders();
             if (shippingOrders != null && !shippingOrders.isEmpty()) {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder,null, null);
+                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder,null);
                 }
             } else {
                 Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
