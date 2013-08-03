@@ -62,7 +62,7 @@
                title="${productVO.name}">
         </a>
         <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
-          Missing 'bt' Image - <a href="${pageContext.request.contextPath}/resizeImage/${productVO.id}/m/bt" target="_blank">Click here</a>
+          Missing 'bt' Image - <a href="${pageContext.request.contextPath}/product/resizeImage/${productVO.id}/m/bt" target="_blank">Click here</a>
         </shiro:hasAnyRoles>
       </div>
       <div>
