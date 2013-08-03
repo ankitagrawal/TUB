@@ -185,8 +185,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             // TODO: giving reward points for one year - 12
             addRewardPoints(shippingOrder.getBaseOrder(), shippingOrder.getAmount(),loggedOnUser,12,comment);
             //paymentService.setRefundAmount(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
-            //getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
-            //        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RewardGiven.asReason(),comment);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RewardGiven.asReason(),comment);
         } else {
             refundPayment(shippingOrder,comment);
         }
@@ -213,25 +213,25 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 try {
                     Payment payment = paymentService.refundPayment(shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(), shippingOrder.getAmount());
                     if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getId())) {
-                    //    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
-                    //            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RefundSuccessful.asReason(),comment);
+                        getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                                EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RefundSuccessful.asReason(),comment);
                     } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getId())) {
-                    //    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
-                    //            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+                        getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                                EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
 
                     } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getId())){
-                    //    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
-                    //            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundInProcess.asReason(),comment);
+                        getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                                EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundInProcess.asReason(),comment);
                     }
 
                 } catch (HealthkartPaymentGatewayException e) {
                     logger.debug("Exception occurred during payment refund",e);
-                    //getShippingOrderService().logShippingOrderActivity(shippingOrder,loggedOnUser,
-                    //        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+                    getShippingOrderService().logShippingOrderActivity(shippingOrder,loggedOnUser,
+                            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
                 } catch (Exception e) {
                     logger.debug("Exception occurred during payment refund",e);
-                    //getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
-                    //        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+                    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
                 }
 
             }
@@ -344,7 +344,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         for (RewardPointTxn rewardPointTxn : txnList) {
             totalBalance += rewardPointTxn.getValue();
         }
-        return (totalBalance <= 0);
+        return (totalBalance < 1);
     }
 
     private double calculateWeight(ShippingOrder shippingOrder, Order order) {

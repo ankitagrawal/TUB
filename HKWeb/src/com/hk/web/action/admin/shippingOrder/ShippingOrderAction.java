@@ -115,7 +115,7 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution cancelShippingOrder() {
-        adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark, false);
+        adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark, reconciliationType,false);
         return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderGatewayId", shippingOrder.getGatewayOrderId());
     }
 

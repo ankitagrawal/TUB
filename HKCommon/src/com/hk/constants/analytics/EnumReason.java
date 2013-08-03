@@ -48,7 +48,14 @@ public enum EnumReason {
     Damaged(910L, "Damaged", EnumReasonType.Reverse_Pickup_Customer),
     Non_Functional(920L, "Non Functional", EnumReasonType.Reverse_Pickup_Customer),
     Near_Expiry(930L, "Near Expiry", EnumReasonType.Reverse_Pickup_Customer),
-    Expired(940L, "Expired", EnumReasonType.Reverse_Pickup_Customer);
+    Expired(940L, "Expired", EnumReasonType.Reverse_Pickup_Customer),
+    RefundFailed(1100L,"Refund Failed",EnumReasonType.Reconciliation),
+    RefundSuccessful(1200L,"Refund Successful", EnumReasonType.Reconciliation),
+    RewardGiven(1300L,"Reward Points Given", EnumReasonType.Reconciliation),
+    RewardNotGiven(1400L,"Reward Points Not Given", EnumReasonType.Reconciliation),
+    RefundInProcess(1500L,"Refund in process",EnumReasonType.Reconciliation),
+
+    ;
 
 
 
