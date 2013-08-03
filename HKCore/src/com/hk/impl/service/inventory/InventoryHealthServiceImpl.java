@@ -403,10 +403,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             }
         }
 
-        if (qty >= lineItem.getQty()){
-            return qty;
-        }else{
-
+        if (checkedInInvList.isEmpty() && lineItem.getCartLineItem().getProductVariant().getProduct().isJit()){
             qty = -1 * lineItem.getQty();
         }
 
