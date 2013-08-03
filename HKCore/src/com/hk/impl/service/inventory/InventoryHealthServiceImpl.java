@@ -458,9 +458,9 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                   qty += skuInfo.getQty();
                 }
               }
-            } else {
-              qty = -1 * lineItem.getQty();
             }
+            qty -= lineItem.getQty();
+
         }
 
         /*
