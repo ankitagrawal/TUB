@@ -111,12 +111,10 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 
 	    try {
 		    inventoryHealthService.tempBookSkuLineItemForOrder(order);
-		            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+		    orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
-	    }catch (Exception ex){
-		    logger.error(ex.getMessage());
-		    ex.printStackTrace();
-
+	    } catch (Exception ex) {
+		    logger.error("exception while tempBooking or Splitting during place Order via API for order -->" + order.getId() + ex.getMessage());
 	    }
 
        return  order;

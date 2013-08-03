@@ -299,6 +299,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			skuList.add(item.getSku());
 			skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
+      //When CLI and LI are empty
 			if (item.getCartLineItem().getSkuItemCLIs() == null
 					|| (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() == 0)) {
 				Long qty = item.getQty();
@@ -348,7 +349,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					logger.debug("Could Not Populate Tables for Line Item - "+item.getId()+" for Cart Line Item - "+item.getCartLineItem().getId()+" of Shipping Order - "+item.getShippingOrder().getId());
 				}
 			}
-
+      //When there are entries in SILI and SICLI; but MRP related fixes are needed
 			else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
 					&& item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() > 0) {
 				int entries = item.getSkuItemLineItems().size();

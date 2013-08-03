@@ -7,6 +7,7 @@ import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import org.hibernate.criterion.DetachedCriteria;
@@ -42,6 +43,16 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 				createQuery("select distinct si.skuGroup from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId" +
 						" and si.skuItemStatus.id =  " + EnumSkuItemStatus.Checked_IN.getId()).
 				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).
+				list();
+		return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
+	}
+	
+	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds) {
+		List<SkuGroup> skuGroups = getSession().
+				//"from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId "
+				createQuery("select distinct si.skuGroup from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId" +
+						" and si.skuItemStatus in (:skuItemStatusIds)").
+				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).setParameterList("skuItemStatusIds", skuItemStatusIds).
 				list();
 		return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
 	}
