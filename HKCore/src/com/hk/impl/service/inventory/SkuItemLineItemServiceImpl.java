@@ -141,10 +141,15 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                         return false;
                     }
 
+                    //Free existing skuitem on skuItemCLI
+                    SkuItem oldItem = skuItemLineItem.getSkuItem();
+                    oldItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                    getSkuItemDao().save(oldItem);
+
                     SkuItem skuItem = availableUnbookedSkuItems.get(0);
                     //Book the sku item first
                     skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-	                logger.debug("savingg skuItem for normal orders ");
+	                  logger.debug("savingg skuItem for normal orders ");
                     skuItem = (SkuItem) getSkuItemDao().save(skuItem);
                     //create skuItemLineItem entry
                     skuItemLineItem.setSkuItem(skuItem);
@@ -153,12 +158,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     skuItemLineItem.setSkuItemCLI(skuItemCLI);
                     skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
 
-                    //Free existing skuitem on skuItemCLI
-                    skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-
                     //save the state
-	                logger.debug("savingg sili for normal orders ");
-                    skuItemLineItem = save(skuItemLineItem);
+	                  logger.debug("savingg sili for normal orders ");
+                    save(skuItemLineItem);
 
                     //set new sku item on skuItemCLI as well
                     skuItemCLI.setSkuItem(skuItem);
