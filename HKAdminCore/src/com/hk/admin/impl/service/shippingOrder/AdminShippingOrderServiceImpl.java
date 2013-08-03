@@ -1,25 +1,28 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.EnumRewardPointTxnType;
+import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
+import com.hk.domain.payment.Payment;
+import com.hk.domain.user.User;
 import com.hk.domain.user.UserAccountInfo;
+import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.reward.RewardPointTxnDao;
 import com.hk.pact.dao.user.UserAccountInfoDao;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.PaymentService;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,8 +134,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired LineItemDao lineItemDao;
     @Autowired ShippingOrderDao shippingOrderDao;
 
+    @Autowired
+    PaymentService paymentService;
+
     
-    public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark, boolean reconcileAll) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType ,boolean reconcileAll) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
@@ -159,7 +165,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
             if(!reconcileAll) {
                 reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
-
+                
+                if(reconciliationType != null) {
+                    relieveExtraLiabilties(reconciliationType,shippingOrder,null);    
+                }
+                
             }
 
             getBucketService().popFromActionQueue(shippingOrder);
@@ -168,6 +178,67 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
         }
     }
+
+    private void relieveExtraLiabilties(Long reconciliationType, ShippingOrder shippingOrder, String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
+        if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
+            // TODO: giving reward points for one year - 12
+            addRewardPoints(shippingOrder.getBaseOrder(), shippingOrder.getAmount(),loggedOnUser,12,comment);
+            //paymentService.setRefundAmount(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
+            //getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+            //        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RewardGiven.asReason(),comment);
+        } else {
+            refundPayment(shippingOrder,comment);
+        }
+    }
+
+
+    private void addRewardPoints(Order order, Double amount,User loggedOnUser,int expiryMonths,String comment) {
+
+        if (amount > 0) {
+            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(order.getUser(), loggedOnUser,
+                    order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+            rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(expiryMonths).toDate());
+        }
+    }
+
+    private void refundPayment(ShippingOrder shippingOrder,String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
+        if (shippingOrder.getAmount() > 0) {
+            if(EnumGateway.manualRefundGatewaysList().contains(shippingOrder.getBaseOrder().getPayment().getGateway().getId())) {
+                //adminEmailManager.sendSOManualRefundTaskToAdmin(shippingOrder.getAmount(),shippingOrder);
+            } else {
+
+                try {
+                    Payment payment = paymentService.refundPayment(shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(), shippingOrder.getAmount());
+                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getId())) {
+                    //    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    //            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RefundSuccessful.asReason(),comment);
+                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getId())) {
+                    //    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    //            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+
+                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getId())){
+                    //    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    //            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundInProcess.asReason(),comment);
+                    }
+
+                } catch (HealthkartPaymentGatewayException e) {
+                    logger.debug("Exception occurred during payment refund",e);
+                    //getShippingOrderService().logShippingOrderActivity(shippingOrder,loggedOnUser,
+                    //        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+                } catch (Exception e) {
+                    logger.debug("Exception occurred during payment refund",e);
+                    //getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    //        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+                }
+
+            }
+
+        }
+    }
+
 
 
     public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order) {

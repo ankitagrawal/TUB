@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.inventory.EnumReconciliationActionType;
+import com.hk.constants.payment.EnumGateway;
+import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pact.service.payment.PaymentService;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +127,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Autowired
 	private LoyaltyProgramService loyaltyProgramService;
 
+    @Autowired
+    PaymentService paymentService;
+
     @Override
 	@Transactional
     public Order putOrderOnHold(Order order) {
@@ -162,7 +172,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             Set<ShippingOrder> shippingOrders = order.getShippingOrders();
             if (shippingOrders != null && !shippingOrders.isEmpty()) {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder,null, true);
+                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder,null, null,true);
                 }
             } else {
                 Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -185,6 +195,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
             adminShippingOrderService.reconcileRPLiabilities(null,order);
 
+            if(reconciliationType != null) {
+                relieveExtraLiabilties(reconciliationType,order,null);
+            }
+
             this.loyaltyProgramService.cancelLoyaltyPoints(order);
             
             // Send Email Comm. for HK Users Only
@@ -199,6 +213,56 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             String comment = "All SOs of BO#" + order.getGatewayOrderId() + " are not in Action Awaiting Status - Aborting Cancellation.";
             logger.info(comment);
             this.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.LoggedComment, comment);
+        }
+    }
+
+    private void relieveExtraLiabilties(Long reconciliationType, Order order, String comment) {
+        if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
+            addRewardPoints(order, comment);
+        } else {
+            refundPayment(order,comment);
+        }
+    }
+
+    private void addRewardPoints(Order order,String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
+        if (order.getPayment().getAmount() > 0) {
+            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(order.getUser(),loggedOnUser,
+                    order, order.getPayment().getAmount(), comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+            rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(12).toDate());
+            //paymentService.setRefundAmount(order.getPayment(), order.getPayment().getAmount());
+            logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RewardPointOrderCancel), comment);
+        }
+    }
+
+    private void refundPayment(Order order,String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
+        if (order.getPayment().getAmount() > 0) {
+
+            if(EnumGateway.manualRefundGatewaysList().contains(order.getPayment().getGateway().getId())) {
+                //adminEmailManager.sendBOManualRefundTaskToAdmin(order.getPayment().getAmount(), order);
+            } else {
+
+                try {
+                    Payment payment = paymentService.refundPayment(order.getPayment().getGatewayOrderId(), order.getPayment().getAmount());
+                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getId())) {
+                        logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.AmountRefundedOrderCancel),comment);
+                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getId())) {
+                        logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RefundAmountFailed),comment);
+                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getId())){
+                        logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RefundAmountInProcess),comment);
+                    }
+
+                } catch (HealthkartPaymentGatewayException e) {
+                    logger.debug("Exception occurred during payment refund",e);
+                    logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RefundAmountFailed),comment);
+                } catch (Exception e) {
+                    logger.debug("Exception occurred during payment refund",e);
+                    logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RefundAmountFailed),comment);
+                }
+            }
+
         }
     }
 

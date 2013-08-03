@@ -87,6 +87,9 @@ public enum EnumGateway {
         return Arrays.asList(CITRUS.asGateway(),EBS.asGateway(),ICICI.asGateway());
     }
 
+    public static List<Long> manualRefundGatewaysList() {
+        return null;
+    }
 }
 
 
