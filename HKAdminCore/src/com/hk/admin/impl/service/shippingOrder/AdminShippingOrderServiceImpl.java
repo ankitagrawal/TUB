@@ -230,6 +230,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
 	//		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
+
+            //Validate SO for SkuItem booking
+            shippingOrderService.validateShippingOrder(shippingOrder);
+          
             return shippingOrder;
         }
         return null;
