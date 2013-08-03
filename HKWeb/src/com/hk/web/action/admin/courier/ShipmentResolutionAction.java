@@ -1,5 +1,19 @@
 package com.hk.web.action.admin.courier;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -27,17 +41,9 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: Pratham
@@ -50,7 +56,6 @@ public class ShipmentResolutionAction extends BaseAction {
 
     private String gatewayOrderId;
     private String newAwbNumber;
-    private static Logger logger = LoggerFactory.getLogger(ShipmentResolutionAction.class);
 
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
     ShippingOrder shippingOrder;
@@ -88,6 +93,8 @@ public class ShipmentResolutionAction extends BaseAction {
     @Autowired
     OrderService orderService;
 
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
+
     @DefaultHandler
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
@@ -120,7 +127,7 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution resolveCase(){
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,"Case Resolved");
-        shippingOrderService.autoEscalateShippingOrder(shippingOrder, false);
+        shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, false);
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 
@@ -317,4 +324,5 @@ public class ShipmentResolutionAction extends BaseAction {
     public void setNewAwbNumber(String newAwbNumber) {
         this.newAwbNumber = newAwbNumber;
     }
+
 }

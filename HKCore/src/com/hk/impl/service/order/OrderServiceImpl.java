@@ -55,8 +55,10 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.splitter.OrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import org.hibernate.criterion.DetachedCriteria;
@@ -115,6 +117,8 @@ public class OrderServiceImpl implements OrderService {
     SubscriptionService subscriptionService;
 
     @Autowired OrderSplitter orderSplitter;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
     @Transactional
     public Order save(Order order) {
@@ -636,9 +640,13 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //for some orders userCodCall object is not created, a last check to create one
-        if (order.getUserCodCall() == null) {
-            UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
-            saveUserCodCall(userCodCall);
+        try{
+            if (order.getUserCodCall() == null) {
+                UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                saveUserCodCall(userCodCall);
+            }
+        } catch (Exception e){
+            logger.info("User Cod Call already exists for " + order.getId());
         }
 
         logger.debug("Trying to split order " + order.getId());
@@ -685,7 +693,7 @@ public class OrderServiceImpl implements OrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder, true);
+                	shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, true);
                 }
             }
 
@@ -770,6 +778,5 @@ public class OrderServiceImpl implements OrderService {
         }
         return isBOCancelable;
     }
-
 
 }

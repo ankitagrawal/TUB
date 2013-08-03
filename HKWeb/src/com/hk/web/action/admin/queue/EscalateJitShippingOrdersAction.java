@@ -1,6 +1,17 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +38,8 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.web.action.admin.AdminHomeAction;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 
 @Component
 public class EscalateJitShippingOrdersAction extends BaseAction {
@@ -50,6 +57,8 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	ShippingOrderLifecycleDao shippingOrderLifecycleDao;
 	@Autowired
 	private UserService userService;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
 	List<ShippingOrder> sortedShippingOrderList;
 	
@@ -104,7 +113,7 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 				}
 				if (flag) {
 					logger.debug("Trying to manually escalate SO -"+shippingOrder.getId());
-					shippingOrder = shippingOrderService.manualEscalateShippingOrder(shippingOrder);
+					shippingOrder = shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
 					if(shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())){
 						notEscalated +=shippingOrder.getId().toString()+", ";
 					}

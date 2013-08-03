@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.EnumCourierOperations;
+import com.hk.constants.reversePickup.EnumReversePickupStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -11,6 +12,7 @@ import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.*;
 import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
@@ -193,4 +195,14 @@ public interface MasterDataDao {
     public List<EnumUserCodCalling> getUserCodCallStatus();
     
     public List<ReconciliationType> getDebitNoteReconciliationType();
+
+    public List<Reason> getCustomerReasonForReversePickup();
+
+    public List<Reason> getWarehouseReceivedCondition();
+
+    public List<Courier> getCouriersForReversePickup();
+
+    public List<EnumReversePickupStatus> getAllReversePickUpStatus();
+
+		public List<Category> getCategoriesForPOS();
 }
