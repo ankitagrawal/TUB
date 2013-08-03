@@ -689,6 +689,10 @@
 	    <div class="floatleft">
             Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
+        <c:if test="${isSearchShippingOrder == true}">
+             Estm Shipping Cost ${shipment.estmShipmentCharge}
+             Estm Collection Cost ${shipment.estmCollectionCharge}
+        </c:if>
         <div class="clear"></div>
         <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">

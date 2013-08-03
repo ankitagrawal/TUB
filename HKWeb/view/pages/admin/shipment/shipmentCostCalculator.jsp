@@ -151,7 +151,9 @@
                             <div class="clear"></div>
                         </li>
                         <div style="margin-top:15px;"></div>
-                        <s:submit name="calculateCourierCostingForShippingOrder" value="Calculate Shipping Cost"/>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.ROCKSTAR%>">
+                            <s:submit name="calculateCourierCostingForShippingOrder" value="Calculate Shipping Cost"/>
+                        </shiro:hasAnyRoles>
                         <shiro:hasPermission name="<%=PermissionConstants.SAVE_SHIPPING_COST%>">
                             <s:submit name="saveHistoricalShipmentCost" value="Save Shipping Cost (By Date)"/>
                             <s:submit name="saveActualShippingCostForShippingOrder"
