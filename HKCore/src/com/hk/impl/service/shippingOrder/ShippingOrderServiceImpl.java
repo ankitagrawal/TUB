@@ -28,6 +28,7 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
@@ -79,6 +80,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     SkuItemDao skuItemDao;
     @Autowired
     BaseDao baseDao;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -379,7 +382,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			} else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
 					&& (item.getSkuItemLineItems() == null || (item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() == 0))) {
 				// create the table skuItemLineItem here
-				List<SkuItemCLI> skuItemCLIs = item.getCartLineItem().getSkuItemCLIs();
+				/*List<SkuItemCLI> skuItemCLIs = item.getCartLineItem().getSkuItemCLIs();
 				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 				for (SkuItemCLI cli : skuItemCLIs) {
 					cli.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
@@ -395,7 +398,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					skuItemLineItems.add(skuItemLineItem);
 				}
 				item.setSkuItemLineItems(skuItemLineItems);
-				baseDao.save(item);
+				baseDao.save(item);*/
+                skuItemLineItemService.createNewSkuItemLineItem(item);
 			}
 		}
 	}
