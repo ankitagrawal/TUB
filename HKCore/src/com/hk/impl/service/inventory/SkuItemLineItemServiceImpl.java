@@ -142,7 +142,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
                     }
 
                     //Free existing skuitem on skuItemCLI
-                    SkuItem oldItem = skuItemLineItem.getSkuItem();
+                    SkuItem oldItem = skuItemCLI.getSkuItem();
                     oldItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                     getSkuItemDao().save(oldItem);
 
