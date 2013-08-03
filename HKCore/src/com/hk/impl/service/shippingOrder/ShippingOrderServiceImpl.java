@@ -341,6 +341,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					baseDao.save(item.getCartLineItem());
 					item.setSkuItemLineItems(skuItemLineItems);
 					baseDao.save(item);
+					inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 					logger.debug("Populated Table SkuItemLineItem for Line Item - "+item.getId()+" for Cart Line Item - "+item.getCartLineItem().getId()+" of Shipping Order - "+item.getShippingOrder().getId());
 				}
 				else{
@@ -353,7 +354,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				int entries = item.getSkuItemLineItems().size();
 				int j = 1;
 				while (j <= entries) {
-					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j-1);
+					SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j - 1);
 					List<SkuItemStatus> skuItemStatus = new ArrayList<SkuItemStatus>();
 					skuItemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 					skuItemStatus.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
@@ -379,6 +380,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					}
 					++j;
 				}
+				inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 			} else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
 					&& (item.getSkuItemLineItems() == null || (item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() == 0))) {
 				// create the table skuItemLineItem here
@@ -400,6 +402,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				item.setSkuItemLineItems(skuItemLineItems);
 				baseDao.save(item);*/
                 skuItemLineItemService.createNewSkuItemLineItem(item);
+                inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 			}
 		}
 	}
