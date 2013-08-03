@@ -8,6 +8,7 @@
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page import="com.hk.cache.vo.ProductVO" %>
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.BigThumbSize%>"/>
@@ -60,6 +61,9 @@
                src="${hk:getS3ImageUrl(imageMediumSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
         </a>
+        <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+          Missing 'bt' Image - <a href="${pageContext.request.contextPath}/resizeImage/${productVO.id}/m/bt" target="_blank">Click here</a>
+        </shiro:hasAnyRoles>
       </div>
       <div>
 					<span style="height:20px;max-width:240px;">
