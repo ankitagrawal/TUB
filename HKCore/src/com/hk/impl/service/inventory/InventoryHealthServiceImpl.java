@@ -450,6 +450,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
             }
         }
 
+        //TODO: Need to cleanup the methods to give us correct inventory for JIT
         if (lineItem.getCartLineItem().getProductVariant().getProduct().isJit()){
             qty = -1 * lineItem.getQty();
         }
