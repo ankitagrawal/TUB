@@ -59,118 +59,117 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     @Override
     public Boolean createNewSkuItemLineItem(LineItem lineItem) {
 	    logger.debug("entering createNewSkuItemLineItem");
-        Long unitNum = 0L;
-        CartLineItem cartLineItem = lineItem.getCartLineItem();
-        unitNum = 0L;
-        if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <=0){
-            return false;
-        }
+	    Long unitNum = 0L;
+	    CartLineItem cartLineItem = lineItem.getCartLineItem();
+	    unitNum = 0L;
+	    if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <= 0) {
+		    return false;
+	    }
 
-        if(lineItem.getShippingOrder() instanceof ReplacementOrder){
-	        logger.debug("instance of ro true");
-            List<Sku> skuList = new ArrayList<Sku>();
-            List<Long> skuStatusIdList = new ArrayList<Long>();
-            List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
-            skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-            skuList.add(lineItem.getSku());
-            skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+	    if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
+		    logger.debug("instance of ro true");
+		    List<Sku> skuList = new ArrayList<Sku>();
+		    List<Long> skuStatusIdList = new ArrayList<Long>();
+		    List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
-            //get available sku items of the given warehouse at given mrp
-            List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-            if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0
-                    || availableUnbookedSkuItems.size() < lineItem.getQty()){
-	            logger.debug("about to return false from createNewSkuItemLineItem");
-                return false;
-            }
-            for(int i = 1; i<= lineItem.getQty(); i++){
-                unitNum++;
-                SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
-                SkuItem skuItem = availableUnbookedSkuItems.get(i-1);
-                //Book the sku item first
-                skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-	            logger.debug("saving si to booked in replacement order ->  " + skuItem.getId() );
-                skuItem = (SkuItem)getSkuItemDao().save(skuItem);
+		    skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+		    skuList.add(lineItem.getSku());
+		    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
-                //create skuItemLineItem entry
-                skuItemLineItem.setSkuItem(skuItem);
-                skuItemLineItem.setLineItem(lineItem);
-                skuItemLineItem.setUnitNum(unitNum);
-                skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i-1));
-                skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
-	            logger.debug("saving sili in replacement order ");
-                skuItemLineItem = save(skuItemLineItem);
+		    //get available sku items of the given warehouse at given mrp
+		    List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+		    if (availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0
+				    || availableUnbookedSkuItems.size() < lineItem.getQty()) {
+			    logger.debug("about to return false from createNewSkuItemLineItem");
+			    return false;
+		    }
+		    for (int i = 1; i <= lineItem.getQty(); i++) {
+			    unitNum++;
+			    SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+			    SkuItem skuItem = availableUnbookedSkuItems.get(i - 1);
+			    //Book the sku item first
+			    skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+			    logger.debug("saving si to booked in replacement order ->  " + skuItem.getId());
+			    skuItem = (SkuItem) getSkuItemDao().save(skuItem);
 
-            }
-            return true;
-        }
-        else{
-	        logger.debug("entering normal enter -> ");
-            for(SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
-                unitNum ++;
-                SkuItemLineItem skuItemLineItem= new SkuItemLineItem();
-                if(lineItem.getShippingOrder().getWarehouse().equals(skuItemCLI.getSkuItem().getSkuGroup().getSku().getWarehouse())){
-                    logger.debug("Creating sku_item_line_item without swapping warehouse (same wh before and after split)");
+			    //create skuItemLineItem entry
+			    skuItemLineItem.setSkuItem(skuItem);
+			    skuItemLineItem.setLineItem(lineItem);
+			    skuItemLineItem.setUnitNum(unitNum);
+			    skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i - 1));
+			    skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
+			    logger.debug("saving sili in replacement order ");
+			    skuItemLineItem = save(skuItemLineItem);
 
-                    //Make skuItemLine item as copy of skuItemCLI
-                    skuItemLineItem.setSkuItem(skuItemCLI.getSkuItem());
-                    skuItemLineItem.setLineItem(lineItem);
-                    skuItemLineItem.setUnitNum(unitNum);
-                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
-                    skuItemLineItem.setProductVariant(skuItemCLI.getSkuItem().getSkuGroup().getSku().getProductVariant());
+		    }
+		    return true;
+	    } else {
+		    logger.debug("entering normal enter -> ");
+		    for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()) {
+			    unitNum++;
+			    SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+			    if (lineItem.getShippingOrder().getWarehouse().equals(skuItemCLI.getSkuItem().getSkuGroup().getSku().getWarehouse())) {
+				    logger.debug("Creating sku_item_line_item without swapping warehouse (same wh before and after split)");
 
-                    //Book the sku item
-                    skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+				    //Make skuItemLine item as copy of skuItemCLI
+				    skuItemLineItem.setSkuItem(skuItemCLI.getSkuItem());
+				    skuItemLineItem.setLineItem(lineItem);
+				    skuItemLineItem.setUnitNum(unitNum);
+				    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+				    skuItemLineItem.setProductVariant(skuItemCLI.getSkuItem().getSkuGroup().getSku().getProductVariant());
 
-                    getSkuItemDao().save(skuItemLineItem.getSkuItem());
-               }
-                else{
-                    logger.debug("Creating sku_item_line_item. Wh after split was diff than before split booking.");
-                    List<Sku> skuList = new ArrayList<Sku>();
-                    List<Long> skuStatusIdList = new ArrayList<Long>();
-                    List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+				    //Book the sku item
+				    skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
-                    skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-                    skuList.add(lineItem.getSku());
-                    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+				    getSkuItemDao().save(skuItemLineItem.getSkuItem());
+			    } else {
+				    logger.debug("Creating sku_item_line_item. Wh after split was diff than before split booking.");
+				    List<Sku> skuList = new ArrayList<Sku>();
+				    List<Long> skuStatusIdList = new ArrayList<Long>();
+				    List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
-                    //get available sku items of the given warehouse at given mrp
-                    List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-                    if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0){
-	                    logger.debug("about to return false from createNewSkuItemLineItem for normal case");
-                        return false;
-                    }
+				    skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+				    skuList.add(lineItem.getSku());
+				    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
-                    //Free existing skuitem on skuItemCLI
-                    SkuItem oldItem = skuItemCLI.getSkuItem();
-                    oldItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                    getSkuItemDao().save(oldItem);
+				    //get available sku items of the given warehouse at given mrp
+				    List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+				    if (availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0) {
+					    logger.debug("about to return false from createNewSkuItemLineItem for normal case");
+					    return false;
+				    }
 
-                    SkuItem skuItem = availableUnbookedSkuItems.get(0);
-                    //Book the sku item first
-                    skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-	                  logger.debug("savingg skuItem for normal orders ");
-                    skuItem = (SkuItem) getSkuItemDao().save(skuItem);
-                    //create skuItemLineItem entry
-                    skuItemLineItem.setSkuItem(skuItem);
-                    skuItemLineItem.setLineItem(lineItem);
-                    skuItemLineItem.setUnitNum(unitNum);
-                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
-                    skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
+				    //Free existing skuitem on skuItemCLI
+				    SkuItem oldItem = skuItemCLI.getSkuItem();
+				    oldItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+				    getSkuItemDao().save(oldItem);
 
-                    //save the state
-	                  logger.debug("savingg sili for normal orders ");
-                    save(skuItemLineItem);
+				    SkuItem skuItem = availableUnbookedSkuItems.get(0);
+				    //Book the sku item first
+				    skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+				    logger.debug("savingg skuItem for normal orders ");
+				    skuItem = (SkuItem) getSkuItemDao().save(skuItem);
+				    //create skuItemLineItem entry
+				    skuItemLineItem.setSkuItem(skuItem);
+				    skuItemLineItem.setLineItem(lineItem);
+				    skuItemLineItem.setUnitNum(unitNum);
+				    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+				    skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
 
-                    //set new sku item on skuItemCLI as well
-                    skuItemCLI.setSkuItem(skuItem);
-                    skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
-                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
-                }
-                skuItemLineItem = save(skuItemLineItem);
-            }
-        }
-        return true;
+				    //save the state
+				    logger.debug("savingg sili for normal orders ");
+				    save(skuItemLineItem);
+
+				    //set new sku item on skuItemCLI as well
+				    skuItemCLI.setSkuItem(skuItem);
+				    skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
+				    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+			    }
+			    skuItemLineItem = save(skuItemLineItem);
+		    }
+	    }
+	    return true;
     }
 
     @Override
