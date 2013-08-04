@@ -82,8 +82,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     BaseDao baseDao;
     @Autowired
     SkuItemLineItemService skuItemLineItemService;
-	@Autowired
-	private ShippingOrderService shippingOrderService;
 
 
 	public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
@@ -407,7 +405,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			    if (item.getSkuItemLineItems() == null || item.getSkuItemLineItems().size() == 0) {
 				    Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(item);
 				    if (!skuItemLineItemStatus) {
-					    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+					    logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
 				    }
 			    }
 
