@@ -340,7 +340,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				    baseDao.saveOrUpdate(skuItemCLIs);
 				    baseDao.saveOrUpdate(skuItemLineItems);
 				    item.getCartLineItem().setSkuItemCLIs(skuItemCLIs);
-				    item.setCartLineItem((CartLineItem) baseDao.save(item.getCartLineItem()));
+				    baseDao.save(item.getCartLineItem());
 				    item.setSkuItemLineItems(skuItemLineItems);
 				    item = (LineItem) baseDao.save(item);
 				    inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
