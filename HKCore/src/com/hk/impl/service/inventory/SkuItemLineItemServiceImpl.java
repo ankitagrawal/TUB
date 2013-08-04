@@ -9,6 +9,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
@@ -41,6 +42,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     @Autowired
     SkuItemDao skuItemDao;
 
+	@Autowired
+	LineItemDao lineItemDao;
+
     @Autowired
     SkuService skuService;
     @Autowired
@@ -69,6 +73,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
 	    if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
 		    logger.debug("instance of ro true");
+		    List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 		    List<Sku> skuList = new ArrayList<Sku>();
 		    List<Long> skuStatusIdList = new ArrayList<Long>();
 		    List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
@@ -100,12 +105,14 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 			    skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i - 1));
 			    skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
 			    logger.debug("saving sili in replacement order ");
-			    skuItemLineItem = save(skuItemLineItem);
-
+			    skuItemLineItems.add(skuItemLineItem);
 		    }
+		    lineItem.setSkuItemLineItems(skuItemLineItems);
+		    lineItem = (LineItem)getLineItemDao().save(lineItem);
 		    return true;
 	    } else {
 		    logger.debug("entering normal enter -> ");
+		    List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 		    for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()) {
 			    unitNum++;
 			    SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
@@ -123,6 +130,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 				    skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
 				    getSkuItemDao().save(skuItemLineItem.getSkuItem());
+
 			    } else {
 				    logger.debug("Creating sku_item_line_item. Wh after split was diff than before split booking.");
 				    List<Sku> skuList = new ArrayList<Sku>();
@@ -159,15 +167,19 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
 				    //save the state
 				    logger.debug("savingg sili for normal orders ");
-				    save(skuItemLineItem);
+
 
 				    //set new sku item on skuItemCLI as well
 				    skuItemCLI.setSkuItem(skuItem);
 				    skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
 				    skuItemLineItem.setSkuItemCLI(skuItemCLI);
 			    }
-			    skuItemLineItem = save(skuItemLineItem);
+			    skuItemLineItems.add(skuItemLineItem);
+
 		    }
+		    lineItem.setSkuItemLineItems(skuItemLineItems);
+		    lineItem = (LineItem) getLineItemDao().save(lineItem);
+
 	    }
 	    return true;
     }
@@ -285,4 +297,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     public SkuService getSkuService() {
         return skuService;
     }
+
+	public LineItemDao getLineItemDao() {
+		return lineItemDao;
+	}
 }
