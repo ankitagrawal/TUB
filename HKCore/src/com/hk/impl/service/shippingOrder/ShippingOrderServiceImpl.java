@@ -340,9 +340,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				    baseDao.saveOrUpdate(skuItemCLIs);
 				    baseDao.saveOrUpdate(skuItemLineItems);
 				    item.getCartLineItem().setSkuItemCLIs(skuItemCLIs);
-				    baseDao.save(item.getCartLineItem());
+				    item.setCartLineItem((CartLineItem) baseDao.save(item.getCartLineItem()));
 				    item.setSkuItemLineItems(skuItemLineItems);
-				    baseDao.save(item);
+				    item = (LineItem) baseDao.save(item);
 				    inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 				    logger.debug("Populated Table SkuItemLineItem for Line Item - " + item.getId() + " for Cart Line Item - " + item.getCartLineItem().getId() + " of Shipping Order - " + item.getShippingOrder().getId());
 			    } else {
@@ -384,29 +384,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			    inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 		    } else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
 				    && (item.getSkuItemLineItems() == null || (item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() == 0))) {
-			    // create the table skuItemLineItem here
-				/*List<SkuItemCLI> skuItemCLIs = item.getCartLineItem().getSkuItemCLIs();
-				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
-				for (SkuItemCLI cli : skuItemCLIs) {
-					cli.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-					baseDao.save(cli.getSkuItem());
-					SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
-					skuItemLineItem.setLineItem(item);
-					skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
-					skuItemLineItem.setSkuItem(cli.getSkuItem());
-					skuItemLineItem.setSkuItemCLI(cli);
-					skuItemLineItem.setUnitNum(cli.getUnitNum());
-					skuItemLineItem.setCreateDate(new Date());
-					skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
-					skuItemLineItems.add(skuItemLineItem);
-				}
-				item.setSkuItemLineItems(skuItemLineItems);
-				baseDao.save(item);*/
-			    if (item.getSkuItemLineItems() == null || item.getSkuItemLineItems().size() == 0) {
-				    Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(item);
-				    if (!skuItemLineItemStatus) {
-					    logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
-				    }
+			    Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(item);
+			    if (!skuItemLineItemStatus) {
+				    logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+
 			    }
 
 			    inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
