@@ -26,6 +26,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 
@@ -42,6 +43,9 @@ public class ShippingOrderValidatorAction extends BaseAction {
 
   @Autowired
   SkuGroupService skuGroupService;
+
+  @Autowired
+  InventoryHealthService inventoryHealthService;
 
 
   @DefaultHandler
@@ -79,9 +83,9 @@ public class ShippingOrderValidatorAction extends BaseAction {
       List<SkuItem> skuItems = null;
       SkuItem outSkuItem = sili.getSkuItem();
       List<SkuItemLineItem> skuItemLIs = skuItemLineItemDao.getSkuItemLIsTemp(outSkuItem);
-      logger.debug("SILIs with duplicate entries for SKUITEM = " + outSkuItem + "; Records=" + skuItemLineItems.size());
+      logger.debug("SILIs with duplicate entries for SKUITEM = " + outSkuItem + "; Records=" + skuItemLIs.size());
       for (SkuItemLineItem skuItemLineItem : skuItemLIs) {
-        SkuItem skuItem = sili.getSkuItem();
+        SkuItem skuItem = skuItemLineItem.getSkuItem();
         logger.debug("SILI=" + skuItemLineItem.getId() + "; SI=" + skuItem.getId());
         if (oldSkuItem != null && oldSkuItem.getId().longValue() == skuItem.getId().longValue()) {
           logger.debug("Do fixing...");
@@ -103,6 +107,8 @@ public class ShippingOrderValidatorAction extends BaseAction {
           oldSkuItem = skuItem;
         }
       }
+      //Inventory Check
+      inventoryHealthService.inventoryHealthCheck(outSkuItem.getSkuGroup().getSku().getProductVariant());
     }
 
     addRedirectAlertMessage(new SimpleMessage("Duplicate SI fixed on SILI. Total fixed SILIs = " + count));
