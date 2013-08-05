@@ -13923,5 +13923,16 @@
 			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		</sql>
 	</changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1375435318078-1">
+        <addColumn tableName="line_item">
+            <column name="has_error" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra" id="1375435318078-2">
+        <insert tableName="shipping_order_lifecycle_activity">
+            <column name="id" value="1020" type="INT"></column>
+            <column name="name" value="SO  Cancelled due to inventory mismatch" type="VARCHAR(100)"></column>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>

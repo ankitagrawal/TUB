@@ -1,19 +1,5 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.hk.pact.service.inventory.SkuItemLineItemService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -31,11 +17,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ReplacementOrderReason;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
@@ -55,12 +37,21 @@ import com.hk.pact.service.inventory.InventoryHealthService.FetchType;
 import com.hk.pact.service.inventory.InventoryHealthService.SkuFilter;
 import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.service.ServiceLocatorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -108,6 +99,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired BaseDao baseDao;
     @Autowired
 	PurchaseOrderService purchaseOrderService;
+
+    ShippingOrderProcessor shippingOrderProcessor;
 
     @Autowired LineItemDao lineItemDao;
     @Autowired ShippingOrderDao shippingOrderDao;
@@ -354,7 +347,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public ShippingOrder moveShippingOrderToPickingQueue(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Picking));
         getShippingOrderService().save(shippingOrder);
-
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_InPicking);
 
         return shippingOrder;
@@ -365,8 +357,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
         shippingOrder = getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
-
+        getShippingOrderService().logShippingOrderActivity(shippingOrder,
+                EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
         getBucketService().escalateBackToActionQueue(shippingOrder);
         return shippingOrder;
     }
@@ -575,4 +567,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void setCancellationRemark(String cancellationRemark) {
         this.cancellationRemark = cancellationRemark;
     }
+
+    public ShippingOrderProcessor getShippingOrderProcessor() {
+        if (this.shippingOrderProcessor == null) {
+            this.shippingOrderProcessor =  ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+        }
+        return this.shippingOrderProcessor;
+    }
+
 }

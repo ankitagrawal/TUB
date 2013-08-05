@@ -1,14 +1,13 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -52,6 +51,10 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     private AdminShippingOrderService  adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+
+    @Autowired
+    ShippingOrderProcessor             shippingOrderProcessor;
+
     @Autowired
     CategoryDao categoryDao;
 
@@ -120,29 +123,95 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution moveToActionAwaiting() {
-           if (!shippingOrderList.isEmpty()) {
-               List<ShippingOrder> shippingOrdersWithoutReason = new ArrayList<ShippingOrder>();
-               String shippingOrderIds = "";
-               for (ShippingOrder shippingOrder : shippingOrderList) {
-                   if (shippingOrder.getReason() == null) {
-                       shippingOrdersWithoutReason.add(shippingOrder);
-                       shippingOrderIds = shippingOrderIds + shippingOrder.getId() + ",";
-                   } else {
-                       adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
-                   }
-               }
-               if (shippingOrdersWithoutReason.size() > 0) {
-                   addRedirectAlertMessage(new SimpleMessage("Reasons must be slected for shipping order -> " + shippingOrderIds));
-                    return new RedirectResolution(PackingAwaitingQueueAction.class);
-               }
+        if (!shippingOrderList.isEmpty()) {
+            // Creating acceptable reasons for escalate back
+            Set<Long> acceptableReasons = new HashSet<Long>();
+            acceptableReasons.add(EnumReason.PROD_DAMAGE.getId());
+            acceptableReasons.add(EnumReason.PROD_EXPIRE.getId());
+            acceptableReasons.add(EnumReason.PROD_INV_MISMATCH.getId());
+            acceptableReasons.add(EnumReason.MRP_LESS.getId());
+            acceptableReasons.add(EnumReason.MRP_MORE.getId());
 
-               addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));
-           } else {
-               addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be moved back to action awaiting"));
-           }
+            boolean isEscalatebackAllowed;
+            List<Long> shippingOrderIdsWithInvalidReason = new ArrayList<Long>();
+            List<Long> shippingOrdersWithoutFixedLI = new ArrayList<Long>();
 
-           return new RedirectResolution(PackingAwaitingQueueAction.class);
-       }
+            for (ShippingOrder shippingOrder : shippingOrderList) {
+                isEscalatebackAllowed = false;
+                if (shippingOrder.getReason() != null && acceptableReasons.contains(shippingOrder.getReason().getId())) {
+                    if (shippingOrderService.getShippingOrderLifeCycleActivity(
+                            EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed) != null ) {
+                        // then only allow escalate back
+                        isEscalatebackAllowed = true;
+                    } else {
+                        shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
+                    }
+                } else {
+                    shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
+                }
+                if (isEscalatebackAllowed) {
+                    Set<LineItem> selectedLineItems = new HashSet<LineItem>();
+                    List<String> messages = new ArrayList<String>();
+                    Map<String, ShippingOrder> splittedOrders =  new HashMap<String, ShippingOrder>();
+                    for (LineItem lineItem : shippingOrder.getLineItems()) {
+                        if (lineItem.getError()) {
+                            selectedLineItems.add(lineItem);
+                        }
+                    }
+                    if (!selectedLineItems.isEmpty()) {
+                        // if all elements can't be fixed then cancel complete SO
+                        if (selectedLineItems.size() == shippingOrder.getLineItems().size()) {
+                            shippingOrderService.logShippingOrderActivity(shippingOrder,
+                                    EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch, shippingOrder.getReason(),
+                                    "SO cancelled due to inventory mismatch.");
+                            adminShippingOrderService.cancelShippingOrder(shippingOrder,null);
+                            //return shippingOrder;
+                        } else {
+                            // split the order and cancel only the unfixed line items
+                            boolean splitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems,
+                                    splittedOrders, messages);
+                            if (splitSuccess) {
+                                ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
+                                shippingOrderService.logShippingOrderActivity(cancelledSO,
+                                        EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch, cancelledSO.getReason(),
+                                        "SO cancelled due to inventory mismatch.");
+                                adminShippingOrderService.cancelShippingOrder(cancelledSO, null);
+                                shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+                                shippingOrder = adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+
+                                // auto escalate the SO
+                                shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
+                            }
+                        }
+                    } else {
+                        //no line items which are unfixed
+                        shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
+                    }
+                }
+
+            }
+
+            if (shippingOrderIdsWithInvalidReason.size() > 0) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid Reasons selected for shipping order -> "
+                        + shippingOrderIdsWithInvalidReason));
+            }
+
+            if (shippingOrdersWithoutFixedLI.size() > 0 ) {
+                addRedirectAlertMessage(new SimpleMessage("Unfixed Line items not found for shipping order -> "
+                        + shippingOrdersWithoutFixedLI));
+            }
+            if (shippingOrderList.size() != (shippingOrderIdsWithInvalidReason.size()
+                    + shippingOrdersWithoutFixedLI.size())) {
+                addRedirectAlertMessage(new SimpleMessage("Orders with no errors have been moved back to Action" +
+                        " Awaiting and also have been auto escalated."));
+            }
+
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be moved back to action awaiting"));
+        }
+
+        return new RedirectResolution(PackingAwaitingQueueAction.class);
+    }
 
 
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
