@@ -32,10 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -170,7 +167,14 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         if (applicableCourier != null) {
             shippingOrderSearchCriteria.setCourierList(Arrays.asList(applicableCourier));
         }
-        List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+        List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+        if (shippingOrderId != null) {
+          ShippingOrder so = shippingOrderService.find(shippingOrderId);
+          if (so != null)
+            shippingOrderList.add(so);
+        } else {
+          shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+        }
 
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
