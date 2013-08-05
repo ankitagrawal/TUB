@@ -423,8 +423,8 @@
           </shiro:hasPermission>
         </div>
     </ul>
-</fieldset>
-<div id="closeButtonDiv">
+
+  <div id="closeButtonDiv">
     <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
       <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="pre">
         Validate SO
@@ -435,6 +435,7 @@
       </s:link>
     </shiro:hasAnyRoles>
 </div>
+</fieldset>
  
 <div>
 
