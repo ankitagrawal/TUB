@@ -728,12 +728,6 @@
         </shiro:hasAnyRoles>
     </td>
 </c:if>
-<shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
-      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="validateSO">
-        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-        [Validate SO]
-      </s:link>
-</shiro:hasAnyRoles>
 <td>
                   <span
                           class="orderStatusName"><strong>${shippingOrder.orderStatus.name}</strong></span>
@@ -777,6 +771,12 @@
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </c:if>
+    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="validateSO">
+        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+        [Validate SO]
+      </s:link>
+</shiro:hasAnyRoles>
 </td>
 <c:if test="${isServiceQueue== true}">
     <td>
