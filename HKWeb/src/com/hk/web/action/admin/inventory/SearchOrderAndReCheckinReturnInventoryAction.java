@@ -159,7 +159,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(GOOD)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
+										null,EnumSkuItemStatus.Checked_IN,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                                 skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);
@@ -169,7 +169,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(DAMAGED)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 0L, loggedOnUser);
+										null,EnumSkuItemStatus.Damaged,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
                                 skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);
@@ -179,10 +179,10 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(EXPIRED)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 0L, loggedOnUser);
-								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
-                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-								skuItemDao.save(skuItem);
+										null,EnumSkuItemStatus.Expired,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 0L, loggedOnUser);
+//								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
+//                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+//								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
 							}

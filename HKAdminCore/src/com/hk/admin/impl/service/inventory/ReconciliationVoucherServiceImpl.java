@@ -151,8 +151,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 // Add PVI Entry with -1  and  set sku item status to expired
                 if ((additionType.intValue()) == (EnumReconciliationType.AddExpired.getId().intValue())) {
                     for (SkuItem skuItem : skuGroup.getSkuItems()) {
-                        adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
+//                        adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
+//                                EnumInvTxnType.RV_ADD_EXPIRED_AUTOMATIC_DELETION.asInvTxnType(), -1L, userService.getLoggedInUser());
+                         adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,EnumSkuItemStatus.Expired,EnumSkuItemOwner.SELF,
                                 EnumInvTxnType.RV_ADD_EXPIRED_AUTOMATIC_DELETION.asInvTxnType(), -1L, userService.getLoggedInUser());
+
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
                         skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                         skuGroupService.saveSkuItem(skuItem);
@@ -300,7 +303,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
 
         rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
-        adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
+        adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null, EnumSkuItemStatus.Checked_OUT,EnumSkuItemOwner.SELF,
                 invTxnType, -1L, userService.getLoggedInUser());
         if (skuItemStatus != null) {
             skuItem.setSkuItemStatus(skuItemStatus);
@@ -329,7 +332,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         for (int i = 0; i < deleteQty; i++) {
             SkuItem skuItem = inStockSkuItems.get(i);
             //Delete -1 entry in PVI
-            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItemSaved, null,
+            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItemSaved, null,EnumSkuItemStatus.ProductVariantAudited, EnumSkuItemOwner.SELF,
                     inventoryService.getInventoryTxnType(EnumInvTxnType.PRODUCT_VARIANT_AUDITED), -1L, loggedOnUser);
 
             //set sku item status to Product_variant_ Audited
