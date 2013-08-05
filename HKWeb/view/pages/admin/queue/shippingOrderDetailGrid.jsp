@@ -688,10 +688,21 @@
             Size: ${shipment.boxSize.name}, Weight: ${shipment.boxWeight}
         </div>
         <div class="clear"></div>
-	    <div class="floatleft">
+	      <div class="floatleft">
             Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
+        <div class="floatleft">
+          <c:if test="${isSearchShippingOrder == true}">
+          Est Shipping Cost ${shipment.estmShipmentCharge}
+          </c:if>
+          <div class="clear"></div>
+          <div class="floatleft">
+            <c:if test="${isSearchShippingOrder == true}">
+              Est Collection Cost ${shipment.estmCollectionCharge}
+            </c:if>
+          </div>
+            <div class="clear"></div>
         <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
                 <div class="floatleft">

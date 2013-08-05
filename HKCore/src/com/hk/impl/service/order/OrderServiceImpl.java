@@ -721,6 +721,7 @@ public class OrderServiceImpl implements OrderService {
 	        logger.debug("post split will create sku item line item");
             for (ShippingOrder shippingOrder : order.getShippingOrders()){
                 for (LineItem lineItem : shippingOrder.getLineItems()){
+	                  //lineItemDao.refresh(lineItem);
                     if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
                         Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
                         if(!skuItemLineItemStatus){
