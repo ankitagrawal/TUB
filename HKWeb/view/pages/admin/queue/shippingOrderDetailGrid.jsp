@@ -782,6 +782,12 @@
         </c:if>
     </td>
 </c:if>
+ <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="validateSO">
+        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+        Validate SO
+      </s:link>
+</shiro:hasAnyRoles>
 </c:forEach>
 </tr>
 </table>
