@@ -92,6 +92,7 @@ public class ShippingOrderValidatorAction extends BaseAction{
 
         count++;
       }
+      oldSkuItem = skuItem;
     }
 
     addRedirectAlertMessage(new SimpleMessage("Duplicate SI fixed on SILI. Total fixed SILIs = "+count));
