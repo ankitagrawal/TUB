@@ -9,6 +9,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.payment.EnumGateway" %>
 <%@ page import="com.hk.constants.inventory.EnumReconciliationActionType" %>
+<%@ page import="com.hk.domain.store.EnumStore" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -178,6 +179,7 @@
 <c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
+<c:set var="reconciliationEnabledStore" value="<%=EnumStore.getReconciliationEnabledStores()%>"/>
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
@@ -313,7 +315,8 @@
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
       <c:if test="${hk:collectionContains(reconciliationModes, order.payment.paymentMode.id)
-                                                and order.payment.paymentStatus.id eq paymentStatusSuccess}">
+                                                and order.payment.paymentStatus.id eq paymentStatusSuccess
+                                                and hk:collectionContains(reconciliationEnabledStore, order.store.id)}">
       <br/>
       Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
       <br/>
