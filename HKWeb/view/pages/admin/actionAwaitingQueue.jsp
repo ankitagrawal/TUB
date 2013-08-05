@@ -87,14 +87,14 @@
         table.row_border tr {
             outline: 1px solid #cccccc;
         }
-        
-        #closeButtonDiv{
-			float: left;
-			position: relative;
-			left: 14%;
-			margin-bottom: 2px;
-			margin-top: 2px;
-}
+
+        .closeButtonDiv {
+          float: left;
+          position: relative;
+          left: 14%;
+          margin-bottom: 2px;
+          margin-top: 2px;
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -413,24 +413,32 @@
 
 
           <shiro:hasPermission name="<%=PermissionConstants.CREATE_JIT_PO%>">
-            <div id="closeButtonDiv">
+            <div class="closeButtonDiv">
               <s:form beanclass="com.hk.web.action.admin.queue.JitShippingOrderAction">
                 <s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form></div>
 
-            <div id="closeButtonDiv">
+            <div class="closeButtonDiv">
               <s:form beanclass="com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
                 <s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
           </shiro:hasPermission>
         </div>
     </ul>
-</fieldset>
 
+  <%--<div>
+    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="pre">
+        Validate SOs
+      </s:link>
+
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="fixDuplicateSI">
+        Fix Duplicate SILIs
+      </s:link>
+    </shiro:hasAnyRoles>
+</div>--%>
+</fieldset>
+ 
 <div>
 
-<div id="closeButtonDiv">
-              <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction">
-                <s:submit name="pre" value="Validate Shipping Orders"/></s:form></div>
-</div>
 
 
 <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">

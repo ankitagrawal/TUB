@@ -24,37 +24,47 @@ import java.util.List;
 @Repository
 public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineItemDao {
 
-    @Override
-    public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId) {
-        String sql = "from SkuItemLineItem s where s.lineItem = :lineItem and s.skuItem.skuItemStatus.id= :skuItemStatusId";
-        Query query = getSession().createQuery(sql).setParameter("lineItem", lineItem).setParameter("skuItemStatusId", skuItemStatusId);
-        return (List<SkuItemLineItem>)query.list();
-    }
-    
-    @Override
-    public List<SkuItemCLI> getSkuItemCLI(CartLineItem cartLineItem, List<SkuItemStatus> skuItemStatusIds){
-    	String sql = "from SkuItemCLI s where s.cartLineItem = :cartLineItem and s.skuItem.skuItemStatus in (:skuItemStatusIds)";
-    	Query query = getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).setParameterList("skuItemStatusIds", skuItemStatusIds);
-    	return (List<SkuItemCLI>)query.list();
-    }
-    
-    @Override
-    public SkuItemCLI getSkuItemCLI(SkuItem skuItem){
-    	String sql = "from SkuItemCLI s where s.skuItem = :skuItem order by s.id desc";
-      List<SkuItemCLI> siliList = (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
-    	return siliList != null && !siliList.isEmpty() ? siliList.get(0) : null;
-    }
-    
-    public SkuItemLineItem getSkuItemLineItem(SkuItem skuItem){
-    	String sql = "from SkuItemLineItem s where s.skuItem = :skuItem order by s.id desc";
-      List<SkuItemLineItem> siliList = (List<SkuItemLineItem>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
-    	return siliList != null && !siliList.isEmpty() ? siliList.get(0) : null;
-    }
-    
-    public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem){
-    	String sql = "from SkuItemCLI s where s.cartLineItem = :cartLineItem";
-    	return (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).uniqueResult();
-    }
-    
-    
+  @Override
+  public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId) {
+    String sql = "from SkuItemLineItem s where s.lineItem = :lineItem and s.skuItem.skuItemStatus.id= :skuItemStatusId";
+    Query query = getSession().createQuery(sql).setParameter("lineItem", lineItem).setParameter("skuItemStatusId", skuItemStatusId);
+    return (List<SkuItemLineItem>) query.list();
+  }
+
+  @Override
+  public List<SkuItemCLI> getSkuItemCLI(CartLineItem cartLineItem, List<SkuItemStatus> skuItemStatusIds) {
+    String sql = "from SkuItemCLI s where s.cartLineItem = :cartLineItem and s.skuItem.skuItemStatus in (:skuItemStatusIds)";
+    Query query = getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).setParameterList("skuItemStatusIds", skuItemStatusIds);
+    return (List<SkuItemCLI>) query.list();
+  }
+
+  @Override
+  public SkuItemCLI getSkuItemCLI(SkuItem skuItem) {
+    String sql = "from SkuItemCLI s where s.skuItem = :skuItem order by s.id desc";
+    List<SkuItemCLI> siliList = (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
+    return siliList != null && !siliList.isEmpty() ? siliList.get(0) : null;
+  }
+
+  public SkuItemLineItem getSkuItemLineItem(SkuItem skuItem) {
+    String sql = "from SkuItemLineItem s where s.skuItem = :skuItem order by s.id desc";
+    List<SkuItemLineItem> siliList = (List<SkuItemLineItem>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
+    return siliList != null && !siliList.isEmpty() ? siliList.get(0) : null;
+  }
+
+  public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem) {
+    String sql = "from SkuItemCLI s where s.cartLineItem = :cartLineItem";
+    return (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).uniqueResult();
+  }
+
+  public List<SkuItemLineItem> getSkuItemLIsTemp() {
+    String sql = "from SkuItemLineItem s group by s.skuItem having count(s.skuItem) > 1";
+    return (List<SkuItemLineItem>) getSession().createQuery(sql).list();
+  }
+
+  public List<SkuItemLineItem> getSkuItemLIsTemp(SkuItem skuItem) {
+    String sql = "from SkuItemLineItem s where s.skuItem = :skuItem";
+    return (List<SkuItemLineItem>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
+  }
+
+
 }
