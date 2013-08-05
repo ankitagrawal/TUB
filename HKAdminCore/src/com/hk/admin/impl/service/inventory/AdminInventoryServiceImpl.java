@@ -404,7 +404,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         List<SkuItemLineItem> bookedSkuLineItemList = new ArrayList<SkuItemLineItem>();
         if (skuLineItemList != null && skuLineItemList.size() > 0) {
         	for(SkuItemLineItem skuItemLineItem : skuLineItemList){
-        		if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())){
+        		if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId()) ||
+                        skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())){
         			bookedSkuLineItemList.add(skuItemLineItem);
         		}
         	}
