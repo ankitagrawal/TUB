@@ -424,17 +424,17 @@
         </div>
     </ul>
 
-  <div>
+  <%--<div>
     <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
       <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="pre">
-        Validate SO
+        Validate SOs
       </s:link>
 
       <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="fixDuplicateSI">
         Fix Duplicate SILIs
       </s:link>
     </shiro:hasAnyRoles>
-</div>
+</div>--%>
 </fieldset>
  
 <div>
