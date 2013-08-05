@@ -73,25 +73,22 @@ public class ShippingOrderValidatorAction extends BaseAction {
     long count = 0;
     List<SkuItemLineItem> skuItemLineItems = skuItemLineItemDao.getSkuItemLIsTemp();
     logger.debug("LIs with duplicate entries = " + skuItemLineItems.size());
-    SkuItem oldSkuItem = null;
-    SkuGroup group = null;
-    List<SkuItem> skuItems = null;
     for (SkuItemLineItem sili : skuItemLineItems) {
+      SkuItem oldSkuItem = null;
+      SkuGroup group = null;
+      List<SkuItem> skuItems = null;
       SkuItem skuItem = sili.getSkuItem();
       List<SkuItemLineItem> skuItemLIs = skuItemLineItemDao.getSkuItemLIsTemp(skuItem);
       logger.debug("SILIs with duplicate entries for SKUITEM = " + skuItem + "; Records=" + skuItemLineItems.size());
-      int siCount = 0;
       for (SkuItemLineItem skuItemLineItem : skuItemLIs) {
         logger.debug("SILI=" + skuItemLineItem.getId() + "; SI=" + skuItem.getId());
-        if (oldSkuItem == null || oldSkuItem.getId().longValue() != skuItem.getId().longValue()) {
-          logger.debug("If");
+        if (oldSkuItem != null && oldSkuItem.getId().longValue() == skuItem.getId().longValue()) {
+          logger.debug("Do fixing...");
           group = skuItem.getSkuGroup();
           skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
               Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
-        } else {
-          logger.debug("Else");
-          if (!skuItems.isEmpty() && skuItems.size() > siCount) {
-            SkuItem newSkuItem = skuItems.get(siCount);
+          if (!skuItems.isEmpty()) {
+            SkuItem newSkuItem = skuItems.get(0);
             newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
             skuGroupService.saveSkuItem(newSkuItem);
 
@@ -102,9 +99,8 @@ public class ShippingOrderValidatorAction extends BaseAction {
           } else {
             logger.debug("Insuff Inventory");
           }
+          oldSkuItem = skuItem;
         }
-        oldSkuItem = skuItem;
-        siCount++;
       }
     }
 
