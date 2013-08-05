@@ -3,6 +3,7 @@ package com.hk.web.action.admin.shippingOrder;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -56,9 +57,17 @@ public class SplitShippingOrderAction extends BaseAction {
                 selectedLineItems.add(lineItem);
             }
         }
-    	boolean orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems,
-                splittedOrders, messages);
-    	
+        boolean orderSplitSuccess = false;
+        if (shippingOrder!=null &&
+                EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
+            orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems,
+                    splittedOrders, messages);
+
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Shipping order is not in Action awaiting state."));
+            return new RedirectResolution(ActionAwaitingQueueAction.class);
+        }
+
     	if(orderSplitSuccess) {
             shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
             ShippingOrder newShippingOrder = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);

@@ -3,7 +3,6 @@ package com.hk.admin.impl.service.shippingOrder;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
@@ -353,7 +352,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         flagMapNewSO.put("jitItemPresent", false);
 
 
-        if (shippingOrder != null && EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
+        if (shippingOrder != null ) {
             if (selectedLineItems.size() == shippingOrder.getLineItems().size()) {
                 messages.add("Invalid LineItem selection for Shipping Order : " + shippingOrder.getGatewayOrderId()
                         + ". Cannot be split.");

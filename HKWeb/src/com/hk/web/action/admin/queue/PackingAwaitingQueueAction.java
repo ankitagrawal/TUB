@@ -7,6 +7,7 @@ import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -54,6 +55,9 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
     @Autowired
     ShippingOrderProcessor             shippingOrderProcessor;
+
+    @Autowired
+    ShippingOrderLifecycleService      shippingOrderLifecycleService;
 
     @Autowired
     CategoryDao categoryDao;
@@ -139,8 +143,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 isEscalatebackAllowed = false;
                 if (shippingOrder.getReason() != null && acceptableReasons.contains(shippingOrder.getReason().getId())) {
-                    if (shippingOrderService.getShippingOrderLifeCycleActivity(
-                            EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed) != null ) {
+                    if (shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(),
+                            EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed.getId()) != null ) {
                         // then only allow escalate back
                         isEscalatebackAllowed = true;
                     } else {
@@ -154,7 +158,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
                     List<String> messages = new ArrayList<String>();
                     Map<String, ShippingOrder> splittedOrders =  new HashMap<String, ShippingOrder>();
                     for (LineItem lineItem : shippingOrder.getLineItems()) {
-                        if (lineItem.getError()) {
+                        if (lineItem.getError() != null && lineItem.getError()) {
                             selectedLineItems.add(lineItem);
                         }
                     }
