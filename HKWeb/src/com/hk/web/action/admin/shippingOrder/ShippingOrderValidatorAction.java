@@ -80,6 +80,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
       SkuItem skuItem = sili.getSkuItem();
       List<SkuItemLineItem> skuItemLIs = skuItemLineItemDao.getSkuItemLIsTemp(skuItem);
       logger.debug("SILIs with duplicate entries for SKUITEM = " + skuItem + "; Records=" + skuItemLineItems.size());
+      int siCount = 0;
       for (SkuItemLineItem skuItemLineItem : skuItemLIs) {
         logger.debug("SILI=" + skuItemLineItem.getId() + "; SI=" + skuItem.getId());
         if (oldSkuItem == null || oldSkuItem.getId().longValue() != skuItem.getId().longValue()) {
@@ -89,16 +90,21 @@ public class ShippingOrderValidatorAction extends BaseAction {
               Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
         } else {
           logger.debug("Else");
-          SkuItem newSkuItem = skuItems.get(0);
-          newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-          skuGroupService.saveSkuItem(newSkuItem);
+          if (!skuItems.isEmpty() && skuItems.size() > siCount) {
+            SkuItem newSkuItem = skuItems.get(siCount);
+            newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+            skuGroupService.saveSkuItem(newSkuItem);
 
-          skuItemLineItem.setSkuItem(newSkuItem);
-          skuItemLineItemDao.save(skuItemLineItem);
+            skuItemLineItem.setSkuItem(newSkuItem);
+            skuItemLineItemDao.save(skuItemLineItem);
 
-          count++;
+            count++;
+          } else {
+            logger.debug("Insuff Inventory");
+          }
         }
         oldSkuItem = skuItem;
+        siCount++;
       }
     }
 
