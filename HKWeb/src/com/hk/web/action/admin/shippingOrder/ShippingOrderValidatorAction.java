@@ -92,6 +92,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
           group = skuItem.getSkuGroup();
           skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
               Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
+          logger.debug("Instock Units=" + (skuItems != null ? skuItems.size() : 0L));
           if (!skuItems.isEmpty()) {
             SkuItem newSkuItem = skuItems.get(0);
             newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
@@ -104,8 +105,8 @@ public class ShippingOrderValidatorAction extends BaseAction {
           } else {
             logger.debug("Insuff Inventory");
           }
-          oldSkuItem = skuItem;
         }
+        oldSkuItem = skuItem;
       }
       //Inventory Check
       inventoryHealthService.inventoryHealthCheck(outSkuItem.getSkuGroup().getSku().getProductVariant());
