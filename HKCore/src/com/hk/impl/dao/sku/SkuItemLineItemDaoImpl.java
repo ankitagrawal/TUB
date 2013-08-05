@@ -40,14 +40,15 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
     
     @Override
     public SkuItemCLI getSkuItemCLI(SkuItem skuItem){
-    	//TODO :ERP Add Status
-    	String sql = "from SkuItemCLI s where s.skuItem = :skuItem";
-    	return (SkuItemCLI) getSession().createQuery(sql).setParameter("skuItem", skuItem).uniqueResult();
+    	String sql = "from SkuItemCLI s where s.skuItem = :skuItem order by s.id desc";
+      List<SkuItemCLI> siliList = (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
+    	return siliList != null && !siliList.isEmpty() ? siliList.get(0) : null;
     }
     
     public SkuItemLineItem getSkuItemLineItem(SkuItem skuItem){
-    	String sql = "from SkuItemLineItem s where s.skuItem = :skuItem";
-    	return (SkuItemLineItem) getSession().createQuery(sql).setParameter("skuItem", skuItem).uniqueResult();
+    	String sql = "from SkuItemLineItem s where s.skuItem = :skuItem order by s.id desc";
+      List<SkuItemLineItem> siliList = (List<SkuItemLineItem>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
+    	return siliList != null && !siliList.isEmpty() ? siliList.get(0) : null;
     }
     
     public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem){
