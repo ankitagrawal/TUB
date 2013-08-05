@@ -73,6 +73,7 @@ public class ShippingOrderValidatorAction extends BaseAction{
   public Resolution fixDuplicateSI(){
     long count = 0;
     List<SkuItemLineItem> skuItemLineItems = skuItemLineItemDao.getSkuItemLIsTemp();
+    logger.debug("SILIs with duplicate entries = "+skuItemLineItems.size());
     SkuItem oldSkuItem = null;
     SkuGroup group = null;
     List<SkuItem> skuItems = null;
