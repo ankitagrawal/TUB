@@ -72,7 +72,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
   public Resolution fixDuplicateSI() {
     long count = 0;
     List<SkuItemLineItem> skuItemLineItems = skuItemLineItemDao.getSkuItemLIsTemp();
-    logger.debug("SILIs with duplicate entries = " + skuItemLineItems.size());
+    logger.debug("LIs with duplicate entries = " + skuItemLineItems.size());
     SkuItem oldSkuItem = null;
     SkuGroup group = null;
     List<SkuItem> skuItems = null;
@@ -80,7 +80,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
       SkuItem skuItem = sili.getSkuItem();
       List<SkuItemLineItem> skuItemLIs = skuItemLineItemDao.getSkuItemLIsTemp(skuItem);
       logger.debug("SILIs with duplicate entries for SKUITEM = " + skuItem + "; Records=" + skuItemLineItems.size());
-      for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+      for (SkuItemLineItem skuItemLineItem : skuItemLIs) {
         logger.debug("SILI=" + skuItemLineItem.getId() + "; SI=" + skuItem.getId());
         if (oldSkuItem == null || oldSkuItem.getId().longValue() != skuItem.getId().longValue()) {
           logger.debug("If");
