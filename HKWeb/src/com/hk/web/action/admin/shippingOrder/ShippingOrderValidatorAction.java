@@ -77,10 +77,11 @@ public class ShippingOrderValidatorAction extends BaseAction {
       SkuItem oldSkuItem = null;
       SkuGroup group = null;
       List<SkuItem> skuItems = null;
-      SkuItem skuItem = sili.getSkuItem();
-      List<SkuItemLineItem> skuItemLIs = skuItemLineItemDao.getSkuItemLIsTemp(skuItem);
-      logger.debug("SILIs with duplicate entries for SKUITEM = " + skuItem + "; Records=" + skuItemLineItems.size());
+      SkuItem outSkuItem = sili.getSkuItem();
+      List<SkuItemLineItem> skuItemLIs = skuItemLineItemDao.getSkuItemLIsTemp(outSkuItem);
+      logger.debug("SILIs with duplicate entries for SKUITEM = " + outSkuItem + "; Records=" + skuItemLineItems.size());
       for (SkuItemLineItem skuItemLineItem : skuItemLIs) {
+        SkuItem skuItem = sili.getSkuItem();
         logger.debug("SILI=" + skuItemLineItem.getId() + "; SI=" + skuItem.getId());
         if (oldSkuItem != null && oldSkuItem.getId().longValue() == skuItem.getId().longValue()) {
           logger.debug("Do fixing...");
