@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     UserService userService;
     @Autowired
 	AdminEmailManager adminEmailManager;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
     
     @Autowired
     private LoyaltyProgramService loyaltyProgramService;
@@ -114,6 +117,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+            skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
             //shippingOrder = getShippingOrderService().save(shippingOrder);
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
@@ -157,13 +161,17 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 					lineItem.setSku(sku);
 				}
 			}
-			
-			for (LineItem lineItem : lineItems) {
-				if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
-					shouldUpdate = false;
-				}
-			}
-			
+
+      for (LineItem lineItem : lineItems) {
+        if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
+          shouldUpdate = false;
+        }
+      }
+      if (shouldUpdate) {
+        shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
+        logger.debug("isWarehouseBeFlippable = "+shouldUpdate);
+      }
+
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);
 				shipmentService.recreateShipment(shippingOrder);
@@ -221,7 +229,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	        // auto escalate shipping orders if possible
 	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
-			orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
+	//		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
+
+            //Validate SO for SkuItem booking
+            shippingOrderService.validateShippingOrder(shippingOrder);
+          
             return shippingOrder;
         }
         return null;

@@ -12,6 +12,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
@@ -160,6 +161,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
@@ -169,6 +171,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
+                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
@@ -178,6 +181,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
+                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
