@@ -65,10 +65,16 @@ public class AdminBookingAction extends BaseAction {
 						boSoSiLi.addAll(li.getSkuItemLineItems());
 					}
 				}
-				soSiLiMap.put(shippingOrder, boSoSiLi);
+				if (boSoSiLi != null && boSoSiLi.size() > 0) {
+					soSiLiMap.put(shippingOrder, boSoSiLi);
+				}
 			}
 		}
 		return new ForwardResolution("/pages/admin/bookingStatusForSO.jsp");
+	}
+
+	public Resolution closeWindow() {
+		return new ForwardResolution("/pages/close.jsp");
 	}
 
 	public Long getShippingOrderId() {
@@ -118,4 +124,5 @@ public class AdminBookingAction extends BaseAction {
 	public void setSoSiLiMap(HashMap<ShippingOrder, List<SkuItemLineItem>> soSiLiMap) {
 		this.soSiLiMap = soSiLiMap;
 	}
+
 }

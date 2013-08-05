@@ -493,7 +493,7 @@
     </s:link>)
     </shiro:hasAnyRoles>
     &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction"
-                                          event="getSkuCartItemLineItems">
+                                          event="getSkuCartItemLineItems" target="_blank">
                     <s:param name="baseOrderId" value="${order.id}"/>
                     Booking Status
                 </s:link>)
