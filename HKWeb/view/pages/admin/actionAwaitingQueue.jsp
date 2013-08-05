@@ -428,9 +428,11 @@
 <div>
 
 <div id="closeButtonDiv">
-              <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction">
-                <s:submit name="pre" value="Validate Shipping Orders"/></s:form>
     <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="pre">
+        Validate SO
+      </s:link>
+      
       <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="fixDuplicateSI">
         Fix Duplicate SILIs
       </s:link>

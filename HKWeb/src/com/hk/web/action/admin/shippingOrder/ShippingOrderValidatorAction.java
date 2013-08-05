@@ -11,12 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.core.RoleConstants;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.ShippingOrder;
@@ -31,6 +33,7 @@ import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 
 @Component
+@Secure(hasAnyRoles = {RoleConstants.ADMIN})
 public class ShippingOrderValidatorAction extends BaseAction {
 
   private static Logger logger = LoggerFactory.getLogger(ShippingOrderValidatorAction.class);
@@ -46,6 +49,8 @@ public class ShippingOrderValidatorAction extends BaseAction {
 
   @Autowired
   InventoryHealthService inventoryHealthService;
+
+  private ShippingOrder shippingOrder;
 
 
   @DefaultHandler
@@ -69,8 +74,19 @@ public class ShippingOrderValidatorAction extends BaseAction {
     }
     addRedirectAlertMessage(new SimpleMessage("Shipping Orders Validated and entries in tables adjusted"));
     return new RedirectResolution(ActionAwaitingQueueAction.class);
+  }
 
-
+  public Resolution validateSO() {
+    logger.debug("Validating Shipping Order -" + shippingOrder.getId());
+    try {
+      shippingOrderService.validateShippingOrder(shippingOrder);
+    }
+    catch (Exception e) {
+      logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
+      e.printStackTrace();
+    }
+    addRedirectAlertMessage(new SimpleMessage("Shipping Order Validated and entries in tables adjusted: "+shippingOrder.getId()));
+    return new RedirectResolution(ActionAwaitingQueueAction.class);
   }
 
   public Resolution fixDuplicateSI() {
@@ -152,4 +168,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
     return shippingOrders;
   }
 
+  public ShippingOrder getShippingOrder() {
+    return shippingOrder;
+  }
 }
