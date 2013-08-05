@@ -424,20 +424,20 @@
         </div>
     </ul>
 </fieldset>
-
-<div>
-
 <div id="closeButtonDiv">
     <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
       <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="pre">
         Validate SO
       </s:link>
-      
+
       <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="fixDuplicateSI">
         Fix Duplicate SILIs
       </s:link>
     </shiro:hasAnyRoles>
 </div>
+ 
+<div>
+
 
 
 <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">

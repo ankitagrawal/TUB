@@ -77,15 +77,17 @@ public class ShippingOrderValidatorAction extends BaseAction {
   }
 
   public Resolution validateSO() {
-    logger.debug("Validating Shipping Order -" + shippingOrder.getId());
-    try {
-      shippingOrderService.validateShippingOrder(shippingOrder);
+    if (shippingOrder != null) {
+      logger.debug("Validating Shipping Order -" + shippingOrder.getId());
+      try {
+        shippingOrderService.validateShippingOrder(shippingOrder);
+      }
+      catch (Exception e) {
+        logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
+        e.printStackTrace();
+      }
+      addRedirectAlertMessage(new SimpleMessage("Shipping Order Validated and entries in tables adjusted: " + shippingOrder.getId()));
     }
-    catch (Exception e) {
-      logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
-      e.printStackTrace();
-    }
-    addRedirectAlertMessage(new SimpleMessage("Shipping Order Validated and entries in tables adjusted: "+shippingOrder.getId()));
     return new RedirectResolution(ActionAwaitingQueueAction.class);
   }
 
@@ -170,5 +172,9 @@ public class ShippingOrderValidatorAction extends BaseAction {
 
   public ShippingOrder getShippingOrder() {
     return shippingOrder;
+  }
+
+  public void setShippingOrder(ShippingOrder shippingOrder) {
+    this.shippingOrder = shippingOrder;
   }
 }
