@@ -80,7 +80,7 @@ public class ShippingOrderValidatorAction extends BaseAction{
     for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
       SkuItem skuItem = skuItemLineItem.getSkuItem();
       logger.debug("SILI="+skuItemLineItem.getId()+"; SI="+skuItem.getId());
-      if (oldSkuItem == null || oldSkuItem.getId().doubleValue() != skuItem.getId().doubleValue()) {
+      if (oldSkuItem == null || oldSkuItem.getId().longValue() != skuItem.getId().longValue()) {
         logger.debug("If");
         group = skuItem.getSkuGroup();
         skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
