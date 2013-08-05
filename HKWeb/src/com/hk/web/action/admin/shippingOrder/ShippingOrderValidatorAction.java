@@ -79,11 +79,13 @@ public class ShippingOrderValidatorAction extends BaseAction{
     List<SkuItem> skuItems = null;
     for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
       SkuItem skuItem = skuItemLineItem.getSkuItem();
-      if (oldSkuItem == null || !oldSkuItem.equals(skuItem)) {
+      if (oldSkuItem == null || !oldSkuItem.getId().equals(skuItem.getId())) {
+        logger.debug("If");
         group = skuItem.getSkuGroup();
         skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
             Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
       }else{
+        logger.debug("Else");
         SkuItem newSkuItem = skuItems.get(0);
         newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
         skuGroupService.saveSkuItem(newSkuItem);
