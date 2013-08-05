@@ -19,13 +19,15 @@ import java.util.List;
  */
 public interface SkuItemLineItemDao extends BaseDao {
 
-    public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId);
-    
-    public List<SkuItemCLI> getSkuItemCLI(CartLineItem cartLineItem, List<SkuItemStatus> skuItemStatusIds);
-    
-    public SkuItemCLI getSkuItemCLI(SkuItem skuItem);
-    
-    public SkuItemLineItem getSkuItemLineItem(SkuItem skuItem);
-    
-    public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem);
+  public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId);
+
+  public List<SkuItemCLI> getSkuItemCLI(CartLineItem cartLineItem, List<SkuItemStatus> skuItemStatusIds);
+
+  public SkuItemCLI getSkuItemCLI(SkuItem skuItem);
+
+  public SkuItemLineItem getSkuItemLineItem(SkuItem skuItem);
+
+  public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem);
+
+  public List<SkuItemLineItem> getSkuItemLIsTemp();
 }

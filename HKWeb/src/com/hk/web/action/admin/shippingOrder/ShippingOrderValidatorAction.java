@@ -1,11 +1,6 @@
 package com.hk.web.action.admin.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -20,11 +15,18 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 
 @Component
@@ -33,7 +35,14 @@ public class ShippingOrderValidatorAction extends BaseAction{
 	private static Logger logger = LoggerFactory.getLogger(ShippingOrderValidatorAction.class);
 	
 	@Autowired
-	ShippingOrderService shippingOrderService; 
+	ShippingOrderService shippingOrderService;
+
+  @Autowired
+  SkuItemLineItemDao skuItemLineItemDao;
+
+  @Autowired
+  SkuGroupService skuGroupService;
+
 	
 	@DefaultHandler
 	public Resolution pre() {
@@ -60,6 +69,34 @@ public class ShippingOrderValidatorAction extends BaseAction{
 		
 		
 	}
+
+  public Resolution fixDuplicateSI(){
+    long count = 0;
+    List<SkuItemLineItem> skuItemLineItems = skuItemLineItemDao.getSkuItemLIsTemp();
+    SkuItem oldSkuItem = null;
+    SkuGroup group = null;
+    List<SkuItem> skuItems = null;
+    for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+      SkuItem skuItem = skuItemLineItem.getSkuItem();
+      if (oldSkuItem == null || !oldSkuItem.equals(skuItem)) {
+        group = skuItem.getSkuGroup();
+        skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
+            Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
+      }else{
+        SkuItem newSkuItem = skuItems.get(0);
+        newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuGroupService.saveSkuItem(newSkuItem);
+
+        skuItemLineItem.setSkuItem(newSkuItem);
+        skuItemLineItemDao.save(skuItemLineItem);
+
+        count++;
+      }
+    }
+
+    addRedirectAlertMessage(new SimpleMessage("Duplicate SI fixed on SILI. Total fixed SILIs = "+count));
+		return new RedirectResolution(ActionAwaitingQueueAction.class);
+  }
 	
 	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
