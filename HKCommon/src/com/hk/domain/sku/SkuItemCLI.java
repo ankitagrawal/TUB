@@ -5,6 +5,8 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,17 +44,17 @@ public class SkuItemCLI implements java.io.Serializable {
 	@Column(name = "unit_num", nullable = false)
 	private Long unitNum;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
-	private List<SkuItemLineItem> skuItemLineItems;
-
-	@JsonSkip
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_dt", nullable = false, length = 19)
-	private Date createDate = new Date();
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "update_dt", length = 19)
-	private Date updateDate;
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "skuItemCLI")
+    private SkuItemLineItem skuItemLineItem;
+    
+   /* @JsonSkip
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date          createDate         = new Date();
+    
+    @Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "update_dt", length = 19)
+	private Date updateDate;*/
 
 	public Long getId() {
 		return id;
@@ -94,15 +96,15 @@ public class SkuItemCLI implements java.io.Serializable {
 		this.unitNum = unitNumber;
 	}
 
-	public List<SkuItemLineItem> getSkuItemLineItems() {
-		return skuItemLineItems;
-	}
+    public SkuItemLineItem getSkuItemLineItem() {
+        return skuItemLineItem;
+    }
 
-	public void setSkuItemLineItems(List<SkuItemLineItem> skuItemLineItems) {
-		this.skuItemLineItems = skuItemLineItems;
-	}
-
-	public Date getCreateDate() {
+    public void setSkuItemLineItem(SkuItemLineItem skuItemLineItem) {
+        this.skuItemLineItem = skuItemLineItem;
+    }
+    
+   /* public Date getCreateDate() {
 		return createDate;
 	}
 
@@ -113,6 +115,10 @@ public class SkuItemCLI implements java.io.Serializable {
 	public Date getUpdateDate() {
 		return updateDate;
 	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}*/
 
 	@Override
 	public boolean equals(Object obj) {
@@ -126,7 +132,7 @@ public class SkuItemCLI implements java.io.Serializable {
 		}
 		return false;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		// TODO Auto-generated method stub

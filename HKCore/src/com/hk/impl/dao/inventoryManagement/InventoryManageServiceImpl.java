@@ -89,6 +89,62 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     }
 
 
+    /// Releasing the SkuItem in case of Payment Failure  or Error
+    public void releaseSkuItemCLIForOrder(Order order) {
+        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+        for (CartLineItem cartLineItem : cartLineItems) {
+            // get Entries of SkuItemCLI corresponding to cartLineItem
+            List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+            Iterator<SkuItemCLI> iterator = skuItemCLIs.iterator();
+            while (iterator.hasNext()) {
+                SkuItemCLI skuItemCLI = iterator.next();
+                SkuItem skuItem = skuItemCLI.getSkuItem();
+                // todo Pvi entries
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                getBaseDao().save(skuItem);
+                // todo UpdatePrice and Mrp qyt
+                iterator.remove();
+                getBaseDao().delete(skuItemCLI);
+            }
+
+        }
+    }
+
+
+    // get list Of SkuItems to booked
+
+    public List<SkuItem> getSkuItems(List<Sku> skus, Double mrp) {
+        List<SkuItem> skuItemList = new ArrayList<SkuItem>();
+        if (skus != null && skus.size() > 0) {
+            for (Sku sku : skus) {
+                List<SkuItem> skuItems = skuGroupService.getCheckedInSkuItems(sku);
+                if (skuItems != null && skuItems.size() > 0) {
+                    for (SkuItem item : skuItems) {
+                        if (item.getSkuGroup().getMrp().equals(mrp)) {
+                            skuItemList.add(item);
+                        }
+                    }
+                }
+            }
+        }
+        return skuItemList;
+    }
+
+
+    /*
+    // Inventory Health Check
+
+
+    1.       Get Net inventory of (product_variant) physical  --> checked in , temp-booked - booked
+    2.       Available unbooked inventory   -->    those are in checked in status
+    3.       if 2 is + ve  instock else out of stock
+    4.       if instock -- current variant --- maximum qty in all warehouses at current mrp price.
+    5.       if current batch finishes then  search first check in batch at all warehouse  and set its maximum qty  and prices.
+
+    6.    if variant is out of stock  then need to make instock at inventory check in time aand updating all the prices and info
+
+    */
+
 
     public Long getAvailableUnBookedInventory(ProductVariant productVariant) {
         // get Net physical inventory
@@ -120,7 +176,7 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     }
 
 
-    private Long getBookedQty(List<Sku> skuList) {
+    public Long getBookedQty(List<Sku> skuList) {
         Long bookedInventory = 0L;
         if (skuList != null && !skuList.isEmpty()) {
             Long bookedInventoryForSKUs = inventoryManageDao.getBookedQtyOfSkuInQueue(skuList);
@@ -141,6 +197,9 @@ public class InventoryManageServiceImpl implements InventoryManageService {
     }
 
 
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem, Long unitNum) {
+        return inventoryManageDao.sicliAlreadyExists(cartLineItem, unitNum);
+    }
 
     public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
         return inventoryManageDao.sicliAlreadyExists(cartLineItem);

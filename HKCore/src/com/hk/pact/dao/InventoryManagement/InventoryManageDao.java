@@ -18,6 +18,8 @@ import java.util.Set;
  */
 public interface InventoryManageDao {
 
+    public Long getNetInventory(Sku sku);
+
     public Long getAvailableUnBookedInventory(List<Sku> skuList);
 
     public Long getNetInventory(List<Sku> skuList, List<Long> skuItemStatusIds);
@@ -41,7 +43,11 @@ public interface InventoryManageDao {
 
     public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
 
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem,  Long unitNum);
+
     public boolean sicliAlreadyExists(CartLineItem cartLineItem);
+
+
 
 
 }
