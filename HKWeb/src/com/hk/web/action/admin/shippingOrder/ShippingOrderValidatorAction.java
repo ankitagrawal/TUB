@@ -30,12 +30,12 @@ import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 
 @Component
-public class ShippingOrderValidatorAction extends BaseAction{
-	
-	private static Logger logger = LoggerFactory.getLogger(ShippingOrderValidatorAction.class);
-	
-	@Autowired
-	ShippingOrderService shippingOrderService;
+public class ShippingOrderValidatorAction extends BaseAction {
+
+  private static Logger logger = LoggerFactory.getLogger(ShippingOrderValidatorAction.class);
+
+  @Autowired
+  ShippingOrderService shippingOrderService;
 
   @Autowired
   SkuItemLineItemDao skuItemLineItemDao;
@@ -43,100 +43,103 @@ public class ShippingOrderValidatorAction extends BaseAction{
   @Autowired
   SkuGroupService skuGroupService;
 
-	
-	@DefaultHandler
-	public Resolution pre() {
-		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
-		List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
-		
-		shippingOrders = getSortedShippingOrders(shippingOrders);
-		Set<ShippingOrder> sortedShippingOrdersSet = new HashSet<ShippingOrder>(shippingOrders);
-		
-		for(ShippingOrder shippingOrder : sortedShippingOrdersSet){
-			logger.debug("Validating Shipping Order -"+shippingOrder.getId());
-			try{
-				shippingOrderService.validateShippingOrder(shippingOrder);
-			}
-			catch(Exception e)
-			{
-				logger.debug("Exception while validating the Shipping Order"+shippingOrder.getId()+" "+e.getMessage());
-				e.printStackTrace();
-			}
-			
-		}
-		addRedirectAlertMessage(new SimpleMessage("Shipping Orders Validated and entries in tables adjusted"));
-		return new RedirectResolution(ActionAwaitingQueueAction.class); 
-		
-		
-	}
 
-  public Resolution fixDuplicateSI(){
+  @DefaultHandler
+  public Resolution pre() {
+    ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
+    List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+
+    shippingOrders = getSortedShippingOrders(shippingOrders);
+    Set<ShippingOrder> sortedShippingOrdersSet = new HashSet<ShippingOrder>(shippingOrders);
+
+    for (ShippingOrder shippingOrder : sortedShippingOrdersSet) {
+      logger.debug("Validating Shipping Order -" + shippingOrder.getId());
+      try {
+        shippingOrderService.validateShippingOrder(shippingOrder);
+      }
+      catch (Exception e) {
+        logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
+        e.printStackTrace();
+      }
+
+    }
+    addRedirectAlertMessage(new SimpleMessage("Shipping Orders Validated and entries in tables adjusted"));
+    return new RedirectResolution(ActionAwaitingQueueAction.class);
+
+
+  }
+
+  public Resolution fixDuplicateSI() {
     long count = 0;
     List<SkuItemLineItem> skuItemLineItems = skuItemLineItemDao.getSkuItemLIsTemp();
-    logger.debug("SILIs with duplicate entries = "+skuItemLineItems.size());
+    logger.debug("SILIs with duplicate entries = " + skuItemLineItems.size());
     SkuItem oldSkuItem = null;
     SkuGroup group = null;
     List<SkuItem> skuItems = null;
-    for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
-      SkuItem skuItem = skuItemLineItem.getSkuItem();
-      logger.debug("SILI="+skuItemLineItem.getId()+"; SI="+skuItem.getId());
-      if (oldSkuItem == null || oldSkuItem.getId().longValue() != skuItem.getId().longValue()) {
-        logger.debug("If");
-        group = skuItem.getSkuGroup();
-        skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
-            Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
-      }else{
-        logger.debug("Else");
-        SkuItem newSkuItem = skuItems.get(0);
-        newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-        skuGroupService.saveSkuItem(newSkuItem);
+    for (SkuItemLineItem sili : skuItemLineItems) {
+      SkuItem skuItem = sili.getSkuItem();
+      List<SkuItemLineItem> skuItemLIs = skuItemLineItemDao.getSkuItemLIsTemp(skuItem);
+      logger.debug("SILIs with duplicate entries for SKUITEM = " + skuItem + "; Records=" + skuItemLineItems.size());
+      for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+        logger.debug("SILI=" + skuItemLineItem.getId() + "; SI=" + skuItem.getId());
+        if (oldSkuItem == null || oldSkuItem.getId().longValue() != skuItem.getId().longValue()) {
+          logger.debug("If");
+          group = skuItem.getSkuGroup();
+          skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
+              Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
+        } else {
+          logger.debug("Else");
+          SkuItem newSkuItem = skuItems.get(0);
+          newSkuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+          skuGroupService.saveSkuItem(newSkuItem);
 
-        skuItemLineItem.setSkuItem(newSkuItem);
-        skuItemLineItemDao.save(skuItemLineItem);
+          skuItemLineItem.setSkuItem(newSkuItem);
+          skuItemLineItemDao.save(skuItemLineItem);
 
-        count++;
+          count++;
+        }
+        oldSkuItem = skuItem;
       }
-      oldSkuItem = skuItem;
     }
 
-    addRedirectAlertMessage(new SimpleMessage("Duplicate SI fixed on SILI. Total fixed SILIs = "+count));
-		return new RedirectResolution(ActionAwaitingQueueAction.class);
+    addRedirectAlertMessage(new SimpleMessage("Duplicate SI fixed on SILI. Total fixed SILIs = " + count));
+    return new RedirectResolution(ActionAwaitingQueueAction.class);
   }
-	
-	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
-		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-		List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
-		soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
-		soStatusList.add(EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus());
-		soStatusList.add(EnumShippingOrderStatus.SO_Picking.asShippingOrderStatus());
-		soStatusList.add(EnumShippingOrderStatus.SO_ReadyForDropShipping.asShippingOrderStatus());
-		soStatusList.add(EnumShippingOrderStatus.SO_ReadyForProcess.asShippingOrderStatus());
-		soStatusList.add(EnumShippingOrderStatus.SO_MarkedForPrinting.asShippingOrderStatus());
-		soStatusList.add(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus());
-		shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
-		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
-		paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
-		paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
-		paymentStatusList.add(EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
-		shippingOrderSearchCriteria.setPaymentStatuses(paymentStatusList);
-		return shippingOrderSearchCriteria;
-	}
-	
-	public class ShippingOrderComparator implements Comparator<ShippingOrder> {
 
-		@Override
-		public int compare(ShippingOrder o1, ShippingOrder o2) {
-			if (o1.getCreateDate() != null && o2.getCreateDate() != null) {
-				return o1.getCreateDate().compareTo(o2.getCreateDate());
-			}
-			return -1;
-		}
+  public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
+    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+    List<ShippingOrderStatus> soStatusList = new ArrayList<ShippingOrderStatus>();
+    soStatusList.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+    soStatusList.add(EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus());
+    soStatusList.add(EnumShippingOrderStatus.SO_Picking.asShippingOrderStatus());
+    soStatusList.add(EnumShippingOrderStatus.SO_ReadyForDropShipping.asShippingOrderStatus());
+    soStatusList.add(EnumShippingOrderStatus.SO_ReadyForProcess.asShippingOrderStatus());
+    soStatusList.add(EnumShippingOrderStatus.SO_MarkedForPrinting.asShippingOrderStatus());
+    soStatusList.add(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus());
+    shippingOrderSearchCriteria.setShippingOrderStatusList(soStatusList);
+    List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
+    paymentStatusList.add(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+    paymentStatusList.add(EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
+    paymentStatusList.add(EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
+    shippingOrderSearchCriteria.setPaymentStatuses(paymentStatusList);
+    return shippingOrderSearchCriteria;
+  }
 
-	}
-	
-	public List<ShippingOrder> getSortedShippingOrders(List<ShippingOrder> shippingOrders) {
-		Collections.sort(shippingOrders, new ShippingOrderComparator());
-		return shippingOrders;
-	}
+  public class ShippingOrderComparator implements Comparator<ShippingOrder> {
+
+    @Override
+    public int compare(ShippingOrder o1, ShippingOrder o2) {
+      if (o1.getCreateDate() != null && o2.getCreateDate() != null) {
+        return o1.getCreateDate().compareTo(o2.getCreateDate());
+      }
+      return -1;
+    }
+
+  }
+
+  public List<ShippingOrder> getSortedShippingOrders(List<ShippingOrder> shippingOrders) {
+    Collections.sort(shippingOrders, new ShippingOrderComparator());
+    return shippingOrders;
+  }
 
 }

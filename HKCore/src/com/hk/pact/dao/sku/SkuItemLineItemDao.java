@@ -30,4 +30,6 @@ public interface SkuItemLineItemDao extends BaseDao {
   public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem);
 
   public List<SkuItemLineItem> getSkuItemLIsTemp();
+
+  public List<SkuItemLineItem> getSkuItemLIsTemp(SkuItem skuItem);
 }

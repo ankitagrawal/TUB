@@ -57,8 +57,13 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
   }
 
   public List<SkuItemLineItem> getSkuItemLIsTemp() {
-    String sql = "from SkuItemLineItem s group by s.skuItem having count(s.skuItem) > 1 order by s.skuItem.id asc";
+    String sql = "from SkuItemLineItem s group by s.skuItem having count(s.skuItem) > 1";
     return (List<SkuItemLineItem>) getSession().createQuery(sql).list();
+  }
+
+  public List<SkuItemLineItem> getSkuItemLIsTemp(SkuItem skuItem) {
+    String sql = "from SkuItemLineItem s where s.skuItem = :skuItem";
+    return (List<SkuItemLineItem>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
   }
 
 
