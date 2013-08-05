@@ -13929,7 +13929,7 @@
             (1500,'Refund Failed',null),
             (1510,'Refund Successful',null),
             (1520,'Reward Point Given',null),
-            (1530,'Reward Point not given',null)
+            (1530,'Reward Point not given',null),
             (1540,'Refund in process',null);
 
             insert into reason (`id`,`type`,`classification_id`) values
