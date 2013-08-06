@@ -250,13 +250,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
   @Transactional
   public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
+    Long qty = 0L;
+    if (shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()) {
+      qty = 1L;
+    }
     if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
       shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
 //            getAdminInventoryService().reCheckInInventory(shippingOrder);
-      Long qty = 0L;
-      if (shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()) {
-        qty = 1L;
-      }
       getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
       shippingOrder = getShippingOrderService().save(shippingOrder);
       getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
@@ -374,12 +374,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
   @Transactional
   public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
-    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
-//        getAdminInventoryService().reCheckInInventory(shippingOrder);
     Long qty = 0L;
     if (shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()) {
       qty = 1L;
     }
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+//        getAdminInventoryService().reCheckInInventory(shippingOrder);
+
     getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
     shippingOrder = getShippingOrderService().save(shippingOrder);
     getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
