@@ -1,12 +1,12 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +111,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Autowired LineItemDao lineItemDao;
     @Autowired ShippingOrderDao shippingOrderDao;
+
+	@Autowired
+  SkuItemDao skuItemDao;
     
     public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
@@ -147,44 +150,36 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
 		boolean shouldUpdate = true;
+
+		List<Sku> toSkuList = new ArrayList<Sku>();
 		try {
 			for (LineItem lineItem : lineItems) {
-				SkuFilter filter = new SkuFilter();
-				filter.setFetchType(FetchType.ALL);
-				filter.setWarehouseId(warehouse.getId());
-				filter.setMinQty(lineItem.getQty());
-				filter.setMrp(lineItem.getMarkedPrice());
-				Collection<SkuInfo> skus = inventoryHealthService.getAvailableSkus(lineItem.getCartLineItem().getProductVariant(), filter);
+				toSkuList.clear();
+				toSkuList.add(getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse));
+				List<SkuItem> skuItemList = getSkuItemDao().getSkuItems(toSkuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), lineItem.getMarkedPrice());
 
-				if(skus != null && skus.size() > 0) {
-					Sku sku = baseDao.get(Sku.class, skus.iterator().next().getSkuId());
-					lineItem.setSku(sku);
+				if (skuItemList != null && skuItemList.size() >= lineItem.getQty()) {
+					lineItem.setSku(toSkuList.get(0));
+				} else {
+					return false;
 				}
 			}
 
-      for (LineItem lineItem : lineItems) {
-        if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
-          shouldUpdate = false;
-        }
-      }
-      if (shouldUpdate) {
-        shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
-        logger.debug("isWarehouseBeFlippable = "+shouldUpdate);
-      }
+			shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
+			logger.debug("isWarehouseBeFlippable = " + shouldUpdate);
 
 			if (shouldUpdate) {
 				shippingOrder.setWarehouse(warehouse);
 				shipmentService.recreateShipment(shippingOrder);
 				shippingOrder = getShippingOrderService().save(shippingOrder);
-				if(shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()) && shippingOrder.getPurchaseOrders()!=null && shippingOrder.getPurchaseOrders().size()>0){
-				adminEmailManager.sendJitShippingCancellationMail(shippingOrder,null, EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED);
+				if (shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()) && shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
+					adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED);
 				}
-				getShippingOrderService().logShippingOrderActivity(shippingOrder,
-						EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
+				getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
 
-				// Re-checkin checkedout inventory in case of flipping.
-				getAdminInventoryService().reCheckInInventory(shippingOrder);
-
+				for (LineItem lineItem : shippingOrder.getLineItems()) {
+					inventoryHealthService.inventoryHealthCheck(lineItem.getSku().getProductVariant());
+				}
 			}
 
 		} catch (NoSkuException noSku) {
@@ -575,4 +570,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void setCancellationRemark(String cancellationRemark) {
         this.cancellationRemark = cancellationRemark;
     }
+
+	public SkuItemDao getSkuItemDao() {
+		return skuItemDao;
+	}
 }

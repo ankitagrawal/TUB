@@ -197,30 +197,30 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 
         List<SkuItem> toBeFreedSkuItemList = new ArrayList<SkuItem>();
 
-        for(LineItem lineItem : shippingOrder.getLineItems()){
-            sku = getSkuService().getSKU(lineItem.getSku().getProductVariant(), targetWarehouse);
-            skuList.add(sku);
-            availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+        for(LineItem lineItem : shippingOrder.getLineItems()) {
+	        sku = getSkuService().getSKU(lineItem.getSku().getProductVariant(), targetWarehouse);
+	        skuList.add(sku);
+	        availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
 
-            if(availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() >= lineItem.getQty()){
-                List<SkuItemLineItem> skuItemLineItemList = lineItem.getSkuItemLineItems();
-                for(SkuItemLineItem skuItemLineItem : skuItemLineItemList){
-                    SkuItem toBeFreedSkuItem = skuItemLineItem.getSkuItem();
-                    SkuItem skuItem = availableUnbookedSkuItems.get(skuItemLineItem.getUnitNum().intValue()-1);
-                    skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+	        if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() >= lineItem.getQty()) {
+		        List<SkuItemLineItem> skuItemLineItemList = lineItem.getSkuItemLineItems();
+		        for (SkuItemLineItem skuItemLineItem : skuItemLineItemList) {
+			        SkuItem toBeFreedSkuItem = skuItemLineItem.getSkuItem();
+			        SkuItem skuItem = availableUnbookedSkuItems.get(skuItemLineItem.getUnitNum().intValue() - 1);
+			        skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
 
-                    skuItemLineItem.setSkuItem(skuItem);
-                    skuItemLineItem.getSkuItemCLI().setSkuItem(skuItem);
+			        skuItemLineItem.setSkuItem(skuItem);
+			        skuItemLineItem.getSkuItemCLI().setSkuItem(skuItem);
 
-                    toBeFreedSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                    toBeFreedSkuItemList.add(toBeFreedSkuItem);
-                }
-                getSkuItemLineItemDao().saveOrUpdate(skuItemLineItemList);
-            }
-            else{
-                return false;
-            }
+			        toBeFreedSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+			        toBeFreedSkuItemList.add(toBeFreedSkuItem);
+		        }
+		        getSkuItemLineItemDao().saveOrUpdate(skuItemLineItemList);
+	        } else {
+		        //todo ankit: need to change the sili and sicli for the flipped line items when the condition fails for line item number 2 or more.
+		        return false;
+	        }
         }
         if(toBeFreedSkuItemList != null && toBeFreedSkuItemList.size() > 0){
             getSkuItemDao().saveOrUpdate(toBeFreedSkuItemList);
