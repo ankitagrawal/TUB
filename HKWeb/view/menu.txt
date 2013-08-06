@@ -174,8 +174,14 @@
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/multi-utility-equipments
 --/sports/fitness-equipment/abdominal-machines
+--/sports/fitness-equipment/heart-rate-monitors
+---/sports/fitness-equipment/heart-rate-monitors/accessories
 --/sports/fitness-equipment/massage-equipments
 --/sports/fitness-equipment/trampolines
+--/sports/fitness-equipment/weighing-scales
+---/sports/fitness-equipment/weighing-scales/Analog
+---/sports/fitness-equipment/weighing-scales/Digital
+---/sports/fitness-equipment/weighing-scales/BMI
 --/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
@@ -236,6 +242,9 @@
 ---/sports/sports-equipment/boxing/boxing-clothing
 ---/sports/sports-equipment/boxing/jabs
 ---/sports/sports-equipment/boxing/accessories
+--/sports/sports-equipment/hockey
+---/sports/sports-equipment/hockey/sticks
+---/sports/sports-equipment/hockey/balls
 --/sports/sports-equipment/golf
 --/sports/sports-equipment/skating
 --/sports/sports-equipment/sports-watches
@@ -270,7 +279,6 @@
 --/sports/fab-corner/win-win-deals
 --/sports/fab-corner/league-of-innovations
 --/sports/fab-corner/new-arrivals
-
 /diabetes
 -/diabetes/devices : Monitoring Devices
 --/diabetes/devices/meters : Glucose Meters
