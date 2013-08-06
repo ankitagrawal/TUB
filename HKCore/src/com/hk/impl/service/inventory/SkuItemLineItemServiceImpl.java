@@ -19,10 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,51 +63,68 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 	    Long unitNum = 0L;
 	    CartLineItem cartLineItem = lineItem.getCartLineItem();
 	    unitNum = 0L;
-	    if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <= 0) {
-		    return false;
-	    }
+        if(!(lineItem.getShippingOrder() instanceof ReplacementOrder) && (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() <=0)){
+            return false;
+        }
 
+        if(lineItem.getShippingOrder() instanceof ReplacementOrder){
+            boolean createSkuCLIFlag = false;
+            logger.debug("instance of ro true");
+            List<Sku> skuList = new ArrayList<Sku>();
+            List<Long> skuStatusIdList = new ArrayList<Long>();
+            List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
-	    if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
-		    logger.debug("instance of ro true");
-		    List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
-		    List<Sku> skuList = new ArrayList<Sku>();
-		    List<Long> skuStatusIdList = new ArrayList<Long>();
-		    List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+            skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+            skuList.add(lineItem.getSku());
+            skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
-		    skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-		    skuList.add(lineItem.getSku());
-		    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+            //get available sku items of the given warehouse at given mrp
+            List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+            if(availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0
+                    || availableUnbookedSkuItems.size() < lineItem.getQty()){
+                logger.debug("about to return false from createNewSkuItemLineItem");
+                return false;
+            }
 
-		    //get available sku items of the given warehouse at given mrp
-		    List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-		    if (availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0
-				    || availableUnbookedSkuItems.size() < lineItem.getQty()) {
-			    logger.debug("about to return false from createNewSkuItemLineItem");
-			    return false;
-		    }
-		    for (int i = 1; i <= lineItem.getQty(); i++) {
-			    unitNum++;
-			    SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
-			    SkuItem skuItem = availableUnbookedSkuItems.get(i - 1);
-			    //Book the sku item first
-			    skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-			    logger.debug("saving si to booked in replacement order ->  " + skuItem.getId());
-			    skuItem = (SkuItem) getSkuItemDao().save(skuItem);
+            if(lineItem.getCartLineItem().getSkuItemCLIs() == null || lineItem.getCartLineItem().getSkuItemCLIs().size() == 0){
+                createSkuCLIFlag = true;
+            }
 
-			    //create skuItemLineItem entry
-			    skuItemLineItem.setSkuItem(skuItem);
-			    skuItemLineItem.setLineItem(lineItem);
-			    skuItemLineItem.setUnitNum(unitNum);
-			    skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i - 1));
-			    skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
-			    logger.debug("saving sili in replacement order ");
-			    skuItemLineItems.add(skuItemLineItem);
-		    }
-		    lineItem.setSkuItemLineItems(skuItemLineItems);
-		    lineItem = (LineItem)getLineItemDao().save(lineItem);
-		    return true;
-	    } else {
+            for(int i = 1; i<= lineItem.getQty(); i++){
+                unitNum++;
+                SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+                SkuItem skuItem = availableUnbookedSkuItems.get(i-1);
+                //Book the sku item first
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                logger.debug("saving si to booked in replacement order ->  " + skuItem.getId() );
+                skuItem = (SkuItem)getSkuItemDao().save(skuItem);
+
+                if(createSkuCLIFlag){
+                    SkuItemCLI skuItemCLI = new SkuItemCLI();
+                    skuItemCLI.setSkuItem(skuItem);
+                    skuItemCLI.setCartLineItem(lineItem.getCartLineItem());
+                    skuItemCLI.setUnitNum(unitNum);
+                    skuItemCLI.setCreateDate(new Date());
+                    skuItemCLI.setProductVariant(lineItem.getSku().getProductVariant());
+                    skuItemCLI = (SkuItemCLI)baseDao.save(skuItemCLI);
+                    skuItemLineItem.setSkuItemCLI(skuItemCLI);
+
+                }else{
+                    skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i-1));
+                }
+
+                //create skuItemLineItem entry
+                skuItemLineItem.setSkuItem(skuItem);
+                skuItemLineItem.setLineItem(lineItem);
+                skuItemLineItem.setUnitNum(unitNum);
+
+                skuItemLineItem.setProductVariant(skuItem.getSkuGroup().getSku().getProductVariant());
+                logger.debug("saving sili in replacement order ");
+                skuItemLineItem = save(skuItemLineItem);
+
+            }
+            return true;
+        } else {
 		    logger.debug("entering normal enter -> ");
 		    List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 		    for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()) {
