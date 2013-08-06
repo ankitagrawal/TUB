@@ -524,6 +524,11 @@
                             <c:if test="${empty hk:orderComments(order)}">Add a comment</c:if>
                             <s:param name="order" value="${order}"/>
                         </s:link>)
+                        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction"
+                                          event="getSkuCartItemLineItems" target="_blank">
+                    	<s:param name="baseOrderId" value="${order.id}"/>
+                   		 Booking Status
+                			</s:link>)
                         </div>
                     </div>
                     <div class="clear"></div>

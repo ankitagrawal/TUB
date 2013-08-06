@@ -252,7 +252,11 @@
             </s:link>)
             </c:if>
         </shiro:hasPermission>
-
+			&nbsp;&nbsp;(
+						<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="getSkuItemLineItems" target="_blank">
+							<s:param name="shippingOrderId" value="${shippingOrder.id}" />
+                    Booking Status
+                </s:link>)
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction" class="editSO">
