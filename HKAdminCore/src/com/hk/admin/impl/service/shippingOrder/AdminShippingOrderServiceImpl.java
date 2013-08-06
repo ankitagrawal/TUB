@@ -271,7 +271,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }*/
 
         // cancel reward points in partial manner
-        List<RewardPoint> currentRewardPoints = rewardPointService.findByReferredOrder(order);
+        List<RewardPoint> currentRewardPoints = rewardPointService.findRewardPoints(order,EnumRewardPointMode.getCashBackModes());
 
         for (RewardPoint rewardPoint : currentRewardPoints) {
 
