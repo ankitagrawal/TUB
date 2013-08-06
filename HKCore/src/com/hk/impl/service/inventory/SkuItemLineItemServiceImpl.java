@@ -283,9 +283,12 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     }
     
 	public Boolean freeBookingTable(ShippingOrder shippingOrder) {
+		logger.debug("Going to free bookings against Shipping Order:- "+shippingOrder.getId());
 		List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
 		List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
 		List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+		List<SkuItemLineItem> skuItemLineItemsToBeRetained = new ArrayList<SkuItemLineItem>();
+		List<SkuItemCLI> skuItemCLIsToBeRetained = new ArrayList<SkuItemCLI>();
 
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
 		for (LineItem lineItem : lineItems) {
@@ -296,20 +299,34 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
 					skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 					skuItem = (SkuItem) getSkuItemDao().save(skuItem);
 					skuItemsToBeFreed.add(skuItem);
+					SkuItemCLI skuItemCLI = skuItemLineItem.getSkuItemCLI();
+					skuItemCLI.setSkuItemLineItems(null);
+					skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
+					skuItemCLIsToBeDeleted.add(skuItemCLI);
+					skuItemLineItemsToBeDeleted.add(skuItemLineItem);
 				}
-				SkuItemCLI skuItemCLI = skuItemLineItem.getSkuItemCLI();
-				skuItemCLI.setSkuItemLineItems(null);
-				skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
-				skuItemCLIsToBeDeleted.add(skuItemCLI);
+				else{
+					skuItemLineItemsToBeRetained.add(skuItemLineItem);
+					skuItemCLIsToBeRetained.add(skuItemLineItem.getSkuItemCLI());
+				}
 			}
-			skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
 		}
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
 			CartLineItem cartLineItem = lineItem.getCartLineItem();
-			cartLineItem.setSkuItemCLIs(null);
+			if(skuItemCLIsToBeRetained!=null && skuItemCLIsToBeRetained.size()>0){
+				cartLineItem.setSkuItemCLIs(skuItemCLIsToBeRetained);
+			}
+			else{
+				cartLineItem.setSkuItemCLIs(null);
+			}
 			cartLineItem = (CartLineItem) baseDao.save(cartLineItem);
-			lineItem.setSkuItemLineItems(null);
-			// lineItem.setCartLineItem(cartLineItem);
+			if(skuItemLineItemsToBeRetained!=null && skuItemLineItemsToBeRetained.size()>0){
+				lineItem.setSkuItemLineItems(skuItemLineItemsToBeRetained);
+			}
+			else{
+				lineItem.setSkuItemLineItems(null);
+			}
+			lineItem.setCartLineItem(cartLineItem);
 			lineItem = (LineItem) baseDao.save(lineItem);
 		}
 		for (Iterator<SkuItemLineItem> iterator = skuItemLineItemsToBeDeleted.iterator(); iterator.hasNext();) {

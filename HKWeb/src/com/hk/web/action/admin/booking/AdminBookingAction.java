@@ -12,8 +12,10 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -23,8 +25,10 @@ import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.web.action.error.AdminPermissionAction;
 
 @Component
+@Secure
 public class AdminBookingAction extends BaseAction {
 
 	@Autowired
@@ -79,6 +83,7 @@ public class AdminBookingAction extends BaseAction {
 		return new ForwardResolution("/pages/admin/bookingStatusForSO.jsp");
 	}
 
+	@Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
 	public Resolution freeBookingTable() {
 		if (shippingOrderId != null) {
 			ShippingOrder so = shippingOrderService.find(shippingOrderId);

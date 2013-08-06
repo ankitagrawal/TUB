@@ -20,15 +20,6 @@
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
   <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-    	var context = '${pageContext.request.contextPath}';
-    	$('#bookingIdButton').click(function(){
-    		window.open(context+"/close.jsp", '_self');
-    	});
-    });
-    </script>
-
 	</s:layout-component>
 
 	<s:layout-component name="content">
@@ -137,9 +128,11 @@
 		</c:if>
 		
 		<s:form beanclass="com.hk.web.action.admin.booking.AdminBookingAction" id="closeForm">
+		<s:hidden name="shippingOrderId" value="${adminBookingBean.shippingOrderId}"/>
+		<s:hidden name="baseOrderId" value="${adminBookingBean.baseOrderId}"/>
 		<s:submit id="bookingIdButton" class="button_green addToCartButton" name="closeWindow" value="Close"/>
 		<shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
-		<s:submit id="bookingIdButton" class="button_green addToCartButton" name="freeBookingTable" value="Close"/>
+		<s:submit id="bookingIdButton" class="button_green addToCartButton" name="freeBookingTable" value="Free Bookings"/>
 		</shiro:hasAnyRoles>
 		</s:form>
 		
