@@ -296,39 +296,15 @@ public class CheckPaymentAction extends BaseAction {
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
+    /*
+    *
+    * To Update payment made through Cheque, Cash and NEFT
+    *
+    * */
+
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
-        User loggedOnUser = null;
-        if (getPrincipal() != null) {
-            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        }
-        //todo shakti, method to deduce what is considered as a valid payment
-        String gatewayOrderId = payment.getGatewayOrderId();
-        if (gatewayOrderId != null) {
-            try {
-                List<HkPaymentResponse> hkPaymentResponses = paymentService.seekPayment(gatewayOrderId);
-                if (hkPaymentResponses != null && !hkPaymentResponses.isEmpty()) {
-                    for (HkPaymentResponse hkPaymentResponse : hkPaymentResponses) {
-                        if (hkPaymentResponse != null && gatewayOrderId.equalsIgnoreCase(hkPaymentResponse.getGatewayOrderId())) {
-                            PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
-                            PaymentStatus paymentGatewayStatus = EnumHKPaymentStatus.getCorrespondingStatus(hkPaymentResponse.getHKPaymentStatus());
-                            if (paymentGatewayStatus != null) {
-                                boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, paymentGatewayStatus);
-                                if (!isValid) {
-                                    // send email to admin
-                                    paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(paymentGatewayStatus, changedStatus, gatewayOrderId);
-                                }
-                            }
-
-                            break;
-                        }
-                    }
-                }
-
-            } catch (HealthkartPaymentGatewayException e) {
-                logger.debug("Healthkart payment exception", e);
-            }
-        }
+        User loggedOnUser = getUserService().getLoggedInUser();
 
         getPaymentManager().success(payment.getGatewayOrderId());
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
@@ -341,6 +317,56 @@ public class CheckPaymentAction extends BaseAction {
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
+
+    /*
+    * Update Payment made through gateway that provide automated update
+    * EBS , CITRUS , ICICI
+    *
+    * */
+
+    @Secure(hasAnyPermissions = {PermissionConstants.AUTO_UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    public Resolution autoUpdate() {
+        User loggedOnUser = getUserService().getLoggedInUser();
+        try {
+
+            paymentService.updatePayment(payment.getGatewayOrderId());
+            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+            order.setConfirmationDate(new Date());
+            orderService.save(order);
+            orderService.sendEmailToServiceProvidersForOrder(order);
+            addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+
+        } catch (HealthkartPaymentGatewayException e) {
+
+            logger.debug("Healthkart Payment Update Exception occurred : " + e);
+            addRedirectAlertMessage(new SimpleMessage("Healthkart Payment Update Exception occurred"));
+        }
+
+        return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
+    }
+
+    /*
+    * Method used to update payment that are made through gateways where update is manual
+    * Techproccess and Paypal
+    *
+    * */
+    @Secure(hasAnyPermissions = {PermissionConstants.MANUAL_UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    public Resolution manualUpdate() {
+        User loggedOnUser = getUserService().getLoggedInUser();
+
+        getPaymentManager().success(payment.getGatewayOrderId());
+        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+        order.setConfirmationDate(new Date());
+        orderService.save(order);
+//        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+        orderService.sendEmailToServiceProvidersForOrder(order);
+//        }
+        addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+        return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
+    }
+
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution associateToPayment() {
