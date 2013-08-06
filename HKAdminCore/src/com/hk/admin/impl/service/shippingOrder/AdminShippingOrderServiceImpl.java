@@ -253,7 +253,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
             shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
 //            getAdminInventoryService().reCheckInInventory(shippingOrder);
-            getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 0L);
+            getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 1L);
             shippingOrder = getShippingOrderService().save(shippingOrder);
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
         }
