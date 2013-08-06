@@ -399,7 +399,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 							"Inventory could not be booked for variant:- " + item.getSku().getProductVariant());
 				} else {
 					logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
-							"Inventory could not be booked for variant:- " + item.getSku().getProductVariant());
+							"Inventory booked for variant:- " + item.getSku().getProductVariant());
 					inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 				}
 
