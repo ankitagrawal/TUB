@@ -289,7 +289,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
     
     public void validateShippingOrder(ShippingOrder shippingOrder) {
-
 	    Set<LineItem> lineItems = shippingOrder.getLineItems();
 	    for (LineItem item : lineItems) {
 		    List<Sku> skuList = new ArrayList<Sku>();
@@ -348,6 +347,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				    logger.debug("Populated Table SkuItemLineItem for Line Item - " + item.getId() + " for Cart Line Item - " + item.getCartLineItem().getId() + " of Shipping Order - " + item.getShippingOrder().getId());
 			    } else {
 				    logger.debug("Could Not Populate Tables for Line Item - " + item.getId() + " for Cart Line Item - " + item.getCartLineItem().getId() + " of Shipping Order - " + item.getShippingOrder().getId());
+				    logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Could Not Books SkuuItems For Line Item"+item.getId()+" of this Shipping Order");
 			    }
 		    }
 		    //When there are entries in SILI and SICLI; but MRP related fixes are needed
@@ -378,6 +378,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 						    baseDao.save(skuItemLineItem.getSkuItemCLI());
 						    skuItemLineItem.setSkuItem(skuItemToBeSet);
 						    skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
+						    logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Handled SkuItem mismatch here For Variant:- "+item.getSku().getProductVariant()+" of this Shipping Order."+" The new SkuItem is - "+skuItemToBeSet.getId());
 					    }
 				    }
 				    ++j;
@@ -388,9 +389,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 			    Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(item);
 			    if (!skuItemLineItemStatus) {
 				    logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
-
 			    }
-
 			    inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 		    }
 	    }

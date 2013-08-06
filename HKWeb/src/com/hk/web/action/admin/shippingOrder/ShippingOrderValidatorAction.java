@@ -30,6 +30,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
+import com.hk.web.action.admin.booking.AdminBookingAction;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 
 @Component
@@ -86,9 +87,9 @@ public class ShippingOrderValidatorAction extends BaseAction {
         logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
         e.printStackTrace();
       }
-      addRedirectAlertMessage(new SimpleMessage("Shipping Order Validated and entries in tables adjusted: " + shippingOrder.getId()));
+      addRedirectAlertMessage(new SimpleMessage("Shipping Order Id :"+shippingOrder.getId()+" - Validated and entries in tables adjusted"));
     }
-    return new RedirectResolution(ActionAwaitingQueueAction.class);
+    return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuItemLineItems").addParameter("shippingOrderId", shippingOrder.getId());
   }
 
   public Resolution fixDuplicateSI() {
