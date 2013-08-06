@@ -137,6 +137,9 @@
 		
 		<s:form beanclass="com.hk.web.action.admin.booking.AdminBookingAction" id="closeForm">
 		<s:submit id="bookingIdButton" class="button_green addToCartButton" name="closeWindow" value="Close"/>
+		<shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+		<s:submit id="bookingIdButton" class="button_green addToCartButton" name="freeBookingTable" value="Close"/>
+		</shiro:hasAnyRoles>
 		</s:form>
 		
 	</s:layout-component>
