@@ -47,8 +47,6 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1724'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2929'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1722'/>
-
-
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1264'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2974'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT482'/>
@@ -57,7 +55,7 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT920'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1263'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT967'/>
-          <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT517'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT517'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1842'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT922'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1276'/>
@@ -65,6 +63,13 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1720'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1711'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT3169'/>
+
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2975'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT525'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2928'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1219'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT782'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2136'/>
 
 
       <div class="cl"></div>
