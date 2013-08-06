@@ -239,7 +239,7 @@ public class StockTransferAction extends BasePaginatedAction {
         baseDao.save(skuGroupToBeReverted);
 
         adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null,
-        		stliToBeReduced, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+        		stliToBeReduced,EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
 
         getInventoryService().checkInventoryHealth(skuGroupToBeReverted.getSku().getProductVariant());
         
