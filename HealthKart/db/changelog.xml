@@ -13923,16 +13923,27 @@
 			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		</sql>
 	</changeSet>
+    <changeSet author="Ajeet (generated)" id="1375698046513-16">
+        <createIndex indexName="si_cli_unique" tableName="sku_item_cart_line_item" unique="true">
+            <column name="cart_line_item_id"/>
+            <column name="sku_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1375698046513-17">
+        <createIndex indexName="si_li_unique" tableName="sku_item_line_item" unique="true">
+            <column name="sku_item_id"/>
+            <column name="line_item_id"/>
+        </createIndex>
+    </changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1375435318078-1">
         <addColumn tableName="line_item">
             <column name="has_error" type="TINYINT"/>
         </addColumn>
     </changeSet>
     <changeSet author="Ankit Chhabra" id="1375435318078-2">
-        <insert tableName="shipping_order_lifecycle_activity">
-            <column name="id" value="1020" type="INT"></column>
-            <column name="name" value="SO  Cancelled due to inventory mismatch" type="VARCHAR(100)"></column>
-        </insert>
+    <insert tableName="shipping_order_lifecycle_activity">
+        <column name="id" value="1020" type="INT"></column>
+        <column name="name" value="SO  Cancelled due to inventory mismatch" type="VARCHAR(100)"></column>
+    </insert>
     </changeSet>
-
 </databaseChangeLog>
