@@ -74,7 +74,7 @@ public class ShippingOrderAction extends BaseAction {
         if (isWarehouseUpdated) {
             responseMsg = "Warehouse Flipped";
         } else {
-            responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot be updated.";
+            responseMsg = " Either All products not available in other warehouse or sku for all products are not available , so cannot be updated.";
         }
         addRedirectAlertMessage(new SimpleMessage(responseMsg));
         return new ForwardResolution("/pages/admin/order/flipShippingOrder.jsp");
