@@ -129,12 +129,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     public Resolution moveToActionAwaiting() {
         if (!shippingOrderList.isEmpty()) {
             // Creating acceptable reasons for escalate back
-            Set<Long> acceptableReasons = new HashSet<Long>();
-            acceptableReasons.add(EnumReason.PROD_DAMAGE.getId());
-            acceptableReasons.add(EnumReason.PROD_EXPIRE.getId());
-            acceptableReasons.add(EnumReason.PROD_INV_MISMATCH.getId());
-            acceptableReasons.add(EnumReason.MRP_LESS.getId());
-            acceptableReasons.add(EnumReason.MRP_MORE.getId());
+            Set<Long> acceptableReasons = EnumReason.getAcceptableReasonIDsEscalateBack();
 
             boolean isEscalatebackAllowed;
             List<Long> shippingOrderIdsWithInvalidReason = new ArrayList<Long>();

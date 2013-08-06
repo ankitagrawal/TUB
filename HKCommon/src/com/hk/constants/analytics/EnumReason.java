@@ -4,7 +4,9 @@ import com.hk.constants.queue.EnumClassification;
 import com.hk.domain.analytics.Reason;
 import java.util.Arrays;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /*
  * User: Pratham
@@ -102,4 +104,14 @@ public enum EnumReason {
         this.reasonType = reasonType;
     }
 
+    public static Set<Long> getAcceptableReasonIDsEscalateBack() {
+        Set<Long> acceptableReasons = new HashSet<Long>();
+        acceptableReasons.add(EnumReason.PROD_DAMAGE.getId());
+        acceptableReasons.add(EnumReason.PROD_EXPIRE.getId());
+        acceptableReasons.add(EnumReason.PROD_INV_MISMATCH.getId());
+        acceptableReasons.add(EnumReason.MRP_LESS.getId());
+        acceptableReasons.add(EnumReason.MRP_MORE.getId());
+
+        return  acceptableReasons;
+    }
 }
