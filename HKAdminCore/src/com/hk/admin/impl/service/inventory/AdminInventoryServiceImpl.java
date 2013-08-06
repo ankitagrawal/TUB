@@ -419,12 +419,17 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 				baseDao.save(tempSkuItem);
 			} else if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
 				SkuItemLineItem skuItemLineItem = skuItemLineItemDao.getSkuItemLineItem(skuItem);
-				SkuItemCLI skuItemCLI = skuItemLineItem.getSkuItemCLI();
-				skuItemLineItem.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
-                skuItemCLI.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
-				baseDao.save(skuItemLineItem);
-				baseDao.save(skuItemCLI);
-
+                if(!skuLineItemList.contains(skuItemLineItem)){
+                    SkuItemCLI skuItemCLI = skuItemLineItem.getSkuItemCLI();
+                    skuItemLineItem.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
+                    skuItemCLI.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
+                    baseDao.save(skuItemLineItem);
+                    baseDao.save(skuItemCLI);
+                }
+                else{
+                    skuItem = checkoutSkuItem(lineItem, skuItem);
+                    return true;
+                }
 			} else if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
 				SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
 				skuItemCLI.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
@@ -442,7 +447,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		}
         else 
         	return false;
-
 	}
 
 	private SkuItem checkoutSkuItem(LineItem lineItem, SkuItem skuItem) {
