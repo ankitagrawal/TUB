@@ -68,522 +68,530 @@ import com.hk.service.ServiceLocatorFactory;
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
 
-    private static Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
-    @Autowired
-    private ShippingOrderService shippingOrderService;
-    @Autowired
-    private AdminInventoryService adminInventoryService;
-    @Autowired
-    private BucketService bucketService;
-    @Autowired
-    private PincodeCourierService pincodeCourierService;
-    private String cancellationRemark;
+  private static Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
+  @Autowired
+  private ShippingOrderService shippingOrderService;
+  @Autowired
+  private AdminInventoryService adminInventoryService;
+  @Autowired
+  private BucketService bucketService;
+  @Autowired
+  private PincodeCourierService pincodeCourierService;
+  private String cancellationRemark;
 
-    @Autowired
-    private InventoryService inventoryService;
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private ShippingOrderStatusService shippingOrderStatusService;
-    @Autowired
-    private SkuService skuService;
-    @Autowired
-    private WarehouseService warehouseService;
-    private AdminOrderService adminOrderService;
-    @Autowired
-    private ShipmentService shipmentService;
-    @Autowired
-    private AdminShippingOrderDao adminShippingOrderDao;
-    @Autowired
-    AwbService awbService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    AdminEmailManager adminEmailManager;
-    @Autowired
-    SkuItemLineItemService skuItemLineItemService;
+  @Autowired
+  private InventoryService inventoryService;
+  @Autowired
+  private OrderService orderService;
+  @Autowired
+  private ShippingOrderStatusService shippingOrderStatusService;
+  @Autowired
+  private SkuService skuService;
+  @Autowired
+  private WarehouseService warehouseService;
+  private AdminOrderService adminOrderService;
+  @Autowired
+  private ShipmentService shipmentService;
+  @Autowired
+  private AdminShippingOrderDao adminShippingOrderDao;
+  @Autowired
+  AwbService awbService;
+  @Autowired
+  UserService userService;
+  @Autowired
+  AdminEmailManager adminEmailManager;
+  @Autowired
+  SkuItemLineItemService skuItemLineItemService;
 
-    @Autowired
-    private LoyaltyProgramService loyaltyProgramService;
+  @Autowired
+  private LoyaltyProgramService loyaltyProgramService;
 
-    @Autowired
-    InventoryHealthService inventoryHealthService;
+  @Autowired
+  InventoryHealthService inventoryHealthService;
 
-    @Autowired
-    BaseDao baseDao;
-    @Autowired
-    PurchaseOrderService purchaseOrderService;
+  @Autowired
+  BaseDao baseDao;
+  @Autowired
+  PurchaseOrderService purchaseOrderService;
 
-    @Autowired
-    LineItemDao lineItemDao;
-    @Autowired
-    ShippingOrderDao shippingOrderDao;
+  @Autowired
+  LineItemDao lineItemDao;
+  @Autowired
+  ShippingOrderDao shippingOrderDao;
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder, String cancellationRemark) {
-        // Check if Order is in Action Queue before cancelling it.
-        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-            logger.warn("Cancelling Shipping order gateway id:::" + shippingOrder.getGatewayOrderId());
-            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
-            skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
-            //shippingOrder = getShippingOrderService().save(shippingOrder);
+  public void cancelShippingOrder(ShippingOrder shippingOrder, String cancellationRemark) {
+    // Check if Order is in Action Queue before cancelling it.
+    if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+      logger.warn("Cancelling Shipping order gateway id:::" + shippingOrder.getGatewayOrderId());
+      shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+      skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
+      //shippingOrder = getShippingOrderService().save(shippingOrder);
 //            getAdminInventoryService().reCheckInInventory(shippingOrder);
-             getAdminInventoryService().reCheckInInventory(shippingOrder,  EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN,1L);
-            // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
-            // inventory, reward points, shipment, discount
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled, shippingOrder.getReason(), cancellationRemark);
+      getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 1L);
+      // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
+      // inventory, reward points, shipment, discount
+      getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled, shippingOrder.getReason(), cancellationRemark);
 
-            orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
-            if (shippingOrder.getShipment() != null) {
-                Awb awbToRemove = shippingOrder.getShipment().getAwb();
-                awbService.preserveAwb(awbToRemove);
-                Shipment shipmentToDelete = shippingOrder.getShipment();
-                shippingOrder.setShipment(null);
-                shipmentService.delete(shipmentToDelete);
-                //shippingOrderService.save(shippingOrder);
-            }
-            shippingOrder = getShippingOrderService().save(shippingOrder);
-            if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
-                adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
-            }
-            getBucketService().popFromActionQueue(shippingOrder);
-        }
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
-        }
+      orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
+      if (shippingOrder.getShipment() != null) {
+        Awb awbToRemove = shippingOrder.getShipment().getAwb();
+        awbService.preserveAwb(awbToRemove);
+        Shipment shipmentToDelete = shippingOrder.getShipment();
+        shippingOrder.setShipment(null);
+        shipmentService.delete(shipmentToDelete);
+        //shippingOrderService.save(shippingOrder);
+      }
+      shippingOrder = getShippingOrderService().save(shippingOrder);
+      if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
+        adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
+      }
+      getBucketService().popFromActionQueue(shippingOrder);
     }
+    for (LineItem lineItem : shippingOrder.getLineItems()) {
+      getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
+    }
+  }
 
-    public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
-        Set<LineItem> lineItems = shippingOrder.getLineItems();
-        boolean shouldUpdate = true;
-        try {
-            for (LineItem lineItem : lineItems) {
-                SkuFilter filter = new SkuFilter();
-                filter.setFetchType(FetchType.ALL);
-                filter.setWarehouseId(warehouse.getId());
-                filter.setMinQty(lineItem.getQty());
-                filter.setMrp(lineItem.getMarkedPrice());
-                Collection<SkuInfo> skus = inventoryHealthService.getAvailableSkus(lineItem.getCartLineItem().getProductVariant(), filter);
+  public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
+    Set<LineItem> lineItems = shippingOrder.getLineItems();
+    boolean shouldUpdate = true;
+    try {
+      for (LineItem lineItem : lineItems) {
+        SkuFilter filter = new SkuFilter();
+        filter.setFetchType(FetchType.ALL);
+        filter.setWarehouseId(warehouse.getId());
+        filter.setMinQty(lineItem.getQty());
+        filter.setMrp(lineItem.getMarkedPrice());
+        Collection<SkuInfo> skus = inventoryHealthService.getAvailableSkus(lineItem.getCartLineItem().getProductVariant(), filter);
 
-                if (skus != null && skus.size() > 0) {
-                    Sku sku = baseDao.get(Sku.class, skus.iterator().next().getSkuId());
-                    lineItem.setSku(sku);
-                }
-            }
+        if (skus != null && skus.size() > 0) {
+          Sku sku = baseDao.get(Sku.class, skus.iterator().next().getSkuId());
+          lineItem.setSku(sku);
+        }
+      }
 
-            for (LineItem lineItem : lineItems) {
-                if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
-                    shouldUpdate = false;
-                }
-            }
-            if (shouldUpdate) {
-                shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
-                logger.debug("isWarehouseBeFlippable = " + shouldUpdate);
-            }
+      for (LineItem lineItem : lineItems) {
+        if (!lineItem.getSku().getWarehouse().getId().equals(warehouse.getId())) {
+          shouldUpdate = false;
+        }
+      }
+      if (shouldUpdate) {
+        shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
+        logger.debug("isWarehouseBeFlippable = " + shouldUpdate);
+      }
 
-            if (shouldUpdate) {
-                shippingOrder.setWarehouse(warehouse);
-                shipmentService.recreateShipment(shippingOrder);
-                shippingOrder = getShippingOrderService().save(shippingOrder);
-                if (shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()) && shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
-                    adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED);
-                }
-                getShippingOrderService().logShippingOrderActivity(shippingOrder,
-                        EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
+      if (shouldUpdate) {
+        shippingOrder.setWarehouse(warehouse);
+        shipmentService.recreateShipment(shippingOrder);
+        shippingOrder = getShippingOrderService().save(shippingOrder);
+        if (shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()) && shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
+          adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED);
+        }
+        getShippingOrderService().logShippingOrderActivity(shippingOrder,
+            EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
 
-                // Re-checkin checkedout inventory in case of flipping.
+        // Re-checkin checkedout inventory in case of flipping.
 //                getAdminInventoryService().reCheckInInventory(shippingOrder);
-                  getAdminInventoryService().reCheckInInventory(shippingOrder,  EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN,1L);
+        getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 1L);
 
-            }
+      }
 
-        } catch (NoSkuException noSku) {
-            shouldUpdate = false;
-        }
-        return shouldUpdate;
+    } catch (NoSkuException noSku) {
+      shouldUpdate = false;
     }
+    return shouldUpdate;
+  }
 
-    public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse) {
+  public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse) {
 
-        if (cartLineItems != null && !cartLineItems.isEmpty() && warehouse != null) {
-            Order baseOrder = cartLineItems.iterator().next().getOrder();
-            ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, warehouse);
-            shippingOrder.setBaseOrder(baseOrder);
+    if (cartLineItems != null && !cartLineItems.isEmpty() && warehouse != null) {
+      Order baseOrder = cartLineItems.iterator().next().getOrder();
+      ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, warehouse);
+      shippingOrder.setBaseOrder(baseOrder);
 
-            for (CartLineItem cartLineItem : cartLineItems) {
-                ProductVariant productVariant = cartLineItem.getProductVariant();
-                Sku sku = getSkuService().getSKU(productVariant, warehouse);
-                if (sku != null) {
-                    LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                    shippingOrder.getLineItems().add(shippingOrderLineItem);
-                } else {
-                    throw new NoSkuException(productVariant, warehouse);
-                }
-            }
-
-            ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
-            shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-            shippingOrder = getShippingOrderService().save(shippingOrder);
-            /**
-             * this additional call to save is done so that we have shipping order id to generate shipping order gateway
-             * id
-             */
-            shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-            shippingOrder = getShippingOrderService().save(shippingOrder);
-            Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
-            shippingOrder.setShippingOrderCategories(categories);
-            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(categories).getName());
-            shippingOrder = getShippingOrderService().save(shippingOrder);
-
-            //shipmentService.createShipment(shippingOrder);
-            // auto escalate shipping orders if possible
-            //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
-
-            //		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
-
-            //Validate SO for SkuItem booking
-            shippingOrderService.validateShippingOrder(shippingOrder);
-
-            return shippingOrder;
-        }
-        return null;
-    }
-
-    @Transactional
-    public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
-        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-            shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
-//            getAdminInventoryService().reCheckInInventory(shippingOrder);
-            getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 1L);
-            shippingOrder = getShippingOrderService().save(shippingOrder);
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
-        }
-        return shippingOrder;
-    }
-
-    @Transactional
-    public ShippingOrder unHoldShippingOrder(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_RemovedOnHold);
-        return shippingOrder;
-    }
-
-    @Transactional
-    public ShippingOrder
-    markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Delivered));
-        getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
-        Order order = shippingOrder.getBaseOrder();
-        getAdminOrderService().markOrderAsDelivered(order);
-        loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
-//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
-        return shippingOrder;
-    }
-
-    @Transactional
-    public ShippingOrder markShippingOrderAsInstalled(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Installed));
-        getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Installed);
-        Order order = shippingOrder.getBaseOrder();
-        getAdminOrderService().markOrderAsCompletedWithInstallation(order);
-//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
-        return shippingOrder;
-    }
-
-
-    @Transactional
-    public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_RTO));
-        shippingOrder.getShipment().setReturnDate(new Date());
-        getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Returned);
-        Order order = shippingOrder.getBaseOrder();
-        getAdminOrderService().markOrderAsRTO(order);
-        return shippingOrder;
-    }
-
-    @Transactional
-    public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Lost));
-        getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Lost);
-        Order order = shippingOrder.getBaseOrder();
-        getAdminOrderService().markOrderAsLost(order);
-        return shippingOrder;
-    }
-
-    public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder, ReplacementOrderReason rtoReason) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
-        getShippingOrderService().save(shippingOrder);
-        if (rtoReason != null) {
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, null, rtoReason.getName());
+      for (CartLineItem cartLineItem : cartLineItems) {
+        ProductVariant productVariant = cartLineItem.getProductVariant();
+        Sku sku = getSkuService().getSKU(productVariant, warehouse);
+        if (sku != null) {
+          LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+          shippingOrder.getLineItems().add(shippingOrderLineItem);
         } else {
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
+          throw new NoSkuException(productVariant, warehouse);
         }
-        return shippingOrder;
+      }
+
+      ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
+      shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+      shippingOrder = getShippingOrderService().save(shippingOrder);
+      /**
+       * this additional call to save is done so that we have shipping order id to generate shipping order gateway
+       * id
+       */
+      shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+      shippingOrder = getShippingOrderService().save(shippingOrder);
+      Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
+      shippingOrder.setShippingOrderCategories(categories);
+      shippingOrder.setBasketCategory(getOrderService().getBasketCategory(categories).getName());
+      shippingOrder = getShippingOrderService().save(shippingOrder);
+
+      //shipmentService.createShipment(shippingOrder);
+      // auto escalate shipping orders if possible
+      //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
+
+      //		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
+
+      //Validate SO for SkuItem booking
+      shippingOrderService.validateShippingOrder(shippingOrder);
+
+      return shippingOrder;
     }
+    return null;
+  }
 
-    public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId) {
-        return getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate, endDate, courierId);
+  @Transactional
+  public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
+    if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+      shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+//            getAdminInventoryService().reCheckInInventory(shippingOrder);
+      Long qty = 0L;
+      if (shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()) {
+        qty = 1L;
+      }
+      getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
+      shippingOrder = getShippingOrderService().save(shippingOrder);
+      getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
     }
+    return shippingOrder;
+  }
+
+  @Transactional
+  public ShippingOrder unHoldShippingOrder(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
+    shippingOrder = getShippingOrderService().save(shippingOrder);
+
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_RemovedOnHold);
+    return shippingOrder;
+  }
+
+  @Transactional
+  public ShippingOrder
+  markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Delivered));
+    getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
+    Order order = shippingOrder.getBaseOrder();
+    getAdminOrderService().markOrderAsDelivered(order);
+    loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+    return shippingOrder;
+  }
+
+  @Transactional
+  public ShippingOrder markShippingOrderAsInstalled(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Installed));
+    getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Installed);
+    Order order = shippingOrder.getBaseOrder();
+    getAdminOrderService().markOrderAsCompletedWithInstallation(order);
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+    return shippingOrder;
+  }
 
 
-    @Transactional
-    public ShippingOrder markShippingOrderAsShipped(ShippingOrder shippingOrder) {
-        Shipment shipment = shippingOrder.getShipment();
-        if (shipment != null) {
-            shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-            shipment.setShipDate(new Date());
-            getShipmentService().save(shipment);
-        }
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
-        getPincodeCourierService().setTargetDeliveryDate(shippingOrder);
-        getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
-        getBucketService().popFromActionQueue(shippingOrder);
-        getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
-        return shippingOrder;
+  @Transactional
+  public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_RTO));
+    shippingOrder.getShipment().setReturnDate(new Date());
+    getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Returned);
+    Order order = shippingOrder.getBaseOrder();
+    getAdminOrderService().markOrderAsRTO(order);
+    return shippingOrder;
+  }
+
+  @Transactional
+  public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Lost));
+    getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Lost);
+    Order order = shippingOrder.getBaseOrder();
+    getAdminOrderService().markOrderAsLost(order);
+    return shippingOrder;
+  }
+
+  public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder, ReplacementOrderReason rtoReason) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
+    getShippingOrderService().save(shippingOrder);
+    if (rtoReason != null) {
+      getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, null, rtoReason.getName());
+    } else {
+      getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
     }
+    return shippingOrder;
+  }
 
-    @Transactional
-    public ShippingOrder markShippingOrderAsPrinted(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_MarkedForPrinting));
-        getShippingOrderService().save(shippingOrder);
+  public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId) {
+    return getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate, endDate, courierId);
+  }
 
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ChosenForPrinting);
 
-        return shippingOrder;
+  @Transactional
+  public ShippingOrder markShippingOrderAsShipped(ShippingOrder shippingOrder) {
+    Shipment shipment = shippingOrder.getShipment();
+    if (shipment != null) {
+      shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
+      shipment.setShipDate(new Date());
+      getShipmentService().save(shipment);
     }
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
+    getPincodeCourierService().setTargetDeliveryDate(shippingOrder);
+    getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
+    getBucketService().popFromActionQueue(shippingOrder);
+    getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
+    return shippingOrder;
+  }
 
-    @Transactional
-    public ShippingOrder moveShippingOrderToPickingQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Picking));
-        getShippingOrderService().save(shippingOrder);
+  @Transactional
+  public ShippingOrder markShippingOrderAsPrinted(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_MarkedForPrinting));
+    getShippingOrderService().save(shippingOrder);
 
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_InPicking);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ChosenForPrinting);
 
-        return shippingOrder;
-    }
+    return shippingOrder;
+  }
 
-    @Transactional
-    public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+  @Transactional
+  public ShippingOrder moveShippingOrderToPickingQueue(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Picking));
+    getShippingOrderService().save(shippingOrder);
+
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_InPicking);
+
+    return shippingOrder;
+  }
+
+  @Transactional
+  public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
 //        getAdminInventoryService().reCheckInInventory(shippingOrder);
-        getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 0L);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
-
-        getBucketService().escalateBackToActionQueue(shippingOrder);
-        return shippingOrder;
+    Long qty = 0L;
+    if (shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()) {
+      qty = 1L;
     }
+    getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
+    shippingOrder = getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
-    @Transactional
-    public ShippingOrder moveShippingOrderBackToPackingQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
+    getBucketService().escalateBackToActionQueue(shippingOrder);
+    return shippingOrder;
+  }
+
+  @Transactional
+  public ShippingOrder moveShippingOrderBackToPackingQueue(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
 //        getAdminInventoryService().reCheckInInventory(shippingOrder);
 
-        getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 0L);
-        getShippingOrderService().save(shippingOrder);
+    getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 0L);
+    getShippingOrderService().save(shippingOrder);
 
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToPackingQueue);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToPackingQueue);
 
-        return shippingOrder;
-    }
+    return shippingOrder;
+  }
 
-    @Transactional
-    public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+  @Transactional
+  public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
+    shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
 //           getAdminInventoryService().reCheckInInventory(shippingOrder);
-        getShippingOrderService().save(shippingOrder);
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToDropShippingQueue);
-        return shippingOrder;
-    }
+    getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToDropShippingQueue);
+    return shippingOrder;
+  }
 
-    public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder) {
-        String rtoReason = null;
-        ReplacementOrderReason replacementOrderReason = null;
-        for (ShippingOrderLifecycle shippingOrderLifecycle : shippingOrder.getShippingOrderLifecycles()) {
-            if (shippingOrderLifecycle.getShippingOrderLifeCycleActivity().getId().equals(EnumShippingOrderLifecycleActivity.RTO_Initiated.getId())) {
-                if (shippingOrderLifecycle.getComments() != null) {
-                    replacementOrderReason = getReplacementOrderReasonByName(shippingOrderLifecycle.getComments());
-                }
-            }
+  public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder) {
+    String rtoReason = null;
+    ReplacementOrderReason replacementOrderReason = null;
+    for (ShippingOrderLifecycle shippingOrderLifecycle : shippingOrder.getShippingOrderLifecycles()) {
+      if (shippingOrderLifecycle.getShippingOrderLifeCycleActivity().getId().equals(EnumShippingOrderLifecycleActivity.RTO_Initiated.getId())) {
+        if (shippingOrderLifecycle.getComments() != null) {
+          replacementOrderReason = getReplacementOrderReasonByName(shippingOrderLifecycle.getComments());
         }
+      }
+    }
+    return replacementOrderReason;
+  }
+
+  public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReasonString) {
+    List<ReplacementOrderReason> replacementOrderReasonList = getAdminShippingOrderDao().getAll(ReplacementOrderReason.class);
+    for (ReplacementOrderReason replacementOrderReason : replacementOrderReasonList) {
+      if (replacementOrderReasonString.contains(replacementOrderReason.getName())) {
         return replacementOrderReason;
+      }
+    }
+    return null;
+  }
+
+  public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder shippingOrder, ShippingOrder newShippingOrder) {
+    List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
+    Set<PurchaseOrder> newShippingOrderPoSet = new HashSet<PurchaseOrder>();
+    Set<PurchaseOrder> parentShippingOrderPoSet = new HashSet<PurchaseOrder>();
+    List<ProductVariant> variantListFromSO = new ArrayList<ProductVariant>();
+    for (LineItem item : shippingOrder.getLineItems()) {
+      variantListFromSO.add(item.getSku().getProductVariant());
     }
 
-    public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReasonString) {
-        List<ReplacementOrderReason> replacementOrderReasonList = getAdminShippingOrderDao().getAll(ReplacementOrderReason.class);
-        for (ReplacementOrderReason replacementOrderReason : replacementOrderReasonList) {
-            if (replacementOrderReasonString.contains(replacementOrderReason.getName())) {
-                return replacementOrderReason;
+    if (poList != null && poList.size() > 0) {
+      for (PurchaseOrder order : poList) {
+        boolean flag = false;
+        List<ProductVariant> productVariants = purchaseOrderService.getAllProductVariantFromPO(order);
+        if (productVariants != null && productVariants.size() > 0) {
+          for (ProductVariant pv : productVariants) {
+            if (variantListFromSO.contains(pv)) {
+              flag = true;
             }
-        }
-        return null;
-    }
-
-    public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder shippingOrder, ShippingOrder newShippingOrder) {
-        List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
-        Set<PurchaseOrder> newShippingOrderPoSet = new HashSet<PurchaseOrder>();
-        Set<PurchaseOrder> parentShippingOrderPoSet = new HashSet<PurchaseOrder>();
-        List<ProductVariant> variantListFromSO = new ArrayList<ProductVariant>();
-        for (LineItem item : shippingOrder.getLineItems()) {
-            variantListFromSO.add(item.getSku().getProductVariant());
-        }
-
-        if (poList != null && poList.size() > 0) {
-            for (PurchaseOrder order : poList) {
-                boolean flag = false;
-                List<ProductVariant> productVariants = purchaseOrderService.getAllProductVariantFromPO(order);
-                if (productVariants != null && productVariants.size() > 0) {
-                    for (ProductVariant pv : productVariants) {
-                        if (variantListFromSO.contains(pv)) {
-                            flag = true;
-                        }
-                        boolean soHasPv = shippingOrderService.shippingOrderContainsProductVariant(newShippingOrder, pv, pv.getMarkedPrice());
-                        if (soHasPv) {
-                            newShippingOrderPoSet.add(order);
-                        }
-                    }
-                }
-                if (flag == true) {
-                    parentShippingOrderPoSet.add(order);
-                }
+            boolean soHasPv = shippingOrderService.shippingOrderContainsProductVariant(newShippingOrder, pv, pv.getMarkedPrice());
+            if (soHasPv) {
+              newShippingOrderPoSet.add(order);
             }
+          }
         }
-
-
-        //shippingOrder = shippingOrderService.save(shippingOrder);
-        newShippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(newShippingOrderPoSet));
-        shippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(parentShippingOrderPoSet));
-
-        newShippingOrder = shippingOrderService.save(newShippingOrder);
-        shippingOrder = shippingOrderService.save(shippingOrder);
-
-        for (PurchaseOrder po : newShippingOrderPoSet) {
-
-            List<ShippingOrder> soList = po.getShippingOrders();
-            soList.add(newShippingOrder);
-            if (!parentShippingOrderPoSet.contains(po)) {
-                soList.remove(shippingOrder);
-            }
-            po.setShippingOrders(soList);
-            baseDao.save(po);
+        if (flag == true) {
+          parentShippingOrderPoSet.add(order);
         }
-        adminEmailManager.sendJitShippingCancellationMail(shippingOrder, newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_SPLITTED);
-
+      }
     }
 
-    public ShippingOrderService getShippingOrderService() {
-        return shippingOrderService;
-    }
 
-    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-        this.shippingOrderService = shippingOrderService;
-    }
+    //shippingOrder = shippingOrderService.save(shippingOrder);
+    newShippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(newShippingOrderPoSet));
+    shippingOrder.setPurchaseOrders(new ArrayList<PurchaseOrder>(parentShippingOrderPoSet));
 
-    public ShippingOrderStatusService getShippingOrderStatusService() {
-        return shippingOrderStatusService;
-    }
+    newShippingOrder = shippingOrderService.save(newShippingOrder);
+    shippingOrder = shippingOrderService.save(shippingOrder);
 
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
-    }
+    for (PurchaseOrder po : newShippingOrderPoSet) {
 
-    public SkuService getSkuService() {
-        return skuService;
+      List<ShippingOrder> soList = po.getShippingOrders();
+      soList.add(newShippingOrder);
+      if (!parentShippingOrderPoSet.contains(po)) {
+        soList.remove(shippingOrder);
+      }
+      po.setShippingOrders(soList);
+      baseDao.save(po);
     }
+    adminEmailManager.sendJitShippingCancellationMail(shippingOrder, newShippingOrder, EnumJitShippingOrderMailToCategoryReason.SO_SPLITTED);
 
-    public void setSkuService(SkuService skuService) {
-        this.skuService = skuService;
-    }
+  }
 
-    public WarehouseService getWarehouseService() {
-        return warehouseService;
-    }
+  public ShippingOrderService getShippingOrderService() {
+    return shippingOrderService;
+  }
 
-    public void setWarehouseService(WarehouseService warehouseService) {
-        this.warehouseService = warehouseService;
-    }
+  public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+    this.shippingOrderService = shippingOrderService;
+  }
 
-    public AdminOrderService getAdminOrderService() {
-        if (adminOrderService == null) {
-            adminOrderService = ServiceLocatorFactory.getService(AdminOrderService.class);
-        }
-        return adminOrderService;
-    }
+  public ShippingOrderStatusService getShippingOrderStatusService() {
+    return shippingOrderStatusService;
+  }
 
-    public void setAdminOrderService(AdminOrderService adminOrderService) {
-        this.adminOrderService = adminOrderService;
-    }
+  public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+    this.shippingOrderStatusService = shippingOrderStatusService;
+  }
 
-    public ShipmentService getShipmentService() {
-        return shipmentService;
-    }
+  public SkuService getSkuService() {
+    return skuService;
+  }
 
-    public void setShipmentService(ShipmentService shipmentService) {
-        this.shipmentService = shipmentService;
-    }
+  public void setSkuService(SkuService skuService) {
+    this.skuService = skuService;
+  }
 
-    public AdminInventoryService getAdminInventoryService() {
-        return adminInventoryService;
-    }
+  public WarehouseService getWarehouseService() {
+    return warehouseService;
+  }
 
-    public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
-        this.adminInventoryService = adminInventoryService;
-    }
+  public void setWarehouseService(WarehouseService warehouseService) {
+    this.warehouseService = warehouseService;
+  }
 
-    public InventoryService getInventoryService() {
-        return inventoryService;
+  public AdminOrderService getAdminOrderService() {
+    if (adminOrderService == null) {
+      adminOrderService = ServiceLocatorFactory.getService(AdminOrderService.class);
     }
+    return adminOrderService;
+  }
 
-    public void setInventoryService(InventoryService inventoryService) {
-        this.inventoryService = inventoryService;
-    }
+  public void setAdminOrderService(AdminOrderService adminOrderService) {
+    this.adminOrderService = adminOrderService;
+  }
 
-    public AdminShippingOrderDao getAdminShippingOrderDao() {
-        return adminShippingOrderDao;
-    }
+  public ShipmentService getShipmentService() {
+    return shipmentService;
+  }
 
-    public void setAdminShippingOrderDao(AdminShippingOrderDao adminShippingOrderDao) {
-        this.adminShippingOrderDao = adminShippingOrderDao;
-    }
+  public void setShipmentService(ShipmentService shipmentService) {
+    this.shipmentService = shipmentService;
+  }
 
-    public OrderService getOrderService() {
-        if (orderService == null) {
-            this.orderService = ServiceLocatorFactory.getService(OrderService.class);
-        }
-        return orderService;
-    }
+  public AdminInventoryService getAdminInventoryService() {
+    return adminInventoryService;
+  }
 
-    public UserService getUserService() {
-        return userService;
-    }
+  public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
+    this.adminInventoryService = adminInventoryService;
+  }
 
-    public BucketService getBucketService() {
-        return bucketService;
-    }
+  public InventoryService getInventoryService() {
+    return inventoryService;
+  }
 
-    public void setBucketService(BucketService bucketService) {
-        this.bucketService = bucketService;
-    }
+  public void setInventoryService(InventoryService inventoryService) {
+    this.inventoryService = inventoryService;
+  }
 
-    public PincodeCourierService getPincodeCourierService() {
-        return pincodeCourierService;
-    }
+  public AdminShippingOrderDao getAdminShippingOrderDao() {
+    return adminShippingOrderDao;
+  }
 
-    public void setPincodeCourierService(PincodeCourierService pincodeCourierService) {
-        this.pincodeCourierService = pincodeCourierService;
-    }
+  public void setAdminShippingOrderDao(AdminShippingOrderDao adminShippingOrderDao) {
+    this.adminShippingOrderDao = adminShippingOrderDao;
+  }
 
-    public String getCancellationRemark() {
-        return cancellationRemark;
+  public OrderService getOrderService() {
+    if (orderService == null) {
+      this.orderService = ServiceLocatorFactory.getService(OrderService.class);
     }
+    return orderService;
+  }
 
-    public void setCancellationRemark(String cancellationRemark) {
-        this.cancellationRemark = cancellationRemark;
-    }
+  public UserService getUserService() {
+    return userService;
+  }
+
+  public BucketService getBucketService() {
+    return bucketService;
+  }
+
+  public void setBucketService(BucketService bucketService) {
+    this.bucketService = bucketService;
+  }
+
+  public PincodeCourierService getPincodeCourierService() {
+    return pincodeCourierService;
+  }
+
+  public void setPincodeCourierService(PincodeCourierService pincodeCourierService) {
+    this.pincodeCourierService = pincodeCourierService;
+  }
+
+  public String getCancellationRemark() {
+    return cancellationRemark;
+  }
+
+  public void setCancellationRemark(String cancellationRemark) {
+    this.cancellationRemark = cancellationRemark;
+  }
 }
