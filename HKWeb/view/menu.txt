@@ -664,6 +664,7 @@
 ---/beauty/what-s-new/gift-ideas/for-her
 ---/beauty/what-s-new/gift-ideas/for-him
 --/beauty/what-s-new/limited-period-offers
+--/beauty/what-s-new/camisoles
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
 --/beauty/what-s-new/organic-skin-care
@@ -739,7 +740,6 @@
 ---/beauty/bath-body/hand-foot-care/foot-care
 --/beauty/bath-body/hair-removal
 --/beauty/bath-body/accessories
---/beauty/bath-body/camisoles
 --/beauty/bath-body/fragrances
 -/beauty/make-up
 --/beauty/make-up/organic-make-up
