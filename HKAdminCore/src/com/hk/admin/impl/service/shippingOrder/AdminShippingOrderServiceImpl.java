@@ -207,19 +207,23 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         User loggedOnUser = userService.getLoggedInUser();
         if (shippingOrder.getAmount() > 0) {
             if(EnumGateway.manualRefundGatewaysList().contains(shippingOrder.getBaseOrder().getPayment().getGateway().getId())) {
-                //adminEmailManager.sendSOManualRefundTaskToAdmin(shippingOrder.getAmount(),shippingOrder);
+                adminEmailManager.sendManualRefundTaskToAdmin(shippingOrder.getAmount(),
+                        shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(),shippingOrder.getBaseOrder().getPayment().getGateway().getName());
+                getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.ManualRefundInitiated.asReason(),comment);
+
             } else {
 
                 try {
                     Payment payment = paymentService.refundPayment(shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(), shippingOrder.getAmount());
-                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getId())) {
+                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId())) {
                         getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                                 EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RefundSuccessful.asReason(),comment);
-                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getId())) {
+                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
                         getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                                 EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
 
-                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getId())){
+                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())){
                         getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                                 EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundInProcess.asReason(),comment);
                     }

@@ -241,16 +241,19 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         if (order.getPayment().getAmount() > 0) {
 
             if(EnumGateway.manualRefundGatewaysList().contains(order.getPayment().getGateway().getId())) {
-                //adminEmailManager.sendBOManualRefundTaskToAdmin(order.getPayment().getAmount(), order);
+                adminEmailManager.sendManualRefundTaskToAdmin(order.getPayment().getAmount(),
+                        order.getPayment().getGatewayOrderId(),order.getPayment().getGateway().getName());
+                logOrderActivity(order, loggedOnUser,
+                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RefundMailToAdmin), comment);
             } else {
 
                 try {
                     Payment payment = paymentService.refundPayment(order.getPayment().getGatewayOrderId(), order.getPayment().getAmount());
-                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getId())) {
+                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId())) {
                         logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.AmountRefundedOrderCancel),comment);
-                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getId())) {
+                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
                         logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RefundAmountFailed),comment);
-                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getId())){
+                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())){
                         logOrderActivity(order,loggedOnUser,getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.RefundAmountInProcess),comment);
                     }
 

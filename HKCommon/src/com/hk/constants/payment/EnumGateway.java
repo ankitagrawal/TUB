@@ -88,7 +88,17 @@ public enum EnumGateway {
     }
 
     public static List<Long> manualRefundGatewaysList() {
-        return null;
+        return Arrays.asList(TECHPROCESS.asGateway().getId(), PAYPAL.asGateway().getId());
+    }
+
+    public static List<Long> getRefundEnabledGateways() {
+        return Arrays.asList(
+                CITRUS.asGateway().getId(),
+                EBS.asGateway().getId(),
+                ICICI.asGateway().getId(),
+                TECHPROCESS.asGateway().getId(),
+                PAYPAL.asGateway().getId()
+        );
     }
 }
 
