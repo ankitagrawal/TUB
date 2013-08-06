@@ -319,6 +319,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 						    SkuItem skuItem = availableUnbookedSkuItems.get(0);
 						    // Book the sku item first
 						    skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                skuItem = (SkuItem)baseDao.save(skuItem);
 						    // create skuItemCLI entry
 						    skuItemCLI.setSkuItem(skuItem);
 						    skuItemCLI.setCartLineItem(item.getCartLineItem());
