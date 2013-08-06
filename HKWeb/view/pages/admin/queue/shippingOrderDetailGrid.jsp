@@ -17,6 +17,7 @@
 <%@ page import="com.hk.constants.payment.EnumGateway" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.inventory.EnumReconciliationActionType" %>
+<%@ page import="com.hk.domain.store.EnumStore" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -107,7 +108,7 @@
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
-
+<c:set var="reconciliationEnabledStore" value="<%=EnumStore.getReconciliationEnabledStores()%>"/>
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
 <c:if test="${isActionQueue == false}">
@@ -323,7 +324,8 @@
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
                 <c:if test="${hk:collectionContains(reconciliationModes, shippingOrder.baseOrder.payment.paymentMode.id)
-                                                    and shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess}">
+                                                    and shippingOrder.baseOrder.payment.paymentStatus.id eq paymentStatusSuccess
+                                                    and hk:collectionContains(reconciliationEnabledStore, shippingOrder.baseOrder.store.id)}">
                     <br/>
                     Reward Points: <s:radio value="${rewardPoints}" name="reconciliationType" checked="${rewardPoints}"/>
                     <br/>
@@ -686,10 +688,21 @@
             Size: ${shipment.boxSize.name}, Weight: ${shipment.boxWeight}
         </div>
         <div class="clear"></div>
-	    <div class="floatleft">
+	      <div class="floatleft">
             Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
+        <div class="floatleft">
+          <c:if test="${isSearchShippingOrder == true}">
+          Est Shipping Cost ${shipment.estmShipmentCharge}
+          </c:if>
+          <div class="clear"></div>
+          <div class="floatleft">
+            <c:if test="${isSearchShippingOrder == true}">
+              Est Collection Cost ${shipment.estmCollectionCharge}
+            </c:if>
+          </div>
+            <div class="clear"></div>
         <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
                 <div class="floatleft">

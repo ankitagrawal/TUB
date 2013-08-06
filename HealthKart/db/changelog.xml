@@ -13631,6 +13631,28 @@
             <column name="remarks" type="TEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-07-24-01">
+        <createTable tableName="synonym">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="search_synonym" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(450)">
+                 <constraints nullable="false"/>
+            </column>
+            <column name="brand_name" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
     <changeSet author="Shakti Singh (generated)" id="20130724-1">
         <addColumn tableName="payment">
             <column name="refund_amount" type="DECIMAL(8,2)"/>
@@ -13774,4 +13796,145 @@
 			<column name="extra_inventory_line_item_id"/>
 		</createIndex>
 	</changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-1">
+        <createTable tableName="sku_item_cart_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cart_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column  defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-2">
+        <createTable tableName="sku_item_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_cart_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column  defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-3">
+        <createTable tableName="sku_item_owner">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-4">
+        <addColumn tableName="product_variant">
+            <column name="warehouse_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-5">
+        <addColumn tableName="sku_item">
+            <column name="sku_item_owner_id" type="INT" defaultValueNumeric="10">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-6">
+        <sql>
+            INSERT INTO sku_item_owner values(10, "SELF"), (20, "CUSTOMER"), (30, "SUPPLIER"), (40, "BRIGHT");
+            INSERT INTO sku_item_status (`id`, `name`) VALUES ('150', 'TEMP BOOKED'), ('160', 'BOOKED');
+        </sql>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-23">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="product_variant" constraintName="fk_product_variant_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-26">
+        <addForeignKeyConstraint baseColumnNames="sku_item_owner_id" baseTableName="sku_item"  constraintName="fk_sku_item_sku_item_owner1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item_owner"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-27">
+        <addForeignKeyConstraint baseColumnNames="cart_line_item_id" baseTableName="sku_item_cart_line_item"  constraintName="fk_sku_item_cart_line_item_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cart_line_item"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-28">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="sku_item_cart_line_item"  constraintName="fk_sku_item_cart_line_item_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-29">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="sku_item_cart_line_item"  constraintName="fk_sku_item_cart_line_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-30">
+        <addForeignKeyConstraint baseColumnNames="line_item_id" baseTableName="sku_item_line_item"  constraintName="fk_sku_item_line_item_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-31">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="sku_item_line_item"  constraintName="fk_sku_item_line_item_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-32">
+        <addForeignKeyConstraint baseColumnNames="sku_item_cart_line_item_id" baseTableName="sku_item_line_item" constraintName="fk_sku_item_line_item_sku_item_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item_cart_line_item"  referencesUniqueColumn="false"/>
+    </changeSet>
+        <changeSet author="Nihal (generated)" id="1375185803482-33">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="sku_item_line_item" constraintName="fk_sku_item_line_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    </changeSet>
+
+    <changeSet author="tarun (generated)" id="1375420269033-18">
+        <createIndex indexName="cart_line_item_unit_num_unique" tableName="sku_item_cart_line_item" unique="true">
+            <column name="unit_num"/>
+            <column name="cart_line_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1375420269033-19">
+        <createIndex indexName="line_item_unit_num_unique" tableName="sku_item_line_item" unique="true">
+            <column name="unit_num"/>
+            <column name="line_item_id"/>
+        </createIndex>
+    </changeSet>
+	<changeSet author="Rahul (generated)" id="8-4-2013-1">
+		<sql>
+			alter table  sku_item_cart_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+		</sql>
+	</changeSet>
+   
+    <changeSet author="Ajeet (generated)" id="1375698046513-16">
+        <createIndex indexName="si_cli_unique" tableName="sku_item_cart_line_item" unique="true">
+            <column name="cart_line_item_id"/>
+            <column name="sku_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1375698046513-17">
+        <createIndex indexName="si_li_unique" tableName="sku_item_line_item" unique="true">
+            <column name="sku_item_id"/>
+            <column name="line_item_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

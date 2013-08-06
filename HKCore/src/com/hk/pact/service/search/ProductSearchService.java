@@ -36,4 +36,6 @@ public interface ProductSearchService {
     public void updatePositionInSearchLog(String position);
 
     public SolrProduct getProduct(String productId);
+
+    public Synonym getCategoryBrandSynonym(String searchTerm, boolean categorySearch, boolean brandSearch);
 }
