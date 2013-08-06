@@ -32,7 +32,7 @@
 
 	<s:layout-component name="content">
 	
-	<div align="center"><label><font size="6px">Booking Status Tables</font></label></div><br><br>
+	<div align="center"><label><font size="6px">Booking Status Tables</font></label></div><br><br><br>
 	<c:choose>
 	<c:when test="${adminBookingBean.shippingOrderId!=null && fn:length(adminBookingBean.skuLiList)>0}">
 	Shipping Order Id = ${adminBookingBean.shippingOrderId}
@@ -64,6 +64,8 @@
 			</table>
 	</c:when>
 	<c:otherwise>
+	<br>
+	<div align="center"><label>Nothing Booked For This Shipping Order</label></div><br><br><br>
 	</c:otherwise>
 	</c:choose>
 	
