@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -121,6 +122,8 @@ public class StockTransferAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
+    	//TODO: ERP Checkout
+    	
         SkuItem skuItem = null;
         if (stockTransfer == null) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
@@ -152,6 +155,7 @@ public class StockTransferAction extends BasePaginatedAction {
                 return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
             }
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
             SkuGroup skuGroup = skuItem.getSkuGroup();
             Sku sku = skuGroup.getSku();
             StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, sku, skuGroup);
@@ -231,10 +235,11 @@ public class StockTransferAction extends BasePaginatedAction {
             return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
         }
         skuItemToBeReverted.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemToBeReverted.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
         baseDao.save(skuGroupToBeReverted);
 
         adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null,
-        		stliToBeReduced, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+        		stliToBeReduced,EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
 
         getInventoryService().checkInventoryHealth(skuGroupToBeReverted.getSku().getProductVariant());
         

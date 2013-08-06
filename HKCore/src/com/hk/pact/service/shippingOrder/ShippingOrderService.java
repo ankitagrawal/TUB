@@ -64,5 +64,7 @@ public interface ShippingOrderService {
     public void revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) ;
 
     public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds);
+    
+    public void validateShippingOrder(ShippingOrder shippingOrder);
 	
 }
