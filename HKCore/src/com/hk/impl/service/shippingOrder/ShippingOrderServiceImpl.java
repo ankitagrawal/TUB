@@ -347,11 +347,14 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 					logger.debug("Populated Table SkuItemLineItem for Line Item - " + item.getId() + " for Cart Line Item - " + item.getCartLineItem().getId()
 							+ " of Shipping Order - " + item.getShippingOrder().getId());
+					logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
+							"Inventory booked for variant:- " + item.getSku().getProductVariant());
+					inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
 				} else {
 					logger.debug("Could Not Populate Tables for Line Item - " + item.getId() + " for Cart Line Item - " + item.getCartLineItem().getId()
 							+ " of Shipping Order - " + item.getShippingOrder().getId());
 					logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
-							"Could Not Book Inventory For Line Item" + item.getId() + " of this Shipping Order");
+							"Inventory could not be booked for variant:- " + item.getSku().getProductVariant());
 				}
 			}
 			// When there are entries in SILI and SICLI; but MRP related fixes

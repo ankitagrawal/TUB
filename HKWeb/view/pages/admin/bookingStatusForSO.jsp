@@ -65,7 +65,9 @@
 	</c:when>
 	<c:otherwise>
 	<br>
+	<c:if test="${adminBookingBean.shippingOrderId!=null}">
 	<div align="center"><label>Nothing Booked For This Shipping Order</label></div><br><br><br>
+	</c:if>
 	</c:otherwise>
 	</c:choose>
 	
