@@ -665,8 +665,8 @@ public class OrderManager {
 			isJit = true;
 		}
         if (!isJit && !isService) {
-            //Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-	        Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(productVariant);
+//            Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+             Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(productVariant);
             if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
                 return false;
             }
