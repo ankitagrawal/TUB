@@ -11,9 +11,6 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.warehouse.WarehouseDao;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.criterion.*;
