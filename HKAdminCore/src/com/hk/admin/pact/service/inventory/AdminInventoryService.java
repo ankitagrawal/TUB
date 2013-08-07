@@ -23,6 +23,9 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.inventory.EnumInvTxnType;
 
 public interface AdminInventoryService {
 
@@ -47,6 +50,10 @@ public interface AdminInventoryService {
     public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
                                          StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy);
 
+    public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
+                                       StockTransferLineItem stockTransferLineItem,   EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner,  InvTxnType invTxnType, Long qty, User txnBy);
+    
+
     /**
      * @param sku
      * @return Inventory count of all action awaiting and in process orders
@@ -66,6 +73,8 @@ public interface AdminInventoryService {
     public void damageInventoryCheckin(SkuItem skuItem, LineItem lineItem);
 
     public void reCheckInInventory(ShippingOrder shippingOrder);
+
+    public void reCheckInInventory(ShippingOrder shippingOrder , EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner, EnumInvTxnType invnTxnType, Long qty) ;
 
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 

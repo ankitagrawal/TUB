@@ -420,7 +420,6 @@
 --%>
 	</div>
 	<c:if test="${!empty subscriptionProduct}">
-		<%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
 		<div class="jqmWindow" style="display:none;" id="subscriptionWindow"></div>
 
 		<script type="text/javascript">
