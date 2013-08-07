@@ -9,6 +9,7 @@ import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -244,7 +245,7 @@ public class POSServiceImpl implements POSService {
                     }*/
 
 				adminInventoryService.inventoryCheckinCheckout(posLineItemSku, skuItem, lineItemToBeInsertedInPVI, shippingOrder, null,
-						null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, userService.getLoggedInUser());
+						null, null, EnumSkuItemStatus.Checked_OUT, EnumSkuItemOwner.SELF,inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, userService.getLoggedInUser());
 
 				counter++;
 			}

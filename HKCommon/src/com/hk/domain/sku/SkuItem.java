@@ -39,6 +39,10 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 	@JoinColumn(name = "sku_item_status_id", nullable = false)
 	private SkuItemStatus skuItemStatus;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sku_item_owner_id", nullable = false)
+	private SkuItemOwner skuItemOwner;
+
 	@JsonSkip
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(
@@ -96,7 +100,16 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 		this.skuItemStatus = skuItemStatus;
 	}
 
-    public int compareTo(SkuItem skuItem) {
+	public SkuItemOwner getSkuItemOwner() {
+		return skuItemOwner;
+	}
+
+	public void setSkuItemOwner(SkuItemOwner skuItemOwner) {
+		this.skuItemOwner = skuItemOwner;
+	}
+
+
+	public int compareTo(SkuItem skuItem) {
 		if (this.getId() < skuItem.getId()) return -1;
 		if (this.getId() > skuItem.getId()) return 1;
 		return 0;
