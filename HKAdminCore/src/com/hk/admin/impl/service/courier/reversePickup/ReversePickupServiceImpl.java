@@ -10,6 +10,7 @@ import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.reversePickup.EnumReverseActionOnStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
@@ -192,24 +193,17 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                     }
                     if (skuItemBarcode != null && skuItemBarcode.equalsIgnoreCase(recheckInBarcode)) {
                         if (skuItem.getId().equals(pvi.getSkuItem().getId()) &&  pvi.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
-
                             EnumReason enumReason = EnumReason.getById(rpLineItem.getWarehouseReceivedCondition().getId());
                             SkuItemStatus skuItemStatus = null;
                             switch (enumReason) {
                                 case Good:
-                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null,
-                                            null, getInventoryService().getInventoryTxnType(EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN), 1L, loggedOnUser);
-                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                                    skuItemDao.save(skuItem);
-                                    inventoryService.checkInventoryHealth(productVariant);
+                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
+                                            EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), 1l, loggedOnUser);
                                     warehouseChecked = true;
                                     break;
-
                                 case Damaged:
-                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null,
-                                            null, getInventoryService().getInventoryTxnType(EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN), 0L, loggedOnUser);
-                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
-                                    skuItemDao.save(skuItem);
+                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
+                                            EnumSkuItemStatus.Damaged, EnumSkuItemOwner.SELF, EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), 0l, loggedOnUser);
                                     inventoryService.checkInventoryHealth(productVariant);
                                     warehouseChecked = true;
                                     break;
@@ -218,25 +212,20 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                                 case Near_Expiry:
                                     /**/
                                 case Expired:
-                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null,
-                                            null, getInventoryService().getInventoryTxnType(EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN), 0L, loggedOnUser);
-                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
-                                    skuItemDao.save(skuItem);
+                                    getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
+                                            EnumSkuItemStatus.Expired, EnumSkuItemOwner.SELF, EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), 0l, loggedOnUser);
                                     inventoryService.checkInventoryHealth(productVariant);
                                     warehouseChecked = true;
                                     break;
                             }
-                           if(warehouseChecked){
+                            inventoryService.checkInventoryHealth(productVariant);
+                            if(warehouseChecked){
                                break;
                            }
 
                         }
-
-
                     }
-
                 }
-
             } else {
                 throw new ReversePickupException("No Items remains  Checkout ", productVariant);
             }

@@ -16,65 +16,76 @@ import java.util.ArrayList;
  */
 public enum EnumSkuItemStatus {
 
-    Checked_IN(10L, "CHECKED IN"),
-    Checked_OUT(20L, "CHECKED OUT"),
-    Stock_Transfer_Out(30L, "Stock Transfer Out"),
-    Damaged(40L, "Damaged"),
-    Expired(50L, "Expired"),
-    Lost(60L, "Lost"),
-    BatchMismatch(70L, "Batch Mismatch"),
-    MrpMismatch(80L, "Mrp Mismatch"),
-    FreeVariant(90L, "Free Variant"),
-    NonMoving(100L, "Non Moving"),
-    ProductVariantAudited(110L, "Product Variant Audited"),
-    IncorrectCounting(120L,"Incorrect Counting"),
-    TEMP_BOOKED(150L, "TEMP BOOKED"),
-    BOOKED(160L, "BOOKED");
+  Checked_IN(10L, "CHECKED IN"),
+  Checked_OUT(20L, "CHECKED OUT"),
+  Stock_Transfer_Out(30L, "Stock Transfer Out"),
+  Damaged(40L, "Damaged"),
+  Expired(50L, "Expired"),
+  Lost(60L, "Lost"),
+  BatchMismatch(70L, "Batch Mismatch"),
+  MrpMismatch(80L, "Mrp Mismatch"),
+  FreeVariant(90L, "Free Variant"),
+  NonMoving(100L, "Non Moving"),
+  ProductVariantAudited(110L, "Product Variant Audited"),
+  IncorrectCounting(120L, "Incorrect Counting"),
+  TEMP_BOOKED(150L, "TEMP BOOKED"),
+  BOOKED(160L, "BOOKED");
 
-    private Long id;
-	private String name;
+  private Long id;
+  private String name;
 
-	EnumSkuItemStatus(Long id, String name) {
-		this.id = id;
-		this.name = name;
-	}
+  EnumSkuItemStatus(Long id, String name) {
+    this.id = id;
+    this.name = name;
+  }
 
-	public SkuItemStatus getSkuItemStatus() {
-		SkuItemStatus skuItemStatus = new SkuItemStatus();
-		skuItemStatus.setId(this.id);
-		skuItemStatus.setName(this.name);
-		return skuItemStatus;
-	}
+  public SkuItemStatus getSkuItemStatus() {
+    SkuItemStatus skuItemStatus = new SkuItemStatus();
+    skuItemStatus.setId(this.id);
+    skuItemStatus.setName(this.name);
+    return skuItemStatus;
+  }
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-    public static List<EnumSkuItemStatus> getStatusForNetPhysicalInventory() {
-          return Arrays.asList(EnumSkuItemStatus.Checked_IN,EnumSkuItemStatus.TEMP_BOOKED,EnumSkuItemStatus.BOOKED);
-
+  public static EnumSkuItemStatus getSkuItemStatusById(Long id){
+    for(EnumSkuItemStatus status : values()){
+      if (status.getId().equals(id)){
+        return status;
       }
-
-
-      public static List<Long> getSkuItemStatusIDs(List<EnumSkuItemStatus> enumSkuItemStatuses) {
-        List<Long> skuItemStatusIds = new ArrayList<Long>();
-        for (EnumSkuItemStatus enumOrderStatus : enumSkuItemStatuses) {
-            skuItemStatusIds.add(enumOrderStatus.getId());
-        }
-        return skuItemStatusIds;
     }
+    return null;
+  }
+
+
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
+  public static List<EnumSkuItemStatus> getStatusForNetPhysicalInventory() {
+    return Arrays.asList(EnumSkuItemStatus.Checked_IN, EnumSkuItemStatus.TEMP_BOOKED, EnumSkuItemStatus.BOOKED);
+
+  }
+
+
+  public static List<Long> getSkuItemStatusIDs(List<EnumSkuItemStatus> enumSkuItemStatuses) {
+    List<Long> skuItemStatusIds = new ArrayList<Long>();
+    for (EnumSkuItemStatus enumOrderStatus : enumSkuItemStatuses) {
+      skuItemStatusIds.add(enumOrderStatus.getId());
+    }
+    return skuItemStatusIds;
+  }
 
 }

@@ -387,7 +387,7 @@ public class InventoryCheckoutAction extends BaseAction {
                 List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
                 if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
                     getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), null, shippingOrder, null, null, null,
-                            getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, user);
+                         EnumSkuItemStatus.Checked_OUT, EnumSkuItemOwner.SELF,  getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, user);
                     addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
                     String comments = "Free Checked-out One Unit of Item: " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();

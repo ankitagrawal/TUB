@@ -19,11 +19,7 @@ import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.*;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.UserManager;
@@ -38,7 +34,6 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +47,12 @@ import java.util.*;
 public class AdminInventoryServiceImpl implements AdminInventoryService {
 
 	private static Logger logger = Logger.getLogger(AdminInventoryServiceImpl.class);
+	@Autowired
+	GrnLineItemService grnLineItemService;
+	@Autowired
+	SkuItemLineItemService skuItemLineItemService;
+	@Autowired
+	SkuItemLineItemDao skuItemLineItemDao;
 	@Autowired
 	private BaseDao baseDao;
 	@Autowired
@@ -78,12 +79,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	private ProductVariantInventoryDao productVariantInventoryDao;
 	@Autowired
 	private SkuGroupService skuGroupService;
-	@Autowired
-	GrnLineItemService grnLineItemService;
-	@Autowired
-	SkuItemLineItemService skuItemLineItemService;
-	@Autowired
-	SkuItemLineItemDao skuItemLineItemDao;
 
 	@Override
 	public List<SkuGroup> getInStockSkuGroups(String upc) {
@@ -93,10 +88,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		if (productVariantList == null || productVariantList.isEmpty()) {
 			productVariantList = new ArrayList<ProductVariant>();
 			productVariantList.add(getProductVariantService().getVariantById(upc));// UPC
-																					// not
-																					// available
-																					// must
-																					// have
+			// not
+			// available
+			// must
+			// have
 			// entered Variant
 			// Id
 		}
@@ -167,7 +162,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	}
 
 	public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote,
-			ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
+	                               ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
 		// SkuGroup skuGroup = new SkuGroup();
 		// skuGroup.setBatchNumber(batch);
 		// skuGroup.setMfgDate(mfgDate);
@@ -192,7 +187,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	}
 
 	public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp,
-			GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
+	                                             GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
 		SkuGroup skuGroup = new SkuGroup();
 		skuGroup.setBatchNumber(batch);
 		skuGroup.setMfgDate(mfgDate);
@@ -209,7 +204,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	}
 
 	public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-			StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
+	                                              StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
 		for (int i = 0; i < qty; i++) {
 			SkuItem skuItem = new SkuItem();
 			skuItem.setSkuGroup(skuGroup);
@@ -223,12 +218,12 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 			skuItem.setBarcode(skuItemBarcode);
 			skuItem = (SkuItem) getBaseDao().save(skuItem);
 
-			this.inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, stockTransferLineItem, invTxnType, 1L, txnBy);
+			this.inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, stockTransferLineItem, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, invTxnType, 1L, txnBy);
 		}
 	}
 
 	public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem,
-			RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy) {
+	                                     RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy) {
 		ProductVariantInventory pvi = new ProductVariantInventory();
 		// pvi.setProductVariant(sku.getProductVariant());
 		pvi.setSku(sku);
@@ -261,6 +256,38 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 			grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
 			getBaseDao().save(grnLineItem);
 		}
+	}
+
+	public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
+	                                     StockTransferLineItem stockTransferLineItem, EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner, InvTxnType invTxnType, Long qty, User txnBy) {
+
+		ProductVariantInventory pvi = new ProductVariantInventory();
+		// pvi.setProductVariant(sku.getProductVariant());
+		pvi.setSku(sku);
+		pvi.setSkuItem(skuItem);
+		pvi.setLineItem(lineItem);
+		pvi.setShippingOrder(shippingOrder);
+		pvi.setGrnLineItem(grnLineItem);
+		pvi.setRvLineItem(rvLineItem);
+		pvi.setStockTransferLineItem(stockTransferLineItem);
+		pvi.setInvTxnType(invTxnType);
+		pvi.setQty(qty);// +1 = Checkin -1 = Checkout
+		pvi.setTxnBy(txnBy);
+		pvi.setTxnDate(new Date());
+		getBaseDao().save(pvi);
+
+		if (skuItem != null) {
+			skuItem.setSkuItemStatus(skuItemStatus.getSkuItemStatus());
+			skuItem.setSkuItemOwner(skuItemOwner.getSkuItemOwnerStatus());
+			getBaseDao().save(skuItem);
+		}
+
+		// Setting checked in qty to make increments in sync with checkin
+		if (grnLineItem != null && qty > 0) {
+			grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
+			getBaseDao().save(grnLineItem);
+		}
+
 	}
 
 	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy) {
@@ -339,7 +366,25 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 			for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
 				this.inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(),
 						checkedOutInventory.getGrnLineItem(), checkedOutInventory.getRvLineItem(), checkedOutInventory.getStockTransferLineItem(),
-						getInventoryService().getInventoryTxnType(EnumInvTxnType.CANCEL_CHECKIN), 1L, loggedOnUser);
+						EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.CANCEL_CHECKIN), 1L, loggedOnUser);
+				// Rechecking Inventory Health to mark variants
+				// instock/outofstock properly.
+				getInventoryService().checkInventoryHealth(checkedOutInventory.getSku().getProductVariant());
+			}
+		}
+		// }
+	}
+
+	public void reCheckInInventory(ShippingOrder shippingOrder, EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner, EnumInvTxnType invnTxnType, Long qty) {
+		// Recheckin InventoInry against checked out qty
+		// User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+		User loggedOnUser = userService.getLoggedInUser();
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			List<ProductVariantInventory> checkedOutInventories = getAdminPVIDao().getCheckedOutSkuItems(lineItem.getShippingOrder(), lineItem);
+			for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
+				this.inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(),
+						checkedOutInventory.getGrnLineItem(), checkedOutInventory.getRvLineItem(), checkedOutInventory.getStockTransferLineItem(), skuItemStatus, skuItemOwner,
+						getInventoryService().getInventoryTxnType(invnTxnType), qty, loggedOnUser);
 				// Rechecking Inventory Health to mark variants
 				// instock/outofstock properly.
 				getInventoryService().checkInventoryHealth(checkedOutInventory.getSku().getProductVariant());
@@ -397,21 +442,22 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	}
 
 	public boolean checkoutMethod(LineItem lineItem, SkuItem skuItem) {
-		logger.debug("Checking Out SkuItem - "+skuItem.getId()+"against Line Item - "+lineItem.getId());
-        SkuItemLineItem skuItemLineItemToBeCheckedOut = null;
-        SkuItemCLI skuCLIToBeCheckout = null;
-        List<SkuItemLineItem> skuLineItemList =  lineItem.getSkuItemLineItems();
-        List<SkuItemLineItem> bookedSkuLineItemList = new ArrayList<SkuItemLineItem>();
-        if (skuLineItemList != null && skuLineItemList.size() > 0) {
-        	for(SkuItemLineItem skuItemLineItem : skuLineItemList){
-        		if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())){
-        			bookedSkuLineItemList.add(skuItemLineItem);
-        		}
-        	}
-        }
+		logger.debug("Checking Out SkuItem - " + skuItem.getId() + "against Line Item - " + lineItem.getId());
+		SkuItemLineItem skuItemLineItemToBeCheckedOut = null;
+		SkuItemCLI skuCLIToBeCheckout = null;
+		List<SkuItemLineItem> skuLineItemList = lineItem.getSkuItemLineItems();
+		List<SkuItemLineItem> bookedSkuLineItemList = new ArrayList<SkuItemLineItem>();
+		if (skuLineItemList != null && skuLineItemList.size() > 0) {
+			for (SkuItemLineItem skuItemLineItem : skuLineItemList) {
+				if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
+
+					bookedSkuLineItemList.add(skuItemLineItem);
+				}
+			}
+		}
 		if (bookedSkuLineItemList != null && bookedSkuLineItemList.size() > 0) {
 			skuItemLineItemToBeCheckedOut = bookedSkuLineItemList.get(0);
-            skuCLIToBeCheckout = skuItemLineItemToBeCheckedOut.getSkuItemCLI();
+			skuCLIToBeCheckout = skuItemLineItemToBeCheckedOut.getSkuItemCLI();
 			if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
 				SkuItem tempSkuItem;
 				tempSkuItem = skuItemLineItemToBeCheckedOut.getSkuItem();
@@ -419,29 +465,37 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 				baseDao.save(tempSkuItem);
 			} else if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
 				SkuItemLineItem skuItemLineItem = skuItemLineItemDao.getSkuItemLineItem(skuItem);
-				SkuItemCLI skuItemCLI = skuItemLineItem.getSkuItemCLI();
-				skuItemLineItem.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
-                skuItemCLI.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
-				baseDao.save(skuItemLineItem);
-				baseDao.save(skuItemCLI);
+				if (!skuLineItemList.contains(skuItemLineItem)) {
+					SkuItemCLI skuItemCLI = skuItemLineItem.getSkuItemCLI();
+					skuItemLineItem.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
+					skuItemCLI.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
+					baseDao.save(skuItemLineItem);
+					baseDao.save(skuItemCLI);
+				} else {
+					skuItem = checkoutSkuItem(lineItem, skuItem);
+					return true;
+				}
+
 
 			} else if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
 				SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
 				skuItemCLI.setSkuItem(skuItemLineItemToBeCheckedOut.getSkuItem());
-                skuItemLineItemToBeCheckedOut.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                baseDao.save(skuItemLineItemToBeCheckedOut.getSkuItem());
+				skuItemLineItemToBeCheckedOut.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+				baseDao.save(skuItemLineItemToBeCheckedOut.getSkuItem());
 				baseDao.save(skuItemCLI);
 			}
 
 			skuItemLineItemToBeCheckedOut.setSkuItem(skuItem);
-            skuCLIToBeCheckout.setSkuItem(skuItem);
+			skuCLIToBeCheckout.setSkuItem(skuItem);
 			baseDao.save(skuCLIToBeCheckout);
 			baseDao.save(skuItemLineItemToBeCheckedOut);
 			skuItem = checkoutSkuItem(lineItem, skuItem);
 			return true;
+
+
+		} else {
+			return false;
 		}
-        else 
-        	return false;
 
 	}
 
@@ -451,7 +505,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		skuItem.setSkuItemOwner(EnumSkuItemOwner.CUSTOMER.getSkuItemOwnerStatus());
 		skuItem = (SkuItem) baseDao.save(skuItem);
 		logger.debug("Checking Out SkuItem - " + skuItem.getId() + " at Checkout");
-		inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null,
+		inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null, EnumSkuItemStatus.Checked_OUT, EnumSkuItemOwner.SELF,
 				inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1l, loggedOnUser);
 		return skuItem;
 	}
@@ -565,7 +619,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	}
 
 	public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem,
-			LineItem lineItem, Long transferQty) {
+	                                               LineItem lineItem, Long transferQty) {
 		return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem, stockTransferLineItem, grnLineItem, lineItem, transferQty);
 	}
 
@@ -601,7 +655,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		}
 	}
 
-		public List<SkuGroup> getInStockSkuGroup(Sku sku) {
-			return adminSkuItemDao.getInStockSkuGroups(sku);
-		}
+	public List<SkuGroup> getInStockSkuGroup(Sku sku) {
+		return adminSkuItemDao.getInStockSkuGroups(sku);
+	}
 }
