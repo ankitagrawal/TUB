@@ -311,8 +311,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
                 // cancel reward points from user total redeemable reward points in lieu of reward points used
                 Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(rewardPoint.getUser());
-                if (redeemablePoints >= totalUsedRewardPoints && totalUsedRewardPoints > 0) {
-                    rewardPointService.cancelRewardPoints(rewardPoint.getUser(), formatAmount(percentageAmount*totalUsedRewardPoints));
+                if (redeemablePoints >= totalUsedRewardPoints) {
+
+                    if(totalAddedRewardPoints > 0) {
+                        rewardPointService.cancelRewardPoints(rewardPoint.getUser(), formatAmount(percentageAmount*totalUsedRewardPoints));
+                    }
+
                 } else {
 
                     if(redeemablePoints > 0) {
