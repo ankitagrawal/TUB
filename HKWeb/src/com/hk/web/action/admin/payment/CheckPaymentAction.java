@@ -326,21 +326,24 @@ public class CheckPaymentAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.AUTO_UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution autoUpdate() {
-        User loggedOnUser = getUserService().getLoggedInUser();
-        try {
 
-            paymentService.updatePayment(payment.getGatewayOrderId());
-            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-            order.setConfirmationDate(new Date());
-            orderService.save(order);
-            orderService.sendEmailToServiceProvidersForOrder(order);
-            addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+        if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
+            User loggedOnUser = getUserService().getLoggedInUser();
+            try {
 
-        } catch (HealthkartPaymentGatewayException e) {
+                paymentService.updatePayment(payment.getGatewayOrderId());
+                getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+                order.setConfirmationDate(new Date());
+                orderService.save(order);
+                orderService.sendEmailToServiceProvidersForOrder(order);
+                addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
 
-            logger.debug("Healthkart Payment Update Exception occurred : " + e);
-            addRedirectAlertMessage(new SimpleMessage("Healthkart Payment Update Exception occurred"));
+            } catch (HealthkartPaymentGatewayException e) {
+
+                logger.debug("Healthkart Payment Update Exception occurred : " + e);
+                addRedirectAlertMessage(new SimpleMessage("Healthkart Payment Update Exception occurred"));
+            }
         }
 
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
@@ -353,17 +356,23 @@ public class CheckPaymentAction extends BaseAction {
     * */
     @Secure(hasAnyPermissions = {PermissionConstants.MANUAL_UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution manualUpdate() {
-        User loggedOnUser = getUserService().getLoggedInUser();
 
-        getPaymentManager().success(payment.getGatewayOrderId());
-        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-        order.setConfirmationDate(new Date());
-        orderService.save(order);
-//        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-        orderService.sendEmailToServiceProvidersForOrder(order);
+        if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
+            Gateway gateway = payment.getGateway();
+            if(EnumGateway.getManualRefundGateways().contains(gateway.getId())) {
+                User loggedOnUser = getUserService().getLoggedInUser();
+
+                getPaymentManager().success(payment.getGatewayOrderId());
+                getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+                order.setConfirmationDate(new Date());
+                orderService.save(order);
+//              orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+                orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
-        addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+                addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+            }
+        }
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
