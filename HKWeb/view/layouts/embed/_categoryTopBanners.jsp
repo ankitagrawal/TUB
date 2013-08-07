@@ -70,6 +70,9 @@
   <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
     <jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
   </c:if>
+    <c:if test="${hk:collectionContains(topCategoryNameList, 'parenting')}">
+       <jsp:include page="/categoryBanners/healthNutriCallback.jsp"/>
+     </c:if>
   <c:if test="${hk:collectionContains(categoryNameList, 'devices') ||
             hk:collectionContains(categoryNameList, 'diabetic-food') ||
             hk:collectionContains(brandList, 'Frio') }">
