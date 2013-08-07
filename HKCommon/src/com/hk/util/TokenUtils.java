@@ -24,6 +24,10 @@ public class TokenUtils {
       return order.getId() + "-" + (order.isReferredOrder() ? "R" : "") + BaseUtils.getRandomNumber(5);
     }
 
+    public static String generateReversePickupOrderId(ShippingOrder shippingOrder) {
+        return shippingOrder.getId() + "-" + "RP" + BaseUtils.getRandomNumber(5);
+    }
+
     public static String generateShippingOrderGatewayOrderId(ShippingOrder shippingOrder){
       Order order = shippingOrder.getBaseOrder();
       String baseOrderGatewayOrderId[] = order.getGatewayOrderId().split("-");

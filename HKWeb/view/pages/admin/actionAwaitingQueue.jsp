@@ -16,6 +16,7 @@
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -85,6 +86,14 @@
 
         table.row_border tr {
             outline: 1px solid #cccccc;
+        }
+
+        .closeButtonDiv {
+          float: left;
+          position: relative;
+          left: 14%;
+          margin-bottom: 2px;
+          margin-top: 2px;
         }
     </style>
     <script type="text/javascript">
@@ -399,10 +408,38 @@
                     <%--<label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>--%>
                     <s:submit name="search" value="Search (No Default)"/>
                 </div>
+                 
             </s:form>
+
+
+          <shiro:hasPermission name="<%=PermissionConstants.CREATE_JIT_PO%>">
+            <div class="closeButtonDiv">
+              <s:form beanclass="com.hk.web.action.admin.queue.JitShippingOrderAction">
+                <s:submit name="pre" value="Create Auto PO For Shipping Orders"/></s:form></div>
+
+            <div class="closeButtonDiv">
+              <s:form beanclass="com.hk.web.action.admin.queue.EscalateJitShippingOrdersAction">
+                <s:submit name="pre" value="Escalate Shipping Orders"/></s:form></div>
+          </shiro:hasPermission>
         </div>
     </ul>
+
+  <%--<div>
+    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="pre">
+        Validate SOs
+      </s:link>
+
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" event="fixDuplicateSI">
+        Fix Duplicate SILIs
+      </s:link>
+    </shiro:hasAnyRoles>
+</div>--%>
 </fieldset>
+ 
+<div>
+
+
 
 <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>
@@ -487,6 +524,11 @@
                             <c:if test="${empty hk:orderComments(order)}">Add a comment</c:if>
                             <s:param name="order" value="${order}"/>
                         </s:link>)
+                        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction"
+                                          event="getSkuCartItemLineItems" target="_blank">
+                    	<s:param name="baseOrderId" value="${order.id}"/>
+                   		 Booking Status
+                			</s:link>)
                         </div>
                     </div>
                     <div class="clear"></div>

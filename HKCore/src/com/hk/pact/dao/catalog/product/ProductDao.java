@@ -104,4 +104,5 @@ public interface ProductDao extends BaseDao {
 
     public List<Product> getOOSHiddenDeletedProducts();
 
+		public List<String> getAllBrands(String brandLike);
 }

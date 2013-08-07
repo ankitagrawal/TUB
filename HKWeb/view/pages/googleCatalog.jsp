@@ -25,7 +25,8 @@
                         <description>![CDATA[${hk:stripHtml(product.description)}]]</description>
                         <g:id>${product.id}</g:id>
                         <g:condition>New</g:condition>
-                        <g:price>${product.minimumMRPProducVariant.hkPrice} INR</g:price>
+                        <g:price><fmt:formatNumber value="${product.minimumMRPProducVariant.hkPrice}"
+                                                                                             maxFractionDigits="0"/> INR</g:price>
                         <g:product_type>
                                 ${product.primaryCategory} &gt;${product.secondaryCategory}
                         </g:product_type>

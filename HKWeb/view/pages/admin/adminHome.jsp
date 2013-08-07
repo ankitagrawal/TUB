@@ -60,7 +60,7 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></h3>
-
+            
    <h3><s:link
             beanclass="com.hk.web.action.admin.shippingOrder.FixedShippingOrderAction">Search Fixed Shipping Orders</s:link></h3>
 
@@ -223,13 +223,18 @@
       <h3><s:link
           beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
 
-      <h3>
-        <s:link
-            beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
-      </h3>
+        <h3>
+            <s:link
+                    beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
+        </h3>
 
-      <h3>
-        <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
+        <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
+            <h3><s:link
+                    beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction">Reverse Pickup List</s:link></h3>
+        </shiro:hasPermission>
+
+        <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
 
     </c:if>
     <h3>

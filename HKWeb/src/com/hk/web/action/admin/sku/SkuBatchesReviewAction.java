@@ -84,6 +84,7 @@ public class SkuBatchesReviewAction extends BaseAction {
     	try {
     		orderReviewService.fixLineItem(lineItem);
     		lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
+    		shippingOrderService.validateShippingOrder(lineItem.getShippingOrder());
     		addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
     	} catch (Exception e) {
     		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 

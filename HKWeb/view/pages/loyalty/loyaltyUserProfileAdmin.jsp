@@ -17,9 +17,7 @@
 		$('.save').click(function(e) {
 			var order_id = $(this).parent().parent().find('.order').text();
 			var productPoints = parseFloat($(this).parent().parent().find('.points').val());
-			if (productPoints > 0) {
-				// do nothing
-			} else {
+			if (isNaN(productPoints)) {
 				e.preventDefault();
 				alert ("Invalid value given as points for Order Id " + order_id);
 			}
@@ -88,7 +86,12 @@
 					<s:option value="${statusOption}">${statusOption}</s:option>
 				</c:forEach>
 			</s:select>&nbsp;&nbsp;&nbsp;&nbsp;
-			User Badge    
+			Transaction
+			<s:select name="profileTransactionType" value="${profile.transactiopnType}">
+				<c:forEach items="${loyaltyAdminAction.transactionTypeArray}" var="typeOption">
+					<s:option value="${typeOption}">${typeOption}</s:option>
+				</c:forEach>
+			</s:select>&nbsp;&nbsp;&nbsp;&nbsp;User Badge    
 			<s:select name="profileBadgeId" >
 						<s:options-collection collection="${loyaltyAdminAction.badges}" value="id" label="badgeName" />
 					</s:select>

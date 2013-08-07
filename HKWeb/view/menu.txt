@@ -76,12 +76,12 @@
 
 
 -/health-nutrition/dietary-supplements: Shop by Product
---/health-nutrition/dietary-supplements/vitamins
+--/health-nutrition/dietary-supplements/multivitamins
+--/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
+--/health-nutrition/dietary-supplements/vitamin-a-z
 --/health-nutrition/dietary-supplements/minerals
 --/health-nutrition/dietary-supplements/herbs
---/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
 --/health-nutrition/dietary-supplements/anti-oxidants:Anti-Oxidants
---/health-nutrition/dietary-supplements/combination
 --/health-nutrition/dietary-supplements/condition-specific
 --/health-nutrition/dietary-supplements/other-supplements
 
@@ -137,6 +137,12 @@
 ---/sports/fitness-accessories/support-gear/thighs
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/rehabilitation-supports
+--/sports/fitness-accessories/heart-rate-monitors
+---/sports/fitness-accessories/heart-rate-monitors/accessories
+--/sports/fitness-accessories/weighing-scales
+---/sports/fitness-accessories/weighing-scales/Analog
+---/sports/fitness-accessories/weighing-scales/Digital
+---/sports/fitness-accessories/weighing-scales/BMI
 --/sports/fitness-accessories/gym-clothing
 --/sports/fitness-accessories/gym-essential-kits
 --/sports/fitness-accessories/bottles-shakers : Bottles & Shakers
@@ -236,6 +242,9 @@
 ---/sports/sports-equipment/boxing/boxing-clothing
 ---/sports/sports-equipment/boxing/jabs
 ---/sports/sports-equipment/boxing/accessories
+--/sports/sports-equipment/hockey
+---/sports/sports-equipment/hockey/sticks
+---/sports/sports-equipment/hockey/balls
 --/sports/sports-equipment/golf
 --/sports/sports-equipment/skating
 --/sports/sports-equipment/sports-watches
@@ -270,7 +279,6 @@
 --/sports/fab-corner/win-win-deals
 --/sports/fab-corner/league-of-innovations
 --/sports/fab-corner/new-arrivals
-
 /diabetes
 -/diabetes/devices : Monitoring Devices
 --/diabetes/devices/meters : Glucose Meters
@@ -367,6 +375,7 @@
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
 -/health-devices/medical-care : Medical Care
+--/health-devices/medical-care/innovative-health-devices:Innovative Health Devices
 --/health-devices/medical-care/weighing-scales
 ---/health-devices/medical-care/weighing-scales/digital
 ---/health-devices/medical-care/weighing-scales/analog
@@ -420,10 +429,7 @@
 ---/health-devices/clinical-products/stethoscope/pediatric
 ---/health-devices/clinical-products/stethoscope/dual-head
 --/health-devices/clinical-products/steth-accessories : Stethoscope Parts
----/health-devices/clinical-products/steth-accessories/ear-tips
 ---/health-devices/clinical-products/steth-accessories/binaurals
----/health-devices/clinical-products/steth-accessories/chest-piece
----/health-devices/clinical-products/steth-accessories/tunable-diaphragm-rim-assemblies : Diaphragm & RIM
 ---/health-devices/clinical-products/steth-accessories/spares
 --/health-devices/clinical-products/dressing-aids
 ---/health-devices/clinical-products/dressing-aids/dressing-pads
@@ -666,6 +672,7 @@
 ---/beauty/what-s-new/gift-ideas/for-her
 ---/beauty/what-s-new/gift-ideas/for-him
 --/beauty/what-s-new/limited-period-offers
+--/beauty/what-s-new/camisoles
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
 --/beauty/what-s-new/organic-skin-care
@@ -741,7 +748,6 @@
 ---/beauty/bath-body/hand-foot-care/foot-care
 --/beauty/bath-body/hair-removal
 --/beauty/bath-body/accessories
---/beauty/bath-body/camisoles
 --/beauty/bath-body/fragrances
 -/beauty/make-up
 --/beauty/make-up/organic-make-up

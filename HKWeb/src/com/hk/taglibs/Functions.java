@@ -914,4 +914,19 @@ public class Functions {
         return productVariantNotifyMeEmailService.getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(productVariant);
     }
 
+    public static boolean isBOCancelable(Long orderId) {
+        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.isBOCancelable(orderId);
+    }
+
+    public static Long countLineItemQty(ShippingOrder shippingOrder) {
+      long qty=0;
+      if(shippingOrder.getLineItems()!=null && shippingOrder.getLineItems().size()>0)
+      for(LineItem lineItem : shippingOrder.getLineItems())
+      {
+          qty=qty+lineItem.getQty();
+      }
+      return qty;
+    }
+
 }
