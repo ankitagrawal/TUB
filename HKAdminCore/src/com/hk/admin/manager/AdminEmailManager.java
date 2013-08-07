@@ -1236,7 +1236,7 @@ public class AdminEmailManager {
         valueMap.put("amount",amount);
         valueMap.put("gateway",gateway);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.manualRefundTaskToAdminMail);
-        emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
+        emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "cs.payments@healthkart.com", "Admin");
     }
 
 
