@@ -7,6 +7,8 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.pact.service.inventory.SkuGroupService;
@@ -212,6 +214,8 @@ public class ReconciliationVoucherParser {
 
                 SkuGroup skuGroup = null;
                 SkuItem skuItem = null;
+                List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+                List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
                 if (groupBarcode != null && !StringUtils.isBlank(groupBarcode)) {
                     List<SkuGroup> skuGroupList = skuGroupService.getSkuGroup(groupBarcode.trim(), warehouse.getId());
                     if (skuGroupList == null || skuGroupList.isEmpty()) {
@@ -223,7 +227,7 @@ public class ReconciliationVoucherParser {
                     }
 
                 } else if (itemBarcode != null && !StringUtils.isBlank(itemBarcode)) {
-                    skuItem = skuGroupService.getSkuItemByBarcode(itemBarcode.trim(), warehouse.getId(), null);
+                    skuItem = skuGroupService.getSkuItemByBarcode(itemBarcode.trim(), warehouse.getId(), skuItemStatusList, skuItemOwners);
                     if (skuItem == null) {
                         throw new Exception("Invalid Item Barcode  @ Row:" + rowCount);
                     }
