@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.*;
 
+import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
@@ -299,23 +300,23 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
             // if total used is zero then, reward point has not been used yet, simple cancel totalRewardPointAdded
             if(totalUsedRewardPoints == 0 && totalAddedRewardPoints > 0) {
-                rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, percentageAmount*totalAddedRewardPoints,txnList.get(0).getExpiryDate());
+                rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, formatAmount(percentageAmount*totalAddedRewardPoints),txnList.get(0).getExpiryDate());
             } else {
 
                 Double remainingRewardPoints = totalAddedRewardPoints - totalUsedRewardPoints;
                 // now first cancel remaining reward points
                 if (remainingRewardPoints > 0) {
-                    rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, percentageAmount*totalAddedRewardPoints,txnList.get(0).getExpiryDate());
+                    rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, formatAmount(percentageAmount*totalAddedRewardPoints),txnList.get(0).getExpiryDate());
                 }
 
                 // cancel reward points from user total redeemable reward points in lieu of reward points used
                 Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(rewardPoint.getUser());
-                if (redeemablePoints >= totalUsedRewardPoints) {
-                    rewardPointService.cancelRewardPoints(rewardPoint.getUser(), percentageAmount*totalUsedRewardPoints);
+                if (redeemablePoints >= totalUsedRewardPoints && totalUsedRewardPoints > 0) {
+                    rewardPointService.cancelRewardPoints(rewardPoint.getUser(), formatAmount(percentageAmount*totalUsedRewardPoints));
                 } else {
 
                     if(redeemablePoints > 0) {
-                        rewardPointService.cancelRewardPoints(rewardPoint.getUser(), percentageAmount*redeemablePoints);
+                        rewardPointService.cancelRewardPoints(rewardPoint.getUser(), formatAmount(percentageAmount*redeemablePoints));
                     }
 
                     // intimate user that redeemable reward points are being canceled from his account at last SO cancel
@@ -351,6 +352,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             totalBalance += rewardPointTxn.getValue();
         }
         return (totalBalance < 1);
+    }
+
+    private double formatAmount(Double amount) {
+        String amtStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(amount);
+        return Double.parseDouble(amtStr);
     }
 
     private double calculateWeight(ShippingOrder shippingOrder, Order order) {
