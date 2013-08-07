@@ -173,9 +173,9 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/pages/campaign/clearance/sale.jsp">
-                    <img src="${pageContext.request.contextPath}/images/banners/Clearance-sale.jpg"
-                         alt="Clearance Sale"
+                <a href="${pageContext.request.contextPath}/product/twinlab-100-whey-protein-fuel/NUT1264?productReferrerId=13&productPosition=1/1">
+                    <img src="${pageContext.request.contextPath}/images/banners/Twinlab_Static.jpg"
+                         alt="Twinlab Sale"
                          class="small_banner"/>
                 </a>
               <script type="text/javascript">
