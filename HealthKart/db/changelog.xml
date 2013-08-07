@@ -13933,4 +13933,9 @@
             <column name="shipment_cost_calculate_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-08-05-03">
+        <sql>
+            update shipment set shipment_cost_calculate_date
+        </sql>
+    </changeSet>
 </databaseChangeLog>
