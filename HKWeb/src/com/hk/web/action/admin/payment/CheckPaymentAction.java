@@ -304,17 +304,21 @@ public class CheckPaymentAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
-        User loggedOnUser = getUserService().getLoggedInUser();
 
-        getPaymentManager().success(payment.getGatewayOrderId());
-        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-        order.setConfirmationDate(new Date());
-        orderService.save(order);
+        if (!EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getId())) {
+
+            User loggedOnUser = getUserService().getLoggedInUser();
+
+            getPaymentManager().success(payment.getGatewayOrderId());
+            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+            order.setConfirmationDate(new Date());
+            orderService.save(order);
 //        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-        orderService.sendEmailToServiceProvidersForOrder(order);
+            orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
-        addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+            addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+        }
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
