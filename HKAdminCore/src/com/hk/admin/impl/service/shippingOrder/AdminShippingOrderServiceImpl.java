@@ -13,6 +13,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
+import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserAccountInfo;
@@ -46,11 +47,6 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ReplacementOrderReason;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
@@ -164,10 +160,16 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             }
 
             if(!reconcileAll) {
-                reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
-                
-                if(reconciliationType != null) {
-                    relieveExtraLiabilties(reconciliationType,shippingOrder,null);    
+
+                // if shipping order is of RO don't do any thing
+                if(shippingOrder instanceof ReplacementOrder) {
+                    // do nothing
+                } else {
+                    reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
+
+                    if(reconciliationType != null) {
+                        relieveExtraLiabilties(reconciliationType,shippingOrder,null);
+                    }
                 }
                 
             }
