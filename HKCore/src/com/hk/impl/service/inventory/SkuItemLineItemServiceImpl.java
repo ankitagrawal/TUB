@@ -295,6 +295,66 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService{
     public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+    
+	public Boolean freeBookingTable(ShippingOrder shippingOrder) {
+		logger.debug("Going to free bookings against Shipping Order:- "+shippingOrder.getId());
+		List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+		List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+		List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+		List<SkuItemLineItem> skuItemLineItemsToBeRetained = new ArrayList<SkuItemLineItem>();
+		List<SkuItemCLI> skuItemCLIsToBeRetained = new ArrayList<SkuItemCLI>();
+
+		Set<LineItem> lineItems = shippingOrder.getLineItems();
+		for (LineItem lineItem : lineItems) {
+			for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()) {
+				SkuItem skuItem = skuItemLineItem.getSkuItem();
+				if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())
+						|| skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+					skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+					skuItem = (SkuItem) getSkuItemDao().save(skuItem);
+					skuItemsToBeFreed.add(skuItem);
+					SkuItemCLI skuItemCLI = skuItemLineItem.getSkuItemCLI();
+					skuItemCLI.setSkuItemLineItems(null);
+					skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
+					skuItemCLIsToBeDeleted.add(skuItemCLI);
+					skuItemLineItemsToBeDeleted.add(skuItemLineItem);
+				}
+				else{
+					skuItemLineItemsToBeRetained.add(skuItemLineItem);
+					skuItemCLIsToBeRetained.add(skuItemLineItem.getSkuItemCLI());
+				}
+			}
+		}
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			CartLineItem cartLineItem = lineItem.getCartLineItem();
+			if(skuItemCLIsToBeRetained!=null && skuItemCLIsToBeRetained.size()>0){
+				cartLineItem.setSkuItemCLIs(skuItemCLIsToBeRetained);
+			}
+			else{
+				cartLineItem.setSkuItemCLIs(null);
+			}
+			cartLineItem = (CartLineItem) baseDao.save(cartLineItem);
+			if(skuItemLineItemsToBeRetained!=null && skuItemLineItemsToBeRetained.size()>0){
+				lineItem.setSkuItemLineItems(skuItemLineItemsToBeRetained);
+			}
+			else{
+				lineItem.setSkuItemLineItems(null);
+			}
+			lineItem.setCartLineItem(cartLineItem);
+			lineItem = (LineItem) baseDao.save(lineItem);
+		}
+		for (Iterator<SkuItemLineItem> iterator = skuItemLineItemsToBeDeleted.iterator(); iterator.hasNext();) {
+			SkuItemLineItem skuItemLineItem = (SkuItemLineItem) iterator.next();
+			baseDao.delete(skuItemLineItem);
+			iterator.remove();
+		}
+		for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext();) {
+			SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+			baseDao.delete(skuItemCLI);
+			iterator.remove();
+		}
+		return true;
+	}
 
     public SkuItemLineItem getBySkuItemId(Long skuItemId){
     	return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);

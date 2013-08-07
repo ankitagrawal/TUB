@@ -6,6 +6,7 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus"%>
 <%@ page import="com.hk.pact.dao.MasterDataDao"%>
 <%@ page import="com.hk.web.HealthkartResponse"%>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 
@@ -18,15 +19,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
   <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-
-  <script type="text/javascript">
-    $(document).ready(function() {
-    	var context = '${pageContext.request.contextPath}';
-    	$('#bookingIdButton').click(function(){
-    		window.open(context+"/close.jsp", '_self');
-    	});
-    });
-    </script>
 
 	</s:layout-component>
 
@@ -140,7 +132,12 @@
 		</c:if>
 		
 		<s:form beanclass="com.hk.web.action.admin.booking.AdminBookingAction" id="closeForm">
+		<s:hidden name="shippingOrderId" value="${adminBookingBean.shippingOrderId}"/>
+		<s:hidden name="baseOrderId" value="${adminBookingBean.baseOrderId}"/>
 		<s:submit id="bookingIdButton" class="button_green addToCartButton" name="closeWindow" value="Close"/>
+		<shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+		<s:submit id="bookingIdButton" class="button_green addToCartButton" name="freeBookingTable" value="Free Bookings"/>
+		</shiro:hasAnyRoles>
 		</s:form>
 		
 	</s:layout-component>
