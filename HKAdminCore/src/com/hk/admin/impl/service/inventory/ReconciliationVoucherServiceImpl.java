@@ -5,17 +5,26 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
+import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.ReconciliationVoucherParser;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationType;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.SkuItemOwner;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.accounting.DebitNote;
@@ -24,18 +33,23 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -82,6 +96,16 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
   SkuService skuService;
   @Autowired
   private ProductVariantService productVariantService;
+  @Autowired
+  SkuItemLineItemService skuItemLineItemService;
+  @Autowired
+  SkuItemLineItemDao skuItemLineItemDao;
+  @Autowired
+  ShippingOrderService shippingOrderService;
+  @Autowired
+  AdminShippingOrderService adminShippingOrderService;
+  @Autowired
+  AdminOrderService adminOrderService;
 
   @Transactional
   public void reconcileAddRV(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher) {
@@ -359,6 +383,82 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
   public DebitNote getDebitNote(ReconciliationVoucher reconciliationVoucher) {
     return (DebitNote) reconciliationVoucherDao.getDebitNote(reconciliationVoucher);
   }
+  
+  @Override
+	public void validateSkuItem(SkuItem skuItem) {
+		User loggedOnUser = userService.getLoggedInUser();
+		SkuItemCLI skuItemCLI = skuItemLineItemDao.getSkuItemCLI(skuItem);
+		SkuItemLineItem skuItemLineItem = skuItemLineItemDao.getSkuItemLineItem(skuItem);
 
+		List<Sku> skuList = new ArrayList<Sku>();
+		List<Long> skuStatusIdList = new ArrayList<Long>();
+		List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 
+		skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+
+		skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+		if (skuItemLineItem != null) {
+			LineItem item = skuItemLineItem.getLineItem();
+			skuList.add(item.getSku());
+			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+			// Free this skuitem
+			skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+			skuItem = (SkuItem) baseDao.save(skuItem);
+			SkuItemCLI cli = skuItemLineItem.getSkuItemCLI();
+			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0 && !availableUnbookedSkuItems.get(0).equals(skuItem)) {
+				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
+				// if got any siblings - set it on the entries in the booking
+				// table
+				cli.setSkuItem(skuItemToBeSet);
+				cli = (SkuItemCLI) baseDao.save(cli);
+				skuItemLineItem.setSkuItem(skuItemToBeSet);
+				skuItemLineItem.setSkuItemCLI(cli);
+				skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
+				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
+						EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(), null,
+						"The already booked unit has been freed for RV subtract and a new unit has been booked for variant:- "
+								+ item.getSku().getProductVariant());
+				logger.debug("got a sibling - set it on the entries in the booking table against SkuItem:- " + skuItem.getId());
+			} else {
+				// when there was no sibling for this skuitem, the entries need
+				// to be deleted. SO moved back to action awaiting.
+				baseDao.delete(cli);
+				baseDao.delete(skuItemLineItem);
+				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder());
+				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
+						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(), null,
+						"The already booked unit has been freed for RV subtract and no spare unit could be found for variant:- "
+								+ item.getSku().getProductVariant() + ". Moving back to Action Queue");
+				logger.debug("could not get a sibling to set on the entries in the booking table against SkuItem:- " + skuItem.getId()
+						+ " deleted the entries from the booking table.");
+			}
+		}
+
+		if (skuItemLineItem == null && skuItemCLI != null) {
+			CartLineItem cartLineItem = skuItemCLI.getCartLineItem();
+			skuList.add(skuItemCLI.getSkuItem().getSkuGroup().getSku());
+			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+			skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+			skuItem = (SkuItem) baseDao.save(skuItem);
+			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
+				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
+				skuItemCLI.setSkuItem(skuItemToBeSet);
+				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+				adminOrderService.logOrderActivity(
+						cartLineItem.getOrder(),
+						loggedOnUser,
+						EnumOrderLifecycleActivity.LoggedComment.asOrderLifecycleActivity(),
+						"The already booked unit has been freed for RV subtract and a new unit has been booked for variant:- "
+								+ cartLineItem.getProductVariant());
+			} else {
+				baseDao.delete(skuItemCLI);
+				adminOrderService.logOrderActivity(
+						cartLineItem.getOrder(),
+						loggedOnUser,
+						EnumOrderLifecycleActivity.LoggedComment.asOrderLifecycleActivity(),
+						"The already booked unit has been freed for RV subtract and no spare unit could be found for variant:- "
+								+ cartLineItem.getProductVariant());
+			}
+		}
+	}
 }

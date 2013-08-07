@@ -11,6 +11,9 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.warehouse.WarehouseDao;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.criterion.*;
@@ -18,6 +21,7 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,13 +82,13 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 	}
 
 
-	private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+	private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
 		DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
 		if (skuGroup != null) {
 			skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
 		}
-		if (skuItemStatus != null) {
-			skuItemCriteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
+		if (skuItemStatus != null && skuItemStatus.size()>0) {
+			skuItemCriteria.add(Restrictions.in("skuItemStatus", skuItemStatus));
 		}
 		return skuItemCriteria;
 	}
@@ -94,7 +98,17 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		if (skuGroup == null) {
 			return new ArrayList<SkuItem>();
 		}
-		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		List<SkuItemStatus> itemStatus = new ArrayList<SkuItemStatus>();
+		itemStatus.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, itemStatus);
+		return findByCriteria(skuItemCriteria);
+	}
+	
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
+		if (skuGroup == null) {
+			return new ArrayList<SkuItem>();
+		}
+		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus);
 		return findByCriteria(skuItemCriteria);
 	}
 
@@ -105,7 +119,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
 		return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
 	}
-
+	
 	public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
 		String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
 		if (statusId != null) {

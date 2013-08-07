@@ -20,6 +20,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -94,14 +95,13 @@ public interface AdminInventoryService {
 
     public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
 
-    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant, List<SkuItemStatus> skuItemStatus, List<SkuItemOwner> itemOwners);
 
     public void deleteInventory(GrnLineItem grnLineItem);
 
     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem);
 
     public List<SkuGroup> getSkuGroupsInReviewState();
-
 
     public boolean checkoutMethod(LineItem lineItem, SkuItem skuItem);
 

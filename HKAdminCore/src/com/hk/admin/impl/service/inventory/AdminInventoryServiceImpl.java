@@ -623,8 +623,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem, stockTransferLineItem, grnLineItem, lineItem, transferQty);
 	}
 
-	public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant) {
-		return adminPVIDao.getCheckedInSkuGroup(brand, warehouse, product, productVariant);
+	public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners) {
+		return adminPVIDao.getCheckedInSkuGroup(brand, warehouse, product, productVariant, itemStatus, itemOwners);
 	}
 
 	private void deletePVIBySkuItem(List<SkuItem> skuItemList) {
