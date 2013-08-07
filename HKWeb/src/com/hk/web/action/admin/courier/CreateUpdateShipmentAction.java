@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -121,6 +122,7 @@ import java.util.List;
             }
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                shipment.setShipmentCostCalculateDate(new Date());
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
             }

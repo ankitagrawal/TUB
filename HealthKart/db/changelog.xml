@@ -13923,5 +13923,14 @@
 			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		</sql>
 	</changeSet>
-
+    <changeSet author="Pratham (generated)" id="2013-08-05-01">
+        <addColumn tableName="shipment">
+            <column name="order_placed_shipment_charge" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-08-05-02">
+        <addColumn tableName="shipment">
+            <column name="shipment_cost_calculate_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
