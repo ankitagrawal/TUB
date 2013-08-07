@@ -5,6 +5,7 @@ import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
+import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import com.hk.domain.payment.PaymentHistory;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -30,5 +31,9 @@ public interface PurchaseInvoiceService {
 	public PurchaseInvoice getPurchaseInvoiceById(Long purchaseInvoiceId);
 	
 	public DebitNote getDebitNote(PurchaseInvoice purchaseInvoice);
+	
+	public List<PurchaseInvoice> getPurchaseInvoicesCorrespondingToThisPI(PurchaseInvoice purchaseInvoice);
+	
+	public boolean otherCorrespondingPIsContainThisEILI(PurchaseInvoice invoice, ExtraInventoryLineItem extraInventoryLineItem);
 
 }

@@ -5,15 +5,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.inventory.EnumReconciliationActionType;
-import com.hk.constants.order.EnumOrderLifecycleActivity;
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.core.PaymentStatus;
-import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
@@ -23,10 +19,10 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +55,8 @@ public class ShippingOrderAction extends BaseAction {
 
     private ReplacementOrderReason rtoReason;
 
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
+
     private String customerSatisfyReason;
 
     //@Validate(required = true)
@@ -76,7 +74,7 @@ public class ShippingOrderAction extends BaseAction {
         if (isWarehouseUpdated) {
             responseMsg = "Warehouse Flipped";
         } else {
-            responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot be updated.";
+            responseMsg = " Either All products not available in other warehouse or sku for all products are not available , so cannot be updated.";
         }
         addRedirectAlertMessage(new SimpleMessage(responseMsg));
         return new ForwardResolution("/pages/admin/order/flipShippingOrder.jsp");
@@ -162,7 +160,7 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution manualEscalateShippingOrder() {
-        shippingOrderService.manualEscalateShippingOrder(shippingOrder);
+    	shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
@@ -171,7 +169,7 @@ public class ShippingOrderAction extends BaseAction {
 
     @JsonHandler
     public Resolution autoEscalateShippingOrder() {
-        shippingOrderService.autoEscalateShippingOrder(shippingOrder, firewall);
+    	shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, firewall);
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
@@ -185,7 +183,7 @@ public class ShippingOrderAction extends BaseAction {
         shippingOrderSearchCriteria.setDropShipping(false);
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
-            shippingOrderService.automateManualEscalation(toBeEscalateShippingOrder);
+        	shippingOrderProcessor.automateManualEscalation(toBeEscalateShippingOrder);
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
@@ -245,4 +243,5 @@ public class ShippingOrderAction extends BaseAction {
     public void setReconciliationType(Long reconciliationType) {
         this.reconciliationType = reconciliationType;
     }
+    
 }

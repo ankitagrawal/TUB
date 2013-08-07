@@ -364,7 +364,9 @@ public class PricingEngine {
                 // }
             }
 
-            if (offerInstance != null && offerInstance.getOffer().getOfferIdentifier() != null
+            // Ajeet - Disabling the offer. Now it should award 5% additional discount.
+            // Upto the purchase of 5000p.m. - Need to implement
+            /*if (offerInstance != null && offerInstance.getOffer().getOfferIdentifier() != null
                     && offerInstance.getOffer().getOfferIdentifier().equals(OfferConstants.HK_EMPLOYEE_OFFER)) {
                 for (CartLineItem lineItem : lineItems) {
                     if (lineItem.isType(EnumCartLineItemType.Product)) {
@@ -409,7 +411,7 @@ public class PricingEngine {
                         lineItem.setDiscountOnHkPrice(lineItem.getHkPrice());
                     }
                 }
-            }
+            }*/
 
             if (!offerActionSuccess)
                 break;

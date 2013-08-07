@@ -12,6 +12,7 @@ import com.hk.db.seed.marketing.ProductReferrerSeedData;
 import com.hk.db.seed.order.*;
 import com.hk.db.seed.payment.PaymentModeSeedData;
 import com.hk.db.seed.payment.PaymentStatusSeedData;
+import com.hk.db.seed.reversePickup.ReversePickupStatusSeedData;
 import com.hk.db.seed.reward.ReviewStatusSeedData;
 import com.hk.db.seed.reward.RewardPointModeSeedData;
 import com.hk.db.seed.reward.RewardPointStatusSeedData;
@@ -148,6 +149,8 @@ public class MasterDataService {
 	DebitNoteTypeSeedData debitNoteTypeSeedData;
 	@Autowired
 	PurchaseOrderTypeSeedData purchaseOrderTypeSeedData;
+    @Autowired
+    ReversePickupStatusSeedData reversePickupStatusSeedData;
 	
 
 	public void insert() {
@@ -327,5 +330,8 @@ public class MasterDataService {
 		
 		logger.debug("inserting Purchase Order type");
 		purchaseOrderTypeSeedData.invokeInsert();
+
+        logger.debug("inserting Reverse Pickup Status");
+        reversePickupStatusSeedData.invokeInsert();
 	}
 }

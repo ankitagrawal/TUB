@@ -173,11 +173,18 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
-                    <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek_sports.jpg"
-                         alt="Brand Of the Week - Gaspari Nutrition!"
+                <a href="${pageContext.request.contextPath}/product/twinlab-100-whey-protein-fuel/NUT1264?productReferrerId=13&productPosition=1/1">
+                    <img src="${pageContext.request.contextPath}/images/banners/Twinlab_Static.jpg"
+                         alt="Twinlab Sale"
                          class="small_banner"/>
                 </a>
+              <script type="text/javascript">
+                $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
+                $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                $(".bulkOrder").click(function() {
+                  $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                });
+              </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
                 <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
