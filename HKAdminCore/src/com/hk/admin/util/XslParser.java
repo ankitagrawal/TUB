@@ -816,7 +816,8 @@ public class XslParser {
                     }
                 }
                 shipment.setEstmCollectionCharge(collectionChargeFromExcel);
-                shipment.setEstmShipmentCharge(shippingChargeFromExcel);
+                //estimated shipping cost will always be calculated via system
+//                shipment.setEstmShipmentCharge(shippingChargeFromExcel);
                 shipment.setExtraCharge(extraCharges);
                 getShipmentService().save(shipment);
             }
