@@ -305,7 +305,7 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
 
-        if (!EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getId())) {
+        if (!EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
 
             User loggedOnUser = getUserService().getLoggedInUser();
 
