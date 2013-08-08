@@ -33,4 +33,6 @@ public interface SkuItemLineItemService {
     
     public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
     
+    public Boolean freeBookingTable(ShippingOrder shippingOrder);
+    
 }
