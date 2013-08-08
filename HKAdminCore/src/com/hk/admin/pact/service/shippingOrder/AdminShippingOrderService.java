@@ -57,4 +57,5 @@ public interface AdminShippingOrderService {
 	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReason);
 
 	public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder order1, ShippingOrder order2);
+	
 }

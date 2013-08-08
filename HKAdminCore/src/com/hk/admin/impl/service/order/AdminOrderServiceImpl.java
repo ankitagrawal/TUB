@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationActionType;
@@ -15,6 +14,10 @@ import com.hk.constants.payment.EnumGateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.PaymentService;
 import org.joda.time.DateTime;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,6 +180,23 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             } else {
                 Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
                 for (CartLineItem cartLineItem : cartLineItems) {
+                    List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+                    List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+                    List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+                    for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
+                        SkuItem skuItem = skuItemCLI.getSkuItem();
+                        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                        skuItemsToBeFreed.add(skuItem);
+                        if(skuItemCLI.getSkuItemLineItems()!=null){
+                        	skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
+                        }
+                    }
+                    skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());
+                    lineItemDao.saveOrUpdate(skuItemsToBeFreed);
+                    cartLineItem.setSkuItemCLIs(null);
+                    cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
+                    lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
+                    lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
                     inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
                 }
             }

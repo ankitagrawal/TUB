@@ -8,6 +8,7 @@ import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.reversePickup.EnumReverseActionOnStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
@@ -164,7 +165,7 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                 ShippingOrder shippingOrder = rpLineItem.getLineItem().getShippingOrder();
                 /*add invn checkIn entry in PVI*/
                 adminInvService.inventoryCheckinCheckout(sku, skuItem, rpLineItem.getLineItem(), shippingOrder, null, null, null,
-                        EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), 1l, user);
+                  EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), 1l, user);
                 saveRpLineItem(rpLineItem);
             }
         }

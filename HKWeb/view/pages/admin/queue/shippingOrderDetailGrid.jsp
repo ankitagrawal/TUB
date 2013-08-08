@@ -252,7 +252,11 @@
             </s:link>)
             </c:if>
         </shiro:hasPermission>
-
+			&nbsp;&nbsp;(
+						<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="getSkuItemLineItems" target="_blank">
+							<s:param name="shippingOrderId" value="${shippingOrder.id}" />
+                    Booking Status
+                </s:link>)
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction" class="editSO">
@@ -771,6 +775,12 @@
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </c:if>
+    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" target="_blank" event="validateSO">
+        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+        [Validate SO]
+      </s:link>
+</shiro:hasAnyRoles>
 </td>
 <c:if test="${isServiceQueue== true}">
     <td>
@@ -782,6 +792,7 @@
         </c:if>
     </td>
 </c:if>
+
 </c:forEach>
 </tr>
 </table>
