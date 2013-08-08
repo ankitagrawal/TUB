@@ -1319,4 +1319,26 @@
       ${hk:countLineItemQty(${shipingOrder})}
     </example>
   </function>
+    <function>
+        <description>
+            returns if Freebie offer should be shown
+        </description>
+        <name>showFreebie</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.catalog.product.Product showFreebie(com.hk.domain.catalog.product.Product)</function-signature>
+        <example>
+            ${hk:showFreebie(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns if Freebie offer should be shown
+        </description>
+        <name>showFreebieForVariant</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.catalog.product.Product showFreebieForVariant(com.hk.domain.catalog.product.ProductVariant)</function-signature>
+        <example>
+            ${hk:showFreebie(${product})}
+        </example>
+    </function>
 </taglib>
