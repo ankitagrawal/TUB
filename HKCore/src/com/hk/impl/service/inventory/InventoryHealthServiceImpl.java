@@ -744,6 +744,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
           ProductVariant productVariant = cartLineItem.getProductVariant();
 
           // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
+
 //                    List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
           List<Sku> skus = new ArrayList<Sku>();
           Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
@@ -753,6 +754,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
           if (availableUnBookedInventory > 0) {
             // picking the  sku for current MRP available at max qty on product variant
 //            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+
             long qtyToBeSet = cartLineItem.getQty();
             //long availableCheckedInInventory = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).size();
             if (availableUnBookedInventory >= qtyToBeSet) {
@@ -760,6 +762,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
               for (int i = 0; i < qtyToBeSet; i++) {
                 List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, cartLineItem.getMarkedPrice());
+
                 if (skuItemList != null && skuItemList.size() > 0) {
                   SkuItem skuItem = skuItemList.get(0);
                   skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());

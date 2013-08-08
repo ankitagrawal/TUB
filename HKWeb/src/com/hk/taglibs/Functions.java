@@ -418,6 +418,12 @@ public class Functions {
         return adminSkuItemDao.getInStockSkuItems((SkuGroup) o);
     }
 
+
+    public static List<SkuItem> getNetPhysicalAvailableStockSkuItems(Object o) {
+        AdminSkuItemDao adminSkuItemDao = ServiceLocatorFactory.getService(AdminSkuItemDao.class);
+        return adminSkuItemDao.getNetPhysicalAvailableStockSkuItems((SkuGroup) o);
+    }
+
     public static Long getComboCount(Object o1) {
 
         if (o1 != null) {

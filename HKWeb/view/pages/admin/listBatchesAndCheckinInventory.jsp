@@ -1,3 +1,6 @@
+<%@ taglib prefix="hk" uri="http://healthkart.com/taglibs/hkTagLib" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
@@ -24,7 +27,7 @@
       <c:choose>
         <c:when test="${!empty ica.availableSkuGroups}">
           <%--<h2>In-stock Batches and Units.</h2>--%>
-          Net Inventory (excluding store)= <strong>${hk:netInventoryAtServiceableWarehouses(ica.productVariant)}</strong>
+          Net Inventory (TEMPBOOK, BOOKED, CHECKED-IN) (excluding store)= <strong>${hk:netInventoryAtServiceableWarehouses(ica.productVariant)}</strong>
           <hr/>
           <table>
             <thead>
@@ -38,13 +41,15 @@
               <th>MRP</th>
               <th>Checkin Date</th>
               <th>Checked-In Units</th>
-              <th>In-stock Units</th>
+              <th> Net Physical Invn</th>
+              <th>Unbooked Units</th>
               <th></th>
 
             </tr>
             </thead>
             <c:forEach items="${ica.availableSkuGroups}" var="skuGroup" varStatus="ctr">
 	           <c:set var="batchInv" value="${fn:length(hk:getInStockSkuItems(skuGroup))}"/>
+               <c:set var="batchPhysicalInv" value="${fn:length(hk:getNetPhysicalAvailableStockSkuItems(skuGroup))}"/>
 	              <c:choose>
 		              <c:when test="${batchInv > 0 && skuGroup.mrp < ica.productVariant.markedPrice}">
 			              <tr style="background:lightpink">
@@ -76,6 +81,7 @@
 	            <td>${skuGroup.mrp}</td>
                 <td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
                 <td>${fn:length(skuGroup.skuItems)}</td>
+                <td> ${batchPhysicalInv}</td>
 	            <td>${batchInv}</td>
 	            <td>
 		            <shiro:hasRole name="<%=RoleConstants.GOD%>">
@@ -126,7 +132,8 @@
               <th>Checked-In Units <br/>
                 <span class="sml gry">0 means deleted all SKUs to adjust inventory</span>
               </th>
-              <th>In-stock Units</th>
+              <th>Net Physical units</th>
+              <th>Available Unbooked Units</th>
 
 
             </tr>
@@ -155,6 +162,7 @@
 	            <td>${skuGroup.mrp}</td>
                 <td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
                 <td>${fn:length(skuGroup.skuItems)}</td>
+                <td>${fn:length(hk:getNetPhysicalAvailableStockSkuItems(skuGroup))}</td>
                 <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
               </tr>
             </c:forEach>
