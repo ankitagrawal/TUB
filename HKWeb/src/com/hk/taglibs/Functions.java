@@ -935,7 +935,8 @@ public class Functions {
                   if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
                       ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
                       if(freeProductVariant != null){
-                          if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+//                          if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+                          if(!(freeProductVariant.isOutOfStock())){
                               return freeProductVariant.getProduct();
                           }
                        }
@@ -951,7 +952,8 @@ public class Functions {
             if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
                 ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
                 if(freeProductVariant != null){
-                    if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+//                    if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+                    if(!(freeProductVariant.isOutOfStock())){
                         return freeProductVariant.getProduct();
                     }
                 }
