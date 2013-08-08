@@ -164,7 +164,6 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         SkuGroup skuGroup = null;
         if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
           // Create batch and checkin inv
-//                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
           skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
           adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, invTxnType, loggedOnUser);
           rvLineItem.setSkuGroup(skuGroup);
@@ -175,8 +174,6 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         // Add PVI Entry with -1  and  set sku item status to expired
         if ((additionType.intValue()) == (EnumReconciliationType.AddExpired.getId().intValue())) {
           for (SkuItem skuItem : skuGroup.getSkuItems()) {
-//                        adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
-//                                EnumInvTxnType.RV_ADD_EXPIRED_AUTOMATIC_DELETION.asInvTxnType(), -1L, userService.getLoggedInUser());
             adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null, EnumSkuItemStatus.Expired, EnumSkuItemOwner.SELF,
                 EnumInvTxnType.RV_ADD_EXPIRED_AUTOMATIC_DELETION.asInvTxnType(), -1L, userService.getLoggedInUser());
 
@@ -185,34 +182,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
             skuGroupService.saveSkuItem(skuItem);
           }
         }
-
         // Check inventory health now.
         inventoryService.checkInventoryHealth(rvLineItem.getSku().getProductVariant());
       }
     }
   }
-
-  public ProductVariantService getProductVariantService() {
-    return productVariantService;
-  }
-
-  public void setProductVariantService(ProductVariantService productVariantService) {
-    this.productVariantService = productVariantService;
-  }
-
-  public BaseDao getBaseDao() {
-    return baseDao;
-  }
-
-  public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher) {
-    return (ReconciliationVoucher) baseDao.save(reconciliationVoucher);
-
-  }
-
-  public void delete(ReconciliationVoucher reconciliationVoucher) {
-    getBaseDao().delete(reconciliationVoucher);
-  }
-
 
   public RvLineItem createRVLineItemWithBasicDetails(SkuGroup skuGroup, Sku sku) {
     RvLineItem rvLineItem = new RvLineItem();
@@ -327,6 +301,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
 
     rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
+    validateSkuItem(skuItem);
     if (skuItemStatus != null) {
       EnumSkuItemStatus enumSkuItemStatus = EnumSkuItemStatus.getSkuItemStatusById(skuItemStatus.getId());
       if (enumSkuItemStatus != null) {
@@ -336,11 +311,6 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
       }
     }
 
-//               if (skuItemStatus != null) {
-//            skuItem.setSkuItemStatus(skuItemStatus);
-//            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-//        }
-//        skuItem = skuGroupService.saveSkuItem(skuItem);
     if (reconciliationType.getId().equals(EnumReconciliationType.SubtractDamage.getId())) {
       adminInventoryService.damageInventoryCheckin(skuItem, null);
     }
@@ -363,19 +333,14 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     for (int i = 0; i < deleteQty; i++) {
       SkuItem skuItem = inStockSkuItems.get(i);
       //Delete -1 entry in PVI
+      validateSkuItem(skuItem);
       adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItemSaved, null, EnumSkuItemStatus.ProductVariantAudited, EnumSkuItemOwner.SELF,
           inventoryService.getInventoryTxnType(EnumInvTxnType.PRODUCT_VARIANT_AUDITED), -1L, loggedOnUser);
 
-      //set sku item status to Product_variant_ Audited
-//      skuItem.setSkuItemStatus(EnumSkuItemStatus.ProductVariantAudited.getSkuItemStatus());
-//      skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-//      skuItem = skuGroupService.saveSkuItem(skuItem);
     }
 
     // Check inventory health now.
     inventoryService.checkInventoryHealth(sku.getProductVariant());
-    //save RvLine item
-
     return rvLineItemSaved;
   }
 
@@ -401,9 +366,6 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 			LineItem item = skuItemLineItem.getLineItem();
 			skuList.add(item.getSku());
 			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
-			// Free this skuitem
-			skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-			skuItem = (SkuItem) baseDao.save(skuItem);
 			SkuItemCLI cli = skuItemLineItem.getSkuItemCLI();
 			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0 && !availableUnbookedSkuItems.get(0).equals(skuItem)) {
 				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
@@ -422,8 +384,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 			} else {
 				// when there was no sibling for this skuitem, the entries need
 				// to be deleted. SO moved back to action awaiting.
-				baseDao.delete(cli);
 				baseDao.delete(skuItemLineItem);
+				baseDao.delete(cli);
 				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder());
 				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
 						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(), null,
@@ -438,8 +400,6 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 			CartLineItem cartLineItem = skuItemCLI.getCartLineItem();
 			skuList.add(skuItemCLI.getSkuItem().getSkuGroup().getSku());
 			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
-			skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-			skuItem = (SkuItem) baseDao.save(skuItem);
 			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
 				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
 				skuItemCLI.setSkuItem(skuItemToBeSet);
@@ -461,4 +421,27 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 			}
 		}
 	}
+  
+
+  public ProductVariantService getProductVariantService() {
+    return productVariantService;
+  }
+
+  public void setProductVariantService(ProductVariantService productVariantService) {
+    this.productVariantService = productVariantService;
+  }
+
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
+
+  public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher) {
+    return (ReconciliationVoucher) baseDao.save(reconciliationVoucher);
+
+  }
+
+  public void delete(ReconciliationVoucher reconciliationVoucher) {
+    getBaseDao().delete(reconciliationVoucher);
+  }
+
 }

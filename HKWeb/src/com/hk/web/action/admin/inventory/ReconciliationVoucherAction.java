@@ -237,6 +237,13 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 
 	public Resolution SubtractReconciled() {
+		List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 		SkuItem skuItem = null;
 		if (reconciliationVoucher == null) {
 			addRedirectAlertMessage(new SimpleMessage("Invalid Reconcilliation "));
@@ -252,12 +259,11 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 		if (getPrincipal() != null) {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
-		SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),
-				EnumSkuItemStatus.Checked_IN.getId());
+		SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwnerList);
 		if (skuItemBarcode != null) {
 			skuItem = skuItemBarcode;
 		} else {
-			List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser());
+			List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser(), skuItemStatusList, skuItemOwnerList);
 			if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
 				skuItem = inStockSkuItemList.get(0);
 			}

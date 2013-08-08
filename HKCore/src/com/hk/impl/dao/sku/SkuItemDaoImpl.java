@@ -1,5 +1,6 @@
 package com.hk.impl.dao.sku;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -159,8 +160,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
 
 	public List<SkuItem> getCheckedInSkuItems(Sku sku) {
-		String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
-		Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
+		List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+        
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+        
+		String sql = "from SkuItem si where  si.skuItemStatus in :skuItemStatusList and si.skuItemOwner in (:skuItemOwnerList) and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
+		Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameterList("skuItemStatusList", skuItemStatusList).setParameterList("skuItemOwnerList", skuItemOwnerList);
 		return query.list();
 	}
 
@@ -373,17 +382,4 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
            List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
            return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
        }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -7,6 +7,8 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -288,6 +290,14 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
         String query = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse " +
                 " and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() + " order by si.id ";
         return findByNamedParams(query, new String[]{"barcode", "warehouse"}, new Object[]{barcode, warehouse});
+    }
+    
+    @Override
+    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners) {
+    	String query = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse " +
+                " and si.skuItemStatus in :itemStatus and si.skuItemOwner in :itemOwners" +"order by si.id ";
+        return findByNamedParams(query, new String[]{"barcode", "warehouse", "itemStatus", "itemOwners"}, new Object[]{barcode, warehouse, itemStatus, itemOwners});
+    	
     }
 
 }

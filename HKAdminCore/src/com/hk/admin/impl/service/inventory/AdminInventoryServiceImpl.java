@@ -617,6 +617,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
 		return adminSkuItemDao.getInStockSkuItems(barcode, warehouse);
 	}
+	
+	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners){
+		return adminSkuItemDao.getInStockSkuItems(barcode, warehouse, itemStatus, itemOwners);
+	}
 
 	public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem,
 	                                               LineItem lineItem, Long transferQty) {
