@@ -756,7 +756,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
                             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
                             for (int i = 0; i < qtyToBeSet; i++) {
-                                List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice());
+                                List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, cartLineItem.getMarkedPrice());
                                 if (skuItemList != null && skuItemList.size() > 0) {
                                     SkuItem skuItem = skuItemList.get(0);
                                     skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
