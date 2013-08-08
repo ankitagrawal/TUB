@@ -13,6 +13,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.springframework.stereotype.Repository;
+import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -293,11 +294,25 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
     }
     
     @Override
-    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners) {
-    	String query = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse " +
-                " and si.skuItemStatus in :itemStatus and si.skuItemOwner in :itemOwners" +"order by si.id ";
-        return findByNamedParams(query, new String[]{"barcode", "warehouse", "itemStatus", "itemOwners"}, new Object[]{barcode, warehouse, itemStatus, itemOwners});
-    	
+    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners) {
+        String sql = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse ";
+        if (skuItemStatusList != null && skuItemStatusList.size() > 0) {
+            sql = sql + "and si.skuItemStatus  in (:skuItemStatusList) ";
+        }
+        if(skuItemOwners!=null &&skuItemOwners.size()>0){
+            sql = sql+ "and si.skuItemOwner in (:skuItemOwners)";
+        }
+        
+        sql+= " order by si.id";
+        Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouse", warehouse);
+        if (skuItemStatusList != null && skuItemStatusList.size() > 0) {
+            query.setParameterList("skuItemStatusList", skuItemStatusList);
+        }
+        if(skuItemOwners!=null &&skuItemOwners.size()>0){
+            query.setParameterList("skuItemOwners", skuItemOwners);
+        }
+
+        return query.list();
     }
 
 }
