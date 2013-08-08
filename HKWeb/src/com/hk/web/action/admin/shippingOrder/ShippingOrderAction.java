@@ -116,6 +116,11 @@ public class ShippingOrderAction extends BaseAction {
     @JsonHandler
     public Resolution cancelShippingOrder() {
         adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark, reconciliationType,false);
+        if (EnumShippingOrderStatus.SO_Cancelled.getId().equals(shippingOrder.getOrderStatus().getId())) {
+            addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please Try again Later!!!"));
+        }
         return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderGatewayId", shippingOrder.getGatewayOrderId());
     }
 
