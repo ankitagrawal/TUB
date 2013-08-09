@@ -20,14 +20,7 @@ public interface SkuService {
 	 * @return
 	 */
 	public Sku getSKU(ProductVariant productVariant, Warehouse warehouse);
-
-  // todo -- to be deleted
-	public Sku findSKU(ProductVariant productVariant, Warehouse warehouse);
-
-  // todo -- to be deleted -- and also deleted commented code in pricing engine
-	public Sku findMaxVATSKU(ProductVariant productVariant);
-
-	/**
+/**
 	 * this will return a list of all sku's (instance of product variant at multiple warehouses)
 	 *
 	 * @param productVariant

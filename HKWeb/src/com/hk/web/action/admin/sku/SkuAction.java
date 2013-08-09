@@ -75,7 +75,7 @@ public class SkuAction extends BaseAction {
 
   public Resolution saveNewSku() {
     if (sku.getProductVariant() != null) {
-      Sku skuInDB = skuService.findSKU(sku.getProductVariant(), sku.getWarehouse());
+      Sku skuInDB = skuService.getSKU(sku.getProductVariant(), sku.getWarehouse());
       if (skuInDB != null) {
         addRedirectAlertMessage(new SimpleMessage("This Product Variant in this warehouse already exists."));
         return new RedirectResolution(SkuAction.class);

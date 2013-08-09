@@ -91,17 +91,7 @@ public class SkuServiceImpl implements SkuService {
         return sku;
     }
 
-    public Sku findSKU(ProductVariant productVariant, Warehouse warehouse) {
-        Sku sku = getSkuDao().getSku(productVariant, warehouse);
-        return sku;
-    }
-
-    public Sku findMaxVATSKU(ProductVariant productVariant) {
-        Sku sku = getSkuDao().getMaxVATSku(productVariant);
-        return sku;
-    }
-
-    /**
+     /**
      * this will return a list of all sku's (instance of product variant at multiple warehouses)
      * 
      * @param productVariant
