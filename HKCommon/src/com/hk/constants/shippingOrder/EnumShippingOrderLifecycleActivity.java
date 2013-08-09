@@ -66,6 +66,7 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_LineItemCouldNotFixed(1002l, "SO Line Item could not be fixed"),
   SO_AUTO_PO_CREATED(1003l, "PO for SO created Automatically"),
   SO_PO_RECEIVED(1004l, "PO for SO Received"),
+  SO_ITEM_RV_SUBTRACT(1004l, "Item Replaced when original was RVed"),
   RewardPointOrderCancel(1005L,"Reward Point given on order cancellation"),
   AmountRefundedOrderCancel(1006L,"Amount Refunded on order cancellation"),
   RefundAmountFailed(1007L,"Refund Process on cancellation failed, Please contact tech support"),
