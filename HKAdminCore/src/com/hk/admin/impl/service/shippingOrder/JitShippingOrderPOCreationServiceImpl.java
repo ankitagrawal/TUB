@@ -224,19 +224,20 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
 
     public List<LineItem> getOnlyJitLineItems(List<LineItem> validLineItems) {
         List<LineItem> lineItemIsJitList = new ArrayList<LineItem>();
-        if (shippingOrders != null && shippingOrders.size() > 0) {
+        if (validLineItems != null && validLineItems.size() > 0) {
             for (LineItem lineItem : validLineItems) {
-                if (lineItem.getSku().getProductVariant().getProduct().getJit() && (lineItem.getSku().getProductVariant().getProduct().isDropShipping() == false)) {
+                if ((lineItem.getSku().getProductVariant().getProduct().isDropShipping() == false) && lineItem.getSku().getProductVariant().getProduct().getJit()) {
                     lineItemIsJitList.add(lineItem);
                 }
             }
         }
+        logger.debug("Number of only JIT line Items:- "+lineItemIsJitList.size());
         return lineItemIsJitList;
     }
 
     public List<LineItem> getOnlyDropShipLineItems(List<LineItem> validLineItems) {
         List<LineItem> lineItemIsDropShipList = new ArrayList<LineItem>();
-        if (shippingOrders != null && shippingOrders.size() > 0) {
+        if (validLineItems != null && validLineItems.size() > 0) {
             for (LineItem lineItem : validLineItems) {
                 if (lineItem.getSku().getProductVariant().getProduct().isDropShipping() == true) {
                     lineItemIsDropShipList.add(lineItem);
