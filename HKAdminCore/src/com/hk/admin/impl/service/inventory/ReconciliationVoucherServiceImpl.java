@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.ReconciliationVoucherParser;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -388,7 +389,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				baseDao.delete(cli);
 				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder());
 				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
-						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(), null,
+						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(), EnumReason.InsufficientUnbookedInventory.asReason(),
 						"The already booked unit has been freed for RV subtract and no spare unit could be found for variant:- "
 								+ item.getSku().getProductVariant() + ". Moving back to Action Queue");
 				logger.debug("could not get a sibling to set on the entries in the booking table against SkuItem:- " + skuItem.getId()

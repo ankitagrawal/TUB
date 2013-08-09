@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.constants.XslConstants;
 import com.hk.constants.sku.EnumSkuItemStatus;
@@ -430,7 +431,11 @@ public class CycleCountHelper {
 
     //Creating Cycle Count items For Batch Level and Item Level Barcode
     public void generateCycleCountItemsCombiningSkuGroupAndSkuItemScanning(CycleCount cycleCount, Map<Long, Integer> cycleCountPviMap, List<SkuGroup> skuGroupNeverScanned, Map<Long, Integer> missedSkuGroupSystemInventoryMap, File excelFile) {
-
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+        
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
         List<CycleCountItem> cycleCountItemListForRVSubtract = new ArrayList<CycleCountItem>();
         Map<SkuGroup, List<SkuItem>> scannedSkuItemsMapOriginal = populateScannedSkuItemsBySkuGroupMap(cycleCountItems);
@@ -448,7 +453,7 @@ public class CycleCountHelper {
                 //Item Level Scanning
                 skuGroup = cycleCountItem.getSkuItem().getSkuGroup();
                 if (scannedSkuItemsBySkuGroupMap.containsKey(skuGroup)) {
-                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
                     if (skuItemList != null) {
                         systemQty = skuItemList.size();
                     }
@@ -475,13 +480,17 @@ public class CycleCountHelper {
 
     private void filterBySkuItemAndSkuGroup(List<CycleCountItem> cycleCountItemListForRVSubtract, Map<SkuGroup, List<SkuItem>> scannedSkuItemsMapOriginal, List<SkuGroup> skuGroupNeverScanned,
                                             Map<Long, Integer> missedSkuGroupSystemInventoryMap,CycleCount cycleCount, File excelFile) {
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
         List<CycleCountItem> finalListOfCycleCountItemsList = new ArrayList<CycleCountItem>();
         for (CycleCountItem cycleCountItem : cycleCountItemListForRVSubtract) {
             SkuGroup skuGroup = cycleCountItem.getSkuGroup();
             if (scannedSkuItemsMapOriginal.containsKey(skuGroup)) {
                 //Item Scanned by Item Level Barcode
                 List<SkuItem> skuItemListShouldNotBeDeleted = scannedSkuItemsMapOriginal.get(skuGroup);
-                List<SkuItem> inStockSkuItem = skuGroupService.getInStockSkuItems(skuGroup);
+                List<SkuItem> inStockSkuItem = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
                 inStockSkuItem.removeAll(skuItemListShouldNotBeDeleted);
                 List<SkuItem> skuItemShouldBeDeleted = inStockSkuItem;
                 List<CycleCountItem> cycleCountItemListForDeletion = createCycleCountItemsForSkuItemsEligibleForDeletion(skuItemShouldBeDeleted, cycleCountItem);
@@ -505,7 +514,7 @@ public class CycleCountHelper {
                 finalListOfCycleCountItemsList.add(cycleCountItemAtSkUGroupLevel);
             } else {
                 //Sku Item which are never scanned in CC and whose item level barcode are generated
-                List<SkuItem> checkedInSkuItem = skuGroupService.getInStockSkuItems(skuGroup);
+                List<SkuItem> checkedInSkuItem = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
                 List<CycleCountItem> cycleCountItemListForDeletion = createCycleCountItemsForSkuItemsEligibleForDeletion(checkedInSkuItem, cycleCount);
                 finalListOfCycleCountItemsList.addAll(cycleCountItemListForDeletion);
             }
