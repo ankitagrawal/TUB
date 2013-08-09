@@ -341,13 +341,16 @@ public class CheckPaymentAction extends BaseAction {
                 User loggedOnUser = getUserService().getLoggedInUser();
                 try {
 
-                    paymentService.updatePayment(payment.getGatewayOrderId());
-                    getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                            getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-                    order.setConfirmationDate(new Date());
-                    orderService.save(order);
-                    orderService.sendEmailToServiceProvidersForOrder(order);
-                    addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+                    Payment updatedPayment = paymentService.updatePayment(payment.getGatewayOrderId());
+                    if (EnumHKPaymentStatus.SUCCESS.getId().equals(updatedPayment.getPaymentStatus().getId())) {
+
+                        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+                        order.setConfirmationDate(new Date());
+                        orderService.save(order);
+                        orderService.sendEmailToServiceProvidersForOrder(order);
+                        addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+                    }
 
                 } catch (HealthkartPaymentGatewayException e) {
 
@@ -381,7 +384,7 @@ public class CheckPaymentAction extends BaseAction {
                             getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
                     order.setConfirmationDate(new Date());
                     orderService.save(order);
-//              orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+//                  orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
                     orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
                     addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
