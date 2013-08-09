@@ -210,7 +210,7 @@
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
                 <a href="${pageContext.request.contextPath}/personal-care">
-                <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
+                <img src="<hk:vhostImage/>/images/banners/Goodnightcategory1.jpg" alt="self-defence"
                      class="small_banner"/>
                 <%--</a>--%>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
