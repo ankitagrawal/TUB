@@ -7,12 +7,15 @@ import com.hk.domain.sku.*;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,10 +40,6 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
   public List<SkuGroup> getAllCheckedInBatches(Sku sku) {
     return skuGroupDao.getAllCheckedInBatches(sku);
-  }
-
-  public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
-    return skuGroupDao.getInStockSkuGroup(barcode, warehouseId);
   }
 
   public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds) {
@@ -76,11 +75,6 @@ public class SkuGroupServiceImpl implements SkuGroupService {
   /**
    * SkuItemDao Methods *
    */
-
-  public List<SkuGroup> getInStockSkuGroups(Sku sku) {
-    return skuItemDao.getInStockSkuGroups(sku);
-  }
-
   public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
     return skuItemDao.getInStockSkuItems(skuGroup);
   }
@@ -122,14 +116,16 @@ public class SkuGroupServiceImpl implements SkuGroupService {
   }
 
   public List<SkuItem> getCheckedInSkuItems(Sku sku) {
-    return skuItemDao.getCheckedInSkuItems(sku);
+    return skuItemDao.getSkuItems(Arrays.asList(sku),
+        EnumSkuItemStatus.getCheckedInPlusBookedStatus(),
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null);
   }
 
   public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn) {
     return skuGroupDao.getAllCheckedInBatchForGrn(grn);
   }
 
-  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp) {
+  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<Long> skuItemOwners, Double mrp) {
     return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners, mrp);
   }
 

@@ -293,11 +293,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		for (LineItem item : lineItems) {
 			List<Sku> skuList = new ArrayList<Sku>();
 			List<Long> skuStatusIdList = new ArrayList<Long>();
-			List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
-
+			List<Long> skuItemOwnerList = new ArrayList<Long>();
 			skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
 			skuList.add(item.getSku());
-			skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+			skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 
 			// When CLI and LI are empty
 			if (item.getCartLineItem().getSkuItemCLIs() == null

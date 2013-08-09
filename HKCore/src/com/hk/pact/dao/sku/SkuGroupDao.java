@@ -16,8 +16,6 @@ public interface SkuGroupDao extends BaseDao {
 
   public List<SkuGroup> getAllCheckedInBatches(Sku sku);
 
-  public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId);
-
   public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds);
 
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);

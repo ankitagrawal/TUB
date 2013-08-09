@@ -23,8 +23,6 @@ public interface SkuGroupService {
 
   public List<SkuGroup> getAllCheckedInBatches(Sku sku);
 
-  public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId);
-
   public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds);
 
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
@@ -45,10 +43,6 @@ public interface SkuGroupService {
   /**
    * SkuItemDao Methods *
    */
-
-  //TODO: Need to refractor it;  logic doesn't make sense
-  public List<SkuGroup> getInStockSkuGroups(Sku sku);
-
   public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
   public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
@@ -75,6 +69,6 @@ public interface SkuGroupService {
    * @param skuItemOwners
    * @return
    */
-  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp);
+  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<Long> skuItemOwners, Double mrp);
 
 }

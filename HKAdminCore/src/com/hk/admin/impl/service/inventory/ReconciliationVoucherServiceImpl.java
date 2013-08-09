@@ -358,11 +358,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
 		List<Sku> skuList = new ArrayList<Sku>();
 		List<Long> skuStatusIdList = new ArrayList<Long>();
-		List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+		List<Long> skuItemOwnerList = new ArrayList<Long>();
 
 		skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
 
-		skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+		skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 		if (skuItemLineItem != null) {
 			LineItem item = skuItemLineItem.getLineItem();
 			skuList.add(item.getSku());

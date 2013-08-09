@@ -147,7 +147,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 			for (LineItem lineItem : lineItems) {
 				toSkuList.clear();
 				toSkuList.add(getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse));
-				List<SkuItem> skuItemList = getSkuItemDao().getSkuItems(toSkuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), lineItem.getMarkedPrice());
+				List<SkuItem> skuItemList = getSkuItemDao().getSkuItems(toSkuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), lineItem.getMarkedPrice());
 				if (skuItemList != null && skuItemList.size() >= lineItem.getQty()) {
 					lineItem.setSku(toSkuList.get(0));
 				} else {

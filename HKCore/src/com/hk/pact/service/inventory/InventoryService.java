@@ -1,7 +1,6 @@
 package com.hk.pact.service.inventory;
 
 import com.hk.constants.inventory.EnumInvTxnType;
-import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -34,8 +33,6 @@ public interface InventoryService {
   public Long getAvailableUnbookedInventory(Sku sku, Double mrp);                               
 
   public Long getAllowedStepUpInventory(ProductVariant productVariant);
-
-  public Supplier getSupplierForSKU(Sku sku);
 
   public boolean allInventoryCheckedIn(GoodsReceivedNote grn);
 

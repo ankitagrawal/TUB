@@ -169,13 +169,6 @@ public class InventoryServiceImpl implements InventoryService {
     return true;
   }
 
-
-  @Override
-  public Supplier getSupplierForSKU(Sku sku) {
-    List<SkuGroup> availableSkuGroups = skuGroupService.getInStockSkuGroups(sku);
-    return (availableSkuGroups != null && !availableSkuGroups.isEmpty()) ? availableSkuGroups.get(0).getGoodsReceivedNote().getPurchaseOrder().getSupplier() : null;
-  }
-
   //Migrated from Inventory Manage Service
   //     Make Entries in new SkuItemCLI  table
     public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem) {
@@ -210,7 +203,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
 
-        List<Long> statusIds = EnumSkuItemStatus.getSkuItemStatusIDs(EnumSkuItemStatus.getStatusForNetPhysicalInventory());
+        List<Long> statusIds = EnumSkuItemStatus.getCheckedInPlusBookedStatus(); 
         // considering Checcked in , temp booked , booked ie physical inventory
         Long netInventory = inventoryManageDao.getInventoryCount(skuList, statusIds);
 

@@ -30,19 +30,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   @Autowired
   WarehouseDao warehouseDao;
 
-
-  public List<SkuGroup> getInStockSkuGroups(Sku sku) {
-    String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
-        " and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc ";
-    List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
-    //List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
-
-    if (skuGroupList == null) {
-      skuGroupList = new ArrayList<SkuGroup>(0);
-    }
-    return skuGroupList;
-  }
-
   private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
     DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
     if (skuGroup != null) {
@@ -113,33 +100,19 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
   }
 
-
-  public List<SkuItem> getCheckedInSkuItems(Sku sku) {
-    List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
-    skuItemStatusList.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-    skuItemStatusList.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-    skuItemStatusList.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-
-    List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
-    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-
-    String sql = "from SkuItem si where  si.skuItemStatus in :skuItemStatusList and si.skuItemOwner in (:skuItemOwnerList) and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
-    Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameterList("skuItemStatusList", skuItemStatusList).setParameterList("skuItemOwnerList", skuItemOwnerList);
-    return query.list();
-  }
-
-  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp) {
-    String sql = "from SkuItem si where si.skuGroup.sku in (:skuList)";
+  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<Long> skuItemOwners, Double mrp) {
+    String sql = "from SkuItem si where si.skuGroup.sku in (:skuList) ";
 
     if (statusIds != null && statusIds.size() > 0) {
-      sql += "and si.skuItemStatus.id in (:statusIds)";
+      sql += "and si.skuItemStatus.id in (:statusIds) ";
     }
     if (skuItemOwners != null && skuItemOwners.size() > 0) {
-      sql += "and si.skuItemOwner in (:skuItemOwners)";
+      sql += "and si.skuItemOwner.id in (:skuItemOwners) ";
     }
     if (mrp != null) {
-      sql += " and si.skuGroup.mrp = :mrp ";
+      sql += "and si.skuGroup.mrp = :mrp ";
     }
+    sql += "and si.skuGroup.status != :skuStatus ";
     String orderByClause = " order by si.skuGroup.expiryDate asc";
     sql += orderByClause;
     Query query = getSession().createQuery(sql).setParameterList("skuList", skuList);
@@ -152,6 +125,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     if (mrp != null) {
       query.setParameter("mrp", mrp);
     }
+    query.setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW);
     return query.list();
   }
 
@@ -319,14 +293,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
     return netInv;
   }
-
-  public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp) {
-    String sql = " from SkuItem si where si.skuGroup.sku =:sku and si.skuGroup.mrp =:mrp and si.skuItemStatus.id = :skuItemStatusId and (si.skuGroup.status != :reviewStatus or si.skuGroup.status is null)";
-    Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("mrp", mrp).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
-    return query.list();
-
-  }
-
 
   public Long getAvailableUnbookedInventory(List<Sku> skuList, Double mrp, boolean addBrightInventory) {
     Long netInventory = getNetInventory(skuList, mrp);

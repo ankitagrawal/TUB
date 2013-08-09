@@ -578,18 +578,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
               Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
               for (int i = 0; i < qtyToBeSet; i++) {
-                List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, cartLineItem.getMarkedPrice());
+                List<SkuItem> skuItemList = inventoryManageDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
 
                 if (skuItemList != null && skuItemList.size() > 0) {
                   SkuItem skuItem = skuItemList.get(0);
                   skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
                   skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                  // todo Pvi entries
                   skuItem = (SkuItem) getBaseDao().save(skuItem);
                   // inventoryHealthCheck call
                   inventoryHealthCheck(productVariant);
 
-                  // todo UpdatePrice and Mrp qyt
                   skuItemsToBeBooked.add(skuItem);
                 }
               }
@@ -733,7 +731,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
         if (maxQty >= qtyToBeSet) {
           for (int i = 0; i < qtyToBeSet; i++) {
-            List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, cartLineItem.getMarkedPrice());
+            List<SkuItem> skuItemList = inventoryManageDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
             if (skuItemList != null && skuItemList.size() > 0) {
               SkuItem skuItem = skuItemList.get(0);
               skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());

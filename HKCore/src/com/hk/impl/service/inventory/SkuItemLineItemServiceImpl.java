@@ -69,11 +69,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			logger.debug("instance of ro true");
 			List<Sku> skuList = new ArrayList<Sku>();
 			List<Long> skuStatusIdList = new ArrayList<Long>();
-			List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+			List<Long> skuItemOwnerList = new ArrayList<Long>();
 
 			skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
 			skuList.add(lineItem.getSku());
-			skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+			skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 
 			//get available sku items of the given warehouse at given mrp
 			List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
@@ -146,11 +146,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 					logger.debug("Creating sku_item_line_item. Wh after split was diff than before split booking.");
 					List<Sku> skuList = new ArrayList<Sku>();
 					List<Long> skuStatusIdList = new ArrayList<Long>();
-					List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+					List<Long> skuItemOwnerList = new ArrayList<Long>();
 
 					skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
 					skuList.add(lineItem.getSku());
-					skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+					skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 
 					//get available sku items of the given warehouse at given mrp
 					List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
@@ -201,10 +201,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		List<SkuItem> availableUnbookedSkuItems = null;
 		List<Sku> skuList = new ArrayList<Sku>();
 		List<Long> skuStatusIdList = new ArrayList<Long>();
-		List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+		List<Long> skuItemOwnerList = new ArrayList<Long>();
 
 		skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-		skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+		skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 
 		List<SkuItem> toBeFreedSkuItemList = new ArrayList<SkuItem>();
 
