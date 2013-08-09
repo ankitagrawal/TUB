@@ -18,6 +18,8 @@ public interface AdminSkuItemDao extends BaseDao {
 
     public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
+    public List<SkuItem> getNetPhysicalAvailableStockSkuItems(SkuGroup skuGroup);
+
     public List<SkuItem> getInStockSkuItemsBySku(Sku sku);
 
     public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty);

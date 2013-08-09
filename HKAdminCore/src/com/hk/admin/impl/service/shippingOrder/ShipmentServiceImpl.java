@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
@@ -123,7 +124,10 @@ public class ShipmentServiceImpl implements ShipmentService {
             shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
             shippingOrder.setShipment(shipment);
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                Double estimatedShipmentCharge = shipmentPricingEngine.calculateShipmentCost(shippingOrder);
+                shipment.setEstmShipmentCharge(estimatedShipmentCharge);
+                shipment.setOrderPlacedShipmentCharge(estimatedShipmentCharge);
+                shipment.setShipmentCostCalculateDate(new Date());
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
             }

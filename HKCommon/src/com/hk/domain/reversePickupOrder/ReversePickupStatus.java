@@ -39,4 +39,17 @@ public class ReversePickupStatus implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof ReversePickupStatus))
+            return false;
+        ReversePickupStatus pickupStatus = (ReversePickupStatus) o;
+        if (this.getId() != null && pickupStatus.getId() != null) {
+            return this.getId().equals(pickupStatus.getId());
+        }
+        return false;
+    }
 }

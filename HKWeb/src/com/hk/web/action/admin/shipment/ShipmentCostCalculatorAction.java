@@ -109,6 +109,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                         shipment.setBoxWeight(weight);
                     }
                     shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                    shipment.setShipmentCostCalculateDate(new Date());
                     shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                     shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
                     shipmentService.save(shipment);
@@ -182,6 +183,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                 if (shipment != null) {
                     if (overrideHistoricalShipmentCost && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                        shipment.setShipmentCostCalculateDate(new Date());
                         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                         shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
                         shipmentService.save(shipment);
