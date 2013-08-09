@@ -145,6 +145,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                 //}
                 // finding line items with inventory mismatch
                 shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
+                if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
+                    reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
+                }
                 if (shippingOrder.getShipment() == null) {
                     reasons.add(EnumReason.ShipmentNotCreated.asReason());
                 } else {
@@ -194,6 +197,12 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     			if(!(shippingOrder.isServiceOrder())){
     				User adminUser = getUserService().getAdminUser();
                     shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, adminUser);
+                    if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
+                        shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder,
+                                EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch,
+                                EnumReason.InsufficientUnbookedInventoryManual.asReason());
+                        return false;
+                    }
     				if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
     					Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
     					if (newShipment == null) {
@@ -255,6 +264,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         if (selectedItems.size() > 0) {
             if (selectedItems.size() == shippingOrder.getLineItems().size()) {
                 this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null);
+                // TODO fire cancellation email
             } else {
                 boolean splitSuccess = this.autoSplitSO(shippingOrder, selectedItems, splittedOrders,
                         messages);
@@ -265,6 +275,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                                     EnumShippingOrderLifecycleActivity.SO_Cancelled),
                             EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
                     this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null);
+                    // TODO fire cancellation email
                     shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
 
                 }
