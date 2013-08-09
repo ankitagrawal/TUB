@@ -5,10 +5,7 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
-
-import java.util.List;
 
 public interface InventoryService {
 
@@ -20,27 +17,19 @@ public interface InventoryService {
 
   public Long getAggregateCutoffInventory(ProductVariant productVariant);
 
-  public Long getAggregateCutoffInventory(List<Sku> skuList);
-
   public InvTxnType getInventoryTxnType(EnumInvTxnType enumInvTxnType);
 
   /**
    * @param sku
-   * @return Unbooked Inventory - this is difference of net physical inventory and all booked inventory The return
-   *         value can be negative in case we are doing overbooking and product is not timely marked as Out Of Stock
+   * @param mrp - Nullable
+   * @return Unbooked Inventory - this is qty of 'CHECKED_IN' units for a SKU at a particular MRP
+   * In case mrp is NULL - it will return all the 'CHECKED_IN' units for the SKU
    */
+  public Long getAvailableUnbookedInventory(Sku sku, Double mrp);
 
-  public Long getAvailableUnbookedInventory(Sku sku);
-
-  public Long getAvailableUnbookedInventory(ProductVariant productVariant);
+  public Long getAllowedStepUpInventory(ProductVariant productVariant);
 
   public Supplier getSupplierForSKU(Sku sku);
-
-  // todo -- need to be replace
-  long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
-
-  // todo -- need to be replace
-  public long getUnbookedInventoryForActionQueue(LineItem lineItem);
 
   public boolean allInventoryCheckedIn(GoodsReceivedNote grn);
 

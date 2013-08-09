@@ -7,7 +7,6 @@ import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.LowInventory;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.manager.EmailManager;
@@ -75,11 +74,6 @@ public class InventoryServiceImpl implements InventoryService {
   @Override
   public Long getAggregateCutoffInventory(ProductVariant productVariant) {
     List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-    return this.getAggregateCutoffInventory(skuList);
-  }
-
-  @Override
-  public Long getAggregateCutoffInventory(List<Sku> skuList) {
     Long cutoff = 0L;
     for (Sku sku : skuList) {
       if (sku.getCutOffInventory() != null) {
@@ -137,52 +131,21 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
-  @Deprecated
-  public Long getAvailableUnbookedInventory(Sku sku) {
-    return getAvailableUnbookedInventory(sku.getProductVariant());
-  }
-
-
-  @Override
-  public Long getAvailableUnbookedInventory(ProductVariant productVariant) {
-    return inventoryHealthService.getAvailableUnbookedInventory(productVariant);
-  }
-
-
-  @Override
-  public long getUnbookedInventoryInProcessingQueue(LineItem lineItem) {
-    return inventoryHealthService.getUnbookedInventoryInProcessingQueue(lineItem);
+  public Long getAvailableUnbookedInventory(Sku sku, Double mrp) {
+    //TODO: Write proper DAO method
+    return 0L;
   }
 
   @Override
-  public long getUnbookedInventoryForActionQueue(LineItem lineItem) {
-    return inventoryHealthService.getUnbookedInventoryForActionQueue(lineItem);
-  }
-
-  @Deprecated
-  private Long getBookedQty(ProductVariant productVariant) {
-    Long bookedInventory = 0L;
-    if (productVariant != null) {
-      Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
-      logger.debug("bookedInventoryForProductVariant " + bookedInventoryForProductVariant);
-      //Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
-      Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
-      logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
-      bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
+  public Long getAllowedStepUpInventory(ProductVariant productVariant) {
+    if (productVariant.getMrpQty() == null) {
+      checkInventoryHealth(productVariant);
     }
-    return bookedInventory;
-  }
-
-  @SuppressWarnings("unused")
-  @Deprecated
-  private Long getBookedQty(List<Sku> skuList) {
-    Long bookedInventory = 0L;
-    if (skuList != null && !skuList.isEmpty()) {
-      Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
-      logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
-      bookedInventory = bookedInventoryForSKUs;
+    productVariant = productVariantService.getVariantById(productVariant.getId());
+    if (productVariant.getMrpQty() == null) {
+      return 0l;
     }
-    return bookedInventory;
+    return productVariant.getMrpQty();
   }
 
   public boolean allInventoryCheckedIn(GoodsReceivedNote grn) {

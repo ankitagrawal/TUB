@@ -193,7 +193,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     						 return true;
     						//availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
     					}else{
-    						availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
+    						availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice());
     					}
 
     					Long orderedQty = lineItem.getQty();
@@ -269,7 +269,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 								EnumReason.Contains_Prescription_Glasses.asReason(), null);
 						return false;
 					}
-					Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(lineItem); // This
+					Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice()); // This
 
 					if (availableUnbookedInv <= 0) {
 						String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
