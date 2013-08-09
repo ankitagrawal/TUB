@@ -81,7 +81,7 @@ public class JitShippingOrderAction extends BaseAction {
 				Set<ShippingOrder> validJITShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(onlyJITLineItems);
                 Set<ShippingOrder> validDropShipShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(onlyDropShipLineItems);
 				List<PurchaseOrder> jitPurchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(onlyJITLineItems, validJITShippingOrders);
-                List<PurchaseOrder> dropShipPurchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(onlyJITLineItems, validDropShipShippingOrders);
+                List<PurchaseOrder> dropShipPurchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(onlyDropShipLineItems, validDropShipShippingOrders);
 				if((jitPurchaseOrders.size()+dropShipPurchaseOrders.size())>0){
 				addRedirectAlertMessage(new SimpleMessage((jitPurchaseOrders.size()+dropShipPurchaseOrders.size())+" Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
 				}
