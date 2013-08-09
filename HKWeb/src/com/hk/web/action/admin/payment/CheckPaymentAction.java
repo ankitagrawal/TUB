@@ -55,7 +55,7 @@ public class CheckPaymentAction extends BaseAction {
 
     private List<Map<String,List<HkPaymentResponse>>> bulkHkPaymentResponseList;
 
-    @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful"})
+    @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful","manualUpdate","autoUpdate"})
     private Payment payment;
 
     private PricingDto pricingDto;
@@ -305,19 +305,23 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
 
-        if (!EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
+        if (payment != null) {
 
-            User loggedOnUser = getUserService().getLoggedInUser();
+            if (!EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
 
-            getPaymentManager().success(payment.getGatewayOrderId());
-            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-            order.setConfirmationDate(new Date());
-            orderService.save(order);
-//        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-            orderService.sendEmailToServiceProvidersForOrder(order);
+                User loggedOnUser = getUserService().getLoggedInUser();
+
+                getPaymentManager().success(payment.getGatewayOrderId());
+                getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+                order.setConfirmationDate(new Date());
+                orderService.save(order);
+//              orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+                orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
-            addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+                addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+            }
+
         }
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
@@ -331,23 +335,27 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.AUTO_UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution autoUpdate() {
 
-        if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
-            User loggedOnUser = getUserService().getLoggedInUser();
-            try {
+        if (payment != null) {
 
-                paymentService.updatePayment(payment.getGatewayOrderId());
-                getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-                order.setConfirmationDate(new Date());
-                orderService.save(order);
-                orderService.sendEmailToServiceProvidersForOrder(order);
-                addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+            if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
+                User loggedOnUser = getUserService().getLoggedInUser();
+                try {
 
-            } catch (HealthkartPaymentGatewayException e) {
+                    paymentService.updatePayment(payment.getGatewayOrderId());
+                    getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                            getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+                    order.setConfirmationDate(new Date());
+                    orderService.save(order);
+                    orderService.sendEmailToServiceProvidersForOrder(order);
+                    addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
 
-                logger.debug("Healthkart Payment Update Exception occurred : " + e);
-                addRedirectAlertMessage(new SimpleMessage("Healthkart Payment Update Exception occurred"));
+                } catch (HealthkartPaymentGatewayException e) {
+
+                    logger.debug("Healthkart Payment Update Exception occurred : " + e);
+                    addRedirectAlertMessage(new SimpleMessage("Healthkart Payment Update Exception occurred"));
+                }
             }
+
         }
 
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
@@ -361,20 +369,23 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.MANUAL_UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution manualUpdate() {
 
-        if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
-            Gateway gateway = payment.getGateway();
-            if(EnumGateway.getManualRefundGateways().contains(gateway.getId())) {
-                User loggedOnUser = getUserService().getLoggedInUser();
+        if (payment != null) {
 
-                getPaymentManager().success(payment.getGatewayOrderId());
-                getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                        getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-                order.setConfirmationDate(new Date());
-                orderService.save(order);
+            if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
+                Gateway gateway = payment.getGateway();
+                if(EnumGateway.getManualRefundGateways().contains(gateway.getId())) {
+                    User loggedOnUser = getUserService().getLoggedInUser();
+
+                    getPaymentManager().success(payment.getGatewayOrderId());
+                    getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                            getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+                    order.setConfirmationDate(new Date());
+                    orderService.save(order);
 //              orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-                orderService.sendEmailToServiceProvidersForOrder(order);
+                    orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
-                addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+                    addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
+                }
             }
         }
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
