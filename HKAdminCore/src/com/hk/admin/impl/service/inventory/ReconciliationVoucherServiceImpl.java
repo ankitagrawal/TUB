@@ -372,6 +372,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
 				// if got any siblings - set it on the entries in the booking
 				// table
+				skuItemToBeSet.setSkuItemStatus(skuItemLineItem.getSkuItem().getSkuItemStatus());
 				cli.setSkuItem(skuItemToBeSet);
 				cli = (SkuItemCLI) baseDao.save(cli);
 				skuItemLineItem.setSkuItem(skuItemToBeSet);
@@ -403,6 +404,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
 			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
 				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
+				skuItemToBeSet.setSkuItemStatus(skuItemCLI.getSkuItem().getSkuItemStatus());
 				skuItemCLI.setSkuItem(skuItemToBeSet);
 				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
 				adminOrderService.logOrderActivity(

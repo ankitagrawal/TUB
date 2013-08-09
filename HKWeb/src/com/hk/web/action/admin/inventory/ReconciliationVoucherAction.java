@@ -433,6 +433,11 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
     public HealthkartResponse subtractInventory(boolean singleBatch) {
+    	
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
         HealthkartResponse healthkartResponse = null;
         warehouse = userService.getWarehouseForLoggedInUser();
         if (rvLineItems != null && (!rvLineItems.isEmpty())) {
@@ -458,7 +463,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                         List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
                         if (skuGroupList.size() > 0) {
                             if (skuGroupList.size() == 1) {
-                                inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
+                                inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0), skuItemStatusList);
                             } else {
                                 return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Inventory Present in Multiple batches ");
                             }
@@ -520,6 +525,11 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 
     public Resolution uploadSubtractExcelForProductAuditedForSingleBatch() throws Exception {
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+    	
         StringBuilder errors = new StringBuilder("");
         rvParser.setMessage(new StringBuilder(""));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -543,7 +553,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 if (skuGroupList.size() > 0) {
                     if (skuGroupList.size() == 1) {
                         skuGroup = skuGroupList.get(0);
-                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroup);
+                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
                         if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
                             int systemQty = inStockSkuItems.size();
                             if (systemQty >= qty) {
@@ -646,7 +656,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 		        if (skuItemBarcode != null) {
 		            skuItem = skuItemBarcode;
 		        } else {
-		            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser());
+		            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser(),skuItemStatusList, skuItemOwnerList);
 		            if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
 		                skuItem = inStockSkuItemList.get(0);
 		            }
