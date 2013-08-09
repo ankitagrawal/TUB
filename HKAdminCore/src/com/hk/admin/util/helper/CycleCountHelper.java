@@ -160,7 +160,13 @@ public class CycleCountHelper {
 
 
     public File generateCompleteCycleCountExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap, List<SkuGroup> skuGroupList, Map<Long, Integer> missedSkuGroupSystemInventoryMap, List<SkuGroup> scannedSkuItemGroupList) {
-        this.xlsFile = xlsFile;
+    	List<Long> skuItemStatusIdList = new ArrayList<Long>();
+    	skuItemStatusIdList.add( EnumSkuItemStatus.Checked_IN.getId());
+    	skuItemStatusIdList.add( EnumSkuItemStatus.BOOKED.getId());
+    	skuItemStatusIdList.add( EnumSkuItemStatus.TEMP_BOOKED.getId());
+        
+    	
+    	this.xlsFile = xlsFile;
         HkXlsWriter xlsWriter = new HkXlsWriter();
         int xlsRow = 1;
         xlsWriter.addHeader(XslConstants.VARIANT_ID, XslConstants.VARIANT_ID);
@@ -238,10 +244,11 @@ public class CycleCountHelper {
         Collections.sort(totalSkuItemsForScannedItemGroup);
         /* Add skuitem information of group which were partial scanned */
 
+        
 
         for (SkuItem skuItem : totalSkuItemsForScannedItemGroup) {
             SkuGroup skuGroup = skuItem.getSkuGroup();
-            if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId()) && skuGroup.getSku().getWarehouse() == userService.getWarehouseForLoggedInUser()) {
+            if (skuItemStatusIdList.contains(skuItem.getSkuItemStatus().getId()) && skuGroup.getSku().getWarehouse() == userService.getWarehouseForLoggedInUser()) {
                 xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
                 xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getProduct().getName());
                 xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
