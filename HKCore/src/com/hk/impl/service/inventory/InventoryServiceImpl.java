@@ -19,6 +19,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.inventory.LowInventoryDao;
 import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
@@ -72,6 +73,8 @@ public class InventoryServiceImpl implements InventoryService {
   InventoryHealthService inventoryHealthService;
   @Autowired
   SkuItemDao inventoryManageDao;
+   @Autowired
+   CartLineItemDao cartLineItemDao;
 
   @Override
   @Transactional
@@ -199,7 +202,7 @@ public class InventoryServiceImpl implements InventoryService {
         List<Long> statuses = new ArrayList<Long>();
         statuses.add(EnumSkuItemStatus.Checked_IN.getId());
         // only considering CheckedInInventory
-        return inventoryManageDao.getNetInventory(skuList, statuses);
+        return inventoryManageDao.getInventoryCount(skuList, statuses);
 
     }
 
@@ -209,7 +212,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         List<Long> statusIds = EnumSkuItemStatus.getSkuItemStatusIDs(EnumSkuItemStatus.getStatusForNetPhysicalInventory());
         // considering Checcked in , temp booked , booked ie physical inventory
-        Long netInventory = inventoryManageDao.getNetInventory(skuList, statusIds);
+        Long netInventory = inventoryManageDao.getInventoryCount(skuList, statusIds);
 
 
         Long bookedInventory = 0L;
@@ -240,14 +243,9 @@ public class InventoryServiceImpl implements InventoryService {
 
 
     public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp) {
-        return inventoryManageDao.getClisForOrderInProcessingState(productVariant, skuId, mrp);
+        return cartLineItemDao.getClisForOrderInProcessingState(productVariant, skuId, mrp);
     }
 
-
-
-    public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
-        return inventoryManageDao.sicliAlreadyExists(cartLineItem);
-    }
 
   public ProductVariantService getProductVariantService() {
     return productVariantService;

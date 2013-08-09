@@ -1,15 +1,11 @@
 package com.hk.impl.dao.sku;
 
-import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.*;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.pos.PosProductSearchDto;
 import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -24,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -47,24 +42,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
     return skuGroupList;
   }
-
-  public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
-    List<Warehouse> warehouseList = warehouseDao.getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
-    SkuGroup minMRPUnbookedSkuGroup = null;
-    String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi " +
-        "where pvi.skuItem is not null and pvi.skuItem.skuGroup.mrp is not null and pvi.sku.warehouse in (:warehouseList) and pvi.sku.productVariant = :productVariant " +
-        "group by pvi.skuItem.id having sum(pvi.qty) > 0 order by pvi.skuItem.skuGroup.mrp asc";
-    List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
-        .setParameter("productVariant", productVariant)
-        .setParameterList("warehouseList", warehouseList).list();
-    if (skuItemIdList != null && skuItemIdList.size() > bookedQty) {
-      List<Long> firstUnBookedSkuItem = skuItemIdList.subList(bookedQty.intValue(), bookedQty.intValue() + 1);
-      String query = "select distinct si.skuGroup from SkuItem si where si.id = :skuItemId order by si.skuGroup.mrp asc";
-      minMRPUnbookedSkuGroup = (SkuGroup) getSession().createQuery(query).setParameter("skuItemId", firstUnBookedSkuItem.get(0)).uniqueResult();
-    }
-    return minMRPUnbookedSkuGroup;
-  }
-
 
   private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
     DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
@@ -94,14 +71,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
     DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus);
     return findByCriteria(skuItemCriteria);
-  }
-
-  public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
-    DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
-    criteria.add(Restrictions.eq("skuGroup", skuGroup));
-    criteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
-    List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
-    return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
   }
 
   public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
@@ -156,13 +125,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
     String sql = "from SkuItem si where  si.skuItemStatus in :skuItemStatusList and si.skuItemOwner in (:skuItemOwnerList) and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
     Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameterList("skuItemStatusList", skuItemStatusList).setParameterList("skuItemOwnerList", skuItemOwnerList);
-    return query.list();
-  }
-
-
-  public List<SkuItem> getSkuItem(Sku sku, Long id) {
-    String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
-    Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", id);
     return query.list();
   }
 
@@ -323,43 +285,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   }
 
 
-  public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner) {
-    String sql;
-    Query query = null;
-    if (skuItemOwner != null) {
-      sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus and si.skuItemOwner = :skuItemOwner";
-      query = getSession().createQuery(sql).setParameter("skuGroup", skuGroup).setParameter("skuItemStatus", skuItemStatus).setParameter("skuItemOwner", skuItemOwner);
-    } else {
-      sql = "from SkuItem si where si.skuGroup =:skuGroup and si.skuItemStatus = :skuItemStatus";
-      query = getSession().createQuery(sql).setParameter("skuGroup", skuGroup).setParameter("skuItemStatus", skuItemStatus);
-    }
-    List<SkuItem> skuItems = query.list();
-    return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
-  }
-
-  public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner) {
-    String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
-    if (statusId != null) {
-      sql = sql + "and si.skuItemStatus.id = :statusId ";
-    }
-    if (skuItemOwner != null) {
-      sql = sql + "and si.skuItemOwner = :skuItemOwner";
-    }
-    Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
-    if (statusId != null) {
-      query.setParameter("statusId", statusId);
-    }
-    if (skuItemOwner != null) {
-      query.setParameter("skuItemOwner", skuItemOwner);
-    }
-    List<SkuItem> skuItems = query.list();
-    if (skuItems != null && skuItems.size() > 1) {
-      logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
-    }
-    return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
-  }
-
-
   public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList) {
     DetachedCriteria criteria = DetachedCriteria.forClass(SkuItem.class);
     criteria.add(Restrictions.eq("skuGroup", skuGroup));
@@ -368,25 +293,9 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
   }
 
-  // checked in as always with  owner self
-  public Long getAvailableUnBookedInventory(List<Sku> skuList) {
+  public Long getInventoryCount(List<Sku> skuList, List<Long> skuItemStatuses) {
     Long netInv = 0L;
     if (skuList != null && !skuList.isEmpty()) {
-      //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
-      String query = "select count(si) from SkuItem si where si.skuGroup.status != :skuStatus and si.skuGroup.sku in (:skuList) and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId();
-      netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW).uniqueResult();
-      if (netInv == null) {
-        netInv = 0L;
-      }
-    }
-    return netInv;
-  }
-
-
-  public Long getNetInventory(List<Sku> skuList, List<Long> skuItemStatuses) {
-    Long netInv = 0L;
-    if (skuList != null && !skuList.isEmpty()) {
-      //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
       String query = "select count(si) from SkuItem si where si.skuGroup.status != :skuStatus and si.skuGroup.sku in (:skuList) and si.skuItemStatus.id in (:skuItemStatuses) ";
       netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("skuItemStatuses", skuItemStatuses).setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW).uniqueResult();
       if (netInv == null) {
@@ -397,7 +306,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   }
 
 
-  public Long getNetInventory(List<Sku> skuList, Double mrp) {
+  private Long getNetInventory(List<Sku> skuList, Double mrp) {
     Long netInv = 0L;
     if (skuList != null && !skuList.isEmpty()) {
       //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
@@ -410,30 +319,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
     return netInv;
   }
-
-
-  public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> skuItemStatusId, List<Long> skuItemOwnerStatusId) {
-    String query = "select count(si) from SkuItem si where si.skugroup.productVariant = :productVariant and si.skuItemStatus.id= :skuItemStatusId and  si.skuItemOwner.id= :skuItemOwnerStatusId";
-    return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", skuItemStatusId).setParameter("skuItemOwnerStatusId", skuItemOwnerStatusId).uniqueResult();
-
-  }
-
-
-  public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
-    Long netInventory = getAvailableUnBookedInventory(skuList);
-    logger.debug("net inventory " + netInventory);
-
-    Long bookedInventory = 0L;
-    if (!skuList.isEmpty()) {
-      ProductVariant productVariant = skuList.get(0).getProductVariant();
-//            bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
-      logger.debug("booked inventory " + bookedInventory);
-    }
-
-    return (netInventory - bookedInventory);
-
-  }
-
 
   public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp) {
     String sql = " from SkuItem si where si.skuGroup.sku =:sku and si.skuGroup.mrp =:mrp and si.skuItemStatus.id = :skuItemStatusId and (si.skuGroup.status != :reviewStatus or si.skuGroup.status is null)";
@@ -458,15 +343,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
   }
 
-
-  public Double getFirstcheckedInBatchMRP(ProductVariant productVariant) {
-    String sql = "Select si.skuGroup.mrp from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and ( si.skuGroup.status != :reviewStatus or si.skuGroup.status is null ) group by si.skuGroup.id order by si.skuGroup.createDate asc  ";
-    Query query = getSession().createQuery(sql).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
-    return (Double) query.list().get(0);
-
-  }
-
-
   public Long getBookedQtyOfSkuInQueue(List<Sku> skuList) {
     Long qtyInQueue = 0L;
     if (skuList != null && !skuList.isEmpty()) {
@@ -480,44 +356,11 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     return qtyInQueue;
   }
 
-
-  public List<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant, Double mrp) {
-
-    String query = "from CartLineItem c  where  c.productVariant = :productVariant and c.markedPrice = :mrp and c.order.orderStatus.id in (:orderStatusIds)"
-        + " and c.skuItemCLIs.size <= 0  order by c.order.createDate  asc ";
-    return (List<CartLineItem>) getSession().createQuery(query).setParameterList("orderStatusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId())).setParameter("productVariant", productVariant).setParameter("mrp", mrp).list();
-  }
-
-
   public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant) {
 
     String sql = "Select count(si) from SkuItem si where si.skuGroup.sku.productVariant =:productVariant and  si.skuItemStatus.id = :skuItemStatusId and ( si.skuGroup.status != :reviewStatus or si.skuGroup.status is null ) group by si.skuGroup.id order by si.skuGroup.createDate desc  ";
     Query query = getSession().createQuery(sql).setParameter("productVariant", productVariant).setParameter("skuItemStatusId", EnumSkuItemStatus.Checked_IN.getId()).setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW);
     return (Long) query.list().get(0);
-  }
-
-
-  public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp) {
-    List<Long> statuses = new ArrayList<Long>();
-    statuses.addAll(EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
-    statuses.add(EnumShippingOrderStatus.SO_ReadyForDropShipping.getId());
-
-    String query = " select c from CartLineItem c inner join c.order as o inner join o.shippingOrders as so  inner join so.lineItems as li where  c.productVariant = :productVariant and c.markedPrice = :mrp and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.sku.id = :skuId  "
-        + " and c.skuItemCLIs.size <= 0  order by so.targetDispatchDate,so.createDate  asc ";
-    return (List<CartLineItem>) getSession().createQuery(query).setParameterList("shippingOrderStatusIds", statuses).setParameter("productVariant", productVariant).setParameter("mrp", mrp).setParameter("skuId", skuId).list();
-
-  }
-
-
-  public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
-    String sql = " from SkuItemCLI sicli where sicli.cartLineItem = :cartlineItem ";
-    List<SkuItemCLI> siclis = (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartlineItem", cartLineItem).list();
-    if (siclis != null && siclis.size() > 0) {
-      if (siclis.size() == cartLineItem.getQty()) {
-        return true;
-      }
-    }
-    return false;
   }
 
 }

@@ -353,7 +353,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		return true;
 	}
 
-	public SkuItemLineItem getBySkuItemId(Long skuItemId) {
+
+  @Override
+  public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
+    return getSkuItemLineItemDao().sicliAlreadyExists(cartLineItem);
+  }
+
+  public SkuItemLineItem getBySkuItemId(Long skuItemId) {
 		return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);
 	}
 

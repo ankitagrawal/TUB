@@ -5,10 +5,10 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItem;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
 
 import java.util.List;
 import java.util.Set;
@@ -29,9 +29,9 @@ public interface InventoryService {
    * @param sku
    * @param mrp - Nullable
    * @return Unbooked Inventory - this is qty of 'CHECKED_IN' units for a SKU at a particular MRP
-   * In case mrp is NULL - it will return all the 'CHECKED_IN' units for the SKU
+   *         In case mrp is NULL - it will return all the 'CHECKED_IN' units for the SKU
    */
-  public Long getAvailableUnbookedInventory(Sku sku, Double mrp);
+  public Long getAvailableUnbookedInventory(Sku sku, Double mrp);                               
 
   public Long getAllowedStepUpInventory(ProductVariant productVariant);
 
@@ -42,14 +42,12 @@ public interface InventoryService {
   //Migrated from Inventory Manage Service
   public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
 
-    public Long getAvailableUnBookedInventory(ProductVariant productVariant);
+  public Long getAvailableUnBookedInventory(ProductVariant productVariant);
 
-    public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
+  public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
-    public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+  public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
-    public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
-
-    public boolean sicliAlreadyExists(CartLineItem cartLineItem);
+  public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);  
 
 }

@@ -1,10 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -228,7 +224,7 @@ public class StockTransferAction extends BasePaginatedAction {
             }
 
         } else {
-            skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, Arrays.asList(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus()));
         }
         if (skuItemToBeReverted == null) {
             addRedirectAlertMessage(new SimpleMessage("Some error occurred. Stock not transferred against this Barcode "));

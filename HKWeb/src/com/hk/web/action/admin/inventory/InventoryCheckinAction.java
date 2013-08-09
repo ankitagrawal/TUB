@@ -393,7 +393,7 @@ public class InventoryCheckinAction extends BaseAction {
         if (skuItemBarcode != null) {
             skuItem = skuItemBarcode;
         } else {
-            skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItem = skuGroupService.getSkuItem(skuGroup,Arrays.asList( EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus()));
         }
 
         if (skuItem != null) {

@@ -136,25 +136,6 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		return skuGroupList;
 	}
 
-
-	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku) {
-		List<SkuGroup> inStockSkuItems = new ArrayList<SkuGroup>();
-		String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.sku =:sku " +
-				"group by pvi.skuItem.id having sum(pvi.qty) > 0";
-		List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery)
-				.setParameter("sku", sku)
-				.list();
-		if (inStockSkuItemIds != null && inStockSkuItemIds.size() > 0) {
-			String query = "select si.skuGroup from SkuItem si where si.id in (:inStockSkuItemIds) order by si.skuGroup.id";
-			inStockSkuItems = (List<SkuGroup>) getSession().createQuery(query)
-					.setParameterList("inStockSkuItemIds", inStockSkuItemIds)
-					.list();
-		}
-		return inStockSkuItems;
-
-	}
-
-
 	private DetachedCriteria getSkuGroupCriteria(List<SkuGroup> skuGroupList, String barcode, String batchNumber, Sku sku) {
 		DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
 		List<Long> skuGroupIds = new ArrayList<Long>();
@@ -182,12 +163,6 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		return skuGroupCriteria;
 
 	}
-
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
-		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, null, batch, sku);
-		return findByCriteria(skuGroupCriteria);
-	}
-
 
 	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
 		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, barcode, null, null);

@@ -18,6 +18,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
@@ -60,6 +61,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   SkuItemLineItemService skuItemLineItemService;
   @Autowired
   LineItemDao lineItemDao;
+  @Autowired
+  CartLineItemDao cartLineItemDao;
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
@@ -319,7 +322,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-
   private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list, long skuId, double mrp) {
     List<SkuInfo> infos = new ArrayList<SkuInfo>();
     for (SkuInfo info : list) {
@@ -511,7 +513,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     // get Net quantity for product variant
     List<Sku> variantSkus = skuService.getSKUsForProductVariant(productVariant);
-    long netQty = inventoryManageDao.getAvailableUnBookedInventory(variantSkus);
+    long netQty = inventoryManageDao.getInventoryCount(variantSkus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
     productVariant.setNetQty(netQty);
 
     productVariant.setMrpQty(maxQty);
@@ -555,7 +557,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     for (CartLineItem cartLineItem : cartLineItems) {
       if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
-        if (!inventoryManageDao.sicliAlreadyExists(cartLineItem)) {
+        if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
           ProductVariant productVariant = cartLineItem.getProductVariant();
 
           // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
@@ -564,7 +566,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           List<Sku> skus = new ArrayList<Sku>();
           Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
           skus.add(sku);
-          Long availableUnBookedInventory = inventoryManageDao.getAvailableUnBookedInventory(skus);
+          Long availableUnBookedInventory = inventoryManageDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
 
           if (availableUnBookedInventory > 0) {
             // picking the  sku for current MRP available at max qty on product variant
@@ -695,7 +697,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       Sku sku = getBaseDao().get(Sku.class, skuId);
       productVariant.setWarehouse(sku.getWarehouse());
       getBaseDao().save(productVariant);
-      List<CartLineItem> cartLineItems = inventoryManageDao.getClisForInPlacedOrder(productVariant, newMrp);
+      List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
       Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
       if (clis.size() > 0) {
         remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty(), false);
