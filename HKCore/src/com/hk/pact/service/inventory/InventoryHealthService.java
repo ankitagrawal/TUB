@@ -13,7 +13,6 @@ import java.util.List;
 
 public interface InventoryHealthService {
 
-  // todo -- all  these method need to be move in ssplitter service
   Collection<InventoryInfo> getAvailableInventory(List<Sku> skus);
 
   Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem);
@@ -24,7 +23,6 @@ public interface InventoryHealthService {
 
   Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter);
 
-  // todo -- need to move  in inventory service
   public void inventoryHealthCheck(ProductVariant productVariant);
 
   public void tempBookSkuLineItemForOrder(Order order);

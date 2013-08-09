@@ -13,22 +13,22 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.service.ServiceLocatorFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
@@ -53,9 +53,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   @Autowired
   UpdatePvPriceDao updatePvPriceDao;
   @Autowired
-  InventoryManageDao inventoryManageDao;
-  @Autowired
-  InventoryManageService inventoryManageService;
+  SkuItemDao inventoryManageDao;
   @Autowired
   SkuService skuService;
   @Autowired
@@ -553,6 +551,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   // Call this method from just  action  java
   public void tempBookSkuLineItemForOrder(Order order) {
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     for (CartLineItem cartLineItem : cartLineItems) {
       if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
@@ -605,6 +604,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
   public void inventoryHealthCheck(ProductVariant productVariant) {
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
 
     if (availableUnbookedInventory > 0) {
@@ -682,6 +682,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
   public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
     if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
 
@@ -719,7 +720,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
   public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
-
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     for (CartLineItem cartLineItem : cartLineItems) {
       if (lineItemDao.getLineItem(cartLineItem) != null) {
 

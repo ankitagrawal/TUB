@@ -6,6 +6,12 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.order.CartLineItem;
+
+import java.util.List;
+import java.util.Set;
 
 public interface InventoryService {
 
@@ -32,5 +38,18 @@ public interface InventoryService {
   public Supplier getSupplierForSKU(Sku sku);
 
   public boolean allInventoryCheckedIn(GoodsReceivedNote grn);
+
+  //Migrated from Inventory Manage Service
+  public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
+
+    public Long getAvailableUnBookedInventory(ProductVariant productVariant);
+
+    public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
+
+    public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+
+    public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
+
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem);
 
 }

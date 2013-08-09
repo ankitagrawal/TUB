@@ -12,6 +12,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
 import com.hk.dto.pos.PosProductSearchDto;
 import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.pact.dao.BaseDao;
@@ -48,5 +49,31 @@ public interface SkuItemDao extends BaseDao {
     public List<PosSkuGroupSearchDto> getCheckedInSkuItemsByGroup(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
     
     public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
+
+    //Migrated from Inventory Manager Dao
+  public Long getAvailableUnBookedInventory(List<Sku> skuList);
+
+    public Long getNetInventory(List<Sku> skuList, List<Long> skuItemStatusIds);
+
+    public Long getNetInventory(List<Sku> skuList, Double mrp);
+
+    // Method to get temp Booked and Booked qty
+    public Long getTempOrBookedQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> skuItemStatusId, List<Long> skuItemOwnerStatusId);
+
+    public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
+
+    public List<SkuItem> getCheckedInSkuItems(Sku sku, Double mrp);
+
+    public Double getFirstcheckedInBatchMRP(ProductVariant productVariant);
+
+    public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
+
+    public List<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant, Double mrp);
+
+    public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+
+    public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
+
+    public boolean sicliAlreadyExists(CartLineItem cartLineItem);
 
 }
