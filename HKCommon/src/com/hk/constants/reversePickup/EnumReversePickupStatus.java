@@ -2,6 +2,9 @@ package com.hk.constants.reversePickup;
 
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Seema
@@ -35,7 +38,15 @@ public enum EnumReversePickupStatus {
         return reversePickupStatus;
     }
 
-    public  ReversePickupStatus asReversePickupStatus() {
+    public static List<ReversePickupStatus> getCustomerManagedReturnStatus() {
+        return Arrays.asList(Return_Initiated.asReversePickupStatus(), Return_Received.asReversePickupStatus());
+    }
+
+    public static List<ReversePickupStatus> getHealthKartManagedRPStatus() {
+        return Arrays.asList(RPU_Initiated.asReversePickupStatus(), RPU_Picked.asReversePickupStatus(), RPU_Received.asReversePickupStatus());
+    }
+
+    public ReversePickupStatus asReversePickupStatus() {
         ReversePickupStatus reversePickupStatus = new ReversePickupStatus();
         reversePickupStatus.setId(this.getId());
         reversePickupStatus.setStatus(this.getStatus());
@@ -57,4 +68,6 @@ public enum EnumReversePickupStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+
 }

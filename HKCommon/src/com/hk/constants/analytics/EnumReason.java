@@ -2,6 +2,7 @@ package com.hk.constants.analytics;
 
 import com.hk.constants.queue.EnumClassification;
 import com.hk.domain.analytics.Reason;
+
 import java.util.Arrays;
 
 import java.util.HashSet;
@@ -37,11 +38,11 @@ public enum EnumReason {
     CcRequest(720L, "CC Request", EnumReasonType.CourierChange),
     BrightMovement(730L, "Bright Movement", EnumReasonType.CourierChange),
     RtoDueToOda(740L, "RTO Due To ODA", EnumReasonType.CourierChange),
-    DummyAwb(750L,"Dummy Awb",EnumReasonType.AwbChange),
-    B2bOrder(760L,"B2b Order",EnumReasonType.AwbChange),
-    ChangedByCourier(770L,"Changed By Courier",EnumReasonType.AwbChange),
-    DuplicateAwb(780L,"Duplicate Awb",EnumReasonType.AwbChange),
-    TechIssue(790L,"Tech Issue",EnumReasonType.AwbChange),
+    DummyAwb(750L, "Dummy Awb", EnumReasonType.AwbChange),
+    B2bOrder(760L, "B2b Order", EnumReasonType.AwbChange),
+    ChangedByCourier(770L, "Changed By Courier", EnumReasonType.AwbChange),
+    DuplicateAwb(780L, "Duplicate Awb", EnumReasonType.AwbChange),
+    TechIssue(790L, "Tech Issue", EnumReasonType.AwbChange),
     ProductDamaged(800L, "Product Damaged", EnumReasonType.Reverse_Pickup_Customer),
     ProductExpired(810L, "Product Expired", EnumReasonType.Reverse_Pickup_Customer),
     WrongColor(820L, "Wrong Color", EnumReasonType.Reverse_Pickup_Customer),
@@ -63,7 +64,6 @@ public enum EnumReason {
     DISPATCH_COURIER_CHANGE(390L, EnumClassification.DISPATCH_ISSUE_COURIER_CHANGE, EnumReasonType.Escalate_Back)
     ;
 
-
     Long id;
     EnumClassification enumClassification;
     String reasonType;
@@ -80,12 +80,23 @@ public enum EnumReason {
         this.enumClassification = enumClassification;
         this.reasonType = enumReasonType.getName();
     }
+
     public Reason asReason() {
         Reason reason = new Reason();
         reason.setId(id);
 //        reason.setClassification(enumClassification.asClassification());
         reason.setType(reasonType);
         return reason;
+    }
+
+    public static EnumReason getById(Long id) {
+        EnumReason enumReasonById = null;
+        for (EnumReason enumReason : EnumReason.values()) {
+            if (enumReason.getId().equals(id)) {
+                enumReasonById = enumReason;
+            }
+        }
+        return enumReasonById;
     }
 
     public Long getId() {

@@ -2,6 +2,7 @@ package com.hk.web.action.admin.courier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -137,6 +138,7 @@ public class ShipmentResolutionAction extends BaseAction {
         shipment = shipmentService.changeCourier(shipment, updateCourier, preserveAwb);
         if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
             shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+            shipment.setShipmentCostCalculateDate(new Date());
             shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
             shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         }
