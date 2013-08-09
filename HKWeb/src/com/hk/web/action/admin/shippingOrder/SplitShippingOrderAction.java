@@ -70,7 +70,6 @@ public class SplitShippingOrderAction extends BaseAction {
 
     	if(orderSplitSuccess) {
             shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
-            ShippingOrder newShippingOrder = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
 
             //master method to handle all new shipping orders
             orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());

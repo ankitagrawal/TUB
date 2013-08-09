@@ -90,9 +90,6 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
     private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 
-    @Column(name = "has_error", nullable = true)
-    private Boolean       error;
-
     public Long getId() {
         return this.id;
     }
@@ -331,13 +328,5 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
-    }
-
-    public Boolean getError() {
-        return error;
-    }
-
-    public void setError(Boolean error) {
-        this.error = error;
     }
 }

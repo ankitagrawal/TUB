@@ -720,6 +720,10 @@ public class OrderServiceImpl implements OrderService {
         if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
 	        logger.debug("post split will create sku item line item");
             for (ShippingOrder shippingOrder : order.getShippingOrders()){
+                //Check to ignore old orders whose status is greater equal than 180
+                if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()){
+                    continue;
+                }
                 for (LineItem lineItem : shippingOrder.getLineItems()){
 	                  //lineItemDao.refresh(lineItem);
                     if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){

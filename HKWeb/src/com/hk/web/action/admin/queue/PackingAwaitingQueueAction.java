@@ -153,9 +153,9 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
                     List<String> messages = new ArrayList<String>();
                     Map<String, ShippingOrder> splittedOrders =  new HashMap<String, ShippingOrder>();
                     for (LineItem lineItem : shippingOrder.getLineItems()) {
-                        if (lineItem.getError() != null && lineItem.getError()) {
+                        /*if (lineItem.getError() != null && lineItem.getError()) {
                             selectedLineItems.add(lineItem);
-                        }
+                        }*/
                     }
                     if (!selectedLineItems.isEmpty()) {
                         // if all elements can't be fixed then cancel complete SO
