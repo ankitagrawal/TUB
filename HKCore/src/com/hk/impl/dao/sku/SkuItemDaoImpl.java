@@ -1,5 +1,6 @@
 package com.hk.impl.dao.sku;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -18,6 +19,7 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,13 +80,13 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 	}
 
 
-	private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+	private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
 		DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
 		if (skuGroup != null) {
 			skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
 		}
-		if (skuItemStatus != null) {
-			skuItemCriteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
+		if (skuItemStatus != null && skuItemStatus.size()>0) {
+			skuItemCriteria.add(Restrictions.in("skuItemStatus", skuItemStatus));
 		}
 		return skuItemCriteria;
 	}
@@ -94,7 +96,17 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		if (skuGroup == null) {
 			return new ArrayList<SkuItem>();
 		}
-		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		List<SkuItemStatus> itemStatus = new ArrayList<SkuItemStatus>();
+		itemStatus.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, itemStatus);
+		return findByCriteria(skuItemCriteria);
+	}
+	
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
+		if (skuGroup == null) {
+			return new ArrayList<SkuItem>();
+		}
+		DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus);
 		return findByCriteria(skuItemCriteria);
 	}
 
@@ -105,7 +117,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
 		return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
 	}
-
+	
 	public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
 		String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
 		if (statusId != null) {
@@ -148,8 +160,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
 
 	public List<SkuItem> getCheckedInSkuItems(Sku sku) {
-		String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
-		Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
+		List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+        
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+        
+		String sql = "from SkuItem si where  si.skuItemStatus in :skuItemStatusList and si.skuItemOwner in (:skuItemOwnerList) and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
+		Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameterList("skuItemStatusList", skuItemStatusList).setParameterList("skuItemOwnerList", skuItemOwnerList);
 		return query.list();
 	}
 
@@ -362,17 +382,4 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
            List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
            return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
        }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-

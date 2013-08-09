@@ -7,12 +7,15 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.springframework.stereotype.Repository;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -302,6 +305,29 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
     String query = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse " +
         " and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() + " order by si.id ";
     return findByNamedParams(query, new String[]{"barcode", "warehouse"}, new Object[]{barcode, warehouse});
+  }
+
+
+  @Override
+  public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners) {
+      String sql = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse ";
+      if (skuItemStatusList != null && skuItemStatusList.size() > 0) {
+          sql = sql + "and si.skuItemStatus  in (:skuItemStatusList) ";
+      }
+      if(skuItemOwners!=null &&skuItemOwners.size()>0){
+          sql = sql+ "and si.skuItemOwner in (:skuItemOwners)";
+      }
+      
+      sql+= " order by si.id";
+      Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouse", warehouse);
+      if (skuItemStatusList != null && skuItemStatusList.size() > 0) {
+          query.setParameterList("skuItemStatusList", skuItemStatusList);
+      }
+      if(skuItemOwners!=null &&skuItemOwners.size()>0){
+          query.setParameterList("skuItemOwners", skuItemOwners);
+      }
+
+      return query.list();
   }
 
 }

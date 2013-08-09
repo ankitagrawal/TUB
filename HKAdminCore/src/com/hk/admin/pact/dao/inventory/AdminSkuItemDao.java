@@ -4,6 +4,8 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.BaseDao;
@@ -50,6 +52,8 @@ public interface AdminSkuItemDao extends BaseDao {
     public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup);
 
     public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
+    
+    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners);
 
 
 }
