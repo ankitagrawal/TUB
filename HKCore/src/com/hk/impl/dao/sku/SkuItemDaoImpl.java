@@ -168,7 +168,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
         skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
         
-		String sql = "from SkuItem si where  si.skuItemStatus in :skuItemStatusList and si.skuItemOwner in (:skuItemOwnerList) and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
+		String sql = "from SkuItem si where  si.skuItemStatus in (:skuItemStatusList) and si.skuItemOwner in (:skuItemOwnerList) and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
 		Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameterList("skuItemStatusList", skuItemStatusList).setParameterList("skuItemOwnerList", skuItemOwnerList);
 		return query.list();
 	}
