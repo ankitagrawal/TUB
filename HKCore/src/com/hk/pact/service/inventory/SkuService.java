@@ -21,8 +21,10 @@ public interface SkuService {
 	 */
 	public Sku getSKU(ProductVariant productVariant, Warehouse warehouse);
 
+  // todo -- to be deleted
 	public Sku findSKU(ProductVariant productVariant, Warehouse warehouse);
 
+  // todo -- to be deleted -- and also deleted commented code in pricing engine
 	public Sku findMaxVATSKU(ProductVariant productVariant);
 
 	/**
@@ -33,6 +35,7 @@ public interface SkuService {
 	 */
 	public List<Sku> getSKUsForProductVariant(ProductVariant productVariant);
 
+  // todo -- need to merged in one method
 	public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant);
 
 	public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant, Order order);
@@ -56,6 +59,7 @@ public interface SkuService {
 
 	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId);
 
+  // todo -- need to merged in one method
  public List<Sku> getSkus(ProductVariant productVariant, List<Warehouse> warehouseList);
   
 

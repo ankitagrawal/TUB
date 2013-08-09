@@ -24,6 +24,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
  * Created by IntelliJ IDEA. User: PRATHAM Date: 1/19/12 Time: 3:14 PM To change this template use File | Settings |
  * File Templates.
  */
+
+//todo -- deleted
 @Component
 public class BinGenerator {
     private static Logger      logger          = LoggerFactory.getLogger(BinGenerator.class);
@@ -64,7 +66,7 @@ public class BinGenerator {
             checkInventoryHealth(skuList);
         }
     }
-
+   // todo --deleted
     public Long getAvailableUnbookedInventory(List<Sku> skuList) {
         Long netInventory = productVariantInventoryDaoProvider.getNetInventory(skuList);
         Long bookedInventory = getInventoryService().getBookedQtyOfSkuInQueue(skuList);

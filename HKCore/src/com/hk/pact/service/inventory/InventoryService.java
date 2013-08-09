@@ -29,12 +29,13 @@ public interface InventoryService {
      * @return Unbooked Inventory - this is difference of net physical inventory and all booked inventory The return
      *         value can be negative in case we are doing overbooking and product is not timely marked as Out Of Stock
      */
-    @Deprecated
+
     public Long getAvailableUnbookedInventory(Sku sku);
 
+  // todo --deleted
     @Deprecated
     public Long getAvailableUnbookedInventoryForPrescriptionEyeglasses(List<Sku> skuList);
-
+    // todo --deleted
     @Deprecated
     public Long getAvailableUnbookedInventory(List<Sku> skuList);
 
@@ -43,18 +44,19 @@ public interface InventoryService {
     //public List<Warehouse> getWarehousesForSkuAndQty(List<Sku> skuList, Long qty);
 
     public Supplier getSupplierForSKU(Sku sku);
-
+    // todo deleted
     public Long getBookedQtyOfSkuInQueue(List<Sku> sku);
-
+     // todo deleted
     @Deprecated
     public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList);
-    
+
+   // todo -- need to be replace
     long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
-
+    // todo -- need to be replace
     public long getUnbookedInventoryForActionQueue(LineItem lineItem);
-
+     // todo deleted
     public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
-
+       // todo deleted
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);
 
     public boolean allInventoryCheckedIn(GoodsReceivedNote grn);

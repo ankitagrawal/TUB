@@ -12,23 +12,26 @@ import com.hk.domain.order.Order;
 public interface InventoryHealthService {
 
 //    void checkInventoryHealth(ProductVariant productVariant);
-
+    // todo -- need to move  in inventory service
     long getAvailableUnbookedInventory(ProductVariant productVariant);
-
+     // todo -- all  these method need to be move in ssplitter service
     Collection<InventoryInfo> getAvailableInventory(List<Sku> skus);
 
     Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem);
 	
 	Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs);   
-	
+
+  // todo --  need to refactor
 	long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
 
     Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant);
 
     Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter);
 
+  // todo --  need to refactor
     long getUnbookedInventoryForActionQueue(LineItem lineItem);
 
+  // todo -- need to move  in inventory service
     public void inventoryHealthCheck(ProductVariant productVariant);
 
     public void tempBookSkuLineItemForOrder(Order order);
