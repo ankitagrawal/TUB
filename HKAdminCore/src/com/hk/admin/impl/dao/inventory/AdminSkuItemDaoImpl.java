@@ -126,17 +126,6 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao 
   }
 
 
-  public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
-    List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
-    for (SkuGroup skuGroup : skuGroupList) {
-      List<SkuItem> skuItemBykuGroup = getInStockSkuItems(skuGroup);
-      if (skuItemBykuGroup != null && skuItemBykuGroup.size() > 0) {
-        inStockSkuItems.addAll(skuItemBykuGroup);
-      }
-    }
-    return inStockSkuItems;
-  }
-
   public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
     String query = "select si from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse = :warehouse " +
         " and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() + " order by si.id ";

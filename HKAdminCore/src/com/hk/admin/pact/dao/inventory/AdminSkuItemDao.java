@@ -25,8 +25,6 @@ public interface AdminSkuItemDao extends BaseDao {
 
   public List<SkuGroup> getInStockSkuGroups(Sku sku);
 
-  public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
-
   public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem);
 
   public List<SkuGroup> getSkuGroupsInReviewState();

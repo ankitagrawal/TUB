@@ -280,34 +280,6 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   }
 
 
-  private Long getNetInventory(List<Sku> skuList, Double mrp) {
-    Long netInv = 0L;
-    if (skuList != null && !skuList.isEmpty()) {
-      //String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
-      String query = "select count(si) from SkuItem si where si.skuGroup.status != :skuStatus and si.skuGroup.sku in (:skuList) " +
-          "and si.skuGroup.mrp = :mrp and si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId();
-      netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW).setParameter("mrp", mrp).uniqueResult();
-      if (netInv == null) {
-        netInv = 0L;
-      }
-    }
-    return netInv;
-  }
-
-  public Long getAvailableUnbookedInventory(List<Sku> skuList, Double mrp, boolean addBrightInventory) {
-    Long netInventory = getNetInventory(skuList, mrp);
-    logger.debug("net inventory " + netInventory);
-
-    Long bookedInventory = 0L;
-    if (!skuList.isEmpty()) {
-      ProductVariant productVariant = skuList.get(0).getProductVariant();
-//               bookedInventory = getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemOwner.SELF.getId()) + getTempOrBookedQtyOfProductVariantInQueue(productVariant, EnumSkuItemStatus.BOOKED.getId(), EnumSkuItemOwner.SELF.getId());
-      logger.debug("booked inventory " + bookedInventory);
-    }
-
-    return (netInventory - bookedInventory);
-
-  }
 
   public Long getBookedQtyOfSkuInQueue(List<Sku> skuList) {
     Long qtyInQueue = 0L;

@@ -54,7 +54,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   @Autowired
   UpdatePvPriceDao updatePvPriceDao;
   @Autowired
-  SkuItemDao inventoryManageDao;
+  SkuItemDao skuItemDao;
   @Autowired
   SkuService skuService;
   @Autowired
@@ -513,7 +513,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     // get Net quantity for product variant
     List<Sku> variantSkus = skuService.getSKUsForProductVariant(productVariant);
-    long netQty = inventoryManageDao.getInventoryCount(variantSkus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
+    long netQty = skuItemDao.getInventoryCount(variantSkus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
     productVariant.setNetQty(netQty);
 
     productVariant.setMrpQty(maxQty);
@@ -566,19 +566,18 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           List<Sku> skus = new ArrayList<Sku>();
           Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
           skus.add(sku);
-          Long availableUnBookedInventory = inventoryManageDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
+          Long availableUnBookedInventory = skuItemDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
 
           if (availableUnBookedInventory > 0) {
             // picking the  sku for current MRP available at max qty on product variant
 //            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
 
             long qtyToBeSet = cartLineItem.getQty();
-            //long availableCheckedInInventory = inventoryManageDao.getCheckedInSkuItems(sku, productVariant.getMarkedPrice()).size();
             if (availableUnBookedInventory >= qtyToBeSet) {
               Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
               for (int i = 0; i < qtyToBeSet; i++) {
-                List<SkuItem> skuItemList = inventoryManageDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+                List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
 
                 if (skuItemList != null && skuItemList.size() > 0) {
                   SkuItem skuItem = skuItemList.get(0);
@@ -731,7 +730,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
         if (maxQty >= qtyToBeSet) {
           for (int i = 0; i < qtyToBeSet; i++) {
-            List<SkuItem> skuItemList = inventoryManageDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+            List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
             if (skuItemList != null && skuItemList.size() > 0) {
               SkuItem skuItem = skuItemList.get(0);
               skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
