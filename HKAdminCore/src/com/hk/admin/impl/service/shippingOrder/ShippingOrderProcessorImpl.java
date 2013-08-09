@@ -100,7 +100,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 	@Transactional
 	public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder) {
 		if(isShippingOrderManuallyEscalable(shippingOrder)){
-			shippingOrderService.validateShippingOrder(shippingOrder);
 			User activityUser = userService.getLoggedInUser();
 			shippingOrderService.logShippingOrderActivity(shippingOrder, activityUser,
 					EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
@@ -216,33 +215,40 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     }
 
     private ShippingOrder autoProcessInventoryMismatch(ShippingOrder shippingOrder, User user) {
+        shippingOrderService.validateShippingOrder(shippingOrder);
         Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
         List<String> messages = new ArrayList<String>();
         Set<LineItem> selectedItems = new HashSet<LineItem>();
 
         for (LineItem lineItem : shippingOrder.getLineItems()) {
-            Long availableUnbookedInv = 0L;
-
             if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
                 continue;
-                //	 return true;
-                //availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
-            }else{
-                availableUnbookedInv = getInventoryService().getUnbookedInventoryForActionQueue(lineItem);
             }
+
             Long orderedQty = lineItem.getQty();
 
-            // It cannot be = as for last order/unit unbooked will always be ZERO
-            if (availableUnbookedInv < orderedQty && !shippingOrder.isDropShipping()
-                    && !lineItem.getSku().getProductVariant().getProduct().isJit()) {
-                String comments = lineItem.getSku().getProductVariant().getProduct().getName()
-                        + " at this instant was = " + availableUnbookedInv;
-                shippingOrderService.logShippingOrderActivity(shippingOrder, user,
-                        shippingOrderService.getShippingOrderLifeCycleActivity(
-                                EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
-                        EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
-                //return false;
-                selectedItems.add(lineItem);
+            // Check for inventory mismatch for non JIT and non drop shipping orders
+            if (!shippingOrder.isDropShipping() && !lineItem.getSku().getProductVariant().getProduct().isJit()) {
+                if (lineItem.getSkuItemLineItems()== null) {
+                    // if no inventory has been booked for the line item
+                    selectedItems.add(lineItem);
+                    String comments = "No available booking found for the product variant " +
+                            lineItem.getSku().getProductVariant();
+                    logger.debug(comments);
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, user,
+                            shippingOrderService.getShippingOrderLifeCycleActivity(
+                                    EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
+                            EnumReason.InsufficientUnbookedInventory.asReason(), comments);
+                } else if( lineItem.getSkuItemLineItems().size() < orderedQty) {
+                    // if partial inventory has been booked for the line item
+                    selectedItems.add(lineItem);
+                    String comments = "Partial inventory booked for " + lineItem.getSku().getProductVariant();
+                    logger.debug(comments);
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, user,
+                            shippingOrderService.getShippingOrderLifeCycleActivity(
+                                    EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
+                            EnumReason.PROD_INV_MISMATCH.asReason(), comments);
+                }
             }
         }
 

@@ -131,63 +131,28 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
             // Creating acceptable reasons for escalate back
             Set<Long> acceptableReasons = EnumReason.getAcceptableReasonIDsEscalateBack();
 
-            boolean isEscalatebackAllowed;
+            boolean isEscalateBackAllowed;
             List<Long> shippingOrderIdsWithInvalidReason = new ArrayList<Long>();
-            List<Long> shippingOrdersWithoutFixedLI = new ArrayList<Long>();
+         //   List<Long> shippingOrdersWithoutFixedLI = new ArrayList<Long>();
 
             for (ShippingOrder shippingOrder : shippingOrderList) {
-                isEscalatebackAllowed = false;
+                isEscalateBackAllowed = false;
                 if (shippingOrder.getReason() != null && acceptableReasons.contains(shippingOrder.getReason().getId())) {
                     if (shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(),
                             EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed.getId()) != null ) {
                         // then only allow escalate back
-                        isEscalatebackAllowed = true;
-                    } else {
+                        isEscalateBackAllowed = true;
+                    } /*else {
                         shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
-                    }
+                    }*/
                 } else {
                     shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
                 }
-                if (isEscalatebackAllowed) {
-                    Set<LineItem> selectedLineItems = new HashSet<LineItem>();
-                    List<String> messages = new ArrayList<String>();
-                    Map<String, ShippingOrder> splittedOrders =  new HashMap<String, ShippingOrder>();
-                    for (LineItem lineItem : shippingOrder.getLineItems()) {
-                        /*if (lineItem.getError() != null && lineItem.getError()) {
-                            selectedLineItems.add(lineItem);
-                        }*/
-                    }
-                    if (!selectedLineItems.isEmpty()) {
-                        // if all elements can't be fixed then cancel complete SO
-                        if (selectedLineItems.size() == shippingOrder.getLineItems().size()) {
-                            shippingOrderService.logShippingOrderActivity(shippingOrder,
-                                    EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch, shippingOrder.getReason(),
-                                    "SO cancelled due to inventory mismatch.");
-                            adminShippingOrderService.cancelShippingOrder(shippingOrder,null);
-                            //return shippingOrder;
-                        } else {
-                            // split the order and cancel only the unfixed line items
-                            boolean splitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems,
-                                    splittedOrders, messages);
-                            if (splitSuccess) {
-                                ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
-                                shippingOrderService.logShippingOrderActivity(cancelledSO,
-                                        EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch, cancelledSO.getReason(),
-                                        "SO cancelled due to inventory mismatch.");
-                                adminShippingOrderService.cancelShippingOrder(cancelledSO, null);
-                                shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
-                                shippingOrder = adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
-
-                                // auto escalate the SO
-                                shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
-                            }
-                        }
-                    } else {
-                        //no line items which are unfixed
-                        shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
-                    }
+                if (isEscalateBackAllowed) {
+                    shippingOrder = adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+                    // after escalate back auto escalate the SO
+                    shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
                 }
-
             }
 
             if (shippingOrderIdsWithInvalidReason.size() > 0) {
@@ -195,12 +160,12 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
                         + shippingOrderIdsWithInvalidReason));
             }
 
-            if (shippingOrdersWithoutFixedLI.size() > 0 ) {
+           /* if (shippingOrdersWithoutFixedLI.size() > 0 ) {
                 addRedirectAlertMessage(new SimpleMessage("Unfixed Line items not found for shipping order -> "
                         + shippingOrdersWithoutFixedLI));
-            }
-            if (shippingOrderList.size() != (shippingOrderIdsWithInvalidReason.size()
-                    + shippingOrdersWithoutFixedLI.size())) {
+            }*/
+            if (shippingOrderList.size() != shippingOrderIdsWithInvalidReason.size()) {
+                    /*+ shippingOrdersWithoutFixedLI.size())*/
                 addRedirectAlertMessage(new SimpleMessage("Orders with no errors have been moved back to Action" +
                         " Awaiting and also have been auto escalated."));
             }
