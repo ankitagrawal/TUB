@@ -2,6 +2,7 @@ package com.hk.impl.service.inventory;
 
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
@@ -35,10 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -73,8 +71,10 @@ public class InventoryServiceImpl implements InventoryService {
   InventoryHealthService inventoryHealthService;
   @Autowired
   SkuItemDao inventoryManageDao;
-   @Autowired
-   CartLineItemDao cartLineItemDao;
+  @Autowired
+  CartLineItemDao cartLineItemDao;
+  @Autowired
+  SkuItemDao skuItemDao;
 
   @Override
   @Transactional
@@ -144,7 +144,10 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public Long getAvailableUnbookedInventory(Sku sku, Double mrp) {
-    //TODO: Write proper DAO method
+    List<SkuItem> skuItems = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), mrp);
+    if(!skuItems.isEmpty()){
+      return Long.valueOf(skuItems.size());
+    }
     return 0L;
   }
 
@@ -171,73 +174,72 @@ public class InventoryServiceImpl implements InventoryService {
 
   //Migrated from Inventory Manage Service
   //     Make Entries in new SkuItemCLI  table
-    public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem) {
-        Long count = 1L;
-        List<SkuItemCLI> skuItemCLIList = new ArrayList<SkuItemCLI>();
-        for (SkuItem si : skuItemsToBeBooked) {
-            SkuItemCLI skuItemCLI = new SkuItemCLI();
-            skuItemCLI.setCartLineItem(cartLineItem);
-            skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-            skuItemCLI.setUnitNum(count);
-            skuItemCLI.setSkuItem(si);
-            skuItemCLIList.add(skuItemCLI);
-            count++;
-        }
-        baseDao.saveOrUpdate(skuItemCLIList);
-        return  skuItemCLIList;
+  public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem) {
+    Long count = 1L;
+    List<SkuItemCLI> skuItemCLIList = new ArrayList<SkuItemCLI>();
+    for (SkuItem si : skuItemsToBeBooked) {
+      SkuItemCLI skuItemCLI = new SkuItemCLI();
+      skuItemCLI.setCartLineItem(cartLineItem);
+      skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+      skuItemCLI.setUnitNum(count);
+      skuItemCLI.setSkuItem(si);
+      skuItemCLIList.add(skuItemCLI);
+      count++;
     }
+    baseDao.saveOrUpdate(skuItemCLIList);
+    return skuItemCLIList;
+  }
 
 
+  public Long getAvailableUnBookedInventory(ProductVariant productVariant) {
+    // get Net physical inventory
+    List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+    List<Long> statuses = new ArrayList<Long>();
+    statuses.add(EnumSkuItemStatus.Checked_IN.getId());
+    // only considering CheckedInInventory
+    return inventoryManageDao.getInventoryCount(skuList, statuses);
 
-    public Long getAvailableUnBookedInventory(ProductVariant productVariant) {
-        // get Net physical inventory
-        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-        List<Long> statuses = new ArrayList<Long>();
-        statuses.add(EnumSkuItemStatus.Checked_IN.getId());
-        // only considering CheckedInInventory
-        return inventoryManageDao.getInventoryCount(skuList, statuses);
-
-    }
-
-
-    @Override
-    public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
-
-        List<Long> statusIds = EnumSkuItemStatus.getCheckedInPlusBookedStatus(); 
-        // considering Checcked in , temp booked , booked ie physical inventory
-        Long netInventory = inventoryManageDao.getInventoryCount(skuList, statusIds);
+  }
 
 
-        Long bookedInventory = 0L;
-        if (!skuList.isEmpty()) {
-            ProductVariant productVariant = skuList.get(0).getProductVariant();
-            bookedInventory = orderDao.getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
+  @Override
+  public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory) {
 
-        }
-        return (netInventory - bookedInventory);
+    List<Long> statusIds = EnumSkuItemStatus.getCheckedInPlusBookedStatus();
+    // considering Checcked in , temp booked , booked ie physical inventory
+    Long netInventory = inventoryManageDao.getInventoryCount(skuList, statusIds);
+
+
+    Long bookedInventory = 0L;
+    if (!skuList.isEmpty()) {
+      ProductVariant productVariant = skuList.get(0).getProductVariant();
+      bookedInventory = orderDao.getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
 
     }
+    return (netInventory - bookedInventory);
+
+  }
 
 
-    private Long getBookedQty(List<Sku> skuList) {
-        Long bookedInventory = 0L;
-        if (skuList != null && !skuList.isEmpty()) {
-            Long bookedInventoryForSKUs = inventoryManageDao.getBookedQtyOfSkuInQueue(skuList);
+  private Long getBookedQty(List<Sku> skuList) {
+    Long bookedInventory = 0L;
+    if (skuList != null && !skuList.isEmpty()) {
+      Long bookedInventoryForSKUs = inventoryManageDao.getBookedQtyOfSkuInQueue(skuList);
 
-            bookedInventory = bookedInventoryForSKUs;
-        }
-        return bookedInventory;
+      bookedInventory = bookedInventoryForSKUs;
     }
+    return bookedInventory;
+  }
 
 
-    public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant) {
-        return inventoryManageDao.getLatestcheckedInBatchInventoryCount(productVariant);
-    }
+  public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant) {
+    return inventoryManageDao.getLatestcheckedInBatchInventoryCount(productVariant);
+  }
 
 
-    public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp) {
-        return cartLineItemDao.getClisForOrderInProcessingState(productVariant, skuId, mrp);
-    }
+  public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp) {
+    return cartLineItemDao.getClisForOrderInProcessingState(productVariant, skuId, mrp);
+  }
 
 
   public ProductVariantService getProductVariantService() {
