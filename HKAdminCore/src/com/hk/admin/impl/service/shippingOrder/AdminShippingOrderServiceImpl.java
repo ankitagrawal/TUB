@@ -371,7 +371,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private void refundPayment(ShippingOrder shippingOrder,String comment) {
         User loggedOnUser = userService.getLoggedInUser();
         if (shippingOrder.getAmount() > 0) {
-            if(EnumGateway.manualRefundGatewaysList().contains(shippingOrder.getBaseOrder().getPayment().getGateway().getId())) {
+            if(EnumGateway.getManualRefundGateways().contains(shippingOrder.getBaseOrder().getPayment().getGateway().getId())) {
                 adminEmailManager.sendManualRefundTaskToAdmin(shippingOrder.getAmount(),
                         shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(),shippingOrder.getBaseOrder().getPayment().getGateway().getName());
                 getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,

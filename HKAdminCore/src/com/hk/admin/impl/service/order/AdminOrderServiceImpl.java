@@ -260,7 +260,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         User loggedOnUser = userService.getLoggedInUser();
         if (order.getPayment().getAmount() > 0) {
 
-            if(EnumGateway.manualRefundGatewaysList().contains(order.getPayment().getGateway().getId())) {
+            if(EnumGateway.getManualRefundGateways().contains(order.getPayment().getGateway().getId())) {
                 adminEmailManager.sendManualRefundTaskToAdmin(order.getPayment().getAmount(),
                         order.getPayment().getGatewayOrderId(),order.getPayment().getGateway().getName());
                 logOrderActivity(order, loggedOnUser,
