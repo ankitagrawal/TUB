@@ -16,6 +16,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -25,6 +26,8 @@ import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
@@ -233,44 +236,53 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
-    public Resolution SubtractReconciled() {
-        SkuItem skuItem = null;
-        if (reconciliationVoucher == null) {
-            addRedirectAlertMessage(new SimpleMessage("Invalid Reconcilliation "));
-            return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
-        }
+	public Resolution SubtractReconciled() {
+		List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
 
-        if (StringUtils.isBlank(upc)) {
-            addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
-            return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
-        }
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+		SkuItem skuItem = null;
+		if (reconciliationVoucher == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Reconcilliation "));
+			return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
+		}
 
-        User loggedOnUser = null;
-        if (getPrincipal() != null) {
-            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        }
-        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
-        if (skuItemBarcode != null) {
-            skuItem = skuItemBarcode;
-        } else {
-            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser());
-            if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
-                skuItem = inStockSkuItemList.get(0);
-            }
-        }
-        if (skuItem == null) {
-            addRedirectAlertMessage(new SimpleMessage("Either Invalid barcode or No Item found"));
-            return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
-        }
+		if (StringUtils.isBlank(upc)) {
+			addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
+			return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+		}
 
-        if (reconciliationVoucherService.reconcileSKUItems(reconciliationVoucher, reconciliationType, skuItem, remarks) == null) {
-            addRedirectAlertMessage(new SimpleMessage("Error occured in saving RVLineitem"));
-            return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
-        }
+		User loggedOnUser = null;
+		if (getPrincipal() != null) {
+			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+		}
+		SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwnerList);
+		if (skuItemBarcode != null) {
+			skuItem = skuItemBarcode;
+		} else {
+			List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser(), skuItemStatusList, skuItemOwnerList);
+			if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
+				skuItem = inStockSkuItemList.get(0);
+			}
+		}
+		if (skuItem == null) {
+			addRedirectAlertMessage(new SimpleMessage("Either Invalid barcode or No Item found"));
+			return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+		}
 
-        addRedirectAlertMessage(new SimpleMessage("DataBase Updated"));
-        return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
-    }
+
+		if (reconciliationVoucherService.reconcileSKUItems(reconciliationVoucher, reconciliationType, skuItem, remarks) == null) {
+			addRedirectAlertMessage(new SimpleMessage("Error occured in saving RVLineitem"));
+			return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+		}
+		//validating this skuitem against any entries in booking table
+		reconciliationVoucherService.validateSkuItem(skuItem);
+		addRedirectAlertMessage(new SimpleMessage("DataBase Updated"));
+		return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+	}
 
 
     public Resolution downloadBarcode() {
@@ -421,6 +433,11 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
     public HealthkartResponse subtractInventory(boolean singleBatch) {
+    	
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
         HealthkartResponse healthkartResponse = null;
         warehouse = userService.getWarehouseForLoggedInUser();
         if (rvLineItems != null && (!rvLineItems.isEmpty())) {
@@ -446,7 +463,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                         List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
                         if (skuGroupList.size() > 0) {
                             if (skuGroupList.size() == 1) {
-                                inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
+                                inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0), skuItemStatusList);
                             } else {
                                 return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Inventory Present in Multiple batches ");
                             }
@@ -508,6 +525,11 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 
     public Resolution uploadSubtractExcelForProductAuditedForSingleBatch() throws Exception {
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+    	
         StringBuilder errors = new StringBuilder("");
         rvParser.setMessage(new StringBuilder(""));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -531,7 +553,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 if (skuGroupList.size() > 0) {
                     if (skuGroupList.size() == 1) {
                         skuGroup = skuGroupList.get(0);
-                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroup);
+                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
                         if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
                             int systemQty = inStockSkuItems.size();
                             if (systemQty >= qty) {
@@ -619,15 +641,22 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     @JsonHandler
 	public Resolution getSupplierAgainstBarcode() {
 		Map<Object, Object> dataMap = new HashMap<Object, Object>();
+		List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+        
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 		HealthkartResponse healthkartResponse = null;
 		SkuItem skuItem = null;
 		if (StringUtils.isNotBlank(barcode) && warehouseId != null) {
 			try {
-				SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(barcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+				SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(barcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwnerList);
 		        if (skuItemBarcode != null) {
 		            skuItem = skuItemBarcode;
 		        } else {
-		            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser());
+		            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(upc, userService.getWarehouseForLoggedInUser(),skuItemStatusList, skuItemOwnerList);
 		            if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
 		                skuItem = inStockSkuItemList.get(0);
 		            }

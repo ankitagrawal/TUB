@@ -54,6 +54,7 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         return reversePickupDetachedCriteria;
     }
 
+
     public List<ReversePickupOrder> getReversePickupsForSO(ShippingOrder shippingOrder) {
         DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, null, null, null, null, null, null);
         return findByCriteria(reversePickupCriteria);

@@ -100,6 +100,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
         return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
     }
+    
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
+    	return (List<SkuItem>) skuItemDao.getInStockSkuItems(skuGroup, skuItemStatus);
+    }
 
     public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList) {
         return skuItemDao.getSkuItem(skuGroup, skuItemStatusList);
