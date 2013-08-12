@@ -78,7 +78,6 @@ public class ReversePickupListAction extends BasePaginatedAction {
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
-
     @Secure(hasAnyPermissions = {PermissionConstants.APPROVE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution approveCSAction() {
         if (rpLineitem != null) {

@@ -16,6 +16,7 @@ import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
+import com.hk.domain.queue.TrafficState;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.queue.ActionItemDao;
@@ -232,10 +233,18 @@ public class BucketServiceImpl implements BucketService {
         ActionItem actionItem = existsActionItem(shippingOrder);
         if (actionItem != null) {
             shippingOrder.setActionItem(null);
+            actionItemDao.save(shippingOrder);
             //release all dependencies
+            Iterator<Bucket> bucketIterator = actionItem.getBuckets().iterator();
+            while ( bucketIterator.hasNext() ){
+            	Bucket bucket = bucketIterator.next();
+            	bucket.getActionItems().remove(actionItem);
+            	actionItemDao.save(bucket);
+            }
             actionItem.getBuckets().clear();
             actionItem.getWatchers().clear();
-            actionItem = saveActionItem(actionItem);
+            saveActionItem(actionItem);
+            actionItemDao.refresh(actionItem);
             actionItemDao.delete(actionItem);
         }
     }

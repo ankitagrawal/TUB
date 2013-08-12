@@ -100,6 +100,7 @@
                         <s:hidden name="shipment.emailSent" value="${cusa.shipment.emailSent}"/>
                         <s:hidden name="shipment.collectionCharge" value="${cusa.shipment.collectionCharge}" />
                         <s:hidden name="shipment.shipmentCharge" value="${cusa.shipment.shipmentCharge}"/>
+                        <s:hidden name="shipment.orderPlacedShipmentCharge" value="${cusa.shipment.orderPlacedShipmentCharge}"/>
                         <s:hidden name="shipment.returnDate" value="${cusa.shipment.returnDate}"/>
                         <s:hidden name="shipment.estmShipmentCharge" value="${cusa.shipment.estmShipmentCharge}" />
                         <s:hidden name="shipment.estmCollectionCharge" value="${cusa.shipment.estmCollectionCharge}" />

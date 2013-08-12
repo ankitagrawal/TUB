@@ -66,7 +66,8 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_LineItemCouldNotFixed(1002l, "SO Line Item could not be fixed"),
   SO_AUTO_PO_CREATED(1003l, "PO for SO created Automatically"),
   SO_PO_RECEIVED(1004l, "PO for SO Received"),
-  Reconciliation(1050l,"Reconciliation"),
+  SO_ITEM_RV_SUBTRACT(1100l, "Item Replaced with another one, when original was RVed"),
+  Reconciliation(1050l,"Reconciliation")
   ;
 
   private String name;

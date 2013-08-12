@@ -13923,7 +13923,16 @@
 			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		</sql>
 	</changeSet>
-   
+    <changeSet author="Pratham (generated)" id="2013-08-05-01">
+        <addColumn tableName="shipment">
+            <column name="order_placed_shipment_charge" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-08-05-02">
+        <addColumn tableName="shipment">
+            <column name="shipment_cost_calculate_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1375698046513-16">
         <createIndex indexName="si_cli_unique" tableName="sku_item_cart_line_item" unique="true">
             <column name="cart_line_item_id"/>
@@ -13936,7 +13945,7 @@
             <column name="line_item_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Shakti Singh (generated)" id="20130805-01">
+    <changeSet author="Shakti Singh (generated)" id="20130812-01">
         <sql>
             insert into classification(`id` ,`primary`,`secondary`) values
             (1500,'Refund Failed',null),

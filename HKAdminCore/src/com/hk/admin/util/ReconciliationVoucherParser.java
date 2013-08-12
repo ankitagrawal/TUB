@@ -16,6 +16,7 @@ import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import com.hk.constants.XslConstants;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 
@@ -310,8 +311,12 @@ public class ReconciliationVoucherParser {
     }
 
     public SkuGroup getSkuGroupWithSystemQty(List<SkuGroup> skuGroupList, int qty) {
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
         for (SkuGroup skuGroup : skuGroupList) {
-            List<SkuItem> inStockSkuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+            List<SkuItem> inStockSkuItemList = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
             int systemQty = inStockSkuItemList.size();
             if (systemQty == qty) {
                 return skuGroup;

@@ -26,7 +26,6 @@ import com.hk.domain.sku.Sku;
 @Table(name = "grn_line_item", uniqueConstraints = @UniqueConstraint(columnNames = {"goods_received_note_id", "sku_id"}))
 public class GrnLineItem implements java.io.Serializable {
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", unique = true, nullable = false)

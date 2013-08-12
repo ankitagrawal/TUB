@@ -213,7 +213,7 @@
             <div>
                 <s:hidden name="order"/>
 
-                <s:submit name="acceptAsSuccessful" value="Accept payment as Successful"
+                <s:submit name="autoUpdate" value="Auto Confirm"
                           onclick="return confirm('Are you sure?')"/>
                     <%--
                             <c:if test="${checkPaymentBean.order.orderStatus.id eq orderStatusInCart && checkPaymentBean.order.address != null}">
@@ -226,7 +226,8 @@
                               <s:submit name="associateToPayment" value="Associate to payment" onclick="return confirm('Are you sure?')"/>
                             </c:if>
                     --%>
-
+                <s:submit name="manualUpdate" value="Manual Confirm" onclick="retrun confirm('Are you sure')"/>
+                <s:submit name="acceptAsSuccessful" value="Confirm Cheque/Neft/Cash" onclick="retrun confirm('Are you sure')"/>
             </div>
         </s:form>
     </s:layout-component>
