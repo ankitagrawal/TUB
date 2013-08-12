@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -9,9 +10,18 @@ import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.discount.EnumRewardPointTxnType;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.inventory.EnumReconciliationActionType;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumGateway;
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
@@ -20,21 +30,30 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.*;
+import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.user.User;
+import com.hk.domain.user.UserAccountInfo;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.reward.RewardPointDao;
+import com.hk.pact.dao.reward.RewardPointTxnDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.user.UserAccountInfoDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
@@ -42,10 +61,13 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +127,19 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	@Autowired
 	private LoyaltyProgramService loyaltyProgramService;
 
-	public void cancelShippingOrder(ShippingOrder shippingOrder, String cancellationRemark) {
+    @Autowired
+    private PaymentService paymentService;
+    @Autowired
+    private RewardPointTxnDao rewardPointTxnDao;
+    @Autowired
+    RewardPointService rewardPointService;
+    @Autowired
+    private UserAccountInfoDao userAccountInfoDao;
+    @Autowired
+    private RewardPointDao rewardPointDao;
+
+
+	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType ,boolean reconcileAll) {
 		// Check if Order is in Action Queue before cancelling it.
 		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 			logger.warn("Cancelling Shipping order gateway id:::" + shippingOrder.getGatewayOrderId());
@@ -127,6 +161,23 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 				shipmentService.delete(shipmentToDelete);
 				//shippingOrderService.save(shippingOrder);
 			}
+
+            if(!reconcileAll) {
+
+                // if shipping order is of RO don't do any thing
+                if(shippingOrder instanceof ReplacementOrder) {
+                    // do nothing
+                } else {
+                    reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
+
+                    if(reconciliationType != null) {
+                        relieveExtraLiabilties(reconciliationType,shippingOrder,null);
+                    }
+                }
+
+            }
+
+
 			shippingOrder = getShippingOrderService().save(shippingOrder);
 			if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
 				adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
@@ -137,6 +188,226 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 			getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
 		}
 	}
+
+    public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order) {
+        /*Double refundValue = 0D;
+        if (shippingOrder == null) {
+            refundValue = order.getPayment().getAmount();
+        } else {
+            refundValue = shippingOrder.getAmount(); //TODO: handle for free cases
+        }*/
+        Double percentageAmount = calculateWeight(shippingOrder,order);
+
+        // first redeem redeem points used by this SO/BO
+        List<RewardPointTxn> rewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
+        for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
+            rewardPointTxnDao.createRefundTxn(rewardPointTxn, rewardPointTxn.getValue()*percentageAmount);
+        }
+
+
+        /*List<RewardPoint> currentRewardPoints = rewardPointService.findRewardPoints(order, EnumRewardPointMode.getCashBackModes());
+        for (RewardPoint currentRewardPoint : currentRewardPoints) {
+            List<RewardPointTxn> currentRewardPointTxnList = rewardPointTxnDao.findByRewardPoint(currentRewardPoint);
+            for (RewardPointTxn rewardPointTxn : currentRewardPointTxnList) {
+                if (rewardPointTxn.isType(EnumRewardPointTxnType.ADD)) {
+                    RewardPoint cashBackRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
+                            order, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
+                            EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
+                    rewardPointService.approveRewardPoints(Arrays.asList(cashBackRewardPoints), rewardPointTxn.getExpiryDate());
+                }
+            }
+        }*/
+
+        // cancel reward points in partial manner
+        List<RewardPoint> currentRewardPoints = rewardPointService.findRewardPoints(order, EnumRewardPointMode.getCashBackModes());
+
+        for (RewardPoint rewardPoint : currentRewardPoints) {
+
+            List<RewardPointTxn> txnList = rewardPointTxnDao.findByRewardPoint(rewardPoint);
+            Double totalAddedRewardPoints = 0D;
+            Double totalUsedRewardPoints = 0D;
+            for (RewardPointTxn rewardPointTxn : txnList) {
+                if (!rewardPointTxn.isType(EnumRewardPointTxnType.REFERRED_ORDER_CANCELLED)) {
+
+                    if (rewardPointTxn.isType(EnumRewardPointTxnType.REDEEM) && rewardPointTxn.isType(EnumRewardPointTxnType.REFUND)) {
+                        totalUsedRewardPoints += rewardPointTxn.getValue();
+                    }
+
+                    if (rewardPointTxn.isType(EnumRewardPointTxnType.ADD)) {
+                        totalAddedRewardPoints = rewardPointTxn.getValue();
+                    }
+                }
+            }
+
+            // if total used is zero then, reward point has not been used yet, simple cancel totalRewardPointAdded
+            if(totalUsedRewardPoints == 0 && totalAddedRewardPoints > 0) {
+                rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, formatAmount(percentageAmount*totalAddedRewardPoints),txnList.get(0).getExpiryDate());
+            } else {
+
+                Double remainingRewardPoints = totalAddedRewardPoints - totalUsedRewardPoints;
+                // now first cancel remaining reward points
+                if (remainingRewardPoints > 0) {
+                    rewardPointTxnDao.createRewardPointCancelTxn(rewardPoint, formatAmount(percentageAmount*totalAddedRewardPoints),txnList.get(0).getExpiryDate());
+                }
+
+                // cancel reward points from user total redeemable reward points in lieu of reward points used
+                Double redeemablePoints = rewardPointService.getTotalRedeemablePoints(rewardPoint.getUser());
+                if (redeemablePoints >= totalUsedRewardPoints) {
+
+                    if(totalAddedRewardPoints > 0) {
+                        rewardPointService.cancelRewardPoints(rewardPoint.getUser(), formatAmount(percentageAmount*totalUsedRewardPoints));
+                    }
+
+                } else {
+
+                    if(redeemablePoints > 0) {
+                        rewardPointService.cancelRewardPoints(rewardPoint.getUser(), formatAmount(percentageAmount*redeemablePoints));
+                    }
+
+                    // intimate user that redeemable reward points are being canceled from his account at last SO cancel
+                    UserAccountInfo userAccountInfo = getUserAccountInfoDao().getOrCreateUserAccountInfo(rewardPoint.getUser());
+                    userAccountInfo.setOverusedRewardPoints(userAccountInfo.getOverusedRewardPoints() + percentageAmount*totalUsedRewardPoints);
+                    getUserAccountInfoDao().save(userAccountInfo);
+                }
+            }
+
+            // now cancel reward Point when its amount has been zero
+            if(isZeroRewardPointBalance(rewardPoint)) {
+                rewardPointDao.cancelRewardPoint(rewardPoint);
+            }
+        }
+
+
+
+        /*List<RewardPointTxn> redeemedRewardPointTxnList = rewardPointTxnDao.findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
+        for (RewardPointTxn rewardPointTxn : redeemedRewardPointTxnList) {
+            Order concernedOrder = rewardPointTxn.getRewardPoint().getReferredOrder();
+            RewardPoint refundRewardPoints = rewardPointService.addRewardPoints(order.getUser(), userService.getAdminUser(),
+                    concernedOrder, percentageAmount * rewardPointTxn.getValue(), "", EnumRewardPointStatus.APPROVED,
+                    EnumRewardPointMode.HK_ADJUSTMENTS.asRewardPointMode());
+            rewardPointService.approveRewardPoints(Arrays.asList(refundRewardPoints), rewardPointTxn.getExpiryDate());
+        }*/
+
+    }
+
+
+    private boolean isZeroRewardPointBalance(RewardPoint rewardPoint) {
+        Double totalBalance = 0D;
+        List<RewardPointTxn> txnList = rewardPointTxnDao.findByRewardPoint(rewardPoint);
+        for (RewardPointTxn rewardPointTxn : txnList) {
+            totalBalance += rewardPointTxn.getValue();
+        }
+        return (totalBalance < 1);
+    }
+
+    private double formatAmount(Double amount) {
+        String amtStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(amount);
+        return Double.parseDouble(amtStr);
+    }
+
+    private double calculateWeight(ShippingOrder shippingOrder, Order order) {
+        double weightedFactor = 0D;
+
+        if(shippingOrder == null) {
+            weightedFactor = 1D;
+
+        } else {
+
+            if (EnumPaymentMode.FREE_CHECKOUT.getId().equals(order.getPayment().getPaymentMode().getId())) {
+                double orderAmount = 0;
+
+                Set<CartLineItem> cartLineItems = order.getCartLineItems();
+                for (CartLineItem cartLineItem : cartLineItems) {
+                    if (EnumCartLineItemType.Product.getId().equals(cartLineItem.getLineItemType().getId())) {
+                        orderAmount += (cartLineItem.getHkPrice() - cartLineItem.getDiscountOnHkPrice()) * cartLineItem.getQty();
+                    }
+                }
+
+
+                double shippingOrderAmount = 0;
+                Set<LineItem> lineItems = shippingOrder.getLineItems();
+                for (LineItem lineItem : lineItems) {
+                    shippingOrderAmount += (lineItem.getHkPrice() - lineItem.getDiscountOnHkPrice()) * lineItem.getQty();
+                }
+                if (shippingOrderAmount != 0 && orderAmount != 0) {
+                    weightedFactor = shippingOrderAmount/orderAmount;
+                }
+
+
+            } else {
+
+                weightedFactor = shippingOrder.getAmount() / order.getPayment().getAmount();
+
+            }
+
+        }
+        return weightedFactor;
+    }
+
+    private void relieveExtraLiabilties(Long reconciliationType, ShippingOrder shippingOrder, String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
+        if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
+            // TODO: giving reward points for one year - 12
+            addRewardPoints(shippingOrder.getBaseOrder(), shippingOrder.getAmount(),loggedOnUser,12,comment);
+            //paymentService.setRefundAmount(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RewardGiven.asReason(),comment);
+        } else {
+            refundPayment(shippingOrder,comment);
+        }
+    }
+
+
+    private void addRewardPoints(Order order, Double amount,User loggedOnUser,int expiryMonths,String comment) {
+
+        if (amount > 0) {
+            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(order.getUser(), loggedOnUser,
+                    order, amount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
+
+            rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(expiryMonths).toDate());
+        }
+    }
+
+    private void refundPayment(ShippingOrder shippingOrder,String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
+        if (shippingOrder.getAmount() > 0) {
+            if(EnumGateway.getManualRefundGateways().contains(shippingOrder.getBaseOrder().getPayment().getGateway().getId())) {
+                adminEmailManager.sendManualRefundTaskToAdmin(shippingOrder.getAmount(),
+                        shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(),shippingOrder.getBaseOrder().getPayment().getGateway().getName());
+                getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                        EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.ManualRefundInitiated.asReason(),comment);
+
+            } else {
+
+                try {
+                    Payment payment = paymentService.refundPayment(shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(), shippingOrder.getAmount());
+                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId())) {
+                        getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                                EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RefundSuccessful.asReason(),comment);
+                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
+                        getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                                EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+
+                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())){
+                        getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                                EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundInProcess.asReason(),comment);
+                    }
+
+                } catch (HealthkartPaymentGatewayException e) {
+                    logger.debug("Exception occurred during payment refund",e);
+                    getShippingOrderService().logShippingOrderActivity(shippingOrder,loggedOnUser,
+                            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+                } catch (Exception e) {
+                    logger.debug("Exception occurred during payment refund",e);
+                    getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                            EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),EnumReason.RefundFailed.asReason(),comment);
+                }
+
+            }
+
+        }
+    }
+
 
 	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
@@ -572,5 +843,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public SkuItemDao getSkuItemDao() {
 		return skuItemDao;
 	}
+
+    public UserAccountInfoDao getUserAccountInfoDao() {
+        return userAccountInfoDao;
+    }
+
+    public void setUserAccountInfoDao(UserAccountInfoDao userAccountInfoDao) {
+        this.userAccountInfoDao = userAccountInfoDao;
+    }
 
 }

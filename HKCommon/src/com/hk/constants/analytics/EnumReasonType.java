@@ -13,9 +13,11 @@ public enum  EnumReasonType {
     CourierChange(50L, "Courier Change Reason"),
     AwbChange(60L, "Awb Change Reason"),
     So_Cancelled(410L,"SO  Cancelled"),
-    Reverse_Pickup_Customer(420L,"Reverse Pickup Customer Reason For Return");
-    private String name;
+    Reverse_Pickup_Customer(420L,"Reverse Pickup Customer Reason For Return"),
+    Reconciliation(430L,"Reconciliation"),
+    ;
 
+    private String name;
     private Long id;
 
     EnumReasonType(Long id, String name) {

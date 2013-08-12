@@ -70,40 +70,9 @@ public class CancelOrderAction extends BaseAction {
     public Resolution pre() {
         User loggedOnUser = userService.getLoggedInUser();
         // TODO: need to tighten logic for cancellation of order
-        adminOrderService.cancelOrder(order, cancellationType, cancellationRemark, loggedOnUser);
+        adminOrderService.cancelOrder(order, cancellationType, cancellationRemark, loggedOnUser, reconciliationType);
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
-        if (EnumOrderStatus.Cancelled.getId().equals(order.getOrderStatus().getId())) {
-            if (paymentService.isValidReconciliation(order.getPayment()) && reconciliationType != null) {
-                if (order.getPayment().getAmount() > 0) {
-                    double refundableAmount = paymentService.getRefundableAmount(order.getPayment());
-                    Map<Long,Object> reconMap = paymentService.reconciliationOnCancel(reconciliationType, order,refundableAmount, cancellationRemark);
-                    if(reconMap.get(reconciliationType) == null) {
-                        adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RefundAmountExceedsFailed);
-                        addRedirectAlertMessage(new SimpleMessage("Amount exceeds the refundable amount"));
-                    } else {
-                        if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
-                            if ((Boolean)reconMap.get(reconciliationType)) {
-                                adminOrderService.logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointOrderCancel);
-                                addRedirectAlertMessage(new SimpleMessage("Reward Point awarded to customer"));
-                            }
-                        } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
-                            PaymentStatus paymentStatus = (PaymentStatus) reconMap.get(reconciliationType);
-                            if(EnumPaymentStatus.REFUNDED.getId().equals(paymentStatus.getId())) {
-                                adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.AmountRefundedOrderCancel);
-                                addRedirectAlertMessage(new SimpleMessage("Amount Refunded to customer"));
-                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(paymentStatus.getId())) {
-                                adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountFailed);
-                                addRedirectAlertMessage(new SimpleMessage("Amount couldn't be refunded to user, Please contact tech support"));
-                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(paymentStatus.getId())) {
-                                adminOrderService.logOrderActivity(order,EnumOrderLifecycleActivity.RefundAmountInProcess);
-                                addRedirectAlertMessage(new SimpleMessage("Refund is in process, Please contact tech support"));
-                            }
-                        }
-                    }
-                }
-            }
-        }
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "cancelled", data);
         return new JsonResolution(healthkartResponse);
     }

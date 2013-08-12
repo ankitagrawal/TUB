@@ -3,6 +3,9 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentTransactionType" %>
+<%@ page import="com.hk.constants.payment.EnumGateway" %>
+<%@ page import="com.hk.constants.core.EnumPermission" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -21,6 +24,9 @@
     <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
     <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
     <c:set var="refundTxn" value="<%=EnumPaymentTransactionType.REFUND.getName()%>"/>
+    <c:set var="onlinePaymentMode" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId()%>"/>
+    <c:set var="autoPaymentGateways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+    <c:set var="manualPaymentGateways" value="<%=EnumGateway.getManualRefundGateways()%>"/>
 
     <s:layout-component name="content">
 
@@ -213,8 +219,21 @@
             <div>
                 <s:hidden name="order"/>
 
-                <s:submit name="acceptAsSuccessful" value="Accept payment as Successful"
-                          onclick="return confirm('Are you sure?')"/>
+                <%--<c:when test="${checkPaymentBean.payment.paymentMode.id eq onlinePaymentMode}">--%>
+                    <shiro:hasPermission name="<%=PermissionConstants.AUTO_UPDATE_PAYMENT%>">
+                        <s:submit name="autoUpdate" value="Auto Confirm" onclick="return confirm('Are you sure?')"/>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="<%=PermissionConstants.MANUAL_UPDATE_PAYMENT%>">
+                        <s:submit name="manualUpdate" value="Manual Confirm" onclick="retrun confirm('Are you sure')"/> 
+                    </shiro:hasPermission>
+                <%--</c:when>--%>
+                <%--<c:otherwise>--%>
+                    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PAYMENT%>">
+                        <s:submit name="acceptAsSuccessful" value="Confirm Cheque/Neft/Cash" onclick="retrun confirm('Are you sure')"/>    
+                    </shiro:hasPermission>                                        
+                <%--</c:otherwise>--%>
+
+
                     <%--
                             <c:if test="${checkPaymentBean.order.orderStatus.id eq orderStatusInCart && checkPaymentBean.order.address != null}">
                               <s:submit name="acceptAsAuthPending" value="Accept payment as Auth Pending" onclick="return confirm('Are you sure?')"/>
@@ -226,7 +245,7 @@
                               <s:submit name="associateToPayment" value="Associate to payment" onclick="return confirm('Are you sure?')"/>
                             </c:if>
                     --%>
-
+                
             </div>
         </s:form>
     </s:layout-component>
