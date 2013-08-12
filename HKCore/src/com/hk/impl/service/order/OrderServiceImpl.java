@@ -46,6 +46,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -55,6 +56,7 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.splitter.OrderSplitter;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
@@ -113,8 +115,12 @@ public class OrderServiceImpl implements OrderService {
     BucketService bucketService;
     @Autowired
     SubscriptionService subscriptionService;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
 
     @Autowired OrderSplitter orderSplitter;
+
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
 
     @Transactional
     public Order save(Order order) {
@@ -309,13 +315,15 @@ public class OrderServiceImpl implements OrderService {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
             shippingOrders = orderSplitter.split(order.getId());
-//            shippingOrders = splitOrder(order);
         } catch (NoSkuException e) {
-            logger.error("Sku could not be found" + e.getMessage());
+          logger.error("Sku could not be found" + e.getMessage());
+          orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         } catch (OrderSplitException e) {
-            logger.error(e.getMessage());
+          logger.error(e.getMessage());
+          orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         } catch (Exception e) {
-            logger.error("Order could not be split due to some exception ", e.getMessage());
+          logger.error("Order could not be split due to some exception ", e);
+          orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         }
         return shippingOrders;
     }
@@ -633,6 +641,16 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
+        //for some orders userCodCall object is not created, a last check to create one
+        try{
+            if (order.getUserCodCall() == null) {
+                UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                saveUserCodCall(userCodCall);
+            }
+        } catch (Exception e){
+            logger.info("User Cod Call already exists for " + order.getId());
+        }
+
         logger.debug("Trying to split order " + order.getId());
 
         User adminUser = getUserService().getAdminUser();
@@ -677,7 +695,7 @@ public class OrderServiceImpl implements OrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder, true);
+                	shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, true);
                 }
             }
 
@@ -697,9 +715,26 @@ public class OrderServiceImpl implements OrderService {
             subscriptionService.placeSubscriptions(order);
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
-        } else {
-			orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Number of shipping orders are zero");
-		}
+        }
+
+        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
+	        logger.debug("post split will create sku item line item");
+            for (ShippingOrder shippingOrder : order.getShippingOrders()){
+                //Check to ignore old orders whose status is greater equal than 180
+                if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()){
+                    continue;
+                }
+                for (LineItem lineItem : shippingOrder.getLineItems()){
+	                  //lineItemDao.refresh(lineItem);
+                    if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
+                        Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+                        if(!skuItemLineItemStatus){
+                            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+                        }
+                    }
+                }
+            }
+        }
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
@@ -707,6 +742,10 @@ public class OrderServiceImpl implements OrderService {
         }
         
         logger.info("SPLIT END ORDER-ID: " + order.getId());
+
+        //create sku_item_line_items for each item of each shipping order of base order
+
+
         return shippingOrderAlreadyExists;
     }
 
@@ -746,5 +785,23 @@ public class OrderServiceImpl implements OrderService {
 		return null;
 	}
 
+    @Override
+    public boolean isBOCancelable(Long orderId) {
+        boolean isBOCancelable;
+        int count=0;
+        Order order = this.find(orderId);
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        for (ShippingOrder shippingOrder : shippingOrders) {
+            if (EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getShippingOrderStatus().getId())) {
+                count++;
+            }
+        }
+        if (count != shippingOrders.size()) {
+            isBOCancelable = false;
+        } else {
+            isBOCancelable = true;
+        }
+        return isBOCancelable;
+    }
 
 }

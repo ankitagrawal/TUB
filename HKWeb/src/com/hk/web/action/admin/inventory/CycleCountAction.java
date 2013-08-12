@@ -11,6 +11,8 @@ import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.core.JSONObject;
 
 import com.hk.domain.user.User;
@@ -26,6 +28,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.constants.core.Keys;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -273,8 +276,12 @@ public class CycleCountAction extends BasePaginatedAction {
             if (cycleCountItem.getSkuGroup() != null) {
                 if (!(cycleCountPviMap.containsKey(cycleCountItem.getId()))) {
                     //new entry added by another auditor
+                	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+                    skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                    skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                    skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
                     newEntryInMap++;
-                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
+                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup(), skuItemStatusList);
                     int pvi = 0;
                     if (skuItemList != null) {
                         pvi = skuItemList.size();
@@ -293,6 +300,10 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
     public Resolution saveScanned() {
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
         message = null;
         error = false;
         if ((hkBarcode != null) && (!(StringUtils.isEmpty(hkBarcode.trim())))) {
@@ -347,7 +358,7 @@ public class CycleCountAction extends BasePaginatedAction {
                     if (validCycleCountItem == null) {
                         validCycleCountItem = cycleCountService.createCycleCountItem(validSkuGroup, null, cycleCount, 1);
                         validCycleCountItem = cycleCountService.save(validCycleCountItem);
-                        List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(validSkuGroup);
+                        List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(validSkuGroup, skuItemStatusList);
                         int pvi = 0;
                         if (skuItemList != null) {
                             pvi = skuItemList.size();
@@ -420,15 +431,24 @@ public class CycleCountAction extends BasePaginatedAction {
         List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
         Warehouse warehouse = cycleCount.getWarehouse();
         List<CreateInventoryFileDto> createInventoryFileDtoList = new ArrayList<CreateInventoryFileDto>();
+        
+        List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+        
+        
         if (cycleCount.getBrand() != null) {
             String brand = cycleCount.getBrand();
-            createInventoryFileDtoList = adminInventoryService.getCheckedInSkuGroup(brand, warehouse, null, null);
+            createInventoryFileDtoList = adminInventoryService.getCheckedInSkuGroup(brand, warehouse, null, null, skuItemStatusList, skuItemOwnerList);
 
         } else if (cycleCount.getProduct() != null) {
-            createInventoryFileDtoList = adminInventoryService.getCheckedInSkuGroup(null, warehouse, cycleCount.getProduct(), null);
+            createInventoryFileDtoList = adminInventoryService.getCheckedInSkuGroup(null, warehouse, cycleCount.getProduct(), null, skuItemStatusList, skuItemOwnerList);
 
         } else {
-            createInventoryFileDtoList = adminInventoryService.getCheckedInSkuGroup(null, warehouse, null, cycleCount.getProductVariant());
+            createInventoryFileDtoList = adminInventoryService.getCheckedInSkuGroup(null, warehouse, null, cycleCount.getProductVariant(), skuItemStatusList, skuItemOwnerList);
 
         }
 
@@ -511,10 +531,15 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
     private void populateScannedSkuGroupSystemQtyMap(List<CycleCountItem> cycleCountItems) {
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
         cycleCountPviMap = new HashMap<Long, Integer>();
         for (CycleCountItem cycleCountItem : cycleCountItems) {
             if (cycleCountItem.getSkuGroup() != null) {
-                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
+            	
+                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup(), skuItemStatusList);
                 int pvi = 0;
                 if (skuItemList != null) {
                     pvi = skuItemList.size();
@@ -634,7 +659,11 @@ public class CycleCountAction extends BasePaginatedAction {
                         int notepadScannedQty = hkBarcodeQtyMap.get(hkbarcodeFromNotepad);
                         for (SkuGroup skuGroup : validSkuGroupList) {
                             if (notepadScannedQty > 0) {
-                                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+                            	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+                                skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                                skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                                skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
                                 CycleCountItem cycleCountItemFromDb = cycleCountService.getCycleCountItem(cycleCount, skuGroup, null);
                                 int pviQty = 0;
                                 if (skuItemList != null && skuItemList.size() > 0) {
@@ -734,7 +763,15 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
     private SkuItem findBySkuItem(String hkBarcode) {
-        SkuItem skuItem = skuGroupService.getSkuItemByBarcode(hkBarcode.trim(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+        //SkuItem skuItem = skuGroupService.getSkuItemByBarcode(hkBarcode.trim(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+        SkuItem skuItem = skuGroupService.getSkuItemByBarcode(hkBarcode.trim(), userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwnerList);
         return skuItem;
 
     }
@@ -821,7 +858,11 @@ public class CycleCountAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has been deleted."));
 
         } else {
-            SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
+        	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+            skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+            skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+            skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+            SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList);
             if (skuGroup == null) {
                 addRedirectAlertMessage(new SimpleMessage("Invalid  Barcode"));
                 return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());

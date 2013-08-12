@@ -4,8 +4,11 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -14,9 +17,11 @@ import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -97,5 +102,11 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
 		}
 		return qtyInQueue;
 	}
+
+    public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds) {
+        String query = " from Reason where id in (:reasonList) ";
+        return getSession().createQuery(query).setParameterList("reasonList", listOfReasonIds).list();
+    }
+
 
 }

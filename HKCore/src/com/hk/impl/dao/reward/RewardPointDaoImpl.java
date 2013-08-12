@@ -53,9 +53,9 @@ public class RewardPointDaoImpl extends BaseDaoImpl implements RewardPointDao {
     public RewardPoint addRewardPoints(User referredBy, User referredUser, Order referredOrder, Double value, String comment, EnumRewardPointStatus rewardPointStatus,
             RewardPointMode rewardPointMode) throws InvalidRewardPointsException {
 
-        if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
+        /*if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
             throw new InvalidRewardPointsException(value);
-        }
+        }*/
         RewardPoint rewardPoint = new RewardPoint();
         rewardPoint.setReferredUser(referredUser);
         rewardPoint.setUser(referredBy);

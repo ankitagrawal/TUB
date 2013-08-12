@@ -33,6 +33,8 @@ public interface ReverseOrderDao {
 
 	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage);
 
+  public List<ReverseOrder> findReverseOrderForTimeFrame(Long warehouseId, Date startDate, Date endDate);
+
 	//public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus);
 
 

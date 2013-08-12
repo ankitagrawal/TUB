@@ -173,11 +173,18 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Gaspari+Nutrition">
-                    <img src="${pageContext.request.contextPath}/images/banners/Gaspari-Nutrition_static.jpg"
-                         alt="Brand Of the Week - Gaspari Nutrition!"
+                <a href="${pageContext.request.contextPath}/product/twinlab-100-whey-protein-fuel/NUT1264?productReferrerId=13&productPosition=1/1">
+                    <img src="${pageContext.request.contextPath}/images/banners/Twinlab_Static.jpg"
+                         alt="Twinlab Sale"
                          class="small_banner"/>
                 </a>
+              <script type="text/javascript">
+                $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
+                $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                $(".bulkOrder").click(function() {
+                  $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                });
+              </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
                 <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
@@ -202,12 +209,12 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <%--<a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">--%>
-                <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
+                <a href="${pageContext.request.contextPath}/personal-care">
+                <img src="<hk:vhostImage/>/images/banners/Goodnightcategory1.jpg" alt="self-defence"
                      class="small_banner"/>
                 <%--</a>--%>
-                <a href="${pageContext.request.contextPath}/product/durex-flavours-combo/CMB-PER007?productReferrerId=1&productPosition=1/1 ">
-                    <img src="<hk:vhostImage/>/images/banners/Durex.jpg" alt="Sexual-wellness`"
+                <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
+                    <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -226,10 +233,10 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/eye/Geek+Boy%27s">
-                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week(geek).jpg" alt="eye"
+
+                    <img src="<hk:vhostImage/>/images/banners/static-banner.jpg" alt="eye"
                          class="small_banner"/>
-                </a>
+
             </c:when>
 
             <c:when test="${categoryBean.category.name eq parenting}">
@@ -243,10 +250,8 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq beauty}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                    <img src="<hk:vhostImage/>/images/banners/Surprise-gift.jpg" alt="surpeise-gift"
                          class="small_banner"/>
-                </a>
                 <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
                     <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
                          class="small_banner"/>
@@ -258,8 +263,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/diabetes/OneTouch">
-                    <img src="<hk:vhostImage/>/images/banners/Onetouch.jpg" alt="diabetes"
+                <a href="${pageContext.request.contextPath}/brand/diabetes/Accu-Chek">
+                    <img src="<hk:vhostImage/>/images/banners/Accu-chek1.jpg" alt="diabetes"
                          class="small_banner"/>
                 </a>
             </c:when>

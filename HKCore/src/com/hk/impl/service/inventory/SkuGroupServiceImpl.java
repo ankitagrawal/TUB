@@ -1,13 +1,10 @@
 package com.hk.impl.service.inventory;
 
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.sku.*;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuItemStatus;
-import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
@@ -46,6 +43,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
     public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
         return skuGroupDao.getInStockSkuGroup(barcode, warehouseId);
+    }
+    
+    public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds) {
+        return skuGroupDao.getInStockSkuGroup(barcode, warehouseId, skuItemStatusIds);
     }
 
     public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
@@ -99,6 +100,14 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
         return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
     }
+    
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
+    	return (List<SkuItem>) skuItemDao.getInStockSkuItems(skuGroup, skuItemStatus);
+    }
+
+    public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList) {
+        return skuItemDao.getSkuItem(skuGroup, skuItemStatusList);
+    }
 
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
         return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);
@@ -108,6 +117,13 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
         return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, statusId);
     }
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners) {
+        return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, skuItemStatusList, skuItemOwners);
+    }
+
+
+
 
     public SkuItem saveSkuItem(SkuItem skuItem) {
         return (SkuItem) skuItemDao.save(skuItem);
@@ -126,9 +142,25 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     public List<SkuItem> getCheckedInSkuItems(Sku sku) {
         return skuItemDao.getCheckedInSkuItems(sku);
     }
+    
+    public List<SkuItem> getSkuItem(Sku sku, Long id){
+    	return skuItemDao.getSkuItem(sku, id);
+    }
 
     public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn) {	
     	return skuGroupDao.getAllCheckedInBatchForGrn(grn);
+    }
+
+    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp){
+        return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners, mrp);
+    }
+
+    public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner){
+        return skuItemDao.getSkuItemWithStatusAndOwner(skuGroup, skuItemStatus, skuItemOwner);
+    }
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner){
+        return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, statusId, skuItemOwner);
     }
 
 }

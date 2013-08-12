@@ -19,7 +19,9 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.manager.*;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
+import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
@@ -65,6 +67,8 @@ public class PaymentManager {
     OrderEventPublisher orderEventPublisher;
     @Autowired
     EmailManager emailManager;
+    @Autowired
+    InventoryHealthService inventoryHealthService;
 
     @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
     private Double cashBackLimit;
@@ -242,20 +246,20 @@ public class PaymentManager {
     }
 
     public Order authPending(String gatewayOrderId, String codContactName, String codContactPhone,
-                             String bankName, String bankBranch, String backCity, String chequeNumber){
+                             String bankName, String bankBranch, String backCity, String chequeNumber) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         Order order = null;
         if (payment != null) {
             payment.setContactName(codContactName);
             payment.setContactNumber(codContactPhone);
-            if(payment.getPaymentDate() == null){
+            if (payment.getPaymentDate() == null) {
                 payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             }
             payment.setBankName(bankName);
             payment.setBankBranch(bankBranch);
             payment.setBankCity(backCity);
             payment.setChequeNumber(chequeNumber);
-            order =  processOrder(payment);
+            order = processOrder(payment);
             orderEventPublisher.publishOrderPlacedEvent(order);
         }
         return order;
@@ -276,13 +280,16 @@ public class PaymentManager {
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
             order = processOrder(payment);
+//            if(!order.isSubscriptionOrder()){
+//                inventoryHealthService.tempBookSkuLineItemForOrder(order);
+//            }
         }
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;
     }
 
     @Transactional
-    public Order processOrder(Payment payment){
+    public Order processOrder(Payment payment) {
         payment = paymentDao.save(payment);
         Order order = getOrderManager().orderPaymentReceieved(payment);
         /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
@@ -300,7 +307,7 @@ public class PaymentManager {
             } else {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
             }
-            order = authPending(gatewayOrderId,codContactName,codContactPhone,null,null,null,null);
+            order = authPending(gatewayOrderId, codContactName, codContactPhone, null, null, null, null);
             pushCODToThirdParty(shouldCodCall, payment);
         }
         return order;
@@ -358,7 +365,7 @@ public class PaymentManager {
         Order order = null;
         if (payment != null) {
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-            order = authPending(gatewayOrderId,null,null,bankName,bankBranch,backCity,chequeNumber);
+            order = authPending(gatewayOrderId, null, null, bankName, bankBranch, backCity, chequeNumber);
         }
         return order;
     }
@@ -369,7 +376,7 @@ public class PaymentManager {
         if (payment != null) {
             payment.setPaymentMode(paymentMode);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-            order = authPending(gatewayOrderId,null,null,null,null,null,null);
+            order = authPending(gatewayOrderId, null, null, null, null, null, null);
         }
         return order;
     }
@@ -387,7 +394,7 @@ public class PaymentManager {
             }
             payment.setGatewayReferenceId(gatewayReferenceId);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-            order = authPending(gatewayOrderId,gatewayReferenceId,null,null,null,null,null);
+            order = authPending(gatewayOrderId, gatewayReferenceId, null, null, null, null, null);
         }
         return order;
     }
@@ -491,12 +498,12 @@ public class PaymentManager {
         return hkPaymentService;
     }*/
 
-    public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus){
+    public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus) {
         return oldStatus.getId().equals(changedStatus.getId());
     }
 
-    public boolean sendUnVerifiedPaymentStatusChangeToAdmin(PaymentStatus actualStatus, PaymentStatus changedStatus,String gatewayOrderId){
-        return emailManager.sendAdminPaymentStatusChangeEmail(actualStatus.getName(),changedStatus.getName(),gatewayOrderId);
+    public boolean sendUnVerifiedPaymentStatusChangeToAdmin(PaymentStatus actualStatus, PaymentStatus changedStatus, String gatewayOrderId) {
+        return emailManager.sendAdminPaymentStatusChangeEmail(actualStatus.getName(), changedStatus.getName(), gatewayOrderId);
     }
 
     public OrderManager getOrderManager() {

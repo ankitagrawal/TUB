@@ -58,8 +58,15 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	@Column (name = "collection_charge")
 	private Double collectionCharge;
 
+    @Column (name = "order_placed_shipment_charge")
+    private Double orderPlacedShipmentCharge;
+
 	@Column (name = "estm_shipment_charge")
 	private Double estmShipmentCharge;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "shipment_cost_calculate_date")
+    private Date shipmentCostCalculateDate;
 
 	@Column (name = "estm_collection_charge")
 	private Double estmCollectionCharge;
@@ -90,7 +97,23 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		return 0;
 	}
 
-	public Long getId() {
+    public Double getOrderPlacedShipmentCharge() {
+        return orderPlacedShipmentCharge;
+    }
+
+    public void setOrderPlacedShipmentCharge(Double orderPlacedShipmentCharge) {
+        this.orderPlacedShipmentCharge = orderPlacedShipmentCharge;
+    }
+
+    public Date getShipmentCostCalculateDate() {
+        return shipmentCostCalculateDate;
+    }
+
+    public void setShipmentCostCalculateDate(Date shipmentCostCalculateDate) {
+        this.shipmentCostCalculateDate = shipmentCostCalculateDate;
+    }
+
+    public Long getId() {
 		return id;
 	}
 

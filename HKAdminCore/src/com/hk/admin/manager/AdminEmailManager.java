@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 
 import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.cache.RoleCache;
+import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
@@ -17,8 +18,10 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
+import com.hk.constants.inventory.EnumPurchaseOrderType;
 import com.hk.constants.warehouse.EnumWarehouseIdentifier;
 import com.hk.domain.accounting.DebitNote;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -35,6 +38,7 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
@@ -142,8 +146,7 @@ public class AdminEmailManager {
     PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
 
 
-    private File  pdfFile;
-    private File  xlsFile;
+
     private PurchaseOrderDto purchaseOrderDto;
     private final int COMMIT_COUNT = 100;
     private final int INITIAL_LIST_SIZE = 100;
@@ -323,7 +326,6 @@ public class AdminEmailManager {
     public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
         List<SkuGroup> skuGroups = skuGroupService.getAllCheckedInBatchForGrn(grn);
-        ;
         valuesMap.put("grn", grn);
         valuesMap.put("skuGroups", skuGroups);
         boolean success = true;
@@ -1090,11 +1092,11 @@ public class AdminEmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("purchaseOrder", purchaseOrder);
         //Mail to Ajeet if anyone  approves PO  other than Sachin Hans
-        User user = userService.getLoggedInUser();
+        User user = purchaseOrder.getApprovedBy();
         Role poApproverRole = RoleCache.getInstance().getRoleByName(EnumRole.PO_APPROVER).getRole();
         List<User> approverUserList = userService.findByRole(poApproverRole);
         if (user != null) {
-            if (!(approverUserList.contains(user))) {
+            if (!(approverUserList.contains(user) && !user.equals(userService.getAdminUser()))) {
                 HashMap valuesMapAt = new HashMap();
                 valuesMapAt.put("purchaseOrder", purchaseOrder);
                 valuesMapAt.put("user", user);
@@ -1107,63 +1109,127 @@ public class AdminEmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
     }
 
-    public boolean sendPOMailToSupplier(PurchaseOrder purchaseOrder, String supplierEmail) {
-    	//TODO
-    	HashMap valuesMap = new HashMap();
-    	String warehouseName = "" , warehouseAddress = "";
-    	DateTime dt = new DateTime();
+	public boolean sendPOMailToSupplier(PurchaseOrder purchaseOrder, String supplierEmail) {
+		//TODO
+		HashMap valuesMap = new HashMap();
+		String warehouseName = "", warehouseAddress = "";
+		DateTime dt = new DateTime();
 		LocalDate ld = dt.toLocalDate();
-		String date = ld.getDayOfMonth()+"-"+ld.getMonthOfYear()+"-"+ld.getYear();;
-        valuesMap.put("purchaseOrder", purchaseOrder);
-        valuesMap.put("date", date);
-        if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())){
-        	warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
-        	warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
-        }
-        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())){
-        	warehouseName = "Bright Lifecare Private Limited, Mumbai Warehouse";
-        	warehouseAddress = "Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
-        }
-        else if(purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Punjabi_Bagh_Aqua_Store.getName())){
-        	warehouseName = "Aquamarine Healthcare Private Limited, Delhi Punjabi Bagh Warehouse";
-        	warehouseAddress = "Shop No 15, Ground Floor, North west Avenue, Club road, Punjabi Bagh Extn, Delhi- 110026, Delhi";
-        }
-        else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Kapashera_Bright_Warehouse.getName())){
-        	warehouseName = "Bright Lifecare Private Limited, Delhi Kapashera Warehouse";
-        	warehouseAddress = "2nd Floor, Safexpress Cargo Complex , 971/1, Opposite Fun and Food Village, Kapashera, New Delhi, Delhi- 110037, Delhi";
-        }
-        valuesMap.put("warehouseName", warehouseName);
-        valuesMap.put("warehouseAddress", warehouseAddress);
-        
-        String fromPurchaseEmail = "purchase@healthkart.com";
-        Set<String> categoryAdmins = new HashSet<String>();
-        if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
-            Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
-            categoryAdmins = emailManager.categoryAdmins(category);
-        }
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
-        try {
-        	
-            pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".pdf");
-            pdfFile.getParentFile().mkdirs();
-            purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
-            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
-            
-            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() +" -Dt- "+date+ ".xls");
-            xlsFile.getParentFile().mkdirs();
-            xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
-        } catch (Exception e) {
-            e.printStackTrace(); 
-        }
-        return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath());
+		String date = ld.getDayOfMonth() + "-" + ld.getMonthOfYear() + "-" + ld.getYear();
+		valuesMap.put("purchaseOrder", purchaseOrder);
+		valuesMap.put("date", date);
+		if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName())) {
+			warehouseName = "Bright Lifecare Private Limited, Gurgaon Warehouse";
+			warehouseAddress = "Khasra No. 146/25/2/1, Village Badshahpur, Distt Gurgaon, Haryana-122101; TIN Haryana - 06101832036";
+		} else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.MUM_Bright_Warehouse.getName())) {
+			warehouseName = "Bright Lifecare Private Limited, Mumbai Warehouse";
+			warehouseAddress = "Safexpress Private Limited,Mumbai Nashik Highway N.H-3, Walsind, Lonad, District- Thane- 421302, Maharashtra";
+		} else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Punjabi_Bagh_Aqua_Store.getName())) {
+			warehouseName = "Aquamarine Healthcare Private Limited, Delhi Punjabi Bagh Warehouse";
+			warehouseAddress = "Shop No 15, Ground Floor, North west Avenue, Club road, Punjabi Bagh Extn, Delhi- 110026, Delhi";
+		} else if (purchaseOrder.getWarehouse().getIdentifier().equalsIgnoreCase(EnumWarehouseIdentifier.DEL_Kapashera_Bright_Warehouse.getName())) {
+			warehouseName = "Bright Lifecare Private Limited, Delhi Kapashera Warehouse";
+			warehouseAddress = "2nd Floor, Safexpress Cargo Complex , 971/1, Opposite Fun and Food Village, Kapashera, New Delhi, Delhi- 110037, Delhi";
+		}
+		valuesMap.put("warehouseName", warehouseName);
+		valuesMap.put("warehouseAddress", warehouseAddress);
+
+		String fromPurchaseEmail = "purchase@healthkart.com";
+		Set<String> categoryAdmins = new HashSet<String>();
+		if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+			Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+			categoryAdmins = emailManager.categoryAdmins(category);
+		}
+		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
+		//categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
+		File pdfFile = null;
+		File xlsFile = null;
+		try {
+			String purchaseOrdertype = "";
+			if (purchaseOrder.getPurchaseOrderType() != null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.JIT.getId())) {
+				purchaseOrdertype = "JIT";
+			} else if (purchaseOrder.getPurchaseOrderType() != null && purchaseOrder.getPurchaseOrderType().getId().equals(EnumPurchaseOrderType.DROP_SHIP.getId())) {
+				purchaseOrdertype = "DS";
+			}
+			pdfFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + " "+purchaseOrdertype + " -Dt- " + date + ".pdf");
+			pdfFile.getParentFile().mkdirs();
+			purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
+			getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(pdfFile.getPath(), purchaseOrderDto);
+
+			xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + " "+purchaseOrdertype +" -Dt- " + date + ".xls");
+			xlsFile.getParentFile().mkdirs();
+			xlsFile = getPurchaseOrderManager().generatePurchaseOrderXls(xlsFile.getPath(), purchaseOrder);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		File newPdfFile = new File(pdfFile.getAbsolutePath());
+		File newXlsFile = new File(xlsFile.getAbsolutePath());
+		 if(newPdfFile.exists()&& newXlsFile.exists() && newPdfFile.getName().contains(purchaseOrder.getId().toString())&& newXlsFile.getName().contains(purchaseOrder.getId().toString())){
+			 return emailService.sendEmail(freemarkerTemplate, valuesMap, fromPurchaseEmail, "purchase@healthkart.com", supplierEmail, purchaseOrder.getSupplier().getName(), null, null, categoryAdmins, null, pdfFile.getAbsolutePath(), xlsFile.getAbsolutePath()); 
+		 }
+		 else{
+			 return poMailNotSentToSupplier(purchaseOrder);
+		 }
+		
 	}
-    
-    public boolean sendDebitNoteMail(DebitNote debitNote){
+	
+	public boolean poMailNotSentToSupplier(PurchaseOrder purchaseOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("purchaseOrder", purchaseOrder);
+        Set<String> categoryAdmins = new HashSet<String>();
+		if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+			Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+			categoryAdmins = emailManager.categoryAdmins(category);
+		}
+		String fromPurchaseEmail = "purchase@healthkart.com";
+		User user = userService.getAdminUser();
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailNotSentToSupplier);
+        return emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),user.getName() ,fromPurchaseEmail, fromPurchaseEmail, null, null, categoryAdmins, null, null, null);
+    }
+
+
+	public boolean sendDebitNoteMail(DebitNote debitNote){
     	HashMap valuesMap = new HashMap();
     	valuesMap.put("debitNote", debitNote);
     	return false;
     }
+    
+	public boolean sendJitShippingCancellationMail(ShippingOrder shippingOrder, ShippingOrder splitShippingOrder,  EnumJitShippingOrderMailToCategoryReason reason){
+    	HashMap valuesMap = new HashMap();
+    	Set<String> emailIds = new HashSet<String>();
+    	valuesMap.put("shippingOrder", shippingOrder);
+    	if(splitShippingOrder!=null){
+    		valuesMap.put("splitShippingOrder", splitShippingOrder);
+    	}
+    	String soCancellationReason = null;
+    	if(reason.getId().equals(EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED.getId())){
+    		soCancellationReason="Following Shipping Orders has been cancelled. Information of corresponding POs has been mentioned below. Kindly take the required actions.";
+    	}else
+    		if(reason.getId().equals(EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED.getId())){
+    			soCancellationReason="Warehouse for the following Shipping Orders has been flipped. Information of corresponding POs has been mentioned below. Kindly take the required actions.";
+    		}
+    		else
+    			if(splitShippingOrder!=null && reason.getId().equals(EnumJitShippingOrderMailToCategoryReason.SO_SPLITTED.getId())){
+    			soCancellationReason="Shipping Order - "+shippingOrder.getId()+" has been split. The new splitted Shipping Order Id - "+splitShippingOrder.getId()+" Information of corresponding POs has been mentioned below. Kindly take the required actions.";
+    		}
+    	valuesMap.put("soCancellationReason", soCancellationReason);
+    	
+    	for(LineItem lineItem : shippingOrder.getLineItems()){
+    		if(lineItem!=null && lineItem.getSku().getProductVariant().getProduct().getCategories()!=null && lineItem.getSku().getProductVariant().getProduct().getCategories().size()>0){
+    			Category category = lineItem.getSku().getProductVariant().getProduct().getCategories().get(0);
+    			emailIds.addAll(emailManager.categoryAdmins(category));
+    		}
+    	}
+    	
+    	String fromPurchaseEmail = "purchase@healthkart.com";
+    	emailIds.add(fromPurchaseEmail);
+    	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.jitShippingOrderStatusChangeMail);
+    	User user = userService.getAdminUser();
+    	boolean sent = emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),"HK Admin", fromPurchaseEmail, "", null, null, emailIds, null, null, null);
+    	return sent;
+    }
+    
+    
     static enum Product_Status {
 
     }

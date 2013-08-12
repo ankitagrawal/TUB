@@ -9,7 +9,7 @@ package com.hk.constants.pos;
  */
 public class DiscountConstants {
 
-	public static final Long fifty_rupees_discount = 50L;
-	public static final Long one_hundred_rupees_discount = 100L;
-	public static final Long one_hundred_fifty_rupees_discount = 150L;
+	public static final Long FIFTY_RUPEES_DISCOUNT = 50L;
+	public static final Long ONE_HUNDRED_RUPEES_DISCOUNT = 100L;
+	public static final Long ONE_HUNDRED_FIFTY_RUPEES_DISCOUNT = 150L;
 }

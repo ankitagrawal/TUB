@@ -34,7 +34,11 @@ public enum EnumClassification {
     B2B(500L, "B2B" , "Bright"),
     Vendor(510L, "Vendor", "Procurement"),
     Logistics(520L, "Logistics", "Pickup/Delivery"),
-    Receiving(530L, "Receiving", "GRN");
+    Receiving(530L, "Receiving", "GRN"),
+    ProductDamaged(540L, "Product Damaged", "Reverse Pickup Product Damaged "),
+    ProductExpired(550L, "Product Expired", "Reverse Pickup Product Expired "),
+    WrongColor(560L, "Wrong Color", "Reverse Pickup Wrong Color"),
+    WrongSize(570L, "Wrong Size", "Reverse Pickup Wrong Size");
 
     private Long id;
     private String primary;

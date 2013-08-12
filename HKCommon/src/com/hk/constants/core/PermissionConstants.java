@@ -178,5 +178,10 @@ public class PermissionConstants {
     public static final String BULK_SEEK = "BULK_SEEK";
     public static final String DEBIT_NOTE_UPDATE = "DEBIT_NOTE_UPDATE";
     public static final String DEBIT_NOTE_MANAGE = "DEBIT_NOTE_MANAGE";
-    
+    public static final String MARK_RTO = "MARK_RTO";
+    public static final String CREATE_JIT_PO = "CREATE_JIT_PO";
+    public static final String CREATE_REVERSE_PICKUP = "CREATE_REVERSE_PICKUP";
+    public static final String VIEW_REVERSE_PICKUP = "VIEW_REVERSE_PICKUP";
+    public static final String EDIT_REVERSE_PICKUP = "EDIT_REVERSE_PICKUP";
+    public static final String APPROVE_REVERSE_PICKUP = "APPROVE_REVERSE_PICKUP";
 }
