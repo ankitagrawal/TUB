@@ -200,7 +200,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
               // It cannot be = as for last order/unit unbooked will always be ZERO
               if (!shippingOrder.isDropShipping()) {
-                if (availableNetPhysicalInventory < 0  && availableUnbookedInv < 0) {
+                if (availableNetPhysicalInventory < 0  || availableUnbookedInv < 0) {
                   String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
                   shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
                       shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
