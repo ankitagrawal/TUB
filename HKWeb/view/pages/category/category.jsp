@@ -202,8 +202,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/westinghouse-1750gs-hand-blender/WST001">
-                    <img src="<hk:vhostImage/>/images/banners/westinghouse-product-of-the-week-(static-banner).jpg"
+                <a href="${pageContext.request.contextPath}/product/eveready-rechargeable-fan/EVE015?productReferrerId=24&productPosition=1/11>
+                    <img src="<hk:vhostImage/>/images/banners/home-live-Banner.jpg"
                          alt="Brand of the Week"
                          class="small_banner"/>
                 </a>
