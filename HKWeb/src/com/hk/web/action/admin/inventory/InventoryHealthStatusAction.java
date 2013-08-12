@@ -197,9 +197,9 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
         }
         int row = 1;
         for (ProductVariant variant : variants) {
-            Sku ggnSKU = skuService.getSKU(variant, whGurgaon);
-            Sku mumSKU = skuService.getSKU(variant, whMumbai);
-            Sku loggedInSKU = skuService.getSKU(variant, loggedInWarehouse);
+            Sku ggnSKU = skuService.findSKU(variant, whGurgaon);
+            Sku mumSKU = skuService.findSKU(variant, whMumbai);
+            Sku loggedInSKU = skuService.findSKU(variant, loggedInWarehouse);
             loggedInWHInventory = adminInventoryService.getNetInventory(loggedInSKU);
             ggnInventory = adminInventoryService.getNetInventory(ggnSKU);
             mumInventory = adminInventoryService.getNetInventory(mumSKU);
