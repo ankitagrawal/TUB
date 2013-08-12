@@ -202,8 +202,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/westinghouse-1750gs-hand-blender/WST001">
-                    <img src="<hk:vhostImage/>/images/banners/westinghouse-product-of-the-week-(static-banner).jpg"
+                <a href="${pageContext.request.contextPath}/product/eveready-rechargeable-fan/EVE015?productReferrerId=24&productPosition=1/11>
+                    <img src="<hk:vhostImage/>/images/banners/home-live-Banner.jpg"
                          alt="Brand of the Week"
                          class="small_banner"/>
                 </a>
@@ -223,8 +223,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/health-devices/Equinox">
-                    <img src="<hk:vhostImage/>/images/banners/Equinox.jpg" alt="Equinox"
+                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7112/HB023?productReferrerId=1&productPosition=1/1">
+                    <img src="<hk:vhostImage/>/images/banners/omron.jpg" alt="Omron"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -250,8 +250,10 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq beauty}">
-                    <img src="<hk:vhostImage/>/images/banners/Surprise-gift.jpg" alt="surpeise-gift"
-                         class="small_banner"/>
+                    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                        <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                             class="small_banner"/>
+                    </a>
                 <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
                     <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
                          class="small_banner"/>

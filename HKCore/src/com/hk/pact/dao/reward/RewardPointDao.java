@@ -30,6 +30,8 @@ public interface RewardPointDao extends BaseDao {
 
     public RewardPoint findByReferredOrderAndRewardMode(Order order, RewardPointMode rewardPointMode);
 
+    public List<RewardPoint> findRewardPoints(Order order,List<RewardPointMode> rewardPointMode);
+
     public RewardPoint cancelRewardPoint(RewardPoint rewardPoint);
 
     public RewardPoint findByReferredUser(User referredUser);

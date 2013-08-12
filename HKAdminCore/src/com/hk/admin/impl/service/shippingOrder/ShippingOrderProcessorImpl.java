@@ -263,7 +263,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
         if (selectedItems.size() > 0) {
             if (selectedItems.size() == shippingOrder.getLineItems().size()) {
-                this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null);
+                this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null, null, true);
                 shippingOrderService.logShippingOrderActivity(shippingOrder, user,
                         shippingOrderService.getShippingOrderLifeCycleActivity(
                                 EnumShippingOrderLifecycleActivity.SO_Cancelled),
@@ -278,7 +278,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                             shippingOrderService.getShippingOrderLifeCycleActivity(
                                     EnumShippingOrderLifecycleActivity.SO_Cancelled),
                             EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
-                    this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null);
+                    this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, true);
                     emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
                     shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
 

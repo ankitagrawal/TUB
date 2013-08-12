@@ -52,7 +52,6 @@ public enum EnumReason {
     Non_Functional(920L, "Non Functional", EnumReasonType.Reverse_Pickup_Customer),
     Near_Expiry(930L, "Near Expiry", EnumReasonType.Reverse_Pickup_Customer),
     Expired(940L, "Expired", EnumReasonType.Reverse_Pickup_Customer),
-
     PROD_CHANGE_CR(310L, EnumClassification.CUSTOMER_REQUEST_PRODUCT_CHANGE, EnumReasonType.Escalate_Back),
     CANCEL_CR(320L, EnumClassification.CUSTOMER_REQUEST_CANCEL, EnumReasonType.Escalate_Back),
     ON_HOLD_CR(330L, EnumClassification.CUSTOMER_REQUEST_ON_HOLD, EnumReasonType.Escalate_Back),
@@ -61,7 +60,13 @@ public enum EnumReason {
     PROD_INV_MISMATCH(360L, EnumClassification.PRODUCT_NOT_AVAILABLE_INV_MISMATCH, EnumReasonType.Escalate_Back),
     MRP_LESS(370L, EnumClassification.MRP_MISMATCH_CHEAPER, EnumReasonType.Escalate_Back),
     MRP_MORE(380L, EnumClassification.MRP_MISMATCH_DEARER, EnumReasonType.Escalate_Back),
-    DISPATCH_COURIER_CHANGE(390L, EnumClassification.DISPATCH_ISSUE_COURIER_CHANGE, EnumReasonType.Escalate_Back)
+    DISPATCH_COURIER_CHANGE(390L, EnumClassification.DISPATCH_ISSUE_COURIER_CHANGE, EnumReasonType.Escalate_Back),
+    RefundFailed(1100L,"Refund Failed",EnumReasonType.Reconciliation),
+    RefundSuccessful(1110L,"Refund Successful", EnumReasonType.Reconciliation),
+    RewardGiven(1120L,"Reward Points Given", EnumReasonType.Reconciliation),
+    RewardNotGiven(1130L,"Reward Points Not Given", EnumReasonType.Reconciliation),
+    RefundInProcess(1140L,"Refund in process",EnumReasonType.Reconciliation),
+    ManualRefundInitiated(1150L, "Manual refund task mail sent to admin", EnumReasonType.Reconciliation),
     ;
 
     Long id;
