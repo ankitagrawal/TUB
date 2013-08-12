@@ -250,8 +250,10 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq beauty}">
-                    <img src="<hk:vhostImage/>/images/banners/Surprise-gift.jpg" alt="surpeise-gift"
-                         class="small_banner"/>
+                    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                        <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                             class="small_banner"/>
+                    </a>
                 <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
                     <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
                          class="small_banner"/>
