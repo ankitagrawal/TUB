@@ -193,7 +193,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     						 return true;
     						//availableUnbookedInv = getInventoryService().getAvailableUnbookedInventoryForPrescriptionEyeglasses(Arrays.asList(lineItem.getSku()));
     					}else{
-    						availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice());
+    						availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku(), null);
     					}
 
     					Long orderedQty = lineItem.getQty();
