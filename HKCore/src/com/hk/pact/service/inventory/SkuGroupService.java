@@ -52,6 +52,8 @@ public interface SkuGroupService {
     public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
 
     public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
+    
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
 
     public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
 
