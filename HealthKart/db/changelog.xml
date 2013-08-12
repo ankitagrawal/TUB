@@ -13923,8 +13923,6 @@
 			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 		</sql>
 	</changeSet>
-<<<<<<< HEAD
-=======
     <changeSet author="Pratham (generated)" id="2013-08-05-01">
         <addColumn tableName="shipment">
             <column name="order_placed_shipment_charge" type="DECIMAL(10,2)"/>
@@ -13935,7 +13933,6 @@
             <column name="shipment_cost_calculate_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
->>>>>>> master
     <changeSet author="Ajeet (generated)" id="1375698046513-16">
         <createIndex indexName="si_cli_unique" tableName="sku_item_cart_line_item" unique="true">
             <column name="cart_line_item_id"/>
