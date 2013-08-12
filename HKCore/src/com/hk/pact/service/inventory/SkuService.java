@@ -21,6 +21,8 @@ public interface SkuService {
    */
   public Sku getSKU(ProductVariant productVariant, Warehouse warehouse);
 
+  public Sku findSKU(ProductVariant productVariant, Warehouse warehouse);
+
   /**
    * this will return a list of all sku's (instance of product variant at multiple warehouses)
    *
