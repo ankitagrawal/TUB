@@ -5,6 +5,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.itextpdf.text.pdf.LongHashtable;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,10 +14,10 @@ import javax.persistence.*;
  * Time: 6:11 PM
  * To change this template use File | Settings | File Templates.
  */
-@SuppressWarnings("serial")
+
 @Entity
 @Table(name = "rp_line_item")
-public class RpLineItem {
+public class RpLineItem implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

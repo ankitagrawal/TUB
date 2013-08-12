@@ -15,6 +15,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.hibernate.Criteria;
@@ -292,9 +294,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
 
-    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant) {
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners) {
 
-        Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
+        //Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
         String productId = null;
         String productVariantId = null;
         if (product != null) {
@@ -305,7 +307,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         }
         String sql = "select sg as skuGroup, pv as productVariant, p as product, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "
                 + " from SkuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
-                + " join sg.sku s join s.productVariant pv join pv.product p where sis.id = :checkedInSkuItemStatus ";
+                + " join sg.sku s join s.productVariant pv join pv.product p where sis in (:itemStatus) and si.skuItemOwner in (:itemOwners) ";
 
         if (productId != null) {
             sql = sql + " and p.id = :productId ";
@@ -340,7 +342,8 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
             query.setParameter("warehouse", warehouse);
         }
 
-        query.setParameter("checkedInSkuItemStatus", checkedInSkuItemStatus);
+        query.setParameterList("itemStatus", itemStatus);
+        query.setParameterList("itemOwners", itemOwners);
 
         return query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
 

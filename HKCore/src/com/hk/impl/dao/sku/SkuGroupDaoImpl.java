@@ -1,11 +1,15 @@
 package com.hk.impl.dao.sku;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import org.hibernate.criterion.DetachedCriteria;
@@ -36,11 +40,28 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		}*/
 
 	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
+		
+		List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+        
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+
 		List<SkuGroup> skuGroups = getSession().
-				//"from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId "
 				createQuery("select distinct si.skuGroup from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId" +
-						" and si.skuItemStatus.id =  " + EnumSkuItemStatus.Checked_IN.getId()).
-				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).
+						" and si.skuItemStatus in (:skuItemStatusList) and si.skuItemOwner in (:skuItemOwnerList)").
+				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).setParameterList("skuItemStatusList", skuItemStatusList).setParameterList("skuItemOwnerList", skuItemOwnerList).
+				list();
+		return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
+	}
+	
+	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds) {
+		List<SkuGroup> skuGroups = getSession().
+				createQuery("select distinct si.skuGroup from SkuItem si where si.skuGroup.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId" +
+						" and si.skuItemStatus in (:skuItemStatusIds)").
+				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).setParameterList("skuItemStatusIds", skuItemStatusIds).
 				list();
 		return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
 	}
@@ -96,11 +117,18 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 	  }*/
 
 	public List<SkuGroup> getAllInStockSkuGroups(Sku sku) {
+		
+		List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+        
+        List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
+        skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
-		String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
+		String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus in (:skuItemStatusList) and si.skuItemOwner in (:skuItemOwnerList)" +
 				" and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc  ";
-		List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
-		//List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
+		List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku","skuItemStatusList", "skuItemOwnerList"}, new Object[]{sku, skuItemStatusList, skuItemOwnerList});
 
 		if(skuGroupList == null) {
 			skuGroupList = new ArrayList<SkuGroup>(0);
@@ -191,6 +219,5 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 				createQuery("from SkuGroup sg where sg.goodsReceivedNote = :grn").
 				setParameter("grn", grn).list();
     }
-
 
 }

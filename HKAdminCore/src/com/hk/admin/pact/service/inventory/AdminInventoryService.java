@@ -20,9 +20,13 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.inventory.EnumInvTxnType;
 
 public interface AdminInventoryService {
 
@@ -39,13 +43,17 @@ public interface AdminInventoryService {
      */
     public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
 
-    public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) ;
+    public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
 
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy);
+                                                  StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy);
 
     public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy);
+                                         StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy);
+
+    public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
+                                       StockTransferLineItem stockTransferLineItem,   EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner,  InvTxnType invTxnType, Long qty, User txnBy);
+    
 
     /**
      * @param sku
@@ -59,7 +67,7 @@ public interface AdminInventoryService {
 
     public Long getNetInventory(ProductVariant productVariant);
 
-	public Long getNetInventoryAtServiceableWarehouses(ProductVariant productVariant);
+    public Long getNetInventoryAtServiceableWarehouses(ProductVariant productVariant);
 
     public void adjustInventory(SkuGroup skuGroup, Long qty);
 
@@ -67,25 +75,29 @@ public interface AdminInventoryService {
 
     public void reCheckInInventory(ShippingOrder shippingOrder);
 
+    public void reCheckInInventory(ShippingOrder shippingOrder , EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner, EnumInvTxnType invnTxnType, Long qty) ;
+
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 
     public List<VariantConfig> getAllVariantConfig();
 
-	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
+    public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
 
-	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
+    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse);
 
-	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy );
+    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners);
+    
+    public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy);
 
 //    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
 
-    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem ,LineItem lineItem, Long transferQty) ;
-    
-   public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
+    public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty);
 
-    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
+    public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
+
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant, List<SkuItemStatus> skuItemStatus, List<SkuItemOwner> itemOwners);
 
     public void deleteInventory(GrnLineItem grnLineItem);
 
@@ -93,5 +105,8 @@ public interface AdminInventoryService {
 
     public List<SkuGroup> getSkuGroupsInReviewState();
 
-		public List<SkuGroup> getInStockSkuGroup(Sku sku);
+    public boolean checkoutMethod(LineItem lineItem, SkuItem skuItem);
+
+    public List<SkuGroup> getInStockSkuGroup(Sku sku);
+
 }

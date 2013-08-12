@@ -173,9 +173,9 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/pages/campaign/clearance/sale.jsp">
-                    <img src="${pageContext.request.contextPath}/images/banners/Clearance-sale.jpg"
-                         alt="Clearance Sale"
+                <a href="${pageContext.request.contextPath}/product/twinlab-100-whey-protein-fuel/NUT1264?productReferrerId=13&productPosition=1/1">
+                    <img src="${pageContext.request.contextPath}/images/banners/Twinlab_Static.jpg"
+                         alt="Twinlab Sale"
                          class="small_banner"/>
                 </a>
               <script type="text/javascript">
@@ -209,12 +209,12 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <%--<a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">--%>
-                <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
+                <a href="${pageContext.request.contextPath}/personal-care">
+                <img src="<hk:vhostImage/>/images/banners/Goodnightcategory1.jpg" alt="self-defence"
                      class="small_banner"/>
                 <%--</a>--%>
-                <a href="${pageContext.request.contextPath}/product/instant-ovulation-test/PW006?productReferrerId=7&productPosition=1/1">
-                    <img src="<hk:vhostImage/>/images/banners/Know-when.jpg" alt="Sexual-wellness`"
+                <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
+                    <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -263,8 +263,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/diabetes/OneTouch">
-                    <img src="<hk:vhostImage/>/images/banners/Onetouch.jpg" alt="diabetes"
+                <a href="${pageContext.request.contextPath}/brand/diabetes/Accu-Chek">
+                    <img src="<hk:vhostImage/>/images/banners/Accu-chek1.jpg" alt="diabetes"
                          class="small_banner"/>
                 </a>
             </c:when>

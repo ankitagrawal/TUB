@@ -1,5 +1,7 @@
 package com.hk.constants.order;
 
+import com.hk.domain.core.OrderLifecycleActivity;
+
 
 public enum EnumOrderLifecycleActivity {
   OrderPlaced(10L, "Order Placed"),
@@ -73,14 +75,14 @@ public enum EnumOrderLifecycleActivity {
     return id;
   }
 
- /* public OrderLifecycleActivity asOrderLifecycleActivity() {
+  public OrderLifecycleActivity asOrderLifecycleActivity() {
     OrderLifecycleActivity orderLifecycleActivity = new OrderLifecycleActivity();
     orderLifecycleActivity.setId(this.getId());
     orderLifecycleActivity.setName(this.getName());
     return orderLifecycleActivity;
   }
 
-
+  /*
   public static List<Long> getLifecycleActivityIDs(List<EnumOrderLifecycleActivity> enumOrderLifeCycleActivities) {
     List<Long> lifeCycleActivityIds = new ArrayList<Long>();
     for (EnumOrderLifecycleActivity enumOrderLifecycleActivity : enumOrderLifeCycleActivities) {

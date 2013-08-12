@@ -15,10 +15,10 @@ import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 
 
-
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.TokenUtils;
+import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -120,8 +120,7 @@ public class ReversePickupAction extends BaseAction {
             } catch (Exception ex) {
                 logger.error("Exception :: " + ex.getMessage());
             }
-        }
-        else {
+        } else {
             addRedirectAlertMessage(new SimpleMessage("Select products to return to create Reverse Order  " +
                     "If you want to delete RP order. click link on ReversePickup List Screen"));
         }
@@ -152,6 +151,20 @@ public class ReversePickupAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.EDIT_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution editReversePickup() {
         shippingOrder = reversePickupOrder.getShippingOrder();
+        /**check If Warehouse has started checkIn**/
+        List<RpLineItem> rpLineItemList = reversePickupOrder.getRpLineItems();
+        boolean startedCheckIn = false;
+        if (rpLineItemList != null) {
+            for (RpLineItem rpLineItem : rpLineItemList) {
+                if (rpLineItem.getWarehouseReceivedCondition() != null) {
+                    startedCheckIn = true;
+                    break;
+                }
+            }
+        }
+        if (startedCheckIn) {
+            return new RedirectResolution(ReversePickupAction.class, "editReversePickup").addParameter("reversePickupOrder", reversePickupOrder.getId());
+        }
         /* put all the lineItems in another RP orders of current SO in map "rpLineDisabledMap" , this will be displayed  readOnly to user.*/
         List<ReversePickupOrder> reversePickupOrdersAlreadyCreatedList = reversePickupService.getReversePickupsExcludeCurrentRP(shippingOrder, reversePickupOrder);
         rpLineDisabledMap = reversePickupHelper.populateAlreadyCreatedRpLineItemsInfo(reversePickupOrdersAlreadyCreatedList);
@@ -163,6 +176,7 @@ public class ReversePickupAction extends BaseAction {
         return new ForwardResolution("/pages/admin/reversePickup/createReversePickRequest.jsp");
 
     }
+
     @Secure(hasAnyPermissions = {PermissionConstants.EDIT_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution editApprovedPickup() {
         shippingOrder = reversePickupOrder.getShippingOrder();
@@ -213,7 +227,7 @@ public class ReversePickupAction extends BaseAction {
                 reversePickupService.updateRpLineItems(rpItems, EnumReverseAction.Pending_Approval.getId());
             }
         }
-        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", rpLineItemFromDb.getReversePickupOrder().getShippingOrder().getId());
+        return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Changes Saved", ""));
     }
 
 

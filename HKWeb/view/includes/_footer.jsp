@@ -88,9 +88,10 @@
                 Misc
             </h5>
           <ul>
-            <li><s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction"
+	          <%--Subscriptions Commented--%>
+            <%--<li><s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction"
                         event="pre">Subscriptions </s:link></li>
-            <li>
+            <li>--%>
               <s:link beanclass="com.hk.web.action.core.catalog.SuperSaversAction"><span class="txt-white">Super Savers</span></s:link>
             </li>
           </ul>
