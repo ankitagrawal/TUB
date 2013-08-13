@@ -13,22 +13,23 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageService;
+import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.service.ServiceLocatorFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
@@ -53,135 +54,18 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   @Autowired
   UpdatePvPriceDao updatePvPriceDao;
   @Autowired
-  InventoryManageDao inventoryManageDao;
-  @Autowired
-  InventoryManageService inventoryManageService;
+  SkuItemDao inventoryManageDao;
   @Autowired
   SkuService skuService;
   @Autowired
   SkuItemLineItemService skuItemLineItemService;
   @Autowired
   LineItemDao lineItemDao;
+  @Autowired
+  CartLineItemDao cartLineItemDao;
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
-  /*
-  @Override
-  @Transactional
-  public void checkInventoryHealth(ProductVariant variant) {
-
-      Collection<InventoryInfo> infos = getAvailableInventory(variant, warehouseService.getServiceableWarehouses());
-
-      InventoryInfo selectedInfo = null;
-      long netInventory = 0l;
-      if (infos != null && infos.size() != 0) {
-          selectedInfo = removeFirst((List<InventoryInfo>) infos);
-      }
-
-      if (selectedInfo != null) {
-          netInventory = selectedInfo.getQty();
-          for (InventoryInfo inventoryInfo : infos) {
-              netInventory += inventoryInfo.getQty();
-              if (selectedInfo.getQty() <= 0) {
-                  selectedInfo = inventoryInfo;
-              }
-          }
-      }
-
-      VariantUpdateInfo vInfo = new VariantUpdateInfo();
-      vInfo.netQty = netInventory;
-
-      if (selectedInfo != null && selectedInfo.getQty() > 0) {
-          SkuInfo mxQtyInfo = selectedInfo.getMaxQtySkuInfo();
-          vInfo.mrp = selectedInfo.getMrp();
-          vInfo.mrpQty = mxQtyInfo.getQty();
-          vInfo.costPrice = mxQtyInfo.getCostPrice();
-          vInfo.inStock = true;
-      }
-      updateVariant(variant, vInfo);
-  }
-  */
-
-  @Override
-  public long getAvailableUnbookedInventory(ProductVariant productVariant) {
-    if (productVariant.getMrpQty() == null) {
-//          comment By ankit
-//			checkInventoryHealth(productVariant);
-      inventoryHealthCheck(productVariant);
-    }
-    productVariant = productVariantService.getVariantById(productVariant.getId());
-    if (productVariant.getMrpQty() == null) {
-      return 0l;
-    }
-    return productVariant.getMrpQty();
-  }
-  /*
-private static class VariantUpdateInfo {
- long mrpQty;
- long netQty;
- double mrp;
- double costPrice;
- boolean inStock;
-
-}
-
-private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
- double newHkPrice = 0d;
- Product product = variant.getProduct();
- boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-
- if (vInfo.mrp != 0d && !variant.getMarkedPrice().equals(Double.valueOf(vInfo.mrp))) {
-     UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(variant, EnumUpdatePVPriceStatus.Pending.getId());
-     if (updatePvPrice == null) {
-         updatePvPrice = new UpdatePvPrice();
-     }
-     updatePvPrice.setProductVariant(variant);
-     updatePvPrice.setOldCostPrice(variant.getCostPrice());
-     updatePvPrice.setNewCostPrice(vInfo.costPrice);
-     updatePvPrice.setOldMrp(variant.getMarkedPrice());
-     updatePvPrice.setNewMrp(vInfo.mrp);
-     updatePvPrice.setOldHkprice(variant.getHkPrice());
-     newHkPrice = vInfo.mrp * (1 - variant.getDiscountPercent());
-     updatePvPrice.setNewHkprice(newHkPrice);
-     updatePvPrice.setTxnDate(new Date());
-     updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
-     baseDao.save(updatePvPrice);
- }
-
- if (vInfo.inStock) {
-     variant.setMarkedPrice(vInfo.mrp);
- }
- variant.setNetQty(vInfo.netQty);
- variant.setMrpQty(vInfo.mrpQty);
-
- // for jit/drop-ship we don't alter stock status
- if (updateStockStatus) {
-     variant.setOutOfStock(!vInfo.inStock);
- }
-
- if (vInfo.costPrice != 0l) {
-     variant.setCostPrice(vInfo.costPrice);
- }
- if (newHkPrice != 0d) {
-     variant.setHkPrice(newHkPrice);
- }
-
- productVariantService.save(variant);
- //neither do we alter corresponding product status
- if (updateStockStatus) {
-     if (!vInfo.inStock) {
-         List<ProductVariant> inStockVariants = product.getInStockVariants();
-         if (inStockVariants != null && inStockVariants.isEmpty()) {
-             product.setOutOfStock(true);
-             productService.save(product);
-         }
-     } else {
-         product.setOutOfStock(false);
-         productService.save(product);
-     }
- }
-}
-  */
 
   private static final String bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty" +
       " from cart_line_item as a inner join base_order as b on a.order_id = b.id" +
@@ -437,74 +321,6 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
     return invList;
   }
 
-  @Override
-  public long getUnbookedInventoryInProcessingQueue(LineItem lineItem) {
-    long qty = 0l;
-    Sku sku = lineItem.getSku();
-    Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
-    if (checkedInInvList != null && !checkedInInvList.isEmpty()) {
-      for (SkuInfo skuInfo : checkedInInvList) {
-        if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
-          qty += skuInfo.getQty();
-        }
-      }
-    }
-
-    //TODO: Need to cleanup the methods to give us correct inventory for JIT
-    if (lineItem.getCartLineItem().getProductVariant().getProduct().isJit()) {
-      qty = -1 * lineItem.getQty();
-    }
-
-    /*
-    List<SkuInfo> inProcessList = getInProcessInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
-    for (SkuInfo skuInfo : inProcessList) {
-        if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
-            qty -= skuInfo.getQty();
-        }
-    }
-
-    */
-    //add inventory booked for lineItem
-    /*if (lineItem.getCartLineItem().getSkuItemCLIs() != null && lineItem.getCartLineItem().getSkuItemCLIs().size() > 0) {
-        qty += lineItem.getQty();
-    }*/
-
-
-    return qty;
-  }
-
-  @Override
-  public long getUnbookedInventoryForActionQueue(LineItem lineItem) {
-    long qty = 0l;
-    Sku sku = lineItem.getSku();
-    Collection<SkuInfo> checkedInInvList = getCheckedInInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
-    if (checkedInInvList != null) {
-      for (SkuInfo skuInfo : checkedInInvList) {
-        if (lineItem.getMarkedPrice().doubleValue() <= skuInfo.getMrp()) { //Ajeet putting all inventory greater tham LI MRP
-          qty += skuInfo.getQty();
-        }
-      }
-    }
-    /*
-// commented by Ankit
- List<SkuInfo> inProcessList = getPostActionQueueInventory(sku.getProductVariant(), Arrays.asList(sku.getWarehouse()));
- for (SkuInfo skuInfo : inProcessList) {
-     if (lineItem.getMarkedPrice().doubleValue() == skuInfo.getMrp()) {
-         qty -= skuInfo.getQty();
-     }
- }
-    */
-
-
-    //adding booked qty from skulineItem
-
-    if (lineItem.getSkuItemLineItems() != null && lineItem.getSkuItemLineItems().size() > 0) {
-      qty += lineItem.getSkuItemLineItems().size();
-    }
-
-
-    return qty;
-  }
 
   private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list, long skuId, double mrp) {
     List<SkuInfo> infos = new ArrayList<SkuInfo>();
@@ -697,7 +513,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
     }
     // get Net quantity for product variant
     List<Sku> variantSkus = skuService.getSKUsForProductVariant(productVariant);
-    long netQty = inventoryManageDao.getAvailableUnBookedInventory(variantSkus);
+    long netQty = inventoryManageDao.getInventoryCount(variantSkus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
     productVariant.setNetQty(netQty);
 
     productVariant.setMrpQty(maxQty);
@@ -737,10 +553,11 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
   // Call this method from just  action  java
   public void tempBookSkuLineItemForOrder(Order order) {
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     for (CartLineItem cartLineItem : cartLineItems) {
       if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
-        if (!inventoryManageDao.sicliAlreadyExists(cartLineItem)) {
+        if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
           ProductVariant productVariant = cartLineItem.getProductVariant();
 
           // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
@@ -749,7 +566,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
           List<Sku> skus = new ArrayList<Sku>();
           Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
           skus.add(sku);
-          Long availableUnBookedInventory = inventoryManageDao.getAvailableUnBookedInventory(skus);
+          Long availableUnBookedInventory = inventoryManageDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
 
           if (availableUnBookedInventory > 0) {
             // picking the  sku for current MRP available at max qty on product variant
@@ -761,18 +578,16 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
               Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
               for (int i = 0; i < qtyToBeSet; i++) {
-                List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, cartLineItem.getMarkedPrice());
+                List<SkuItem> skuItemList = inventoryManageDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
 
                 if (skuItemList != null && skuItemList.size() > 0) {
                   SkuItem skuItem = skuItemList.get(0);
                   skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
                   skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                  // todo Pvi entries
                   skuItem = (SkuItem) getBaseDao().save(skuItem);
                   // inventoryHealthCheck call
                   inventoryHealthCheck(productVariant);
 
-                  // todo UpdatePrice and Mrp qyt
                   skuItemsToBeBooked.add(skuItem);
                 }
               }
@@ -789,6 +604,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
 
   public void inventoryHealthCheck(ProductVariant productVariant) {
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
 
     if (availableUnbookedInventory > 0) {
@@ -866,6 +682,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
   }
 
   public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
     if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
 
@@ -878,7 +695,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
       Sku sku = getBaseDao().get(Sku.class, skuId);
       productVariant.setWarehouse(sku.getWarehouse());
       getBaseDao().save(productVariant);
-      List<CartLineItem> cartLineItems = inventoryManageDao.getClisForInPlacedOrder(productVariant, newMrp);
+      List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
       Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
       if (clis.size() > 0) {
         remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty(), false);
@@ -903,7 +720,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
 
 
   public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
-
+    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     for (CartLineItem cartLineItem : cartLineItems) {
       if (lineItemDao.getLineItem(cartLineItem) != null) {
 
@@ -914,7 +731,7 @@ private void updateVariant(ProductVariant variant, VariantUpdateInfo vInfo) {
         Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
         if (maxQty >= qtyToBeSet) {
           for (int i = 0; i < qtyToBeSet; i++) {
-            List<SkuItem> skuItemList = inventoryManageDao.getCheckedInSkuItems(sku, cartLineItem.getMarkedPrice());
+            List<SkuItem> skuItemList = inventoryManageDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
             if (skuItemList != null && skuItemList.size() > 0) {
               SkuItem skuItem = skuItemList.get(0);
               skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());

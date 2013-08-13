@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.hk.pact.service.splitter;
 
@@ -12,18 +12,17 @@ import com.hk.domain.shippingOrder.LineItem;
 
 /**
  * @author Ankit Chhabra
- *
  */
 public interface ShippingOrderProcessor {
 
 
-    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall);
+  public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall);
 
-    public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder);
+  public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder);
 
-    public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder);
-    
-	public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems,
-                               Map<String, ShippingOrder> splittedOrders, List<String> messages);
-	
+  public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder);
+
+  public boolean autoSplitSO(ShippingOrder shippingOrder, Set<LineItem> selectedLineItems,
+                             Map<String, ShippingOrder> splittedOrders, List<String> messages);
+
 }

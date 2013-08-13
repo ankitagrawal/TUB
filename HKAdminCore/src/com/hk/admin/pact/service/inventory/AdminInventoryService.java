@@ -81,6 +81,7 @@ public interface AdminInventoryService {
 
     public List<VariantConfig> getAllVariantConfig();
 
+  // todo  to be deleted
     public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
 
     public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
@@ -101,12 +102,14 @@ public interface AdminInventoryService {
 
     public void deleteInventory(GrnLineItem grnLineItem);
 
+  // todo-- refcator
     public List<SkuGroup> getInStockSkuGroupsForReview(LineItem lineItem);
 
     public List<SkuGroup> getSkuGroupsInReviewState();
 
     public boolean checkoutMethod(LineItem lineItem, SkuItem skuItem);
 
+     // todo-- refcator
     public List<SkuGroup> getInStockSkuGroup(Sku sku);
 
 }
