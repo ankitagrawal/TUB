@@ -633,6 +633,29 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		return shippingOrder;
 	}
 
+  /**
+   * This overloaded method is used for auto processing at escalate back and is created to support legacy code.
+   */
+  @Transactional
+  public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder, Boolean autoProcess) {
+    Long qty = 0L;
+    if (shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()) {
+      qty = 1L;
+    }
+    if (autoProcess) {
+      shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
+    } else {
+      shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+    }
+
+    getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
+    shippingOrder = getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
+
+    getBucketService().escalateBackToActionQueue(shippingOrder);
+    return shippingOrder;
+  }
+
 	@Transactional
 	public ShippingOrder moveShippingOrderBackToPackingQueue(ShippingOrder shippingOrder) {
 		shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));

@@ -149,7 +149,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
                     shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
                 }
                 if (isEscalateBackAllowed) {
-                    shippingOrder = adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+                    shippingOrder = adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder,true);
                     // after escalate back auto escalate the SO
                     shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
                 }

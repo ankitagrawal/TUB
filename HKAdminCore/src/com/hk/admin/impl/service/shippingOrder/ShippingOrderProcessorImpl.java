@@ -243,8 +243,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         if (lineItem.getSkuItemLineItems()== null) {
           // if no inventory has been booked for the line item
           selectedItems.add(lineItem);
-          String comments = "No available booking found for the product variant " +
-              lineItem.getSku().getProductVariant();
+          String comments = "No available booking found for the product variant " + lineItem.getSku().getProductVariant();
           logger.debug(comments);
           shippingOrderService.logShippingOrderActivity(shippingOrder, user,
               shippingOrderService.getShippingOrderLifeCycleActivity(
