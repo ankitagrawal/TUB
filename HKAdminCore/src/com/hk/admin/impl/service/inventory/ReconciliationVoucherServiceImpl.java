@@ -378,8 +378,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				skuItemLineItem.setSkuItem(skuItemToBeSet);
 				skuItemLineItem.setSkuItemCLI(cli);
 				skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
-				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
-						EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(), null,
+				
+				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), EnumShippingOrderLifecycleActivity.SO_ITEM_RV_SUBTRACT, null,
 						"The already booked unit has been freed for RV subtract and a new unit has been booked for variant:- "
 								+ item.getSku().getProductVariant());
 				logger.debug("got a sibling - set it on the entries in the booking table against SkuItem:- " + skuItem.getId());
@@ -388,6 +388,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				// to be deleted. SO moved back to action awaiting.
 				baseDao.delete(skuItemLineItem);
 				baseDao.delete(cli);
+				item.getShippingOrder().setReason(EnumReason.InsufficientUnbookedInventory.asReason());
 				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder());
 				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
 						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(), EnumReason.InsufficientUnbookedInventory.asReason(),
