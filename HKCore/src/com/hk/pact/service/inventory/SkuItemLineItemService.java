@@ -1,6 +1,7 @@
 package com.hk.pact.service.inventory;
 
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
@@ -34,5 +35,7 @@ public interface SkuItemLineItemService {
     public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
     
     public Boolean freeBookingTable(ShippingOrder shippingOrder);
+
+   public boolean sicliAlreadyExists(CartLineItem cartLineItem);
     
 }
