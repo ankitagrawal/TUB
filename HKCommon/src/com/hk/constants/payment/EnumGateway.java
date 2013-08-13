@@ -93,6 +93,16 @@ public enum EnumGateway {
                 TECHPROCESS.asGateway().getId()
         );
     }
+
+    public static List<Long> getRefundEnabledGateways() {
+        return Arrays.asList(
+                CITRUS.asGateway().getId(),
+                EBS.asGateway().getId(),
+                ICICI.asGateway().getId(),
+                TECHPROCESS.asGateway().getId(),
+                PAYPAL.asGateway().getId()
+        );
+    }
 }
 
 

@@ -61,10 +61,8 @@ public interface ShippingOrderService {
 	
 	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant, Double mrp);
 
-    public void revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) ;
-
     public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds);
-    
+
     public void validateShippingOrder(ShippingOrder shippingOrder);
-	
+
 }
