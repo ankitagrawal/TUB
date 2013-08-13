@@ -128,7 +128,7 @@ public class StockTransferServiceImpl implements StockTransferService {
 			}
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 }
