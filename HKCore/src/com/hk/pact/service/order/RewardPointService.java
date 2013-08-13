@@ -29,6 +29,8 @@ public interface RewardPointService {
 
     public RewardPoint findByReferredOrderAndRewardMode(Order order, RewardPointMode rewardPointMode);
 
+    public List<RewardPoint> findRewardPoints(Order order, List<RewardPointMode> rewardPointMode);
+
     public void approvePendingRewardPointsForOrder(Order order);
 
     public List<RewardPoint> findByReferredOrder(Order order);
@@ -47,5 +49,7 @@ public interface RewardPointService {
     public void cancelReferredOrderRewardPoint(RewardPoint rewardPoint);
     
     public void redeemRewardPoints(Order order, Double rewardPointsUsed);
+
+    public void cancelRewardPoints(User user,  Double cancelRewardPoints);
 
 }

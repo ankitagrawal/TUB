@@ -177,7 +177,7 @@
 <c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
 <c:set var="rewardPoints" value="<%=EnumReconciliationActionType.RewardPoints.getId()%>"/>
 <c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
-<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getRefundEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 <c:set var="reconciliationEnabledStore" value="<%=EnumStore.getReconciliationEnabledStores()%>"/>
 

@@ -265,28 +265,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		
 	}
 
-    @Override
-    public void revertRewardPointsOnSOCancel(ShippingOrder shippingOrder, String comment) {
-        User loggedOnUser = getUserService().getLoggedInUser();
-        double totalRewardPoints = 0;
-        Set<LineItem> lineItems = shippingOrder.getLineItems();
-        for (LineItem lineItem : lineItems) {
-            double rewardPoints = lineItem.getRewardPoints();
-            if (rewardPoints > 0) {
-                totalRewardPoints += rewardPoints;
-            }
-        }
-        if (totalRewardPoints > 0) {
-
-            RewardPoint cancelRewardPoints = rewardPointService.addRewardPoints(shippingOrder.getBaseOrder().getUser(),loggedOnUser,
-                    shippingOrder.getBaseOrder(), totalRewardPoints, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HK_ORDER_CANCEL_POINTS.asRewardPointMode());
-
-            //TODO: expiry date should be on the basis of previous reward points
-            rewardPointService.approveRewardPoints(Arrays.asList(cancelRewardPoints),new DateTime().plusMonths(3).toDate());
-            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RewardPointsRevertBack);
-
-        }
-    }
     
 	public void validateShippingOrder(ShippingOrder shippingOrder) {
 		Set<LineItem> lineItems = shippingOrder.getLineItems();

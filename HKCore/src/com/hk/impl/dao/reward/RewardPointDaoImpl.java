@@ -96,6 +96,14 @@ public class RewardPointDaoImpl extends BaseDaoImpl implements RewardPointDao {
         return (RewardPoint) criteria.uniqueResult();
     }
 
+    @Override
+    public List<RewardPoint> findRewardPoints(Order order, List<RewardPointMode> rewardPointModes) {
+        Criteria criteria = getSession().createCriteria(RewardPoint.class);
+        criteria.add(Restrictions.eq("referredOrder", order));
+        criteria.add(Restrictions.in("rewardPointMode", rewardPointModes));
+        return criteria.list();
+    }
+
     public RewardPoint cancelRewardPoint(RewardPoint rewardPoint) {
         rewardPoint.setRewardPointStatus(get(RewardPointStatus.class, EnumRewardPointStatus.CANCELLED.getId()));
         return save(rewardPoint);
