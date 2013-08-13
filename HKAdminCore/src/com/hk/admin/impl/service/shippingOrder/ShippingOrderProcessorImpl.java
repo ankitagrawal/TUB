@@ -2,11 +2,13 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -263,7 +265,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
         if (selectedItems.size() > 0) {
             if (selectedItems.size() == shippingOrder.getLineItems().size()) {
-                this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null, null, true);
+                this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null,
+                        EnumReconciliationActionType.RewardPoints.getId(), false);
                 shippingOrderService.logShippingOrderActivity(shippingOrder, user,
                         shippingOrderService.getShippingOrderLifeCycleActivity(
                                 EnumShippingOrderLifecycleActivity.SO_Cancelled),
@@ -278,7 +281,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                             shippingOrderService.getShippingOrderLifeCycleActivity(
                                     EnumShippingOrderLifecycleActivity.SO_Cancelled),
                             EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
-                    this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, true);
+                    this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
+                           EnumReconciliationActionType.RewardPoints.getId(), false);
                     emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
                     shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
 
@@ -483,8 +487,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
 	}
 
-	
-	
 	/* Setters and getters begin*/
 	/**
 	 * @return the logger
