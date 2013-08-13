@@ -126,7 +126,7 @@
       </div>
     </div>
   </div>
-  <div id="bulkOrderModal" class="bulkOrderModal" style="top:45px;"></div>
+  <div id="bulkOrderModal" class="bulkOrderModal" style="top:100px; height:630px; " ></div>
   <div class='floatfix'></div>
 
   <%--<script type="text/javascript">
