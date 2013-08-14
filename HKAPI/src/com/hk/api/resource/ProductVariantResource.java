@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.hk.api.dto.HKAPISkuInfoDTO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class ProductVariantResource {
   private InventoryService inventoryService;
   private SkuService skuService;
   private StoreService storeService;
+
+    @Autowired
+    private com.hk.api.pact.service.HKAPIProductService hkapiProductService;
 
   @SuppressWarnings("unused")
 private static Logger logger                    = LoggerFactory.getLogger(ProductVariantResource.class);
@@ -84,7 +88,31 @@ private static Logger logger                    = LoggerFactory.getLogger(Produc
 
   }
 
-  public ProductVariantService getProductVariantService() {
+
+
+
+    @POST
+    @Path("/{variantId}/details/")
+    @Produces("application/json")
+    public String productVariantInfoForAqua(HKAPISkuInfoDTO hkapiSkuInfo, @PathParam("variantId") String variantId) {
+
+        if (StringUtils.isBlank(variantId)) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        }
+
+
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+        if (productVariant == null) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+        }
+        productVariant =  hkapiProductService.updatePVForBrightInventory(hkapiSkuInfo, productVariant);
+//        return new JSONResponseBuilder().addField("hkPrice", productVariant.getHkPrice()).addField("mrp", productVariant.getMarkedPrice()).addField("qty", productVariant.getNetQty()).build();
+        return new JSONResponseBuilder().build();
+
+    }
+
+
+    public ProductVariantService getProductVariantService() {
     if (productVariantService == null) {
       productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
     }

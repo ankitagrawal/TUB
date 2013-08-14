@@ -140,6 +140,8 @@ public class Keys {
         public static final String aquaBrightSeparatedFor = "aquaBrightSeparatedFor";
         public static final String aquaBrightSeparateDate = "aquaBrightSeparateDate";
 
+        public static final String brightlifecareRestUrl           = "brightlifecareRestUrl";
+
 
     }
 

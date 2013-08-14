@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.hk.admin.util.S3Utils;
 import com.hk.api.constants.EnumHKAPIErrorCode;
 import com.hk.api.dto.HKAPIBaseDTO;
+import com.hk.api.dto.HKAPISkuInfoDTO;
 import com.hk.api.dto.marketing.HKAPIMarketingProductDTO;
 import com.hk.api.dto.product.HKAPIProductDTO;
 import com.hk.api.dto.product.HKAPIProductVariantDTO;
@@ -16,9 +17,11 @@ import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.HKImageUtils;
 import org.apache.commons.io.IOUtils;
@@ -46,7 +49,7 @@ import java.util.Stack;
 @Service
 public class HKAPIProductServiceImpl implements HKAPIProductService {
 
-    @Value ("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
     private String healthkartRestUrl;
 
     private static Logger logger = LoggerFactory.getLogger(HKAPIProductServiceImpl.class);
@@ -58,19 +61,22 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
     ProductService productService;
 
     @Autowired
+    BaseDao baseDao;
+
+    @Autowired
     MenuHelper menuHelper;
 
 
-    @Value ("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
     String awsAccessKey;
 
-    @Value ("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
     String awsSecretKey;
 
-    @Value ("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
 
-    @Value ("#{hkEnvProps['" + Keys.Env.readBucket + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.readBucket + "']}")
     String hkReadBucket;
 
     private static final float QUALITY = 0.95F;
@@ -78,19 +84,19 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 
     private static final Integer pixelSize = 1024;
 
-    public HKAPIBaseDTO getProductDetails(String productId){
-        Product product=productService.getProductById(productId);
-        HKAPIBaseDTO hkAPIBaseDto=new HKAPIBaseDTO();
-        if(product!=null){
-            HKAPIProductDTO productDTO=new HKAPIProductDTO();
+    public HKAPIBaseDTO getProductDetails(String productId) {
+        Product product = productService.getProductById(productId);
+        HKAPIBaseDTO hkAPIBaseDto = new HKAPIBaseDTO();
+        if (product != null) {
+            HKAPIProductDTO productDTO = new HKAPIProductDTO();
             productDTO.setDeleted(product.isDeleted());
             productDTO.setOutOfStock(product.getOutOfStock());
             productDTO.setHidden(product.getHidden());
             productDTO.setProductID(product.getId());
-            List<ProductVariant> productVariantList=product.getProductVariants();
+            List<ProductVariant> productVariantList = product.getProductVariants();
             HKAPIProductVariantDTO[] productVariantDTOs = new HKAPIProductVariantDTO[productVariantList.size()];
-            int i=0;
-            for(ProductVariant variant:productVariantList){
+            int i = 0;
+            for (ProductVariant variant : productVariantList) {
                 HKAPIProductVariantDTO productVariantDTO = new HKAPIProductVariantDTO();
                 productVariantDTO.setProductVariantID(variant.getId());
                 productVariantDTO.setHkDiscountPercent(variant.getDiscountPercent());
@@ -103,24 +109,24 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             }
             productDTO.setProductVariantDTOs(productVariantDTOs);
             hkAPIBaseDto.setData(productDTO);
-        }else {
+        } else {
             return new HKAPIBaseDTO(EnumHKAPIErrorCode.ProductDoesNotExist);
         }
         return hkAPIBaseDto;
     }
 
-    public HKAPIBaseDTO getOOSHiddenDeletedProducts(){
-        List<Product> products= productService.getOOSHiddenDeletedProducts();
-        List<String> productIDs= new ArrayList<String>();
-        for(Product product : products){
+    public HKAPIBaseDTO getOOSHiddenDeletedProducts() {
+        List<Product> products = productService.getOOSHiddenDeletedProducts();
+        List<String> productIDs = new ArrayList<String>();
+        for (Product product : products) {
             productIDs.add(product.getId());
         }
-        HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
+        HKAPIBaseDTO baseDTO = new HKAPIBaseDTO();
         baseDTO.setData(productIDs);
         return baseDTO;
     }
 
-    public HKAPIBaseDTO getBrandCategoryInfo(String productId){
+    public HKAPIBaseDTO getBrandCategoryInfo(String productId) {
         Product product = productService.getProductById(productId);
         HKAPIMarketingProductDTO marketingProductDTO = new HKAPIMarketingProductDTO();
         marketingProductDTO.setProductId(productId);
@@ -141,22 +147,25 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             }
         }
 
-        int i=0;
+        int i = 0;
         while (!menuNodeStack.isEmpty()) {
             MenuNode menuNode = menuNodeStack.pop();
-            switch (i){
-                case 1: marketingProductDTO.setSubCategory1(menuNode.getName());
-                case 2: marketingProductDTO.setSubCategory2(menuNode.getName());
-                case 3: marketingProductDTO.setSubCategory3(menuNode.getName());
+            switch (i) {
+                case 1:
+                    marketingProductDTO.setSubCategory1(menuNode.getName());
+                case 2:
+                    marketingProductDTO.setSubCategory2(menuNode.getName());
+                case 3:
+                    marketingProductDTO.setSubCategory3(menuNode.getName());
             }
 
             i++;
-            if(i==3){
+            if (i == 3) {
                 break;
             }
 
         }
-        HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
+        HKAPIBaseDTO baseDTO = new HKAPIBaseDTO();
         baseDTO.setData(marketingProductDTO);
         return baseDTO;
     }
@@ -292,6 +301,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             }
 
             return productImage;
+
         }
     }
 
@@ -346,7 +356,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
                                         productsWithLowResolutionImages.add(product);
                                         productIdsForLowResolutionImages.append(product.getId() + "," + product.getPrimaryCategory() + ";");
                                         counter++;
-                                        logger.info("Low Resolution ProductID = " + product.getId()+"; Count="+counter);
+                                        logger.info("Low Resolution ProductID = " + product.getId() + "; Count=" + counter);
                                         printWriter.write(product.getId() + " || " + product.getPrimaryCategory().getDisplayName() + lineSeparator);
                                     }
                                     //return new Dimension(reader.getWidth(0), reader.getHeight(0));
@@ -375,7 +385,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         return productIdsForLowResolutionImages.toString();
     }
 
-    public String downloadResizeAndUploadImages(String srcImageSize, String targetImageSize){
+    public String downloadResizeAndUploadImages(String srcImageSize, String targetImageSize) {
         StringBuffer stringBuffer = new StringBuffer("IDs:");
         List<Product> productList = getProductService().getAllNonDeletedProducts();
         for (Product product : productList) {
@@ -395,7 +405,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             EnumImageSize srcEnumImageSize = EnumImageSize.getEnumImageSize(srcImageSize);
             EnumImageSize targetEnumImageSize = EnumImageSize.getEnumImageSize(targetImageSize);
 
-            if (product != null &&  product.getMainImageId() != null && srcEnumImageSize != null && targetEnumImageSize != null) {
+            if (product != null && product.getMainImageId() != null && srcEnumImageSize != null && targetEnumImageSize != null) {
 
                 String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
                 File imageFile = new File(imageFilePath);
@@ -408,9 +418,9 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
                 ImageUtils.createThumbnail(imageFilePath, repositoryFilePath, targetEnumImageSize.getDimension(), QUALITY, false, false, .5F);
                 String imageUrl = HKImageUtils.getS3ImageKey(targetEnumImageSize, product.getMainImageId());
                 S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, hkReadBucket);
-                logger.debug("Resized Image for Product="+product.getId());
-                return "SUCCESS:"+product.getId();
-            }else{
+                logger.debug("Resized Image for Product=" + product.getId());
+                return "SUCCESS:" + product.getId();
+            } else {
                 return "FAILED - Incorrect Values";
             }
         } catch (Exception e) {
@@ -422,6 +432,27 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         return adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
     }
 
+
+    public ProductVariant updatePVForBrightInventory(HKAPISkuInfoDTO hkapiSkuInfo, ProductVariant productVariant) {
+        productVariant.setCostPrice(hkapiSkuInfo.getCostPrice());
+        productVariant.setMarkedPrice(hkapiSkuInfo.getMrp());
+        productVariant.setOutOfStock(hkapiSkuInfo.isOutOfStock());
+        productVariant.setMrpQty(hkapiSkuInfo.getQty());
+        productVariant.setNetQty(hkapiSkuInfo.getNetQty());
+        productVariant.setHkPrice(hkapiSkuInfo.getHkPrice());
+        Warehouse warehouse = baseDao.get(Warehouse.class, hkapiSkuInfo.getWarehouseId());
+        productVariant.setWarehouse(warehouse);
+        productVariant = (ProductVariant) baseDao.save(productVariant);
+        Product product = productVariant.getProduct();
+        List<ProductVariant> inStockVariants = product.getInStockVariants();
+        if (inStockVariants != null && inStockVariants.isEmpty()) {
+            product.setOutOfStock(true);
+        } else {
+            product.setOutOfStock(false);
+        }
+        baseDao.save(product);
+        return productVariant;
+    }
 
     public ProductDao getProductDao() {
         return productDao;
