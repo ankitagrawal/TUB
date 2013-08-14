@@ -66,6 +66,7 @@ import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.service.ServiceLocatorFactory;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -127,19 +128,23 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	@Autowired
 	private LoyaltyProgramService loyaltyProgramService;
 
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private RewardPointTxnDao rewardPointTxnDao;
-    @Autowired
-    RewardPointService rewardPointService;
-    @Autowired
-    private UserAccountInfoDao userAccountInfoDao;
-    @Autowired
-    private RewardPointDao rewardPointDao;
+  @Autowired
+  private PaymentService paymentService;
+  @Autowired
+  private RewardPointTxnDao rewardPointTxnDao;
+  @Autowired
+  RewardPointService rewardPointService;
+  @Autowired
+  private UserAccountInfoDao userAccountInfoDao;
+  @Autowired
+  private RewardPointDao rewardPointDao;
+
+  @Autowired
+  ShippingOrderProcessor shippingOrderProcessor;
 
 
-	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType ,boolean reconcileAll) {
+	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType,
+                                  boolean reconcileAll) {
 		// Check if Order is in Action Queue before cancelling it.
 		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 			logger.warn("Cancelling Shipping order gateway id:::" + shippingOrder.getGatewayOrderId());
@@ -147,12 +152,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 			skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
 			//shippingOrder = getShippingOrderService().save(shippingOrder);
 //            getAdminInventoryService().reCheckInInventory(shippingOrder);
-			getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 1L);
+			getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF,
+          EnumInvTxnType.CANCEL_CHECKIN, 1L);
 			// TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
 			// inventory, reward points, shipment, discount
-			getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled, shippingOrder.getReason(), cancellationRemark);
+			getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled,
+          shippingOrder.getReason(), cancellationRemark);
 
-			orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
+			orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(),
+          EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
 			if (shippingOrder.getShipment() != null) {
 				Awb awbToRemove = shippingOrder.getShipment().getAwb();
 				awbService.preserveAwb(awbToRemove);
@@ -180,7 +188,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
 			shippingOrder = getShippingOrderService().save(shippingOrder);
 			if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
-				adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
+				adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null,
+            EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
 			}
 			getBucketService().popFromActionQueue(shippingOrder);
 		}
@@ -653,6 +662,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
     getBucketService().escalateBackToActionQueue(shippingOrder);
+    // after escalate back auto escalate the SO
+    shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
     return shippingOrder;
   }
 
