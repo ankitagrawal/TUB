@@ -539,6 +539,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       product.setOutOfStock(true);
     } else {
       product.setOutOfStock(false);
+      if (productVariantService.isFreeVariant(productVariant)) {
+        product.setJit(false);
+      }
     }
 
     boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
@@ -661,6 +664,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
       if (!updateStockStatus) {
         productVariant.setOutOfStock(false);
+      } else if (productVariantService.isFreeVariant(productVariant)){
+        product.setJit(true);
+        getBaseDao().save(product);
       } else {
         productVariant.setOutOfStock(true);
         productVariant.setNetQty(0L);
