@@ -56,6 +56,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
   @Autowired
   private InventoryService			inventoryService;
 
+
   @Autowired
   private ShippingOrderDao			shippingOrderDao;
 

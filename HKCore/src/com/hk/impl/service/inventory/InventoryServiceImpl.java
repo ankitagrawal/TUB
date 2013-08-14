@@ -2,8 +2,6 @@ package com.hk.impl.service.inventory;
 
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.sku.EnumSkuItemOwner;
-import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -11,14 +9,12 @@ import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.LowInventory;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.manager.EmailManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.inventory.LowInventoryDao;
-import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -36,7 +32,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -53,8 +52,6 @@ public class InventoryServiceImpl implements InventoryService {
   @Autowired
   private LowInventoryDao lowInventoryDao;
   @Autowired
-  private ProductVariantInventoryDao productVariantInventoryDao;
-  @Autowired
   private ShippingOrderDao shippingOrderDao;
   @Autowired
   private ComboService comboService;
@@ -70,11 +67,9 @@ public class InventoryServiceImpl implements InventoryService {
   @Autowired
   InventoryHealthService inventoryHealthService;
   @Autowired
-  SkuItemDao inventoryManageDao;
+  SkuItemDao skuItemDao;
   @Autowired
   CartLineItemDao cartLineItemDao;
-  @Autowired
-  SkuItemDao skuItemDao;
 
   @Override
   @Transactional
@@ -144,10 +139,7 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public Long getAvailableUnbookedInventory(Sku sku, Double mrp) {
-    List<SkuItem> skuItems = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), mrp);
-    if(!skuItems.isEmpty()){
-      return Long.valueOf(skuItems.size());
-    }
+    //TODO: Write proper DAO method
     return 0L;
   }
 
@@ -197,7 +189,7 @@ public class InventoryServiceImpl implements InventoryService {
     List<Long> statuses = new ArrayList<Long>();
     statuses.add(EnumSkuItemStatus.Checked_IN.getId());
     // only considering CheckedInInventory
-    return inventoryManageDao.getInventoryCount(skuList, statuses);
+    return skuItemDao.getInventoryCount(skuList, statuses);
 
   }
 
@@ -207,7 +199,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     List<Long> statusIds = EnumSkuItemStatus.getCheckedInPlusBookedStatus();
     // considering Checcked in , temp booked , booked ie physical inventory
-    Long netInventory = inventoryManageDao.getInventoryCount(skuList, statusIds);
+    Long netInventory = skuItemDao.getInventoryCount(skuList, statusIds);
 
 
     Long bookedInventory = 0L;
@@ -224,7 +216,7 @@ public class InventoryServiceImpl implements InventoryService {
   private Long getBookedQty(List<Sku> skuList) {
     Long bookedInventory = 0L;
     if (skuList != null && !skuList.isEmpty()) {
-      Long bookedInventoryForSKUs = inventoryManageDao.getBookedQtyOfSkuInQueue(skuList);
+      Long bookedInventoryForSKUs = skuItemDao.getBookedQtyOfSkuInQueue(skuList);
 
       bookedInventory = bookedInventoryForSKUs;
     }
@@ -233,7 +225,7 @@ public class InventoryServiceImpl implements InventoryService {
 
 
   public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant) {
-    return inventoryManageDao.getLatestcheckedInBatchInventoryCount(productVariant);
+    return skuItemDao.getLatestcheckedInBatchInventoryCount(productVariant);
   }
 
 
@@ -273,14 +265,6 @@ public class InventoryServiceImpl implements InventoryService {
 
   public void setLowInventoryDao(LowInventoryDao lowInventoryDao) {
     this.lowInventoryDao = lowInventoryDao;
-  }
-
-  public ProductVariantInventoryDao getProductVariantInventoryDao() {
-    return productVariantInventoryDao;
-  }
-
-  public void setProductVariantInventoryDao(ProductVariantInventoryDao productVariantInventoryDao) {
-    this.productVariantInventoryDao = productVariantInventoryDao;
   }
 
   public ShippingOrderDao getShippingOrderDao() {

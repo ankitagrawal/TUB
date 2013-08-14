@@ -162,6 +162,7 @@
             }
             else if(hkPageType == 'product'){
                 prodId = $("#googleProductId").val();
+                pCategory = $("#secondaryLevelCategory").val();
                 canSet = true;
             }else if(hkPageType == 'cart' || hkPageType == 'purchase'){
                 prodId = $("#cartProductId").val();
