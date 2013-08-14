@@ -238,6 +238,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       }
 
       Long orderedQty = lineItem.getQty();
+      Long availableNetPhysicalInventory =
+          getInventoryService().getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
 
       // Check for inventory mismatch for non JIT and non drop shipping orders
       if (!shippingOrder.isDropShipping() && !lineItem.getSku().getProductVariant().getProduct().isJit()) {
@@ -250,7 +252,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
               shippingOrderService.getShippingOrderLifeCycleActivity(
                   EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
               EnumReason.InsufficientUnbookedInventory.asReason(), comments);
-        } else if( lineItem.getSkuItemLineItems().size() < orderedQty) {
+        } else if( availableNetPhysicalInventory < 0 && lineItem.getSkuItemLineItems().size() < orderedQty) {
           // if partial inventory has been booked for the line item
           selectedItems.add(lineItem);
           String comments = "Partial inventory booked for " + lineItem.getSku().getProductVariant();
