@@ -177,7 +177,7 @@
 <c:set var="onlinePayment" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId() %>"/>
 <c:set var="rewardPoints" value="<%=EnumReconciliationActionType.RewardPoints.getId()%>"/>
 <c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
-<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getRefundEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 <c:set var="reconciliationEnabledStore" value="<%=EnumStore.getReconciliationEnabledStores()%>"/>
 
@@ -492,6 +492,11 @@
         BO Split Analytics
     </s:link>)
     </shiro:hasAnyRoles>
+    &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction"
+                                          event="getSkuCartItemLineItems" target="_blank">
+                    <s:param name="baseOrderId" value="${order.id}"/>
+                    Booking Status
+                </s:link>)
 
     <s:link beanclass="com.hk.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
     <c:if test="${!empty order.comments}">

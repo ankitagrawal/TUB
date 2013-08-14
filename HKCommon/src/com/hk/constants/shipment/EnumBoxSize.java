@@ -17,7 +17,7 @@ public enum EnumBoxSize {
     XL(50L, "XL", 4300D, 31.9D, 580D, 16D, 30D, 46D),
     XXL(60L, "XXL", 8500D, 37D, 800D, 30D, 31D, 45D),
     XXXL(70L, "XXXL", 10500D, 57.2D, 1200D, 0D, 0D, 0D),
-    TAMPER_PROOF(80L, "TAMPER_PROOF", 1000D, 5.0D, 2D, 13D, 16D, 23D),
+    TAMPER_PROOF(80L, "TAMPER_PROOF", 500D, 5.0D, 2D, 13D, 16D, 23D),
     MIGRATE(-1L, "MIGRATE", 0D, 0D, 0D, 0D, 0D, 0D);
 
     private String name;

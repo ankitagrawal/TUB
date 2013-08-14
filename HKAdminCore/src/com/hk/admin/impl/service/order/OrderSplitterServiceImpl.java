@@ -157,7 +157,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
                 for (Sku sku : skuList) {
-                    if (inventoryService.getAvailableUnbookedInventory(sku) >= 0) {
+                    if (inventoryService.getAvailableUnbookedInventory(sku, cartLineItem.getMarkedPrice()) >= 0) {
                         applicableWarehousesForLineItem.add(sku.getWarehouse());
                     }
                 }
@@ -276,7 +276,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
                 for (Sku sku : skuList) {
-                    if (inventoryService.getAvailableUnbookedInventory(sku) > 0) {
+                    if (inventoryService.getAvailableUnbookedInventory(sku, cartLineItem.getMarkedPrice()) > 0) {
                         applicableWarehousesForLineItem.add(sku.getWarehouse());
                     }
                 }
@@ -436,7 +436,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
                 for (Sku sku : skuList) {
-                    if (inventoryService.getAvailableUnbookedInventory(sku) > 0) {
+                    if (inventoryService.getAvailableUnbookedInventory(sku, lineItem.getMarkedPrice()) > 0) {
                         applicableWarehousesForLineItem.add(sku.getWarehouse());
                     }
                 }
@@ -497,5 +497,9 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         }
         return warehouseLineItemSetMap;
     }
+
+
+
+  
 
 }

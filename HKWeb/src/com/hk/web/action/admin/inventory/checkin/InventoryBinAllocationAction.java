@@ -1,26 +1,25 @@
 package com.hk.web.action.admin.inventory.checkin;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.warehouse.BinDao;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.Bin;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.web.action.admin.inventory.InventoryCheckinAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,8 +69,11 @@ public class InventoryBinAllocationAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("Please enter the Bin Location"));
        return new ForwardResolution("/pages/admin/inventoryBinAllocation.jsp").addParameter("saved","false");
     }
-
-    this.skuGroup = skuGroupService.getInStockSkuGroup(barcode, userService.getWarehouseForLoggedInUser().getId());
+    List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+    skuItemStatusList.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+    skuItemStatusList.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+    skuItemStatusList.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+    this.skuGroup = skuGroupService.getInStockSkuGroup(barcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList);
     if (skuGroup != null) {
    ProductVariant productVariant = skuGroup.getSku().getProductVariant();
       if (productVariant == null) {
