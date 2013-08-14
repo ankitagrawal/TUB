@@ -96,12 +96,12 @@ public class ReferrerProgramManager {
         return nameLength > 10 ? name.substring(0, 10) + BaseUtils.getRandomStringTypable(5) : name + BaseUtils.getRandomStringTypable(15 - nameLength);
     }
 
-    public void refundRedeemedPoints(Order order) {
+    /*public void refundRedeemedPoints(Order order) {
         List<RewardPointTxn> rewardPointTxnList = getRewardPointTxnDao().findByTxnTypeAndOrder(EnumRewardPointTxnType.REDEEM, order);
         for (RewardPointTxn rewardPointTxn : rewardPointTxnList) {
             getRewardPointTxnDao().createRefundTxn(rewardPointTxn);
         }
-    }
+    }*/
 
     public CouponService getCouponService() {
         return couponService;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
@@ -13,7 +14,9 @@ public interface AdminShippingOrderService {
 
     //  public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder,String comment);
+    public void cancelShippingOrder(ShippingOrder shippingOrder, String comment,Long reconciliationType ,boolean reconcileAll);
+
+    public void reconcileRPLiabilities(ShippingOrder shippingOrder, Order order);
 
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse);
 
@@ -52,6 +55,7 @@ public interface AdminShippingOrderService {
 	public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder);
 
 	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReason);
-	
+
 	public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder order1, ShippingOrder order2);
+	
 }

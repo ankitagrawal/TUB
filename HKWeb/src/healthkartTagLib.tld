@@ -549,6 +549,19 @@
         </example>
     </function>
 
+     <function>
+        <description>
+            returns list of available skuitems of a skugroup
+        </description>
+        <name>getNetPhysicalAvailableStockSkuItems</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getNetPhysicalAvailableStockSkuItems(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getInStockSkuItems(${object})}
+        </example>
+    </function>
+
+
     <function>
         <description>
             returns first combo line item, selected in cart
@@ -1308,4 +1321,15 @@
             ${hk:isSOCanceled(${orderId})}
         </example>
     </function>
+  <function>
+    <description>
+      returns count of LineItem quantity
+    </description>
+    <name>countLineItemQty</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>java.lang.Long countLineItemQty( com.hk.domain.order.ShippingOrder)</function-signature>
+    <example>
+      ${hk:countLineItemQty(${shipingOrder})}
+    </example>
+  </function>
 </taglib>

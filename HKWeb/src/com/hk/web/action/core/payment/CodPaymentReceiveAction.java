@@ -36,147 +36,149 @@ import java.util.Set;
 @Component
 public class CodPaymentReceiveAction extends BaseAction {
 
-    @Autowired
-    private PincodeCourierService pincodeCourierService;
-	@Autowired
-	private OrderManager orderManager;
-	@Autowired
-	private PaymentService paymentService;
-	@Autowired
-	private PaymentManager paymentManager;
+  @Autowired
+  private PincodeCourierService pincodeCourierService;
+  @Autowired
+  private OrderManager orderManager;
+  @Autowired
+  private PaymentService paymentService;
+  @Autowired
+  private PaymentManager paymentManager;
 
-	@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-	private Double codMinAmount;
 
-	@Value("#{hkEnvProps['" + Keys.Env.codMaxAmount + "']}")
-	private Double codMaxAmount;
+  @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+  private Double codMinAmount;
 
-	@Validate(required = true)
-	private Order order;
+  @Value("#{hkEnvProps['" + Keys.Env.codMaxAmount + "']}")
+  private Double codMaxAmount;
 
-	@Validate(required = true)
-	private String codContactName;
+  @Validate(required = true)
+  private Order order;
 
-	@Validate(required = true)
-	private String codContactPhone;
+  @Validate(required = true)
+  private String codContactName;
 
-	@SuppressWarnings("unused")
-    private User user;
+  @Validate(required = true)
+  private String codContactPhone;
 
-	public Resolution pre() {
-		Resolution resolution = null;
-		if (order != null && order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+  @SuppressWarnings("unused")
+  private User user;
 
-			if (StringUtils.isBlank(codContactName)) {
-				addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be blank"));
-				return new RedirectResolution(PaymentModeAction.class);
-			} else if (StringUtils.isBlank(codContactPhone)) {
-				addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be blank"));
-				return new RedirectResolution(PaymentModeAction.class);
-			} else if (codContactName.length() > 80) {
-				addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be longer than 80 characters"));
-				return new RedirectResolution(PaymentModeAction.class);
-			} else if (codContactPhone.length() > 25) {
-				addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be longer than 25 characters"));
-				return new RedirectResolution(PaymentModeAction.class);
-			}
+  public Resolution pre() {
+    Resolution resolution = null;
+    if (order != null && order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 
-			Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-			if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
-				addRedirectAlertMessage(new SimpleMessage("Cod is not allowed as you have subscriptions in your cart"));
-				return new RedirectResolution(PaymentModeAction.class);
-			}
+      if (StringUtils.isBlank(codContactName)) {
+        addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be blank"));
+        return new RedirectResolution(PaymentModeAction.class);
+      } else if (StringUtils.isBlank(codContactPhone)) {
+        addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be blank"));
+        return new RedirectResolution(PaymentModeAction.class);
+      } else if (codContactName.length() > 80) {
+        addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be longer than 80 characters"));
+        return new RedirectResolution(PaymentModeAction.class);
+      } else if (codContactPhone.length() > 25) {
+        addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be longer than 25 characters"));
+        return new RedirectResolution(PaymentModeAction.class);
+      }
 
-			// recalculate the pricing before creating a payment.
-			order = orderManager.recalAndUpdateAmount(order);
-			// first create a payment row, this will also cotain the payment checksum
-			Payment payment = getPaymentManager().createNewPayment(order, getPaymentService().findPaymentMode(EnumPaymentMode.COD), BaseUtils.getRemoteIpAddrForUser(getContext()),
-                    null, null, null);
+      Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+      if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
+        addRedirectAlertMessage(new SimpleMessage("Cod is not allowed as you have subscriptions in your cart"));
+        return new RedirectResolution(PaymentModeAction.class);
+      }
 
-			String gatewayOrderId = payment.getGatewayOrderId();
+      // recalculate the pricing before creating a payment.
+      order = orderManager.recalAndUpdateAmount(order);
+      // first create a payment row, this will also cotain the payment checksum
+      Payment payment = getPaymentManager().createNewPayment(order, getPaymentService().findPaymentMode(EnumPaymentMode.COD), BaseUtils.getRemoteIpAddrForUser(getContext()),
+          null, null, null);
 
-			Address address = order.getAddress();
-			String pin = address != null ? address.getPincode().getPincode() : null;
+      String gatewayOrderId = payment.getGatewayOrderId();
 
-            if (!pincodeCourierService.isCodAllowed(pin)) {
-				addRedirectAlertMessage(new SimpleMessage("Cod is not available for this location"));
-				return new RedirectResolution(PaymentModeAction.class);
-			} else if (order.getIsExclusivelyServiceOrder()) {
-				addRedirectAlertMessage(new SimpleMessage("Currently Cod is not available for services"));
-				return new RedirectResolution(PaymentModeAction.class);
-			} else if (order.getContainsServices()) {
-				addRedirectAlertMessage(new SimpleMessage("Currently Cod is not available for services, Please make payments separately for products and services"));
-				return new RedirectResolution(PaymentModeAction.class);
-			} else if (order.getAmount() < codMinAmount || order.getAmount() > codMaxAmount) {
-				addRedirectAlertMessage(new SimpleMessage("Cod is only applicable when total item price is between " + codMinAmount + " and " + codMaxAmount));
-				return new RedirectResolution(PaymentModeAction.class);
-            }
+      Address address = order.getAddress();
+      String pin = address != null ? address.getPincode().getPincode() : null;
 
-            try {
-                getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
-                boolean shouldMakeCodCall = true;
-                if (getPrincipal() != null && getPrincipal().isAssumed()) {
-                    shouldMakeCodCall = false;
-                }
-                getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone, shouldMakeCodCall);
-                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-            } catch (HealthkartPaymentGatewayException e) {
-                getPaymentManager().error(gatewayOrderId, e);
-                resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
-            }
-		} else {
-			addRedirectAlertMessage(new SimpleMessage("Please try again, else Payment for the order has already been recorded."));
-			resolution = new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
-		}
-		return resolution;
-	}
+      if (!pincodeCourierService.isCodAllowed(pin)) {
+        addRedirectAlertMessage(new SimpleMessage("Cod is not available for this location"));
+        return new RedirectResolution(PaymentModeAction.class);
+      } else if (order.getIsExclusivelyServiceOrder()) {
+        addRedirectAlertMessage(new SimpleMessage("Currently Cod is not available for services"));
+        return new RedirectResolution(PaymentModeAction.class);
+      } else if (order.getContainsServices()) {
+        addRedirectAlertMessage(new SimpleMessage("Currently Cod is not available for services, Please make payments separately for products and services"));
+        return new RedirectResolution(PaymentModeAction.class);
+      } else if (order.getAmount() < codMinAmount || order.getAmount() > codMaxAmount) {
+        addRedirectAlertMessage(new SimpleMessage("Cod is only applicable when total item price is between " + codMinAmount + " and " + codMaxAmount));
+        return new RedirectResolution(PaymentModeAction.class);
+      }
 
-	public Order getOrder() {
-		return order;
-	}
+      try {
+        getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
+        boolean shouldMakeCodCall = true;
+        if (getPrincipal() != null && getPrincipal().isAssumed()) {
+          shouldMakeCodCall = false;
+        }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+        getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone, shouldMakeCodCall);
+        resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+      } catch (HealthkartPaymentGatewayException e) {
+        getPaymentManager().error(gatewayOrderId, e);
+        resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+      }
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Please try again, else Payment for the order has already been recorded."));
+      resolution = new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
+    }
+    return resolution;
+  }
 
-	public String getCodContactName() {
-		return codContactName;
-	}
+  public Order getOrder() {
+    return order;
+  }
 
-	public void setCodContactName(String codContactName) {
-		this.codContactName = codContactName;
-	}
+  public void setOrder(Order order) {
+    this.order = order;
+  }
 
-	public String getCodContactPhone() {
-		return codContactPhone;
-	}
+  public String getCodContactName() {
+    return codContactName;
+  }
 
-	public void setCodContactPhone(String codContactPhone) {
-		this.codContactPhone = codContactPhone;
-	}
+  public void setCodContactName(String codContactName) {
+    this.codContactName = codContactName;
+  }
 
-	public OrderManager getOrderManager() {
-		return orderManager;
-	}
+  public String getCodContactPhone() {
+    return codContactPhone;
+  }
 
-	public void setOrderManager(OrderManager orderManager) {
-		this.orderManager = orderManager;
-	}
+  public void setCodContactPhone(String codContactPhone) {
+    this.codContactPhone = codContactPhone;
+  }
 
-	public PaymentService getPaymentService() {
-		return paymentService;
-	}
+  public OrderManager getOrderManager() {
+    return orderManager;
+  }
 
-	public void setPaymentService(PaymentService paymentService) {
-		this.paymentService = paymentService;
-	}
+  public void setOrderManager(OrderManager orderManager) {
+    this.orderManager = orderManager;
+  }
 
-	public PaymentManager getPaymentManager() {
-		return paymentManager;
-	}
+  public PaymentService getPaymentService() {
+    return paymentService;
+  }
 
-	public void setPaymentManager(PaymentManager paymentManager) {
-		this.paymentManager = paymentManager;
-	}
+  public void setPaymentService(PaymentService paymentService) {
+    this.paymentService = paymentService;
+  }
+
+  public PaymentManager getPaymentManager() {
+    return paymentManager;
+  }
+
+  public void setPaymentManager(PaymentManager paymentManager) {
+    this.paymentManager = paymentManager;
+  }
 
 }

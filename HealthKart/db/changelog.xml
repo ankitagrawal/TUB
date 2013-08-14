@@ -13631,6 +13631,28 @@
             <column name="remarks" type="TEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-07-24-01">
+        <createTable tableName="synonym">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="search_synonym" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(450)">
+                 <constraints nullable="false"/>
+            </column>
+            <column name="brand_name" type="VARCHAR(450)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
     <changeSet author="Shakti Singh (generated)" id="20130724-1">
         <addColumn tableName="payment">
             <column name="refund_amount" type="DECIMAL(8,2)"/>
@@ -13641,5 +13663,305 @@
     </changeSet>
     <changeSet author="Shakti Singh (generated)" id="20130724-3">
         <modifyDataType columnName="value" newDataType="DOUBLE" tableName="reward_point_txn"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1375032999219-1">
+        <createTable tableName="reverse_pickup_order">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="reverse_pickup_order_id" type="VARCHAR(70)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reverse_pickup_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="close_dt" type="DATETIME"/>
+            <column name="tracking_number" type="VARCHAR(70)"/>
+            <column name="courier_managed_by" type="INT"/>
+            <column name="courier_name" type="VARCHAR(100)"/>
+            <column name="pickup_time" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-2">
+        <createTable tableName="reverse_pickup_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-3">
+        <createTable tableName="rp_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="reverse_pickup_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_reason_for_return_id" type="INT"/>
+            <column name="customer_comment" type="VARCHAR(100)"/>
+            <column name="action_taken_id" type="INT"/>
+            <column name="action_on_status_id" type="INT"/>
+            <column name="warehouse_remark" type="VARCHAR(100)"/>
+            <column name="warehouse_condition_id" type="INT"/>
+            <column name="warehouse_comment" type="INT"/>
+            <column name="customer_action_status" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-13">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="reverse_pickup_order"  constraintName="fk_reverse_pickup_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-14">
+        <addForeignKeyConstraint baseColumnNames="reverse_pickup_status_id" baseTableName="reverse_pickup_order"  constraintName="fk_reverse_pickup_order_reverse_pickup_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_pickup_status"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-15">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="reverse_pickup_order"  constraintName="fk_reverse_pickup_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-16">
+        <addForeignKeyConstraint baseColumnNames="customer_reason_for_return_id" baseTableName="rp_line_item" constraintName="fk_rp_line_item_reason1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reason"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-17">
+        <addForeignKeyConstraint baseColumnNames="line_item_id" baseTableName="rp_line_item" constraintName="fk_rp_line_item_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-18">
+        <addForeignKeyConstraint baseColumnNames="reverse_pickup_id" baseTableName="rp_line_item" constraintName="fk_rp_line_item_reverse_pickup1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_pickup_order"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-19">
+        <addForeignKeyConstraint baseColumnNames="warehouse_condition_id" baseTableName="rp_line_item"  constraintName="fk_rp_line_item_reason2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reason"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-20">
+        <sql>
+            insert into classification(`id` ,`primary`,`secondary`) values
+            (1300,'Damaged','Customer Reason For Reverse Pickup'),
+            (1310,'Expired','Customer Reason For Reverse Pickup'),
+            (1320,'Wrong Color','Customer Reason For Reverse Pickup'),
+            (1330,'Wrong Size','Customer Reason For Reverse Pickup');
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (800,'Customer Reason For Reverse Pickup',1300),
+            (810,'Customer Reason For Reverse Pickup',1310),
+            (820,'Customer Reason For Reverse Pickup',1320),
+            (830,'Customer Reason For Reverse Pickup',1330);
+
+            insert into classification(id ,`primary`,`secondary`) values
+            (1400,'Good','RP Warehouse QA Checkin Product Is Good'),
+            (1410,'Damaged','RP Warehouse QA Product Damaged'),
+            (1420,'Non Functional','RP Warehouse QA Product Non Functional'),
+            (1430,' Near Expiry','RP Warehouse QA Product  Near Expiry'),
+            (1440,'Expired','RP Warehouse QA Product Expired');
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (900,'Warehouse QA For Reverse pickup',1400),
+            (910,'Warehouse QA For Reverse pickup',1410),
+            (920,'Warehouse QA For Reverse pickup',1420),
+            (930,'Warehouse QA For Reverse pickup',1430),
+            (940,'Warehouse QA For Reverse pickup',1440);
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1374606680815-21">
+        <sql>
+            insert into role (name) values ('REVERSE_PICKUP');
+
+            insert into permission (name) values ('CREATE_REVERSE_PICKUP');
+            insert into permission (name) values ('EDIT_REVERSE_PICKUP');
+            insert into permission (name) values ('APPROVE_REVERSE_PICKUP');
+            insert into permission (name) values ('VIEW_REVERSE_PICKUP');
+
+
+            insert into role_has_permission (role_name , permission_name) values ('REVERSE_PICKUP','CREATE_REVERSE_PICKUP');
+            insert into role_has_permission (role_name , permission_name) values ('REVERSE_PICKUP','APPROVE_REVERSE_PICKUP');
+            insert into role_has_permission (role_name , permission_name) values ('REVERSE_PICKUP','EDIT_REVERSE_PICKUP');
+            insert into role_has_permission (role_name , permission_name) values ('REVERSE_PICKUP','VIEW_REVERSE_PICKUP');
+        </sql>
+    </changeSet>
+	<changeSet author="Nihal(Generated)" id="01-08-2013(1)">
+		<createIndex indexName="extra_inventory_line_item_id_UNIQUE" tableName="purchase_invoice_has_extra_inventory_line_item" unique="true">
+			<column name="extra_inventory_line_item_id"/>
+		</createIndex>
+	</changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-1">
+        <createTable tableName="sku_item_cart_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cart_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column  defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-2">
+        <createTable tableName="sku_item_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_cart_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column  defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-3">
+        <createTable tableName="sku_item_owner">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-4">
+        <addColumn tableName="product_variant">
+            <column name="warehouse_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-5">
+        <addColumn tableName="sku_item">
+            <column name="sku_item_owner_id" type="INT" defaultValueNumeric="10">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-6">
+        <sql>
+            INSERT INTO sku_item_owner values(10, "SELF"), (20, "CUSTOMER"), (30, "SUPPLIER"), (40, "BRIGHT");
+            INSERT INTO sku_item_status (`id`, `name`) VALUES ('150', 'TEMP BOOKED'), ('160', 'BOOKED');
+        </sql>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-23">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="product_variant" constraintName="fk_product_variant_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-26">
+        <addForeignKeyConstraint baseColumnNames="sku_item_owner_id" baseTableName="sku_item"  constraintName="fk_sku_item_sku_item_owner1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item_owner"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-27">
+        <addForeignKeyConstraint baseColumnNames="cart_line_item_id" baseTableName="sku_item_cart_line_item"  constraintName="fk_sku_item_cart_line_item_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cart_line_item"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-28">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="sku_item_cart_line_item"  constraintName="fk_sku_item_cart_line_item_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-29">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="sku_item_cart_line_item"  constraintName="fk_sku_item_cart_line_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-30">
+        <addForeignKeyConstraint baseColumnNames="line_item_id" baseTableName="sku_item_line_item"  constraintName="fk_sku_item_line_item_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-31">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="sku_item_line_item"  constraintName="fk_sku_item_line_item_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1375185803482-32">
+        <addForeignKeyConstraint baseColumnNames="sku_item_cart_line_item_id" baseTableName="sku_item_line_item" constraintName="fk_sku_item_line_item_sku_item_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item_cart_line_item"  referencesUniqueColumn="false"/>
+    </changeSet>
+        <changeSet author="Nihal (generated)" id="1375185803482-33">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="sku_item_line_item" constraintName="fk_sku_item_line_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    </changeSet>
+
+    <changeSet author="tarun (generated)" id="1375420269033-18">
+        <createIndex indexName="cart_line_item_unit_num_unique" tableName="sku_item_cart_line_item" unique="true">
+            <column name="unit_num"/>
+            <column name="cart_line_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1375420269033-19">
+        <createIndex indexName="line_item_unit_num_unique" tableName="sku_item_line_item" unique="true">
+            <column name="unit_num"/>
+            <column name="line_item_id"/>
+        </createIndex>
+    </changeSet>
+	<changeSet author="Rahul (generated)" id="8-4-2013-1">
+		<sql>
+			alter table  sku_item_cart_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+			alter table  sku_item_line_item modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+		</sql>
+	</changeSet>
+    <changeSet author="Pratham (generated)" id="2013-08-05-01">
+        <addColumn tableName="shipment">
+            <column name="order_placed_shipment_charge" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-08-05-02">
+        <addColumn tableName="shipment">
+            <column name="shipment_cost_calculate_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1375698046513-16">
+        <createIndex indexName="si_cli_unique" tableName="sku_item_cart_line_item" unique="true">
+            <column name="cart_line_item_id"/>
+            <column name="sku_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1375698046513-17">
+        <createIndex indexName="si_li_unique" tableName="sku_item_line_item" unique="true">
+            <column name="sku_item_id"/>
+            <column name="line_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130812-01">
+        <sql>
+            insert into classification(`id` ,`primary`,`secondary`) values
+            (1500,'Refund Failed',null),
+            (1510,'Refund Successful',null),
+            (1520,'Reward Point Given',null),
+            (1530,'Reward Point not given',null),
+            (1540,'Refund in process',null),
+            (1550,'Manual refund task mail sent to admin',null);
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (1100,'Reconciliation',1500),
+            (1110,'Reconciliation',1510),
+            (1120,'Reconciliation',1520),
+            (1130,'Reconciliation',1530),
+            (1140,'Reconciliation',1540),
+            (1150,'Reconciliation',1550);
+        </sql>
     </changeSet>
 </databaseChangeLog>

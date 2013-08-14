@@ -38,7 +38,7 @@ public class ProductCache {
   }
 
   public ProductVO getProductCache(String productId) {
-    logger.debug("Getting ProductVO from Cache for Product=" + productId);
+//    logger.debug("Getting ProductVO from Cache for Product=" + productId);
     return idToProductCache.get(productId);
   }
 
@@ -58,14 +58,14 @@ public class ProductCache {
 
   public void refreshCache(Product product) {
     if (product != null && product.getId() != null) {
-      logger.debug("Refreshing Product Cache for Product=" + product.getId());
+//      logger.debug("Refreshing Product Cache for Product=" + product.getId());
       idToProductCache.put(product.getId(), getProductService().createProductVO(product));
     }
   }
 
   public void refreshCache(ProductVO productVO) {
     if (productVO != null && productVO.getId() != null) {
-      logger.debug("Refreshing Product Cache for ProductVO=" + productVO.getId());
+//      logger.debug("Refreshing Product Cache for ProductVO=" + productVO.getId());
       idToProductCache.put(productVO.getId(), productVO);
     }
   }

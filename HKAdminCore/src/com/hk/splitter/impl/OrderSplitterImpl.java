@@ -92,7 +92,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 				filter.setMinQty(cartLineItem.getQty());
 				filter.setMrp(cartLineItem.getMarkedPrice());
 				
-				Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkus(cartLineItem.getProductVariant(), filter);
+				Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkusForSplitter(cartLineItem.getProductVariant(), filter, cartLineItem);
 				for (SkuInfo skuInfo : skuList) {
 					Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
 					if(whs.contains(sku.getWarehouse())) {

@@ -24,6 +24,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumStockTransferStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
@@ -227,7 +228,7 @@ public class InventoryCheckinAction extends BaseAction {
                   addRedirectAlertMessage(new SimpleMessage("Product is marked Deleted for Variant:" + productVariant.getId() + " - Plz get it fixed by Category Team"));
                   return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                 }
-                Sku sku = getSkuService().findSKU(productVariant, grn.getWarehouse());
+                Sku sku = getSkuService().getSKU(productVariant, grn.getWarehouse());
                 // Check for In Progress Audit  for Variant.
                 List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
                 if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
@@ -375,7 +376,7 @@ public class InventoryCheckinAction extends BaseAction {
         StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
-        sku = skuService.findSKU(productVariant, toWarehouse);
+        sku = skuService.getSKU(productVariant, toWarehouse);
         if (sku == null) {
             addRedirectAlertMessage(new SimpleMessage("No SKU Found for ProductVariantId:-" + (productVariant == null ? "" : productVariant.getId())));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
@@ -392,13 +393,14 @@ public class InventoryCheckinAction extends BaseAction {
         if (skuItemBarcode != null) {
             skuItem = skuItemBarcode;
         } else {
-            skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItem = skuGroupService.getSkuItem(skuGroup,Arrays.asList( EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus()));
         }
 
         if (skuItem != null) {
 
             if (stockTransferLineItem.getCheckedinQty() == null || (!stockTransferLineItem.getCheckedinQty().equals(stockTransferLineItem.getCheckedoutQty()))) {
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                 skuItem.setSkuGroup(checkinSkuGroup);
                 stockTransfer.setCheckinDate(HKDateUtil.getNow());
                 stockTransfer.setReceivedBy(loggedOnUser);
@@ -412,7 +414,7 @@ public class InventoryCheckinAction extends BaseAction {
                 }
                 baseDao.update(stockTransferLineItem);
 //           adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, 1L, loggedOnUser, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, stockTransferLineItem, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+                adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, stockTransferLineItem,EnumSkuItemStatus.Checked_IN,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
                 getInventoryService().checkInventoryHealth(sku.getProductVariant());
 
             } else {
