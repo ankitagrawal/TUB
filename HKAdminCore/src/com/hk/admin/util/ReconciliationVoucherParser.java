@@ -7,6 +7,8 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.pact.service.inventory.SkuGroupService;
@@ -14,6 +16,7 @@ import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import com.hk.constants.XslConstants;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 
@@ -212,6 +215,8 @@ public class ReconciliationVoucherParser {
 
                 SkuGroup skuGroup = null;
                 SkuItem skuItem = null;
+                List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+                List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
                 if (groupBarcode != null && !StringUtils.isBlank(groupBarcode)) {
                     List<SkuGroup> skuGroupList = skuGroupService.getSkuGroup(groupBarcode.trim(), warehouse.getId());
                     if (skuGroupList == null || skuGroupList.isEmpty()) {
@@ -223,7 +228,7 @@ public class ReconciliationVoucherParser {
                     }
 
                 } else if (itemBarcode != null && !StringUtils.isBlank(itemBarcode)) {
-                    skuItem = skuGroupService.getSkuItemByBarcode(itemBarcode.trim(), warehouse.getId(), null);
+                    skuItem = skuGroupService.getSkuItemByBarcode(itemBarcode.trim(), warehouse.getId(), skuItemStatusList, skuItemOwners);
                     if (skuItem == null) {
                         throw new Exception("Invalid Item Barcode  @ Row:" + rowCount);
                     }
@@ -306,8 +311,12 @@ public class ReconciliationVoucherParser {
     }
 
     public SkuGroup getSkuGroupWithSystemQty(List<SkuGroup> skuGroupList, int qty) {
+    	List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+        skuItemStatusList.add( EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+        skuItemStatusList.add( EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
         for (SkuGroup skuGroup : skuGroupList) {
-            List<SkuItem> inStockSkuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+            List<SkuItem> inStockSkuItemList = skuGroupService.getInStockSkuItems(skuGroup, skuItemStatusList);
             int systemQty = inStockSkuItemList.size();
             if (systemQty == qty) {
                 return skuGroup;

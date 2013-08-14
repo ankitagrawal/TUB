@@ -90,11 +90,12 @@
                           class="eyeGlass cta button_green"/>
               </c:when>
               <c:otherwise>
-                  <c:if test="${!empty subscriptionProduct}">
+	              <%--Subscription Commented--%>
+                  <%--<c:if test="${!empty subscriptionProduct}">
                      &nbsp;&nbsp;
                       <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
                           <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link>
-                  </c:if>
+                  </c:if>--%>
 	              <s:layout-render name="/layouts/embed/preOrderMessage.jsp"
 							                 product="${product}" />
                   <%--<s:submit name="addToCart" value="Place Order"

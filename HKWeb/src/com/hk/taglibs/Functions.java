@@ -418,6 +418,12 @@ public class Functions {
         return adminSkuItemDao.getInStockSkuItems((SkuGroup) o);
     }
 
+
+    public static List<SkuItem> getNetPhysicalAvailableStockSkuItems(Object o) {
+        AdminSkuItemDao adminSkuItemDao = ServiceLocatorFactory.getService(AdminSkuItemDao.class);
+        return adminSkuItemDao.getNetPhysicalAvailableStockSkuItems((SkuGroup) o);
+    }
+
     public static Long getComboCount(Object o1) {
 
         if (o1 != null) {
@@ -917,6 +923,16 @@ public class Functions {
     public static boolean isBOCancelable(Long orderId) {
         OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
         return orderService.isBOCancelable(orderId);
+    }
+
+    public static Long countLineItemQty(ShippingOrder shippingOrder) {
+      long qty=0;
+      if(shippingOrder.getLineItems()!=null && shippingOrder.getLineItems().size()>0)
+      for(LineItem lineItem : shippingOrder.getLineItems())
+      {
+          qty=qty+lineItem.getQty();
+      }
+      return qty;
     }
 
 }

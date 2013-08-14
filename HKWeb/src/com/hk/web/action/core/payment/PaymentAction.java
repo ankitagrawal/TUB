@@ -4,13 +4,10 @@ import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
@@ -22,10 +19,7 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
-import com.hk.web.action.core.cart.CartAction;
-import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.factory.PaymentModeActionFactory;
-import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -37,7 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Author: Pratham
@@ -88,8 +83,10 @@ public class PaymentAction extends BaseAction {
 //                }
 //                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
 //            }
+
+
             BillingAddress billingAddress = null;
-            if(billingAddressId != null){
+            if (billingAddressId != null) {
                 billingAddress = addressDao.getBillingAddressById(billingAddressId);
             }
 
@@ -123,6 +120,7 @@ public class PaymentAction extends BaseAction {
                     //this is a very crude away, although this code should not fail, but as a worse case scenario, redirecting customer to icici no matter what since it gives max option
                     logger.error("Routing Multiple gateways failed due to some exception" + e);
                     gateway = EnumGateway.ICICI.asGateway();
+
                 }
             }
 

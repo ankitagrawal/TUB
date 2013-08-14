@@ -500,13 +500,14 @@
           to the service provider
         </span>
       </c:if>
-      <c:if test="${cartLineItem.productVariant.product.subscribable}">
+	    <%--Subscription Commented--%>
+      <%--<c:if test="${cartLineItem.productVariant.product.subscribable}">
        <br/> <div style="font-style: italic; font-size: 11px; font-weight: normal; font-family: Georgia, Cambria, serif;">
           <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionLink"><b>subscribe and save more</b>
               <s:param name="productVariant" value="${cartLineItem.productVariant}"/>
           <s:param name="fromCart" value="true"/> </s:link>
     </div>
-      </c:if>
+      </c:if>--%>
     </div>
     <div class="floatfix"> </div>
 

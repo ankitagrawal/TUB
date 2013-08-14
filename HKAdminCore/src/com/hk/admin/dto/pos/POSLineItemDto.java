@@ -20,6 +20,7 @@ public class POSLineItemDto {
 	private Double mrp;
 	private Double offerPrice;
 	private Double total;
+	private Boolean freebie;
 
 	public SkuItem getSkuItem() {
 		return skuItem;
@@ -75,5 +76,17 @@ public class POSLineItemDto {
 
 	public void setProductVariantBarcode(String productVariantBarcode) {
 		this.productVariantBarcode = productVariantBarcode;
+	}
+
+	public Boolean isFreebie() {
+		return freebie;
+	}
+
+	public Boolean getFreebie() {
+		return freebie;
+	}
+
+	public void setFreebie(Boolean freebie) {
+		this.freebie = freebie;
 	}
 }

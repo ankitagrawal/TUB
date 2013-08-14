@@ -1,7 +1,20 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +38,8 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.web.action.admin.AdminHomeAction;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 
 @Component
 public class EscalateJitShippingOrdersAction extends BaseAction {
@@ -49,71 +58,89 @@ public class EscalateJitShippingOrdersAction extends BaseAction {
 	@Autowired
 	private UserService userService;
 
+    @Autowired ShippingOrderProcessor shippingOrderProcessor;
+
 	List<ShippingOrder> sortedShippingOrderList;
+	
+	private static Logger logger = LoggerFactory.getLogger(EscalateJitShippingOrdersAction.class);
 
 	@DefaultHandler
 	public Resolution pre() {
-		sortedShippingOrderList = new ArrayList<ShippingOrder>();
-		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
-		shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
-		Set<ShippingOrder> shippingOrderListToProcess = new HashSet<ShippingOrder>();
-		if (shippingOrderList != null && shippingOrderList.size() > 0) {
+		synchronized (EscalateJitShippingOrdersAction.class) {
+			String escalated = "";
+			String notEscalated = "";
+			sortedShippingOrderList = new ArrayList<ShippingOrder>();
+			ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
+			shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+			Set<ShippingOrder> shippingOrderListToProcess = new HashSet<ShippingOrder>();
+			if (shippingOrderList != null && shippingOrderList.size() > 0) {
 
-			for (ShippingOrder shippingOrder : shippingOrderList) {
-				if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
-					boolean canAdd = true;
-					for(LineItem item: shippingOrder.getLineItems()){
-						if(item.getSku().getProductVariant().getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
-							canAdd = false;
+				for (ShippingOrder shippingOrder : shippingOrderList) {
+					if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
+						boolean canAdd = true;
+						for(LineItem item: shippingOrder.getLineItems()){
+							if(item.getSku().getProductVariant().getProduct().getPrimaryCategory().getName().equals(CategoryConstants.EYE)){
+								canAdd = false;
+								break;
+							}
+						}
+						if(canAdd)
+						shippingOrderListToProcess.add(shippingOrder);
+					}
+				}
+			}
+
+			sortedShippingOrderList.addAll(shippingOrderListToProcess);
+			sortedShippingOrderList = getSortedShippingOrders();
+			Set<ShippingOrder> sortedShippingOrdersSet = new HashSet<ShippingOrder>(sortedShippingOrderList);
+
+
+			for (ShippingOrder shippingOrder : sortedShippingOrdersSet) {
+				if(shippingOrder.getId().intValue()==1639052){
+					System.out.println(shippingOrder.getId());
+				}
+				List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
+				boolean flag = true;
+				if (poList != null && poList.size() > 0) {
+					for (PurchaseOrder po : poList) {
+						if (!po.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.Received.asEnumPurchaseOrderStatus())) {
+							flag = false;
 							break;
 						}
 					}
-					if(canAdd)
-					shippingOrderListToProcess.add(shippingOrder);
+				} else {
+					flag = false;
 				}
-			}
-		}
-
-		sortedShippingOrderList.addAll(shippingOrderListToProcess);
-		sortedShippingOrderList = getSortedShippingOrders();
-		Set<ShippingOrder> sortedShippingOrdersSet = new HashSet<ShippingOrder>(sortedShippingOrderList);
-
-		int ctr = 0;
-
-		for (ShippingOrder shippingOrder : sortedShippingOrdersSet) {
-			if(shippingOrder.getId().intValue()==1639052){
-				System.out.println(shippingOrder.getId());
-			}
-			List<PurchaseOrder> poList = shippingOrder.getPurchaseOrders();
-			boolean flag = true;
-			if (poList != null && poList.size() > 0) {
-				for (PurchaseOrder po : poList) {
-					if (!po.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.Received.asEnumPurchaseOrderStatus())) {
-						flag = false;
-						break;
+				if (flag) {
+					logger.debug("Trying to manually escalate SO -"+shippingOrder.getId());
+					shippingOrder = shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
+					if(shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())){
+						notEscalated +=shippingOrder.getId().toString()+", ";
 					}
+					else{
+						escalated +=shippingOrder.getId().toString()+", ";
+					}
+					ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
+					shippingOrderLifecycle.setOrder(shippingOrder);
+					shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
+							EnumShippingOrderLifecycleActivity.SO_PO_RECEIVED.getId()));
+					shippingOrderLifecycle.setUser(userService.getAdminUser());
+					shippingOrderLifecycle.setComments("Tried to manually escalate as PO against the shipping order served.");
+					shippingOrderLifecycle.setActivityDate(new Date());
+					shippingOrderLifecycleDao.save(shippingOrderLifecycle);
 				}
-			} else {
-				flag = false;
 			}
-			if (flag) {
-				shippingOrder = shippingOrderService.manualEscalateShippingOrder(shippingOrder);
-				ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
-				shippingOrderLifecycle.setOrder(shippingOrder);
-				shippingOrderLifecycle.setShippingOrderLifeCycleActivity(getBaseDao().get(ShippingOrderLifeCycleActivity.class,
-						EnumShippingOrderLifecycleActivity.SO_PO_RECEIVED.getId()));
-				shippingOrderLifecycle.setUser(userService.getAdminUser());
-				shippingOrderLifecycle.setComments("Tried to manually escalate as PO against the shipping order served.");
-				shippingOrderLifecycle.setActivityDate(new Date());
-				shippingOrderLifecycleDao.save(shippingOrderLifecycle);
-				ctr++;
+			if(escalated.length()>0&&notEscalated.length()>0){
+			addRedirectAlertMessage(new SimpleMessage("Shipping Order(s) - "+escalated+" were escalated. <br/>"+"Shipping Order(s) - "+notEscalated+" could not be escalated <br/>"));
 			}
+			else if(escalated.length()>0&&!(notEscalated.length()>0)){
+				addRedirectAlertMessage(new SimpleMessage("Shipping Order(s) - "+escalated+" were escalated."));
+			}
+			else if(notEscalated.length()>0&&!(escalated.length()>0)){
+				addRedirectAlertMessage(new SimpleMessage("Shipping Order(s) - "+notEscalated+" were not escalated."));
+			}
+			return new RedirectResolution(ActionAwaitingQueueAction.class);
 		}
-
-
-		addRedirectAlertMessage(new SimpleMessage("Tried to Escalate "+ctr+ " Shipping Orders"));
-		return new RedirectResolution(ActionAwaitingQueueAction.class);
-
 	}
 
 	public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {

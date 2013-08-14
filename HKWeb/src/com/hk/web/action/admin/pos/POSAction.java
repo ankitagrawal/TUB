@@ -114,8 +114,8 @@ public class POSAction extends BaseAction {
 	private String loyaltyPoints = null;
 	private User loyaltyCustomer;
 	private List<UserOrderKarmaProfile> customerKarmaList;
-	
-	
+
+
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -150,7 +150,7 @@ public class POSAction extends BaseAction {
 	private PricingEngine pricingEngine;
 	@Autowired
 	private OrderManager orderManager;
-	
+
 	@DefaultHandler
 	public Resolution pre() {
 		return new ForwardResolution("/pages/pos/pos.jsp");
@@ -222,7 +222,7 @@ public class POSAction extends BaseAction {
 					address = addressList.get(addressList.size() - 1);
 					dataMap.put("address", address);
 					dataMap.put("pincode", address.getPincode().getPincode());
-					
+
 				}
 				if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
 					// if already a loyalty user then fill params
@@ -241,12 +241,12 @@ public class POSAction extends BaseAction {
 				// Did not use getEligibleRewardPointsForUser(login) API of rewardPointService to save a db hit to find the user again
 				double rewardPoints = 0.0;
 				if (customer.getUserAccountInfo()==null) {
-					rewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
-				} else {
-					rewardPoints = (rewardPointService.getTotalRedeemablePoints(customer)
-							- customer.getUserAccountInfo().getOverusedRewardPoints());
-				}
-				
+          rewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
+        } else {
+          rewardPoints = (rewardPointService.getTotalRedeemablePoints(customer)
+              - customer.getUserAccountInfo().getOverusedRewardPoints());
+        }
+
 				if (rewardPoints > 0 ) {
 					dataMap.put("rewardPoints", Functions.roundNumberForDisplay(rewardPoints));
 				}
@@ -264,7 +264,7 @@ public class POSAction extends BaseAction {
 
 	public Resolution receivePaymentAndProcessOrder() {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		
+
 		customer = this.updateCustomerDetails(warehouse);
 		if (customer == null) {
 			return new ForwardResolution("/pages/pos/pos.jsp");
@@ -288,8 +288,18 @@ public class POSAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Error occurred while creating Order"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
+		for (POSLineItemDto posLineItemDto : posLineItems) {
+			if (posLineItemDto.getFreebie() != null && posLineItemDto.isFreebie()) {
+				if (discount == null) {
+					discount = 0D;
+				}
+				discount += posLineItemDto.getOfferPrice();
+				grandTotal += posLineItemDto.getOfferPrice();
+			}
+		}
 		order.setAmount(grandTotal);
 		order = posService.createCartLineItems(posLineItems, order);
+
 		if (discount != null) {
 			posService.applyOrderLevelDiscountOnCartLineItems(order, discount);
 			order.setAmount(grandTotal - discount);
@@ -322,548 +332,546 @@ public class POSAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Payment could not be processed, contact Application Support"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
-		
+
 		if (paymentMode.getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
 			payment.setGatewayReferenceId(paymentReferenceNumber);
 			payment.setBankName(paymentRemarks);
 			payment.setLastFourDigitCardNo(lastFourDigitCardNo);
 		}
 		payment.setAmount(order.getAmount());
-		
+
 		payment.setPaymentStatus(paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS));
 		paymentService.save(payment);
 
-		order.setGatewayOrderId(payment.getGatewayOrderId());
-		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-		order.setPayment(payment);
-		order = orderService.save(order);
-		
-		ShippingOrder shippingOrder = posService.createSOForStore(order, warehouse);
+    order.setGatewayOrderId(payment.getGatewayOrderId());
+    payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+    order.setPayment(payment);
+    order = orderService.save(order);
 
-		posService.checkoutAndUpdateInventory(posLineItems, shippingOrder);
+    ShippingOrder shippingOrder = posService.createSOForStore(order, warehouse);
 
-		String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
-		shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
+    posService.checkoutAndUpdateInventory(posLineItems, shippingOrder);
 
-		shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered));
-		ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-		shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-		shippingOrder = shippingOrderService.save(shippingOrder);
-		
-		order.setOrderStatus(EnumOrderStatus.Delivered.asOrderStatus());
-		orderService.save(order);
-		
-		
-		double loyaltyPointsEarned = 0.0;
-		if (loyaltyUser) {
-			loyaltyProgramService.creditKarmaPoints(order);
-			if (loyaltyProgramService.getUserOrderKarmaProfile(order.getId()) !=null ) {
-				loyaltyPointsEarned = loyaltyProgramService.getUserOrderKarmaProfile(order.getId()).getKarmaPoints();
-			}
-			loyaltyProgramService.approveKarmaPoints(order);
-		}
-		shippingOrderToPrint = shippingOrder;
-		StringBuilder redirectMessage = new StringBuilder("Order processed successfully. ");
-		if (loyaltyPointsEarned > 0) {
-			redirectMessage.append(customer.getName() + " earned " + Functions.roundNumberForDisplay(loyaltyPointsEarned)
-					+ " loyalty points for this transaction.");
-		}
-		addRedirectAlertMessage(new SimpleMessage(redirectMessage.toString()));
-		return new ForwardResolution("/pages/pos/pos.jsp");
-	}
+    String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
+    shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
 
-	public Resolution print() {
-		if (order == null) {
-			addRedirectAlertMessage(new SimpleMessage("Invalid Order Id"));
-			return new ForwardResolution("/pages/pos/pos.jsp");
-		}
-		///get the first Shipping Order of the base Order
-		ShippingOrder shippingOrder = null;
-		for (ShippingOrder shippingOrderInBaseOrder : order.getShippingOrders()) {
-			shippingOrder = shippingOrderInBaseOrder;
-			break;
-		}
+    shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered));
+    ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+    shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+    shippingOrder = shippingOrderService.save(shippingOrder);
 
-		return new RedirectResolution(AccountingInvoiceAction.class).addParameter("shippingOrder", shippingOrder);
-	}
+    order.setOrderStatus(EnumOrderStatus.Delivered.asOrderStatus());
+    orderService.save(order);
 
-	public Resolution createReverseOrderForPOS() {
-		if (!StringUtil.isBlank(shippingGatewayOrderId)) {
-			shippingOrder = shippingOrderService.findByGatewayOrderId(shippingGatewayOrderId);
-		}
-		if (shippingOrder != null) {
-			if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
-				return new ForwardResolution("/pages/pos/posReturnOrder.jsp");
-			} else {
-				addRedirectAlertMessage(new SimpleMessage("Reverse Order has been already created for this SO"));
-				return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderGatewayId", shippingOrder.getGatewayOrderId());
-			}
+    double loyaltyPointsEarned = 0.0;
+    if (loyaltyUser) {
+      loyaltyProgramService.creditKarmaPoints(order);
+      if (loyaltyProgramService.getUserOrderKarmaProfile(order.getId()) != null) {
+        loyaltyPointsEarned = loyaltyProgramService.getUserOrderKarmaProfile(order.getId()).getKarmaPoints();
+      }
+      loyaltyProgramService.approveKarmaPoints(order);
+    }
+    shippingOrderToPrint = shippingOrder;
+    StringBuilder redirectMessage = new StringBuilder("Order processed successfully. ");
+    if (loyaltyPointsEarned > 0) {
+      redirectMessage.append(customer.getName() + " earned " + Functions.roundNumberForDisplay(loyaltyPointsEarned)
+          + " loyalty points for this transaction.");
+    }
+    addRedirectAlertMessage(new SimpleMessage(redirectMessage.toString()));
+      return new ForwardResolution("/pages/pos/pos.jsp");
+    }
 
-		}
-		addRedirectAlertMessage(new SimpleMessage("Invalid gateway Order Id"));
-		return new RedirectResolution(POSAction.class);
-	}
+  public Resolution print() {
+    if (order == null) {
+      addRedirectAlertMessage(new SimpleMessage("Invalid Order Id"));
+      return new ForwardResolution("/pages/pos/pos.jsp");
+    }
+    ///get the first Shipping Order of the base Order
+    ShippingOrder shippingOrder = null;
+    for (ShippingOrder shippingOrderInBaseOrder : order.getShippingOrders()) {
+      shippingOrder = shippingOrderInBaseOrder;
+      break;
+    }
 
-	public Resolution saveReverseOrder() {
-		if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
-			ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason, null);
-			reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
-			//shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated, null, returnOrderReason);
-			shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus());
-			shippingOrderService.save(shippingOrder);
-			reverseOrder.setReceivedDate(new Date());
-			reverseOrder.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
-			reverseOrderService.save(reverseOrder);
-			addRedirectAlertMessage(new SimpleMessage("Reverse Order Created"));
-			return new RedirectResolution(POSAction.class);
-		} else {
-			addRedirectAlertMessage(new SimpleMessage("Reverse Order has already been created for this Shipping order"));
-			return new RedirectResolution(POSAction.class);
-		}
+    return new RedirectResolution(AccountingInvoiceAction.class).addParameter("shippingOrder", shippingOrder);
+  }
 
-	}
+  public Resolution createReverseOrderForPOS() {
+    if (!StringUtil.isBlank(shippingGatewayOrderId)) {
+      shippingOrder = shippingOrderService.findByGatewayOrderId(shippingGatewayOrderId);
+    }
+    if (shippingOrder != null) {
+      if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
+        return new ForwardResolution("/pages/pos/posReturnOrder.jsp");
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("Reverse Order has been already created for this SO"));
+        return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderGatewayId", shippingOrder.getGatewayOrderId());
+      }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Resolution updateCustomerInfo () {
-		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		customer = this.updateCustomerDetails(warehouse);
-		if (customer != null) {
-			Hibernate.initialize(customer);
-			if (customer instanceof HibernateProxy) {
-				HibernateProxy proxy = (HibernateProxy)customer;                                                          
-				customer = (User)proxy.getHibernateLazyInitializer().getImplementation();
-			}
+    }
+    addRedirectAlertMessage(new SimpleMessage("Invalid gateway Order Id"));
+    return new RedirectResolution(POSAction.class);
+  }
+
+  public Resolution saveReverseOrder() {
+    if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
+      ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason, null);
+      reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
+      //shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated, null, returnOrderReason);
+      shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus());
+      shippingOrderService.save(shippingOrder);
+      reverseOrder.setReceivedDate(new Date());
+      reverseOrder.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
+      reverseOrderService.save(reverseOrder);
+      addRedirectAlertMessage(new SimpleMessage("Reverse Order Created"));
+      return new RedirectResolution(POSAction.class);
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Reverse Order has already been created for this Shipping order"));
+      return new RedirectResolution(POSAction.class);
+    }
+
+  }
+
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Resolution updateCustomerInfo() {
+    Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+    customer = this.updateCustomerDetails(warehouse);
+    if (customer != null) {
+      Hibernate.initialize(customer);
+      if (customer instanceof HibernateProxy) {
+        HibernateProxy proxy = (HibernateProxy) customer;
+        customer = (User) proxy.getHibernateLazyInitializer().getImplementation();
+      }
 
 //			addRedirectAlertMessage(new SimpleMessage("Customer Info updated."));
-			Map dataMap = new HashMap();
-			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
-			dataMap.put("customerName", customer.getName());
-			dataMap.put("customer", customer);
-			if(loyaltyUser) {
-				this.addLoyaltyUser = false;
-				dataMap.put("loyaltyUser", true);
-				dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
-				UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
-				dataMap.put("badgeName", badgeInfo.getBadge().getBadgeName());
-				dataMap.put("cardNumber", badgeInfo.getCardNumber());
-			} else {
-				this.addLoyaltyUser = true;
-				dataMap.put("cardNumber", null);
-			}
-			noCache();
-			//HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
-			return new JsonResolution(healthkartResponse);
-		}
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Customer Not found");
-		noCache();
-		return new JsonResolution(healthkartResponse);
-	}
-	
-	private User updateCustomerDetails (Warehouse warehouse) {
-
-		if (customer == null) {
-			customer = userService.findByLogin(email);
-			// Still customer not found that means new user
-			if (customer == null) {
-				customer = posService.createUserForStore(email, name, null, RoleConstants.HK_USER);
-			}
-		}
-		customer.setName(name);
-		if (newAddress) {
-			if (StringUtils.isBlank(addressLine1) || StringUtils.isBlank(addressCity) || StringUtils.isBlank(addressPincode)) {
-				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
-			} else {
-				if (pincodeService.getByPincode(addressPincode) == null) {
-					addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
-					return null;
-				}
-				address = posService.createAddressForUser(addressLine1, addressLine2, addressCity, addressState, addressPincode, phone, customer);
-			}
-
-		} else {
-			if (address == null) {
-				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
-			}
-		}
-		 if (addLoyaltyUser) {
-			 loyaltyProgramService.createNewUserBadgeInfo(customer);
-			 addLoyaltyUser = false;
-			 loyaltyUser = true;
-		 } 
-		 if(loyaltyUser) {
-			 UserBadgeInfo customerBadgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
-			 loyaltyUser =true;
-			 if(cardNumber != null && !cardNumber.isEmpty()) {
-		 			 if (!cardNumber.trim().equalsIgnoreCase(customerBadgeInfo.getCardNumber())) {
-		 				 loyaltyProgramService.updateCardNumber(loyaltyProgramService.getUserBadgeInfo(customer), cardNumber.trim());
-		 			 }
-			 }
-		 }
-		 	
-		userService.save(customer);
-		return customer;
-	}
-	
-	public Resolution convertLoyaltyPoints () {
-		double convertedPoints = 0.0;
-		Map dataMap = new HashMap();
-		
-		if (loyaltyCustomer == null) {
-			if(!StringUtils.isBlank(email)) {
-				loyaltyCustomer = userService.findByLogin(email);
-			}
-		}
-		if (loyaltyCustomer!=null) {
-			convertedPoints= loyaltyProgramService.convertLoyaltyToRewardPoints(loyaltyCustomer);
-		}
-		if (convertedPoints > 0 ) {
-			double totalRewardPoints = 0.0; 
-			if (loyaltyCustomer.getUserAccountInfo()==null) {
-				totalRewardPoints = rewardPointService.getTotalRedeemablePoints(loyaltyCustomer);
-			} else {
-				totalRewardPoints = (rewardPointService.getTotalRedeemablePoints(loyaltyCustomer)
-						- loyaltyCustomer.getUserAccountInfo().getOverusedRewardPoints());
-			}
-			
-			dataMap.put("totalRewardPoints", Functions.roundNumberForDisplay(totalRewardPoints));
-			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer has been awarded "
-			+ Functions.roundNumberForDisplay(convertedPoints) + " reward Points.", dataMap);
-			
-			noCache();
-			return new JsonResolution(healthkartResponse);
-		} else {
-			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Insufficient loyalty points for conversion.", dataMap);
-			noCache();
-			return new JsonResolution(healthkartResponse);
-		}
-	}
-	
-	
-	public Resolution getCustomerLoyaltyHistory() {
-		if (loyaltyCustomer == null) {
-				loyaltyCustomer = userService.findByLogin(email);
-		}
-		
-		customerKarmaList = loyaltyProgramService.getUserLoyaltyProfileHistory(loyaltyCustomer);
-		return new ForwardResolution("/pages/pos/posCustomerOrderHistory.jsp");
-	}
-	/**
-	 * Setters and getters begin 
-	 */
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @return the useRewardPoints
-	 */
-	public boolean isUseRewardPoints() {
-		return useRewardPoints;
-	}
-
-	/**
-	 * @param useRewardPoints the useRewardPoints to set
-	 */
-	public void setUseRewardPoints(boolean useRewardPoints) {
-		this.useRewardPoints = useRewardPoints;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getProductVariantBarcode() {
-		return productVariantBarcode;
-	}
-
-	public void setProductVariantBarcode(String productVariantBarcode) {
-		this.productVariantBarcode = productVariantBarcode;
-	}
-
-	public List<POSLineItemDto> getPosLineItems() {
-		return posLineItems;
-	}
-
-	public void setPosLineItems(List<POSLineItemDto> posLineItems) {
-		this.posLineItems = posLineItems;
-	}
-
-	public User getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(User customer) {
-		this.customer = customer;
-	}
-
-	public Double getGrandTotal() {
-		return grandTotal;
-	}
-
-	public void setGrandTotal(Double grandTotal) {
-		this.grandTotal = grandTotal;
-	}
-
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public List<SkuItem> getSkuItemListToBeCheckedOut() {
-		return skuItemListToBeCheckedOut;
-	}
-
-	public void setSkuItemListToBeCheckedOut(List<SkuItem> skuItemListToBeCheckedOut) {
-		this.skuItemListToBeCheckedOut = skuItemListToBeCheckedOut;
-	}
-
-	public ShippingOrder getShippingOrderToPrint() {
-		return shippingOrderToPrint;
-	}
-
-	/**
-	 * @return the addLoyaltyUser
-	 */
-	public boolean isAddLoyaltyUser() {
-		return addLoyaltyUser;
-	}
-
-	/**
-	 * @param addLoyaltyUser the addLoyaltyUser to set
-	 */
-	public void setAddLoyaltyUser(boolean addLoyaltyUser) {
-		this.addLoyaltyUser = addLoyaltyUser;
-	}
-
-	/**
-	 * @return the cardNumber
-	 */
-	public String getCardNumber() {
-		return cardNumber;
-	}
-
-	/**
-	 * @param cardNumber the cardNumber to set
-	 */
-	public void setCardNumber(String cardNumber) {
-		this.cardNumber = cardNumber;
-	}
-
-	public void setShippingOrderToPrint(ShippingOrder shippingOrderToPrint) {
-		this.shippingOrderToPrint = shippingOrderToPrint;
-	}
-
-	public PaymentMode getPaymentMode() {
-		return paymentMode;
-	}
-
-	public void setPaymentMode(PaymentMode paymentMode) {
-		this.paymentMode = paymentMode;
-	}
-
-	public String getPaymentReferenceNumber() {
-		return paymentReferenceNumber;
-	}
-
-	public void setPaymentReferenceNumber(String paymentReferenceNumber) {
-		this.paymentReferenceNumber = paymentReferenceNumber;
-	}
-
-	public String getPaymentRemarks() {
-		return paymentRemarks;
-	}
-
-	public void setPaymentRemarks(String paymentRemarks) {
-		this.paymentRemarks = paymentRemarks;
-	}
-
-	public Long getLastFourDigitCardNo() {
-		return lastFourDigitCardNo;
-	}
-
-	public void setLastFourDigitCardNo(Long lastFourDigitCardNo) {
-		this.lastFourDigitCardNo = lastFourDigitCardNo;
-	}
-
-	public Store getStore() {
-		return store;
-	}
-
-	public void setStore(Store store) {
-		this.store = store;
-	}
-
-	public boolean isNewAddress() {
-		return newAddress;
-	}
-
-	public void setNewAddress(boolean newAddress) {
-		this.newAddress = newAddress;
-	}
-
-	public String getAddressLine1() {
-		return addressLine1;
-	}
-
-	public void setAddressLine1(String addressLine1) {
-		this.addressLine1 = addressLine1;
-	}
-
-	public String getAddressLine2() {
-		return addressLine2;
-	}
-
-	public void setAddressLine2(String addressLine2) {
-		this.addressLine2 = addressLine2;
-	}
-
-	public String getAddressCity() {
-		return addressCity;
-	}
-
-	public void setAddressCity(String addressCity) {
-		this.addressCity = addressCity;
-	}
-
-	public String getAddressState() {
-		return addressState;
-	}
-
-	public void setAddressState(String addressState) {
-		this.addressState = addressState;
-	}
-
-	public String getAddressPincode() {
-		return addressPincode;
-	}
-
-	public void setAddressPincode(String addressPincode) {
-		this.addressPincode = addressPincode;
-	}
-
-	public Double getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(Double discount) {
-		this.discount = discount;
-	}
-
-	public String getShippingGatewayOrderId() {
-		return shippingGatewayOrderId;
-	}
-
-	public void setShippingGatewayOrderId(String shippingGatewayOrderId) {
-		this.shippingGatewayOrderId = shippingGatewayOrderId;
-	}
-
-	public ShippingOrder getShippingOrder() {
-		return shippingOrder;
-	}
-
-	public void setShippingOrder(ShippingOrder shippingOrder) {
-		this.shippingOrder = shippingOrder;
-	}
-
-	public String getReturnOrderReason() {
-		return returnOrderReason;
-	}
-
-	public void setReturnOrderReason(String returnOrderReason) {
-		this.returnOrderReason = returnOrderReason;
-	}
-
-	public Map<LineItem, Long> getItemMap() {
-		return itemMap;
-	}
-
-	public void setItemMap(Map<LineItem, Long> itemMap) {
-		this.itemMap = itemMap;
-	}
-
-	/**
-	 * @return the loyaltyUser
-	 */
-	public boolean isLoyaltyUser() {
-		return loyaltyUser;
-	}
-
-	/**
-	 * @param loyaltyUser the loyaltyUser to set
-	 */
-	public void setLoyaltyUser(boolean loyaltyUser) {
-		this.loyaltyUser = loyaltyUser;
-	}
-
-	/**
-	 * @return the loyaltyPoints
-	 */
-	public String getLoyaltyPoints() {
-		return loyaltyPoints;
-	}
-
-	/**
-	 * @param loyaltyPoints the loyaltyPoints to set
-	 */
-	public void setLoyaltyPoints(String loyaltyPoints) {
-		this.loyaltyPoints = loyaltyPoints;
-	}
-
-	/**
-	 * @return the loyaltyCustomer
-	 */
-	public User getLoyaltyCustomer() {
-		return loyaltyCustomer;
-	}
-
-	/**
-	 * @param loyaltyCustomer the loyaltyCustomer to set
-	 */
-	public void setLoyaltyCustomer(User loyaltyCustomer) {
-		this.loyaltyCustomer = loyaltyCustomer;
-	}
-
-	/**
-	 * @return the customerKarmaList
-	 */
-	public List<UserOrderKarmaProfile> getCustomerKarmaList() {
-		return customerKarmaList;
-	}
-
-	/**
-	 * @param customerKarmaList the customerKarmaList to set
-	 */
-	public void setCustomerKarmaList(List<UserOrderKarmaProfile> customerKarmaList) {
-		this.customerKarmaList = customerKarmaList;
-	}
-
-	
+      Map dataMap = new HashMap();
+      HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
+      dataMap.put("customerName", customer.getName());
+      dataMap.put("customer", customer);
+      if (loyaltyUser) {
+        this.addLoyaltyUser = false;
+        dataMap.put("loyaltyUser", true);
+        dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
+        UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
+        dataMap.put("badgeName", badgeInfo.getBadge().getBadgeName());
+        dataMap.put("cardNumber", badgeInfo.getCardNumber());
+      } else {
+        this.addLoyaltyUser = true;
+        dataMap.put("cardNumber", null);
+      }
+      noCache();
+      //HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
+      return new JsonResolution(healthkartResponse);
+    }
+    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Customer Not found");
+    noCache();
+    return new JsonResolution(healthkartResponse);
+  }
+
+  private User updateCustomerDetails(Warehouse warehouse) {
+
+    if (customer == null) {
+      customer = userService.findByLogin(email);
+      // Still customer not found that means new user
+      if (customer == null) {
+        customer = posService.createUserForStore(email, name, null, RoleConstants.HK_USER);
+      }
+    }
+    customer.setName(name);
+    if (newAddress) {
+      if (StringUtils.isBlank(addressLine1) || StringUtils.isBlank(addressCity) || StringUtils.isBlank(addressPincode)) {
+        address = posService.createDefaultAddressForUser(customer, phone, warehouse);
+      } else {
+        if (pincodeService.getByPincode(addressPincode) == null) {
+          addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
+          return null;
+        }
+        address = posService.createAddressForUser(addressLine1, addressLine2, addressCity, addressState, addressPincode, phone, customer);
+      }
+
+    } else {
+      if (address == null) {
+        address = posService.createDefaultAddressForUser(customer, phone, warehouse);
+      }
+    }
+    if (addLoyaltyUser) {
+      loyaltyProgramService.createNewUserBadgeInfo(customer);
+      addLoyaltyUser = false;
+      loyaltyUser = true;
+    }
+    if (loyaltyUser) {
+      UserBadgeInfo customerBadgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
+      loyaltyUser = true;
+      if (cardNumber != null && !cardNumber.isEmpty()) {
+        if (!cardNumber.trim().equalsIgnoreCase(customerBadgeInfo.getCardNumber())) {
+          loyaltyProgramService.updateCardNumber(loyaltyProgramService.getUserBadgeInfo(customer), cardNumber.trim());
+        }
+      }
+    }
+
+    userService.save(customer);
+    return customer;
+  }
+
+  public Resolution convertLoyaltyPoints() {
+    double convertedPoints = 0.0;
+    Map dataMap = new HashMap();
+
+    if (loyaltyCustomer == null) {
+      if (!StringUtils.isBlank(email)) {
+        loyaltyCustomer = userService.findByLogin(email);
+      }
+    }
+    if (loyaltyCustomer != null) {
+      convertedPoints = loyaltyProgramService.convertLoyaltyToRewardPoints(loyaltyCustomer);
+    }
+    if (convertedPoints > 0) {
+      double totalRewardPoints = 0.0;
+      if (loyaltyCustomer.getUserAccountInfo() == null) {
+        totalRewardPoints = rewardPointService.getTotalRedeemablePoints(loyaltyCustomer);
+      } else {
+        totalRewardPoints = (rewardPointService.getTotalRedeemablePoints(loyaltyCustomer)
+            - loyaltyCustomer.getUserAccountInfo().getOverusedRewardPoints());
+      }
+
+      dataMap.put("totalRewardPoints", Functions.roundNumberForDisplay(totalRewardPoints));
+      HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer has been awarded "
+          + Functions.roundNumberForDisplay(convertedPoints) + " reward Points.", dataMap);
+
+      noCache();
+      return new JsonResolution(healthkartResponse);
+    } else {
+      HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Insufficient loyalty points for conversion.", dataMap);
+      noCache();
+      return new JsonResolution(healthkartResponse);
+    }
+  }
+
+
+  public Resolution getCustomerLoyaltyHistory() {
+    if (loyaltyCustomer == null) {
+      loyaltyCustomer = userService.findByLogin(email);
+    }
+
+    customerKarmaList = loyaltyProgramService.getUserLoyaltyProfileHistory(loyaltyCustomer);
+    return new ForwardResolution("/pages/pos/posCustomerOrderHistory.jsp");
+  }
+
+  /**
+   * Setters and getters begin
+   */
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  /**
+   * @return the useRewardPoints
+   */
+  public boolean isUseRewardPoints() {
+    return useRewardPoints;
+  }
+
+  /**
+   * @param useRewardPoints the useRewardPoints to set
+   */
+  public void setUseRewardPoints(boolean useRewardPoints) {
+    this.useRewardPoints = useRewardPoints;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getProductVariantBarcode() {
+    return productVariantBarcode;
+  }
+
+  public void setProductVariantBarcode(String productVariantBarcode) {
+    this.productVariantBarcode = productVariantBarcode;
+  }
+
+  public List<POSLineItemDto> getPosLineItems() {
+    return posLineItems;
+  }
+
+  public void setPosLineItems(List<POSLineItemDto> posLineItems) {
+    this.posLineItems = posLineItems;
+  }
+
+  public User getCustomer() {
+    return customer;
+  }
+
+  public void setCustomer(User customer) {
+    this.customer = customer;
+  }
+
+  public Double getGrandTotal() {
+    return grandTotal;
+  }
+
+  public void setGrandTotal(Double grandTotal) {
+    this.grandTotal = grandTotal;
+  }
+
+  public Order getOrder() {
+    return order;
+  }
+
+  public void setOrder(Order order) {
+    this.order = order;
+  }
+
+  public Address getAddress() {
+    return address;
+  }
+
+  public void setAddress(Address address) {
+    this.address = address;
+  }
+
+  public List<SkuItem> getSkuItemListToBeCheckedOut() {
+    return skuItemListToBeCheckedOut;
+  }
+
+  public void setSkuItemListToBeCheckedOut(List<SkuItem> skuItemListToBeCheckedOut) {
+    this.skuItemListToBeCheckedOut = skuItemListToBeCheckedOut;
+  }
+
+  public ShippingOrder getShippingOrderToPrint() {
+    return shippingOrderToPrint;
+  }
+
+  /**
+   * @return the addLoyaltyUser
+   */
+  public boolean isAddLoyaltyUser() {
+    return addLoyaltyUser;
+  }
+
+  /**
+   * @param addLoyaltyUser the addLoyaltyUser to set
+   */
+  public void setAddLoyaltyUser(boolean addLoyaltyUser) {
+    this.addLoyaltyUser = addLoyaltyUser;
+  }
+
+  /**
+   * @return the cardNumber
+   */
+  public String getCardNumber() {
+    return cardNumber;
+  }
+
+  /**
+   * @param cardNumber the cardNumber to set
+   */
+  public void setCardNumber(String cardNumber) {
+    this.cardNumber = cardNumber;
+  }
+
+  public void setShippingOrderToPrint(ShippingOrder shippingOrderToPrint) {
+    this.shippingOrderToPrint = shippingOrderToPrint;
+  }
+
+  public PaymentMode getPaymentMode() {
+    return paymentMode;
+  }
+
+  public void setPaymentMode(PaymentMode paymentMode) {
+    this.paymentMode = paymentMode;
+  }
+
+  public String getPaymentReferenceNumber() {
+    return paymentReferenceNumber;
+  }
+
+  public void setPaymentReferenceNumber(String paymentReferenceNumber) {
+    this.paymentReferenceNumber = paymentReferenceNumber;
+  }
+
+  public String getPaymentRemarks() {
+    return paymentRemarks;
+  }
+
+  public void setPaymentRemarks(String paymentRemarks) {
+    this.paymentRemarks = paymentRemarks;
+  }
+
+  public Long getLastFourDigitCardNo() {
+    return lastFourDigitCardNo;
+  }
+
+  public void setLastFourDigitCardNo(Long lastFourDigitCardNo) {
+    this.lastFourDigitCardNo = lastFourDigitCardNo;
+  }
+
+  public Store getStore() {
+    return store;
+  }
+
+  public void setStore(Store store) {
+    this.store = store;
+  }
+
+  public boolean isNewAddress() {
+    return newAddress;
+  }
+
+  public void setNewAddress(boolean newAddress) {
+    this.newAddress = newAddress;
+  }
+
+  public String getAddressLine1() {
+    return addressLine1;
+  }
+
+  public void setAddressLine1(String addressLine1) {
+    this.addressLine1 = addressLine1;
+  }
+
+  public String getAddressLine2() {
+    return addressLine2;
+  }
+
+  public void setAddressLine2(String addressLine2) {
+    this.addressLine2 = addressLine2;
+  }
+
+  public String getAddressCity() {
+    return addressCity;
+  }
+
+  public void setAddressCity(String addressCity) {
+    this.addressCity = addressCity;
+  }
+
+  public String getAddressState() {
+    return addressState;
+  }
+
+  public void setAddressState(String addressState) {
+    this.addressState = addressState;
+  }
+
+  public String getAddressPincode() {
+    return addressPincode;
+  }
+
+  public void setAddressPincode(String addressPincode) {
+    this.addressPincode = addressPincode;
+  }
+
+  public Double getDiscount() {
+    return discount;
+  }
+
+  public void setDiscount(Double discount) {
+    this.discount = discount;
+  }
+
+  public String getShippingGatewayOrderId() {
+    return shippingGatewayOrderId;
+  }
+
+  public void setShippingGatewayOrderId(String shippingGatewayOrderId) {
+    this.shippingGatewayOrderId = shippingGatewayOrderId;
+  }
+
+  public ShippingOrder getShippingOrder() {
+    return shippingOrder;
+  }
+
+  public void setShippingOrder(ShippingOrder shippingOrder) {
+    this.shippingOrder = shippingOrder;
+  }
+
+  public String getReturnOrderReason() {
+    return returnOrderReason;
+  }
+
+  public void setReturnOrderReason(String returnOrderReason) {
+    this.returnOrderReason = returnOrderReason;
+  }
+
+  public Map<LineItem, Long> getItemMap() {
+    return itemMap;
+  }
+
+  public void setItemMap(Map<LineItem, Long> itemMap) {
+    this.itemMap = itemMap;
+  }
+
+  /**
+   * @return the loyaltyUser
+   */
+  public boolean isLoyaltyUser() {
+    return loyaltyUser;
+  }
+
+  /**
+   * @param loyaltyUser the loyaltyUser to set
+   */
+  public void setLoyaltyUser(boolean loyaltyUser) {
+    this.loyaltyUser = loyaltyUser;
+  }
+
+  /**
+   * @return the loyaltyPoints
+   */
+  public String getLoyaltyPoints() {
+    return loyaltyPoints;
+  }
+
+  /**
+   * @param loyaltyPoints the loyaltyPoints to set
+   */
+  public void setLoyaltyPoints(String loyaltyPoints) {
+    this.loyaltyPoints = loyaltyPoints;
+  }
+
+  /**
+   * @return the loyaltyCustomer
+   */
+  public User getLoyaltyCustomer() {
+    return loyaltyCustomer;
+  }
+
+  /**
+   * @param loyaltyCustomer the loyaltyCustomer to set
+   */
+  public void setLoyaltyCustomer(User loyaltyCustomer) {
+    this.loyaltyCustomer = loyaltyCustomer;
+  }
+
+  /**
+   * @return the customerKarmaList
+   */
+  public List<UserOrderKarmaProfile> getCustomerKarmaList() {
+    return customerKarmaList;
+  }
+
+  /**
+   * @param customerKarmaList the customerKarmaList to set
+   */
+  public void setCustomerKarmaList(List<UserOrderKarmaProfile> customerKarmaList) {
+    this.customerKarmaList = customerKarmaList;
+  }
 
 }
