@@ -2,9 +2,15 @@
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="org.joda.time.DateTime" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
+<%
+  DateTime currentDateTime = new DateTime();
+    Date startOfOfferDate = new Date(new DateTime(2013, 8, 15, 00, 00, 00, 00).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 8, 15, 23, 59, 59, 59).getMillis());
+%>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Contact Us for Customer Support or Business Queries">
 
   <s:layout-component name="heading">Contact Us</s:layout-component>
@@ -62,12 +68,11 @@
       <h2>Call Us</h2>
 
       <p style="font-size: 1.2em;">0124-4616444 <br/> <span style="font-size: 10px;">9 AM to 12 AM (midnight)</span></p>
-
-      <%--<div
-          style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 25px; padding-top: 3px; font-size: 11px;">
-        Our customer care phone lines will be down for maintenance from 5:30pm to 9:00pm on 29th June 2013. Sincere apologies for the inconvenience caused.
-      </div>--%>
-
+        <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())) {%>
+        <div style="color: red; float: left; ">&nbsp;(Our customer care phone lines will be down on 15th August 2013.
+            Sincere apologies for the inconvenience caused.)
+        </div>
+        <%}%>
       <br/>
 
       <%--<p style="color: gray">If you are not satisfied with the response, please write to us at <a href="mailto:ceo@healthkart.com">ceo@healthkart.com</a></p>--%>
