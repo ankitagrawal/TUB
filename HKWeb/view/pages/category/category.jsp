@@ -179,11 +179,11 @@
                          class="small_banner"/>
                 </a>
               <script type="text/javascript">
-                $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
-                $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
-                $(".bulkOrder").click(function() {
+                  $(".bulkOrder").live('click', function () {
                   $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
-                });
+                      $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
+                      $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                  });
               </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
@@ -198,11 +198,11 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq homeLiving}">
-                <a class="bulkOrder" href="#" style="cursor: pointer;">
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/eveready-rechargeable-fan/EVE015?productReferrerId=24&productPosition=1/11>
+                <a href="${pageContext.request.contextPath}/product/eveready-rechargeable-fan/EVE015?productReferrerId=24&productPosition=1/11">
                     <img src="<hk:vhostImage/>/images/banners/home-live-Banner.jpg"
                          alt="Brand of the Week"
                          class="small_banner"/>
