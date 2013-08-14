@@ -251,8 +251,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           shippingOrderService.logShippingOrderActivity(shippingOrder, user,
               shippingOrderService.getShippingOrderLifeCycleActivity(
                   EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
-              EnumReason.InsufficientUnbookedInventory.asReason(), comments);
-        } else if( availableNetPhysicalInventory < 0 && lineItem.getSkuItemLineItems().size() < orderedQty) {
+              EnumReason.PROD_INV_MISMATCH.asReason(), comments);
+        } else if( availableNetPhysicalInventory < 0 || lineItem.getSkuItemLineItems().size() < orderedQty) {
           // if partial inventory has been booked for the line item
           selectedItems.add(lineItem);
           String comments = "Partial inventory booked for " + lineItem.getSku().getProductVariant();
