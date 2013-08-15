@@ -4,12 +4,15 @@ package com.hk.api.resource;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import com.hk.api.dto.HKAPISkuInfoDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.lang.StringUtils;
+import com.hk.api.pact.service.HKAPIProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +45,8 @@ public class ProductVariantResource {
   private SkuService skuService;
   private StoreService storeService;
 
-    @Autowired
-    private com.hk.api.pact.service.HKAPIProductService hkapiProductService;
+  @Autowired
+    private HKAPIProductService hkapiProductService;
 
   @SuppressWarnings("unused")
 private static Logger logger                    = LoggerFactory.getLogger(ProductVariantResource.class);

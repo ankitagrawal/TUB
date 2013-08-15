@@ -669,6 +669,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             // check available inventory for aqua  in Bright
             if (getUnbookedInventoryOfBright(productVariant) >= 0) {
                 // now need to update pv with Bright Inventory
+               HKApiSkuResponse hkApiSkuResponse = getPVInfoFromBright(productVariant) ;
+               productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
 
 
             } else {
@@ -805,9 +807,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
 
-    public void getPVInfoFromBright(ProductVariant productVariant) {
-        Long qty = 0L;
+    public HKApiSkuResponse getPVInfoFromBright(ProductVariant productVariant) {
         try {
+
             String url = brightlifecareRestUrl + "product/variant/" + productVariant.getId() + "/details/";
             ClientRequest request = new ClientRequest(url);
             ClientResponse response = request.get();
@@ -815,12 +817,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             if (status == 200) {
                 String data = (String) response.getEntity(String.class);
                 HKApiSkuResponse skuResponse = new Gson().fromJson(data, HKApiSkuResponse.class);
+                return  skuResponse;
             }
         } catch (Exception e) {
             logger.error("Exception while getting Bright product variant Details inventory for Sku", e.getMessage());
         }
 
-
+       return  null;
     }
 
 
