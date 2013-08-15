@@ -93,6 +93,25 @@ private static Logger logger                    = LoggerFactory.getLogger(Produc
 
 
 
+    @GET
+    @Path("unbookedInventory/{variantId}")
+    @Produces("application/json")
+    public String getUnbookedInventory(@PathParam("variantId") String variantId) {
+        if (StringUtils.isBlank(variantId)) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        }
+
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+
+        if(productVariant ==null){
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+        }
+        Long unbookedQtyAqua = getInventoryService().getAvailableUnBookedInventory(productVariant);
+
+        return new JSONResponseBuilder().addField("variantId", variantId).addField("qty",unbookedQtyAqua).build();
+
+    }
+
 
     @POST
     @Path("/{variantId}/details/")
