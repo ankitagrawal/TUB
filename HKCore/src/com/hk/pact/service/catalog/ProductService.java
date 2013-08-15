@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
+import com.hk.domain.api.HKApiSkuResponse;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
@@ -25,7 +26,7 @@ public interface ProductService {
 
     /**
      * returns list of all the products irrespective of whether they are deleted or not.
-     * 
+     *
      * @param category
      * @return
      */
@@ -33,18 +34,19 @@ public interface ProductService {
 
     /**
      * checks if a brand name exists or not
-     * 
+     *
      * @param brandName
      * @return
      */
     public boolean doesBrandExist(String brandName);
-    
-    public String getProductUrl(Product product,boolean isSecure);
-    
+
+    public String getProductUrl(Product product, boolean isSecure);
+
     public List<Product> getAllProducts();
 
     /**
      * returns the product which are not deleted
+     *
      * @return
      */
     List<Product> getAllNonDeletedProducts();
@@ -63,7 +65,7 @@ public interface ProductService {
 
     public Page getProductByCategoryAndBrand(String category, String brand, int page, int perPage);
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand,boolean onlyCOD, boolean includeCombo, int page, int perPage);
+    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, boolean onlyCOD, boolean includeCombo, int page, int perPage);
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage);
 
@@ -101,17 +103,17 @@ public interface ProductService {
 
     public List<Combo> getRelatedCombos(Product product);
 
-    public Map<String,List<String>> getRecommendedProducts(Product product);
+    public Map<String, List<String>> getRecommendedProducts(Product product);
 
     public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
 
-	  public boolean isProductOutOfStock(Product product);
+    public boolean isProductOutOfStock(Product product);
 
     public ProductVariant validTryOnProductVariant(Product product);
 
     SolrProduct createSolrProduct(Product pr);
 
-	  public List<Product> getSimilarProducts(Product product);
+    public List<Product> getSimilarProducts(Product product);
 
     boolean isCombo(Product product);
 
@@ -127,5 +129,7 @@ public interface ProductService {
 
     public String getAppendedProductURL(String baseUrl, String parameter, String value);
 
-		public List<String> getAllBrands(String brandLike);
+    public List<String> getAllBrands(String brandLike);
+
+    public ProductVariant updatePVForBrightInventory(HKApiSkuResponse hKApiSkuResponse, ProductVariant productVariant);
 }

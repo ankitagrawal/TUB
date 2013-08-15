@@ -142,6 +142,8 @@ public class Keys {
         
         public static final String brightlifecareRestUrl           = "brightlifecareRestUrl";
 
+        public static final String brightlifecareRestUrl           = "brightlifecareRestUrl";
+
 
     }
 

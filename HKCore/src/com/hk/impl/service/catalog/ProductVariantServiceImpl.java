@@ -107,6 +107,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
           }
         }
         return false;
+
     }
 
 	public ProductVariantServiceType getVariantServiceType(EnumProductVariantServiceType enumProductVariantServiceType) {

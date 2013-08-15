@@ -5,13 +5,16 @@ import com.hk.cache.vo.ProductVO;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.Keys;
 import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.domain.api.HKApiSkuResponse;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.LinkManager;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.seo.SeoDao;
@@ -66,6 +69,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private SeoDao                    seoDao;
+
+    @Autowired
+    private BaseDao                     baseDao;
 
     // @Autowired
     private UserService               userService;
@@ -723,4 +729,27 @@ public class ProductServiceImpl implements ProductService {
 	public List<String> getAllBrands(String brandLike) {
 		return productDAO.getAllBrands(brandLike);
 	}
+
+
+    public ProductVariant updatePVForBrightInventory(HKApiSkuResponse hKApiSkuResponse, ProductVariant productVariant){
+            productVariant.setCostPrice(hKApiSkuResponse.getCostPrice());
+            productVariant.setMarkedPrice(hKApiSkuResponse.getMrp());
+            productVariant.setOutOfStock(hKApiSkuResponse.isOutOfStock());
+            productVariant.setMrpQty(hKApiSkuResponse.getQty());
+            productVariant.setNetQty(hKApiSkuResponse.getNetQty());
+            productVariant.setHkPrice(hKApiSkuResponse.getHkPrice());
+            Warehouse warehouse = baseDao.get(Warehouse.class, hKApiSkuResponse.getWarehouseId());
+            productVariant.setWarehouse(warehouse);
+            productVariant = (ProductVariant) baseDao.save(productVariant);
+            Product product = productVariant.getProduct();
+            List<ProductVariant> inStockVariants = product.getInStockVariants();
+            if (inStockVariants != null && inStockVariants.isEmpty()) {
+                product.setOutOfStock(true);
+            } else {
+                product.setOutOfStock(false);
+            }
+            baseDao.save(product);
+            return productVariant;
+        }
+
 }

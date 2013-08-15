@@ -1,8 +1,10 @@
 package com.hk.api.pact.service;
 
 import com.hk.api.dto.HKAPIBaseDTO;
+import com.hk.api.dto.HKAPISkuInfoDTO;
 import com.hk.domain.catalog.product.Product;
 import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.domain.catalog.product.ProductVariant;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,5 +31,7 @@ public interface HKAPIProductService {
   public String downloadResizeAndUploadImages(String srcImageSize, String targetImageSize);
 
   public String downloadResizeAndUploadImage(String productId, String srcImageSize, String targetImageSize);
+
+  public ProductVariant updatePVForBrightInventory(HKAPISkuInfoDTO hkapiSkuInfoDTO , ProductVariant productVariant);
 
 }
