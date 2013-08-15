@@ -1,7 +1,10 @@
 package com.hk.impl.service.inventory;
 
+import com.google.gson.Gson;
+import com.hk.constants.core.Keys;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
@@ -14,9 +17,13 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -43,6 +50,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	@Autowired
 	BaseDao baseDao;
 	private Logger logger = LoggerFactory.getLogger(SkuItemLineItemServiceImpl.class);
+	
+	@Value("#{hkEnvProps['" + Keys.Env.brightlifecareRestUrl + "']}")
+    private String brightlifecareRestUrl;
 
 	@Override
 	public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId) {
@@ -251,7 +261,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
 		for (LineItem lineItem : lineItems) {
-			for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()) {
+			List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
+			if(skuItemLineItems!=null && skuItemLineItems.size()>0){
+			for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
 				SkuItem skuItem = skuItemLineItem.getSkuItem();
 				skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 				skuItem = (SkuItem) getSkuItemDao().save(skuItem);
@@ -264,6 +276,36 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			}
 
 			skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
+			}
+			else{
+				//call free inventory on bright side.
+				try {
+					HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+					hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
+					hkapiBookingInfo.setLineItemId(lineItem.getId());
+					hkapiBookingInfo.setMrp(lineItem.getMarkedPrice());
+					hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
+					hkapiBookingInfo.setQty(lineItem.getQty());
+					
+					Gson gson = new Gson();
+			        String json = gson.toJson(hkapiBookingInfo);
+					
+		            String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForSOCancellation/";
+		            ClientRequest request = new ClientRequest(url);
+		            request.body("application/json",json);
+		            ClientResponse response = request.post();
+		            int status = response.getStatus();
+		            if (status == 200) {
+		                String data = (String) response.getEntity(String.class);
+		                Boolean deleted = new Gson().fromJson(data, Boolean.class);
+		                logger.debug("Successfully freed Bright Inventory against SO# "+shippingOrder.getId()+" cancellation");
+		                return deleted;
+		            }
+		        } catch (Exception e) {
+		            logger.error("Exception while freeing bright inventory against cancelling SO# "+shippingOrder.getId(), e.getMessage());
+		            return false;
+		        }
+			}
 		}
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
 			CartLineItem cartLineItem = lineItem.getCartLineItem();

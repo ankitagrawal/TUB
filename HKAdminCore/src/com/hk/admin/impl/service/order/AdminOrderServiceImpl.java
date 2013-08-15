@@ -7,12 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.google.gson.Gson;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.PaymentService;
+
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.joda.time.DateTime;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.sku.SkuItem;
@@ -40,6 +45,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.core.search.OrderSearchCriteria;
+import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
@@ -126,7 +132,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Value("#{hkEnvProps['codMaxAmount']}")
     private Double codMaxAmount;
 
-    
+    @Value("#{hkEnvProps['" + Keys.Env.brightlifecareRestUrl + "']}")
+    private String brightlifecareRestUrl;
     @Autowired
 	private LoyaltyProgramService loyaltyProgramService;
 
@@ -180,23 +187,54 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             } else {
                 Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
                 for (CartLineItem cartLineItem : cartLineItems) {
-                    List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
-                    List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
-                    List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
-                    for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
-                        SkuItem skuItem = skuItemCLI.getSkuItem();
-                        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                        skuItemsToBeFreed.add(skuItem);
-                        if(skuItemCLI.getSkuItemLineItems()!=null){
-                        	skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
+                	List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+                	if(skuItemCLIs!=null && skuItemCLIs.size()>0){
+                		List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+                        List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+                        List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+                        for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
+                            SkuItem skuItem = skuItemCLI.getSkuItem();
+                            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                            skuItemsToBeFreed.add(skuItem);
+                            if(skuItemCLI.getSkuItemLineItems()!=null){
+                            	skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
+                            }
                         }
-                    }
-                    skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());
-                    lineItemDao.saveOrUpdate(skuItemsToBeFreed);
-                    cartLineItem.setSkuItemCLIs(null);
-                    cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
-                    lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
-                    lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
+                        skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());
+                        lineItemDao.saveOrUpdate(skuItemsToBeFreed);
+                        cartLineItem.setSkuItemCLIs(null);
+                        cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
+                        lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
+                        lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
+                	}
+                	else{
+                		//call free inventory on bright side.
+        				try {
+        					HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+        					hkapiBookingInfo.setCartLineItemId(cartLineItem.getId());
+        					hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
+        					hkapiBookingInfo.setProductVariantId(cartLineItem.getProductVariant().getId());
+        					hkapiBookingInfo.setQty(cartLineItem.getQty());
+        					
+        					Gson gson = new Gson();
+        			        String json = gson.toJson(hkapiBookingInfo);
+        					
+        		            String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForBOCancellation/";
+        		            ClientRequest request = new ClientRequest(url);
+        		            request.body("application/json",json);
+        		            ClientResponse response = request.post();
+        		            int status = response.getStatus();
+        		            if (status == 200) {
+        		                String data = (String) response.getEntity(String.class);
+        		                Boolean deleted = new Gson().fromJson(data, Boolean.class);
+        		                if(deleted){
+        		                	logger.debug("Successfully freed Bright Inventory against BO# "+order.getId()+" cancellation");
+        		                }
+        		            }
+        		        } catch (Exception e) {
+        		            logger.error("Exception while freeing bright inventory against BO cancellation.", e.getMessage());
+        		        }
+                	}
                     inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
                 }
             }
