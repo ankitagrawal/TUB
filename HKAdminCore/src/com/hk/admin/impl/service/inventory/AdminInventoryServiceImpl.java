@@ -26,8 +26,8 @@ import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -164,33 +164,26 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
   }
 
-  public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote,
-                                 ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
-    // SkuGroup skuGroup = new SkuGroup();
-    // skuGroup.setBatchNumber(batch);
-    // skuGroup.setMfgDate(mfgDate);
-    // skuGroup.setExpiryDate(expiryDate);
-    // skuGroup.setCostPrice(costPrice);
-    // skuGroup.setMrp(mrp);
-    // skuGroup.setGoodsReceivedNote(goodsReceivedNote);
-    // skuGroup.setReconciliationVoucher(reconciliationVoucher);
-    // skuGroup.setStockTransfer(stockTransfer);
-    // skuGroup.setSku(sku);
-    // skuGroup.setCreateDate(new Date());
-    // skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
-    SkuGroup skuGroup = createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, goodsReceivedNote, reconciliationVoucher, stockTransfer,
-        sku);
-    if (skuGroup != null && skuGroup.getId() != null) {
-      String skuGroupBarCode = BarcodeUtil.generateBarCodeForSKuGroup(skuGroup.getId());
-      skuGroup.setBarcode(skuGroupBarCode);
-      skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
-    }
-
+  public SkuGroup createSkuGroup(String barcode, String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku, Long foreignSkuGroupId) {
+    SkuGroup skuGroup = new SkuGroup();
+    skuGroup.setBatchNumber(batch);
+    skuGroup.setBarcode(barcode);
+    skuGroup.setMfgDate(mfgDate);
+    skuGroup.setExpiryDate(expiryDate);
+    skuGroup.setCostPrice(costPrice);
+    skuGroup.setMrp(mrp);
+    skuGroup.setGoodsReceivedNote(goodsReceivedNote);
+    skuGroup.setReconciliationVoucher(reconciliationVoucher);
+    skuGroup.setStockTransfer(stockTransfer);
+    skuGroup.setSku(sku);
+    skuGroup.setForeignSkuGroupId(foreignSkuGroupId);
+    skuGroup.setCreateDate(new Date());
+    skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
     return skuGroup;
   }
 
-  public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp,
-                                               GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
+
+  public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
     SkuGroup skuGroup = new SkuGroup();
     skuGroup.setBatchNumber(batch);
     skuGroup.setMfgDate(mfgDate);
@@ -206,22 +199,23 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     return skuGroup;
   }
 
-  public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
+
+  public void createSkuItemsAndCheckinInventory(String skuItemBarcode, SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
                                                 StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
     for (int i = 0; i < qty; i++) {
       SkuItem skuItem = new SkuItem();
       skuItem.setSkuGroup(skuGroup);
       skuItem.setCreateDate(new Date());
       skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-      skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-      // skuItem = (SkuItem) getBaseDao().save(skuItem);
-
-      // generating Barcode at Skuitem level
-      String skuItemBarcode = BarcodeUtil.generateBarCodeForSKuItem(skuGroup.getId(), i + 1);
-      skuItem.setBarcode(skuItemBarcode);
+      String barcode = skuItemBarcode;
+      if (StringUtils.isBlank(barcode)) {
+        //  generating Barcode at Skuitem level
+        barcode = BarcodeUtil.generateBarCodeForSKuItem(skuGroup.getId(), i + 1);
+      }
+      skuItem.setBarcode(barcode);
       skuItem = (SkuItem) getBaseDao().save(skuItem);
 
-      this.inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, stockTransferLineItem, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, invTxnType, 1L, txnBy);
+      inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, stockTransferLineItem, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, invTxnType, 1L, txnBy);
     }
   }
 
@@ -333,7 +327,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     for (LineItem lineItem : shippingOrder.getLineItems()) {
       List<ProductVariantInventory> checkedOutInventories = getAdminPVIDao().getCheckedOutSkuItems(lineItem.getShippingOrder(), lineItem);
       for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-        this.inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(),
+        if (checkedOutInventory.getSkuItem().getSkuItemStatus().getId() >= EnumSkuItemStatus.Checked_OUT.getId()) {
+          qty = 1L;
+        }
+        inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(),
             checkedOutInventory.getGrnLineItem(), checkedOutInventory.getRvLineItem(), checkedOutInventory.getStockTransferLineItem(), skuItemStatus, skuItemOwner,
             getInventoryService().getInventoryTxnType(invnTxnType), qty, loggedOnUser);
         // Rechecking Inventory Health to mark variants

@@ -25,6 +25,8 @@ public interface SkuGroupService {
 
   public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds);
 
+  public SkuGroup getForeignSkuGroup(Long warehouseId, Long foreignSkuGroupId);
+
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
 
   public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);

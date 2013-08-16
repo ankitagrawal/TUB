@@ -80,9 +80,12 @@ public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
     @Enumerated(EnumType.STRING)
     private EnumSkuGroupStatus status = EnumSkuGroupStatus.NA;
 
-	@JsonSkip
-	@OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuGroup")
-	private Set<SkuItem> skuItems = new HashSet<SkuItem>(0);
+  @Column(name = "foreign_sku_group_id", nullable = true)
+  private Long foreignSkuGroupId;
+
+  @JsonSkip
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuGroup")
+  private Set<SkuItem> skuItems = new HashSet<SkuItem>(0);
 
 	@Transient
 	private Long qty;
@@ -223,15 +226,23 @@ public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
         this.status = status;
     }
 
-    @Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof SkuGroup)) {
-			return false;
-		}
-		SkuGroup skuGroup = (SkuGroup) o;
+  public Long getForeignSkuGroupId() {
+    return foreignSkuGroupId;
+  }
+
+  public void setForeignSkuGroupId(Long foreignSkuGroupId) {
+    this.foreignSkuGroupId = foreignSkuGroupId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof SkuGroup)) {
+      return false;
+    }
+    SkuGroup skuGroup = (SkuGroup) o;
 
 		if (this.id != null && skuGroup.getId() != null) {
 			return this.id.equals(skuGroup.getId());

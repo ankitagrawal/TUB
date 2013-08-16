@@ -12,6 +12,7 @@ import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoServi
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.util.PurchaseOrderPDFGenerator;
+import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumGrnStatus;
@@ -69,6 +70,14 @@ public class POAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                                    adminDownloads;
 
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+	  String adminUploadsPath;
+
+    @Validate(required = true, on = "uploadExcelAndCreatePOs")
+	  private FileBean fileBean;
+
+    @Autowired
+    XslParser xslParser;
     @Autowired
     XslGenerator                              xslGenerator;
     @Autowired
@@ -191,6 +200,8 @@ public class POAction extends BasePaginatedAction {
 
         grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);
         editPVFillRate(purchaseOrder);
+      
+        boolean isInternalSupplier = grn.getPurchaseOrder().getSupplier().isInternalSupplier();
 
         for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
             ProductVariant productVariant = poLineItem.getSku().getProductVariant();
@@ -210,8 +221,11 @@ public class POAction extends BasePaginatedAction {
             else{
             	grnLineItem.setWeight(0.0);
             }
-            grnLineItem.setQty(0L); // Negative so that while entring GRN they know what they have filled and what
-            // they have not.
+            if (isInternalSupplier) {
+              grnLineItem.setQty(poLineItem.getQty());
+            } else {
+              grnLineItem.setQty(0L);
+            }
             if (poLineItem.getCostPrice() != null) {
                 grnLineItem.setCostPrice(poLineItem.getCostPrice());
             } else if (productVariant.getCostPrice() != null) {
@@ -302,6 +316,26 @@ public class POAction extends BasePaginatedAction {
         }
         return new HTTPResponseResolution();
     }
+
+  public Resolution uploadExcelAndCreatePOs() {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    try {
+      String excelFilePath = adminUploadsPath + "/poFiles/BrightPO" + sdf.format(new Date()) + ".xls";
+      File excelFile = new File(excelFilePath);
+      excelFile.getParentFile().mkdirs();
+      fileBean.save(excelFile);
+      Map<Warehouse, Set<ProductVariant>> whPVMap = xslParser.parseBrightPOFile(excelFile);
+      if (!whPVMap.isEmpty()) {
+        getPurchaseOrderService().createPOsForBright(whPVMap);
+        addRedirectAlertMessage(new SimpleMessage("POs and their Line Items Created Successfully."));
+      } else
+        addRedirectAlertMessage(new SimpleMessage("POs and their Line Items Could not be Successfully."));
+    } catch (Exception e) {
+      logger.error("Exception while reading excel sheet.", e);
+      addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+    }
+    return new RedirectResolution(POAction.class);
+  }
 
     public List<PurchaseOrder> getPurchaseOrderList() {
         return purchaseOrderList;
@@ -514,4 +548,7 @@ public class POAction extends BasePaginatedAction {
         return extraInventoryCreated;
     }
 
+    public void setFileBean(FileBean fileBean) {
+      this.fileBean = fileBean;
+    }
 }

@@ -12,8 +12,9 @@ import java.util.*;
  */
 public class BarcodeUtil {
 
-    public static final String BARCODE_SKU_GROUP_PREFIX = "HK-INVN-";
-    public static final String BARCODE_SKU_ITEM_PREFIX = "IV-";
+  public static final String BARCODE_SKU_GROUP_PREFIX = "HK-INVN-";
+  public static final String BARCODE_SKU_ITEM_PREFIX = "IV-";
+  public static final String BARCODE_SKU_ITEM_PREFIX_IVN = "IVN-";
 
     public static String generateBarCodeForSKuGroup(Long skuGroupId) {
         return BARCODE_SKU_GROUP_PREFIX + skuGroupId;

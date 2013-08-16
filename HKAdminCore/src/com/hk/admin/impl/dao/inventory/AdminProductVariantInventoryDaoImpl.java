@@ -10,11 +10,13 @@ import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.inventory.StockTransferLineItem;
+import com.hk.domain.inventory.crossDomain.InventoryBarcodeMapItem;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItemOwner;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
@@ -44,7 +46,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         String query = "select count(pvi.id) from ProductVariantInventory pvi where pvi.grnLineItem = :grnLineItem and pvi.qty = :checkedInQty";
         return (Long) getSession().createQuery(query).setParameter("grnLineItem", grnLineItem).setLong("checkedInQty", 1L).uniqueResult();
     }
-
+                                                                                     
     public void resetInventoryByBrand(String brand) {
 
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from ProductVariantInventory pvi where pvi.sku.productVariant.product.brand = :brand").setParameter(
@@ -104,6 +106,20 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         }
 
         return checkedOutPVI;
+    }
+
+    public List<InventoryBarcodeMapItem> getCheckedOutBarcodeInfo(ShippingOrder shippingOrder) {
+      String query = "select pvi.skuItem.skuGroup.id as skuGroupId, pvi.skuItem.skuGroup.barcode as skuGroupBarcode, pvi.skuItem.barcode as skuItemBarcode, " +
+          "pvi.sku.productVariant.id as variantId, pvi.skuItem.skuGroup.costPrice as costPrice, pvi.skuItem.skuGroup.mrp as mrp, " +
+          "pvi.skuItem.skuGroup.batchNumber as batchNumber, pvi.skuItem.skuGroup.mfgDate as mfgDate, pvi.skuItem.skuGroup.expiryDate as expDate, " +
+          "pvi.sku.productVariant.product.name as name " +
+          "from ProductVariantInventory pvi " +
+          "where pvi.shippingOrder = :shippingOrder and pvi.invTxnType.id = :invTxnType";
+      List<InventoryBarcodeMapItem> checkedOutBarcodes = (List<InventoryBarcodeMapItem>) getSession().createQuery(query)
+          .setParameter("shippingOrder", shippingOrder)
+          .setParameter("invTxnType", EnumInvTxnType.INV_CHECKOUT.getId())
+          .setResultTransformer(Transformers.aliasToBean(InventoryBarcodeMapItem.class)).list();
+      return checkedOutBarcodes;
     }
 
     /*

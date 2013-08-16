@@ -17,9 +17,14 @@
   <s:layout-component name="heading">Available Batch List of UPC/VariantID# ${ica.upc}</s:layout-component>
   <s:layout-component name="content">
     <div>
+      <span>
       <b>${ica.productVariant.product.name}</b>,
       <span class="sml gry">${ica.productVariant.optionsCommaSeparated}</span>
       <strong>MRP=${ica.productVariant.markedPrice}</strong>
+      </span>
+      <span style="float:right">
+        <strong>Unbooked Inventory in Bright: ${hk:getUnbookedInventoryOfBright(ica.productVariant)}</strong>
+      </span>
     </div>
     <br/>
 

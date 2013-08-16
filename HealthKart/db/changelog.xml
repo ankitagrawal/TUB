@@ -13588,7 +13588,85 @@
     <changeSet author="Ankit Chhabra (generated)" id="1373436305338-2">
         <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" defaultNullValue="0.0" tableName="sku_group"/>
     </changeSet>
-    
+
+    <changeSet author="Ajeet (generated)" id="1369376937240-1">
+        <createTable tableName="inventory_barcode_map">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="po_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="Active" name="status" remarks="Active&#10;Inactive&#10;Deleted" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1369376937240-2">
+        <createTable tableName="inventory_barcode_map_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="inventory_barcode_map_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_group_barcode" type="VARCHAR(45)"/>
+            <column name="sku_item_barcode" type="VARCHAR(45)"/>
+            <column name="variant_id" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="cost_price" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="mrp" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="batch_number" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mfg_date" type="DATE"/>
+            <column name="exp_date" type="DATE"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="txn_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1369376937240-4">
+        <addForeignKeyConstraint baseColumnNames="po_id" baseTableName="inventory_barcode_map" constraintName="fk_inventory_barcode_map_purchase_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369376937240-5">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="inventory_barcode_map" constraintName="fk_inventory_barcode_map_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369376937240-6">
+        <addForeignKeyConstraint baseColumnNames="inventory_barcode_map_id" baseTableName="inventory_barcode_map_item" constraintName="fk_inventory_bracode_temp_inventory_barcode_map1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="inventory_barcode_map" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369386589992-1">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="barcode" tableName="sku_item"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369386589992-3">
+        <createIndex indexName="barcode_UNIQUE" tableName="sku_item" unique="true">
+            <column name="barcode"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369398983560-1">
+        <addColumn tableName="sku_group">
+            <column name="foreign_sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Nihal (generated)" id="1372681593125-1">
 		<createTable tableName="purchase_order_type">
             <column name="id" type="INT">

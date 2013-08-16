@@ -11,6 +11,7 @@ pageContext.setAttribute("projectEnv", projectEnv);
 %>
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
     <div class="menuBar adminMenuBar" style="width:100%; margin:0px;">
+      <div style="background-color:yellow;margin:0;text-align:center;"><h1 style="color:red; margin:0">AQUA</h1></div>
         <ul class='lvl1'>
             <li class='lvl1 menuItem trimPadding' title="">
                 <a href="${pageContext.request.contextPath}/pages/admin/adminHome.jsp">Admin Home</a>

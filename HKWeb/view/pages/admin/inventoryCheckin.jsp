@@ -14,10 +14,34 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
   </s:layout-component>
-  <s:layout-component name="heading">Inventory Checkin</s:layout-component>
+  <s:layout-component name="heading">Inventory Checkin - GRN#${ica.grn.id} (PO#${ica.grn.purchaseOrder.id})</s:layout-component>
   <s:layout-component name="content">
     <div style="display:inline;float:left;">
-      <h2>Item Checkin against GRN#${ica.grn.id}</h2>
+       <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="invBarcodeCheckinForm">
+        <s:hidden name="grn" value="${ica.grn.id}"/>
+           <s:hidden name="invoiceNumber" value="${ica.grn.invoiceNumber}"/>
+            <s:hidden name="invoiceDate" value="${ica.grn.invoiceDate}"/>
+        <table border="1">
+          <tr>
+            <td><b>Inventory BARCODE:</b></td>
+            <td><s:text name="invBarcode" class="invBarcode" style="padding:5px;"/></td>
+          </tr>
+        </table>
+         <s:submit name="save" value="Save" style="visibility:hidden;padding:1px;font-size:1px;"/>
+         
+         <script language=javascript type=text/javascript>
+           $(document).ready(function() {
+             $('.invBarcode').focus();
+             $('.invBarcode').change(function() {
+               var formName = $('#invBarcodeCheckinForm');
+               var formURL = formName.attr('action');
+               formName.attr('action', formURL + "?checkinInvBarcode=");
+               formName.submit();
+             });
+           });
+         </script>
+      </s:form>
+      <hr/>
       <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="checkinForm">
         <s:hidden name="grn" value="${ica.grn.id}"/>
         <table border="1">

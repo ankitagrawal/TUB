@@ -80,7 +80,6 @@ public class DebitNoteAction extends BasePaginatedAction {
     Page                            debitNotePage;
     private List<DebitNote>         debitNoteList      = new ArrayList<DebitNote>();
     private List<DebitNoteLineItem> debitNoteLineItems = new ArrayList<DebitNoteLineItem>();
-    private List<RtvNoteLineItem> rtvNoteLineItems = new ArrayList<RtvNoteLineItem>();
     private Supplier                supplier;
     private GoodsReceivedNote       grn;
     private DebitNote               debitNote;
@@ -93,7 +92,6 @@ public class DebitNoteAction extends BasePaginatedAction {
 
     private Integer                 defaultPerPage     = 20;
     public PurchaseInvoice purchaseInvoice; 
-    public List<RtvNote> rtvList = new ArrayList<RtvNote>();
     public List<ExtraInventoryLineItem> eiLineItem = new ArrayList<ExtraInventoryLineItem>();
     public List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
     private ReconciliationVoucher reconciliationVoucher;
@@ -143,24 +141,21 @@ public class DebitNoteAction extends BasePaginatedAction {
     }
 
     @Secure(hasAnyPermissions = { PermissionConstants.FINANCE_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
-    public Resolution debitNoteFromPi(){
-    	if (purchaseInvoice != null) {
-    		rtvList = purchaseInvoice.getRtvNotes();
-    		eiLineItem = purchaseInvoice.getEiLineItems();
-    		for(RtvNote rtv:rtvList){
-    		List<RtvNoteLineItem> rtvNoteLineItemsList = rtvNoteLineItemService.getRtvNoteLineItemsByRtvNote(rtv);
-    		if(rtvNoteLineItemsList!=null && rtvNoteLineItemsList.size()>0){
-    			rtvNoteLineItems.addAll(rtvNoteLineItemsList);
-    			}
-    		}
-		debitNote = new DebitNote();
-		debitNote.setPurchaseInvoice(purchaseInvoice);
-		debitNote = debitNoteService.createDebitNoteLineItem(debitNote, rtvNoteLineItems, eiLineItem);
-    		
-    	}
-    	//return new ForwardResolution("/pages/admin/debitNote.jsp");
-    	return new RedirectResolution(DebitNoteAction.class).addParameter("editDebitNote").addParameter("debitNote", debitNote.getId());
-    }
+	public Resolution debitNoteFromPi() {
+		if (purchaseInvoice != null) {
+			eiLineItem = purchaseInvoice.getEiLineItems();
+			debitNote = new DebitNote();
+			debitNote.setPurchaseInvoice(purchaseInvoice);
+			debitNote = debitNoteService.createDebitNoteLineItem(debitNote, eiLineItem);
+			if (debitNote != null) {
+				return new RedirectResolution(DebitNoteAction.class).addParameter("editDebitNote").addParameter("debitNote", debitNote.getId());
+			}
+			addRedirectAlertMessage(new SimpleMessage("Debit Note was not created"));
+			return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+		}
+		addRedirectAlertMessage(new SimpleMessage("Debit Note was not created"));
+		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+	}
     
     
     @Secure(hasAnyPermissions = { PermissionConstants.DEBIT_NOTE_MANAGE }, authActionBean = AdminPermissionAction.class)
@@ -366,14 +361,6 @@ public class DebitNoteAction extends BasePaginatedAction {
 
 	public void setPurchaseInvoice(PurchaseInvoice purchaseInvoice) {
 		this.purchaseInvoice = purchaseInvoice;
-	}
-
-	public List<RtvNote> getRtvList() {
-		return rtvList;
-	}
-
-	public void setRtvList(List<RtvNote> rtvList) {
-		this.rtvList = rtvList;
 	}
 
 	public List<ExtraInventoryLineItem> getEiLineItem() {
