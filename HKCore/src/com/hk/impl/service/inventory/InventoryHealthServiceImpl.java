@@ -570,9 +570,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
                     ProductVariant productVariant = cartLineItem.getProductVariant();
                     List<Warehouse> servicableWarehouse = warehouseService.getServiceableWarehouses();
+                    List<Long> whIds = new ArrayList<Long>();
+                    for(Warehouse warehouse : servicableWarehouse){
+                    	whIds.add(warehouse.getId());
+                    }
                     //HardCoding
-                    Warehouse wh = warehouseService.getWarehouseById((long)1);
-                    if(servicableWarehouse.contains(wh)){
+                    if(whIds.contains(1L)){
                    // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
                       List<Sku> skus = new ArrayList<Sku>();
                       Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
