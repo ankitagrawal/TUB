@@ -261,8 +261,8 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq diabetes}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
+                    <img src="<hk:vhostImage/>/images/banners/Contour-super-saver-pack.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/brand/diabetes/Accu-Chek">

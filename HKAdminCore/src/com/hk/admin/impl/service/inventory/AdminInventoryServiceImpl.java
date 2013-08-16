@@ -333,6 +333,9 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     for (LineItem lineItem : shippingOrder.getLineItems()) {
       List<ProductVariantInventory> checkedOutInventories = getAdminPVIDao().getCheckedOutSkuItems(lineItem.getShippingOrder(), lineItem);
       for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
+          if(checkedOutInventory.getSkuItem().getSkuItemStatus().getId() >= EnumSkuItemStatus.Checked_OUT.getId())  {
+              qty = 1L;
+          }
         this.inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(),
             checkedOutInventory.getGrnLineItem(), checkedOutInventory.getRvLineItem(), checkedOutInventory.getStockTransferLineItem(), skuItemStatus, skuItemOwner,
             getInventoryService().getInventoryTxnType(invnTxnType), qty, loggedOnUser);
