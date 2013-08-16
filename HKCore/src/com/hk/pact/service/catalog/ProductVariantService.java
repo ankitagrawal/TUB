@@ -70,4 +70,6 @@ public interface ProductVariantService {
 
     public boolean isImageType(String variantId);
 
+
+
 }
