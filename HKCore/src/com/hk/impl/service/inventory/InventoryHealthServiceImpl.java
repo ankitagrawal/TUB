@@ -575,7 +575,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                     	whIds.add(warehouse.getId());
                     }
                     //HardCoding
-                    if(whIds.contains(1L)){
+                    if(whIds.contains(productVariant.getWarehouse().getId())){
+                    	logger.debug("Temp Booking On Aqua Side");
                    // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
                       List<Sku> skus = new ArrayList<Sku>();
                       Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
@@ -620,6 +621,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     
     
     private void tempBookBrightInventory(CartLineItem cartLineItem) {
+    	logger.debug("Going to book inv on Bright Side");
   		try {
   			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
   			hkapiBookingInfo.setCartLineItemId(cartLineItem.getId());
@@ -629,7 +631,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   			Gson gson = new Gson();
   			String json = gson.toJson(hkapiBookingInfo);
-
+  			logger.debug("json to be sent on Bright for Inv Booking - "+json);
   			String url = brightlifecareRestUrl + "product/variant/" + "tempBookInventoryOnBright/";
   			ClientRequest request = new ClientRequest(url);
   			request.body("application/json", json);
