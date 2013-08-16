@@ -628,6 +628,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   			hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
   			hkapiBookingInfo.setProductVariantId(cartLineItem.getProductVariant().getId());
   			hkapiBookingInfo.setQty(cartLineItem.getQty());
+  			hkapiBookingInfo.setWarehouseId(cartLineItem.getProductVariant().getWarehouse().getId());
 
   			Gson gson = new Gson();
   			String json = gson.toJson(hkapiBookingInfo);
