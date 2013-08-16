@@ -76,7 +76,7 @@ Order Cancellation for Order ID ${shippingOrder.gatewayOrderId}
                     </#list></em>
                                 </td>
                                 <td>
-                                ${productLineItem.qty/pricingDto.shippingLineCount}
+                                ${productLineItem.qty}
                                 </td>
                                 <td><span
                                         style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${productLineItem.hkPrice}

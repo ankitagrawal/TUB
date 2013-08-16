@@ -273,7 +273,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             shippingOrderService.getShippingOrderLifeCycleActivity(
                 EnumShippingOrderLifecycleActivity.SO_Cancelled),
             EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
-        //emailManager.sendPartialOrderCancelEmailToUser(shippingOrder);
+        emailManager.sendPartialOrderCancelEmailToUser(shippingOrder);
       } else {
         boolean splitSuccess = this.autoSplitSO(shippingOrder, selectedItems, splittedOrders,
             messages);
@@ -285,7 +285,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
               EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
           this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
               EnumReconciliationActionType.RewardPoints.getId(), false);
-          //emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
+          emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
           shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
 
         }
