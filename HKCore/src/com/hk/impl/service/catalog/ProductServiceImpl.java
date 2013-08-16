@@ -21,6 +21,7 @@ import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
@@ -42,7 +43,6 @@ import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
     @Value("#{hkEnvProps['" + Keys.Env.projectEnv + "']}")
 	  private String projectEnv;
 
@@ -732,6 +732,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     public ProductVariant updatePVForBrightInventory(HKApiSkuResponse hKApiSkuResponse, ProductVariant productVariant){
+    				logger.debug("hKApiSkuResponse got -"+hKApiSkuResponse.getVariantId()+", qty - "+hKApiSkuResponse.getQty()+", MRP -"+hKApiSkuResponse.getMrp());
             productVariant.setCostPrice(hKApiSkuResponse.getCostPrice());
             productVariant.setMarkedPrice(hKApiSkuResponse.getMrp());
             productVariant.setOutOfStock(hKApiSkuResponse.isOutOfStock());

@@ -709,7 +709,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             // check available inventory for aqua  in Bright
             if (getUnbookedInventoryOfBright(productVariant) >= 0) {
                 // now need to update pv with Bright Inventory
+            		logger.debug("Unbooked Qty of Bright - "+getUnbookedInventoryOfBright(productVariant));
                HKApiSkuResponse hkApiSkuResponse = getPVInfoFromBright(productVariant) ;
+               logger.debug("hKApiSkuResponse got -"+hkApiSkuResponse.getVariantId()+", qty - "+hkApiSkuResponse.getQty()+", MRP -"+hkApiSkuResponse.getMrp());
                productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
 
 
