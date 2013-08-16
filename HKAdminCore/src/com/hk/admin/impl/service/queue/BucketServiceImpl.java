@@ -273,7 +273,13 @@ public class BucketServiceImpl implements BucketService {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
            
             Long availableNetPhysicalInventory = inventoryService.getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
-            if ( availableNetPhysicalInventory < 0  || availableUnbookedInv < 0) {
+            Long bookedQty = 0L;
+            Long orderedQty = lineItem.getQty();
+            if (lineItem.getSkuItemLineItems() != null){
+                bookedQty = (long)lineItem.getSkuItemLineItems().size();
+            }
+
+            if ( bookedQty < orderedQty || availableNetPhysicalInventory < 0  || availableUnbookedInv < 0) {
                 categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
             }
             if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {

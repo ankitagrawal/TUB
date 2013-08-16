@@ -196,13 +196,16 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 						} else {
 							availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku(), null);
 						}
-
+                        Long bookedQty = 0L;
 						Long orderedQty = lineItem.getQty();
+                        if (lineItem.getSkuItemLineItems() != null){
+                           bookedQty = (long)lineItem.getSkuItemLineItems().size();
+                        }
 
 						// It cannot be = as for last order/unit unbooked will
 						// always be ZERO
 						if (!shippingOrder.isDropShipping()) {
-							if (availableNetPhysicalInventory < 0 || availableUnbookedInv < 0) {
+							if (bookedQty < orderedQty ||availableNetPhysicalInventory < 0 || availableUnbookedInv < 0) {
 								String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
 										+ availableUnbookedInv;
 								shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, shippingOrderService
