@@ -209,31 +209,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 	}
                 	else{
                 		//call free inventory on bright side.
-        				try {
-        					HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-        					hkapiBookingInfo.setCartLineItemId(cartLineItem.getId());
-        					hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
-        					hkapiBookingInfo.setProductVariantId(cartLineItem.getProductVariant().getId());
-        					hkapiBookingInfo.setQty(cartLineItem.getQty());
-        					
-        					Gson gson = new Gson();
-        			        String json = gson.toJson(hkapiBookingInfo);
-        					
-        		            String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForBOCancellation/";
-        		            ClientRequest request = new ClientRequest(url);
-        		            request.body("application/json",json);
-        		            ClientResponse response = request.post();
-        		            int status = response.getStatus();
-        		            if (status == 200) {
-        		                String data = (String) response.getEntity(String.class);
-        		                Boolean deleted = new Gson().fromJson(data, Boolean.class);
-        		                if(deleted){
-        		                	logger.debug("Successfully freed Bright Inventory against BO# "+order.getId()+" cancellation");
-        		                }
-        		            }
-        		        } catch (Exception e) {
-        		            logger.error("Exception while freeing bright inventory against BO cancellation.", e.getMessage());
-        		        }
+        				freeBrightInventoryAgainstBOCancellation(cartLineItem);
                 	}
                     inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
                 }
@@ -273,6 +249,37 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             this.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.LoggedComment, comment);
         }
     }
+    
+	private void freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem) {
+		try {
+			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+			hkapiBookingInfo.setCartLineItemId(cartLineItem.getId());
+			hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
+			hkapiBookingInfo.setProductVariantId(cartLineItem.getProductVariant().getId());
+			hkapiBookingInfo.setQty(cartLineItem.getQty());
+
+			Gson gson = new Gson();
+			String json = gson.toJson(hkapiBookingInfo);
+
+			String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForBOCancellation/";
+			ClientRequest request = new ClientRequest(url);
+			request.body("application/json", json);
+			ClientResponse response = request.post();
+			int status = response.getStatus();
+			if (status == 200) {
+				String data = (String) response.getEntity(String.class);
+				Boolean deleted = new Gson().fromJson(data, Boolean.class);
+				if (deleted) {
+					logger.debug("Successfully freed Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation");
+				} else {
+					logger.debug("Could not free Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation");
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Exception while freeing Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation", e.getMessage());
+		}
+
+	}
 
     private void relieveExtraLiabilties(Long reconciliationType, Order order, String comment) {
         if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
