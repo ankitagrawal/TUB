@@ -8,11 +8,13 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.inventory.StockTransferLineItem;
+import com.hk.domain.inventory.crossDomain.InventoryBarcodeMapItem;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItemOwner;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
@@ -36,6 +38,8 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
     public List<ProductVariantInventory> getPVIByLineItem(LineItem lineItem);
 
     public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem);
+
+    public List<InventoryBarcodeMapItem> getCheckedOutBarcodeInfo(ShippingOrder shippingOrder);
 
 /*
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand);

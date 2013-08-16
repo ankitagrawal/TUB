@@ -687,6 +687,27 @@ function temp() {
 		</fieldset>
 	</c:if>
 </shiro:hasPermission>
+
+<shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
+	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id >= poReceived}">
+		<hr/>
+
+		<fieldset>
+			<legend>Upload Excel to Create Barcode Map</legend>
+			<br/>
+			<span class="large gry">(BARCODE, VARIANT_ID, COST_PRICE, MRP, MFG_DATE, EXP_DATE) as excel headers</span>
+			<br/><br/>
+			<s:form beanclass="com.hk.web.action.admin.inventory.InventoryBarcodeMapAction">
+				<h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+				<s:hidden name="purchaseOrder" value="${pa.purchaseOrder.id}"/>
+
+				<div class="buttons">
+					<s:submit name="parse" value="Create Mapping"/>
+				</div>
+			</s:form>
+		</fieldset>
+	</c:if>
+</shiro:hasPermission>
 </s:layout-component>
 
 </s:layout-render>

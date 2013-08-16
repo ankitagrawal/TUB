@@ -1,10 +1,9 @@
 package com.hk.admin.pact.service.inventory;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
+import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
@@ -17,16 +16,13 @@ import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemOwner;
-import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.*;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.sku.EnumSkuItemOwner;
-import com.hk.constants.inventory.EnumInvTxnType;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public interface AdminInventoryService {
 
@@ -41,11 +37,11 @@ public interface AdminInventoryService {
   /**
    * SkuGroup/SkuItem/PVI Inventory Checkin / Checkout Functions
    */
-  public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
+  public SkuGroup createSkuGroup(String barcode, String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku, Long foreignSkuGroupId);
 
   public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
 
-  public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
+  public void createSkuItemsAndCheckinInventory(String skuItemBarcode, SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
                                                 StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy);
 
   public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,

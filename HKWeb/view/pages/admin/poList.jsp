@@ -2,6 +2,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
@@ -198,6 +199,23 @@
 
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${poa}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${poa}"/>
+
+    <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
+		<hr/>
+
+		<fieldset>
+			<legend>Upload Excel to Create Bright POs</legend>
+			<br/>
+			<span class="large gry">(WAREHOUSE_ID, VARIANT_ID, QTY) as excel headers</span>
+			<br/><br/>
+			<s:form beanclass="com.hk.web.action.admin.inventory.POAction">
+				<h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+				<div class="buttons">
+					<s:submit name="uploadExcelAndCreatePOs" value="Create Bright POs"/>
+				</div>
+			</s:form>
+		</fieldset>
+</shiro:hasPermission>
 
   </s:layout-component>
 </s:layout-render>

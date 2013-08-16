@@ -6,6 +6,7 @@ import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.util.inventory.InventoryBarcodeXslManager;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.RoleCache;
 import com.hk.constants.XslConstants;
@@ -16,6 +17,7 @@ import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.report.ReportConstants;
 import com.hk.domain.RetailLineItem;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
@@ -26,6 +28,8 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.crossDomain.InventoryBarcodeMapItem;
+import com.hk.domain.inventory.crossDomain.InventoryBarcodeMap;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.order.ShippingOrder;
@@ -453,7 +457,7 @@ public class XslParser {
                             SkuGroup skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
 //                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
                                     XslConstants.EXP_DATE, rowMap, headerMap)), 0.0, 0.0, goodsReceivedNote, null, null, null);
-                            adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(
+                            adminInventoryService.createSkuItemsAndCheckinInventory(null, skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(
                                     EnumInvTxnType.INV_CHECKIN), null);
 
                             /*
@@ -553,6 +557,132 @@ public class XslParser {
             }
         }
         return poLineItems;
+    }
+
+    public Map<Warehouse, Set<ProductVariant>> parseBrightPOFile(File objInFile) throws Exception {
+      logger.debug("parsing po line items : " + objInFile.getAbsolutePath());
+
+      InputStream poiInputStream = new FileInputStream(objInFile);
+      POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
+
+      HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+
+      // Assuming there is only one sheet, the first one only will be picked
+      HSSFSheet courierServiceInfoSheet = workbook.getSheetAt(0);
+      Iterator<Row> objRowIt = courierServiceInfoSheet.rowIterator();
+
+      // Declaring data elements
+      Map<Integer, String> headerMap;
+      Map<Integer, String> rowMap;
+      Set<ProductVariant> pvSet = null;
+      Warehouse warehouse = null;
+      int rowCount = 1;
+      Map<Long, Warehouse> whMap = new HashMap<Long, Warehouse>();
+      Map<Warehouse, Set<ProductVariant>> whPVMap = new HashMap<Warehouse, Set<ProductVariant>>();
+      try {
+        headerMap = getRowMap(objRowIt);
+        while (objRowIt.hasNext()) {
+          rowMap = getRowMap(objRowIt);
+          ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap));
+          Long qty = getLong(getCellValue(XslConstants.QTY, rowMap, headerMap));
+          productVariant.setQty(qty);
+          if (productVariant != null) {
+            Long whId = getLong(getCellValue(XslConstants.WAREHOUSE_ID, rowMap, headerMap));
+            if (whMap.get(whId) == null) {
+              warehouse = getWarehouseService().getWarehouseById(whId);
+              whMap.put(whId, warehouse);
+            } else {
+              warehouse = whMap.get(whId);
+            }
+            Sku sku = skuService.getSKU(productVariant, warehouse);// Sku Availability Check
+            if (whPVMap.get(warehouse) == null) {
+              pvSet = new HashSet<ProductVariant>();
+            } else {
+              pvSet = whPVMap.get(warehouse);
+            }
+            pvSet.add(productVariant);
+            whPVMap.put(warehouse, pvSet);
+          }
+          logger.debug("read row " + rowCount);
+          rowCount++;
+        }
+
+      } catch (Exception e) {
+        logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
+        throw new Exception("Exception @ Row:" + rowCount +" - "+e.getMessage(), e);
+      } finally {
+        if (poiInputStream != null) {
+          IOUtils.closeQuietly(poiInputStream);
+        }
+      }
+      return whPVMap;
+    }
+
+    public Set<InventoryBarcodeMapItem> readAndCreateInvBarcodeMapItems(File objInFile, InventoryBarcodeMap inventoryBarcodeMap) throws Exception {
+      logger.debug("parsing barcode mapping items : " + objInFile.getAbsolutePath());
+
+      InputStream poiInputStream = new FileInputStream(objInFile);
+      POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
+
+      HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+
+      // Assuming there is only one sheet, the first one only will be picked
+      HSSFSheet courierServiceInfoSheet = workbook.getSheetAt(0);
+      Iterator<Row> objRowIt = courierServiceInfoSheet.rowIterator();
+
+      // Declaring data elements
+      Map<Integer, String> headerMap;
+      Map<Integer, String> rowMap;
+      Set<InventoryBarcodeMapItem> items = new HashSet<InventoryBarcodeMapItem>();
+      int rowCount = 1;
+      try {
+        headerMap = getRowMap(objRowIt);
+        while (objRowIt.hasNext()) {
+          rowMap = getRowMap(objRowIt);
+          ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap));
+          if (productVariant != null) {
+            Long skuGroupId = getLong(getCellValue(InventoryBarcodeXslManager.SKU_GROUP_ID, rowMap, headerMap));
+            String skuGroupBarcode = getCellValue(InventoryBarcodeXslManager.SKU_GROUP_BARCODE, rowMap, headerMap);
+            String skuItemBarcode = getCellValue(InventoryBarcodeXslManager.SKU_ITEM_BARCODE, rowMap, headerMap);
+            Double costPrice = getDouble(getCellValue(InventoryBarcodeXslManager.COST_PRICE, rowMap, headerMap));
+            Double mrp = getDouble(getCellValue(InventoryBarcodeXslManager.MRP, rowMap, headerMap));
+            String batch = getCellValue(InventoryBarcodeXslManager.BATCH_NUMBER, rowMap, headerMap);
+            Date mfgDate = getDateFromDDMMYYYY(getCellValue(InventoryBarcodeXslManager.MFG_DATE, rowMap, headerMap));
+            Date expDate = getDateFromDDMMYYYY(getCellValue(InventoryBarcodeXslManager.EXP_DATE, rowMap, headerMap));
+
+            InventoryBarcodeMapItem item = new InventoryBarcodeMapItem();
+            item.setInventoryBarcodeMap(inventoryBarcodeMap);
+            item.setSkuGroupId(skuGroupId);
+            if (StringUtils.isBlank(skuGroupBarcode))
+              item.setSkuGroupBarcode(null);
+            else
+              item.setSkuGroupBarcode(skuGroupBarcode);
+            item.setSkuItemBarcode(skuItemBarcode);
+            item.setVariantId(productVariant.getId());
+            item.setCostPrice(costPrice);
+            item.setMrp(mrp);
+            item.setBatchNumber(batch);
+            item.setMfgDate(mfgDate);
+            item.setExpDate(expDate);
+            item.setTxnDate(new Date());
+
+            getBaseDao().save(item);
+
+            items.add(item);       
+          }
+          logger.debug("read row " + rowCount);
+          rowCount++;
+        }
+
+      } catch (Exception e) {
+        logger.error("Exception @ Row:" + rowCount + " - " + e.getMessage());
+        throw new Exception("Exception @ Row:" + rowCount, e);
+      } finally {
+        if (poiInputStream != null) {
+          IOUtils.closeQuietly(poiInputStream);
+        }
+      }
+      return items;
     }
 
     public HashMap<ReconciliationStatus, List<String>> readAndUpdateReconciliationStatus(File objInFile) throws Exception {
@@ -1047,6 +1177,17 @@ public class XslParser {
         return date;
     }
 
+   private Date getDateFromDDMMYYYY(String value) {
+        Date date = null;
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            date = (Date) formatter.parse(value);
+        } catch (Exception e) {
+
+        }
+        return date;
+    }
+
     private Double getDouble(String value) {
         Double valueInDouble = null;
         try {
@@ -1062,7 +1203,7 @@ public class XslParser {
         try {
             valueInLong = Long.parseLong(value.replace(".0", ""));
         } catch (Exception e) {
-
+           logger.error("Exp while parsing value for Long: "+value);
         }
         return valueInLong;
     }

@@ -40,6 +40,14 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
     return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
   }
 
+  public SkuGroup getForeignSkuGroup(Long warehouseId, Long foreignSkuGroupId) {
+    List<SkuGroup> skuGroups = getSession().
+				createQuery("from SkuGroup sg where sg.foreignSkuGroupId = :foreignSkuGroupId and sg.sku.warehouse.id = :warehouseId").
+				setParameter("foreignSkuGroupId", foreignSkuGroupId).setParameter("warehouseId", warehouseId).
+				list();
+		return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
+  }
+
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
     return (List<SkuGroup>) getSession().
         createQuery("from SkuGroup sg where sg.goodsReceivedNote = :grn and sg.sku = :sku").

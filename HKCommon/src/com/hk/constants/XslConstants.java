@@ -75,6 +75,7 @@ public class XslConstants {
     public static final String IS_DELETED = "IS_DELETED";
     public static final String DEFAULT_COURIER_ID = "DEFAULT_COURIER_ID";
     public static final String WAREHOUSE = "WAREHOUSE";
+    public static final String WAREHOUSE_ID = "WAREHOUSE_ID";
     //    public static final String    COD_COURIER_ID                  = "COD_COURIER_ID";
     public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
     public static final String ESTIMATED_SHIPPING_COST = "ESTIMATED_SHIPPING_COST";

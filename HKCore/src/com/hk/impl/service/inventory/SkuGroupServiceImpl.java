@@ -46,6 +46,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     return skuGroupDao.getInStockSkuGroup(barcode, warehouseId, skuItemStatusIds);
   }
 
+    public SkuGroup getForeignSkuGroup(Long warehouseId, Long foreignSkuGroupId) {
+      return skuGroupDao.getForeignSkuGroup(warehouseId, foreignSkuGroupId);
+    }
+
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
     return skuGroupDao.getCurrentCheckedInBatchGrn(grn, sku);
   }

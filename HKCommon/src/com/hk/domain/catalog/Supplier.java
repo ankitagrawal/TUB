@@ -1,6 +1,8 @@
 package com.hk.domain.catalog;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -370,4 +372,12 @@ public class Supplier implements java.io.Serializable {
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
 	}
+
+  public boolean isInternalSupplier() {
+    List<String> internalSuppliers = Arrays.asList("06101832036", "27210893736V", "07320452122");
+    if (this.tinNumber != null && internalSuppliers.contains(this.tinNumber))
+      return true;
+
+    return false;
+  }
 }
