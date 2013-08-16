@@ -182,7 +182,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 		if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
 			if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 				if (!(shippingOrder.isServiceOrder())) {
-					User adminUser = getUserService().getAdminUser();
+
+					User loggedInUser = getUserService().getLoggedInUser();
+					if(loggedInUser == null){
+						loggedInUser = getUserService().getAdminUser();
+					}
 					// Set<LineItem> selectedItems = new HashSet<LineItem>();
 
 					for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -208,7 +212,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 							if (!(bookedQty >= orderedQty)) {
 								if (availableNetPhysicalInventory < 0 || availableUnbookedInv < 0) {
 									String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
-									shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, shippingOrderService
+									shippingOrderService.logShippingOrderActivity(shippingOrder, loggedInUser, shippingOrderService
 											.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
 											EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
 									return false;
