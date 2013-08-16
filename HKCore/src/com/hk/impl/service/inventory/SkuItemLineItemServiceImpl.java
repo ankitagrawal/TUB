@@ -234,7 +234,6 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 					SkuItem skuItem = availableUnbookedSkuItems.get(skuItemLineItem.getUnitNum().intValue() - 1);
 					skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 
-
 					skuItemLineItem.setSkuItem(skuItem);
 					skuItemLineItem.getSkuItemCLI().setSkuItem(skuItem);
 
@@ -279,32 +278,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			}
 			else{
 				//call free inventory on bright side.
-				try {
-					HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-					hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
-					hkapiBookingInfo.setLineItemId(lineItem.getId());
-					hkapiBookingInfo.setMrp(lineItem.getMarkedPrice());
-					hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
-					hkapiBookingInfo.setQty(lineItem.getQty());
-					
-					Gson gson = new Gson();
-			        String json = gson.toJson(hkapiBookingInfo);
-					
-		            String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForSOCancellation/";
-		            ClientRequest request = new ClientRequest(url);
-		            request.body("application/json",json);
-		            ClientResponse response = request.post();
-		            int status = response.getStatus();
-		            if (status == 200) {
-		                String data = (String) response.getEntity(String.class);
-		                Boolean deleted = new Gson().fromJson(data, Boolean.class);
-		                logger.debug("Successfully freed Bright Inventory against SO# "+shippingOrder.getId()+" cancellation");
-		                return deleted;
-		            }
-		        } catch (Exception e) {
-		            logger.error("Exception while freeing bright inventory against cancelling SO# "+shippingOrder.getId(), e.getMessage());
-		            return false;
-		        }
+				return freeBrightInventoryForSOCancellation(lineItem);
 			}
 		}
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -326,6 +300,37 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			iterator.remove();
 		}
 		return true;
+	}
+	
+	private boolean freeBrightInventoryForSOCancellation(LineItem lineItem){
+		try {
+			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+			hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
+			hkapiBookingInfo.setLineItemId(lineItem.getId());
+			hkapiBookingInfo.setMrp(lineItem.getMarkedPrice());
+			hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
+			hkapiBookingInfo.setQty(lineItem.getQty());
+			
+			Gson gson = new Gson();
+	        String json = gson.toJson(hkapiBookingInfo);
+			
+            String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForSOCancellation/";
+            ClientRequest request = new ClientRequest(url);
+            request.body("application/json",json);
+            ClientResponse response = request.post();
+            int status = response.getStatus();
+            if (status == 200) {
+                String data = (String) response.getEntity(String.class);
+                Boolean deleted = new Gson().fromJson(data, Boolean.class);
+                logger.debug("Successfully freed Bright Inventory against SO# "+lineItem.getShippingOrder().getId()+" cancellation");
+                return deleted;
+            }
+            logger.debug("Could not free Bright Inventory against SO# "+lineItem.getShippingOrder().getId()+" cancellation");
+            return false;
+        } catch (Exception e) {
+            logger.error("Exception while freeing bright inventory against cancelling SO# "+lineItem.getShippingOrder().getId(), e.getMessage());
+            return false;
+        }
 	}
 
 	@Override
