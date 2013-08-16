@@ -205,14 +205,15 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 						// It cannot be = as for last order/unit unbooked will
 						// always be ZERO
 						if (!shippingOrder.isDropShipping()) {
-							if (bookedQty < orderedQty ||availableNetPhysicalInventory < 0 || availableUnbookedInv < 0) {
-								String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
-										+ availableUnbookedInv;
-								shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, shippingOrderService
-										.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
-										EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
-								return false;
-								// selectedItems.add(lineItem);
+							if (!(bookedQty >= orderedQty)) {
+								if (availableNetPhysicalInventory < 0 || availableUnbookedInv < 0) {
+									String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
+									shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, shippingOrderService
+											.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
+											EnumReason.InsufficientUnbookedInventoryManual.asReason(), comments);
+									return false;
+									// selectedItems.add(lineItem);
+								}
 							}
 						}
 					}

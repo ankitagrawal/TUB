@@ -278,9 +278,10 @@ public class BucketServiceImpl implements BucketService {
             if (lineItem.getSkuItemLineItems() != null){
                 bookedQty = (long)lineItem.getSkuItemLineItems().size();
             }
-
-            if ( bookedQty < orderedQty || availableNetPhysicalInventory < 0  || availableUnbookedInv < 0) {
+            if (!(bookedQty >= orderedQty)) {
+            	if (availableNetPhysicalInventory < 0  || availableUnbookedInv < 0) {
                 categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            	}
             }
             if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
                 categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
