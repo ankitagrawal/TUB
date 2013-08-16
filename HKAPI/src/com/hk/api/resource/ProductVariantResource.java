@@ -71,7 +71,7 @@ private static Logger logger                    = LoggerFactory.getLogger(Produc
     boolean isVisible = false;
     Long unbookedInventory = 0L;
     unbookedInventory = getInventoryService().getAllowedStepUpInventory(productVariant);
-    
+
     if(unbookedInventory > 0){
       isVisible = true;
     }
@@ -132,6 +132,26 @@ private static Logger logger                    = LoggerFactory.getLogger(Produc
         return new JSONResponseBuilder().build();
 
     }
+
+
+    @GET
+    @Path("/{variantId}/inventoryhealthcheck")
+    @Produces("application/json")
+    public String variantPrice(@PathParam("variantId") String variantId) {
+        if (StringUtils.isBlank(variantId)) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        }
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+        if (productVariant == null) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+        }
+        logger.debug("Aqua inventoryhealthcheck called by Bright for Variant = "+variantId);
+        inventoryService.checkInventoryHealth(productVariant);
+
+        return new JSONResponseBuilder().addField("outofstock", productVariant.isOutOfStock()).build();
+
+    }
+
 
 
     public ProductVariantService getProductVariantService() {
