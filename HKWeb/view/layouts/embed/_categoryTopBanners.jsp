@@ -79,9 +79,4 @@
        <jsp:include page="/categoryBanners/parenting_static.jsp"/>
      </c:if>
 
-  <c:if test="${hk:collectionContains(categoryNameList, 'devices') ||
-            hk:collectionContains(brandList, 'Frio') }">
-    <jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>
-  </c:if>
-
 </s:layout-definition>

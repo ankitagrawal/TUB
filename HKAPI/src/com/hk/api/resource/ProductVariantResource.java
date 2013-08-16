@@ -63,7 +63,7 @@ private static Logger logger                    = LoggerFactory.getLogger(Produc
     //boolean isVisible = !(productVariant.getDeleted() || productVariant.isOutOfStock());
     boolean isVisible = false;
     Long unbookedInventory = 0L;
-    unbookedInventory = getInventoryService().getAvailableUnbookedInventory(productVariant);
+    unbookedInventory = getInventoryService().getAllowedStepUpInventory(productVariant);
     
     if(unbookedInventory > 0){
       isVisible = true;
