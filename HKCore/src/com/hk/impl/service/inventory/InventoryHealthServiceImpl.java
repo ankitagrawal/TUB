@@ -10,6 +10,7 @@ import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.api.HKApiSkuResponse;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -568,47 +569,81 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
                 if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
                     ProductVariant productVariant = cartLineItem.getProductVariant();
+                    List<Warehouse> servicableWarehouse = warehouseService.getServiceableWarehouses();
+                    if(servicableWarehouse.contains(productVariant.getWarehouse())){
+                   // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
+                      List<Sku> skus = new ArrayList<Sku>();
+                      Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+                      skus.add(sku);
+                      Long availableUnBookedInventory = skuItemDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
 
-                    // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
+                      if (availableUnBookedInventory > 0) {
+                          // picking the  sku for current MRP available at max qty on product variant
+                          long qtyToBeSet = cartLineItem.getQty();
+                          if (availableUnBookedInventory >= qtyToBeSet) {
+                              Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
-//                    List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-                    List<Sku> skus = new ArrayList<Sku>();
-                    Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-                    skus.add(sku);
-                    Long availableUnBookedInventory = skuItemDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
+                              for (int i = 0; i < qtyToBeSet; i++) {
+                                  List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
 
-                    if (availableUnBookedInventory > 0) {
-                        // picking the  sku for current MRP available at max qty on product variant
-//            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+                                  if (skuItemList != null && skuItemList.size() > 0) {
+                                      SkuItem skuItem = skuItemList.get(0);
+                                      skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                                      skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                                      skuItem = (SkuItem) getBaseDao().save(skuItem);
+                                      // inventoryHealthCheck call
+                                      inventoryHealthCheck(productVariant);
 
-                        long qtyToBeSet = cartLineItem.getQty();
-                        if (availableUnBookedInventory >= qtyToBeSet) {
-                            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-
-                            for (int i = 0; i < qtyToBeSet; i++) {
-                                List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
-
-                                if (skuItemList != null && skuItemList.size() > 0) {
-                                    SkuItem skuItem = skuItemList.get(0);
-                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                                    skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                                    skuItem = (SkuItem) getBaseDao().save(skuItem);
-                                    // inventoryHealthCheck call
-                                    inventoryHealthCheck(productVariant);
-
-                                    skuItemsToBeBooked.add(skuItem);
-                                }
-                            }
-                            // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-                            List<SkuItemCLI> skuItemCLIList = inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-                            cartLineItem.setSkuItemCLIs(skuItemCLIList);
-                        }
+                                      skuItemsToBeBooked.add(skuItem);
+                                  }
+                              }
+                              // Call method to make new entries in SKUItemCLI  only those for which inventory availa
+                              List<SkuItemCLI> skuItemCLIList = inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+                              cartLineItem.setSkuItemCLIs(skuItemCLIList);
+                          }
+                      }
+                    }
+                    else{
+                    	//book inventory on Bright
+                    	tempBookBrightInventory(cartLineItem);
                     }
                 }
             }
         }
         baseDao.save(order);
     }
+    
+    
+    private void tempBookBrightInventory(CartLineItem cartLineItem) {
+  		try {
+  			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+  			hkapiBookingInfo.setCartLineItemId(cartLineItem.getId());
+  			hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
+  			hkapiBookingInfo.setProductVariantId(cartLineItem.getProductVariant().getId());
+  			hkapiBookingInfo.setQty(cartLineItem.getQty());
+
+  			Gson gson = new Gson();
+  			String json = gson.toJson(hkapiBookingInfo);
+
+  			String url = brightlifecareRestUrl + "product/variant/" + "tempBookInventoryOnBright/";
+  			ClientRequest request = new ClientRequest(url);
+  			request.body("application/json", json);
+  			ClientResponse response = request.post();
+  			int status = response.getStatus();
+  			if (status == 200) {
+  				String data = (String) response.getEntity(String.class);
+  				Boolean deleted = new Gson().fromJson(data, Boolean.class);
+  				if (deleted) {
+  					logger.debug("Successfully booked Bright Inventory against BO# " + cartLineItem.getOrder().getId());
+  				} else {
+  					logger.debug("Could not book Bright Inventory against BO# " + cartLineItem.getOrder().getId());
+  				}
+  			}
+  		} catch (Exception e) {
+  			logger.error("Exception while booking Bright Inventory against BO# " + cartLineItem.getOrder().getId(), e.getMessage());
+  		}
+
+  	}
 
 
     public void inventoryHealthCheck(ProductVariant productVariant) {
