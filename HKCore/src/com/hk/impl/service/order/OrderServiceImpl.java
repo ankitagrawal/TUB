@@ -1,11 +1,13 @@
 package com.hk.impl.service.order;
 
 import com.akube.framework.dao.Page;
+import com.google.gson.Gson;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumUserCodCalling;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -15,6 +17,8 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.OrderSplitterFilter;
 import com.hk.core.search.OrderSearchCriteria;
+import com.hk.domain.api.HKAPIBookingInfo;
+import com.hk.domain.api.HKApiSkuResponse;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
@@ -63,9 +67,12 @@ import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,7 +82,9 @@ import java.util.*;
 public class OrderServiceImpl implements OrderService {
 
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
-
+    
+    @Value("#{hkEnvProps['" + Keys.Env.brightlifecareRestUrl + "']}")
+    private String brightlifecareRestUrl;
     @Autowired
     private ShippingOrderService shippingOrderService;
 
@@ -726,6 +735,13 @@ public class OrderServiceImpl implements OrderService {
                 }
                 for (LineItem lineItem : shippingOrder.getLineItems()){
 	                  //lineItemDao.refresh(lineItem);
+                	CartLineItem cartLineItem = lineItem.getCartLineItem();
+                	if(bookedOnBright(cartLineItem)&&bookedOnBright(lineItem)){
+                		logger.debug("All the booking on bright already done");
+                	}else
+                		if(bookedOnBright(cartLineItem)&&!bookedOnBright(lineItem)){
+                			bookInventoryOnBright(lineItem);
+                		}else
                     if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
                         Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
                         if(!skuItemLineItemStatus){
@@ -749,7 +765,74 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderAlreadyExists;
     }
 
+	private boolean bookedOnBright(CartLineItem cartLineItem) {
+		try {
 
+			String url = brightlifecareRestUrl + "product/variant/getBookingForCartLineItemId" + cartLineItem.getId();
+			ClientRequest request = new ClientRequest(url);
+			ClientResponse response = request.get();
+			int status = response.getStatus();
+			if (status == 200) {
+				String data = (String) response.getEntity(String.class);
+				Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
+				return bookedAtBright;
+			}
+		} catch (Exception e) {
+			logger.error("Exception while checking booking status on Bright", e.getMessage());
+		}
+		return false;
+	}
+	
+	private boolean bookedOnBright(LineItem lineItem) {
+		try {
+
+			String url = brightlifecareRestUrl + "product/variant/getBookingForLineItemId" + lineItem.getId();
+			ClientRequest request = new ClientRequest(url);
+			ClientResponse response = request.get();
+			int status = response.getStatus();
+			if (status == 200) {
+				String data = (String) response.getEntity(String.class);
+				Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
+				return bookedAtBright;
+			}
+		} catch (Exception e) {
+			logger.error("Exception while checking booking status on Bright", e.getMessage());
+		}
+		return false;
+	}
+
+	private void bookInventoryOnBright(LineItem lineItem) {
+		try {
+			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+			hkapiBookingInfo.setCartLineItemId(lineItem.getId());
+			hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
+			hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
+			hkapiBookingInfo.setQty(lineItem.getQty());
+			hkapiBookingInfo.setLineItemId(lineItem.getId());
+			hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
+
+			Gson gson = new Gson();
+			String json = gson.toJson(hkapiBookingInfo);
+
+			String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForBOCancellation/";
+			ClientRequest request = new ClientRequest(url);
+			request.body("application/json", json);
+			ClientResponse response = request.post();
+			int status = response.getStatus();
+			if (status == 200) {
+				String data = (String) response.getEntity(String.class);
+				Boolean deleted = new Gson().fromJson(data, Boolean.class);
+				if (deleted) {
+					logger.debug("Successfully freed Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId() + " cancellation");
+				} else {
+					logger.debug("Could not free Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId() + " cancellation");
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Exception while freeing Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId() + " cancellation", e.getMessage());
+		}
+
+	}
 
 	@Transactional
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall){
