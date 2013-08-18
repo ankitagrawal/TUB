@@ -1,6 +1,8 @@
 package com.hk.impl.service.inventory;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -390,6 +392,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
 
         Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
+        if (infos != null && infos.size()<= 0) {
+            // make a call to Bright side for inventory Info
+           infos =  avaialbleSkuInfoInfoOfBright(variant);
+
+        }
         boolean invAdded = false;
         boolean newSkuInfoFlag = false;
         boolean updateSkuInfoFlag = false;
@@ -849,6 +856,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
 
         return qty;
+    }
+
+
+    private Collection<InventoryInfo> avaialbleSkuInfoInfoOfBright(ProductVariant productVariant) {
+        Collection<InventoryInfo>  infos = null;
+        try {
+            String url = brightlifecareRestUrl + "product/variant/splitterInfo/" + productVariant.getId();
+            ClientRequest request = new ClientRequest(url);
+            ClientResponse response = request.get();
+            int status = response.getStatus();
+            if (status == 200) {
+                String data = (String) response.getEntity(String.class);
+                Type listType = new TypeToken<Collection<InventoryInfo>>() {
+                }.getType();
+                infos = new Gson().fromJson(data, listType);
+            }
+        } catch (Exception e) {
+            logger.error("Exception while getting Bright InventoryInfo list", e.getMessage());
+        }        return infos;
     }
 
 

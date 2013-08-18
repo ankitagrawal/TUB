@@ -86,7 +86,7 @@ public class ProductVariantResource {
 
 
   @GET
-  @Path("unbookedInventory/{variantId}")
+  @Path("/unbookedInventory/{variantId}")
   @Produces("application/json")
   public String getUnbookedInventory(@PathParam("variantId") String variantId) {
     if (StringUtils.isBlank(variantId)) {
