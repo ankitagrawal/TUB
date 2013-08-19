@@ -184,12 +184,18 @@
                       $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
                       $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
                   });
+
+                  $(".dietPlan").live('click', function () {
+                      $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                      $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
+                      $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                  });
               </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
-                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
-                    <img src="${pageContext.request.contextPath}/images/banners/patanjali-banner.jpg"
-                         alt="Patanjali Offer" class="small_banner"/>
+                <a class="dietPlan" href="#" style="cursor: pointer;">
+                                    <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
+                                         alt="DIET_PLAN" class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/health-nutrition/shop-by-need/hair-skin-nails">
                     <img src="${pageContext.request.contextPath}/images/banners/Hair-skin-nails.jpg"
