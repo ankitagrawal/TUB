@@ -497,34 +497,60 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
   }
 
   /**
-   * This method cehcks and cancels an SO only if it can not be fulfilled by any warehouse.
+   * This method checks and cancels an SO only if it can not be fulfilled by any warehouse.
    * @param shippingOrder
    * @param user
    */
   private void cancelUnfulfilledSO (ShippingOrder shippingOrder, User user) {
-    boolean cancelFlag = true;
     ProductVariant variant = null;
+    Set<LineItem> outOfStockLineItems = new HashSet<LineItem>();
+    StringBuilder comment = new StringBuilder();
+    ShippingOrder cancelledSO = null;
     for (LineItem lineItem : shippingOrder.getLineItems()) {
       variant = lineItem.getCartLineItem().getProductVariant();
-      if (inventoryService.getAvailableUnBookedInventory(variant) >= 0){
-        cancelFlag = false;
-        break;
+      if (!(inventoryService.getAvailableUnBookedInventory(variant) >= lineItem.getQty())){
+        outOfStockLineItems.add(lineItem);
       }
     }
-    if (cancelFlag) {
-      this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null,
-                              EnumReconciliationActionType.RewardPoints.getId(), false);
-      shippingOrderService.logShippingOrderActivity(shippingOrder, user,
-          shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
-          EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
-
-      emailManager.sendPartialOrderCancelEmailToUser(shippingOrder);
-    } else {
-      StringBuilder comment = new StringBuilder();
-      comment.append("Inventory for the variant " + variant.getId() +  " found in another warehouse.");
+    if (outOfStockLineItems.size() == shippingOrder.getLineItems().size()) {
+      cancelledSO = shippingOrder;
+    } else if (outOfStockLineItems.isEmpty()) {
+      // nothing to cancel
+      comment.append("Inventory for the variant ");
+      for (LineItem item : shippingOrder.getLineItems() ) {
+        comment.append(item.getCartLineItem().getProductVariant().getId() + " ");
+      }
+      comment.append("found in another warehouse.");
       shippingOrderService.logShippingOrderActivity(shippingOrder,
           EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_DIFFERENT_WAREHOUSE, null, comment.toString());
+
+      return;
+    } else {
+      Map<String,ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
+      List<String>  messages = new ArrayList<String>();
+      // split and cancel only the unfulfilled line items
+      this.autoSplitSO(shippingOrder, outOfStockLineItems, splittedOrders, messages);
+      cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
+      shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+      
+      // log the items which can be fulfilled by other warehouses.
+      comment.append("Inventory for the variant ");
+      for (LineItem item :shippingOrder.getLineItems() ) {
+        comment.append(item.getCartLineItem().getProductVariant().getId() + " ");
+      }
+      comment.append("found in another warehouse.");
+      shippingOrderService.logShippingOrderActivity(shippingOrder,
+          EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_DIFFERENT_WAREHOUSE, null, comment.toString());
+
     }
+
+    this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
+        EnumReconciliationActionType.RewardPoints.getId(), false);
+    shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
+        EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
+
+    emailManager.sendPartialOrderCancelEmailToUser(shippingOrder);
 
   }
 
