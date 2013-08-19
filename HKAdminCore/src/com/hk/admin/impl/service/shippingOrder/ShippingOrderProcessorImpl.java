@@ -9,7 +9,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.analytics.Reason;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -502,13 +501,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
    * @param user
    */
   private void cancelUnfulfilledSO (ShippingOrder shippingOrder, User user) {
-    ProductVariant variant = null;
     Set<LineItem> outOfStockLineItems = new HashSet<LineItem>();
     StringBuilder comment = new StringBuilder();
     ShippingOrder cancelledSO = null;
     for (LineItem lineItem : shippingOrder.getLineItems()) {
-      variant = lineItem.getCartLineItem().getProductVariant();
-      if (!(inventoryService.getAvailableUnBookedInventory(variant) >= lineItem.getQty())){
+      if (!(inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice()) >= lineItem.getQty())){
         outOfStockLineItems.add(lineItem);
       }
     }
