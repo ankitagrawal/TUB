@@ -74,7 +74,8 @@ public enum EnumShippingOrderLifecycleActivity {
   RewardPointsRevertBack(1009L,"Reward Points given back to user in SO cancellation"),
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
   SO_CancelledInventoryMismatch(1020L, "SO  Cancelled due to inventory mismatch"),
-  Reconciliation(1050l,"Reconciliation")
+  Reconciliation(1050l,"Reconciliation"),
+  SO_COULD_NOT_BE_CANCELLED_DIFFERENT_WAREHOUSE(1060l,"SO could not be cancelled as inventory found in other warehouse.")
   ;
 
   private String name;

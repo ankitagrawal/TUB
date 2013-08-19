@@ -657,9 +657,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
       shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
     }
 
-    getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
+    getAdminInventoryService().reCheckInInventory(shippingOrder,
+        EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
     shippingOrder = getShippingOrderService().save(shippingOrder);
-    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder,
+        EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
     getBucketService().escalateBackToActionQueue(shippingOrder);
     // after escalate back auto escalate the SO

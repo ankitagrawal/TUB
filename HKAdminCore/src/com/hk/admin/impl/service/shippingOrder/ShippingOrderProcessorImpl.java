@@ -7,6 +7,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
@@ -15,6 +16,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.User;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
@@ -241,9 +243,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       }
 
       Long orderedQty = lineItem.getQty();
-      Long availableNetPhysicalInventory =
+     /* Long availableNetPhysicalInventory =
           getInventoryService().getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
-
+*/
       // Check for inventory mismatch for non JIT and non drop shipping orders
       if (!shippingOrder.isDropShipping() && !lineItem.getSku().getProductVariant().getProduct().isJit()) {
         if (lineItem.getSkuItemLineItems()== null) {
@@ -255,7 +257,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
               shippingOrderService.getShippingOrderLifeCycleActivity(
                   EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
               EnumReason.PROD_INV_MISMATCH.asReason(), comments);
-        } else if( availableNetPhysicalInventory < 0 || lineItem.getSkuItemLineItems().size() < orderedQty) {
+        } else if( this.countValidSILI(lineItem.getSkuItemLineItems()) < orderedQty) {
           // if partial inventory has been booked for the line item
           selectedItems.add(lineItem);
           String comments = "Partial inventory booked for " + lineItem.getSku().getProductVariant();
@@ -270,26 +272,13 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
     if (selectedItems.size() > 0) {
       if (selectedItems.size() == shippingOrder.getLineItems().size()) {
-        this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null,
-            EnumReconciliationActionType.RewardPoints.getId(), false);
-        shippingOrderService.logShippingOrderActivity(shippingOrder, user,
-            shippingOrderService.getShippingOrderLifeCycleActivity(
-                EnumShippingOrderLifecycleActivity.SO_Cancelled),
-            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
-        emailManager.sendPartialOrderCancelEmailToUser(shippingOrder);
+        this.cancelUnfulfilledSO(shippingOrder, user);
       } else {
         boolean splitSuccess = this.autoSplitSO(shippingOrder, selectedItems, splittedOrders,
             messages);
         if (splitSuccess) {
           ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
-          shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-              shippingOrderService.getShippingOrderLifeCycleActivity(
-                  EnumShippingOrderLifecycleActivity.SO_Cancelled),
-              EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
-          this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
-              EnumReconciliationActionType.RewardPoints.getId(), false);
-          emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
-          shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+          this.cancelUnfulfilledSO(cancelledSO, user);
 
         }
       }
@@ -489,6 +478,53 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     }
     ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
     newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
+
+  }
+
+  /**
+   * This method is used to count valid Sku line items to handle inventory mismatch
+   * @param items
+   * @return
+   */
+  private Integer countValidSILI(List<SkuItemLineItem> items) {
+    Integer count = 0;
+    for (SkuItemLineItem item: items) {
+      if (item.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /**
+   * This method cehcks and cancels an SO only if it can not be fulfilled by any warehouse.
+   * @param shippingOrder
+   * @param user
+   */
+  private void cancelUnfulfilledSO (ShippingOrder shippingOrder, User user) {
+    boolean cancelFlag = true;
+    ProductVariant variant = null;
+    for (LineItem lineItem : shippingOrder.getLineItems()) {
+      variant = lineItem.getCartLineItem().getProductVariant();
+      if (inventoryService.getAvailableUnBookedInventory(variant) >= 0){
+        cancelFlag = false;
+        break;
+      }
+    }
+    if (cancelFlag) {
+      this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder, null,
+                              EnumReconciliationActionType.RewardPoints.getId(), false);
+      shippingOrderService.logShippingOrderActivity(shippingOrder, user,
+          shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
+          EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
+
+      emailManager.sendPartialOrderCancelEmailToUser(shippingOrder);
+    } else {
+      StringBuilder comment = new StringBuilder();
+      comment.append("Inventory for the variant " + variant.getId() +  " found in another warehouse.");
+      shippingOrderService.logShippingOrderActivity(shippingOrder,
+          EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_DIFFERENT_WAREHOUSE, null, comment.toString());
+    }
 
   }
 
