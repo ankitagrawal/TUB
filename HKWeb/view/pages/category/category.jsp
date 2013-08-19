@@ -187,7 +187,7 @@
 
                   $(".dietPlan").live('click', function () {
                       $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
-                      $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
+                      $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
                       $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
                   });
               </script>
@@ -202,6 +202,13 @@
                          alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
+                <script type="text/javascript">
+                                 $(".dietPlan").live('click', function () {
+                                     $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                                     $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
+                                     $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                                 });
+                             </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq homeLiving}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
