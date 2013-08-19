@@ -26,16 +26,19 @@ import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.constants.sku.EnumSkuItemOwner;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -139,8 +142,11 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public Long getAvailableUnbookedInventory(Sku sku, Double mrp) {
-    //TODO: Write proper DAO method
-    return 0L;
+      List<SkuItem> skuItems = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), mrp);
+      if(!skuItems.isEmpty()){
+          return Long.valueOf(skuItems.size());
+      }
+      return 0L;
   }
 
   @Override

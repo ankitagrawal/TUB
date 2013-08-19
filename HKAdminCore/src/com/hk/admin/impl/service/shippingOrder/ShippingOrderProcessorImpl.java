@@ -198,8 +198,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
       if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
         if(!(shippingOrder.isServiceOrder())){
-          User adminUser = getUserService().getAdminUser();
-          shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, adminUser);
+          User loggedInUser = getUserService().getLoggedInUser();
+          if(loggedInUser == null){
+            loggedInUser = getUserService().getAdminUser();
+          }
+          shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
           if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
             shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder,
                 EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch,
