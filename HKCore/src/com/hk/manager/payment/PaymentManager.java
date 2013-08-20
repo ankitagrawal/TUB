@@ -19,7 +19,6 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.manager.*;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.OrderService;
@@ -260,10 +259,6 @@ public class PaymentManager {
             payment.setBankCity(backCity);
             payment.setChequeNumber(chequeNumber);
             order = processOrder(payment);
-            // calling health check
-            if(!order.isSubscriptionOrder()){
-                inventoryHealthService.tempBookSkuLineItemForOrder(order);
-            }
             orderEventPublisher.publishOrderPlacedEvent(order);
         }
         return order;
@@ -284,9 +279,9 @@ public class PaymentManager {
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
             order = processOrder(payment);
-            if(!order.isSubscriptionOrder()){
-                inventoryHealthService.tempBookSkuLineItemForOrder(order);
-            }
+//            if(!order.isSubscriptionOrder()){
+//                inventoryHealthService.tempBookSkuLineItemForOrder(order);
+//            }
         }
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;

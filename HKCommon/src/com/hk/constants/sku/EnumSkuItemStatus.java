@@ -76,7 +76,10 @@ public enum EnumSkuItemStatus {
 
   public static List<EnumSkuItemStatus> getStatusForNetPhysicalInventory() {
     return Arrays.asList(EnumSkuItemStatus.Checked_IN, EnumSkuItemStatus.TEMP_BOOKED, EnumSkuItemStatus.BOOKED);
+  }
 
+   public static List<Long> getCheckedInPlusBookedStatus() {
+    return Arrays.asList(EnumSkuItemStatus.Checked_IN.getId(), EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId());
   }
 
 

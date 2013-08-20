@@ -549,6 +549,19 @@
         </example>
     </function>
 
+     <function>
+        <description>
+            returns list of available skuitems of a skugroup
+        </description>
+        <name>getNetPhysicalAvailableStockSkuItems</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getNetPhysicalAvailableStockSkuItems(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getInStockSkuItems(${object})}
+        </example>
+    </function>
+
+
     <function>
         <description>
             returns first combo line item, selected in cart

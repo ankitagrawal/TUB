@@ -18,7 +18,7 @@ import java.util.List;
  * Time: 5:55 PM
  * To change this template use File | Settings | File Templates.
  */
-@SuppressWarnings("serial")
+
 @Entity
 @Table(name = "reverse_pickup_order")
 public class ReversePickupOrder {

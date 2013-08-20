@@ -100,7 +100,7 @@ public class B2BCartAction extends BaseAction {
 					dataMap.put("imageUrl", null);
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant",
 							dataMap);
-					//Long value = inventoryService.getAvailableUnbookedInventory(pv);
+					//Long value = inventoryService.getAllowedStepUpInventory(pv);
 					Long value = adminInventoryService.getNetInventory(pv);
 					if(value==null){
 						value = 0L;
@@ -140,7 +140,7 @@ public class B2BCartAction extends BaseAction {
 				b2bOutOfStockProductList.add(b2bProduct);
 			}
 			if (variant != null
-					&& inventoryService.getAvailableUnbookedInventory(variant) <= 0) {
+					&& inventoryService.getAllowedStepUpInventory(variant) <= 0) {
 				setExcelFileValidated(Boolean.FALSE);
 				b2bInventoryNotFoundProductList.add(b2bProduct);
 			}

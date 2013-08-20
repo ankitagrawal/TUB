@@ -160,7 +160,7 @@ public class SkuXslParser {
                         throw new HealthKartCatalogUploadException("Invalid tax id in excel.", rowCount);
                     }
 
-                    skuProduct = getSkuService().findSKU(productVariantObj, warehouseObj);
+                    skuProduct = getSkuService().getSKU(productVariantObj, warehouseObj);
                     if (skuProduct == null) {
                         skuProduct = new Sku();
                         skuProduct.setProductVariant(productVariantObj);

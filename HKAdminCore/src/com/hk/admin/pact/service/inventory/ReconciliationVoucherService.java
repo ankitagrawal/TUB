@@ -44,5 +44,5 @@ public interface ReconciliationVoucherService {
     
     public DebitNote getDebitNote(ReconciliationVoucher reconciliationVoucher);
 
-
+    public void validateSkuItem(SkuItem skuItem);
 }

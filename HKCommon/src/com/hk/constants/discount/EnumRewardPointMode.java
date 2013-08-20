@@ -2,6 +2,9 @@ package com.hk.constants.discount;
 
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Generated
  */
@@ -24,6 +27,15 @@ public enum EnumRewardPointMode {
 
     public Long getId() {
         return this.id;
+    }
+
+    public static List<RewardPointMode> getCashBackModes(){
+       return Arrays.asList(
+                EnumRewardPointMode.HK_CASHBACK.asRewardPointMode(),
+                EnumRewardPointMode.REFERRAL.asRewardPointMode(),
+                EnumRewardPointMode.HKPLUS_POINTS.asRewardPointMode(),
+                EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode()
+        );
     }
 
     public RewardPointMode asRewardPointMode() {
