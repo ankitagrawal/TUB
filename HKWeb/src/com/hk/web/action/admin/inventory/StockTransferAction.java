@@ -1,10 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.hk.constants.sku.EnumSkuItemOwner;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -32,6 +28,8 @@ import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
@@ -123,6 +121,14 @@ public class StockTransferAction extends BasePaginatedAction {
 
     public Resolution save() {
     	//TODO: ERP Checkout
+    	List<SkuItemStatus> itemStatus = new ArrayList<SkuItemStatus>();
+    	itemStatus.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+    	itemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+    	itemStatus.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+    	
+    	List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+    	skuItemOwners.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+    	
     	
         SkuItem skuItem = null;
         if (stockTransfer == null) {
@@ -140,20 +146,28 @@ public class StockTransferAction extends BasePaginatedAction {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
 
-        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId(), EnumSkuItemStatus.Checked_IN.getId());
+        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId(), itemStatus, skuItemOwners);
         if (skuItemBarcode != null) {
             skuItem = skuItemBarcode;
         } else {
-            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse());
+            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse(), itemStatus, skuItemOwners);
             if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
                 skuItem = inStockSkuItemList.get(0);
             }
         }
         if (skuItem != null) {
-            if (!skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
+        	
+        	if (!itemStatus.contains(skuItem.getSkuItemStatus())) {
                 addRedirectAlertMessage(new SimpleMessage("Seems to be multiple Scanning of Same Barcode"));
                 return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
             }
+        	
+        	boolean validateSkuItem = stockTransferService.validateSkuItem(skuItem);
+        	if(!validateSkuItem){
+        		addRedirectAlertMessage(new SimpleMessage("The SkuItem cannot be freed for Stock Transfer"));
+                return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+        	}
+        	
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
             skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
             SkuGroup skuGroup = skuItem.getSkuGroup();
@@ -228,7 +242,7 @@ public class StockTransferAction extends BasePaginatedAction {
             }
 
         } else {
-            skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, Arrays.asList(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus()));
         }
         if (skuItemToBeReverted == null) {
             addRedirectAlertMessage(new SimpleMessage("Some error occurred. Stock not transferred against this Barcode "));

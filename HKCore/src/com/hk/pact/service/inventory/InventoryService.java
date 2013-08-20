@@ -1,62 +1,50 @@
 package com.hk.pact.service.inventory;
 
-import java.util.List;
-
 import com.hk.constants.inventory.EnumInvTxnType;
-import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.Sku;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+
+import java.util.List;
+import java.util.Set;
 
 public interface InventoryService {
 
-    /**
-     * Check If Inventory is going in RED zone. Check for Low Inventory and Delete from the list if it's healthy Mark
-     * variants in stock and out of stock
-     */
-    public void checkInventoryHealth(ProductVariant productVariant);
-    
-    public Long getAggregateCutoffInventory(ProductVariant productVariant);
-    
-    public Long getAggregateCutoffInventory(List<Sku> skuList) ;
-    
-    public InvTxnType getInventoryTxnType(EnumInvTxnType enumInvTxnType);
+  /**
+   * Check If Inventory is going in RED zone. Check for Low Inventory and Delete from the list if it's healthy Mark
+   * variants in stock and out of stock
+   */
+  public void checkInventoryHealth(ProductVariant productVariant);
 
-    /**
-     * @param sku
-     * @return Unbooked Inventory - this is difference of net physical inventory and all booked inventory The return
-     *         value can be negative in case we are doing overbooking and product is not timely marked as Out Of Stock
-     */
-    @Deprecated
-    public Long getAvailableUnbookedInventory(Sku sku);
+  public Long getAggregateCutoffInventory(ProductVariant productVariant);
 
-    @Deprecated
-    public Long getAvailableUnbookedInventoryForPrescriptionEyeglasses(List<Sku> skuList);
+  public InvTxnType getInventoryTxnType(EnumInvTxnType enumInvTxnType);
 
-    @Deprecated
-    public Long getAvailableUnbookedInventory(List<Sku> skuList);
+  /**
+   * @param sku
+   * @param mrp - Nullable
+   * @return Unbooked Inventory - this is qty of 'CHECKED_IN' units for a SKU at a particular MRP
+   *         In case mrp is NULL - it will return all the 'CHECKED_IN' units for the SKU
+   */
+  public Long getAvailableUnbookedInventory(Sku sku, Double mrp);                               
 
-    public Long getAvailableUnbookedInventory(ProductVariant productVariant);
+  public Long getAllowedStepUpInventory(ProductVariant productVariant);
 
-    //public List<Warehouse> getWarehousesForSkuAndQty(List<Sku> skuList, Long qty);
+  public boolean allInventoryCheckedIn(GoodsReceivedNote grn);
 
-    public Supplier getSupplierForSKU(Sku sku);
+  //Migrated from Inventory Manage Service
+  public List<SkuItemCLI> saveSkuItemCLI(Set<SkuItem> skuItemsToBeBooked, CartLineItem cartLineItem);
 
-    public Long getBookedQtyOfSkuInQueue(List<Sku> sku);
+  public Long getAvailableUnBookedInventory(ProductVariant productVariant);
 
-    @Deprecated
-    public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList);
-    
-    long getUnbookedInventoryInProcessingQueue(LineItem lineItem);
+  public Long getAvailableUnbookedInventory(List<Sku> skuList, boolean addBrightInventory);
 
-    public long getUnbookedInventoryForActionQueue(LineItem lineItem);
+  public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
-    public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
-
-    public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);
-
-    public boolean allInventoryCheckedIn(GoodsReceivedNote grn);
+  public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);  
 
 }

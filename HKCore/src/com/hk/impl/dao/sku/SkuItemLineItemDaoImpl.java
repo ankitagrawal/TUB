@@ -66,5 +66,16 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
     return (List<SkuItemLineItem>) getSession().createQuery(sql).setParameter("skuItem", skuItem).list();
   }
 
+  public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
+    String sql = " from SkuItemCLI sicli where sicli.cartLineItem = :cartlineItem ";
+    List<SkuItemCLI> siclis = (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartlineItem", cartLineItem).list();
+    if (siclis != null && siclis.size() > 0) {
+      if (siclis.size() == cartLineItem.getQty()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
 }
