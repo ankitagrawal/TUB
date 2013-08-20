@@ -62,22 +62,25 @@ public class OrderUtil {
     }
 
     /**
-     * returns min/max dispatch days for set of product variants, [0] will be min days and [1] will be maax days
+     * returns min/max dispatch days for set of product variants, [0] will be min days and [1] will be max days
      * 
      * @param productVariants
      * @return
      */
     public static Long[] getDispatchDaysForVariants(Set<ProductVariant> productVariants) {
 
-        long minDays = DEFAULT_MIN_DEL_DAYS, maxDays = DEFAULT_MAX_DEL_DAYS;
+        long minDays = 1, maxDays = 3;
+        long defaultMinDays = DEFAULT_MIN_DEL_DAYS, defaultMaxDays = DEFAULT_MAX_DEL_DAYS;
 
         for (ProductVariant productVariant : productVariants) {
             if (productVariant != null) {
                 Product product = productVariant.getProduct();
-                if (product.getMinDays() != null && product.getMinDays() > minDays) {
+                long productMinDays = product.isJit() ? product.getMinDays() : defaultMinDays;
+                if (product.getMinDays() != null && productMinDays > minDays) {
                     minDays = product.getMinDays();
                 }
-                if (product.getMaxDays() != null && product.getMaxDays() > maxDays) {
+                long productMaxDays = product.isJit() ? product.getMaxDays() : defaultMaxDays;
+                if (product.getMaxDays() != null && productMaxDays > maxDays) {
                     maxDays = product.getMaxDays();
                 }
             }
