@@ -108,6 +108,8 @@ public class InventoryServiceImpl implements InventoryService {
         getComboService().markRelatedCombosOutOfStock(productVariant);
         //Update Low Inventory Record
         updateLowInventory(productVariant, availableUnbookedInventory, aggCutOffInv);
+        //recache freebies
+        getComboService().recacheFreebieProducts(productVariant);
       } catch (Exception e) {
         logger.error("Error while marking LowInv and UpdatePv: ", e);
       }

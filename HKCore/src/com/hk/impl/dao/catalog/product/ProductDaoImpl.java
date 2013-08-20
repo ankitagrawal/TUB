@@ -409,4 +409,11 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 		return findByQuery("select distinct(p.brand) from Product p where p.deleted = 0 and p.brand like '%" + brandLike + "%'");
 	}
 
+    @Override
+    public List<Product> getProductsWithFreebie(ProductVariant freeProductVariant) {
+        return getSession().createQuery("select distinct(p) from Product p, ProductVariant pv " +
+                "where pv.product = p.id and pv.freeProductVariant = :freeProductVariant")
+                .setParameter("freeProductVariant", freeProductVariant).list();
+    }
+
 }
