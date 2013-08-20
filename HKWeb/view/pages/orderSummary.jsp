@@ -128,6 +128,7 @@
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
 
+<%--
             <h5 class = "newTextHeading arialBlackBold">
                 SPECIAL INSTRUCTIONS
             </h5>
@@ -137,6 +138,7 @@
                 <div class="commentTypeText"><s:radio value="3" name="order.commentType" class="commentType" style="width: 11px;"/> Others</div>
             </div>
         <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" class="newTextArea" placeholder="(e.g. preferred delivery time)"/>
+--%>
           <%--<div class="title">
             <h5>
               Confirm order
