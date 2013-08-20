@@ -87,13 +87,14 @@ public class PaymentManager {
      * This method will throw an {@link com.hk.exception.HealthkartPaymentGatewayException} if the payment request
      * cannot be verified
      *
+     *
      * @param gatewayOrderId
      * @param amount
      * @param merchantParam
      * @throws com.hk.exception.HealthkartPaymentGatewayException
      *
      */
-    public void verifyPayment(String gatewayOrderId, Double amount, String merchantParam) throws HealthkartPaymentGatewayException {
+    public Payment verifyPayment(String gatewayOrderId, Double amount, String merchantParam) throws HealthkartPaymentGatewayException {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment == null) {
             logger.info("Payment not found with gateway order id {}", gatewayOrderId);
@@ -133,6 +134,7 @@ public class PaymentManager {
             logger.info("Seems like a double payment attempt. (or a page refresh)");
 //            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.DOUBLE_PAYMENT);
         }
+        return payment;
     }
 
     /**
