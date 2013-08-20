@@ -186,4 +186,6 @@ public class PermissionConstants {
     public static final String APPROVE_REVERSE_PICKUP = "APPROVE_REVERSE_PICKUP";
     public static final String AUTO_UPDATE_PAYMENT = "AUTO_UPDATE_PAYMENT";
     public static final String MANUAL_UPDATE_PAYMENT = "MANUAL_UPDATE_PAYMENT";
+
+    public static final String SCHEDULE_REVERSE_PICKUP = "SCHEDULE_REVERSE_PICKUP";
 }

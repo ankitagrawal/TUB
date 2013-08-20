@@ -972,15 +972,15 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
     }
 
-    public boolean sendSoFixedMail(HashMap<String, String> map){
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixedMail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
-    }
-    
-    public boolean sendSoFixFailedMail(HashMap<String, String> map){
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixFailedMail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
-    }
+//    public boolean sendSoFixedMail(HashMap<String, String> map){
+//        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixedMail);
+//        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
+//    }
+//
+//    public boolean sendSoFixFailedMail(HashMap<String, String> map){
+//        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixFailedMail);
+//        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
+//    }
     
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();
