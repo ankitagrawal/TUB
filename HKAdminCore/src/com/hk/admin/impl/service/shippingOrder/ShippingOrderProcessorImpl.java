@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumReconciliationActionType;
@@ -15,6 +16,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.User;
 import com.hk.helper.ShippingOrderHelper;
@@ -49,45 +51,47 @@ import java.util.*;
 @Service
 public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
-  private Logger						logger = LoggerFactory.getLogger(ShippingOrderProcessor.class);
+  private Logger						              logger = LoggerFactory.getLogger(ShippingOrderProcessor.class);
 
   @Autowired
-  private UserService					userService;
+  private UserService					            userService;
 
   @Autowired
-  private InventoryService			inventoryService;
-
-
-  @Autowired
-  private ShippingOrderDao			shippingOrderDao;
+  private InventoryService			          inventoryService;
 
   @Autowired
-  private ShippingOrderStatusService	shippingOrderStatusService;
+  private ShippingOrderDao			          shippingOrderDao;
 
   @Autowired
-  private ReconciliationStatusDao   	reconciliationStatusDao;
+  private ShippingOrderStatusService	    shippingOrderStatusService;
 
   @Autowired
-  private LineItemDao					lineItemDao;
+  private ReconciliationStatusDao   	    reconciliationStatusDao;
 
   @Autowired
-  private ReplacementOrderDao			replacementOrderDao;
+  private LineItemDao					            lineItemDao;
 
   @Autowired
-  private EmailManager				emailManager;
+  private ReplacementOrderDao			        replacementOrderDao;
 
   @Autowired
-  BucketService 						bucketService;
+  private EmailManager				            emailManager;
 
   @Autowired
-  private ShippingOrderService		shippingOrderService;
-
-  private OrderService				orderService;
+  BucketService 						              bucketService;
 
   @Autowired
-  private ShipmentService 			shipmentService;
+  private ShippingOrderService		        shippingOrderService;
 
-  private AdminShippingOrderService adminShippingOrderService;
+  private OrderService				            orderService;
+
+  @Autowired
+  private ShipmentService 			          shipmentService;
+
+  private AdminShippingOrderService       adminShippingOrderService;
+
+  @Autowired
+  private AdminInventoryService           adminInventoryService;
 
   @Transactional
   public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
@@ -505,7 +509,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     StringBuilder comment = new StringBuilder();
     ShippingOrder cancelledSO = null;
     for (LineItem lineItem : shippingOrder.getLineItems()) {
-      if (!(inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice()) >= lineItem.getQty())){
+      Long netQty = adminInventoryService.getNetInventoryAtServiceableWarehouses(lineItem.getSku().getProductVariant());
+      Long bookedQty = adminInventoryService.getBookedInventory(lineItem.getSku().getProductVariant());
+      if (!((netQty - bookedQty) >= lineItem.getQty())){
         outOfStockLineItems.add(lineItem);
       }
     }

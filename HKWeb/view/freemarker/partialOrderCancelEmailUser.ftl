@@ -52,11 +52,10 @@ Order Cancellation for Order ID ${shippingOrder.gatewayOrderId}
                 <tr>
                     <td width="579" valign="top">Hi ${order.user.name}! <br/>
                         <br/>
-                        Your partial order, dated ${order.payment.paymentDate}, for INR ${pricingDto.grandTotalPayable}, with order
-                        confirmation number ${order.gatewayOrderId} has been cancelled. <br/>
-                        We ran out of stock for the item(s) listed below or faced an increase in price of the item. We will be refunding/rewarding your
-                        money in the form of reward points at our store. We deeply regret the inconvenience caused to you.
-
+                        Our sincere apologies , the product your ordered , dated ${order.payment.paymentDate}, for INR ${shippingOrder.amount}, with order
+                        confirmation number ${shippingOrder.gatewayOrderId} could not be shipped.<br/>
+                        We have initiated refund for the same and the amount should reflect in your account in 7-10 business days.<br/>
+                        Please be rest assured as this is one off case. We look forward for your continued patronage with Healthkart.com.
                         <br/>
 
                         You had ordered for:<br/>
