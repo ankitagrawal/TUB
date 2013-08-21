@@ -19,6 +19,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
@@ -48,6 +49,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -635,6 +637,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   			hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
   			hkapiBookingInfo.setProductVariantId(cartLineItem.getProductVariant().getId());
   			hkapiBookingInfo.setQty(cartLineItem.getQty());
+  			hkapiBookingInfo.setBaseOrderId(cartLineItem.getOrder().getId());
   			hkapiBookingInfo.setWarehouseId(cartLineItem.getProductVariant().getWarehouse().getId());
 
   			Gson gson = new Gson();
@@ -647,18 +650,36 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   			int status = response.getStatus();
   			if (status == 200) {
   				String data = (String) response.getEntity(String.class);
-  				Boolean deleted = new Gson().fromJson(data, Boolean.class);
-  				if (deleted) {
+  				Type collectionType = new TypeToken<HashMap<Long, Long>>(){}.getType();
+  				HashMap<Long, Long> foreignSIList = gson.fromJson(data, collectionType);
+  				if (foreignSIList!=null && foreignSIList.size()>0) {
   					logger.debug("Successfully booked Bright Inventory against BO# " + cartLineItem.getOrder().getId());
+  					//populate our foreign table
+  					populateForeignSICLITable(cartLineItem, foreignSIList);
   				} else {
   					logger.debug("Could not book Bright Inventory against BO# " + cartLineItem.getOrder().getId());
   				}
   			}
   		} catch (Exception e) {
-  			logger.error("Exception while booking Bright Inventory against BO# " + cartLineItem.getOrder().getId(), e.getMessage());
+  			logger.error("Exception while booking Bright Inventory against BO# "+ cartLineItem.getOrder().getId() + e.getMessage());
   		}
-
   	}
+    
+    private void populateForeignSICLITable(CartLineItem cartLineItem, HashMap<Long, Long> siLiMap){
+    	if(siLiMap!=null && siLiMap.size()>0){
+    		Set<Entry<Long, Long>> entrySet = siLiMap.entrySet();
+    		for(Entry<Long, Long> entry: entrySet){
+    			ForeignSkuItemCLI foreignSkuItemCLI = new ForeignSkuItemCLI();
+        	foreignSkuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+        	foreignSkuItemCLI.setUnitNum(entry.getKey());
+        	foreignSkuItemCLI.setSkuItemId(entry.getValue());
+        	foreignSkuItemCLI.setCounter(1L);
+        	foreignSkuItemCLI.setCartLineItem(cartLineItem);
+        	baseDao.save(foreignSkuItemCLI);
+    		}
+    	}
+    	
+    }
 
 
     public void inventoryHealthCheck(ProductVariant productVariant) {
@@ -808,10 +829,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                             skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                             // todo Pvi entries
                             skuItem = (SkuItem) getBaseDao().save(skuItem);
-                            // inventoryHealthCheck call
-//                        inventoryHealthCheck(productVariant);
-
-                            // todo UpdatePrice and Mrp qyt
                             skuItemsToBeBooked.add(skuItem);
                         }
                     }

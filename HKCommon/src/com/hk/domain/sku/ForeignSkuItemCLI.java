@@ -2,10 +2,12 @@ package com.hk.domain.sku;
 
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +28,12 @@ public class ForeignSkuItemCLI {
   private Long id;
 
   @Column(name="foreign_sku_item_id")
-  private Long skuItem;
+  private Long skuItemId;
+  
+  @JsonSkip
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name="cart_line_item_id")
+  private CartLineItem cartLineItem;
 
   @Column(name="foreign_shipping_order_id")
   private Long foreignShippingOrderId;
@@ -49,7 +56,8 @@ public class ForeignSkuItemCLI {
   @Column(name = "update_dt", length = 19)
   private Date updateDate;
 
-  @Column(name = "product_variant_id", nullable = false)
+  @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_variant_id", nullable = false)
   private ProductVariant productVariant;
 
   public Long getId() {
@@ -100,12 +108,12 @@ public class ForeignSkuItemCLI {
     this.foreignOrderId = foreignOrderId;
   }
 
-	public Long getSkuItem() {
-		return skuItem;
+	public Long getSkuItemId() {
+		return skuItemId;
 	}
 
-	public void setSkuItem(Long skuItem) {
-		this.skuItem = skuItem;
+	public void setSkuItemId(Long skuItemId) {
+		this.skuItemId = skuItemId;
 	}
 
 	public Long getCounter() {
@@ -122,5 +130,13 @@ public class ForeignSkuItemCLI {
 
 	public void setProductVariant(ProductVariant productVariant) {
 		this.productVariant = productVariant;
+	}
+
+	public CartLineItem getCartLineItem() {
+		return cartLineItem;
+	}
+
+	public void setCartLineItem(CartLineItem cartLineItem) {
+		this.cartLineItem = cartLineItem;
 	}
 }

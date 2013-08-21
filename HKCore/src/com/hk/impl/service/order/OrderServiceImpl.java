@@ -808,7 +808,8 @@ public class OrderServiceImpl implements OrderService {
 			hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
 			hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
 			hkapiBookingInfo.setQty(lineItem.getQty());
-			hkapiBookingInfo.setLineItemId(lineItem.getId());
+			hkapiBookingInfo.setShippingOrderId(lineItem.getShippingOrder().getId());
+			hkapiBookingInfo.setBaseOrderId(lineItem.getCartLineItem().getId());
 			hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
 
 			Gson gson = new Gson();

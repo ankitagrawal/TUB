@@ -9,58 +9,67 @@ package com.hk.domain.api;
  */
 public class HKAPIBookingInfo {
 
-    private Double mrp;
-    private Long qty;
-    private Long cartLineItemId;
-    private Long lineItemId;
-    private Long warehouseId;
-    private String productVariantId;
+	private Double mrp;
+  private Long qty;
+  private Long cartLineItemId;
+  private Long shippingOrderId;
+  private Long baseOrderId;
+  private Long warehouseId;
+  private String productVariantId;
 
-    public Double getMrp() {
-        return mrp;
-    }
+  public Double getMrp() {
+    return mrp;
+  }
 
-    public void setMrp(Double mrp) {
-        this.mrp = mrp;
-    }
+  public void setMrp(Double mrp) {
+    this.mrp = mrp;
+  }
 
-    public Long getQty() {
-        return qty;
-    }
+  public Long getQty() {
+    return qty;
+  }
 
-    public void setQty(Long qty) {
-        this.qty = qty;
-    }
+  public void setQty(Long qty) {
+    this.qty = qty;
+  }
 
-    public Long getCartLineItemId() {
-        return cartLineItemId;
-    }
+  public Long getCartLineItemId() {
+    return cartLineItemId;
+  }
 
-    public void setCartLineItemId(Long cartLineItemId) {
-        this.cartLineItemId = cartLineItemId;
-    }
+  public void setCartLineItemId(Long cartLineItemId) {
+    this.cartLineItemId = cartLineItemId;
+  }
 
-    public Long getLineItemId() {
-        return lineItemId;
-    }
+  public Long getWarehouseId() {
+    return warehouseId;
+  }
 
-    public void setLineItemId(Long lineItemId) {
-        this.lineItemId = lineItemId;
-    }
+  public void setWarehouseId(Long warehouseId) {
+    this.warehouseId = warehouseId;
+  }
 
-    public Long getWarehouseId() {
-        return warehouseId;
-    }
+  public String getProductVariantId() {
+    return productVariantId;
+  }
 
-    public void setWarehouseId(Long warehouseId) {
-        this.warehouseId = warehouseId;
-    }
+  public void setProductVariantId(String productVariantId) {
+    this.productVariantId = productVariantId;
+  }
 
-    public String getProductVariantId() {
-        return productVariantId;
-    }
+  public Long getShippingOrderId() {
+    return shippingOrderId;
+  }
 
-    public void setProductVariantId(String productVariantId) {
-        this.productVariantId = productVariantId;
-    }
+  public void setShippingOrderId(Long shippingOrderId) {
+    this.shippingOrderId = shippingOrderId;
+  }
+
+  public Long getBaseOrderId() {
+    return baseOrderId;
+  }
+
+  public void setBaseOrderId(Long baseOrderId) {
+    this.baseOrderId = baseOrderId;
+  }
 }
