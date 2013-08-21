@@ -78,6 +78,10 @@ public enum EnumSkuItemStatus {
     return Arrays.asList(EnumSkuItemStatus.Checked_IN, EnumSkuItemStatus.TEMP_BOOKED, EnumSkuItemStatus.BOOKED);
   }
 
+   public static List<Long> getCheckedInPlusBookedStatus() {
+    return Arrays.asList(EnumSkuItemStatus.Checked_IN.getId(), EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId());
+  }
+
 
   public static List<Long> getSkuItemStatusIDs(List<EnumSkuItemStatus> enumSkuItemStatuses) {
     List<Long> skuItemStatusIds = new ArrayList<Long>();

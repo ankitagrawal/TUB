@@ -40,7 +40,6 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.pact.dao.inventory.LowInventoryDao;
-import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -63,8 +62,6 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     ProductVariant                productVariant;
     Product                       product;
     private Boolean               unbookedInventoryRequired;
-    @Autowired
-    ProductVariantInventoryDao    productVariantInventoryDao;
     @Autowired
     LowInventoryDao               lowInventoryDao;
     @Autowired

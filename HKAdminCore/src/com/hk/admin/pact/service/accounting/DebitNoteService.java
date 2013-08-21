@@ -21,8 +21,7 @@ public interface DebitNoteService {
 
     public DebitNoteDto generateDebitNoteDto(DebitNote debitNote);
 
-    public DebitNote createDebitNoteLineItem(DebitNote debitNote, List<RtvNoteLineItem> rtvNoteLineItems,
-                                             List<ExtraInventoryLineItem> extraInventoryLineItems);
+    public DebitNote createDebitNoteLineItem(DebitNote debitNote, List<ExtraInventoryLineItem> extraInventoryLineItems);
     
     public DebitNote createDebitNoteLineItemWithRVLineItems(DebitNote debitNote, List<RvLineItem> rvLineItems);
 

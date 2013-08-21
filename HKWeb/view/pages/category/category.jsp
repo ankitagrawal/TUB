@@ -179,42 +179,55 @@
                          class="small_banner"/>
                 </a>
               <script type="text/javascript">
-                $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
-                $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
-                $(".bulkOrder").click(function() {
+                  $(".bulkOrder").live('click', function () {
                   $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
-                });
+                      $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
+                      $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                  });
+
+                  $(".dietPlan").live('click', function () {
+                      $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                      $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
+                      $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                  });
               </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
-                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
-                    <img src="${pageContext.request.contextPath}/images/banners/patanjali-banner.jpg"
-                         alt="Patanjali Offer" class="small_banner"/>
+                <a class="dietPlan" href="#" style="cursor: pointer;">
+                                    <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
+                                         alt="DIET_PLAN" class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/health-nutrition/shop-by-need/hair-skin-nails">
                     <img src="${pageContext.request.contextPath}/images/banners/Hair-skin-nails.jpg"
                          alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
+                <script type="text/javascript">
+                                 $(".dietPlan").live('click', function () {
+                                     $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                                     $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
+                                     $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                                 });
+                             </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq homeLiving}">
-                <a class="bulkOrder" href="#" style="cursor: pointer;">
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/westinghouse-1750gs-hand-blender/WST001">
-                    <img src="<hk:vhostImage/>/images/banners/westinghouse-product-of-the-week-(static-banner).jpg"
+                <a href="${pageContext.request.contextPath}/product/eveready-rechargeable-fan/EVE015?productReferrerId=24&productPosition=1/11">
+                    <img src="<hk:vhostImage/>/images/banners/home-live-Banner.jpg"
                          alt="Brand of the Week"
                          class="small_banner"/>
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <%--<a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">--%>
-                <img src="<hk:vhostImage/>/images/banners/goodnight.jpg" alt="self-defence"
+                <a href="${pageContext.request.contextPath}/personal-care">
+                <img src="<hk:vhostImage/>/images/banners/Goodnightcategory1.jpg" alt="self-defence"
                      class="small_banner"/>
                 <%--</a>--%>
-                <a href="${pageContext.request.contextPath}/product/instant-ovulation-test/PW006?productReferrerId=7&productPosition=1/1">
-                    <img src="<hk:vhostImage/>/images/banners/Know-when.jpg" alt="Sexual-wellness`"
+                <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
+                    <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -223,8 +236,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/health-devices/Equinox">
-                    <img src="<hk:vhostImage/>/images/banners/Equinox.jpg" alt="Equinox"
+                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7112/HB023?productReferrerId=1&productPosition=1/1">
+                    <img src="<hk:vhostImage/>/images/banners/omron.jpg" alt="Omron"
                          class="small_banner"/>
                 </a>
             </c:when>
@@ -250,8 +263,10 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq beauty}">
-                    <img src="<hk:vhostImage/>/images/banners/Surprise-gift.jpg" alt="surpeise-gift"
-                         class="small_banner"/>
+                    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                        <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                             class="small_banner"/>
+                    </a>
                 <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
                     <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
                          class="small_banner"/>
@@ -259,12 +274,12 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq diabetes}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
+                    <img src="<hk:vhostImage/>/images/banners/Contour-super-saver-pack.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/diabetes/OneTouch">
-                    <img src="<hk:vhostImage/>/images/banners/Onetouch.jpg" alt="diabetes"
+                <a href="${pageContext.request.contextPath}/brand/diabetes/Accu-Chek">
+                    <img src="<hk:vhostImage/>/images/banners/Accu-chek1.jpg" alt="diabetes"
                          class="small_banner"/>
                 </a>
             </c:when>

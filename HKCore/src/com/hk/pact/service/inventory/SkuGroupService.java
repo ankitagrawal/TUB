@@ -1,10 +1,9 @@
 package com.hk.pact.service.inventory;
 
-import com.hk.domain.inventory.GrnLineItem;
-import com.hk.domain.sku.*;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
-
+import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.sku.*;
 
 import java.util.List;
 
@@ -17,72 +16,59 @@ import java.util.List;
  */
 public interface SkuGroupService {
 
-    //SkuGroupDao method
-    public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant);
+  /**
+   * SkuGroupDao Methods *
+   */
+  public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant);
 
-    public List<SkuGroup> getAllCheckedInBatches(Sku sku);
+  public List<SkuGroup> getAllCheckedInBatches(Sku sku);
 
-    public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId);
-    
-    public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds);
+  public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds);
 
-    public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
+  public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
 
-    public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);
+  public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);
 
-    public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
+  public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId);
 
-    public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
+  public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem);
 
-    public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId);
+  public void deleteSkuGroup(SkuGroup skuGroup);
 
-    public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem);
+  public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
 
-    public void deleteSkuGroup(SkuGroup skuGroup);
-
-    public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
-    
-    public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
+  public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
 
 
-    //SkuItemDao Methods
+  /**
+   * SkuItemDao Methods *
+   */
+  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-    public List<SkuGroup> getInStockSkuGroups(Sku sku);
+  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
 
-    public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
+  public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList);
 
-    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
-    
-    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
+  public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
 
-    public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
+  public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
 
-    public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatusList);
+  public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners);
 
-    public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
+  public SkuItem saveSkuItem(SkuItem skuItem);
 
-    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+  public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup);
 
-    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners);
+  public List<SkuItem> getCheckedInSkuItems(Sku sku);
 
-    public SkuItem saveSkuItem(SkuItem skuItem);
+  /**
+   * A generic method for fetching List of SkuItems with given Sku, status and SkuItemOwners
+   *
+   * @param skuList
+   * @param statusIds
+   * @param skuItemOwners
+   * @return
+   */
+  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<Long> skuItemOwners, Double mrp);
 
-    public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup);
-
-    public List<SkuItem> getCheckedInSkuItems(Sku sku);
-    
-    public List<SkuItem> getSkuItem(Sku sku, Long id);
-
-    /**
-     *  A generic method for fetching List of SkuItems with given Sku, status and SkuItemOwners
-     * @param skuList
-     * @param statusIds
-     * @param skuItemOwners
-     * @return
-     */
-    public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<SkuItemOwner> skuItemOwners, Double mrp);
-
-    public SkuItem getSkuItemWithStatusAndOwner(SkuGroup skuGroup, SkuItemStatus skuItemStatus, SkuItemOwner skuItemOwner);
-
-    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId, SkuItemOwner skuItemOwner);
 }

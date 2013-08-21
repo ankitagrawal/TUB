@@ -19,7 +19,6 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.manager.*;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.OrderService;
