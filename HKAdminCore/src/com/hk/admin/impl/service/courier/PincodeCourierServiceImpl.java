@@ -15,7 +15,6 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.util.HKDateUtil;
 import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +41,6 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
 
     @Autowired
     ShipmentDao shipmentDao;
-
-    @Autowired
-    ShipmentService shipmentService;
-
 
     @Override
     public boolean isCodAllowed(String pin) {

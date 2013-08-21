@@ -1228,8 +1228,18 @@ public class AdminEmailManager {
     	boolean sent = emailService.sendEmail(freemarkerTemplate, valuesMap, user.getEmail(),"HK Admin", fromPurchaseEmail, "", null, null, emailIds, null, null, null);
     	return sent;
     }
-    
-    
+
+    public void sendManualRefundTaskToAdmin(Double amount, String gatewayOrderId, String gateway) {
+        HashMap valueMap = new HashMap();
+        valueMap.put("username","Admin");
+        valueMap.put("gatewayOrderId", gatewayOrderId);
+        valueMap.put("amount",amount);
+        valueMap.put("gateway",gateway);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.manualRefundTaskToAdminMail);
+        emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "cs.payments@healthkart.com", "Admin");
+    }
+
+
     static enum Product_Status {
 
     }

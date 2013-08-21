@@ -123,7 +123,10 @@ public enum EnumPermission {
   CREATE_REVERSE_PICKUP                          (PermissionConstants.CREATE_REVERSE_PICKUP),
   VIEW_REVERSE_PICKUP                            (PermissionConstants.VIEW_REVERSE_PICKUP),
   EDIT_REVERSE_PICKUP                            (PermissionConstants.EDIT_REVERSE_PICKUP),
-  APPROVE_REVERSE_PICKUP                         (PermissionConstants.APPROVE_REVERSE_PICKUP);
+  APPROVE_REVERSE_PICKUP                         (PermissionConstants.APPROVE_REVERSE_PICKUP),
+  AUTO_UPDATE_PAYMENT                            (PermissionConstants.AUTO_UPDATE_PAYMENT),
+  MANUAL_UPDATE_PAYMENT                          (PermissionConstants.MANUAL_UPDATE_PAYMENT)
+  ;
 
   String permissionName;
 

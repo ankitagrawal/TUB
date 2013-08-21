@@ -4,13 +4,10 @@ import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
@@ -20,13 +17,9 @@ import com.hk.domain.user.BillingAddress;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
-import com.hk.pact.dao.InventoryManagement.InventoryManageService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
-import com.hk.web.action.core.cart.CartAction;
-import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.factory.PaymentModeActionFactory;
-import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -38,7 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Author: Pratham
@@ -72,10 +66,6 @@ public class PaymentAction extends BaseAction {
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
-
-    @Autowired
-    InventoryManageService inventoryManageService;
-
     /*
    algorithm to route multiple gateways, first let the customer choose the issuer now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
    then you iterate over your faddu logic, to decide which gateway won then call the action corresponding to that gateway along with the issuer if needed

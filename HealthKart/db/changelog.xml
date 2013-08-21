@@ -13945,4 +13945,23 @@
             <column name="line_item_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130812-01">
+        <sql>
+            insert into classification(`id` ,`primary`,`secondary`) values
+            (1500,'Refund Failed',null),
+            (1510,'Refund Successful',null),
+            (1520,'Reward Point Given',null),
+            (1530,'Reward Point not given',null),
+            (1540,'Refund in process',null),
+            (1550,'Manual refund task mail sent to admin',null);
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (1100,'Reconciliation',1500),
+            (1110,'Reconciliation',1510),
+            (1120,'Reconciliation',1520),
+            (1130,'Reconciliation',1530),
+            (1140,'Reconciliation',1540),
+            (1150,'Reconciliation',1550);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
