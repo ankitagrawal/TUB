@@ -261,14 +261,16 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                   EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
               EnumReason.PROD_INV_MISMATCH.asReason(), comments);
         } else if( this.countValidSILI(lineItem.getSkuItemLineItems()) < orderedQty) {
-          // if partial inventory has been booked for the line item
-          selectedItems.add(lineItem);
-          String comments = "Partial inventory booked for " + lineItem.getSku().getProductVariant();
-          logger.debug(comments);
-          shippingOrderService.logShippingOrderActivity(shippingOrder, user,
-              shippingOrderService.getShippingOrderLifeCycleActivity(
-                  EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
-              EnumReason.PROD_INV_MISMATCH.asReason(), comments);
+          // also if there is no unbooked inventory at different MRP
+          if (inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), null) < orderedQty) {
+            selectedItems.add(lineItem);
+            String comments = "Partial inventory booked for " + lineItem.getSku().getProductVariant();
+            logger.debug(comments);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, user,
+                shippingOrderService.getShippingOrderLifeCycleActivity(
+                    EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
+                EnumReason.PROD_INV_MISMATCH.asReason(), comments);
+          }
         }
       }
     }
