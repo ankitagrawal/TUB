@@ -184,12 +184,6 @@
                       $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
                       $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
                   });
-
-                  $(".dietPlan").live('click', function () {
-                      $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
-                      $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
-                      $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
-                  });
               </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
@@ -197,8 +191,8 @@
                                     <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
                                          alt="DIET_PLAN" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/health-nutrition/shop-by-need/hair-skin-nails">
-                    <img src="${pageContext.request.contextPath}/images/banners/Hair-skin-nails.jpg"
+                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Nature%27s+Herbs">
+                    <img src="${pageContext.request.contextPath}/images/banners/nature's-herb-static-banner.jpg"
                          alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
@@ -222,10 +216,10 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/personal-care">
-                <img src="<hk:vhostImage/>/images/banners/Goodnightcategory1.jpg" alt="self-defence"
-                     class="small_banner"/>
-                <%--</a>--%>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
                     <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
