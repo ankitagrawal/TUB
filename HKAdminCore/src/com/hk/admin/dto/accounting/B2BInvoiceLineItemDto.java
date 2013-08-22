@@ -1,7 +1,9 @@
 package com.hk.admin.dto.accounting;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.hk.constants.core.TaxConstants;
@@ -13,6 +15,8 @@ import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItemLineItem;
 
 public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 
@@ -21,8 +25,10 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 	private List<ProductOption> productOptions;
 	private List<CartLineItemExtraOption> cartLineItemExtraOptions;
 	private Set<CartLineItemConfigValues> cartLineItemConfigValues;
+    private List<SkuItemLineItem>         skuItemLineItems;
 	private String productName;
 	private String variantName;
+    private String variantId;
 	private long qty;
 	private double markedPrice;
 	private double hkPrice;
@@ -38,6 +44,7 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 	private double taxable;
 	private double tax;
 	private double surcharge;
+    Map<String, Long> skuGroupLongMap;
 	
 
 	public B2BInvoiceLineItemDto(LineItem productLineItem, String state, boolean cFormAvailable) {
@@ -45,15 +52,27 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 		productCategories = productLineItem.getSku().getProductVariant().getProduct().getCategories();
 		productName = productLineItem.getSku().getProductVariant().getProduct().getName();
 		variantName = productLineItem.getSku().getProductVariant().getVariantName();
+        variantId   = productLineItem.getSku().getProductVariant().getId();
 		productOptions = productLineItem.getSku().getProductVariant().getProductOptions();
 		cartLineItemExtraOptions = productLineItem.getCartLineItem().getCartLineItemExtraOptions();
+        skuItemLineItems = productLineItem.getSkuItemLineItems();
 		CartLineItemConfig cartLineItemConfig = productLineItem.getCartLineItem().getCartLineItemConfig();
 		if (cartLineItemConfig != null) {
 			cartLineItemConfigValues = cartLineItemConfig.getCartLineItemConfigValues();
 		}
-		
-		
-		qty = productLineItem.getQty();
+		skuGroupLongMap = new HashMap<String, Long>();
+        for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+            String batchNumber = skuItemLineItem.getSkuItem().getSkuGroup().getBatchNumber();
+            if(skuGroupLongMap.get(batchNumber)!=null){
+                Long qty = skuGroupLongMap.get(batchNumber);
+                ++qty;
+                skuGroupLongMap.put(batchNumber, qty);
+            }
+            else
+                skuGroupLongMap.put(batchNumber, 1l);
+        }
+
+        qty = productLineItem.getQty();
 
 		markedPrice = productLineItem.getMarkedPrice();
 		hkPrice = productLineItem.getHkPrice();
@@ -115,7 +134,15 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 
 	}
 
-	public LineItem getProductLineItem() {
+    public String getVariantId() {
+        return variantId;
+    }
+
+    public void setVariantId(String variantId) {
+        this.variantId = variantId;
+    }
+
+    public LineItem getProductLineItem() {
 		return productLineItem;
 	}
 
@@ -211,9 +238,20 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 	public Set<CartLineItemConfigValues> getCartLineItemConfigValues() {
 		return cartLineItemConfigValues;
 	}
-	
 
-	public String getExtraOptionsPipeSeparated() {
+    public List<SkuItemLineItem> getSkuItemLineItems() {
+        return skuItemLineItems;
+    }
+
+    public Map<String, Long> getSkuGroupLongMap() {
+        return skuGroupLongMap;
+    }
+
+    public void setSkuGroupLongMap(Map<String, Long> skuGroupLongMap) {
+        this.skuGroupLongMap = skuGroupLongMap;
+    }
+
+    public String getExtraOptionsPipeSeparated() {
 		StringBuffer stringBuffer = new StringBuffer();
 		if (cartLineItemExtraOptions != null) {
 			for (CartLineItemExtraOption cartLineItemExtraOption : cartLineItemExtraOptions) {
