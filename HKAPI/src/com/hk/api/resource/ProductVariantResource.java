@@ -4,11 +4,14 @@ package com.hk.api.resource;
 import com.hk.api.pact.service.HKAPIProductService;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.store.StoreProduct;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.core.WarehouseService ;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.json.JSONResponseBuilder;
 import org.apache.commons.lang.StringUtils;
@@ -22,6 +25,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.util.List;
 
 /**
  * @author vaibhav.adlakha
@@ -31,125 +35,155 @@ import javax.ws.rs.Produces;
 @Component
 public class ProductVariantResource {
 
-  @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-  String adminUploadsPath;
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    String adminUploadsPath;
 
-  private ProductVariantService productVariantService;
-  private InventoryService inventoryService;
-  private SkuService skuService;
-  private StoreService storeService;
+    private ProductVariantService productVariantService;
+    private InventoryService inventoryService;
+    private SkuService skuService;
+    private StoreService storeService;
+    private WarehouseService warehouseService;
 
-  @Autowired
-  private HKAPIProductService hkapiProductService;
+    @Autowired
+    private HKAPIProductService hkapiProductService;
 
-  @SuppressWarnings("unused")
-  private static Logger logger = LoggerFactory.getLogger(ProductVariantResource.class);
+    @SuppressWarnings("unused")
+    private static Logger logger = LoggerFactory.getLogger(ProductVariantResource.class);
 
 
-  @GET
-  @Path("/{variantId}/price/{storeId}")
-  @Produces("application/json")
-  public String variantPrice(@PathParam("variantId") String variantId, @PathParam("storeId") Long storeId) {
-    if (StringUtils.isBlank(variantId)) {
-      return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+    @GET
+    @Path("/{variantId}/price/{storeId}")
+    @Produces("application/json")
+    public String variantPrice(@PathParam("variantId") String variantId, @PathParam("storeId") Long storeId) {
+        if (StringUtils.isBlank(variantId)) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        }
+
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+
+        if (productVariant == null) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+        }
+
+        //boolean isVisible = !(productVariant.getDeleted() || productVariant.isOutOfStock());
+        boolean isVisible = false;
+        Long unbookedInventory = 0L;
+        unbookedInventory = getInventoryService().getAllowedStepUpInventory(productVariant);
+
+        if (unbookedInventory > 0) {
+            isVisible = true;
+        }
+        int visibleNumber = isVisible ? 1 : 0;
+        StoreProduct storeProduct;
+        if (storeId != null) {
+            storeProduct = getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getStoreById(storeId));
+        } else {
+            storeProduct = getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getDefaultStore());
+        }
+        if (storeProduct != null && !storeProduct.isHidden()) {
+            //don't get confused hkPrice field is actually the store price
+            return new JSONResponseBuilder().addField("hkPrice", storeProduct.getStorePrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible", visibleNumber).build();
+        } else {
+            return new JSONResponseBuilder().addField("hkPrice", productVariant.getHkPrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible", visibleNumber).build();
+        }
+
     }
 
-    ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
 
-    if (productVariant == null) {
-      return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+    @GET
+    @Path("/unbookedInventory/{variantId}")
+    @Produces("application/json")
+    public String getUnbookedInventory(@PathParam("variantId") String variantId) {
+        if (StringUtils.isBlank(variantId)) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        }
+
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+
+        if (productVariant == null) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+        }
+        Long unbookedQtyAqua = getInventoryService().getAvailableUnBookedInventory(productVariant);
+
+        return new JSONResponseBuilder().addField("variantId", variantId).addField("qty", unbookedQtyAqua).build();
+
     }
 
-    //boolean isVisible = !(productVariant.getDeleted() || productVariant.isOutOfStock());
-    boolean isVisible = false;
-    Long unbookedInventory = 0L;
-    unbookedInventory = getInventoryService().getAllowedStepUpInventory(productVariant);
 
-    if (unbookedInventory > 0) {
-      isVisible = true;
-    }
-    int visibleNumber = isVisible ? 1 : 0;
-    StoreProduct storeProduct;
-    if (storeId != null) {
-      storeProduct = getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getStoreById(storeId));
-    } else {
-      storeProduct = getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getDefaultStore());
-    }
-    if (storeProduct != null && !storeProduct.isHidden()) {
-      //don't get confused hkPrice field is actually the store price
-      return new JSONResponseBuilder().addField("hkPrice", storeProduct.getStorePrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible", visibleNumber).build();
-    } else {
-      return new JSONResponseBuilder().addField("hkPrice", productVariant.getHkPrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible", visibleNumber).build();
+    @GET
+    @Path("/{variantId}/inventoryhealthcheck")
+    @Produces("application/json")
+    public String variantPrice(@PathParam("variantId") String variantId) {
+        if (StringUtils.isBlank(variantId)) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        }
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+        if (productVariant == null) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+        }
+        logger.debug("Aqua inventoryhealthcheck called by Bright for Variant = " + variantId);
+        getInventoryService().checkInventoryHealth(productVariant);
+
+        return new JSONResponseBuilder().addField("outofstock", productVariant.isOutOfStock()).build();
+
     }
 
-  }
 
+    @GET
+    @Path("/skuInfo/{variantId}/{tinPrefix}")
+    @Produces("application/json")
+    public String getSKUInfo(@PathParam("variantId") String variantId, @PathParam("tinPrefix") String tinPrefix) {
+        if (StringUtils.isBlank(variantId)) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        }
 
-  @GET
-  @Path("/unbookedInventory/{variantId}")
-  @Produces("application/json")
-  public String getUnbookedInventory(@PathParam("variantId") String variantId) {
-    if (StringUtils.isBlank(variantId)) {
-      return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+
+        if (productVariant == null) {
+            return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+        }
+
+        List<Warehouse> whList = getWarehouseService().findWarehouses(tinPrefix);
+        Sku aquaSku = getSkuService().getSKU(productVariant,whList.get(0)) ;
+
+        return new JSONResponseBuilder().addField("variantId", variantId).addField("warehouseId", aquaSku.getId()).build();
+
     }
 
-    ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
-
-    if (productVariant == null) {
-      return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+    public ProductVariantService getProductVariantService() {
+        if (productVariantService == null) {
+            productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
+        }
+        return productVariantService;
     }
-    Long unbookedQtyAqua = getInventoryService().getAvailableUnBookedInventory(productVariant);
 
-    return new JSONResponseBuilder().addField("variantId", variantId).addField("qty", unbookedQtyAqua).build();
-
-  }
-
-
-  @GET
-  @Path("/{variantId}/inventoryhealthcheck")
-  @Produces("application/json")
-  public String variantPrice(@PathParam("variantId") String variantId) {
-    if (StringUtils.isBlank(variantId)) {
-      return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
+    public InventoryService getInventoryService() {
+        if (inventoryService == null) {
+            inventoryService = ServiceLocatorFactory.getService(InventoryService.class);
+        }
+        return inventoryService;
     }
-    ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
-    if (productVariant == null) {
-      return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
+
+    public StoreService getStoreService() {
+        if (storeService == null) {
+            storeService = ServiceLocatorFactory.getService(StoreService.class);
+        }
+        return storeService;
     }
-    logger.debug("Aqua inventoryhealthcheck called by Bright for Variant = " + variantId);
-    getInventoryService().checkInventoryHealth(productVariant);
 
-    return new JSONResponseBuilder().addField("outofstock", productVariant.isOutOfStock()).build();
-
-  }
-
-
-  public ProductVariantService getProductVariantService() {
-    if (productVariantService == null) {
-      productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
+    public SkuService getSkuService() {
+        if (skuService == null) {
+            skuService = ServiceLocatorFactory.getService(SkuService.class);
+        }
+        return skuService;
     }
-    return productVariantService;
-  }
 
-  public InventoryService getInventoryService() {
-    if (inventoryService == null) {
-      inventoryService = ServiceLocatorFactory.getService(InventoryService.class);
+    public WarehouseService getWarehouseService() {
+        if (warehouseService == null) {
+            warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+        }
+        return warehouseService;
     }
-    return inventoryService;
-  }
 
-  public StoreService getStoreService() {
-    if (storeService == null) {
-      storeService = ServiceLocatorFactory.getService(StoreService.class);
-    }
-    return storeService;
-  }
-
-  public SkuService getSkuService() {
-    if (skuService == null) {
-      skuService = ServiceLocatorFactory.getService(SkuService.class);
-    }
-    return skuService;
-  }
 
 }

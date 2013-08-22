@@ -396,7 +396,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
         if (infos != null && infos.size()<= 0) {
             // make a call to Bright side for inventory Info
-           infos =  avaialbleSkuInfoInfoOfBright(variant);
+           infos =  avaialbleSkuInfoInfoOfBright(variant , cartLineItem.getId());
 
         }
         boolean invAdded = false;
@@ -876,10 +876,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
 
-    private Collection<InventoryInfo> avaialbleSkuInfoInfoOfBright(ProductVariant productVariant) {
+    private Collection<InventoryInfo> avaialbleSkuInfoInfoOfBright(ProductVariant productVariant, Long cartlineItemId) {
         Collection<InventoryInfo>  infos = null;
         try {
-            String url = brightlifecareRestUrl + "product/variant/splitterInfo/" + productVariant.getId();
+            String url = brightlifecareRestUrl + "product/variant/splitterInfo/" + productVariant.getId()+"/" + cartlineItemId;
             ClientRequest request = new ClientRequest(url);
             ClientResponse response = request.get();
             int status = response.getStatus();
@@ -890,8 +890,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 infos = new Gson().fromJson(data, listType);
             }
         } catch (Exception e) {
-            logger.error("Exception while getting Bright InventoryInfo list", e.getMessage());
-        }        return infos;
+            e.printStackTrace();
+            logger.error("Exception while getting Bright InventoryInfo list", e.getStackTrace());
+        }
+        return infos;
     }
 
 
