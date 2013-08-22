@@ -14062,6 +14062,9 @@
             </column>
             <column name="foreign_base_order_id" type="INT"/>
             <column name="foreign_shipping_order_id" type="INT"/>
+            <column name="booking_status" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
