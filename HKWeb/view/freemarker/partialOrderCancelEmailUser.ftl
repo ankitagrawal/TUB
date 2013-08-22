@@ -1,8 +1,8 @@
-Order Cancellation for Order ID ${shippingOrder.gatewayOrderId}
+Partial Order Cancellation for Order ID ${order.gatewayOrderId}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Your order has been cancelled.</title>
+    <title>Your order has been cancelled partially.</title>
 </head>
 
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
@@ -53,12 +53,13 @@ Order Cancellation for Order ID ${shippingOrder.gatewayOrderId}
                     <td width="579" valign="top">Hi ${order.user.name}! <br/>
                         <br/>
                         Our sincere apologies , the product your ordered , dated ${order.payment.paymentDate}, for INR ${shippingOrder.amount}, with order
-                        confirmation number ${shippingOrder.gatewayOrderId} could not be shipped.<br/>
+                        confirmation number ${order.gatewayOrderId} could not be shipped.<br/>
                         We have initiated refund for the same and the amount should reflect in your account in 7-10 business days.<br/>
-                        Please be rest assured as this is one off case. We look forward for your continued patronage with Healthkart.com.
+                        Please be assured that the remaining products of your order will be processed (if not processed yet) as communicated earlier.
+                        <br/>We look forward for your continued patronage with Healthkart.com.
                         <br/>
 
-                        You had ordered for:<br/>
+                        The canceled product(s) are:<br/>
                         <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
                             <tr>
                                 <td><strong>Item</strong></td>
