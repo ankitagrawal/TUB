@@ -65,7 +65,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 							<td><strong>Quantity</strong></td>
 							<td><strong>TrackingId</strong></td>
 							<td><strong>Courier</strong></td>
-						</tr>
+                            <td><strong>Est. Delivery Date</strong></td>
+                        </tr>
 					<#list order.lineItems as lineItem>
 						<tr>
 
@@ -92,6 +93,9 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 							<td>
 							${order.shipment.awb.courier.name}
 							</td>
+                            <td>
+                            ${targetDeliverDate}
+                            </td>
 						</tr>
 					</#list>
 					</table>
