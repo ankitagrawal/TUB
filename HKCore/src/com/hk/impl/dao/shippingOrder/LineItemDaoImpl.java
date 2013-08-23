@@ -30,8 +30,9 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
     }
 
     public LineItem getLineItem(CartLineItem cartLineItem) {
-        String query = "select li from LineItem li where li.cartLineItem = :cartLineItem";
-        return (LineItem) getSession().createQuery(query).setParameter("cartLineItem", cartLineItem).uniqueResult();
+        String query = "select li from LineItem li where li.cartLineItem = :cartLineItem order by id desc";
+        List<LineItem> lineItems = (List<LineItem>) getSession().createQuery(query).setParameter("cartLineItem", cartLineItem).list();
+        return lineItems != null && !lineItems.isEmpty() ? lineItems.get(0) : null;
     }
 
     public void flipProductVariants(Sku srcSku, Sku dstSku, ShippingOrder shippingOrder) {
