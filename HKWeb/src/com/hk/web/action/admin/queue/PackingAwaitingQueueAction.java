@@ -132,47 +132,46 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
       // Creating acceptable reasons for escalate back
       Set<Long> acceptableReasons = EnumReason.getAcceptableReasonIDsEscalateBack();
 
-      boolean isEscalateBackAllowed;
+      boolean isAutoEscalateBackAllowed;
       List<Long> shippingOrderIdsWithInvalidReason = new ArrayList<Long>();
-      //   List<Long> shippingOrdersWithoutFixedLI = new ArrayList<Long>();
+      List<Long> shippingOrdersWithoutFixedLI = new ArrayList<Long>();
 
       for (ShippingOrder shippingOrder : shippingOrderList) {
-        isEscalateBackAllowed = false;
+        isAutoEscalateBackAllowed = false;
         if (shippingOrder.getReason() != null) {
-            //&& acceptableReasons.contains(shippingOrder.getReason().getId())) {
-          List<ShippingOrderLifecycle> lifeCycles =
-              shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(),
-              EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed.getId());
-          if (lifeCycles != null && !lifeCycles.isEmpty() ) {
-            // then only allow escalate back
-            isEscalateBackAllowed = true;
+          if (acceptableReasons.contains(shippingOrder.getReason().getId())) {
+            List<ShippingOrderLifecycle> lifeCycles =
+                shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(),
+                    EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed.getId());
+            if (lifeCycles != null && !lifeCycles.isEmpty() ) {
+              // then only allow auto escalate back
+              isAutoEscalateBackAllowed = true;
+            } else {
+              shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
+              continue;
+            }
           }
         } else {
           shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
-          continue;
         }
-        if (isEscalateBackAllowed) {
-         // adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder,true);
-          // allowing escalate back only for now, upper line will be uncommented in future release and line below will be deleted
-          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+        if (isAutoEscalateBackAllowed) {
+          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder, true);
         } else {
           adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
         }
       }
 
       if (shippingOrderIdsWithInvalidReason.size() > 0) {
-        addRedirectAlertMessage(new SimpleMessage("Invalid or No Reasons selected for shipping order -> "
+        addRedirectAlertMessage(new SimpleMessage("No reasons selected for shipping order -> "
             + shippingOrderIdsWithInvalidReason ));
       }
-
-           /* if (shippingOrdersWithoutFixedLI.size() > 0 ) {
-                addRedirectAlertMessage(new SimpleMessage("Unfixed Line items not found for shipping order -> "
-                        + shippingOrdersWithoutFixedLI));
-            }*/
-      if (shippingOrderList.size() != shippingOrderIdsWithInvalidReason.size()) {
-                    /*+ shippingOrdersWithoutFixedLI.size())*/
+      if (shippingOrdersWithoutFixedLI.size() > 0 ) {
+        addRedirectAlertMessage(new SimpleMessage("Unfixed Line items not found for shipping order -> "
+            + shippingOrdersWithoutFixedLI));
+      }
+      if (shippingOrderList.size() != shippingOrderIdsWithInvalidReason.size() + shippingOrdersWithoutFixedLI.size()) {
         addRedirectAlertMessage(new SimpleMessage("Orders with no errors have been moved back to Action" +
-            " Awaiting."));
+            " Awaiting and auto escalated forward if possible."));
       }
 
     } else {

@@ -8,6 +8,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
+import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
@@ -495,7 +496,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     Integer count = 0;
     for (SkuItemLineItem item: items) {
       if (item.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
-        count++;
+        if (EnumSkuGroupStatus.UNDER_REVIEW.equals(item.getSkuItem().getSkuGroup().getStatus())) {
+          break;
+        } else {
+          count++;
+        }
       }
     }
     return count;
