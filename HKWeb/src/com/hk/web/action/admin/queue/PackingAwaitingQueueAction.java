@@ -138,7 +138,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
       for (ShippingOrder shippingOrder : shippingOrderList) {
         isEscalateBackAllowed = false;
-        if (shippingOrder.getReason() != null && acceptableReasons.contains(shippingOrder.getReason().getId())) {
+        if (shippingOrder.getReason() != null) {
+            //&& acceptableReasons.contains(shippingOrder.getReason().getId())) {
           List<ShippingOrderLifecycle> lifeCycles =
               shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(),
               EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed.getId());
@@ -153,15 +154,12 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
          // adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder,true);
           // allowing escalate back only for now, upper line will be uncommented in future release and line below will be deleted
           adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
-        } else {
-          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
         }
       }
 
       if (shippingOrderIdsWithInvalidReason.size() > 0) {
-        // commented for now only
-      /*  addRedirectAlertMessage(new SimpleMessage("Invalid Reasons selected for shipping order -> "
-            + shippingOrderIdsWithInvalidReason + " They have been shifted to action awaiting only."));*/
+        addRedirectAlertMessage(new SimpleMessage("Invalid or No Reasons selected for shipping order -> "
+            + shippingOrderIdsWithInvalidReason ));
       }
 
            /* if (shippingOrdersWithoutFixedLI.size() > 0 ) {
