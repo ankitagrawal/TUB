@@ -145,22 +145,23 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
           if (lifeCycles != null && !lifeCycles.isEmpty() ) {
             // then only allow escalate back
             isEscalateBackAllowed = true;
-          } /*else {
-                        shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
-                    }*/
+          }
         } else {
           shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
         }
         if (isEscalateBackAllowed) {
-          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder,true);
+         // adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder,true);
+          // allowing escalate back only for now, upper line will be uncommented in future release and line below will be deleted
+          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
         } else {
           adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
         }
       }
 
       if (shippingOrderIdsWithInvalidReason.size() > 0) {
-        addRedirectAlertMessage(new SimpleMessage("Invalid Reasons selected for shipping order -> "
-            + shippingOrderIdsWithInvalidReason + " They have been shifted to action awaiting only."));
+        // commented for now only
+      /*  addRedirectAlertMessage(new SimpleMessage("Invalid Reasons selected for shipping order -> "
+            + shippingOrderIdsWithInvalidReason + " They have been shifted to action awaiting only."));*/
       }
 
            /* if (shippingOrdersWithoutFixedLI.size() > 0 ) {
