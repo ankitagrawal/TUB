@@ -66,7 +66,6 @@ public class JitShippingOrderAction extends BaseAction {
 	WarehouseService warehouseService;
 
 	private List<LineItem> jitLineItems = new ArrayList<LineItem>();
-	private HashMap<Supplier, List<LineItem>> supplierLineItemListMap = new HashMap<Supplier, List<LineItem>>();
 	private List<PurchaseOrder> purchaseOrders;
 	
 	@DefaultHandler
@@ -77,13 +76,20 @@ public class JitShippingOrderAction extends BaseAction {
 			List<ShippingOrder> shippingOrderListToProcess = jitShippingOrderPOCreationService.getShippingOrderListToProcess(filterJit);
 			if (shippingOrderListToProcess != null && shippingOrderListToProcess.size() > 0) {
 				List<LineItem> lineItemList = jitShippingOrderPOCreationService.getValidLineItems(shippingOrderListToProcess);
-				Set<ShippingOrder> validShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(lineItemList);
-				List<PurchaseOrder> purchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(lineItemList, validShippingOrders);
-				if(purchaseOrders.size()>0){
-				addRedirectAlertMessage(new SimpleMessage(purchaseOrders.size()+" Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+                List<LineItem> onlyJITLineItems = jitShippingOrderPOCreationService.getOnlyJitLineItems(lineItemList);
+                List<LineItem> onlyDropShipLineItems = jitShippingOrderPOCreationService.getOnlyDropShipLineItems(lineItemList);
+                
+				Set<ShippingOrder> validJITShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(onlyJITLineItems);
+                Set<ShippingOrder> validDropShipShippingOrders = jitShippingOrderPOCreationService.getValidShippingOrders(onlyDropShipLineItems);
+                
+				List<PurchaseOrder> jitPurchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(onlyJITLineItems, validJITShippingOrders);
+                List<PurchaseOrder> dropShipPurchaseOrders = jitShippingOrderPOCreationService.processShippingOrderForPOCreation(onlyDropShipLineItems, validDropShipShippingOrders);
+                
+				if((jitPurchaseOrders.size()+dropShipPurchaseOrders.size())>0){
+				addRedirectAlertMessage(new SimpleMessage((jitPurchaseOrders.size()+dropShipPurchaseOrders.size())+" Purchase Orders created, approved and sent to supplier for JIT/DropShip shipping orders. Please visit POList page to check them."));
 				}
 				else{
-				addRedirectAlertMessage(new SimpleMessage("(0) Purchase Orders created, approved and sent to supplier for JIT shipping orders. Please visit POList page to check them."));
+				addRedirectAlertMessage(new SimpleMessage("(0) Purchase Orders created, approved and sent to supplier for JIT/DropShip shipping orders. Please visit POList page to check them."));
 				}
 				return new RedirectResolution(ActionAwaitingQueueAction.class);
 			}
@@ -117,14 +123,6 @@ public class JitShippingOrderAction extends BaseAction {
 
 	public void setJitLineItems(List<LineItem> jitLineItems) {
 		this.jitLineItems = jitLineItems;
-	}
-
-	public HashMap<Supplier, List<LineItem>> getSupplierLineItemListMap() {
-		return supplierLineItemListMap;
-	}
-
-	public void setSupplierLineItemListMap(HashMap<Supplier, List<LineItem>> supplierLineItemListMap) {
-		this.supplierLineItemListMap = supplierLineItemListMap;
 	}
 
 	public List<PurchaseOrder> getPurchaseOrders() {
