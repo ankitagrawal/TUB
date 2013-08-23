@@ -149,10 +149,13 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
           }
         } else {
           shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
+          continue;
         }
         if (isEscalateBackAllowed) {
          // adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder,true);
           // allowing escalate back only for now, upper line will be uncommented in future release and line below will be deleted
+          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+        } else {
           adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
         }
       }
