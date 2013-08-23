@@ -119,16 +119,16 @@
 <div class="grid_12">
     <table cellspacing="0" id="mainTable">
         <tr>
-            <th>Item</th>
-            <th>Variant Id</th>
-            <th>Batch Number</th>
+            <th width="40%">Item</th>
+            <th>Code</th>
+            <th>Batch/Expiry</th>
             <th>Qty</th>
             <th>MRP</th>
-            <th>Rate (per unit)</th>
+            <th>Rate<br/>(per unit)</th>
             <th>
                 <c:choose>
                     <c:when test="${isB2BOrder&&cFormAvailable}">
-                        Tax Rate (CST)
+                        Tax Rate<br/>(CST)
                     </c:when>
                     <c:otherwise>
                         Tax Rate
@@ -161,7 +161,7 @@
 
                     <c:if test="${invoiceLineItem.skuGroupLongMap!=null && fn:length(invoiceLineItem.skuGroupLongMap)>0}">
                         <c:forEach var="skuGroupLongMap" items="${invoiceLineItem.skuGroupLongMap}" varStatus="ctr">
-                                <labe>${skuGroupLongMap.key} - ${skuGroupLongMap.value}</labe><br>
+                                <label>${skuGroupLongMap.key} - ${skuGroupLongMap.value}</label><br>
                         </c:forEach>
                             </c:if>
 

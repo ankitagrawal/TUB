@@ -1,8 +1,9 @@
 package com.hk.admin.dto.accounting;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.hk.constants.core.TaxConstants;
 import com.hk.constants.courier.StateList;
@@ -46,7 +47,8 @@ public class InvoiceLineItemDto {
     private double                        taxable;
     private double                        tax;
     private double                        surcharge;
-
+    //Map<String, QtyExp> skuGroupLongMap;
+    DateFormat dateFormat = new SimpleDateFormat("MM/yy");
 
     public InvoiceLineItemDto(LineItem productLineItem) {
         productCategories = productLineItem.getSku().getProductVariant().getProduct().getCategories();

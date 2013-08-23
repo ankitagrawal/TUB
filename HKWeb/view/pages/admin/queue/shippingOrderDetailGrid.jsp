@@ -238,11 +238,12 @@
           <s:param name="shippingOrder" value="${shippingOrder}"/>
           Accounting Invoice
       </s:link>)
+    <c:if test="${shippingOrder.baseOrder.b2bOrder}">
     (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="B2BInvoice"
              target="_blank">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         B2B Invoice
-    </s:link>)
+    </s:link>)</c:if>
         <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id ||  shippingOrderStatusCheckedOut == shippingOrder.orderStatus.id }">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
