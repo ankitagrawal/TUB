@@ -306,7 +306,6 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		try {
 			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
 			hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
-			hkapiBookingInfo.setLineItemId(lineItem.getId());
 			hkapiBookingInfo.setMrp(lineItem.getMarkedPrice());
 			hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
 			hkapiBookingInfo.setQty(lineItem.getQty());
