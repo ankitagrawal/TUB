@@ -172,7 +172,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
       if (shippingOrderList.size() != shippingOrderIdsWithInvalidReason.size()) {
                     /*+ shippingOrdersWithoutFixedLI.size())*/
         addRedirectAlertMessage(new SimpleMessage("Orders with no errors have been moved back to Action" +
-            " Awaiting and also have been auto escalated."));
+            " Awaiting."));
       }
 
     } else {
