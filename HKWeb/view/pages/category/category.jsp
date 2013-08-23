@@ -222,8 +222,8 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/personal-care/misc/mosquito-repellents">
-                <img src="<hk:vhostImage/>/images/banners/mosquito-repellents.jpg" alt="self-defence"
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
                      class="small_banner"/>
                 <%--</a>--%>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
