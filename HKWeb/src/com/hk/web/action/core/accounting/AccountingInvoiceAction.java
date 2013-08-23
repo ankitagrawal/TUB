@@ -127,7 +127,33 @@ public class AccountingInvoiceAction extends BaseAction {
     }
   }
 
-	
+    public Resolution B2BInvoice() {
+        if (shippingOrder != null) {
+            String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
+            if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
+                b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
+            }
+            ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
+
+            if (replacementOrder != null) {
+                if (shippingOrder.getBaseOrder().isB2bOrder() != null && shippingOrder.getBaseOrder().isB2bOrder()) {
+                    cFormAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
+                    invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormAvailable);
+                } else
+                    invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails, false);
+            } else {
+                if (shippingOrder.getBaseOrder().isB2bOrder() != null && shippingOrder.getBaseOrder().isB2bOrder()) {
+                    cFormAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
+                    invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormAvailable);
+                } else
+                    invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, false);
+            }
+            return new ForwardResolution("/pages/b2bInvoice.jsp");
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
+            return new ForwardResolution("pages/admin/adminHome.jsp");
+        }
+    }
 
   public String getDefaultCourier() {
     return defaultCourier;
