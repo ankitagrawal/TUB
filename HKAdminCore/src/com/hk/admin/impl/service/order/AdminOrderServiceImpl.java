@@ -215,7 +215,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
             adminShippingOrderService.reconcileRPLiabilities(null,order);
 
-            if(reconciliationType != null) {
+            if(reconciliationType != null && !EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
                 relieveExtraLiabilties(reconciliationType,order,null);
             }
 

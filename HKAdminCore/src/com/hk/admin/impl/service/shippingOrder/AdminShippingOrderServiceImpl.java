@@ -170,7 +170,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 } else {
                     reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
 
-                    if(reconciliationType != null) {
+                    if(reconciliationType != null && !EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
                         relieveExtraLiabilties(reconciliationType,shippingOrder,null);
                     }
                 }

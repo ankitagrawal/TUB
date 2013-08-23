@@ -10,6 +10,7 @@ package com.hk.constants.inventory;
 public enum EnumReconciliationActionType {
     RefundAmount(200L, "Refund Amount"),
     RewardPoints(210L, "Reward Points"),
+    None(220L,"No Action"),
     ;
 
     private java.lang.String name;
