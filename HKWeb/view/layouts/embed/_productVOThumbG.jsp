@@ -90,14 +90,11 @@
                                 maxFractionDigits="0"/>% off
             </c:if>
           </div>
-            <c:set var="freebieDesc" value="${productVO.freebieDesc}"/>
-            <c:if test="${hk:isNotBlank(freebieDesc) != null}">
+            <c:if test="${hk:isNotBlank(productVO.freebieDesc)}">
                 <div class="freebie-cntnr with-variants">
-                    <h6 >${freebieDesc} FREE</h6>
+                    <h6 >${productVO.freebieDesc} FREE</h6>
                 </div>
             </c:if>
-
-            ${productVO.freebieDesc}
         </c:when>
         <c:otherwise>
           <div class='prices'>

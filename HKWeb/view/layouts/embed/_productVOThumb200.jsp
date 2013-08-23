@@ -101,6 +101,11 @@
                                 maxFractionDigits="0"/>% off
             </c:if>
           </div>
+            <c:if test="${hk:isNotBlank(productVO.freebieDesc)}">
+                <div class="freebie-cntnr with-variants">
+                    <h6 >${productVO.freebieDesc} FREE</h6>
+                </div>
+            </c:if>
         </c:when>
         <c:otherwise>
           <div class='prices'>
