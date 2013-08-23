@@ -209,8 +209,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/eveready-rechargeable-fan/EVE015?productReferrerId=24&productPosition=1/11">
-                    <img src="<hk:vhostImage/>/images/banners/home-live-Banner.jpg"
+                <a href="${pageContext.request.contextPath}/home-living?camp=jan">
+                    <img src="<hk:vhostImage/>/images/banners/static-banner-HL-(janmashathmi).jpg"
                          alt="Brand of the Week"
                          class="small_banner"/>
                 </a>
@@ -230,8 +230,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7112/HB023?productReferrerId=1&productPosition=1/1">
-                    <img src="<hk:vhostImage/>/images/banners/omron.jpg" alt="Omron"
+                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
+                    <img src="<hk:vhostImage/>/images/banners/product-of-the-week-omron-BP2.jpg" alt="Omron"
                          class="small_banner"/>
                 </a>
             </c:when>

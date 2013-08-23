@@ -21,7 +21,10 @@ public enum EnumReversePickupStatus {
     /* Status If Return By Customer*/
     Return_Initiated(50L, "Return Initiated"),
     Return_Received(60L, "Return Received"),
-    Return_QC_Checkin(70L, "Return QC checkin");
+    Return_QC_Checkin(70L, "Return QC checkin"),
+
+    RPU_CANCEL(90L, "RPU Cancel"),
+    RPU_CLOSED(100L, "RPU Closed");
 
     private Long id;
     private String status;
@@ -38,12 +41,12 @@ public enum EnumReversePickupStatus {
         return reversePickupStatus;
     }
 
-    public static List<ReversePickupStatus> getCustomerManagedReturnStatus() {
-        return Arrays.asList(Return_Initiated.asReversePickupStatus(), Return_Received.asReversePickupStatus());
-    }
 
     public static List<ReversePickupStatus> getHealthKartManagedRPStatus() {
-        return Arrays.asList(RPU_Initiated.asReversePickupStatus(), RPU_Picked.asReversePickupStatus(), RPU_Received.asReversePickupStatus());
+        return Arrays.asList(RPU_Initiated.asReversePickupStatus(),
+                RPU_Picked.asReversePickupStatus(),
+                RPU_Received.asReversePickupStatus(),
+                RPU_CANCEL.asReversePickupStatus());
     }
 
     public ReversePickupStatus asReversePickupStatus() {
@@ -68,6 +71,5 @@ public enum EnumReversePickupStatus {
     public void setStatus(String status) {
         this.status = status;
     }
-
 
 }
