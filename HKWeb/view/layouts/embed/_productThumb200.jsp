@@ -1,10 +1,11 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
 <%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.BigThumbSize%>"/>
@@ -44,6 +45,11 @@
 						<img style="max-height:180px;max-width:180px;" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 					</s:link>
+					<shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
+						Missing Image - <a
+							href="${pageContext.request.contextPath}/rest/api/product/resizeImage/${product.id}/m/bt"
+							target="_blank">Click here</a>
+					</shiro:hasAnyRoles>
 				</div>
 				<div>
 					<span style="height:20px;max-width:240px;">
