@@ -7,6 +7,7 @@
 <%@ page import="com.hk.domain.analytics.Reason" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.domain.courier.Courier" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" var="rev"/>
@@ -169,7 +170,7 @@
         <th>Check For Return</th>
         <th>Reason For Return</th>
         <th>CS Action</th>
-        <th>Action On Status</th>
+        <%--<th>Action On Status</th>--%>
         <th>CS Action Status</th>
         <th>Customer Care Comment</th>
     </tr>
@@ -218,7 +219,7 @@
                             </c:forEach>
                         </s:select>
                     </td>
-                    <td>
+               <%--     <td>
                         <s:select name="rpLineItems[${index}].actionTakenOnStatus"
                                   value="${savedRpLineItem.actionTakenOnStatus}">
                             <s:option value="">--Select -- </s:option>
@@ -229,7 +230,7 @@
                                         value="${actionTakenOnStatus.id}">${actionTakenOnStatus.name}</s:option>
                             </c:forEach>
                         </s:select>
-                    </td>
+                    </td>--%>
                     <td>
                         <c:forEach items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
                                    var="customerActionStatusenum">
@@ -279,7 +280,7 @@
                             </c:if>
                         </c:forEach>
                     </td>
-                    <td>
+                    <%--<td>
                         <c:forEach
                                 items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"
                                 var="actionTakenOnStatus">
@@ -287,7 +288,7 @@
                                 ${actionTakenOnStatus.name}
                             </c:if>
                         </c:forEach>
-                    </td>
+                    </td>--%>
                     <td>
                         <c:forEach items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
                                    var="customerActionStatusenum">
@@ -331,7 +332,7 @@
                         </c:forEach>
                     </s:select>
                 </td>
-                <td>
+               <%-- <td>
                     <s:select name="rpLineItems[${index}].actionTakenOnStatus">
                         <s:option value="">--Select-- </s:option>
                         <c:forEach items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"
@@ -340,7 +341,7 @@
                                     value="${actionTakenOnStatus.id}">${actionTakenOnStatus.name}</s:option>
                         </c:forEach>
                     </s:select>
-                </td>
+                </td>--%>
                 <td>
 
                 </td>
@@ -356,6 +357,7 @@
     </c:forEach>
 </table>
 
+<shiro:hasPermission name="<%=PermissionConstants.SCHEDULE_REVERSE_PICKUP%>">
 
 <div class="clear" style="margin: 1em auto"></div>
 
@@ -422,6 +424,9 @@
                                           formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                           name="pickupDate"/>
 </div>
+
+</shiro:hasPermission>
+
 <div class="courier-detail">
     <c:choose>
         <c:when test="${rev.pendingApprovalEditMode}">
