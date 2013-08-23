@@ -153,12 +153,14 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         }
         if (isEscalateBackAllowed) {
           adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder,true);
+        } else {
+          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
         }
       }
 
       if (shippingOrderIdsWithInvalidReason.size() > 0) {
         addRedirectAlertMessage(new SimpleMessage("Invalid Reasons selected for shipping order -> "
-            + shippingOrderIdsWithInvalidReason));
+            + shippingOrderIdsWithInvalidReason + " They have been shifted to action awaiting only."));
       }
 
            /* if (shippingOrdersWithoutFixedLI.size() > 0 ) {
