@@ -161,7 +161,7 @@
                 <th>Product Name</th>
                 <th>Reason For Return</th>
                 <th>CS Action</th>
-                <th>Action On Status</th>
+                <%--<th>Action On Status</th>--%>
                 <th>CS Action Status</th>
                 <th>Customer Care Comment</th>
                 <th style="padding:10px">Action</th>
@@ -212,19 +212,19 @@
                                     </c:forEach>
                                 </s:select>
                             </td>
-                            <td>
-                                <s:select name="rpLineItems[${index}].actionTakenOnStatus"
-                                          value="${savedRpLineItem.actionTakenOnStatus}"
-                                          disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}">
-                                    <s:option value="">--Select -- </s:option>
-                                    <c:forEach
-                                            items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"
-                                            var="actionTakenOnStatus">
-                                        <s:option
-                                                value="${actionTakenOnStatus.id}">${actionTakenOnStatus.name}</s:option>
-                                    </c:forEach>
-                                </s:select>
-                            </td>
+                            <%--<td>--%>
+                                <%--<s:select name="rpLineItems[${index}].actionTakenOnStatus"--%>
+                                          <%--value="${savedRpLineItem.actionTakenOnStatus}"--%>
+                                          <%--disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}">--%>
+                                    <%--<s:option value="">--Select -- </s:option>--%>
+                                    <%--<c:forEach--%>
+                                            <%--items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"--%>
+                                            <%--var="actionTakenOnStatus">--%>
+                                        <%--<s:option--%>
+                                                <%--value="${actionTakenOnStatus.id}">${actionTakenOnStatus.name}</s:option>--%>
+                                    <%--</c:forEach>--%>
+                                <%--</s:select>--%>
+                            <%--</td>--%>
                             <td>
                                 <c:forEach items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
                                            var="customerActionStatusenum">
