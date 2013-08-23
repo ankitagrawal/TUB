@@ -159,13 +159,9 @@
                 <td>${invoiceLineItem.variantId}</td>
                 <td>
 
-                    <%--<c:forEach items="${invoiceLineItem.skuItemLineItems}" var="skuItemLineItem">
-                       ${skuItemLineItem.unitNum}-${skuItemLineItem.skuItem.skuGroup.batchNumber}
-                    </c:forEach>--%>
-
                     <c:if test="${invoiceLineItem.skuGroupLongMap!=null && fn:length(invoiceLineItem.skuGroupLongMap)>0}">
                         <c:forEach var="skuGroupLongMap" items="${invoiceLineItem.skuGroupLongMap}" varStatus="ctr">
-                                ${skuGroupLongMap.key} - ${skuGroupLongMap.value}&nbsp;
+                                <labe>${skuGroupLongMap.key} - ${skuGroupLongMap.value}</labe><br>
                         </c:forEach>
                             </c:if>
 
