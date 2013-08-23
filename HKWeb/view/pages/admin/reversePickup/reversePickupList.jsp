@@ -190,7 +190,7 @@
             <th>Product</th>
             <th>Reason For Return</th>
             <th>CS Action</th>
-            <th>Action On Status</th>
+            <%--<th>Action On Status</th>--%>
             <th>CS Comment</th>
             <th>CS Action Status</th>
             <th>Warehouse Condition</th>
@@ -240,16 +240,16 @@
                             </c:if>
                         </c:forEach>
                     </td>
-                    <td>
-                        <c:forEach
-                                items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"
-                                var="actionTakenOnStatus">
-                            <c:if test="${rpLineitem.actionTakenOnStatus == actionTakenOnStatus.id}">
-                                ${actionTakenOnStatus.name}
-                            </c:if>
-                        </c:forEach>
+                    <%--<td>--%>
+                        <%--<c:forEach--%>
+                                <%--items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"--%>
+                                <%--var="actionTakenOnStatus">--%>
+                            <%--<c:if test="${rpLineitem.actionTakenOnStatus == actionTakenOnStatus.id}">--%>
+                                <%--${actionTakenOnStatus.name}--%>
+                            <%--</c:if>--%>
+                        <%--</c:forEach>--%>
 
-                    </td>
+                    <%--</td>--%>
                     <td>
                             ${rpLineitem.customerComment}
                     </td>
