@@ -13,7 +13,8 @@ public enum  EnumReasonType {
     CourierChange(50L, "Courier Change Reason"),
     AwbChange(60L, "Awb Change Reason"),
     So_Cancelled(410L,"SO  Cancelled"),
-    Reverse_Pickup_Customer(420L,"Reverse Pickup Customer Reason For Return"),
+    Reverse_Pickup_Customer(420L,"Customer Reason For Reverse Pickup"),
+    Reverse_Pickup_Warehouse(420L,"Warehouse QA For Reverse pickup"),
     Reconciliation(430L,"Reconciliation"),
     ;
 
