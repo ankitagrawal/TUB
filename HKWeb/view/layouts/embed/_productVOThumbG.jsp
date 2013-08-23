@@ -89,12 +89,8 @@
               <fmt:formatNumber value="${combo.discountPercent*100}"
                                 maxFractionDigits="0"/>% off
             </c:if>
+
           </div>
-            <c:if test="${fn:length(productVO.freebieDesc) > 3}">
-                <div class="freebie-cntnr with-variants">
-                    <h6 >${productVO.freebieDesc} FREE</h6>
-                </div>
-            </c:if>
         </c:when>
         <c:otherwise>
           <div class='prices'>
@@ -132,8 +128,14 @@
           </c:if>
         </c:otherwise>
       </c:choose>
+        ABC = ${productVO.freebieDesc}
+        <c:if test="${fn:length(productVO.freebieDesc) > 3}">
+            <div class="freebie-cntnr with-variants">
+                <h6 >${productVO.freebieDesc} FREE</h6>
+            </div>
+        </c:if>
 
-      <div class="floatfix"></div>
+        <div class="floatfix"></div>
     </div>
   </c:if>
 </s:layout-definition>
