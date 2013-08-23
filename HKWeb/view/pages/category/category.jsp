@@ -223,7 +223,7 @@
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
+                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                      class="small_banner"/>
                 <%--</a>--%>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
