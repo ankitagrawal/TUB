@@ -13970,4 +13970,25 @@
             <column name="name" value="SO  Cancelled due to inventory mismatch" type="VARCHAR(100)"></column>
         </insert>
     </changeSet>
+    <changeSet author="Ankit Chhabra" id="1375435318078-2">
+        <sql>
+            insert into classification(`id` ,`primary`,`secondary`) values
+            (1560,'SO Not cancelled automatically','Inventory found in other warehouse'),
+            (1570,'SO Not cancelled automatically','No inventory for JIT items only');
+
+            INV_FOUND_DIFF_WAREHOUSE(1200L,EnumClassification.INV_PRESENT_DIFF_WAREHOUSE, EnumReasonType.SO_NOT_CANCELLED),
+            JIT_ITEMS_IN_SO(1210L,EnumClassification.JIT_IN_SO,EnumReasonType.SO_NOT_CANCELLED)
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (1200,'SO Not cancelled automatically',1560),
+            (1210,'SO Not cancelled automatically',1570);
+
+        </sql>
+    </changeSet>
+    <changeSet author="Ankit Chhabra" id="1375435318078-3">
+        <insert tableName="shipping_order_lifecycle_activity">
+            <column name="id" value="1020" type="INT"></column>
+            <column name="name" value="SO  Cancelled due to inventory mismatch" type="VARCHAR(100)"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
