@@ -47,7 +47,9 @@ public enum EnumClassification {
     PRODUCT_NOT_AVAILABLE_INV_MISMATCH(660L, "Product Not Available", "Inventory Mismatch"),
     MRP_MISMATCH_CHEAPER(670L, "Mrp Mismatch", "Invoice MRP > Product MRP"),
     MRP_MISMATCH_DEARER(680L, "Mrp Mismatch", "Invoice MRP < 50% Product MRP && Diff > 1000"),
-    DISPATCH_ISSUE_COURIER_CHANGE(690L, "Dispatch Issue", "Courier service changed");
+    DISPATCH_ISSUE_COURIER_CHANGE(690L, "Dispatch Issue", "Courier service changed"),
+    INV_PRESENT_DIFF_WAREHOUSE(1560L, "SO Not cancelled automatically", "Inventory found in other warehouse"),
+    JIT_IN_SO(1570L, "SO Not cancelled automatically", "No inventory for JIT items only");
 
     private Long id;
     private String primary;

@@ -17,7 +17,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
-import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.User;
 import com.hk.helper.ShippingOrderHelper;
@@ -250,8 +249,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
      /* Long availableNetPhysicalInventory =
           getInventoryService().getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
 */
-      // Check for inventory mismatch for non JIT and non drop shipping orders
-      if (!shippingOrder.isDropShipping() && !lineItem.getSku().getProductVariant().getProduct().isJit()) {
+      // Check for inventory mismatch for non drop shipping orders
+      if (!shippingOrder.isDropShipping()) {
         if (lineItem.getSkuItemLineItems()== null) {
           // if no inventory has been booked for the line item
           selectedItems.add(lineItem);
@@ -513,15 +512,42 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
    */
   private void cancelUnfulfilledSO (ShippingOrder shippingOrder, User user) {
     Set<LineItem> outOfStockLineItems = new HashSet<LineItem>();
+    Set<LineItem> outOfStockJitItems = new HashSet<LineItem>();
     StringBuilder comment = new StringBuilder();
     ShippingOrder cancelledSO = null;
     for (LineItem lineItem : shippingOrder.getLineItems()) {
       Long netQty = adminInventoryService.getNetInventoryAtServiceableWarehouses(lineItem.getSku().getProductVariant());
       Long bookedQty = adminInventoryService.getBookedInventory(lineItem.getSku().getProductVariant());
       if (!((netQty - bookedQty) >= lineItem.getQty())){
-        outOfStockLineItems.add(lineItem);
+        if (lineItem.getSku().getProductVariant().getProduct().isJit()) {
+          outOfStockJitItems.add(lineItem);
+        } else {
+          outOfStockLineItems.add(lineItem);
+        }
       }
     }
+    // BLock to handle JIT items begin
+    if (!outOfStockJitItems.isEmpty()) {
+      if (outOfStockJitItems.size() == shippingOrder.getLineItems().size()) {
+        // just log that jit items hence could not be cancelled automatically
+        shippingOrderService.logShippingOrderActivity(shippingOrder,
+            EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
+            "All items are JIT in this SO");
+        return;
+      } else {
+        // only split jit items but do not cancel those items
+        Map<String,ShippingOrder> splittedOrdersForJit = new HashMap<String, ShippingOrder>();
+        List<String> msgs = new ArrayList<String>();
+        this.autoSplitSO(shippingOrder, outOfStockJitItems, splittedOrdersForJit, msgs);
+        shippingOrder = splittedOrdersForJit.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
+        shippingOrderService.logShippingOrderActivity(splittedOrdersForJit.get(ShippingOrderConstants.NEW_SHIPPING_ORDER),
+            EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
+            "All items are JIT in this SO");
+      }
+    }
+    // Block to handle JIt items end
+
+    // Other items inventory mismatch begin
     if (outOfStockLineItems.size() == shippingOrder.getLineItems().size()) {
       cancelledSO = shippingOrder;
     } else if (outOfStockLineItems.isEmpty()) {
@@ -532,7 +558,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       }
       comment.append("found in another warehouse.");
       shippingOrderService.logShippingOrderActivity(shippingOrder,
-          EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_DIFFERENT_WAREHOUSE, null, comment.toString());
+          EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO,
+          EnumReason.INV_FOUND_DIFF_WAREHOUSE.asReason(), comment.toString());
 
       return;
     } else {
@@ -550,7 +577,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       }
       comment.append("found in another warehouse.");
       shippingOrderService.logShippingOrderActivity(shippingOrder,
-          EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_DIFFERENT_WAREHOUSE, null, comment.toString());
+          EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO,
+          EnumReason.INV_FOUND_DIFF_WAREHOUSE.asReason(), comment.toString());
 
     }
 
