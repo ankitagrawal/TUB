@@ -51,6 +51,10 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 			inverseJoinColumns = {@JoinColumn(name = "bin_id", nullable = false, updatable = false)}
 	)
 	private List<Bin> bins = new ArrayList<Bin>(0);
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "foreign_si_cli_id", nullable = false)
+	private ForeignSkuItemCLI foreignSkuItemCLI;
 
 	public Long getId() {
 		return this.id;
@@ -108,6 +112,13 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 		this.skuItemOwner = skuItemOwner;
 	}
 
+	public ForeignSkuItemCLI getForeignSkuItemCLI() {
+		return foreignSkuItemCLI;
+	}
+
+	public void setForeignSkuItemCLI(ForeignSkuItemCLI foreignSkuItemCLI) {
+		this.foreignSkuItemCLI = foreignSkuItemCLI;
+	}
 
 	public int compareTo(SkuItem skuItem) {
 		if (this.getId() < skuItem.getId()) return -1;
