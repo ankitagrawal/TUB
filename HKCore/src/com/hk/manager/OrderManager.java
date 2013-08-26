@@ -418,9 +418,11 @@ public class OrderManager {
       }
 
 //       Check Inventory health of order lineItems
-      for (CartLineItem cartLineItem : order.getCartLineItems()) {
-        this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-      }
+        for (CartLineItem cartLineItem : order.getCartLineItems()) {
+            if (cartLineItem.isType(EnumCartLineItemType.Product)) {
+                this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            }
+        }
 
         if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
             //for some orders userCodCall object is not created, a  check to create one
