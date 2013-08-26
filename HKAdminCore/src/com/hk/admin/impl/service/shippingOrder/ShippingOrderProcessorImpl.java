@@ -543,9 +543,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         shippingOrderService.logShippingOrderActivity(splittedOrdersForJit.get(ShippingOrderConstants.NEW_SHIPPING_ORDER),
             EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
             null);
-        if (outOfStockLineItems.isEmpty()) {
-          this.manualEscalateShippingOrder(shippingOrder);
-        }
       }
     }
     // Block to handle JIt items end
