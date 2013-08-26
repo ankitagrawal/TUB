@@ -1,19 +1,14 @@
 package com.hk.web.action.pages;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.action.UrlBinding;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.feedback.Feedback;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.pact.service.feedback.FeedbackService;
+import com.hk.pact.service.order.OrderService;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created with IntelliJ IDEA. User: Rohit Date: 8/20/12 Time: 4:54 PM To change this template use File | Settings |
@@ -23,20 +18,25 @@ import com.hk.pact.service.feedback.FeedbackService;
 @UrlBinding("/feedback")
 @Component
 public class FeedbackAction extends BaseAction {
-    Order           order;
-    private Long    recommendToFriends;
-    private Long    websiteExperienceFeedback;
-    private Long    customerServiceFeedback;
-    private String  comments;
+    Order order;
+    private Long recommendToFriends;
+    private Long websiteExperienceFeedback;
+    private Long customerServiceFeedback;
+    private String comments;
+    private Long baseOrderId;
     @Autowired
     FeedbackService feedbackService;
+    @Autowired
+    OrderService orderService;
 
     @DefaultHandler
     public Resolution pre() {
+        if (baseOrderId != null) {
+            order = orderService.find(baseOrderId);
+        }
         if (order != null) {
             Feedback feedback = getFeedbackService().getOrCreateFeedbackForOrder(order);
             getFeedbackService().updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
-            return new ForwardResolution("/pages/static/feedbackCapture.jsp");
         }
         return new ForwardResolution("/pages/static/feedback.jsp");
     }
@@ -102,5 +102,13 @@ public class FeedbackAction extends BaseAction {
 
     public void setRecommendToFriends(Long recommendToFriends) {
         this.recommendToFriends = recommendToFriends;
+    }
+
+    public Long getBaseOrderId() {
+        return baseOrderId;
+    }
+
+    public void setBaseOrderId(Long baseOrderId) {
+        this.baseOrderId = baseOrderId;
     }
 }
