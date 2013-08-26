@@ -11,6 +11,7 @@ import com.hk.cache.CategoryCache;
 import com.hk.cache.RoleCache;
 import com.hk.cache.vo.RoleVO;
 import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.analytics.EnumReasonType;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumCancellationType;
@@ -73,6 +74,7 @@ import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.review.MailService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +121,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private MailService mailService;
     @Autowired
     ShippingOrderService shippingOrderService;
+    @Autowired
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -542,19 +546,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
     }
 
-
     public List<Reason> getCustomerReasonForReversePickup() {
-        List<Long> reasonsIds = Arrays.asList(EnumReason.ProductDamaged.getId(), EnumReason.ProductExpired.getId(), EnumReason.WrongColor.getId(), EnumReason.WrongSize.getId());
-        return shippingOrderService.getReasonForReversePickup(reasonsIds);
+        return shippingOrderLifecycleService.getReasonByType(EnumReasonType.Reverse_Pickup_Customer.getName());
     }
 
     public List<Reason> getWarehouseReceivedCondition() {
-        List<Long> reasonsIds = Arrays.asList(EnumReason.Good.getId(), EnumReason.Damaged.getId(),EnumReason.Expired.getId());
-        return shippingOrderService.getReasonForReversePickup(reasonsIds);
+        return shippingOrderLifecycleService.getReasonByType(EnumReasonType.Reverse_Pickup_Warehouse.getName());
     }
 
     public List<Courier> getCouriersForReversePickup() {
-        return Arrays.asList(EnumCourier.FedEx.asCourier());
+        return courierService.getCouriers(null, null, null, EnumCourierOperations.REVERSE_PICKUP.getId());
     }
 
     public List<EnumReversePickupStatus> getAllReversePickUpStatus() {
