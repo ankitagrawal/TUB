@@ -21,7 +21,8 @@ public enum EnumReverseAction {
     Decide_Later(70L, "Decide Later "),
     /* CS Action Status */
     Pending_Approval(80L, "Pending Approval"),
-    Approved(90L, "Approved");
+    Approved(90L, "Approved"),
+    Force_Approval(100L, "Force_Approval");
 
     private Long id;
     private String name;

@@ -18,7 +18,8 @@ public enum  EnumCourierOperations {
     COLLECT_FROM_SUPPLIER(5L, "COLLECT_FROM_SUPPLIER"),
     DEBIT_NOTE(7L, "DEBIT_NOTE"),
     DISPATCH_LOT(11L, "DISPATCH_LOT"),
-    VENDOR_DROP_SHIP(13L, "VENDOR_DROP_SHIP");
+    VENDOR_DROP_SHIP(13L, "VENDOR_DROP_SHIP"),
+    REVERSE_PICKUP(17L, "REVERSE_PICKUP");
 
     private String name;
     private Long id;
@@ -54,7 +55,7 @@ public enum  EnumCourierOperations {
 
 
 	public  static List<EnumCourierOperations> getAllCourierOperations() {
-		return Arrays.asList(HK_SHIPPING, CUSTOMER_RETURNS, COLLECT_FROM_SUPPLIER, DEBIT_NOTE, DISPATCH_LOT, VENDOR_DROP_SHIP);
+		return Arrays.asList(HK_SHIPPING, CUSTOMER_RETURNS, COLLECT_FROM_SUPPLIER, DEBIT_NOTE, DISPATCH_LOT, VENDOR_DROP_SHIP, REVERSE_PICKUP);
 
 	}
 
