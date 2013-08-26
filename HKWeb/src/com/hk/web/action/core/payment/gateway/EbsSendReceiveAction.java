@@ -3,6 +3,7 @@ package com.hk.web.action.core.payment.gateway;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
 import com.hk.exception.HealthkartPaymentGatewayException;
@@ -169,11 +170,16 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		Resolution resolution = null;
 		try {
 			// our own validations
-			paymentManager.verifyPayment(gatewayOrderId, amount, merchantParam);
+			Payment payment = paymentManager.verifyPayment(gatewayOrderId, amount, merchantParam);
 
 			// payment callback has been verified. now see if it is successful or failed from the gateway response
 			if (EbsPaymentGatewayWrapper.authStatus_Success.equals(authStatus) && EbsPaymentGatewayWrapper.is_Flagged_False.equalsIgnoreCase(flag_status)) {
-				paymentManager.success(gatewayOrderId,ePGTxnID,rrn,TxMsg,null);
+
+                //currently putting a dummy check for payment status at Ebs only, essentially at this stage payment status will not be success, just double checking, and if yes do nothing
+                if(!EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId())){
+                    paymentManager.success(gatewayOrderId, ePGTxnID, rrn, TxMsg, null);
+                }
+
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
 				paymentManager.pendingApproval(gatewayOrderId,ePGTxnID);

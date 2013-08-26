@@ -5,12 +5,12 @@
 
 <div style="margin-left: auto; margin-right: auto; width:960px;">
      <img
-            src="${pageContext.request.contextPath}/images/banners/hd2.jpg"
+            src="${pageContext.request.contextPath}/images/banners/HD-strip-banner.jpg"
             alt="Flat 25% Off" usemap="#Map">
       <map name="Map" id="Map">
-        <area shape="rect" coords="262,-7,453,94" href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?productReferrerId=1&productPosition=1/1" />
-        <area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/product/equinox-digital-weighing-scale-eb-9300/EQNX015?productReferrerId=1&productPosition=1/1" />
-        <area shape="rect" coords="667,1,874,80" href="${pageContext.request.contextPath}/product/vitamin-shoppe-salmon-oil/HW004?productReferrerId=11" />
+        <area shape="rect" coords="262,-7,453,94" href="${pageContext.request.contextPath}/product/omron-weight-scale-hn-283/OMRN007?camp=omron" />
+        <area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/product/equinox-digital-weighing-scale-eb-9300/EQNX015?camp=equinox" />
+        <area shape="rect" coords="667,1,874,80" href="${pageContext.request.contextPath}/product/jsb-leg-and-foot-massager-hf05/AS006?camp=mass" />
 
       </map>
 </div>

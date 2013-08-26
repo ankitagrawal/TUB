@@ -61,8 +61,8 @@
                src="${hk:getS3ImageUrl(imageMediumSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
         </a>
-        <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
-          Missing 'bt' Image - <a href="${pageContext.request.contextPath}/rest/api/product/resizeImage/${productVO.id}/m/bt" target="_blank">Click here</a>
+        <shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
+          Missing Image - <a href="${pageContext.request.contextPath}/rest/api/product/resizeImage/${productVO.id}/m/bt" target="_blank">Click here</a>
         </shiro:hasAnyRoles>
       </div>
       <div>

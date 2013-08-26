@@ -187,32 +187,39 @@
               </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
-                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
-                    <img src="${pageContext.request.contextPath}/images/banners/patanjali-banner.jpg"
-                         alt="Patanjali Offer" class="small_banner"/>
+                <a class="dietPlan" href="#" style="cursor: pointer;">
+                                    <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
+                                         alt="DIET_PLAN" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/health-nutrition/shop-by-need/hair-skin-nails">
-                    <img src="${pageContext.request.contextPath}/images/banners/Hair-skin-nails.jpg"
+                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Nature%27s+Herbs">
+                    <img src="${pageContext.request.contextPath}/images/banners/nature's-herb-static-banner.jpg"
                          alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
+                <script type="text/javascript">
+                                 $(".dietPlan").live('click', function () {
+                                     $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                                     $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
+                                     $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                                 });
+                             </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq homeLiving}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/eveready-rechargeable-fan/EVE015?productReferrerId=24&productPosition=1/11">
-                    <img src="<hk:vhostImage/>/images/banners/home-live-Banner.jpg"
+                <a href="${pageContext.request.contextPath}/home-living?camp=jan">
+                    <img src="<hk:vhostImage/>/images/banners/static-banner-HL-(janmashathmi).jpg"
                          alt="Brand of the Week"
                          class="small_banner"/>
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/personal-care">
-                <img src="<hk:vhostImage/>/images/banners/Goodnightcategory1.jpg" alt="self-defence"
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                      class="small_banner"/>
-                <%--</a>--%>
+                </a>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
                     <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
@@ -223,8 +230,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7112/HB023?productReferrerId=1&productPosition=1/1">
-                    <img src="<hk:vhostImage/>/images/banners/omron.jpg" alt="Omron"
+                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
+                    <img src="<hk:vhostImage/>/images/banners/product-of-the-week-omron-BP2.jpg" alt="Omron"
                          class="small_banner"/>
                 </a>
             </c:when>

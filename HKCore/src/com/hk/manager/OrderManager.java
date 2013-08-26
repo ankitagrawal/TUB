@@ -2,6 +2,7 @@ package com.hk.manager;
 
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -27,6 +28,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.store.EnumStore;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.impl.service.codbridge.OrderEventPublisher;
@@ -418,6 +420,18 @@ public class OrderManager {
       for (CartLineItem cartLineItem : cartLineItems) {
         this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
       }
+
+        if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
+            //for some orders userCodCall object is not created, a  check to create one
+            try{
+                if (order.getUserCodCall() == null) {
+                    UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                    orderService.saveUserCodCall(userCodCall);
+                }
+            } catch (Exception e){
+                logger.info("User Cod Call already exists for " + order.getId());
+            }
+        }
 
 
       this.getUserService().updateIsProductBought(order);
