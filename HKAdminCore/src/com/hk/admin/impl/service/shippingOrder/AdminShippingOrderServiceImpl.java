@@ -170,7 +170,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 } else {
                     reconcileRPLiabilities(shippingOrder,shippingOrder.getBaseOrder());
 
-                    if(reconciliationType != null && !EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
+                    if(reconciliationType != null) {
                         relieveExtraLiabilties(reconciliationType,shippingOrder,null);
                     }
                 }
@@ -352,8 +352,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             //paymentService.setRefundAmount(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
             getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                     EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RewardGiven.asReason(),comment);
-        } else {
+
+        } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
             refundPayment(shippingOrder,comment);
+        } else if (EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.NoActionTakenAtReconciliation.asReason(),comment);
         }
     }
 
