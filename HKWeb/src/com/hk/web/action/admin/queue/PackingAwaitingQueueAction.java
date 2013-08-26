@@ -166,7 +166,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
             + shippingOrderIdsWithInvalidReason ));
       }
       if (shippingOrdersWithoutFixedLI.size() > 0 ) {
-        addRedirectAlertMessage(new SimpleMessage("Unfixed Line items not found for shipping order -> "
+        addRedirectAlertMessage(new SimpleMessage("Fix it not tried for shipping order -> "
             + shippingOrdersWithoutFixedLI));
       }
       if (shippingOrderList.size() != shippingOrderIdsWithInvalidReason.size() + shippingOrdersWithoutFixedLI.size()) {

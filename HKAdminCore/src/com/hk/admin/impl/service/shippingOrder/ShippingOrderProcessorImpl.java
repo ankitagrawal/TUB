@@ -532,7 +532,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         // just log that jit items hence could not be cancelled automatically
         shippingOrderService.logShippingOrderActivity(shippingOrder,
             EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
-            "All items are JIT in this SO");
+            null);
         return;
       } else {
         // only split jit items but do not cancel those items
@@ -542,7 +542,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         shippingOrder = splittedOrdersForJit.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
         shippingOrderService.logShippingOrderActivity(splittedOrdersForJit.get(ShippingOrderConstants.NEW_SHIPPING_ORDER),
             EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
-            "All items are JIT in this SO");
+            null);
       }
     }
     // Block to handle JIt items end

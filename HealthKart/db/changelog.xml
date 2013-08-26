@@ -13974,7 +13974,7 @@
         <sql>
             insert into classification(`id` ,`primary`,`secondary`) values
             (1560,'SO Not cancelled automatically','Inventory found in other warehouse'),
-            (1570,'SO Not cancelled automatically','No inventory for JIT items only');
+            (1570,'SO Not cancelled automatically','No inventory only for JIT items');
 
             insert into reason (`id`,`type`,`classification_id`) values
             (1200,'SO Not cancelled automatically',1560),
