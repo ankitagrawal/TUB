@@ -409,14 +409,13 @@ public class OrderManager {
       // Order lifecycle activity logging - Order Placed
       this.getOrderLoggingService().logOrderActivity(order, order.getUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
-      Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
       // calling health check
       if (!order.isSubscriptionOrder()) {
         inventoryHealthService.tempBookSkuLineItemForOrder(order);
       }
 
 //       Check Inventory health of order lineItems
-      for (CartLineItem cartLineItem : productCartLineItems) {
+      for (CartLineItem cartLineItem : cartLineItems) {
         this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
       }
 
