@@ -14042,8 +14042,8 @@
             (1150,'Reconciliation',1550);
         </sql>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1377078901260-2">
-		<createTable tableName="foreign_si_cli">
+    <changeSet author="Nihal (generated)" id="1377517287151-6">
+    <createTable tableName="foreign_si_cli">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -14053,15 +14053,26 @@
             <column name="product_variant_id" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
+            <column name="foreign_sku_group_id" type="INT"/>
             <column name="foreign_sku_item_id" type="INT"/>
+            <column name="foreign_barcode" type="VARCHAR(45)"/>
+            <column name="fsg_batch_number" type="VARCHAR(45)"/>
+            <column name="fsg_mrp" type="DOUBLE"/>
+            <column name="aqua_mrp" type="DOUBLE"/>
+            <column name="fsg_mfg_dt" type="DATETIME"/>
+            <column name="fsg_expiry_dt" type="DATETIME"/>
+            <column name="fsg_cost_price" type="DOUBLE"/>
             <column name="unit_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_base_order_id" type="INT"/>
+            <column name="foreign_shipping_order_id" type="INT"/>
+            <column name="processed_status" type="VARCHAR(45)">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="counter" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="foreign_base_order_id" type="INT"/>
-            <column name="foreign_shipping_order_id" type="INT"/>
             <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
@@ -14070,19 +14081,21 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1377078901260-20">
-        <createIndex indexName="cart_line_item_id_unit_num_unique" tableName="foreign_si_cli" unique="true">
-            <column name="cart_line_item_id"/>
-            <column name="unit_num"/>
-        </createIndex>
+    <changeSet author="Nihal (generated)" id="1377517435520-4">
+        <addColumn tableName="sku_item">
+            <column name="foreign_si_cli_id" type="INT"/>
+        </addColumn>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1377078901260-22">
-        <addForeignKeyConstraint baseColumnNames="cart_line_item_id" baseTableName="foreign_si_cli" constraintName="fk_foreign_si_cli_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cart_line_item" referencesUniqueColumn="false"/>
+    <changeSet author="Nihal (generated)" id="1377517435520-24">
+        <addForeignKeyConstraint baseColumnNames="cart_line_item_id" baseTableName="foreign_si_cli"  constraintName="fk_foreign_si_cli_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cart_line_item" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1377078901260-23">
-        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="foreign_si_cli" constraintName="fk_foreign_si_cli_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    <changeSet author="Nihal (generated)" id="1377517435520-25">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="foreign_si_cli"  constraintName="fk_foreign_si_cli_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1377078901260-24">
+    <changeSet author="Nihal (generated)" id="1377517435520-28">
+        <addForeignKeyConstraint baseColumnNames="foreign_si_cli_id" baseTableName="sku_item"  constraintName="fk_sku_item_foreign_si_cli1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="foreign_si_cli" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377517435520-29">
         <sql>
             alter table foreign_si_cli modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
         </sql>

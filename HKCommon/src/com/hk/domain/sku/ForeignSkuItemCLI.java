@@ -59,6 +59,35 @@ public class ForeignSkuItemCLI {
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_variant_id", nullable = false)
   private ProductVariant productVariant;
+  
+  @Column(name = "foreign_sku_group_id")
+  private Long foreignSkuGroupId;
+  
+  @Column(name="foreign_barcode")
+  private String foreignBarcode;
+  
+  @Column(name="fsg_batch_number")
+  private String fsgBatchNumber;
+  
+  @Column(name="fsg_mrp")
+  private Double fsgMrp;
+  
+  @Column(name="aqua_mrp")
+  private Double aquaMrp;
+  
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name="fsg_mfg_dt")
+  private Date fsgMfgDate;
+  
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name= "fsg_expiry_dt")
+  private Date fsgExpiryDate;
+  
+  @Column(name="fsg_cost_price")
+  private Double fsgCostPrice;
+  
+  @Column(name="processed_status")
+  private String processedStatus;
 
   public Long getId() {
     return id;
@@ -138,5 +167,77 @@ public class ForeignSkuItemCLI {
 
 	public void setCartLineItem(CartLineItem cartLineItem) {
 		this.cartLineItem = cartLineItem;
+	}
+
+	public Long getForeignSkuGroupId() {
+		return foreignSkuGroupId;
+	}
+
+	public void setForeignSkuGroupId(Long foreignSkuGroupId) {
+		this.foreignSkuGroupId = foreignSkuGroupId;
+	}
+
+	public String getForeignBarcode() {
+		return foreignBarcode;
+	}
+
+	public void setForeignBarcode(String foreignBarcode) {
+		this.foreignBarcode = foreignBarcode;
+	}
+
+	public String getFsgBatchNumber() {
+		return fsgBatchNumber;
+	}
+
+	public void setFsgBatchNumber(String fsgBatchNumber) {
+		this.fsgBatchNumber = fsgBatchNumber;
+	}
+
+	public Double getFsgMrp() {
+		return fsgMrp;
+	}
+
+	public void setFsgMrp(Double fsgMrp) {
+		this.fsgMrp = fsgMrp;
+	}
+
+	public Double getAquaMrp() {
+		return aquaMrp;
+	}
+
+	public void setAquaMrp(Double aquaMrp) {
+		this.aquaMrp = aquaMrp;
+	}
+
+	public Date getFsgMfgDate() {
+		return fsgMfgDate;
+	}
+
+	public void setFsgMfgDate(Date fsgMfgDate) {
+		this.fsgMfgDate = fsgMfgDate;
+	}
+
+	public Date getFsgExpiryDate() {
+		return fsgExpiryDate;
+	}
+
+	public void setFsgExpiryDate(Date fsgExpiryDate) {
+		this.fsgExpiryDate = fsgExpiryDate;
+	}
+
+	public Double getFsgCostPrice() {
+		return fsgCostPrice;
+	}
+
+	public void setFsgCostPrice(Double fsgCostPrice) {
+		this.fsgCostPrice = fsgCostPrice;
+	}
+
+	public String getProcessedStatus() {
+		return processedStatus;
+	}
+
+	public void setProcessedStatus(String processedStatus) {
+		this.processedStatus = processedStatus;
 	}
 }

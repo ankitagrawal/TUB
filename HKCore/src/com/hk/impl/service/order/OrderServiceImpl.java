@@ -736,11 +736,12 @@ public class OrderServiceImpl implements OrderService {
                 for (LineItem lineItem : shippingOrder.getLineItems()){
 	                  //lineItemDao.refresh(lineItem);
                 	CartLineItem cartLineItem = lineItem.getCartLineItem();
-                	if(bookedOnBright(cartLineItem)&&bookedOnBright(lineItem)){
+                	if(bookedOnBright(cartLineItem)){
                 		logger.debug("All the booking on bright already done");
                 	}else
-                		if(bookedOnBright(cartLineItem)&&!bookedOnBright(lineItem)){
-                			bookInventoryOnBright(lineItem);
+                		if(!bookedOnBright(cartLineItem)){
+                			logger.debug("Update booking on Bright");
+                			updateBookedInventoryOnBright(lineItem);
                 		}else
                     if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
                         Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
@@ -782,32 +783,15 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return false;
 	}
-	
-	private boolean bookedOnBright(LineItem lineItem) {
-		try {
 
-			String url = brightlifecareRestUrl + "product/variant/getBookingForLineItemId" + lineItem.getId();
-			ClientRequest request = new ClientRequest(url);
-			ClientResponse response = request.get();
-			int status = response.getStatus();
-			if (status == 200) {
-				String data = (String) response.getEntity(String.class);
-				Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
-				return bookedAtBright;
-			}
-		} catch (Exception e) {
-			logger.error("Exception while checking booking status on Bright", e.getMessage());
-		}
-		return false;
-	}
-
-	private void bookInventoryOnBright(LineItem lineItem) {
+	private void updateBookedInventoryOnBright(LineItem lineItem) {
 		try {
 			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
 			hkapiBookingInfo.setCartLineItemId(lineItem.getId());
 			hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
 			hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
 			hkapiBookingInfo.setQty(lineItem.getQty());
+			hkapiBookingInfo.setWarehouseId(lineItem.getSku().getWarehouse().getId());
 			hkapiBookingInfo.setShippingOrderId(lineItem.getShippingOrder().getId());
 			hkapiBookingInfo.setBaseOrderId(lineItem.getCartLineItem().getId());
 			hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
