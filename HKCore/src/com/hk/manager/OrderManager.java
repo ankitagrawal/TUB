@@ -407,6 +407,7 @@ public class OrderManager {
       }
 
       order = this.getOrderService().save(order);
+      orderDao.refresh(order);
 
       // Order lifecycle activity logging - Order Placed
       this.getOrderLoggingService().logOrderActivity(order, order.getUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
@@ -417,17 +418,15 @@ public class OrderManager {
       }
 
 //       Check Inventory health of order lineItems
-      for (CartLineItem cartLineItem : cartLineItems) {
+      for (CartLineItem cartLineItem : order.getCartLineItems()) {
         this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
       }
 
         if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
             //for some orders userCodCall object is not created, a  check to create one
             try{
-                if (order.getUserCodCall() == null) {
                     UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
                     orderService.saveUserCodCall(userCodCall);
-                }
             } catch (Exception e){
                 logger.info("User Cod Call already exists for " + order.getId());
             }
