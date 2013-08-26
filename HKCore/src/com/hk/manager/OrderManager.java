@@ -420,6 +420,7 @@ public class OrderManager {
 //       Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : order.getCartLineItems()) {
             if (cartLineItem.isType(EnumCartLineItemType.Product)) {
+                logger.info("Inventory Health being called for " + cartLineItem.getProductVariant().getId());
                 this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
             }
         }
