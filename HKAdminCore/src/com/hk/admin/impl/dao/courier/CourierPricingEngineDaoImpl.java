@@ -1,6 +1,10 @@
 package com.hk.admin.impl.dao.courier;
 
+import com.hk.domain.core.Pincode;
+import com.hk.domain.hkDelivery.HKReachPricingEngine;
+import com.hk.domain.hkDelivery.Hub;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +14,8 @@ import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,12 +28,27 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierPricingEngineDao {
 
-    public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse){
-        Criteria criteria = getSession().createCriteria(CourierPricingEngine.class);
-        criteria.add(Restrictions.eq("courier", courier));
-        criteria.add(Restrictions.eq("regionType", regionType));
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse){
+    Criteria criteria = getSession().createCriteria(CourierPricingEngine.class);
+    criteria.add(Restrictions.eq("courier", courier));
+    criteria.add(Restrictions.eq("regionType", regionType));
 //    criteria.add(Restrictions.eq("warehouse", warehouse));
-        return (CourierPricingEngine) criteria.uniqueResult();
+    return (CourierPricingEngine) criteria.uniqueResult();
+  }
+
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Pincode pincode) {
+    DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
+    criteria.add(Restrictions.eq("warehouse", warehouse));
+    criteria.add(Restrictions.eq("hub", pincode.getNearestHub()));
+    // TODO: add restrictions for active pricing engine
+
+    List<HKReachPricingEngine> result = this.findByCriteria(criteria);
+
+    if (result!=null && !result.isEmpty()) {
+      return result.get(0);
+    } else {
+      return null;
     }
+  }
 
 }

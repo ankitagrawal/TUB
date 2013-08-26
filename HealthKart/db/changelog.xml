@@ -13964,4 +13964,24 @@
             (1150,'Reconciliation',1550);
         </sql>
     </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377546998134-1">
+        <createTable tableName="hk_reach_pricing_engine">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="inter_city_cost" type="DECIMAL(8,2)"/>
+            <column name="last_mile_cost" type="DECIMAL(8,2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377546998134-2">
+        <addColumn tableName="pincode">
+            <column name="nearest_hub_id" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

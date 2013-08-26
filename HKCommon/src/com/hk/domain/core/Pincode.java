@@ -2,6 +2,7 @@ package com.hk.domain.core;
 
 
 import com.hk.domain.courier.Zone;
+import com.hk.domain.hkDelivery.Hub;
 
 import javax.persistence.*;
 
@@ -14,95 +15,107 @@ import javax.persistence.*;
 public class Pincode implements java.io.Serializable {
 
 
-    @Id
-    @Column(name = "pincode", unique = true, nullable = false)
-    private String pincode;
+  @Id
+  @Column(name = "pincode", unique = true, nullable = false)
+  private String pincode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id")
-    private City city;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "city_id")
+  private City city;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_id")
-    private State state;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "state_id")
+  private State state;
 
-    @Column(name = "region", nullable = true, length = 25)
-    private String region;
+  @Column(name = "region", nullable = true, length = 25)
+  private String region;
 
-    @Column(name = "locality", length = 25)
-    private String locality;
+  @Column(name = "locality", length = 25)
+  private String locality;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "zone_id", nullable = false)
-    private Zone zone;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "zone_id", nullable = false)
+  private Zone zone;
 
-    public String getPincode() {
-        return pincode;
-    }
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name="nearest_hub_id", nullable = true)
+  private Hub nearestHub;
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
-    }
+  public String getPincode() {
+    return pincode;
+  }
 
-    public City getCity() {
-        return city;
-    }
+  public void setPincode(String pincode) {
+    this.pincode = pincode;
+  }
 
-    public void setCity(City city) {
-        this.city = city;
-    }
+  public City getCity() {
+    return city;
+  }
 
-    public State getState() {
-        return state;
-    }
+  public void setCity(City city) {
+    this.city = city;
+  }
 
-    public void setState(State state) {
-        this.state = state;
-    }
+  public State getState() {
+    return state;
+  }
 
-    public String getLocality() {
-        return this.locality;
-    }
+  public void setState(State state) {
+    this.state = state;
+  }
 
-    public void setLocality(String locality) {
-        this.locality = locality;
-    }
+  public String getLocality() {
+    return this.locality;
+  }
 
-    public String getRegion() {
-        return region;
-    }
+  public void setLocality(String locality) {
+    this.locality = locality;
+  }
 
-    public void setRegion(String region) {
-        this.region = region;
-    }
+  public String getRegion() {
+    return region;
+  }
 
-    public Zone getZone() {
-        return zone;
-    }
+  public void setRegion(String region) {
+    this.region = region;
+  }
 
-    public void setZone(Zone zone) {
-        this.zone = zone;
-    }
+  public Zone getZone() {
+    return zone;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public void setZone(Zone zone) {
+    this.zone = zone;
+  }
 
-        Pincode pincode1 = (Pincode) o;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-      return pincode.equals(pincode1.pincode);
-    }
+    Pincode pincode1 = (Pincode) o;
 
-    @Override
-    public int hashCode() {
-        return pincode.hashCode();
-    }
+    return pincode.equals(pincode1.pincode);
+  }
 
-    @Override
-    public String toString() {
-        return pincode == null ? "" : pincode;
-    }
+  @Override
+  public int hashCode() {
+    return pincode.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return pincode == null ? "" : pincode;
+  }
+
+  public Hub getNearestHub() {
+    return nearestHub;
+  }
+
+  public void setNearestHub(Hub nearestHub) {
+    this.nearestHub = nearestHub;
+  }
 }
 
 

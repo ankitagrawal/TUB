@@ -1,8 +1,10 @@
 package com.hk.admin.pact.dao.courier;
 
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 
@@ -15,6 +17,8 @@ import com.hk.pact.dao.BaseDao;
  */
 public interface CourierPricingEngineDao extends BaseDao {
 
-    public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
+
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Pincode pincode);
 
 }
