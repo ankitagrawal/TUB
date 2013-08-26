@@ -143,9 +143,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         if (shippingOrder.isDropShipping()) {
           reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
         }
-        if (shippingOrder.containsJitProducts()) {
-          reasons.add(EnumReason.Contains_Jit_Products.asReason());
-        }
         // List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
         //if (!enumBuckets.isEmpty()) {
         //reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
@@ -155,6 +152,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
         if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
           reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
+        }
+        if (shippingOrder.containsJitProducts()) {
+          reasons.add(EnumReason.Contains_Jit_Products.asReason());
         }
         if (shippingOrder.getShipment() == null) {
           reasons.add(EnumReason.ShipmentNotCreated.asReason());
