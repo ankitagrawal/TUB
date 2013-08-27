@@ -153,14 +153,32 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public Long getAllowedStepUpInventory(ProductVariant productVariant) {
-    if (productVariant.getMrpQty() == null) {
-      checkInventoryHealth(productVariant);
+    Long allowedQty = 0L;
+
+    ProductVariant freebie = productVariant.getFreeProductVariant();
+
+    if (freebie == null) {
+      if (productVariant.getMrpQty() == null) {
+        checkInventoryHealth(productVariant);
+      }
+      productVariant = productVariantService.getVariantById(productVariant.getId());
+      if (productVariant.getMrpQty() != null) {
+        allowedQty = productVariant.getMrpQty();
+      }
+    } else {
+      Long allowedQtyOfFreebie = 0L;
+      if (freebie.getMrpQty() == null) {
+        checkInventoryHealth(freebie);
+      }
+      freebie = productVariantService.getVariantById(freebie.getId());
+      if (freebie.getMrpQty() != null) {
+        allowedQtyOfFreebie = freebie.getMrpQty();
+      }
+      if (allowedQtyOfFreebie > 0 && allowedQty > 0) {
+        return Math.min(allowedQty, allowedQtyOfFreebie);
+      }
     }
-    productVariant = productVariantService.getVariantById(productVariant.getId());
-    if (productVariant.getMrpQty() == null) {
-      return 0l;
-    }
-    return productVariant.getMrpQty();
+    return allowedQty;
   }
 
   public boolean allInventoryCheckedIn(GoodsReceivedNote grn) {
