@@ -2,21 +2,22 @@ package com.hk.admin.util.helper;
 
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.XslConstants;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.City;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.core.State;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Zone;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
-import com.hk.exception.HealthkartCheckedException;
 import com.hk.pact.service.core.CityService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.core.WarehouseService;
+import com.hk.util.NumberUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +55,8 @@ public class XslPincodeParser {
     WarehouseService warehouseService;
     @Autowired
     StateService stateService;
+    @Autowired
+    HubService hubService;
 
     private static Logger logger = LoggerFactory.getLogger(XslPincodeParser.class);
 
@@ -76,8 +79,12 @@ public class XslPincodeParser {
                 String zoneName = row.getColumnValue(XslConstants.ZONE);
                 String locality = row.getColumnValue(XslConstants.LOCALITY);
                 String region = row.getColumnValue(XslConstants.REGION);
-
-                if (StringUtils.isEmpty(pin) || StringUtils.isEmpty(cityName) || StringUtils.isEmpty(stateName) || StringUtils.isEmpty(zoneName)) {
+                String nearestHubName = row.getColumnValue(XslConstants.NEAREST_HUB);
+                String lastMileCostString = row.getColumnValue(XslConstants.LAST_MILE_COST);
+                Double lastMileCost = null;
+                if (StringUtils.isEmpty(pin) || StringUtils.isEmpty(cityName) || StringUtils.isEmpty(stateName)
+                    || StringUtils.isEmpty(zoneName) || StringUtils.isEmpty(nearestHubName)
+                    || StringUtils.isEmpty(lastMileCostString)) {
                     throw new ExcelBlankFieldException("Blank field for at row number " + rowCount);
                 }
                 if (pin.length() != 6) {
@@ -91,8 +98,14 @@ public class XslPincodeParser {
                 City city = cityService.getCityByName(cityName);
                 State state = stateService.getStateByName(stateName);
                 Zone zone = pincodeService.getZoneByName(zoneName);
-                if (city == null || state == null || zone == null) {
-                    throw new ExcelBlankFieldException("Invalid city/state/zone name at row " + rowCount);
+                Hub nearestHub = hubService.findHubByName(nearestHubName);
+                if (city == null || state == null || zone == null || nearestHub == null) {
+                    throw new ExcelBlankFieldException("Invalid city/state/zone/nearestHub name at row " + rowCount);
+                }
+                try {
+                  lastMileCost = Double.parseDouble(lastMileCostString);
+                } catch (NumberFormatException nfe) {
+                  throw new ExcelBlankFieldException("Last mile cost should be a number only" + rowCount);
                 }
                 pincode.setPincode(pin);
                 pincode.setCity(city);
@@ -100,6 +113,8 @@ public class XslPincodeParser {
                 pincode.setZone(zone);
                 pincode.setLocality(locality);
                 pincode.setRegion(region);
+                pincode.setNearestHub(nearestHub);
+                pincode.setLastMileCost(lastMileCost);
                 pincodeSet.add(pincode);
                 rowCount++;
             }
@@ -126,7 +141,7 @@ public class XslPincodeParser {
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 25);
 
-        int totalColumnNo = 6;
+        int totalColumnNo = 8;
 
         Cell cell;
         for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
@@ -138,8 +153,10 @@ public class XslPincodeParser {
         setCellValue(row, 2, XslConstants.STATE);
         setCellValue(row, 3, XslConstants.LOCALITY);
         setCellValue(row, 4, XslConstants.ZONE);
+        setCellValue(row, 5, XslConstants.NEAREST_HUB);
+        setCellValue(row, 6, XslConstants.LAST_MILE_COST);
 
-        int initialRowNo = 1;
+      int initialRowNo = 1;
         for (Pincode pincode : pincodeList) {
 
             row = sheet1.createRow(initialRowNo);
@@ -154,7 +171,12 @@ public class XslPincodeParser {
             if (pincode.getZone() != null) {
                 setCellValue(row, 4, pincode.getZone().getName());
             }
-            initialRowNo++;
+            if (pincode.getNearestHub() != null) {
+              setCellValue(row, 5, pincode.getNearestHub().getName());
+            }
+            setCellValue(row, 6, pincode.getLastMileCost());
+
+          initialRowNo++;
         }
 
         wb.write(out);
