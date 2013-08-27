@@ -41,6 +41,9 @@ public class Pincode implements java.io.Serializable {
   @JoinColumn(name="nearest_hub_id", nullable = true)
   private Hub nearestHub;
 
+  @Column(name = "last_mile_cost")
+  private Double lastMileCost;
+
   public String getPincode() {
     return pincode;
   }
@@ -115,6 +118,14 @@ public class Pincode implements java.io.Serializable {
 
   public void setNearestHub(Hub nearestHub) {
     this.nearestHub = nearestHub;
+  }
+
+  public Double getLastMileCost() {
+    return lastMileCost;
+  }
+
+  public void setLastMileCost(Double lastMileCost) {
+    this.lastMileCost = lastMileCost;
   }
 }
 

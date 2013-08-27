@@ -16,6 +16,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -54,6 +55,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   public Resolution save() {
+    hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
     courierPricingEngineDao.save(hkReachPricingEngine);
     addRedirectAlertMessage(new SimpleMessage("HK Reach courier info saved"));
     this.prepareEngineData();
@@ -88,5 +90,13 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   public void setOnlineWarehouses(List<Warehouse> onlineWarehouses) {
     this.onlineWarehouses = onlineWarehouses;
+  }
+
+  public List<Hub> getHubs() {
+    return hubs;
+  }
+
+  public void setHubs(List<Hub> hubs) {
+    this.hubs = hubs;
   }
 }

@@ -2,7 +2,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-
 <s:layout-render name="/layouts/defaultAdmin.jsp">
     <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" var="updateReachEngineAction"/>
     <s:layout-component name="heading">
@@ -22,9 +21,6 @@
         <div class="clear">
         </div>
 
-
-
-
         <table>
             <fieldset style="float:left;">
                 <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction">
@@ -34,7 +30,7 @@
                         <td>Select Warehouse:</td>
                         <td>
                             <s:select name="hkReachPricingEngine.warehouse">
-                                <c:forEach items="${updateReachEngineAction.warehouses}" var="warehouse">
+                                <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="warehouse">
                                     <s:option value="${warehouse.id}">${warehouse.name}</s:option>
                                 </c:forEach>
                             </s:select>
@@ -57,8 +53,8 @@
                     </tr>
 
                     <tr>
-                        <td>Last Mile Cost:</td>
-                        <td><s:text name="hkReachPricingEngine.lastMileCost"/></td>
+                        <td>Fixed Cost:</td>
+                        <td><s:text name="hkReachPricingEngine.fixedCost"/></td>
                     </tr>
 
 
@@ -67,9 +63,6 @@
                 </s:form>
             </fieldset>
         </table>
-
-
-
 
     </s:layout-component>
 </s:layout-render>

@@ -2,7 +2,6 @@ package com.hk.admin.engine;
 
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
@@ -179,7 +178,8 @@ public class ShipmentPricingEngine {
 
     // TODO: conditional check for amount of payment
 
-    Double shippingCost =  (pricingEngine.getInterCityCost() + pricingEngine.getLastMileCost()) * weightInGrams;
+    Double shippingCost =  (pricingEngine.getInterCityCost() + pricingEngine.getFixedCost()) * weightInGrams/1000 +
+                               destPincode.getLastMileCost();
 
     return shippingCost;
   }

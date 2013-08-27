@@ -1,9 +1,9 @@
 package com.hk.domain.hkDelivery;
 
-import com.hk.domain.courier.*;
 import com.hk.domain.warehouse.Warehouse;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,8 +32,11 @@ public class HKReachPricingEngine {
   @Column(name = "inter_city_cost")
   private Double interCityCost;
 
-  @Column(name = "last_mile_cost")
-  private Double lastMileCost;
+  @Column(name = "fixed_cost")
+  private Double fixedCost;
+
+  @Column(name = "update_time")
+  private Date updateTime;
 
   public Long getId() {
     return id;
@@ -67,11 +70,19 @@ public class HKReachPricingEngine {
     this.interCityCost = interCityCost;
   }
 
-  public Double getLastMileCost() {
-    return lastMileCost;
+  public Double getFixedCost() {
+    return fixedCost;
   }
 
-  public void setLastMileCost(Double lastMileCost) {
-    this.lastMileCost = lastMileCost;
+  public void setFixedCost(Double lastMileCost) {
+    this.fixedCost = lastMileCost;
+  }
+
+  public Date getUpdateTime() {
+    return updateTime;
+  }
+
+  public void setUpdateTime(Date updateTime) {
+    this.updateTime = updateTime;
   }
 }
