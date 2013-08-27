@@ -5,7 +5,7 @@
 <%@ page import="com.hk.domain.warehouse.Warehouse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" var="mpa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction" var="mpa"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search/Add Pincode Region Zone">
 
@@ -71,7 +71,7 @@
 			<div style=" float:left;display:inline-block; %">
 				<fieldset>
 					<legend>Add Pincode Region</legend>
-					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
+					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction">
 						<table align="center">
 							<tr>
 								<td><label>Pincode</label></td>
@@ -120,7 +120,7 @@
 			
 			<div style="display:inline-block;">
 				<c:if test="${(mpa.pincodeRegionZoneList != null) &&(fn:length(mpa.pincodeRegionZoneList) > 0)}">
-				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
+				<s:form beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction">
 					<table align="center" class="cont"> Available Pincode Region :
 						<thead>
 						<tr>
@@ -179,7 +179,7 @@
 
 			<div style="display:inline-block; float:right;padding-right:40px;">
 				<span style="font:bold;color:darkolivegreen;"><s:link
-						beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" event="showRemainingPrz">
+						beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction" event="showRemainingPrz">
 					Remaining Pincode Region
 				</s:link> </span>
 
