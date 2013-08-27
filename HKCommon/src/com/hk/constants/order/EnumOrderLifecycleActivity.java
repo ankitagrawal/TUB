@@ -58,6 +58,7 @@ public enum EnumOrderLifecycleActivity {
   RefundAmountExceedsFailed(300L,"Amount exceeds the refundable amount"),
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
   RefundMailToAdmin(900L, "Manual refund task mail sent to admin"),
+  NoActionAtReconciliation(1050L, "No action taken at reconciliation(refund/reward)"),
   ;
 
   private String name;

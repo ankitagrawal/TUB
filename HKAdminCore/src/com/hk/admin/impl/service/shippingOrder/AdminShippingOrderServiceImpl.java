@@ -352,8 +352,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             //paymentService.setRefundAmount(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
             getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                     EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RewardGiven.asReason(),comment);
-        } else {
+
+        } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
             refundPayment(shippingOrder,comment);
+        } else if (EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
+                    EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.NoActionTakenAtReconciliation.asReason(),comment);
         }
     }
 
@@ -418,7 +422,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 			for (LineItem lineItem : lineItems) {
 				toSkuList.clear();
 				toSkuList.add(getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse));
-				List<SkuItem> skuItemList = getSkuItemDao().getSkuItems(toSkuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), lineItem.getMarkedPrice());
+				List<SkuItem> skuItemList = getSkuItemDao().getSkuItems(toSkuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), lineItem.getMarkedPrice());
 				if (skuItemList != null && skuItemList.size() >= lineItem.getQty()) {
 					lineItem.setSku(toSkuList.get(0));
 				} else {

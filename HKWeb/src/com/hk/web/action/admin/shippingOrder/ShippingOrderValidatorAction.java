@@ -110,7 +110,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
           logger.debug("Do fixing...");
           group = skuItem.getSkuGroup();
           skuItems = skuGroupService.getSkuItems(Arrays.asList(group.getSku()),
-              Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus()), group.getMrp());
+              Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), group.getMrp());
           logger.debug("Instock Units=" + (skuItems != null ? skuItems.size() : 0L));
           if (!skuItems.isEmpty()) {
             SkuItem newSkuItem = skuItems.get(0);

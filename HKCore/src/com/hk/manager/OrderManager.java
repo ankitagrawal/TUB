@@ -1,22 +1,8 @@
 package com.hk.manager;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -27,7 +13,6 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.builder.CartLineItemBuilder;
-import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
@@ -37,18 +22,13 @@ import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.CartLineItemConfig;
-import com.hk.domain.order.CartLineItemExtraOption;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.PrimaryReferrerForOrder;
-import com.hk.domain.order.SecondaryReferrerForOrder;
+import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.store.EnumStore;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.impl.service.codbridge.OrderEventPublisher;
@@ -64,9 +44,9 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.combo.ComboService;
 import com.hk.pact.service.core.AffilateService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -78,6 +58,15 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @Component
 public class OrderManager {
@@ -433,6 +422,18 @@ public class OrderManager {
         this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
       }
 
+        if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
+            //for some orders userCodCall object is not created, a  check to create one
+            try{
+                if (order.getUserCodCall() == null) {
+                    UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                    orderService.saveUserCodCall(userCodCall);
+                }
+            } catch (Exception e){
+                logger.info("User Cod Call already exists for " + order.getId());
+            }
+        }
+
 
       this.getUserService().updateIsProductBought(order);
 
@@ -621,7 +622,7 @@ public class OrderManager {
         }
 
         if (!(product.isJit() || product.isService() || product.isDropShipping() || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
-          Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(productVariant);
+          Long unbookedInventory = this.inventoryService.getAllowedStepUpInventory(productVariant);
           if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
             // Check in case of negative unbooked inventory
             if (comboInstance != null) {
@@ -673,8 +674,8 @@ public class OrderManager {
       isJit = true;
     }
     if (!isJit && !isService) {
-//            Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-      Long unbookedInventory = this.inventoryService.getAvailableUnbookedInventory(productVariant);
+//            Long unbookedInventory = inventoryService.getAllowedStepUpInventory(skuService.getSKUsForProductVariant(productVariant));
+      Long unbookedInventory = this.inventoryService.getAllowedStepUpInventory(productVariant);
       if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
         return false;
       }
@@ -750,53 +751,6 @@ public class OrderManager {
 
   }
 
-  /**
-   * This method need to be re-written as multiple wh would be having different tax rates hence different margins
-   *
-   * @param order
-   * @return
-   */
-  public Double getNetMarginOnOrder(Order order) {
-    Double margin = 0.0;
-    try {
-      Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-      for (CartLineItem lineItem : productCartLineItems) {
-        List<Sku> skuList = this.getSkuService().getSKUsForProductVariant(lineItem.getProductVariant());
-        if (skuList != null && !skuList.isEmpty()) {
-          Sku sku = skuList.get(0);
-          Double costPrice = 0.0;
-          if (lineItem.getProductVariant().getCostPrice() != null) {
-            costPrice = lineItem.getProductVariant().getCostPrice();
-          } else {
-            costPrice = lineItem.getHkPrice();
-          }
-          Double taxPaid = 0.0;
-          Double taxRecoverable = 0.0;
-          Supplier supplier = this.getInventoryService().getSupplierForSKU(sku);
-          if (supplier != null && costPrice != null) {
-            if (supplier.getState().equalsIgnoreCase("haryana")) {
-              Double surcharge = 0.05;
-              taxPaid = costPrice * sku.getTax().getValue() * (1 + surcharge);
-            } else {
-              // Double surcharge = 0.0; // CST Surcharge
-              Double cst = 0.02; // CST
-              taxPaid = costPrice * cst;
-            }
-            if (supplier.getState().equalsIgnoreCase("haryana")) {
-              taxRecoverable = taxPaid;
-            }
-          }
-          margin += ((lineItem.getHkPrice() * (1 - sku.getTax().getValue() * (1 + 0.05)) - (costPrice + taxPaid - taxRecoverable)) * lineItem.getQty() - this.getNetDiscountOnLineItem(lineItem));
-        }
-      }
-    } catch (Exception e) {
-      logger.error("Error while calculating margin for order - " + order.getId());
-      logger.error(e.getMessage(), e);
-    }
-
-    return margin;
-  }
-
   public void setGroundShippedItemQuantity(Order order) {
     Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     for (CartLineItem cartLineItem : cartLineItems) {
@@ -804,13 +758,6 @@ public class OrderManager {
         cartLineItem.setQty(0L);
       }
     }
-    /*
-    * if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) { for
-    * (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) { CartLineItem
-    * lineItem = iterator.next(); if
-    * (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) ||
-    * lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) { } } }
-    */
   }
 
   public CartLineItemService getCartLineItemService() {

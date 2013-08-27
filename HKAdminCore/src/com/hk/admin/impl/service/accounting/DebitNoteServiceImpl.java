@@ -35,8 +35,8 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 	@Autowired
 	DebitNoteDao debitNoteDao;
 
-    @Autowired
-    SeekInvoiceNumService seekInvoiceNumService;
+	@Autowired
+	SeekInvoiceNumService seekInvoiceNumService;
 
     @Autowired
     SupplierTransactionService supplierTransactionService;
@@ -49,7 +49,7 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 
 			DebitNoteLineItemDto debitNoteLineItemDto = new DebitNoteLineItemDto();
 			debitNoteLineItemDto.setDebitNoteLineItem(debitNoteLineItem);
-			
+
 			debitNoteLineItemDto.setTaxable(debitNoteLineItem.getTaxableAmount());
 			debitNoteLineItemDto.setPayable(debitNoteLineItem.getPayableAmount());
 			debitNoteLineItemDto.setSurcharge(debitNoteLineItem.getSurchargeAmount());
@@ -69,97 +69,78 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 
 	}
 
-	public DebitNote createDebitNoteLineItem(DebitNote debitNote, List<RtvNoteLineItem> rtvNoteLineItems,
-			List<ExtraInventoryLineItem> extraInventoryLineItems) {
-		
-		Double finalDebitAmount = 0.0;
-		List<ExtraInventoryLineItem> eiLineItems = new ArrayList<ExtraInventoryLineItem>();
-		Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
-		if (rtvNoteLineItems != null && rtvNoteLineItems.size() > 0) {
-			for (RtvNoteLineItem lineItem : rtvNoteLineItems) {
-				ExtraInventoryLineItem eiLiItems = lineItem.getExtraInventoryLineItem();
-				if (eiLiItems != null) {
-					eiLineItems.add(eiLiItems);
-				}
-			}
-		}
+	public DebitNote createDebitNoteLineItem(DebitNote debitNote, List<ExtraInventoryLineItem> extraInventoryLineItems) {
 
-		if (extraInventoryLineItems != null && extraInventoryLineItems.size() > 0) {
-			eiLineItems.addAll(extraInventoryLineItems);
-		}
+		Double finalDebitAmount = 0.0;
+		Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
 
 		debitNote.setCreateDate(new Date());
 		debitNote.setDebitNoteStatus(EnumDebitNoteStatus.Created.asDebitNoteStatus());
 		debitNote.setDebitNoteType(EnumDebitNoteType.PreCheckin.asEnumDebitNoteType());
 		// TODO: set invoice number and
-		if (rtvNoteLineItems != null && rtvNoteLineItems.size() > 0) {
-			RtvNote note = rtvNoteLineItems.get(0).getRtvNote();
-			debitNote.setSupplier(note.getExtraInventory().getPurchaseOrder().getSupplier());
-			debitNote.setWarehouse(note.getExtraInventory().getPurchaseOrder().getWarehouse());
-		} else if (extraInventoryLineItems != null && extraInventoryLineItems.size() > 0) {
-			ExtraInventoryLineItem eili = extraInventoryLineItems.get(0);
-			debitNote.setSupplier(eili.getExtraInventory().getPurchaseOrder().getSupplier());
-			debitNote.setWarehouse(eili.getExtraInventory().getPurchaseOrder().getWarehouse());
-		}
-		Set<DebitNoteLineItem> debitNoteLineItems = new HashSet<DebitNoteLineItem>();
-		for (ExtraInventoryLineItem eili : eiLineItems) {
-			DebitNoteLineItem debitNoteLineItem = new DebitNoteLineItem();
-			debitNoteLineItem.setCostPrice(eili.getCostPrice());
-			debitNoteLineItem.setMrp(eili.getMrp());
-			debitNoteLineItem.setQty(eili.getReceivedQty());
-			debitNoteLineItem.setTaxableAmount(eili.getTaxableAmount());
-			debitNoteLineItem.setTaxAmount(eili.getTaxAmount());
-			debitNoteLineItem.setSurchargeAmount(eili.getSurchargeAmount());
-			debitNoteLineItem.setPayableAmount(eili.getPayableAmount());
-			if (eili.getSku() != null) {
-				debitNoteLineItem.setSku(eili.getSku());
+		if (extraInventoryLineItems != null && extraInventoryLineItems.size() > 0) {
+			debitNote.setSupplier(extraInventoryLineItems.get(0).getExtraInventory().getPurchaseOrder().getSupplier());
+			debitNote.setWarehouse(extraInventoryLineItems.get(0).getExtraInventory().getPurchaseOrder().getWarehouse());
+			Set<DebitNoteLineItem> debitNoteLineItems = new HashSet<DebitNoteLineItem>();
+			for (ExtraInventoryLineItem eili : extraInventoryLineItems) {
+				DebitNoteLineItem debitNoteLineItem = new DebitNoteLineItem();
+				debitNoteLineItem.setCostPrice(eili.getCostPrice());
+				debitNoteLineItem.setMrp(eili.getMrp());
+				debitNoteLineItem.setQty(eili.getReceivedQty());
+				debitNoteLineItem.setTaxableAmount(eili.getTaxableAmount());
+				debitNoteLineItem.setTaxAmount(eili.getTaxAmount());
+				debitNoteLineItem.setSurchargeAmount(eili.getSurchargeAmount());
+				debitNoteLineItem.setPayableAmount(eili.getPayableAmount());
+				if (eili.getSku() != null) {
+					debitNoteLineItem.setSku(eili.getSku());
+				} else {
+					debitNoteLineItem.setProductName(eili.getProductName());
+				}
+				if (eili.getTax() != null) {
+					debitNoteLineItem.setTax(eili.getTax());
+				}
+				totalTaxable += eili.getTaxableAmount();
+				totalTax += eili.getTaxAmount();
+				totalSurcharge += eili.getSurchargeAmount();
+				totalPayable += eili.getPayableAmount();
+				finalDebitAmount += eili.getPayableAmount();
+				debitNoteLineItem.setDiscountPercent(0.0D);
+				debitNoteLineItems.add(debitNoteLineItem);
 			}
-			else{
-				debitNoteLineItem.setProductName(eili.getProductName());
+			debitNote.setFreightForwardingCharges(0.0D);
+			debitNote.setDiscount(0.0D);
+			debitNote.setTaxableAmount(totalTaxable);
+			debitNote.setTaxAmount(totalTax);
+			debitNote.setSurchargeAmount(totalSurcharge);
+			debitNote.setPayableAmount(totalPayable);
+			debitNote.setFinalDebitAmount(finalDebitAmount);
+			debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
+			Set<DebitNoteLineItem> debitNoteLineItemSet = new HashSet<DebitNoteLineItem>();
+			for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
+				debitNoteLineItem.setDebitNote(debitNote);
+				debitNoteLineItem = (DebitNoteLineItem) getDebitNoteDao().save(debitNoteLineItem);
+				debitNoteLineItemSet.add(debitNoteLineItem);
 			}
-			if (eili.getTax() != null) {
-				debitNoteLineItem.setTax(eili.getTax());
-			}
-			totalTaxable += eili.getTaxableAmount();
-			totalTax += eili.getTaxAmount();
-			totalSurcharge += eili.getSurchargeAmount();
-			totalPayable += eili.getPayableAmount();
-			finalDebitAmount+=eili.getPayableAmount();
-			debitNoteLineItem.setDiscountPercent(0.0D);
-			debitNoteLineItems.add(debitNoteLineItem);
+			debitNote.setDebitNoteLineItems(debitNoteLineItemSet);
+			debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
+			return debitNote;
 		}
-		debitNote.setFreightForwardingCharges(0.0D);
-		debitNote.setDiscount(0.0D);
-		debitNote.setTaxableAmount(totalTaxable);
-		debitNote.setTaxAmount(totalTax);
-		debitNote.setSurchargeAmount(totalSurcharge);
-		debitNote.setPayableAmount(totalPayable);
-		debitNote.setFinalDebitAmount(finalDebitAmount);
-		debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
-		Set<DebitNoteLineItem> debitNoteLineItemSet = new HashSet<DebitNoteLineItem>();
-		for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
-			debitNoteLineItem.setDebitNote(debitNote);
-			debitNoteLineItem = (DebitNoteLineItem) getDebitNoteDao().save(debitNoteLineItem);
-			debitNoteLineItemSet.add(debitNoteLineItem);
-		}
-		debitNote.setDebitNoteLineItems(debitNoteLineItemSet);
-		debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
-		return debitNote;
+		return null;
 
 	}
-	
+
 	@Override
 	public DebitNote createDebitNoteLineItemWithRVLineItems(DebitNote debitNote, List<RvLineItem> rvLineItems) {
 		// TODO Auto-generated method stub
-    	debitNote.setCreateDate(new Date());
-    	Double finalDebitAmount = 0.0;
-    	Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
+		debitNote.setCreateDate(new Date());
+		Double finalDebitAmount = 0.0;
+		Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
 		debitNote.setDebitNoteStatus(EnumDebitNoteStatus.Created.asDebitNoteStatus());
 		debitNote.setDebitNoteType(EnumDebitNoteType.PostCheckin.asEnumDebitNoteType());
 		debitNote.setFreightForwardingCharges(0.0D);
 		Set<DebitNoteLineItem> debitNoteLineItems = new HashSet<DebitNoteLineItem>();
-		
-		for(RvLineItem lineItem: rvLineItems){
+
+		for (RvLineItem lineItem : rvLineItems) {
 			Double taxableAmount = 0.0D;
 			Double discountPercentage = 0D;
 			DebitNoteLineItem debitNoteLineItem = new DebitNoteLineItem();
@@ -170,10 +151,9 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 			if (lineItem.getSku() != null) {
 				debitNoteLineItem.setSku(lineItem.getSku());
 				debitNoteLineItem.setProductName(lineItem.getSku().getProductVariant().getVariantName());
-				if(debitNote.getSupplier().getState().equalsIgnoreCase(debitNote.getWarehouse().getState())){
+				if (debitNote.getSupplier().getState().equalsIgnoreCase(debitNote.getWarehouse().getState())) {
 					debitNoteLineItem.setTax(lineItem.getSku().getTax());
-				}
-				else{
+				} else {
 					Tax tax = new Tax();
 					tax.setId(EnumTax.CST.getId());
 					tax.setName(EnumTax.CST.getName());
@@ -183,7 +163,8 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 				}
 				taxableAmount = (lineItem.getReconciledQty() * (lineItem.getCostPrice() - lineItem.getCostPrice() * discountPercentage / 100));
 				totalTaxable += taxableAmount;
-				TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(debitNote.getSupplier(),debitNote.getWarehouse().getState(), debitNoteLineItem.getTax(), taxableAmount);
+				TaxComponent taxComponent = TaxUtil.getSupplierTaxForVariedTaxRatesWithoutSku(debitNote.getSupplier(), debitNote.getWarehouse().getState(),
+						debitNoteLineItem.getTax(), taxableAmount);
 				totalTax += taxComponent.getTax();
 				totalSurcharge += taxComponent.getSurcharge();
 				totalPayable += taxComponent.getPayable();
@@ -198,8 +179,8 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 		debitNote.setTaxableAmount(totalTaxable);
 		debitNote.setTaxAmount(totalTax);
 		debitNote.setSurchargeAmount(totalSurcharge);
-		finalDebitAmount+=totalPayable;
-		finalDebitAmount+=debitNote.getFreightForwardingCharges();
+		finalDebitAmount += totalPayable;
+		finalDebitAmount += debitNote.getFreightForwardingCharges();
 		debitNote.setFinalDebitAmount(finalDebitAmount);
 		debitNote.setDiscount(0.0D);
 		debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
@@ -212,13 +193,13 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 		debitNote.setDebitNoteLineItems(debitNoteLineItemSet);
 		debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
 		return debitNote;
-		
+
 	}
 
     @Override
     public DebitNote save(DebitNote debitNote) {
         String invoiceNumType = InvoiceNumHelper.PREFIX_FOR_DEBIT_NOTE;
-        if(debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId()) && debitNote.getDebitNoteNumber()==null){
+        if (debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId()) && debitNote.getDebitNoteNumber() == null) {
             debitNote.setDebitNoteNumber(seekInvoiceNumService.getInvoiceNum(invoiceNumType, debitNote.getWarehouse()));
             supplierTransactionService.createSupplierTransaction(debitNote.getSupplier(), EnumSupplierTransactionType.PurchaseReturn.asSupplierTransactionType(),
                     debitNote.getFinalDebitAmount(), debitNote.getCloseDate(), debitNote);
@@ -226,29 +207,28 @@ public class DebitNoteServiceImpl implements DebitNoteService {
         return (DebitNote)getDebitNoteDao().save(debitNote);
     }
 
-    @Override
-    public DebitNote save(DebitNote debitNote, List<DebitNoteLineItem> debitNoteLineItems) {
-        for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
-            if (debitNoteLineItem.getDebitNote() == null) {
-                debitNoteLineItem.setDebitNote(debitNote);
-            }
-            if (debitNoteLineItem.getQty() != null && debitNoteLineItem.getQty() <= 0) {
-                getDebitNoteDao().delete(debitNoteLineItem);
-            } else {
-                getDebitNoteDao().save(debitNoteLineItem);
-            }
-        }
-        return save(debitNote);
-    }
-    
-    @Override
-    public ReconciliationVoucher getRvForDebitNote(DebitNote debitNote) {
-    	return getDebitNoteDao().getRvForDebitNote(debitNote);
-    }
-    
-    public DebitNoteDao getDebitNoteDao() {
-		return debitNoteDao;
+ 	@Override
+	public DebitNote save(DebitNote debitNote, List<DebitNoteLineItem> debitNoteLineItems) {
+		for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
+			if (debitNoteLineItem.getDebitNote() == null) {
+				debitNoteLineItem.setDebitNote(debitNote);
+			}
+			if (debitNoteLineItem.getQty() != null && debitNoteLineItem.getQty() <= 0) {
+				getDebitNoteDao().delete(debitNoteLineItem);
+			} else {
+				getDebitNoteDao().save(debitNoteLineItem);
+			}
+		}
+		return save(debitNote);
 	}
 
+	@Override
+	public ReconciliationVoucher getRvForDebitNote(DebitNote debitNote) {
+		return getDebitNoteDao().getRvForDebitNote(debitNote);
+	}
+
+	public DebitNoteDao getDebitNoteDao() {
+		return debitNoteDao;
+	}
 
 }

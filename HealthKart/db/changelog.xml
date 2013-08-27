@@ -13964,6 +13964,15 @@
             (1150,'Reconciliation',1550);
         </sql>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130826-01">
+        <sql>
+            insert into classification(`id` ,`primary`,`secondary`) values
+            (1750,'No Action Taken',null);
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (1450,'Reconciliation',1750);
+        </sql>
+    </changeSet>
     <changeSet author="tarun (generated)" id="1372941433730-1">
         <createTable tableName="busy_api_call_log">
             <column autoIncrement="true" name="id" type="INT">

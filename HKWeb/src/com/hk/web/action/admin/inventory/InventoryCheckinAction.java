@@ -228,7 +228,7 @@ public class InventoryCheckinAction extends BaseAction {
                   addRedirectAlertMessage(new SimpleMessage("Product is marked Deleted for Variant:" + productVariant.getId() + " - Plz get it fixed by Category Team"));
                   return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                 }
-                Sku sku = getSkuService().findSKU(productVariant, grn.getWarehouse());
+                Sku sku = getSkuService().getSKU(productVariant, grn.getWarehouse());
                 // Check for In Progress Audit  for Variant.
                 List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
                 if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
@@ -376,7 +376,7 @@ public class InventoryCheckinAction extends BaseAction {
         StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
-        sku = skuService.findSKU(productVariant, toWarehouse);
+        sku = skuService.getSKU(productVariant, toWarehouse);
         if (sku == null) {
             addRedirectAlertMessage(new SimpleMessage("No SKU Found for ProductVariantId:-" + (productVariant == null ? "" : productVariant.getId())));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
@@ -393,7 +393,7 @@ public class InventoryCheckinAction extends BaseAction {
         if (skuItemBarcode != null) {
             skuItem = skuItemBarcode;
         } else {
-            skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItem = skuGroupService.getSkuItem(skuGroup,Arrays.asList( EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus()));
         }
 
         if (skuItem != null) {

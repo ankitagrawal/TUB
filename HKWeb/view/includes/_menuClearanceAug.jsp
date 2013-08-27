@@ -3,6 +3,8 @@
 
 
 <ul class="menu">
+  <li><a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/snCS.jsp">Sports<br />
+    Nutrition</a></li>
   <li><a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/hnCS.jsp">Health<br />
     Nutrition</a></li>
   <li><a href="${pageContext.request.contextPath}/pages/campaign/clearance/august/devicesCS.jsp">Health<br />
