@@ -300,7 +300,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         }
       }
     }
-    if (!cancelFlag) {
+    if (cancelFlag) {
       return shippingOrder;
     } else {
       return null;
