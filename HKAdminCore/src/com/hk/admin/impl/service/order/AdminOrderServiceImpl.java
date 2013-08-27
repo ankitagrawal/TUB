@@ -83,6 +83,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RewardPointService rewardPointService;
     @Autowired
     private OrderService orderService;
+    @Autowired
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     ShippingOrderService shippingOrderService;
@@ -237,10 +238,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     private void relieveExtraLiabilties(Long reconciliationType, Order order, String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
         if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
             addRewardPoints(order, comment);
-        } else {
+        } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
             refundPayment(order,comment);
+        } else if (EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
+            logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.NoActionAtReconciliation), comment);
         }
     }
 
@@ -586,9 +590,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AdminShippingOrderService getAdminShippingOrderService() {
-        if (adminShippingOrderService == null) {
+       /* if (adminShippingOrderService == null) {
             adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
-        }
+        }*/
         return adminShippingOrderService;
     }
 
