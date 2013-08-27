@@ -11,6 +11,7 @@ import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -27,6 +28,7 @@ import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
@@ -92,6 +94,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
   @Autowired
   private AdminInventoryService           adminInventoryService;
+
+  @Autowired
+  private ProductVariantService           productVariantService;
 
   @Transactional
   public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
@@ -513,14 +518,15 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       Long netQty = adminInventoryService.getNetInventoryAtServiceableWarehouses(lineItem.getSku().getProductVariant());
       Long bookedQty = adminInventoryService.getBookedInventory(lineItem.getSku().getProductVariant());
       if (!((netQty - bookedQty) >= lineItem.getQty())){
-        if (lineItem.getSku().getProductVariant().getProduct().isJit()) {
+        ProductVariant itemVariant = lineItem.getSku().getProductVariant();
+        if (itemVariant.getProduct().isJit() || productVariantService.isFreeVariant(itemVariant)) {
           outOfStockJitItems.add(lineItem);
         } else {
           outOfStockLineItems.add(lineItem);
         }
       }
     }
-    // BLock to handle JIT items begin
+    // BLock to handle JIT items or free variants begin
     if (!outOfStockJitItems.isEmpty()) {
       if (outOfStockJitItems.size() == shippingOrder.getLineItems().size()) {
         // just log that jit items hence could not be cancelled automatically
