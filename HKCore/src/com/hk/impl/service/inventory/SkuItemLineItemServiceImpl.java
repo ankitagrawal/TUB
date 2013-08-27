@@ -410,6 +410,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return getSkuItemLineItemDao().getForeignSkuItemCLI(id);
   }
 
+  public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem){
+    return getSkuItemLineItemDao().getForeignSkuItemCli(cartLineItem);
+  }
 
   public SkuItem getSkuItem(Long fsicliId) {
     return getSkuItemDao().getSkuItem(fsicliId);

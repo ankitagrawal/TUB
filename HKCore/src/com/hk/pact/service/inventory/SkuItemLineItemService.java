@@ -50,5 +50,6 @@ public interface SkuItemLineItemService {
 
   public void populateSILIForABJit(List<ForeignSkuItemCLI> foreignSkuItemCLIs, LineItem lineItem);
 
+  public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem);
 
 }

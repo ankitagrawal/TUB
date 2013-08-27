@@ -740,12 +740,8 @@ public class OrderServiceImpl implements OrderService {
                 for (LineItem lineItem : shippingOrder.getLineItems()){
 	                  //lineItemDao.refresh(lineItem);
                 	CartLineItem cartLineItem = lineItem.getCartLineItem();
-                  List<Warehouse> servicableWarehouse = warehouseService.getServiceableWarehouses();
-                  List<Long> whIds = new ArrayList<Long>();
-                  for (Warehouse warehouse : servicableWarehouse) {
-                    whIds.add(warehouse.getId());
-                  }
-                  if (!whIds.contains(lineItem.getShippingOrder().getWarehouse().getId())) {
+                  if(bookedOnBright(cartLineItem)){
+                    logger.debug("Update booking on Bright");
                     List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem);
                     List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
                     skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
@@ -778,7 +774,7 @@ public class OrderServiceImpl implements OrderService {
 	private boolean bookedOnBright(CartLineItem cartLineItem) {
 		try {
 
-			String url = brightlifecareRestUrl + "product/variant/getBookingForCartLineItemId" + cartLineItem.getId();
+			String url = brightlifecareRestUrl + "product/variant/getBookingForCartLineItemId/" + cartLineItem.getId();
 			ClientRequest request = new ClientRequest(url);
 			ClientResponse response = request.get();
 			int status = response.getStatus();
@@ -795,19 +791,21 @@ public class OrderServiceImpl implements OrderService {
 
 	private List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem) {
     List<HKAPIForeignBookingResponseInfo> infos = null;
+    List<HKAPIForeignBookingResponseInfo> infos1 = null;
 		try {
-
+      List <ForeignSkuItemCLI > foreignSkuItemCLIs = lineItem.getCartLineItem().getForeignSkuItemCLIs();
+      for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs){
 			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
 			hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
 			hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
-			hkapiBookingInfo.setQty(lineItem.getQty());
 			hkapiBookingInfo.setWhId(lineItem.getSku().getWarehouse().getId());
 			hkapiBookingInfo.setSoId(lineItem.getShippingOrder().getId());
 			hkapiBookingInfo.setBoId(lineItem.getCartLineItem().getId());
 			hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
+      hkapiBookingInfo.setFsiCLIId(foreignSkuItemCLI.getId());
 
 			Gson gson = new Gson();
-			String json = gson.toJson(hkapiBookingInfo);
+			String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
 
 			String url = brightlifecareRestUrl + "product/variant/" + "bookInventoryOnBright/";
 			ClientRequest request = new ClientRequest(url);
@@ -819,11 +817,14 @@ public class OrderServiceImpl implements OrderService {
         Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
         }.getType();
         infos = new Gson().fromJson(data, listType);
+        infos1.add(infos.get(0));
 			}
-		} catch (Exception e) {
+		}} catch (Exception e) {
 			logger.error("Exception while booking/updating Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId(),e);
 		}
-     return infos;
+
+     return infos1;
+
 	}
 
 	@Transactional
