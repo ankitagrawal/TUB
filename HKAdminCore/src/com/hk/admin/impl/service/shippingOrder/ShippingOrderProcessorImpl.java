@@ -410,15 +410,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         selectedLineItem.setShippingOrder(newShippingOrder);
         if ((selectedLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
           flagMapNewSO.put("dropShipItemPresent", true);
-          break;
-        }
-        lineItemDao.save(selectedLineItem);
-      }
-      for (LineItem selectedLineItem : selectedLineItems) {
-        selectedLineItem.setShippingOrder(newShippingOrder);
-        if ((selectedLineItem.getSku().getProductVariant().getProduct().isJit())) {
+        } else if ((selectedLineItem.getSku().getProductVariant().getProduct().isJit())) {
           flagMapNewSO.put("jitItemPresent", true);
-          break;
         }
         lineItemDao.save(selectedLineItem);
       }
