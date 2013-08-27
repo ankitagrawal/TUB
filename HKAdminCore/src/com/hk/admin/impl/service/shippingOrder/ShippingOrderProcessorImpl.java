@@ -155,6 +155,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         //}
         // finding line items with inventory mismatch
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
+        if (shippingOrder == null) {
+          return false;
+        }
         if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
           reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
         }
@@ -213,6 +216,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             loggedInUser = getUserService().getAdminUser();
           }
           shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
+          if (shippingOrder == null) {
+            return false;
+          }
           if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
             shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder,
                 EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch,
@@ -280,20 +286,25 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       }
     }
 
+    boolean cancelFlag = false;
     if (selectedItems.size() > 0) {
       if (selectedItems.size() == shippingOrder.getLineItems().size()) {
-        this.cancelUnfulfilledSO(shippingOrder, user);
+        cancelFlag = this.cancelUnfulfilledSO(shippingOrder, user);
       } else {
         boolean splitSuccess = this.autoSplitSO(shippingOrder, selectedItems, splittedOrders,
             messages);
         if (splitSuccess) {
           ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
-          this.cancelUnfulfilledSO(cancelledSO, user);
+          cancelFlag = this.cancelUnfulfilledSO(cancelledSO, user);
 
         }
       }
     }
-    return shippingOrder;
+    if (!cancelFlag) {
+      return shippingOrder;
+    } else {
+      return null;
+    }
   }
 
 
@@ -509,7 +520,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
    * @param shippingOrder
    * @param user
    */
-  private void cancelUnfulfilledSO (ShippingOrder shippingOrder, User user) {
+  private boolean cancelUnfulfilledSO (ShippingOrder shippingOrder, User user) {
     Set<LineItem> outOfStockLineItems = new HashSet<LineItem>();
     Set<LineItem> outOfStockJitItems = new HashSet<LineItem>();
     StringBuilder comment = new StringBuilder();
@@ -533,7 +544,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         shippingOrderService.logShippingOrderActivity(shippingOrder,
             EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
             null);
-        return;
+        return false;
       } else {
         // only split jit items but do not cancel those items and escalate rest of the order if possible
         Map<String,ShippingOrder> splittedOrdersForJit = new HashMap<String, ShippingOrder>();
@@ -561,7 +572,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO,
           EnumReason.INV_FOUND_DIFF_WAREHOUSE.asReason(), comment.toString());
 
-      return;
+      return false;
     } else {
       Map<String,ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
       List<String>  messages = new ArrayList<String>();
@@ -594,6 +605,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
     }
 
+    return true;
   }
 
 	/* Setters and getters begin*/
