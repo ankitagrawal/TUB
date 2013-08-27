@@ -787,14 +787,13 @@ public class OrderServiceImpl implements OrderService {
 	private void updateBookedInventoryOnBright(LineItem lineItem) {
 		try {
 			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-			hkapiBookingInfo.setCartLineItemId(lineItem.getId());
 			hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
-			hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
+			hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
 			hkapiBookingInfo.setQty(lineItem.getQty());
-			hkapiBookingInfo.setWarehouseId(lineItem.getSku().getWarehouse().getId());
-			hkapiBookingInfo.setShippingOrderId(lineItem.getShippingOrder().getId());
-			hkapiBookingInfo.setBaseOrderId(lineItem.getCartLineItem().getId());
-			hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
+			hkapiBookingInfo.setWhId(lineItem.getSku().getWarehouse().getId());
+			hkapiBookingInfo.setSoId(lineItem.getShippingOrder().getId());
+			hkapiBookingInfo.setBoId(lineItem.getCartLineItem().getId());
+			hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
 
 			Gson gson = new Gson();
 			String json = gson.toJson(hkapiBookingInfo);

@@ -301,4 +301,12 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     return (Long) query.list().get(0);
   }
 
+
+
+  public SkuItem getSkuItem(Long fsicliId) {
+    String sql = "select si from SkuItem si where si.foreignSkuItemCLI.id = :fsicliId";
+    Query query = getSession().createQuery(sql).setParameter("fsicliId" , fsicliId);
+    return (SkuItem) query.list().get(0);
+
+  }
 }

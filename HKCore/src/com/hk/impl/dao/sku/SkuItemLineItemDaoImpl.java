@@ -1,16 +1,20 @@
 package com.hk.impl.dao.sku;
 
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.StockTransfer;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.*;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.sku.SkuItemLineItemDao;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.sku.*;
+
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +27,9 @@ import java.util.List;
 
 @Repository
 public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineItemDao {
+
+  @Autowired
+  BaseDao baseDao;
 
   @Override
   public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId) {
@@ -75,6 +82,27 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
       }
     }
     return false;
+  }
+
+
+  public ForeignSkuItemCLI getForeignSkuItemCLI(Long id){
+    return get(ForeignSkuItemCLI.class, id);
+  }
+
+  public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
+    SkuGroup skuGroup = new SkuGroup();
+    skuGroup.setBatchNumber(batch);
+    skuGroup.setMfgDate(mfgDate);
+    skuGroup.setExpiryDate(expiryDate);
+    skuGroup.setCostPrice(costPrice);
+    skuGroup.setMrp(mrp);
+    skuGroup.setGoodsReceivedNote(goodsReceivedNote);
+    skuGroup.setReconciliationVoucher(reconciliationVoucher);
+    skuGroup.setStockTransfer(stockTransfer);
+    skuGroup.setSku(sku);
+    skuGroup.setCreateDate(new Date());
+    skuGroup = (SkuGroup)baseDao.save(skuGroup);
+    return skuGroup;
   }
 
 

@@ -29,7 +29,8 @@ public enum EnumSkuItemStatus {
   ProductVariantAudited(110L, "Product Variant Audited"),
   IncorrectCounting(120L, "Incorrect Counting"),
   TEMP_BOOKED(150L, "TEMP BOOKED"),
-  BOOKED(160L, "BOOKED");
+  BOOKED(160L, "BOOKED"),
+  EXPECTED_CHECKED_IN(170L , "EXPECTED CHECKED IN");
 
   private Long id;
   private String name;

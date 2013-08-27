@@ -1,13 +1,15 @@
 package com.hk.pact.dao.sku;
 
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.StockTransfer;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.*;
 import com.hk.pact.dao.BaseDao;
 
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,4 +36,9 @@ public interface SkuItemLineItemDao extends BaseDao {
   public List<SkuItemLineItem> getSkuItemLIsTemp(SkuItem skuItem);
 
   public boolean sicliAlreadyExists(CartLineItem cartLineItem);
+
+  public ForeignSkuItemCLI getForeignSkuItemCLI(Long id);
+
+  public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
+
 }

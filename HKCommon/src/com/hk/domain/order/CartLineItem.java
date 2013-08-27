@@ -7,6 +7,7 @@ import com.hk.domain.catalog.product.VariantConfigOptionParam;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.core.CartLineItemType;
 import com.hk.domain.marketing.ProductReferrer;
+import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.subscription.Subscription;
@@ -104,6 +105,9 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cartLineItem")
     private List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
 
+  @JsonSkip
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cartLineItem")
+  private List<ForeignSkuItemCLI> foreignSkuItemCLIs = new ArrayList<ForeignSkuItemCLI>();
 
     public CartLineItem() {
 
@@ -386,4 +390,12 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
     public void setSkuItemCLIs(List<SkuItemCLI> skuItemCLIs) {
         this.skuItemCLIs = skuItemCLIs;
     }
+
+  public List<ForeignSkuItemCLI> getForeignSkuItemCLIs() {
+    return foreignSkuItemCLIs;
+  }
+
+  public void setForeignSkuItemCLIs(List<ForeignSkuItemCLI> foreignSkuItemCLIs) {
+    this.foreignSkuItemCLIs = foreignSkuItemCLIs;
+  }
 }

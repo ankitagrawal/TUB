@@ -1,12 +1,15 @@
 package com.hk.pact.service.inventory;
 
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.StockTransfer;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.*;
 import com.hk.domain.warehouse.Warehouse;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,5 +40,9 @@ public interface SkuItemLineItemService {
     public Boolean freeBookingTable(ShippingOrder shippingOrder);
 
    public boolean sicliAlreadyExists(CartLineItem cartLineItem);
-    
+
+  public ForeignSkuItemCLI getForeignSkuItemCLI(Long id);
+
+  public SkuItem getSkuItem(Long fsicliId);
+
 }

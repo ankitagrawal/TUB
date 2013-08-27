@@ -11,11 +11,14 @@ public class HKAPIBookingInfo {
 
 	private Double mrp;
   private Long qty;
-  private Long cartLineItemId;
-  private Long shippingOrderId;
-  private Long baseOrderId;
-  private Long warehouseId;
-  private String productVariantId;
+  private Long cliId;
+  private Long soId;
+  private Long boId;
+  private Long whId;
+  private String pvId;
+  private String boDate;
+  private Long unitNum;
+  private Long fsiCLIId;
 
   public Double getMrp() {
     return mrp;
@@ -29,47 +32,71 @@ public class HKAPIBookingInfo {
     return qty;
   }
 
+  public Long getFsiCLIId() {
+    return fsiCLIId;
+  }
+
+  public void setFsiCLIId(Long fsiCLIId) {
+    this.fsiCLIId = fsiCLIId;
+  }
+
+  public Long getUnitNum() {
+    return unitNum;
+  }
+
+  public void setUnitNum(Long unitNum) {
+    this.unitNum = unitNum;
+  }
+
   public void setQty(Long qty) {
     this.qty = qty;
   }
 
-  public Long getCartLineItemId() {
-    return cartLineItemId;
+  public Long getCliId() {
+    return cliId;
   }
 
-  public void setCartLineItemId(Long cartLineItemId) {
-    this.cartLineItemId = cartLineItemId;
+  public void setCliId(Long cliId) {
+    this.cliId = cliId;
   }
 
-  public Long getWarehouseId() {
-    return warehouseId;
+  public Long getSoId() {
+    return soId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
-    this.warehouseId = warehouseId;
+  public void setSoId(Long soId) {
+    this.soId = soId;
   }
 
-  public String getProductVariantId() {
-    return productVariantId;
+  public Long getBoId() {
+    return boId;
   }
 
-  public void setProductVariantId(String productVariantId) {
-    this.productVariantId = productVariantId;
+  public void setBoId(Long boId) {
+    this.boId = boId;
   }
 
-  public Long getShippingOrderId() {
-    return shippingOrderId;
+  public Long getWhId() {
+    return whId;
   }
 
-  public void setShippingOrderId(Long shippingOrderId) {
-    this.shippingOrderId = shippingOrderId;
+  public void setWhId(Long whId) {
+    this.whId = whId;
   }
 
-  public Long getBaseOrderId() {
-    return baseOrderId;
+  public String getPvId() {
+    return pvId;
   }
 
-  public void setBaseOrderId(Long baseOrderId) {
-    this.baseOrderId = baseOrderId;
+  public void setPvId(String pvId) {
+    this.pvId = pvId;
+  }
+
+  public String getBoDate() {
+    return boDate;
+  }
+
+  public void setBoDate(String boDate) {
+    this.boDate = boDate;
   }
 }

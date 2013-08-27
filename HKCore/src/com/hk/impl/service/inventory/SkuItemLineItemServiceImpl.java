@@ -305,9 +305,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	private boolean freeBrightInventoryForSOCancellation(LineItem lineItem){
 		try {
 			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-			hkapiBookingInfo.setCartLineItemId(lineItem.getCartLineItem().getId());
+			hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
 			hkapiBookingInfo.setMrp(lineItem.getMarkedPrice());
-			hkapiBookingInfo.setProductVariantId(lineItem.getSku().getProductVariant().getId());
+			hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
 			hkapiBookingInfo.setQty(lineItem.getQty());
 			
 			Gson gson = new Gson();
@@ -403,6 +403,16 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   @Override
   public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
     return getSkuItemLineItemDao().sicliAlreadyExists(cartLineItem);
+  }
+
+  @Override
+  public ForeignSkuItemCLI getForeignSkuItemCLI(Long id){
+    return getSkuItemLineItemDao().getForeignSkuItemCLI(id) ;
+  }
+
+
+  public SkuItem getSkuItem(Long fsicliId){
+    return getSkuItemDao().getSkuItem(fsicliId) ;
   }
 
   public SkuItemLineItem getBySkuItemId(Long skuItemId) {

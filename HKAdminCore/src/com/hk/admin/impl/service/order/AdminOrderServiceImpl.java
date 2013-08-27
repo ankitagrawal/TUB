@@ -253,9 +253,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	private void freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem) {
 		try {
 			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-			hkapiBookingInfo.setCartLineItemId(cartLineItem.getId());
+			hkapiBookingInfo.setCliId(cartLineItem.getId());
 			hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
-			hkapiBookingInfo.setProductVariantId(cartLineItem.getProductVariant().getId());
+			hkapiBookingInfo.setPvId(cartLineItem.getProductVariant().getId());
 			hkapiBookingInfo.setQty(cartLineItem.getQty());
 
 			Gson gson = new Gson();
