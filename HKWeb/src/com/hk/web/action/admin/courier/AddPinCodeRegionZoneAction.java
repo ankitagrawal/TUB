@@ -227,4 +227,12 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
     public static void setLogger(Logger logger) {
         AddPinCodeRegionZoneAction.logger = logger;
     }
+
+    public List<Pincode> getPincodeList() {
+        return pincodeList;
+    }
+
+    public void setPincodeList(List<Pincode> pincodeList) {
+        this.pincodeList = pincodeList;
+    }
 }
