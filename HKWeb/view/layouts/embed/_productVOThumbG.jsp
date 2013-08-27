@@ -42,6 +42,21 @@
       opacity: 1.0;
       filter: alpha(opacity = 100);
     }
+      .freebie-cntnr{color:#000; font-weight:bold;padding:5px 0;}
+      .freebie-cntnr h6{
+          font-size:11px;
+      }
+      .hk-offer{
+          background: #fbff90;
+          color:#000;
+          text-transform: uppercase;
+          width: 50px;
+          padding: 1px;
+          position: relative;
+          bottom: 40px;
+          font-weight: bold;
+          right: 10px;
+      }
   </style>
   <c:if test="${!productVO.googleAdDisallowed && !productVO.deleted && !productVO.hidden}">
     <c:set var="param_ref" value="<%=HealthkartConstants.URL.productReferrerId%>"/>
@@ -53,6 +68,9 @@
           <img src="${hk:getS3ImageUrl(imageSmallSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
         </a>
+          <%--<c:if test="${fn:length(productVO.freebieDesc) > 3}">--%>
+              <div class="hk-offer">Offer</div>
+          <%--</c:if>--%>
       </div>
       <div>
 					<span style="height:20px;max-width:190px;">
@@ -128,11 +146,11 @@
           </c:if>
         </c:otherwise>
       </c:choose>
-        <c:if test="${fn:length(productVO.freebieDesc) > 3}">
+        <%--<c:if test="${fn:length(productVO.freebieDesc) > 3}">--%>
             <div class="freebie-cntnr with-variants">
                 <h6 >${productVO.freebieDesc} FREE</h6>
             </div>
-        </c:if>
+        <%--</c:if>--%>
 
         <div class="floatfix"></div>
     </div>
