@@ -16,6 +16,7 @@ import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
+import com.hk.domain.queue.TrafficState;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.queue.ActionItemDao;
@@ -232,10 +233,18 @@ public class BucketServiceImpl implements BucketService {
         ActionItem actionItem = existsActionItem(shippingOrder);
         if (actionItem != null) {
             shippingOrder.setActionItem(null);
+            actionItemDao.save(shippingOrder);
             //release all dependencies
+            Iterator<Bucket> bucketIterator = actionItem.getBuckets().iterator();
+            while ( bucketIterator.hasNext() ){
+            	Bucket bucket = bucketIterator.next();
+            	bucket.getActionItems().remove(actionItem);
+            	actionItemDao.save(bucket);
+            }
             actionItem.getBuckets().clear();
             actionItem.getWatchers().clear();
-            actionItem = saveActionItem(actionItem);
+            saveActionItem(actionItem);
+            actionItemDao.refresh(actionItem);
             actionItemDao.delete(actionItem);
         }
     }
@@ -260,11 +269,19 @@ public class BucketServiceImpl implements BucketService {
         List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
         Set<String> categoryNames = new HashSet<String>();
         for (LineItem lineItem : shippingOrder.getLineItems()) {
-            Long availableUnbookedInv = inventoryService.getUnbookedInventoryInProcessingQueue(lineItem);
+            Long availableUnbookedInv = inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice());
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
-
-            if (availableUnbookedInv < 0) {
+           
+            Long availableNetPhysicalInventory = inventoryService.getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
+            Long bookedQty = 0L;
+            Long orderedQty = lineItem.getQty();
+            if (lineItem.getSkuItemLineItems() != null){
+                bookedQty = (long)lineItem.getSkuItemLineItems().size();
+            }
+            if (!(bookedQty >= orderedQty)) {
+            	if (availableNetPhysicalInventory < 0  || availableUnbookedInv < 0) {
                 categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            	}
             }
             if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
                 categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());

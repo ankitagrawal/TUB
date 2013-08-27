@@ -1,8 +1,9 @@
 package com.hk.admin.dto.accounting;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.hk.constants.core.TaxConstants;
 import com.hk.constants.courier.StateList;
@@ -13,6 +14,8 @@ import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItemLineItem;
 
 public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 
@@ -21,8 +24,10 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 	private List<ProductOption> productOptions;
 	private List<CartLineItemExtraOption> cartLineItemExtraOptions;
 	private Set<CartLineItemConfigValues> cartLineItemConfigValues;
+    private List<SkuItemLineItem>         skuItemLineItems;
 	private String productName;
 	private String variantName;
+    private String variantId;
 	private long qty;
 	private double markedPrice;
 	private double hkPrice;
@@ -38,6 +43,9 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 	private double taxable;
 	private double tax;
 	private double surcharge;
+    Map<String, QtyExp> skuGroupLongMap;
+    DateFormat dateFormat = new SimpleDateFormat("MM/yy");
+    private QtyExp qtyExp;
 	
 
 	public B2BInvoiceLineItemDto(LineItem productLineItem, String state, boolean cFormAvailable) {
@@ -45,15 +53,41 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 		productCategories = productLineItem.getSku().getProductVariant().getProduct().getCategories();
 		productName = productLineItem.getSku().getProductVariant().getProduct().getName();
 		variantName = productLineItem.getSku().getProductVariant().getVariantName();
+        variantId   = productLineItem.getSku().getProductVariant().getId();
 		productOptions = productLineItem.getSku().getProductVariant().getProductOptions();
 		cartLineItemExtraOptions = productLineItem.getCartLineItem().getCartLineItemExtraOptions();
+        skuItemLineItems = productLineItem.getSkuItemLineItems();
 		CartLineItemConfig cartLineItemConfig = productLineItem.getCartLineItem().getCartLineItemConfig();
 		if (cartLineItemConfig != null) {
 			cartLineItemConfigValues = cartLineItemConfig.getCartLineItemConfigValues();
 		}
-		
-		
-		qty = productLineItem.getQty();
+        skuGroupLongMap = new HashMap<String, QtyExp>();
+        for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+            Date expiry = skuItemLineItem.getSkuItem().getSkuGroup().getExpiryDate();
+            String expiryDt;
+            if(expiry!=null) {
+                expiryDt = dateFormat.format(expiry);
+            }
+            else expiryDt = "N/A";
+            String batchNumber = skuItemLineItem.getSkuItem().getSkuGroup().getBatchNumber();
+            if(skuGroupLongMap.get(batchNumber)!=null){
+                QtyExp qtyExp =  skuGroupLongMap.get(batchNumber);
+                Long qty = skuGroupLongMap.get(batchNumber).getQty();
+                ++qty;
+                qtyExp.setQty(qty);
+                skuGroupLongMap.put(batchNumber, qtyExp);
+            }
+            else
+            {
+                QtyExp qtyExp = new QtyExp();
+                qtyExp.setExpiry(expiryDt);
+                qtyExp.setQty(1l);
+                skuGroupLongMap.put(batchNumber, qtyExp);
+
+            }
+        }
+
+        qty = productLineItem.getQty();
 
 		markedPrice = productLineItem.getMarkedPrice();
 		hkPrice = productLineItem.getHkPrice();
@@ -115,7 +149,15 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 
 	}
 
-	public LineItem getProductLineItem() {
+    public String getVariantId() {
+        return variantId;
+    }
+
+    public void setVariantId(String variantId) {
+        this.variantId = variantId;
+    }
+
+    public LineItem getProductLineItem() {
 		return productLineItem;
 	}
 
@@ -211,9 +253,12 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 	public Set<CartLineItemConfigValues> getCartLineItemConfigValues() {
 		return cartLineItemConfigValues;
 	}
-	
 
-	public String getExtraOptionsPipeSeparated() {
+    public List<SkuItemLineItem> getSkuItemLineItems() {
+        return skuItemLineItems;
+    }
+
+    public String getExtraOptionsPipeSeparated() {
 		StringBuffer stringBuffer = new StringBuffer();
 		if (cartLineItemExtraOptions != null) {
 			for (CartLineItemExtraOption cartLineItemExtraOption : cartLineItemExtraOptions) {
@@ -274,4 +319,47 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 		return stringBuffer.toString();
 	}
 
+
+    public Map<String, QtyExp> getSkuGroupLongMap() {
+        return skuGroupLongMap;
+    }
+
+    public void setSkuGroupLongMap(Map<String, QtyExp> skuGroupLongMap) {
+        this.skuGroupLongMap = skuGroupLongMap;
+    }
+
+    public QtyExp getQtyExp() {
+        return qtyExp;
+    }
+
+    public void setQtyExp(QtyExp qtyExp) {
+        this.qtyExp = qtyExp;
+    }
+}
+
+ class QtyExp{
+    Long qty;
+    String expiry;
+
+    String getExpiry() {
+        return expiry;
+    }
+
+    void setExpiry(String expiry) {
+        this.expiry = expiry;
+    }
+
+    Long getQty() {
+        return qty;
+    }
+
+    void setQty(Long qty) {
+        this.qty = qty;
+    }
+
+    @Override
+    public String toString() {
+        String val = "["+expiry+"]"+" - "+qty.toString();
+        return val;
+    }
 }

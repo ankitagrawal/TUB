@@ -26,116 +26,111 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CounterCashPaymentReceiveAction extends BaseAction {
-	@Autowired
-	private PaymentManager paymentManager;
-	@Autowired
-	private PaymentService paymentService;
-	@Autowired
-	private RoleService roleService;
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private OrderManager orderManager;
+  @Autowired
+  private PaymentManager paymentManager;
+  @Autowired
+  private PaymentService paymentService;
+  @Autowired
+  private RoleService roleService;
+  @Autowired
+  private UserService userService;
+  @Autowired
+  private OrderManager orderManager;
 
-	// PaymentModeDao paymentModeDao;
+  @Validate(required = true)
+  private Order order;
 
-	// RoleDao roleDao;
+  @Validate(required = true)
+  private Long paymentMode;
 
-	// UserDao userDao;
+  private User user;
 
-	@Validate(required = true)
-	private Order order;
+  public Resolution pre() {
+    Resolution resolution = null;
+    if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+      // recalculate the pricing before creating a payment.
+      order = getOrderManager().recalAndUpdateAmount(order);
+      // first create a payment row, this will also cotain the payment checksum
+      Payment payment = paymentManager.createNewPayment(order, getPaymentService().findPaymentMode(paymentMode), BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
+      String gatewayOrderId = payment.getGatewayOrderId();
+      try {
+        getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
+        getPaymentManager().counterCashSuccess(gatewayOrderId, getBaseDao().get(PaymentMode.class, paymentMode));
 
-	@Validate(required = true)
-	private Long paymentMode;
+        resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+      } catch (HealthkartPaymentGatewayException e) {
+        getPaymentManager().error(gatewayOrderId, e);
+        resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+      }
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
+      resolution = new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
+    }
+    return resolution;
+  }
 
-	private User user;
+  public Order getOrder() {
+    return order;
+  }
 
-	public Resolution pre() {
-		Resolution resolution = null;
-		if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
-			// recalculate the pricing before creating a payment.
-			order = getOrderManager().recalAndUpdateAmount(order);
-			// first create a payment row, this will also cotain the payment checksum
-			Payment payment = paymentManager.createNewPayment(order, getPaymentService().findPaymentMode(paymentMode), BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
-			String gatewayOrderId = payment.getGatewayOrderId();
-			try {
-				getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
-				getPaymentManager().counterCashSuccess(gatewayOrderId, getBaseDao().get(PaymentMode.class, paymentMode));
-				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-			} catch (HealthkartPaymentGatewayException e) {
-				getPaymentManager().error(gatewayOrderId, e);
-				resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
-			}
-		} else {
-			addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
-			resolution = new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
-		}
-		return resolution;
-	}
+  public void setOrder(Order order) {
+    this.order = order;
+  }
 
-	public Order getOrder() {
-		return order;
-	}
+  public Long getPaymentMode() {
+    return paymentMode;
+  }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+  public void setPaymentMode(Long paymentMode) {
+    this.paymentMode = paymentMode;
+  }
 
-	public Long getPaymentMode() {
-		return paymentMode;
-	}
+  public User getUser() {
+    return user;
+  }
 
-	public void setPaymentMode(Long paymentMode) {
-		this.paymentMode = paymentMode;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	public User getUser() {
-		return user;
-	}
+  public PaymentManager getPaymentManager() {
+    return paymentManager;
+  }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  public void setPaymentManager(PaymentManager paymentManager) {
+    this.paymentManager = paymentManager;
+  }
 
-	public PaymentManager getPaymentManager() {
-		return paymentManager;
-	}
+  public PaymentService getPaymentService() {
+    return paymentService;
+  }
 
-	public void setPaymentManager(PaymentManager paymentManager) {
-		this.paymentManager = paymentManager;
-	}
+  public void setPaymentService(PaymentService paymentService) {
+    this.paymentService = paymentService;
+  }
 
-	public PaymentService getPaymentService() {
-		return paymentService;
-	}
+  public RoleService getRoleService() {
+    return roleService;
+  }
 
-	public void setPaymentService(PaymentService paymentService) {
-		this.paymentService = paymentService;
-	}
+  public void setRoleService(RoleService roleService) {
+    this.roleService = roleService;
+  }
 
-	public RoleService getRoleService() {
-		return roleService;
-	}
+  public UserService getUserService() {
+    return userService;
+  }
 
-	public void setRoleService(RoleService roleService) {
-		this.roleService = roleService;
-	}
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
-	public UserService getUserService() {
-		return userService;
-	}
+  public OrderManager getOrderManager() {
+    return orderManager;
+  }
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	public OrderManager getOrderManager() {
-		return orderManager;
-	}
-
-	public void setOrderManager(OrderManager orderManager) {
-		this.orderManager = orderManager;
-	}
+  public void setOrderManager(OrderManager orderManager) {
+    this.orderManager = orderManager;
+  }
 
 }

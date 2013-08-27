@@ -79,7 +79,7 @@
     }
 
     .link-button-cancel {
-        color: #ff0000;
+        color: red;
         font-weight: bolder;
         font-size: 13px;
         margin-top: 1em;
@@ -175,11 +175,11 @@
     </s:form>
 </div>
 
-<div class="margin-top">
+
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${revList}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${revList}"/>
-</div>
-<div>
+
+
     <table class="rline-items">
         <thead>
         <tr>
@@ -190,7 +190,7 @@
             <th>Product</th>
             <th>Reason For Return</th>
             <th>CS Action</th>
-            <th>Action On Status</th>
+            <%--<th>Action On Status</th>--%>
             <th>CS Comment</th>
             <th>CS Action Status</th>
             <th>Warehouse Condition</th>
@@ -229,8 +229,8 @@
                         </c:if>
                         <c:set var="prevLineId" value="${currentLineId}"/>
                     </td>
-                    <td>${rpLineitem.lineItem.sku.productVariant.product.name}  ${rpLineitem.lineItem.sku.productVariant}
-                         ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}   </td>
+                    <td>${rpLineitem.lineItem.sku.productVariant.product.name} ${rpLineitem.lineItem.sku.productVariant}
+                            ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}   </td>
                     <td>${rpLineitem.customerReasonForReturn.classification.primary}</td>
                     <td>
                         <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
@@ -240,16 +240,16 @@
                             </c:if>
                         </c:forEach>
                     </td>
-                    <td>
-                        <c:forEach
-                                items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"
-                                var="actionTakenOnStatus">
-                            <c:if test="${rpLineitem.actionTakenOnStatus == actionTakenOnStatus.id}">
-                                ${actionTakenOnStatus.name}
-                            </c:if>
-                        </c:forEach>
+                    <%--<td>--%>
+                        <%--<c:forEach--%>
+                                <%--items="<%=EnumReverseActionOnStatus.getAllReverseActionOnStatus()%>"--%>
+                                <%--var="actionTakenOnStatus">--%>
+                            <%--<c:if test="${rpLineitem.actionTakenOnStatus == actionTakenOnStatus.id}">--%>
+                                <%--${actionTakenOnStatus.name}--%>
+                            <%--</c:if>--%>
+                        <%--</c:forEach>--%>
 
-                    </td>
+                    <%--</td>--%>
                     <td>
                             ${rpLineitem.customerComment}
                     </td>
@@ -353,16 +353,16 @@
                                            beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction"
                                            event="editReversePickup">
                               Edit RPU
-                              <s:param name="reversePickupOrder"
-                                       value="${reversePickup.id}"/>
-                          </s:link></span> <br>
-                                                             <span> <s:link class="link-button-cancel"
-                                                                            beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
-                                                                            event="deleteReversePickUp">
-                                                                 Delete RPU
-                                                                 <s:param name="reversePickupOrder"
-                                                                          value="${reversePickup.id}"/>
-                                                             </s:link> </span> <br>
+                              <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                          </s:link>
+                          </span> <br>
+                           <span> <s:link class="link-button-cancel"
+                                          beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                          event="deleteReversePickUp">
+                               Delete RPU
+                               <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                           </s:link>
+                           </span> <br>
                                 </c:otherwise>
                             </c:choose>
                         </td>
@@ -372,7 +372,6 @@
         </c:forEach>
     </table>
 
-</div>
 
 <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${revList}"/>
 <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${revList}"/>

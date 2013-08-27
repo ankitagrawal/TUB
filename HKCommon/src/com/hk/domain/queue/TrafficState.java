@@ -21,9 +21,6 @@ public class TrafficState implements java.io.Serializable {
     @Column(name = "name", length = 45)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "trafficState")
-    private Set<ActionItem> actionItems = new HashSet<ActionItem>(0);
-
     public Long getId() {
         return this.id;
     }
@@ -40,13 +37,6 @@ public class TrafficState implements java.io.Serializable {
         this.name = name;
     }
 
-    public Set<ActionItem> getActionItems() {
-        return this.actionItems;
-    }
-
-    public void setActionItems(Set<ActionItem> actionItems) {
-        this.actionItems = actionItems;
-    }
 
 
 }

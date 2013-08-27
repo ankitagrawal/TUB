@@ -15,6 +15,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.hibernate.Criteria;
@@ -166,91 +168,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
 
-    /*
-    * public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem) {
-    * return (List<ProductVariantInventory>) getSession().createQuery( "from ProductVariantInventory pvi where pvi.sku =
-    * :sku and pvi.qty = :qty and pvi.shippingOrder = :shippingOrder order by pvi.id desc").setParameter("sku",
-    * lineItem.getSku()).setParameter("qty", -1L).setParameter("shippingOrder",
-    * shippingOrder).setMaxResults(lineItem.getQty().intValue()).list(); }
-    */
 
-    /*
-     * public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder) { return (List<ProductVariantInventory>)
-     * getSession().createQuery("from ProductVariantInventory pvi where pvi.qty = :qty and pvi.shippingOrder =
-     * :shippingOrder").setParameter( "qty", -1L).setParameter("shippingOrder", shippingOrder).list(); }
-     */
-
-    /*public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand) {
-        return getDetailsForUncheckedItems(brand, null);
-    }*/
-
-    /*public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
-         List<CreateInventoryFileDto> createInventoryFileDtoList = new ArrayList<CreateInventoryFileDto>();
-
-         //GRN
-         String sql = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sg.batchNumber as batchNumber," +
-           " sum(pvi.qty) as sumQty, grnli.mrp as markedPrice, pv as productVariant "
-           + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.goodsReceivedNote grn join grn.grnLineItems grnli "
-           + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and grnli.sku.id = s.id ";
-         if (warehouse != null) {
-             sql = sql + " and s.warehouse = :warehouse ";
-         }
-         sql = sql + " group by si.skuGroup having sum(pvi.qty) > 0";
-
-         Query query = getSession().createQuery(sql).setParameter("brand", brand);
-         if (warehouse != null) {
-             query.setParameter("warehouse", warehouse);
-         }
-         List<CreateInventoryFileDto> createInventoryFileDtoListForGRN = query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
-         if (createInventoryFileDtoListForGRN != null && !createInventoryFileDtoListForGRN.isEmpty()) {
-             createInventoryFileDtoList.addAll(createInventoryFileDtoListForGRN);
-         }
-
-         //RV
-         String sql2 = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sg.batchNumber as batchNumber," +
-           " sum(pvi.qty) as sumQty, rvli.mrp as markedPrice, pv as productVariant "
-           + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.reconciliationVoucher rv join rv.rvLineItems rvli "
-           + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and rvli.sku.id = s.id ";
-         if (warehouse != null) {
-             sql2 = sql2 + " and s.warehouse = :warehouse ";
-         }
-         sql2 = sql2 + " group by si.skuGroup having sum(pvi.qty) > 0";
-
-         Query query2 = getSession().createQuery(sql2).setParameter("brand", brand);
-         if (warehouse != null) {
-             query2.setParameter("warehouse", warehouse);
-         }
-         List<CreateInventoryFileDto> createInventoryFileDtoListForRV = query2.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
-         if (createInventoryFileDtoListForRV != null && !createInventoryFileDtoListForRV.isEmpty()) {
-             createInventoryFileDtoList.addAll(createInventoryFileDtoListForRV);
-         }
-
-         //ST
-         String sql3 = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sg.batchNumber as batchNumber," +
-           " sum(pvi.qty) as sumQty, stli.mrp as markedPrice, pv as productVariant "
-           + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.stockTransfer st join st.stockTransferLineItems stli "
-           + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and stli.sku.id = s.id ";
-         if (warehouse != null) {
-             sql3 = sql3 + " and s.warehouse = :warehouse ";
-         }
-         sql3 = sql3 + " group by si.skuGroup having sum(pvi.qty) > 0";
-
-         Query query3 = getSession().createQuery(sql3).setParameter("brand", brand);
-         if (warehouse != null) {
-             query3.setParameter("warehouse", warehouse);
-         }
-         List<CreateInventoryFileDto> createInventoryFileDtoListForST = query3.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
-         if (createInventoryFileDtoListForST != null && !createInventoryFileDtoListForST.isEmpty()) {
-             createInventoryFileDtoList.addAll(createInventoryFileDtoListForST);
-         }
-
-         return createInventoryFileDtoList;
-     }*/
-
-    public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) {
-        String query = "select count(pvi.id) from ProductVariantInventory pvi where pvi.stockTransferLineItem = :stockTransferLineItem and pvi.qty = :checkedInQty";
-        return (Long) getSession().createQuery(query).setParameter("stockTransferLineItem", stockTransferLineItem).setLong("checkedInQty", 1L).uniqueResult();
-    }
 
     public void updateProductVariantsConfig(String id, Long variantconfigId) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ProductVariant.class);
@@ -292,9 +210,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
 
-    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant) {
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners) {
 
-        Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
+        //Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
         String productId = null;
         String productVariantId = null;
         if (product != null) {
@@ -305,7 +223,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         }
         String sql = "select sg as skuGroup, pv as productVariant, p as product, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "
                 + " from SkuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
-                + " join sg.sku s join s.productVariant pv join pv.product p where sis.id = :checkedInSkuItemStatus ";
+                + " join sg.sku s join s.productVariant pv join pv.product p where sis in (:itemStatus) and si.skuItemOwner in (:itemOwners) ";
 
         if (productId != null) {
             sql = sql + " and p.id = :productId ";
@@ -340,7 +258,8 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
             query.setParameter("warehouse", warehouse);
         }
 
-        query.setParameter("checkedInSkuItemStatus", checkedInSkuItemStatus);
+        query.setParameterList("itemStatus", itemStatus);
+        query.setParameterList("itemOwners", itemOwners);
 
         return query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
 

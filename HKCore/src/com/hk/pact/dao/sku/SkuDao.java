@@ -11,7 +11,7 @@ public interface SkuDao extends BaseDao {
 
     public Sku getSku(ProductVariant productVariant, Warehouse warehouse);
 
-    public Sku getMaxVATSku(ProductVariant productVariant);
+
 
     public List<Sku> getSkus(ProductVariant productVariant);
 

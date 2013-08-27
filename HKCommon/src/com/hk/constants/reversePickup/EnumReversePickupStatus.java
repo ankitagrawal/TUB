@@ -2,6 +2,9 @@ package com.hk.constants.reversePickup;
 
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Seema
@@ -18,7 +21,10 @@ public enum EnumReversePickupStatus {
     /* Status If Return By Customer*/
     Return_Initiated(50L, "Return Initiated"),
     Return_Received(60L, "Return Received"),
-    Return_QC_Checkin(70L, "Return QC checkin");
+    Return_QC_Checkin(70L, "Return QC checkin"),
+
+    RPU_CANCEL(90L, "RPU Cancel"),
+    RPU_CLOSED(100L, "RPU Closed");
 
     private Long id;
     private String status;
@@ -35,7 +41,15 @@ public enum EnumReversePickupStatus {
         return reversePickupStatus;
     }
 
-    public  ReversePickupStatus asReversePickupStatus() {
+
+    public static List<ReversePickupStatus> getHealthKartManagedRPStatus() {
+        return Arrays.asList(RPU_Initiated.asReversePickupStatus(),
+                RPU_Picked.asReversePickupStatus(),
+                RPU_Received.asReversePickupStatus(),
+                RPU_CANCEL.asReversePickupStatus());
+    }
+
+    public ReversePickupStatus asReversePickupStatus() {
         ReversePickupStatus reversePickupStatus = new ReversePickupStatus();
         reversePickupStatus.setId(this.getId());
         reversePickupStatus.setStatus(this.getStatus());
@@ -57,4 +71,5 @@ public enum EnumReversePickupStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

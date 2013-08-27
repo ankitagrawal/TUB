@@ -106,9 +106,10 @@
 <c:set var="rewardPoints" value="<%=EnumReconciliationActionType.RewardPoints.getId()%>"/>
 <c:set var="refundPoints" value="<%=EnumReconciliationActionType.RefundAmount.getId()%>"/>
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
-<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getHKServiceEnabledGateways()%>"/>
+<c:set var="refundEnabledGatedways" value="<%=EnumGateway.getRefundEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 <c:set var="reconciliationEnabledStore" value="<%=EnumStore.getReconciliationEnabledStores()%>"/>
+<c:set var="noAction" value="<%=EnumReconciliationActionType.None.getId()%>"/>
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
 <c:if test="${isActionQueue == false}">
@@ -238,6 +239,12 @@
           <s:param name="shippingOrder" value="${shippingOrder}"/>
           Accounting Invoice
       </s:link>)
+    <c:if test="${shippingOrder.baseOrder.b2bOrder}">
+    (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="B2BInvoice"
+             target="_blank">
+        <s:param name="shippingOrder" value="${shippingOrder}"/>
+        B2B Invoice
+    </s:link>)</c:if>
         <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id ||  shippingOrderStatusCheckedOut == shippingOrder.orderStatus.id }">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
@@ -252,7 +259,11 @@
             </s:link>)
             </c:if>
         </shiro:hasPermission>
-
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(
+						<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="getSkuItemLineItems" target="_blank">
+							<s:param name="shippingOrderId" value="${shippingOrder.id}" />
+                    Booking Status
+                </s:link>)
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction" class="editSO">
@@ -331,6 +342,8 @@
                     <br/>
                     <c:if test="${hk:collectionContains(refundEnabledGatedways, shippingOrder.baseOrder.payment.gateway.id)}">
                         Refund Payment: <s:radio value="${refundPoints}" name="reconciliationType"/> </c:if>
+                    <br/>
+                    None: <s:radio value="${noAction}" name="reconciliationType"/>
                 </c:if>
                 <div class="buttons">
                    <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO"/>
@@ -771,6 +784,12 @@
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </c:if>
+    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+      <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" target="_blank" event="validateSO">
+        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+        [Validate SO]
+      </s:link>
+</shiro:hasAnyRoles>
 </td>
 <c:if test="${isServiceQueue== true}">
     <td>
@@ -782,6 +801,7 @@
         </c:if>
     </td>
 </c:if>
+
 </c:forEach>
 </tr>
 </table>

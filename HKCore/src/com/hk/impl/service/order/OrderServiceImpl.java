@@ -19,10 +19,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
@@ -46,6 +43,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -58,7 +56,6 @@ import com.hk.pact.service.splitter.OrderSplitter;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
-import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import org.hibernate.criterion.DetachedCriteria;
@@ -115,6 +112,8 @@ public class OrderServiceImpl implements OrderService {
     BucketService bucketService;
     @Autowired
     SubscriptionService subscriptionService;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
 
     @Autowired OrderSplitter orderSplitter;
 
@@ -320,7 +319,7 @@ public class OrderServiceImpl implements OrderService {
           logger.error(e.getMessage());
           orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         } catch (Exception e) {
-          logger.error("Order could not be split due to some exception ", e.getMessage());
+          logger.error("Order could not be split due to some exception ", e);
           orderLoggingService.logOrderActivity(order, getUserService().getAdminUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
         }
         return shippingOrders;
@@ -639,16 +638,6 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
-        //for some orders userCodCall object is not created, a last check to create one
-        try{
-            if (order.getUserCodCall() == null) {
-                UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
-                saveUserCodCall(userCodCall);
-            }
-        } catch (Exception e){
-            logger.info("User Cod Call already exists for " + order.getId());
-        }
-
         logger.debug("Trying to split order " + order.getId());
 
         User adminUser = getUserService().getAdminUser();
@@ -689,6 +678,9 @@ public class OrderServiceImpl implements OrderService {
                     getShippingOrderService().logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated,
                             EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
+                if (!(shippingOrder instanceof ReplacementOrder)){
+                    shippingOrderService.validateShippingOrder(shippingOrder);
+                }
             }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
@@ -715,12 +707,35 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
+        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
+	        logger.debug("post split will create sku item line item");
+            for (ShippingOrder shippingOrder : order.getShippingOrders()){
+                //Check to ignore old orders whose status is greater equal than 180
+                if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()){
+                    continue;
+                }
+                for (LineItem lineItem : shippingOrder.getLineItems()){
+	                  //lineItemDao.refresh(lineItem);
+                    if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
+                        Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+                        if(!skuItemLineItemStatus){
+                            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+                        }
+                    }
+                }
+            }
+        }
+
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
         
         logger.info("SPLIT END ORDER-ID: " + order.getId());
+
+        //create sku_item_line_items for each item of each shipping order of base order
+
+
         return shippingOrderAlreadyExists;
     }
 

@@ -627,7 +627,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			noCache();
 		}
 		if (pv != null) {
-			sku = getSkuService().findSKU(pv, wareHouse);
+			sku = getSkuService().getSKU(pv, wareHouse);
 			if (sku != null) {
 				dataMap.put("sku", sku);
 				dataMap.put("productName", sku.getProductVariant().getProduct().getName());
