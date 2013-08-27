@@ -238,10 +238,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     private void relieveExtraLiabilties(Long reconciliationType, Order order, String comment) {
+        User loggedOnUser = userService.getLoggedInUser();
         if (EnumReconciliationActionType.RewardPoints.getId().equals(reconciliationType)) {
             addRewardPoints(order, comment);
-        } else {
+        } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
             refundPayment(order,comment);
+        } else if (EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
+            logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.NoActionAtReconciliation), comment);
         }
     }
 
