@@ -8,18 +8,6 @@
         Enter Values For Courier Pricing
     </s:layout-component>
     <s:layout-component name="content">
-        <div>
-            <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" name="updatePricing">
-                <fieldset style="float:left;" width="60%">
-
-                    <s:submit name="getCourierPricing" value="Update Pricing"/>
-
-                </fieldset>
-            </s:form>
-        </div>
-
-        <div class="clear">
-        </div>
 
         <table>
             <fieldset style="float:left;">

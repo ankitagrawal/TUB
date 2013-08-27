@@ -29,8 +29,6 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   @Autowired
   CourierPricingEngineDao courierPricingEngineDao;
-  @Autowired
-  BaseDao baseDao;
 
   @Autowired
   WarehouseService warehouseService;
@@ -43,10 +41,6 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   private List<Warehouse> onlineWarehouses;
 
   private  List<Hub>  hubs;
-
-
-  private Courier courier;
-  private RegionType regionType;
 
   @DefaultHandler
   public Resolution pre() {
@@ -63,7 +57,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   private void prepareEngineData() {
-    onlineWarehouses = warehouseService.getAllWarehouses();
+    onlineWarehouses = warehouseService.getServiceableWarehouses();
     hubs = hubService.getAllHubs();
 
   }
