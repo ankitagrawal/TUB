@@ -1,9 +1,14 @@
+<%@ taglib prefix="hk" uri="http://healthkart.com/taglibs/hkTagLib" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.constants.sku.EnumSkuItemStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="checkedInStatus" value="<%=EnumSkuItemStatus.Checked_IN.getId()%>"/>
+<c:set var="bookedStatus" value="<%=EnumSkuItemStatus.BOOKED.getId()%>"/>
+<c:set var="TempBookedStatus" value="<%=EnumSkuItemStatus.TEMP_BOOKED.getId()%>"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search Batches for UPC/VariantID">
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction" var="ssba"/>
   <s:layout-component name="content">
@@ -51,17 +56,23 @@
 	              </tr><tr>
 	                <td>Exp. Date:</td><td>${skuGroup.expiryDate}</td>
 	              </tr><tr>
-	                <td>Inventory:</td><td>
+	                <td>Net Physical Inventory:</td><td>
+	                ${fn:length(hk:getNetPhysicalAvailableStockSkuItems(skuGroup))}
+                  </td>
+	              </tr><tr>
+	                <td>Net Available Unbooked Inventory (CHECKED IN):</td><td>
 	                ${fn:length(hk:getInStockSkuItems(skuGroup))}
                   </td>
 	              </tr>
                       <tr>
-                          <c:if test="${ssba.skuItemBarcode != null && ssba.skuItemBarcode.skuItemStatus.id == checkedInStatus}">
-                              <td> Item Available</td> <td></td>
-                       </c:if>
-                          <c:if test="${ssba.skuItemBarcode != null && ssba.skuItemBarcode.skuItemStatus.id != checkedInStatus}">
-                              <td> Item Not Available</td> <td></td>
-                       </c:if>
+                       <c:set var="status" value="${ssba.skuItemBarcode.skuItemStatus.id}"/>
+                        <c:if test="${ssba.skuItemBarcode != null  && status == checkedInStatus ||  status == TempBookedStatus || status == bookedStatus}">
+                            <td> Item Available</td>
+                        </c:if>
+                       <c:if test="${ssba.skuItemBarcode != null  && !(status == checkedInStatus ||  status == TempBookedStatus || status == bookedStatus)}">                            
+                            <td> Item Not Available</td>
+                        </c:if>
+
                       </tr>
 	              </table>
 	            </c:forEach>

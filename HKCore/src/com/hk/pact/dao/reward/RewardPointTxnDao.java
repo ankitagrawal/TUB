@@ -22,7 +22,7 @@ public interface RewardPointTxnDao extends BaseDao {
 
     public RewardPointTxn createRewardPointRedeemTxn(RewardPoint rewardPoint, Double unclaimedPoints, Date rewardPointExpiryDate, Order redeemedOrder);
 
-    public RewardPointTxn createRefundTxn(RewardPointTxn rewardPointTxn);
+    public RewardPointTxn createRefundTxn(RewardPointTxn rewardPointTxn, Double value);
 
     public RewardPointTxn createRewardPointCancelTxn(RewardPoint rewardPoint, Double value, Date expiryDate);
 

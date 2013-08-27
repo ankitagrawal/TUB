@@ -230,7 +230,10 @@
 
         <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
             <h3><s:link
-                    beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction">Reverse Pickup List</s:link></h3>
+                beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction">Reverse Pickup List</s:link></h3>
+
+            <h3><s:link
+                    beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction">RPWarehouse Checkin</s:link></h3>
         </shiro:hasPermission>
 
         <h3>

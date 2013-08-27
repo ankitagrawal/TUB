@@ -102,16 +102,23 @@ body {
 .banner { margin:20px 0 10px 0;
 		}
 		
-#box1 { 
+.box1 {
+    border: none;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-	-webkit-transition: all .4s cubic-bezier(.02, .01, .47, 1); 
-    -moz-transition: all .4s cubic-bezier(.02, .01, .47, 1);  
-    -o-transition: all .4s cubic-bezier(.02, .01, .47, 1);  
-    transition: all .4s cubic-bezier(.02, .01, .47, 1);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
 }
  
-#box1:hover,  
-#box1.glow {
+.box1:hover,
+.box1.glow {
     box-shadow: 6px 6px 6px rgba(0,0,0,0.3);
 }
 
@@ -134,7 +141,7 @@ ul.menu li{
 ul.menu li a{
 	display:table-cell;
 	height:30px;
-	width:117px;
+	width:104px;
 	background:#999;
 	color:#FFf;
 	padding:5px 0;

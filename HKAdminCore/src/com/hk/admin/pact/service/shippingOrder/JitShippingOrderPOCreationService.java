@@ -18,6 +18,10 @@ public interface JitShippingOrderPOCreationService {
 	public List<LineItem> getJitLineItems(List<ShippingOrder> shippingOrders);
 	
 	public List<LineItem> getValidLineItems(List<ShippingOrder> shippingOrders);
+
+    public List<LineItem> getOnlyJitLineItems(List<LineItem> validLineItems);
+
+    public List<LineItem> getOnlyDropShipLineItems(List<LineItem> validLineItems);
 	
 	public Set<ShippingOrder> getValidShippingOrders(List<LineItem> validLineItemList);
 	

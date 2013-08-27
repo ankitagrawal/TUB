@@ -1,5 +1,7 @@
 package com.hk.constants.order;
 
+import com.hk.domain.core.OrderLifecycleActivity;
+
 
 public enum EnumOrderLifecycleActivity {
   OrderPlaced(10L, "Order Placed"),
@@ -55,6 +57,8 @@ public enum EnumOrderLifecycleActivity {
   RefundAmountFailed(290L,"Amount couldn't be refunded to user, Please contact tech support"),
   RefundAmountExceedsFailed(300L,"Amount exceeds the refundable amount"),
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
+  RefundMailToAdmin(900L, "Manual refund task mail sent to admin"),
+  NoActionAtReconciliation(1050L, "No action taken at reconciliation(refund/reward)"),
   ;
 
   private String name;
@@ -73,14 +77,14 @@ public enum EnumOrderLifecycleActivity {
     return id;
   }
 
- /* public OrderLifecycleActivity asOrderLifecycleActivity() {
+  public OrderLifecycleActivity asOrderLifecycleActivity() {
     OrderLifecycleActivity orderLifecycleActivity = new OrderLifecycleActivity();
     orderLifecycleActivity.setId(this.getId());
     orderLifecycleActivity.setName(this.getName());
     return orderLifecycleActivity;
   }
 
-
+  /*
   public static List<Long> getLifecycleActivityIDs(List<EnumOrderLifecycleActivity> enumOrderLifeCycleActivities) {
     List<Long> lifeCycleActivityIds = new ArrayList<Long>();
     for (EnumOrderLifecycleActivity enumOrderLifecycleActivity : enumOrderLifeCycleActivities) {
