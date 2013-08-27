@@ -70,6 +70,9 @@
 						<li>
 							<s:checkbox name="operationBitSetList" value="13"/><label>VENDOR DROP SHIP</label>
 						</li>
+                        <li>
+                            <s:checkbox name="operationBitSetList" value="17"/><label>REVERSE PICKUP</label>
+                        </li>
 					</ul>
 				</div>
 				<div class="clear"></div>

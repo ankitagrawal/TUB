@@ -132,7 +132,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		map.put("quantity", String.valueOf(lineItem.getQty()));
 		map.put("mrp", String.valueOf(lineItem.getMarkedPrice()));
 		map.put("reason", reason);
-		emailManager.sendSoFixFailedMail(map);
+//		emailManager.sendSoFixFailedMail(map);
 		return new CouldNotFixException(reason);
 	}
 }
