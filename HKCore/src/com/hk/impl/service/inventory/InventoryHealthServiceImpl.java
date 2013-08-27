@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
 import java.util.*;
@@ -583,6 +584,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
   // Call this method from just  action  java
+  @Transactional
   public void tempBookSkuLineItemForOrder(Order order) {
     InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -631,9 +633,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
           } else {
             //book inventory on Bright
-            tempBookBrightInventory(cartLineItem);
-            CartLineItem cartLineItem1 =  createSkuGroupAndItem(cartLineItem) ;
-            populateSICLI(cartLineItem1) ;
+           cartLineItem =  tempBookBrightInventory(cartLineItem);
+            cartLineItem =  createSkuGroupAndItem(cartLineItem) ;
+            populateSICLI(cartLineItem) ;
           }
         }
       }
@@ -641,8 +643,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     baseDao.save(order);
   }
 
-
+   @Transactional
   public CartLineItem createSkuGroupAndItem (CartLineItem cartLineItem) {
+
     if (cartLineItem.getForeignSkuItemCLIs() != null && cartLineItem.getForeignSkuItemCLIs().size() > 0) {
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
       ProductVariant productVariant = cartLineItem.getProductVariant();
@@ -681,12 +684,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   }
 
-  private void tempBookBrightInventory(CartLineItem cartLineItem) {
+  private CartLineItem tempBookBrightInventory(CartLineItem cartLineItem) {
     logger.debug("Going to book inv on Bright Side");
 
-    populateForeignSICLITable(cartLineItem);
     // now make a API call to booked inventory at Bright
-    List<ForeignSkuItemCLI> foreignSkuItemCLis = cartLineItem.getForeignSkuItemCLIs();
+    List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
     List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
     for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLis) {
       HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
@@ -729,6 +731,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       }
 
     }
+    cartLineItem = (CartLineItem)getBaseDao().save(cartLineItem);
+    return cartLineItem;
   }
 
 
@@ -749,7 +753,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  private void populateForeignSICLITable(CartLineItem cartLineItem) {
+  private List<ForeignSkuItemCLI> populateForeignSICLITable(CartLineItem cartLineItem) {
+    List<ForeignSkuItemCLI> foreignSkuItemCLIs = new ArrayList<ForeignSkuItemCLI>();
     for (int i = 1; i <= cartLineItem.getQty(); i++) {
 
       ForeignSkuItemCLI foreignSkuItemCLI = new ForeignSkuItemCLI();
@@ -762,8 +767,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
       foreignSkuItemCLI.setCounter(1L);
       foreignSkuItemCLI = (ForeignSkuItemCLI)getBaseDao().save(foreignSkuItemCLI);
+      foreignSkuItemCLIs.add(foreignSkuItemCLI);
+
 
     }
+
+    return foreignSkuItemCLIs ;
   }
 
 
@@ -775,7 +784,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         foreignSkuItemCLI.setForeignBarcode(info.getBarcode());
         foreignSkuItemCLI.setForeignSkuGroupId(info.getFsgId());
         foreignSkuItemCLI.setFsgCostPrice(info.getCp());
-        foreignSkuItemCLI.setSkuItemId(info.getFsgId());
+        foreignSkuItemCLI.setSkuItemId(info.getFsiId());
         if(info.getExpdt()!=null){
           foreignSkuItemCLI.setFsgExpiryDate(getFormattedDate(info.getExpdt()));
         }

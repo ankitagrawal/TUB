@@ -23,62 +23,62 @@ import com.hk.exception.OrderSplitException;
 
 public interface OrderService {
 
-    public Order save(Order order);
+  public Order save(Order order);
 
-    public Order find(Long orderId);
+  public Order find(Long orderId);
 
-    @Deprecated
-    public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
+  @Deprecated
+  public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
 
-    public Long getCountOfOrdersByStatus(User user,EnumOrderStatus enumOrderStatus);
+  public Long getCountOfOrdersByStatus(User user, EnumOrderStatus enumOrderStatus);
 
-    public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
+  public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
 
-    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
+  public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
 
-    public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
+  public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
 
-    public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
+  public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
-    public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
+  public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
 
-    public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);   
+  public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);
 
-    public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories);
+  public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories);
 
-    public Order getLatestOrderForUser(User user);
+  public Order getLatestOrderForUser(User user);
 
-    public Page listOrdersForUser(User user, int page, int perPage);
+  public Page listOrdersForUser(User user, int page, int perPage);
 
 
-    /**
-     * @param order
-     * @return set of shipping orders which are split/derived from a base order
-     * @throws OrderSplitException
-     */
+  /**
+   * @param order
+   * @return set of shipping orders which are split/derived from a base order
+   * @throws OrderSplitException
+   */
 
-    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;
+  public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;
 
-    public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
+  public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
-    public void sendEmailToServiceProvidersForOrder(Order order);
+  public void sendEmailToServiceProvidersForOrder(Order order);
 
-    public ProductVariant getTopDealVariant(Order order);
+  public ProductVariant getTopDealVariant(Order order);
 
-    public Order findByGatewayOrderId(String gatewayOrderId);
+  public Order findByGatewayOrderId(String gatewayOrderId);
 
-     public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
+  public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 
-    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
+  public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
 
-	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
+  public UserCodCall saveUserCodCall(UserCodCall userCodCall);
 
-	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
+  public UserCodCall createUserCodCall(Order order, EnumUserCodCalling enumUserCodCalling);
 
-	public List<UserCodCall> getAllUserCodCallForToday();
-	
-	public Order findCart(User user, Store store);
+  public List<UserCodCall> getAllUserCodCallForToday();
 
-    public boolean isBOCancelable(Long orderId);
+  public Order findCart(User user, Store store);
+
+  public boolean isBOCancelable(Long orderId);
 }
 

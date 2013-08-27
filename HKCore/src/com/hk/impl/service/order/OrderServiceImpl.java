@@ -2,6 +2,7 @@ package com.hk.impl.service.order;
 
 import com.akube.framework.dao.Page;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.analytics.EnumReason;
@@ -18,6 +19,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.OrderSplitterFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.api.HKAPIBookingInfo;
+import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.api.HKApiSkuResponse;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -29,6 +31,7 @@ import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
@@ -76,6 +79,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 @Service
@@ -736,13 +740,18 @@ public class OrderServiceImpl implements OrderService {
                 for (LineItem lineItem : shippingOrder.getLineItems()){
 	                  //lineItemDao.refresh(lineItem);
                 	CartLineItem cartLineItem = lineItem.getCartLineItem();
-                	if(bookedOnBright(cartLineItem)){
-                		logger.debug("All the booking on bright already done");
-                	}else
-                		if(!bookedOnBright(cartLineItem)){
-                			logger.debug("Update booking on Bright");
-                			updateBookedInventoryOnBright(lineItem);
-                		}else
+                  List<Warehouse> servicableWarehouse = warehouseService.getServiceableWarehouses();
+                  List<Long> whIds = new ArrayList<Long>();
+                  for (Warehouse warehouse : servicableWarehouse) {
+                    whIds.add(warehouse.getId());
+                  }
+                  if (!whIds.contains(lineItem.getShippingOrder().getWarehouse().getId())) {
+                    List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem);
+                    List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
+                    skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
+
+                  }
+                	else
                     if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
                         Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
                         if(!skuItemLineItemStatus){
@@ -784,8 +793,10 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 	}
 
-	private void updateBookedInventoryOnBright(LineItem lineItem) {
+	private List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem) {
+    List<HKAPIForeignBookingResponseInfo> infos = null;
 		try {
+
 			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
 			hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
 			hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
@@ -798,24 +809,21 @@ public class OrderServiceImpl implements OrderService {
 			Gson gson = new Gson();
 			String json = gson.toJson(hkapiBookingInfo);
 
-			String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForBOCancellation/";
+			String url = brightlifecareRestUrl + "product/variant/" + "bookInventoryOnBright/";
 			ClientRequest request = new ClientRequest(url);
 			request.body("application/json", json);
 			ClientResponse response = request.post();
 			int status = response.getStatus();
 			if (status == 200) {
-				String data = (String) response.getEntity(String.class);
-				Boolean deleted = new Gson().fromJson(data, Boolean.class);
-				if (deleted) {
-					logger.debug("Successfully freed Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId() + " cancellation");
-				} else {
-					logger.debug("Could not free Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId() + " cancellation");
-				}
+        String data = (String) response.getEntity(String.class);
+        Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
+        }.getType();
+        infos = new Gson().fromJson(data, listType);
 			}
 		} catch (Exception e) {
-			logger.error("Exception while freeing Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId() + " cancellation", e.getMessage());
+			logger.error("Exception while booking/updating Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId(),e);
 		}
-
+     return infos;
 	}
 
 	@Transactional

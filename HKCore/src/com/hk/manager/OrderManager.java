@@ -411,9 +411,7 @@ public class OrderManager {
 
       Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
       // calling health check
-      if (!order.isSubscriptionOrder()) {
-        inventoryHealthService.tempBookSkuLineItemForOrder(order);
-      }
+
 
 //       Check Inventory health of order lineItems
       for (CartLineItem cartLineItem : productCartLineItems) {

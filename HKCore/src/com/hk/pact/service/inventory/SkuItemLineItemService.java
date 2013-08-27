@@ -1,5 +1,6 @@
 package com.hk.pact.service.inventory;
 
+import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
@@ -21,28 +22,33 @@ import java.util.List;
  */
 public interface SkuItemLineItemService {
 
-    public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId);
+  public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId);
 
-    public SkuItemLineItem getById(Long skuItemLineItemId);
+  public SkuItemLineItem getById(Long skuItemLineItemId);
 
-    public Boolean createNewSkuItemLineItem(LineItem lineItem) ;
+  public Boolean createNewSkuItemLineItem(LineItem lineItem);
 
-    public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse);
+  public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse);
 
-    public SkuItemLineItem save(SkuItemLineItem skuItemLineItem);
+  public SkuItemLineItem save(SkuItemLineItem skuItemLineItem);
 
-    public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem);
+  public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem);
 
-    public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder);
-    
-    public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
-    
-    public Boolean freeBookingTable(ShippingOrder shippingOrder);
+  public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder);
 
-   public boolean sicliAlreadyExists(CartLineItem cartLineItem);
+  public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
+
+  public Boolean freeBookingTable(ShippingOrder shippingOrder);
+
+  public boolean sicliAlreadyExists(CartLineItem cartLineItem);
 
   public ForeignSkuItemCLI getForeignSkuItemCLI(Long id);
 
   public SkuItem getSkuItem(Long fsicliId);
+
+  public List<ForeignSkuItemCLI> updateSkuItemForABJit(List<HKAPIForeignBookingResponseInfo> infos);
+
+  public void populateSILIForABJit(List<ForeignSkuItemCLI> foreignSkuItemCLIs, LineItem lineItem);
+
 
 }
