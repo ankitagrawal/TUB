@@ -53,7 +53,7 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 	private List<Bin> bins = new ArrayList<Bin>(0);
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "foreign_si_cli_id", nullable = false)
+	@JoinColumn(name = "foreign_si_cli_id")
 	private ForeignSkuItemCLI foreignSkuItemCLI;
 
 	public Long getId() {

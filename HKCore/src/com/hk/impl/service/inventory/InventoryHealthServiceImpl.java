@@ -656,8 +656,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         skuItem.setSkuGroup(skuGroup);
         skuItem.setCreateDate(new Date());
         skuItem.setSkuItemStatus(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus());
-        skuItem.setBarcode(fsicli.getForeignBarcode());
-        skuItem.setForeignSkuItemCLI(fsicli);
+        skuItem.setBarcode(fsicli1.getForeignBarcode());
         skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
         skuItem.setForeignSkuItemCLI(fsicli1);
         skuItem = (SkuItem) getBaseDao().save(skuItem);

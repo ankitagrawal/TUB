@@ -8,8 +8,7 @@ import com.hk.domain.order.ShippingOrder;
 
 import javax.persistence.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -88,6 +87,8 @@ public class ForeignSkuItemCLI {
   
   @Column(name="processed_status")
   private String processedStatus;
+
+
 
   public Long getId() {
     return id;
@@ -240,4 +241,5 @@ public class ForeignSkuItemCLI {
 	public void setProcessedStatus(String processedStatus) {
 		this.processedStatus = processedStatus;
 	}
+
 }
