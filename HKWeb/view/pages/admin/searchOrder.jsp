@@ -180,6 +180,7 @@
 <c:set var="refundEnabledGatedways" value="<%=EnumGateway.getRefundEnabledGateways()%>"/>
 <c:set var="reconciliationModes" value="<%=EnumPaymentMode.getReconciliationModeIds()%>"/>
 <c:set var="reconciliationEnabledStore" value="<%=EnumStore.getReconciliationEnabledStores()%>"/>
+<c:set var="noAction" value="<%=EnumReconciliationActionType.None.getId()%>"/>
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
@@ -322,6 +323,8 @@
       <br/>
       <c:if test="${hk:collectionContains(refundEnabledGatedways, order.payment.gateway.id)}">
       Refund Payment: <s:radio  value="${refundPoints}" name="reconciliationType" /></c:if>
+      <br/>
+      None: <s:radio value="${noAction}" name="reconciliationType"/>
       </c:if>
       <div class="buttons">
         <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
