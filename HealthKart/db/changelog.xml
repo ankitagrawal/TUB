@@ -13968,5 +13968,13 @@
         <addColumn tableName="shipping_order">
             <column name="promise_dispatch_date" type="DATE"/>
         </addColumn>
+    <changeSet author="Shakti Singh (generated)" id="20130826-01">
+        <sql>
+            insert into classification(`id` ,`primary`,`secondary`) values
+            (1750,'No Action Taken',null);
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (1450,'Reconciliation',1750);
+        </sql>
     </changeSet>
 </databaseChangeLog>

@@ -171,8 +171,12 @@ public class OrderSplitterImpl implements OrderSplitter {
 				boolean isDropShipped = false;
 				boolean containsJitProducts = false;
 				for (CartLineItem cartLineItem : bucketedCartLineItemMapEntry.getValue()) {
+                    if(!isDropShipped){
 					isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
-					containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
+                    }
+			        if(!containsJitProducts){
+                        containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit() || cartLineItem.getCartLineItemConfig() != null;
+                    }
 					Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
 					LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
 					shippingOrder.getLineItems().add(shippingOrderLineItem);
