@@ -6,6 +6,7 @@ import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -139,6 +140,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
   public Resolution calculateHKReachCost() {
     Double totalCost = null;
+    Map<Courier, Long> courierCostMap = new HashMap<Courier, Long>();
     if (shippingOrderId != null) {
       ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
       if (shippingOrder != null) {
@@ -166,7 +168,11 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         totalCost = shipmentPricingEngine.calculateHKReachCost(srcWarehouse, pincodeObj, null, weight, false);
       }
     }
-    courierCostingMap.put(EnumCourier.HK_Delivery.asCourier(), totalCost.longValue());
+    courierCostMap.put(EnumCourier.HK_Delivery.asCourier(), totalCost.longValue());
+      MapValueComparator mapValueComparator = new MapValueComparator(courierCostMap);
+      courierCostingMap = new TreeMap(mapValueComparator);
+      courierCostingMap.putAll(courierCostMap);
+
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
   public Resolution calculateCourierCostingForShippingOrder() {
