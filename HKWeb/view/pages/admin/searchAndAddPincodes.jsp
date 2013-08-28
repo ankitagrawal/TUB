@@ -162,7 +162,7 @@
                         <td>Nearest Hub:</td>
                         <td>
                             <c:choose>
-                                <c:when test="${mpaBean.pincode!=null && mpaBean.pincode.hub!=null}">
+                                <c:when test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
                                     ${mpaBean.pincode.hub.name}
                                 </c:when>
                                 <c:otherwise>
