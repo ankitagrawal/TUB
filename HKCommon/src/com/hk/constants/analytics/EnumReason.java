@@ -56,6 +56,7 @@ public enum EnumReason {
     RewardNotGiven(1130L,"Reward Points Not Given", EnumReasonType.Reconciliation),
     RefundInProcess(1140L,"Refund in process",EnumReasonType.Reconciliation),
     ManualRefundInitiated(1150L, "Manual refund task mail sent to admin", EnumReasonType.Reconciliation),
+    NoActionTakenAtReconciliation(1450L, "No Action Taken", EnumReasonType.Reconciliation),
     ;
 
 
