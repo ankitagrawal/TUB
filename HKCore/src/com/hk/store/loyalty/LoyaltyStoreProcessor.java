@@ -89,9 +89,10 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	protected void validateCart(Long userId, Collection<CartLineItem> cartLineItems, double hkPrice) throws InvalidOrderException {
 		double shoppingPoints = this.loyaltyProgramService.calculateLoyaltyPoints(cartLineItems);
 		double userKarmaPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.userService.getUserById(userId));
-		if (RewardPointConstants.MAX_REWARD_POINTS <= hkPrice) {
+		/*if (RewardPointConstants.MAX_REWARD_POINTS <= hkPrice) {
 			throw new InvalidOrderException("Sorry! You can not put any more product in your cart right now. Confirm this order and place another order to add more products.");
-		} else if(shoppingPoints > userKarmaPoints ) {
+		} else*/
+    if(shoppingPoints > userKarmaPoints ) {
 			throw new InvalidOrderException("You do not have sufficient loyalty points to add this product.");
 		}  
 	}

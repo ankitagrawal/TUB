@@ -33,6 +33,8 @@ public class ProductVO implements Serializable {
 
   private String productURL;
 
+  private String freebieDesc;
+
   private Long mainImageId;
 
   public String getId() {
@@ -138,4 +140,12 @@ public class ProductVO implements Serializable {
   public void setMainImageId(Long mainImageId) {
     this.mainImageId = mainImageId;
   }
+
+    public String getFreebieDesc() {
+        return freebieDesc;
+    }
+
+    public void setFreebieDesc(String freebieDesc) {
+        this.freebieDesc = freebieDesc;
+    }
 }
