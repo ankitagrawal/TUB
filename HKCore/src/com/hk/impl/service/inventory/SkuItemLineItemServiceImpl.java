@@ -263,6 +263,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     for (LineItem lineItem : lineItems) {
       List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
       if (skuItemLineItems != null && skuItemLineItems.size() > 0) {
+
+        CartLineItem cartLineItem = lineItem.getCartLineItem();
+        if (bookedOnBright(cartLineItem)) {
+          logger.debug("Update booking on Bright");
+          freeBrightInventoryForSOCancellation(lineItem);
+        }
+
         for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
           SkuItem skuItem = skuItemLineItem.getSkuItem();
           skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
@@ -276,9 +283,6 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         }
 
         skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
-      } else {
-        //call free inventory on bright side.
-        return freeBrightInventoryForSOCancellation(lineItem);
       }
     }
     for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -300,6 +304,24 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       iterator.remove();
     }
     return true;
+  }
+
+  private boolean bookedOnBright(CartLineItem cartLineItem) {
+    try {
+
+      String url = brightlifecareRestUrl + "product/variant/getBookingForCartLineItemId/" + cartLineItem.getId();
+      ClientRequest request = new ClientRequest(url);
+      ClientResponse response = request.get();
+      int status = response.getStatus();
+      if (status == 200) {
+        String data = (String) response.getEntity(String.class);
+        Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
+        return bookedAtBright;
+      }
+    } catch (Exception e) {
+      logger.error("Exception while checking booking status on Bright", e.getMessage());
+    }
+    return false;
   }
 
   private boolean freeBrightInventoryForSOCancellation(LineItem lineItem) {

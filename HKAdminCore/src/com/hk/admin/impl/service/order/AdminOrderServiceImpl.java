@@ -13,6 +13,8 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.payment.EnumGateway;
+import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
+import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.PaymentService;
 
@@ -185,34 +187,35 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     getAdminShippingOrderService().cancelShippingOrder(shippingOrder,null, null,true);
                 }
             } else {
-                Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-                for (CartLineItem cartLineItem : cartLineItems) {
-                	List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
-                	if(skuItemCLIs!=null && skuItemCLIs.size()>0){
-                		List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
-                        List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
-                        List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
-                        for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
-                            SkuItem skuItem = skuItemCLI.getSkuItem();
-                            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-                            skuItemsToBeFreed.add(skuItem);
-                            if(skuItemCLI.getSkuItemLineItems()!=null){
-                            	skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
-                            }
-                        }
-                        skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());
-                        lineItemDao.saveOrUpdate(skuItemsToBeFreed);
-                        cartLineItem.setSkuItemCLIs(null);
-                        cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
-                        lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
-                        lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
-                	}
-                	else{
-                		//call free inventory on bright side.
-        				freeBrightInventoryAgainstBOCancellation(cartLineItem);
-                	}
-                    inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+              Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+              for (CartLineItem cartLineItem : cartLineItems) {
+
+                if (bookedOnBright(cartLineItem)) {
+                  logger.debug("Update booking on Bright");
+                  freeBrightInventoryAgainstBOCancellation(cartLineItem);
                 }
+                List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+                if (skuItemCLIs != null && skuItemCLIs.size() > 0) {
+                  List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+                  List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+                  List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+                  for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()) {
+                    SkuItem skuItem = skuItemCLI.getSkuItem();
+                    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                    skuItemsToBeFreed.add(skuItem);
+                    if (skuItemCLI.getSkuItemLineItems() != null) {
+                      skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
+                    }
+                  }
+                  skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());
+                  lineItemDao.saveOrUpdate(skuItemsToBeFreed);
+                  cartLineItem.setSkuItemCLIs(null);
+                  cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
+                  lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
+                  lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
+                }
+                inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+              }
             }
 
             affilateService.cancelTxn(order);
@@ -249,6 +252,24 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             this.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.LoggedComment, comment);
         }
     }
+
+  private boolean bookedOnBright(CartLineItem cartLineItem) {
+    try {
+
+      String url = brightlifecareRestUrl + "product/variant/getBookingForCartLineItemId/" + cartLineItem.getId();
+      ClientRequest request = new ClientRequest(url);
+      ClientResponse response = request.get();
+      int status = response.getStatus();
+      if (status == 200) {
+        String data = (String) response.getEntity(String.class);
+        Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
+        return bookedAtBright;
+      }
+    } catch (Exception e) {
+      logger.error("Exception while checking booking status on Bright", e.getMessage());
+    }
+    return false;
+  }
     
 	private void freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem) {
 		try {
