@@ -100,6 +100,8 @@
   <h3><s:link
       beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing details</s:link></h3>
 
+  <h3><s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction">Change HK Reach Pricing</s:link></h3>
+
 </div>
 
 <div class="cl"></div>

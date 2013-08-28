@@ -5,33 +5,29 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
     <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" var="updateReachEngineAction"/>
-    <s:layout-component name="heading">
-        Enter Values For Courier Pricing
-    </s:layout-component>
     <s:layout-component name="content">
 
         <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" id="searchForm">
             <h4>Search HKReach Pricing Engine </h4>
             <br>Warehouse
             <s:select name="warehouseParam">
-            <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="warehouse">
                 <s:option>- Select -</s:option>
-                <s:option value="${warehouse.id}">${warehouse.identifier}</s:option>
-            </c:forEach>
-        </s:select> &nbsp;&nbsp;
+                <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="warehouse">
+                    <s:option value="${warehouse.id}">${warehouse.identifier}</s:option>
+                </c:forEach>
+            </s:select> &nbsp;&nbsp;
             Hub
             <s:select name="hubParam">
-            <s:option value="">- Select -</s:option>
+                <s:option value="">- Select -</s:option>
                 <c:forEach items="${updateReachEngineAction.hubs}" var="hub">
                     <s:option value="${hub.id}">${hub.name}</s:option>
                 </c:forEach>
             </s:select>
             <s:submit name="search"  value="Search"/>
         </s:form>
-        <br>
 
-        <table>
-            <fieldset style="float:left;">
+        <fieldset style="float:left;">
+            <table>
                 <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction">
                     <s:hidden name="hkReachPricingEngine.id"/>
                     <tr>
@@ -56,14 +52,13 @@
                         <td><s:text name="hkReachPricingEngine.interCityCost"/></td>&nbsp;&nbsp;
                         <td>Fixed Cost:</td>
                         <td><s:text name="hkReachPricingEngine.fixedCost"/></td>
+                        <td><s:submit name="saveOrUpdate" value="Add Values"/></td>
                     </tr>
 
-                    <s:submit name="saveOrUpdate" value="Add Values"/>
                 </s:form>
-            </fieldset>
-        </table>
-        <br>
-        <div>
+            </table>
+        </fieldset>
+        <div style="clear:both;">
             <c:if test="${not empty updateReachEngineAction.hkReachEngines}">
                 <div id="hkReachTable">
                     <table style="width:100%;">
@@ -78,28 +73,30 @@
                         <%int count=0; %>
                         <c:forEach items="${updateReachEngineAction.hkReachEngines}" var="hkRE">
                             <tbody><tr>
-                                <td><%=++count %>
-                                <s:hidden name="hkReachPricingEngine.id" value="${hkReachPricingEngine.id}" />
-                                </td>
-                                <td><s:select name="hkReachPricingEngine.warehouse" value="${hkRE.warehouse}">
-                                    <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="hkWarehouse">
-                                        <s:option value="${hkWarehouse.id}">${hkWarehouse.identifier}</s:option>
-                                    </c:forEach>
-                                </s:select>
-                                </td>
-                                <td>
-                                    <s:select name="hkReachPricingEngine.hub" value="${hkRE.hub.name}">
-                                        <c:forEach items="${updateReachEngineAction.hubs}" var="hub">
-                                            <s:option value="${hub.id}">${hub.name}</s:option>
+                                <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction">
+                                    <td><%=++count %>
+                                        <s:hidden name="hkReachPricingEngine.id" value="${hkRE.id}" />
+                                    </td>
+                                    <td><s:select name="hkReachPricingEngine.warehouse" value="${hkRE.warehouse}">
+                                        <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="hkWarehouse">
+                                            <s:option value="${hkWarehouse.id}">${hkWarehouse.identifier}</s:option>
                                         </c:forEach>
                                     </s:select>
-                                </td>
-                                <td><s:text name="hkReachPricingEngine.interCityCost" value="${hkRE.interCityCost}" /></td>
-                                <td>$<s:text name="hkReachPricingEngine.fixedCost" vslue="{hkRE.fixedCost}" /></td>
-                                <td style="font-size: 16px;">
-                                    <s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction"
-                                            event="saveOrUpdate" class="save">Save</s:link>
-                                 </td>
+                                    </td>
+                                    <td>
+                                        <s:select name="hkReachPricingEngine.hub" value="${hkRE.hub.id}">
+                                            <c:forEach items="${updateReachEngineAction.hubs}" var="hub">
+                                                <s:option value="${hub.id}">${hub.name}</s:option>
+                                            </c:forEach>
+                                        </s:select>
+                                    </td>
+                                    <td><s:text name="hkReachPricingEngine.interCityCost" value="${hkRE.interCityCost}" /></td>
+                                    <td><s:text name="hkReachPricingEngine.fixedCost" value="${hkRE.fixedCost}" /></td>
+                                    <td >
+                                        <s:submit beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction"
+                                                  name="saveOrUpdate" class="green" >Save</s:submit>
+                                    </td>
+                                </s:form>
                             </tr></tbody>
                         </c:forEach>
                     </table>
