@@ -5,7 +5,7 @@
 <%@ page import="com.hk.domain.warehouse.Warehouse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction" var="mpa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.AddPincodeRegionZoneAction" var="aprza"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search/Add Pincode Region Zone">
 
@@ -71,12 +71,11 @@
 			<div style=" float:left;display:inline-block; %">
 				<fieldset>
 					<legend>Add Pincode Region</legend>
-					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction">
+					<s:form id="regionform" beanclass="com.hk.web.action.admin.courier.AddPincodeRegionZoneAction">
 						<table align="center">
 							<tr>
 								<td><label>Pincode</label></td>
 								<td><s:text name="pincodeRegionZone.pincode"   id="pin"/></td>
-								<td><s:submit name="searchPincodeRegion" class="pinsearch" value="Search"/></td>
 							</tr>
 							<tr>
 								<td><label>Region</label></td>
@@ -111,6 +110,7 @@
 
 						</table>
 						<div>
+                            <s:submit name="searchPincodeRegion" class="pinsearch" value="Search"/>
 							<s:submit id="submit" name="savePincodeRegion" value="Save"/>
 						</div>
 					</s:form>
@@ -119,8 +119,8 @@
 
 			
 			<div style="display:inline-block;">
-				<c:if test="${(mpa.pincodeRegionZoneList != null) &&(fn:length(mpa.pincodeRegionZoneList) > 0)}">
-				<s:form beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction">
+				<c:if test="${(aprza.pincodeRegionZoneList != null) &&(fn:length(aprza.pincodeRegionZoneList) > 0)}">
+				<s:form beanclass="com.hk.web.action.admin.courier.AddPincodeRegionZoneAction">
 					<table align="center" class="cont"> Available Pincode Region :
 						<thead>
 						<tr>
@@ -131,7 +131,7 @@
 						</tr>
 						</thead>
 
-						<c:forEach items="${mpa.pincodeRegionZoneList}" var="prz" varStatus="ctr">
+						<c:forEach items="${aprza.pincodeRegionZoneList}" var="prz" varStatus="ctr">
 							<s:hidden name="pincodeRegionZoneList[${ctr.index}].id" value="${prz.id}"/>
 							<input type="hidden" name="pincodeRegionZoneList[${ctr.index}].pincode"
 							       value="${prz.pincode.pincode}"/>
@@ -179,18 +179,18 @@
 
 			<div style="display:inline-block; float:right;padding-right:40px;">
 				<span style="font:bold;color:darkolivegreen;"><s:link
-						beanclass="com.hk.web.action.admin.courier.AddPinCodeRegionZoneAction" event="showRemainingPrz">
+						beanclass="com.hk.web.action.admin.courier.AddPincodeRegionZoneAction" event="showRemainingPrz">
 					Remaining Pincode Region
 				</s:link> </span>
 
-				<c:if test="${(mpa.pincodeList  != null )&& (fn:length(mpa.pincodeList) > 0)}">
+				<c:if test="${(aprza.pincodeList  != null )&& (fn:length(aprza.pincodeList) > 0)}">
 					<table align="center" class="cont">
 						<thead>
 						<tr>
 							<th>Pincode</th>
 						</tr>
 						</thead>
-						<c:forEach items="${mpa.pincodeList}" var="pinc" varStatus="ctr">
+						<c:forEach items="${aprza.pincodeList}" var="pinc" varStatus="ctr">
 							<tr>
 								<td>${pinc.pincode}</td>
 							</tr>

@@ -8,7 +8,6 @@ import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.core.PincodeService;
@@ -21,9 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,7 +30,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class AddPinCodeRegionZoneAction extends BaseAction {
+public class AddPincodeRegionZoneAction extends BaseAction {
 
     @Autowired
     CourierService courierService;
@@ -61,7 +58,7 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
     PincodeCourierService pincodeCourierService;
 
 
-    private static Logger logger = LoggerFactory.getLogger(AddPinCodeRegionZoneAction.class);
+    private static Logger logger = LoggerFactory.getLogger(AddPincodeRegionZoneAction.class);
 
     @DefaultHandler
     @DontValidate
@@ -225,7 +222,7 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
     }
 
     public static void setLogger(Logger logger) {
-        AddPinCodeRegionZoneAction.logger = logger;
+        AddPincodeRegionZoneAction.logger = logger;
     }
 
     public List<Pincode> getPincodeList() {
