@@ -791,41 +791,42 @@ public class OrderServiceImpl implements OrderService {
 
 	private List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem) {
     List<HKAPIForeignBookingResponseInfo> infos = null;
-    List<HKAPIForeignBookingResponseInfo> infos1 = null;
-		try {
-      List <ForeignSkuItemCLI > foreignSkuItemCLIs = lineItem.getCartLineItem().getForeignSkuItemCLIs();
-      for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs){
-			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-			hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
-			hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
-			hkapiBookingInfo.setWhId(lineItem.getSku().getWarehouse().getId());
-			hkapiBookingInfo.setSoId(lineItem.getShippingOrder().getId());
-			hkapiBookingInfo.setBoId(lineItem.getCartLineItem().getId());
-			hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
-      hkapiBookingInfo.setFsiCLIId(foreignSkuItemCLI.getId());
+    List<HKAPIForeignBookingResponseInfo> infos1 = new ArrayList<HKAPIForeignBookingResponseInfo>();
+    try {
+      List<ForeignSkuItemCLI> foreignSkuItemCLIs = lineItem.getCartLineItem().getForeignSkuItemCLIs();
+      for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+        HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+        hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
+        hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
+        hkapiBookingInfo.setWhId(lineItem.getSku().getWarehouse().getId());
+        hkapiBookingInfo.setSoId(lineItem.getShippingOrder().getId());
+        hkapiBookingInfo.setBoId(lineItem.getCartLineItem().getId());
+        hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
+        hkapiBookingInfo.setFsiCLIId(foreignSkuItemCLI.getId());
 
-			Gson gson = new Gson();
-			String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
+        Gson gson = new Gson();
+        String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
 
-			String url = brightlifecareRestUrl + "product/variant/" + "bookInventoryOnBright/";
-			ClientRequest request = new ClientRequest(url);
-			request.body("application/json", json);
-			ClientResponse response = request.post();
-			int status = response.getStatus();
-			if (status == 200) {
-        String data = (String) response.getEntity(String.class);
-        Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
-        }.getType();
-        infos = new Gson().fromJson(data, listType);
-        infos1.add(infos.get(0));
-			}
-		}} catch (Exception e) {
-			logger.error("Exception while booking/updating Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId(),e);
-		}
+        String url = brightlifecareRestUrl + "product/variant/" + "bookInventoryOnBright/";
+        ClientRequest request = new ClientRequest(url);
+        request.body("application/json", json);
+        ClientResponse response = request.post();
+        int status = response.getStatus();
+        if (status == 200) {
+          String data = (String) response.getEntity(String.class);
+          Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
+          }.getType();
+          infos = new Gson().fromJson(data, listType);
+          infos1.add(infos.get(0));
+        }
+      }
+    } catch (Exception e) {
+      logger.error("Exception while booking/updating Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId(), e);
+    }
 
-     return infos1;
+    return infos1;
 
-	}
+  }
 
 	@Transactional
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall){

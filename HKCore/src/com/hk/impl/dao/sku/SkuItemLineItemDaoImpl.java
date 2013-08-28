@@ -58,9 +58,9 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
     return siliList != null && !siliList.isEmpty() ? siliList.get(0) : null;
   }
 
-  public List<SkuItemCLI> getSkuItemCLIs(CartLineItem cartLineItem) {
-    String sql = "from SkuItemCLI s where s.cartLineItem = :cartLineItem";
-    return (List<SkuItemCLI>) getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).uniqueResult();
+  public SkuItemCLI getSkuItemCLI(CartLineItem cartLineItem , Long unitNum) {
+    String sql = "from SkuItemCLI s where s.cartLineItem = :cartLineItem and s.unitNum = :unitNum";
+    return (SkuItemCLI) getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).setParameter("unitNum", unitNum).uniqueResult();
   }
 
   public List<SkuItemLineItem> getSkuItemLIsTemp() {

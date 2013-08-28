@@ -441,21 +441,20 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
 
   public void populateSILIForABJit(List<ForeignSkuItemCLI> foreignSkuItemCLIs, LineItem lineItem) {
-    int i = 0;
+
     for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
       SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
       skuItemLineItem.setProductVariant(foreignSkuItemCLI.getProductVariant());
       skuItemLineItem.setUnitNum(foreignSkuItemCLI.getUnitNum());
       skuItemLineItem.setSkuItem(getSkuItem(foreignSkuItemCLI.getId()));
       skuItemLineItem.setLineItem(lineItem);
-      skuItemLineItem.setSkuItemCLI(foreignSkuItemCLI.getCartLineItem().getSkuItemCLIs().get(i));
+      SkuItemCLI skuItemCli = skuItemLineItemDao.getSkuItemCLI(foreignSkuItemCLI.getCartLineItem(), foreignSkuItemCLI.getUnitNum());
+      skuItemLineItem.setSkuItemCLI(skuItemCli);
       skuItemLineItem.setCreateDate(new Date());
       baseDao.save(skuItemLineItem);
-      i++;
     }
-
-
   }
+
 
   public SkuItemLineItem getBySkuItemId(Long skuItemId) {
     return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);
