@@ -14,6 +14,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Calendar;
@@ -42,16 +43,47 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   private  List<Hub>  hubs;
 
+  private Warehouse warehouseParam;
+
+  private Hub hubParam;
+
+  private List<HKReachPricingEngine> hkReachEngines;
+
   @DefaultHandler
   public Resolution pre() {
     this.prepareEngineData();
     return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
   }
 
-  public Resolution save() {
-    hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
-    courierPricingEngineDao.save(hkReachPricingEngine);
+  public Resolution saveOrUpdate() {
+    if (hkReachPricingEngine.getId() != null) {
+      HKReachPricingEngine localReachEngine = courierPricingEngineDao.getHKHkReachPricingEngineById(hkReachPricingEngine.getId());
+      if (localReachEngine != null) {
+        localReachEngine.setHub(hkReachPricingEngine.getHub());
+        localReachEngine.setWarehouse(hkReachPricingEngine.getWarehouse());
+        localReachEngine.setFixedCost(hkReachPricingEngine.getFixedCost());
+        localReachEngine.setInterCityCost(hkReachPricingEngine.getInterCityCost());
+        localReachEngine.setUpdateTime(Calendar.getInstance().getTime());
+        courierPricingEngineDao.save(localReachEngine);
+      } else {
+        addRedirectAlertMessage(new SimpleError("Invalid data supplied."));
+        this.prepareEngineData();
+        return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
+      }
+    } else {
+      hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
+      courierPricingEngineDao.save(hkReachPricingEngine);
+    }
     addRedirectAlertMessage(new SimpleMessage("HK Reach courier info saved"));
+    this.prepareEngineData();
+    return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
+  }
+
+  public Resolution search() {
+    hkReachEngines = courierPricingEngineDao.getHkReachPricingEngine(warehouseParam,hubParam);
+    if (hkReachEngines == null || hkReachEngines.isEmpty()) {
+      addRedirectAlertMessage(new SimpleMessage("No results match your search."));
+    }
     this.prepareEngineData();
     return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
   }
@@ -92,5 +124,29 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   public void setHubs(List<Hub> hubs) {
     this.hubs = hubs;
+  }
+
+  public Warehouse getWarehouseParam() {
+    return warehouseParam;
+  }
+
+  public void setWarehouseParam(Warehouse warehouseParam) {
+    this.warehouseParam = warehouseParam;
+  }
+
+  public Hub getHubParam() {
+    return hubParam;
+  }
+
+  public void setHubParam(Hub hubParam) {
+    this.hubParam = hubParam;
+  }
+
+  public List<HKReachPricingEngine> getHkReachEngines() {
+    return hkReachEngines;
+  }
+
+  public void setHkReachEngines(List<HKReachPricingEngine> hkReachEngines) {
+    this.hkReachEngines = hkReachEngines;
   }
 }

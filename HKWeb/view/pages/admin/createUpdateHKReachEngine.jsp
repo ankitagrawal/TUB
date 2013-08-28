@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -9,48 +10,103 @@
     </s:layout-component>
     <s:layout-component name="content">
 
+        <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" id="searchForm">
+            <h4>Search HKReach Pricing Engine </h4>
+            <br>Warehouse
+            <s:select name="warehouseParam">
+            <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="warehouse">
+                <s:option>- Select -</s:option>
+                <s:option value="${warehouse.id}">${warehouse.identifier}</s:option>
+            </c:forEach>
+        </s:select> &nbsp;&nbsp;
+            Hub
+            <s:select name="hubParam">
+            <s:option value="">- Select -</s:option>
+                <c:forEach items="${updateReachEngineAction.hubs}" var="hub">
+                    <s:option value="${hub.id}">${hub.name}</s:option>
+                </c:forEach>
+            </s:select>
+            <s:submit name="search"  value="Search"/>
+        </s:form>
+        <br>
+
         <table>
             <fieldset style="float:left;">
                 <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction">
                     <s:hidden name="hkReachPricingEngine.id"/>
-
                     <tr>
                         <td>Select Warehouse:</td>
                         <td>
                             <s:select name="hkReachPricingEngine.warehouse">
                                 <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="warehouse">
-                                    <s:option value="${warehouse.id}">${warehouse.name}</s:option>
+                                    <s:option value="${warehouse.id}">${warehouse.identifier}</s:option>
                                 </c:forEach>
                             </s:select>
-                        </td>
-                    </tr>
-                    <tr>
+                        </td> &nbsp;&nbsp;
                         <td>Select Hub: </td>
                         <td>
-                        <s:select name="hkReachPricingEngine.hub">
-                            <s:option value="">-Select-</s:option>
-                            <<c:forEach items="${updateReachEngineAction.hubs}" var="hub">
-                            <s:option value="${hub.id}">${hub.name}</s:option>
-                        </c:forEach>
-                        </s:select>
-                        </td>
-                    </tr>
-                    <tr>
+                            <s:select name="hkReachPricingEngine.hub">
+                                <s:option value="">-Select-</s:option>
+                                <<c:forEach items="${updateReachEngineAction.hubs}" var="hub">
+                                <s:option value="${hub.id}">${hub.name}</s:option>
+                                </c:forEach>
+                            </s:select>
+                        </td>&nbsp;&nbsp;
                         <td>Inter City Cost:</td>
-                        <td><s:text name="hkReachPricingEngine.interCityCost"/></td>
-                    </tr>
-
-                    <tr>
+                        <td><s:text name="hkReachPricingEngine.interCityCost"/></td>&nbsp;&nbsp;
                         <td>Fixed Cost:</td>
                         <td><s:text name="hkReachPricingEngine.fixedCost"/></td>
                     </tr>
 
-
-                    <div class="clear"></div>
-                    <s:submit name="save" value="Save Values"/>
+                    <s:submit name="saveOrUpdate" value="Add Values"/>
                 </s:form>
             </fieldset>
         </table>
+        <br>
+        <div>
+            <c:if test="${not empty updateReachEngineAction.hkReachEngines}">
+                <div id="hkReachTable">
+                    <table style="width:100%;">
+                        <thead><tr>
+                            <th>S No.</th>
+                            <th style="width:150px;">Warehouse</th>
+                            <th >Hub</th>
+                            <th>Inter City Cost</th>
+                            <th>Fixed Cost</th>
+                            <th> &nbsp;</th>
+                        </tr></thead>
+                        <%int count=0; %>
+                        <c:forEach items="${updateReachEngineAction.hkReachEngines}" var="hkRE">
+                            <tbody><tr>
+                                <td><%=++count %>
+                                <s:hidden name="hkReachPricingEngine.id" value="${hkReachPricingEngine.id}" />
+                                </td>
+                                <td><s:select name="hkReachPricingEngine.warehouse" value="${hkRE.warehouse}">
+                                    <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="hkWarehouse">
+                                        <s:option value="${hkWarehouse.id}">${hkWarehouse.identifier}</s:option>
+                                    </c:forEach>
+                                </s:select>
+                                </td>
+                                <td>
+                                    <s:select name="hkReachPricingEngine.hub" value="${hkRE.hub.name}">
+                                        <c:forEach items="${updateReachEngineAction.hubs}" var="hub">
+                                            <s:option value="${hub.id}">${hub.name}</s:option>
+                                        </c:forEach>
+                                    </s:select>
+                                </td>
+                                <td><s:text name="hkReachPricingEngine.interCityCost" value="${hkRE.interCityCost}" /></td>
+                                <td>$<s:text name="hkReachPricingEngine.fixedCost" vslue="{hkRE.fixedCost}" /></td>
+                                <td style="font-size: 16px;">
+                                    <s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction"
+                                            event="saveOrUpdate" class="save">Save</s:link>
+                                 </td>
+                            </tr></tbody>
+                        </c:forEach>
+                    </table>
+                </div>
+            </c:if>
+        </div>
+
 
     </s:layout-component>
 </s:layout-render>

@@ -36,19 +36,35 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     return (CourierPricingEngine) criteria.uniqueResult();
   }
 
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Pincode pincode) {
+  public List<HKReachPricingEngine> getHkReachPricingEngine(Warehouse warehouse, Hub hub) {
     DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
-    criteria.add(Restrictions.eq("warehouse", warehouse));
-    criteria.add(Restrictions.eq("hub", pincode.getNearestHub()));
+    if (warehouse != null) {
+      criteria.add(Restrictions.eq("warehouse", warehouse));
+    }
+    if (hub != null) {
+      criteria.add(Restrictions.eq("hub", hub));
+    }
     // TODO: add restrictions for active pricing engine
 
     List<HKReachPricingEngine> result = this.findByCriteria(criteria);
 
     if (result!=null && !result.isEmpty()) {
-      return result.get(0);
+      return result;
     } else {
       return null;
     }
   }
 
+  public HKReachPricingEngine getHKHkReachPricingEngineById (Long id) {
+    DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
+    criteria.add(Restrictions.idEq(id));
+
+    List<HKReachPricingEngine> engines = this.findByCriteria(criteria);
+
+    if (engines != null && !engines.isEmpty()) {
+      return engines.get(0);
+    } else {
+      return null;
+    }
+  }
 }

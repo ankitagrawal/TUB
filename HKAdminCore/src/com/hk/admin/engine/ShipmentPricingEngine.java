@@ -26,6 +26,8 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Pratham
@@ -167,10 +169,13 @@ public class ShipmentPricingEngine {
 
   public Double calculateHKReachCost(Warehouse warehouse, Pincode destPincode, Double amount, Double weightInGrams,
                                       Boolean isCod) {
-    HKReachPricingEngine pricingEngine = courierPricingEngineDao.getHkReachPricingEngine(warehouse,destPincode);
-
-    if (pricingEngine == null) {
+    List<HKReachPricingEngine> pricingEngines = courierPricingEngineDao.getHkReachPricingEngine(warehouse,
+                                                                          destPincode.getNearestHub());
+    HKReachPricingEngine pricingEngine = null;
+    if (pricingEngines == null) {
       return -1.0;
+    } else {
+      pricingEngine = pricingEngines.get(0);
     }
     if (isCod) {
       // no collection charge to add

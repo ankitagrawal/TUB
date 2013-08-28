@@ -226,7 +226,7 @@
 
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
-             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 5 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION
+             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 7 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION
                         &nbsp;LOCALITY &nbsp;ZONE &nbsp;NEAREST_HUB &nbsp;LAST_MILE_COST)</li>
                     <br>
                     <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
