@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.order;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationActionType;
@@ -16,6 +18,7 @@ import com.hk.constants.payment.EnumGateway;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.payment.PaymentService;
 
 import org.jboss.resteasy.client.ClientRequest;
@@ -125,6 +128,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Autowired
     PaymentManager paymentManager;
 
+  @Autowired
+    private SkuItemLineItemService skuItemLineItemService;
+
     @Autowired
     ReviewCollectionFrameworkService reviewCollectionFrameworkService;
 
@@ -189,10 +195,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             } else {
               Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
               for (CartLineItem cartLineItem : cartLineItems) {
-
+                List<SkuItem>   skuItemToBeDeleted =  null;
                 if (bookedOnBright(cartLineItem)) {
                   logger.debug("Update booking on Bright");
-                  freeBrightInventoryAgainstBOCancellation(cartLineItem);
+                List<HKAPIForeignBookingResponseInfo> infos =   freeBrightInventoryAgainstBOCancellation(cartLineItem);
+                  skuItemToBeDeleted =  skuItemLineItemService.updateForeignSICLIForCancelledOrder(infos);
                 }
                 List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
                 if (skuItemCLIs != null && skuItemCLIs.size() > 0) {
@@ -214,6 +221,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                   lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
                   lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
                 }
+                lineItemDao.deleteAll(skuItemToBeDeleted);
+
                 inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
               }
             }
@@ -271,35 +280,38 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     return false;
   }
     
-	private void freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem) {
+	private List<HKAPIForeignBookingResponseInfo> freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem) {
+    List<HKAPIForeignBookingResponseInfo> infos = null;
 		try {
-			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-			hkapiBookingInfo.setCliId(cartLineItem.getId());
-			hkapiBookingInfo.setMrp(cartLineItem.getMarkedPrice());
-			hkapiBookingInfo.setPvId(cartLineItem.getProductVariant().getId());
-			hkapiBookingInfo.setQty(cartLineItem.getQty());
 
-			Gson gson = new Gson();
-			String json = gson.toJson(hkapiBookingInfo);
+      List<ForeignSkuItemCLI> foreignSkuItemCLIs = cartLineItem.getForeignSkuItemCLIs();
+      List<Long> fsicliIds = new ArrayList<Long>();
 
-			String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForBOCancellation/";
-			ClientRequest request = new ClientRequest(url);
-			request.body("application/json", json);
-			ClientResponse response = request.post();
-			int status = response.getStatus();
-			if (status == 200) {
-				String data = (String) response.getEntity(String.class);
-				Boolean deleted = new Gson().fromJson(data, Boolean.class);
-				if (deleted) {
-					logger.debug("Successfully freed Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation");
-				} else {
-					logger.debug("Could not free Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation");
-				}
-			}
-		} catch (Exception e) {
-			logger.error("Exception while freeing Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation", e.getMessage());
-		}
+      for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+        fsicliIds.add(foreignSkuItemCLI.getId());
+      }
+      Gson gson = new Gson();
+      String json = gson.toJson(fsicliIds);
 
+      String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForSOCancellation/";
+      ClientRequest request = new ClientRequest(url);
+      request.body("application/json", json);
+      ClientResponse response = request.post();
+      int status = response.getStatus();
+      if (status == 200) {
+        String data = (String) response.getEntity(String.class);
+        Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
+        }.getType();
+        infos = new Gson().fromJson(data, listType);
+        logger.debug("Successfully freed Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation");
+        return infos;
+      }
+      logger.debug("Could not free Bright Inventory against BO# " + cartLineItem.getOrder().getId()  + " cancellation");
+      return infos;
+    } catch (Exception e) {
+      logger.error("Exception while freeing bright inventory against cancelling SO# " + cartLineItem.getOrder().getId() , e.getMessage());
+      return infos;
+    }
 	}
 
     private void relieveExtraLiabilties(Long reconciliationType, Order order, String comment) {

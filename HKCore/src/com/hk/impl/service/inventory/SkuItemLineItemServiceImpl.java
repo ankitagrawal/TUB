@@ -1,6 +1,7 @@
 package com.hk.impl.service.inventory;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hk.constants.core.Keys;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -243,7 +245,6 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         }
         getSkuItemLineItemDao().saveOrUpdate(skuItemLineItemList);
       } else {
-        //todo ankit: need to change the sili and sicli for the flipped line items when the condition fails for line item number 2 or more.
         return false;
       }
     }
@@ -258,18 +259,20 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
     List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
     List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
-
+    List<SkuItem> skuItemsToBeDeleted = new ArrayList<SkuItem>();
     Set<LineItem> lineItems = shippingOrder.getLineItems();
     for (LineItem lineItem : lineItems) {
+
+      CartLineItem cartLineItem = lineItem.getCartLineItem();
+      if (bookedOnBright(cartLineItem)) {
+        logger.debug("Update booking on Bright");
+       List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryForSOCancellation(lineItem);
+
+        skuItemsToBeDeleted.addAll(updateForeignSICLIForCancelledOrder(infos));
+      }
+
       List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
       if (skuItemLineItems != null && skuItemLineItems.size() > 0) {
-
-        CartLineItem cartLineItem = lineItem.getCartLineItem();
-        if (bookedOnBright(cartLineItem)) {
-          logger.debug("Update booking on Bright");
-          freeBrightInventoryForSOCancellation(lineItem);
-        }
-
         for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
           SkuItem skuItem = skuItemLineItem.getSkuItem();
           skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
@@ -303,6 +306,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       baseDao.delete(skuItemCLI);
       iterator.remove();
     }
+    baseDao.deleteAll(skuItemsToBeDeleted);
     return true;
   }
 
@@ -324,16 +328,19 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return false;
   }
 
-  private boolean freeBrightInventoryForSOCancellation(LineItem lineItem) {
+  private  List<HKAPIForeignBookingResponseInfo> freeBrightInventoryForSOCancellation(LineItem lineItem) {
+    List<HKAPIForeignBookingResponseInfo> infos = null;
     try {
-      HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-      hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
-      hkapiBookingInfo.setMrp(lineItem.getMarkedPrice());
-      hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
-      hkapiBookingInfo.setQty(lineItem.getQty());
+      CartLineItem cartLineItem = lineItem.getCartLineItem();
+      List<ForeignSkuItemCLI> foreignSkuItemCLIs = cartLineItem.getForeignSkuItemCLIs();
+      List<Long> fsicliIds = new ArrayList<Long>();
+
+      for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+        fsicliIds.add(foreignSkuItemCLI.getId());
+      }
 
       Gson gson = new Gson();
-      String json = gson.toJson(hkapiBookingInfo);
+      String json = gson.toJson(fsicliIds);
 
       String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForSOCancellation/";
       ClientRequest request = new ClientRequest(url);
@@ -342,15 +349,17 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       int status = response.getStatus();
       if (status == 200) {
         String data = (String) response.getEntity(String.class);
-        Boolean deleted = new Gson().fromJson(data, Boolean.class);
+        Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
+        }.getType();
+        infos = new Gson().fromJson(data, listType);
         logger.debug("Successfully freed Bright Inventory against SO# " + lineItem.getShippingOrder().getId() + " cancellation");
-        return deleted;
+        return infos;
       }
       logger.debug("Could not free Bright Inventory against SO# " + lineItem.getShippingOrder().getId() + " cancellation");
-      return false;
+      return infos;
     } catch (Exception e) {
       logger.error("Exception while freeing bright inventory against cancelling SO# " + lineItem.getShippingOrder().getId(), e.getMessage());
-      return false;
+      return infos;
     }
   }
 
@@ -477,6 +486,18 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     }
   }
 
+
+  public List<SkuItem> updateForeignSICLIForCancelledOrder (List <HKAPIForeignBookingResponseInfo> infos ){
+   List<SkuItem> skuItems = new ArrayList<SkuItem>();
+    for (HKAPIForeignBookingResponseInfo info : infos ){
+      ForeignSkuItemCLI foreignSkuItemCLI =  getForeignSkuItemCLI(info.getFsiCLIId());
+      foreignSkuItemCLI.setProcessedStatus(info.getProcessed());
+      foreignSkuItemCLI = (ForeignSkuItemCLI) baseDao.save(foreignSkuItemCLI);
+       SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
+       skuItems.add(skuItem);
+    }
+    return skuItems;
+  }
 
   public SkuItemLineItem getBySkuItemId(Long skuItemId) {
     return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);

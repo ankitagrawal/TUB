@@ -52,4 +52,6 @@ public interface SkuItemLineItemService {
 
   public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem);
 
+  public List<SkuItem> updateForeignSICLIForCancelledOrder (List <HKAPIForeignBookingResponseInfo> infos );
+
 }
