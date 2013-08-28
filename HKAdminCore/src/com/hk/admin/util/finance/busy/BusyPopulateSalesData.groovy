@@ -106,10 +106,12 @@ public class BusyPopulateSalesData {
       String against_form;
       Double net_amount;
       byte imported_flag;
+      String warehouse_state;
 
 	  String gateway_order_id;
 	  String awb_number;
 
+      warehouse_state = accountingInvoice.warehouse_state;
       shippingOrderId = accountingInvoice.shipping_order_id
 	     Long warehouseId =  accountingInvoice.warehouse_id;
 
@@ -351,12 +353,13 @@ public class BusyPopulateSalesData {
       String against_form;
       Double net_amount;
       byte imported_flag;
+      String warehouse_state;
 
 	  String gateway_order_id;
 	  String awb_number;
 
       shippingOrderId = accountingInvoice.shipping_order_id
-
+      warehouse_state = accountingInvoice.warehouse_state;
       Long warehouseId =  accountingInvoice.warehouse_id;
 
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
