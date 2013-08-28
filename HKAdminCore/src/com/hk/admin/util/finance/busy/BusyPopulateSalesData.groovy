@@ -553,7 +553,7 @@ public class BusyPopulateSalesData {
 							pay_gate.name as payment_gateway_name,
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
-							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type, th.hk_ref_no,
 							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
@@ -567,19 +567,16 @@ public class BusyPopulateSalesData {
 							left join courier c on aw.courier_id = c.id
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
-
+                            left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
 							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and bo.is_b2b_order = 1
-
+                            and th.hk_ref_no is null
 							GROUP BY so.id
 							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
       accountingInvoice ->
 
-      // left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
-      //and th.hk_ref_no is null
-      //th.hk_ref_no,
       Long shippingOrderId;
       String series;
       Date date;
