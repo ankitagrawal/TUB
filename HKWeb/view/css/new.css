@@ -6841,3 +6841,24 @@ css for loyalty related message
      font-size: 13px;
      padding: 0px;
  }
+
+.freebie-cntnr{
+background: #FBFF90;padding: 10px;margin: 25px 0 25px 0;font-size: 11px;color: #000;
+}
+
+.freebie-cntnr.with-variants{
+    margin:5px 0px;
+    padding: 0px;
+}
+.freebie-cntnr h6{
+    font-weight: bold;
+    text-decoration: none;
+    font-size:1.3em !important;
+    padding: 5px;;
+}
+.freebie-cntnr div{
+    padding:5px ;
+}
+.freebie-cntnr div.cntr-align{
+    text-align: center;
+}

@@ -407,28 +407,29 @@ public class OrderManager {
       }
 
       order = this.getOrderService().save(order);
+      orderDao.refresh(order);
 
       // Order lifecycle activity logging - Order Placed
       this.getOrderLoggingService().logOrderActivity(order, order.getUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
-      Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
       // calling health check
       if (!order.isSubscriptionOrder()) {
         inventoryHealthService.tempBookSkuLineItemForOrder(order);
       }
 
 //       Check Inventory health of order lineItems
-      for (CartLineItem cartLineItem : productCartLineItems) {
-        this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-      }
+        for (CartLineItem cartLineItem : order.getCartLineItems()) {
+            if (cartLineItem.isType(EnumCartLineItemType.Product)) {
+                logger.info("Inventory Health being called for " + cartLineItem.getProductVariant().getId());
+                this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            }
+        }
 
         if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
             //for some orders userCodCall object is not created, a  check to create one
             try{
-                if (order.getUserCodCall() == null) {
                     UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
                     orderService.saveUserCodCall(userCodCall);
-                }
             } catch (Exception e){
                 logger.info("User Cod Call already exists for " + order.getId());
             }
