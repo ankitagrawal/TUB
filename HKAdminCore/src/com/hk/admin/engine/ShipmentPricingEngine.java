@@ -60,14 +60,14 @@ public class ShipmentPricingEngine {
     Shipment shipment = shippingOrder.getShipment();
     Courier courier = shipment.getAwb().getCourier();
     Double weight = shipment.getBoxWeight() * 1000;
-    if (EnumCourierGroup.COMMON.getId().equals(courierGroupService.getCourierGroup(courier).getId())) {
+
       EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
       if (enumBoxSize != null) {
         if (enumBoxSize.getVolumetricWeight() > weight) {
           weight = enumBoxSize.getVolumetricWeight();
         }
       }
-    }
+
     Order order = shippingOrder.getBaseOrder();
     Pincode pincodeObj  = order.getAddress().getPincode();
     if(pincodeObj == null)   {
@@ -76,13 +76,13 @@ public class ShipmentPricingEngine {
     Warehouse srcWarehouse = shippingOrder.getWarehouse();
     CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
     if(courierPricingInfo == null)   {
-      return null;
+        if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+            return this.calculateHKReachCost(srcWarehouse,pincodeObj,shippingOrder.getAmount(),weight,shippingOrder.getCOD());
+        } else {
+            return null;
+        }
     }
-    if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-      return this.calculateHKReachCost(srcWarehouse,pincodeObj,shippingOrder.getAmount(),weight,shippingOrder.getCOD());
-    } else {
-      return calculateShipmentCost(courierPricingInfo, weight);
-    }
+    return calculateShipmentCost(courierPricingInfo, weight);
   }
 
   public Double calculateShipmentCost(CourierPricingEngine courierPricingEngine, Double weight) {
@@ -123,7 +123,10 @@ public class ShipmentPricingEngine {
     }
     CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
     if(courierPricingInfo == null)   {
-      return null;
+      if(EnumCourier.HK_Delivery.asCourier().equals(courier)) {
+          calculateReconciliationCostForHKReach(shippingOrder);
+      } else
+          return null;
     }
     return calculateReconciliationCost(courierPricingInfo, shippingOrder);
   }
@@ -177,9 +180,6 @@ public class ShipmentPricingEngine {
     } else {
       pricingEngine = pricingEngines.get(0);
     }
-    if (isCod) {
-      // no collection charge to add
-    }
 
     // TODO: conditional check for amount of payment
 
@@ -188,4 +188,19 @@ public class ShipmentPricingEngine {
 
     return shippingCost;
   }
+
+  public Double calculateReconciliationCostForHKReach(ShippingOrder shippingOrder) {
+    Double reconciliationCharges = 0D;
+    Double amount = shippingOrder.getAmount();
+    Payment payment = shippingOrder.getBaseOrder().getPayment();
+    if (payment.getPaymentMode().getId().equals(EnumPaymentMode.ONLINE_PAYMENT.getId())) {
+        GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(), payment.getGateway(), null);
+        if(gatewayIssuerMapping == null) {
+            return 0D;
+        }
+        reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
+        reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
+    }
+      return  reconciliationCharges;
+    }
 }

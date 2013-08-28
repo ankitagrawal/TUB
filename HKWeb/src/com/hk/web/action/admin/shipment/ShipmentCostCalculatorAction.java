@@ -139,7 +139,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
 
   public Resolution calculateHKReachCost() {
-    Double totalCost = null;
+    Double totalCost = 0D;
     Map<Courier, Long> courierCostMap = new HashMap<Courier, Long>();
     if (shippingOrderId != null) {
       ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
@@ -159,7 +159,6 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             shippingOrder.getAmount(), weight, false);
       }
     } else {
-      addRedirectAlertMessage(new SimpleMessage("No SO found for given SO Id"));
       Pincode pincodeObj = pincodeDao.getByPincode(pincode);
       if (pincodeObj == null) {
         addRedirectAlertMessage(new SimpleMessage("Could not find pincode for given pincode"));
