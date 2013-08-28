@@ -87,19 +87,14 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
             Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
             for (Courier courier : couriers) {
-                if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-                  totalCost = shipmentPricingEngine.calculateHKReachCost(srcWarehouse, pincodeObj, amount, weight,
-                      cod);
-                } else {
-                  CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
-                  if (courierPricingInfo == null) {
-                    continue;
-                  }
-                  totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) +
-                                      shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
-                }
-                logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
-                courierCostingMap.put(courier, totalCost.longValue());
+              CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
+              if (courierPricingInfo == null) {
+                continue;
+              }
+              totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) +
+                  shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
+              logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
+              courierCostingMap.put(courier, totalCost.longValue());
             }
 
         }
