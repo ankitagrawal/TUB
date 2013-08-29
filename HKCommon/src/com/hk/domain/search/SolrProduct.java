@@ -172,6 +172,10 @@ public class SolrProduct {
   private
   String smallImageUrl;
 
+    @Field
+    private
+    String freebieDesc;
+
 
   public String getName() {
     return name;
@@ -446,7 +450,15 @@ public class SolrProduct {
     this.comboDiscountPercent = comboDiscountPercent;
   }
 
-  public List<String> getVariantNames() {
+    public String getFreebieDesc() {
+        return freebieDesc;
+    }
+
+    public void setFreebieDesc(String freebieDesc) {
+        this.freebieDesc = freebieDesc;
+    }
+
+    public List<String> getVariantNames() {
     return variantNames;
   }
 
