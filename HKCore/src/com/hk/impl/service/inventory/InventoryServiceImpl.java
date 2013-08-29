@@ -163,7 +163,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     ProductVariant freebie = productVariant.getFreeProductVariant();
-    if (freebie != null) {
+    if (freebie != null && !freebie.isDeleted() && !freebie.getProduct().isDeleted()) {
       Long allowedQtyOfFreebie = 0L;
       if (freebie.getMrpQty() == null) {
         checkInventoryHealth(freebie);
