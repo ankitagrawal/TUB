@@ -247,6 +247,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
   private ShippingOrder autoProcessInventoryMismatch(ShippingOrder shippingOrder, User user) {
     shippingOrderService.validateShippingOrder(shippingOrder);
+    boolean cancelFlag = false;
+    boolean isSOProcessable = false;
     Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
     List<String> messages = new ArrayList<String>();
     Set<LineItem> selectedItems = new HashSet<LineItem>();
@@ -257,9 +259,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       }
 
       Long orderedQty = lineItem.getQty();
-     /* Long availableNetPhysicalInventory =
-          getInventoryService().getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
-*/
       // Check for inventory mismatch for non drop shipping orders
       if (!shippingOrder.isDropShipping()) {
         if (lineItem.getSkuItemLineItems()== null) {
@@ -275,7 +274,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           // also if there is no unbooked inventory at different MRP
           if (inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), null) < orderedQty) {
             selectedItems.add(lineItem);
-            String comments = "Partial inventory booked for " + lineItem.getSku().getProductVariant();
+            String comments = "Invalid or no inventory booked for " + lineItem.getSku().getProductVariant();
             logger.debug(comments);
             shippingOrderService.logShippingOrderActivity(shippingOrder, user,
                 shippingOrderService.getShippingOrderLifeCycleActivity(
@@ -286,7 +285,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       }
     }
 
-    boolean cancelFlag = false;
     if (selectedItems.size() > 0) {
       if (selectedItems.size() == shippingOrder.getLineItems().size()) {
         cancelFlag = this.cancelUnfulfilledSO(shippingOrder, user);
@@ -294,13 +292,16 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         boolean splitSuccess = this.autoSplitSO(shippingOrder, selectedItems, splittedOrders,
             messages);
         if (splitSuccess) {
+          isSOProcessable = true;
           ShippingOrder cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
           cancelFlag = this.cancelUnfulfilledSO(cancelledSO, user);
 
         }
       }
+    } else {
+      isSOProcessable = true;
     }
-    if (cancelFlag) {
+    if (isSOProcessable || (!isSOProcessable && cancelFlag)) {
       return shippingOrder;
     } else {
       return null;
