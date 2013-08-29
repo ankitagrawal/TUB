@@ -1,5 +1,6 @@
 package com.hk.admin.impl.dao.courier;
 
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.hkDelivery.Hub;
@@ -29,6 +30,9 @@ import java.util.List;
 public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierPricingEngineDao {
 
   public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse){
+    if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+     return null;
+    }
     Criteria criteria = getSession().createCriteria(CourierPricingEngine.class);
     criteria.add(Restrictions.eq("courier", courier));
     criteria.add(Restrictions.eq("regionType", regionType));
@@ -59,6 +63,13 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     } else {
       return null;
     }
+  }
+
+  @Override
+  public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier) {
+    DetachedCriteria courierPricingEngineCriteria = DetachedCriteria.forClass(CourierPricingEngine.class);
+    courierPricingEngineCriteria.add(Restrictions.eq("courier", courier));
+    return findByCriteria(courierPricingEngineCriteria);
   }
 
   public HKReachPricingEngine getHKHkReachPricingEngineById (Long id) {

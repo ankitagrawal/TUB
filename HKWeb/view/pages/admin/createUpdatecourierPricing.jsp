@@ -4,13 +4,17 @@
 
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
+
     <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction" var="cpea"/>
+
     <s:layout-component name="heading">
-        Enter Values For Courier Pricing
+        Search and Update Courier Pricing
     </s:layout-component>
+
     <s:layout-component name="content">
-        <div>
-            <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction" name="updatePricing">
+
+        <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">
+            <div>
                 <fieldset style="float:left;" width="60%">
 
                     Select Courier :
@@ -19,90 +23,122 @@
                         <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers"
                                                    value="id" label="name"/>
                     </s:select>
-                    <td> Select Region:</td>
-                    <td><s:select name="regionType">
-                        <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                   serviceProperty="regionTypeList"
-                                                   value="id" label="name"/>
-                        </s:select>
-                    </td>
-                    <s:submit name="getCourierPricing" value="Update Pricing"/>
+
+                    <s:submit name="search" value="Search"/>
 
                 </fieldset>
-            </s:form>
-        </div>
 
-        <div class="clear">
-        </div>
+            </div>
 
+            <div class="clear">
 
-          
+            </div>
 
-                <table>
-                    <fieldset style="float:left;">
-                        <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">
-                            <s:hidden name="courierPricingEngine.id"/>
-                            <s:hidden name="courierPricingEngine.courier" value="${cpea.courier}"/>
-                            <s:hidden name="courierPricingEngine.regionType" value="${cpea.regionType}"/>
-                            <s:hidden name="courierPricingEngine.warehouse" value="2"/>
+            <fieldset>
+
+                <c:if test="${(cpea.courierPricingEngineList != null) and fn:length(cpea.courierPricingEngineList) > 0}">
+                    <h2>Courier Pricing Table</h2>
+                    <br/>
+
+                    <table class="courier-prcng-tbl">
+
+                            <thead>
                             <tr>
-                                <td>First Base Weight:</td>
-                                <td><s:text name="courierPricingEngine.firstBaseWt"/></td>
+                                <th>S.No</th>
+                                <th>Courier</th>
+                                <th>Region</th>
+                                <th>First Base Weight</th>
+                                <th>First Base Cost</th>
+                                <th>Second Base Weight</th>
+                                <th>Second Base Cost</th>
+                                <th>Additional Weight</th>
+                                <th>Additional Cost</th>
+                                <th>Fuel Surcharge(in Decimal)</th>
+                                <th>Min COD Charge</th>
+                                <th>COD Cutoff Amount</th>
+                                <th>Variable COD Charges</th>
                             </tr>
-
-                            <tr>
-                                <td>First Base Cost:</td>
-                                <td><s:text name="courierPricingEngine.firstBaseCost"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>Second Base Weight:</td>
-                                <td><s:text name="courierPricingEngine.secondBaseWt"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>Second Base Cost:</td>
-                                <td><s:text name="courierPricingEngine.secondBaseCost"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>Additional Weight:</td>
-                                <td><s:text name="courierPricingEngine.additionalWt"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>Additional Cost:</td>
-                                <td><s:text name="courierPricingEngine.additionalCost"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>Fuel Surcharge :(in Decimal)</td>
-                                <td><s:text name="courierPricingEngine.fuelSurcharge"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>Min COD Charges</td>
-                                <td><s:text name="courierPricingEngine.minCodCharges"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>COD Cutoff Amount:</td>
-                                <td><s:text name="courierPricingEngine.codCutoffAmount"/></td>
-                            </tr>
-
-                            <tr>
-                                <td>Varibale COD Charges:</td>
-                                <td><s:text name="courierPricingEngine.variableCodCharges"/></td>
-                            </tr>
-
-                            <div class="clear"></div>
-                            <s:submit name="save" value="Save Values"/>
-                        </s:form>
-                    </fieldset>
-                </table>
+                            </thead>
 
 
-      
+                        <tbody>
+                            <c:forEach items="${cpea.courierPricingEngineList}" var="courierPricingEngine" varStatus="ctr">
+                                <tr count="${ctr.index}">
+                                    <td>
+                                        ${ctr.index+1}.
+                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].id" value="${courierPricingEngine.id}" />
+                                    </td>
+
+                                    <input type="hidden" name="courierPricingEngineList[${ctr.index}].warehouse" value="${courierPricingEngine.warehouse.id}" />
+
+                                    <td>
+                                        ${courierPricingEngine.courier.name}
+                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].courier" value="${courierPricingEngine.courier.id}" />
+                                    </td>
+
+                                    <td>
+                                        ${courierPricingEngine.regionType.name}
+                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].regionType" value="${courierPricingEngine.regionType.id}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].firstBaseWt" value="${courierPricingEngine.firstBaseWt}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].firstBaseCost" value="${courierPricingEngine.firstBaseCost}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].secondBaseWt" value="${courierPricingEngine.secondBaseWt}"  />
+
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].secondBaseCost" value="${courierPricingEngine.secondBaseCost}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].additionalWt" value="${courierPricingEngine.additionalWt}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].additionalCost" value="${courierPricingEngine.additionalCost}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].fuelSurcharge" value="${courierPricingEngine.fuelSurcharge}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].minCodCharges" value="${courierPricingEngine.minCodCharges}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].codCutoffAmount" value="${courierPricingEngine.codCutoffAmount}" />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].variableCodCharges" value="${courierPricingEngine.variableCodCharges}" />
+                                    </td>
+
+                                </tr>
+
+                            </c:forEach>
+
+                        </tbody>
+
+                    </table>
+
+                <s:submit name="save" value="Save Values"/>
+
+                </c:if>
+
+            </fieldset>
+
+
+        </s:form>
 
     </s:layout-component>
+
 </s:layout-render>
