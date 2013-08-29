@@ -3,12 +3,9 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.RegionType;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.core.WarehouseService;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
@@ -68,8 +65,8 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
         return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
       }
     } else {
-      List<HKReachPricingEngine> localEngines = courierPricingEngineDao.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
-              hkReachPricingEngine.getHub(),Boolean.FALSE);
+      List<HKReachPricingEngine> localEngines = courierPricingEngineDao.getHkReachPricingEngineList(hkReachPricingEngine.getWarehouse(),
+              hkReachPricingEngine.getHub(), Boolean.FALSE);
       if (localEngines != null && !localEngines.isEmpty()) {
         addRedirectAlertMessage(new SimpleError("Duplicate data supplied, entry already exists."));
         return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
@@ -84,7 +81,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   public Resolution search() {
-    hkReachEngines = courierPricingEngineDao.getHkReachPricingEngine(warehouseParam,hubParam, true);
+    hkReachEngines = courierPricingEngineDao.getHkReachPricingEngineList(warehouseParam, hubParam, true);
     if (hkReachEngines == null || hkReachEngines.isEmpty()) {
       addRedirectAlertMessage(new SimpleMessage("No results match your search."));
     }
