@@ -1,5 +1,6 @@
 package com.hk.impl.service.inventory;
 
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.order.CartLineItem;
@@ -14,6 +15,8 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.service.ServiceLocatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	@Autowired
 	BaseDao baseDao;
 	private Logger logger = LoggerFactory.getLogger(SkuItemLineItemServiceImpl.class);
+  ShippingOrderService shippingOrderService;
 
 	@Override
 	public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId) {
@@ -350,6 +354,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			baseDao.delete(skuItemCLI);
 			iterator.remove();
 		}
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Inventory freed for SO.");
 		return true;
 	}
 
@@ -378,4 +383,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	public LineItemDao getLineItemDao() {
 		return lineItemDao;
 	}
+
+  public ShippingOrderService getShippingOrderService() {
+    return ServiceLocatorFactory.getService(ShippingOrderService.class);
+  }
 }
