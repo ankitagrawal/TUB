@@ -33,6 +33,12 @@
       Zone Crud Operations
     </s:link>
   </h3>
+
+  <h3>
+    <s:link beanclass="com.hk.web.action.admin.courier.AddPincodeRegionZoneAction">
+        Pincode Region Zone
+    </s:link>
+  </h3>
 </div>
 
 <div class="cl"></div>
