@@ -148,18 +148,10 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         if (shippingOrder.isDropShipping()) {
           reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
         }
-        // List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
-        //if (!enumBuckets.isEmpty()) {
-        //reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
-
-        //}
         // finding line items with inventory mismatch
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
         if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
           return false;
-        }
-        if (shippingOrder.containsJitProducts()) {
-          reasons.add(EnumReason.Contains_Jit_Products.asReason());
         }
         if (shippingOrder.getShipment() == null) {
           reasons.add(EnumReason.ShipmentNotCreated.asReason());
