@@ -49,147 +49,147 @@ import java.util.*;
 @Component
 public class ShipmentCostCalculatorAction extends BaseAction {
 
-    private Double weight;
+  private Double weight;
 
-    private Warehouse srcWarehouse;
+  private Warehouse srcWarehouse;
 
-    private String pincode;
+  private String pincode;
 
-    Double amount;
+  Double amount;
 
-    boolean cod;
+  boolean cod;
 
-    Long shippingOrderId;
-    String merchantId;
+  Long shippingOrderId;
+  String merchantId;
 
-    int days;
+  int days;
 
-    Date shippedStartDate;
-    Date shippedEndDate;
-    boolean overrideHistoricalShipmentCost;
+  Date shippedStartDate;
+  Date shippedEndDate;
+  boolean overrideHistoricalShipmentCost;
 
-    private static Logger logger = LoggerFactory.getLogger(ShipmentCostCalculatorAction.class);
+  private static Logger logger = LoggerFactory.getLogger(ShipmentCostCalculatorAction.class);
 
-    @Autowired
-    ShipmentPricingEngine shipmentPricingEngine;
+  @Autowired
+  ShipmentPricingEngine shipmentPricingEngine;
 
-    @Autowired
-    CourierCostCalculator courierCostCalculator;
+  @Autowired
+  CourierCostCalculator courierCostCalculator;
 
-    @Autowired
-    ShipmentService shipmentService;
+  @Autowired
+  ShipmentService shipmentService;
 
-    @Autowired
-    ShippingOrderStatusService shippingOrderStatusService;
+  @Autowired
+  ShippingOrderStatusService shippingOrderStatusService;
 
-    @Autowired
-    ShippingOrderService shippingOrderService;
+  @Autowired
+  ShippingOrderService shippingOrderService;
 
-    @Autowired
-    PincodeCourierService pincodeCourierService;
+  @Autowired
+  PincodeCourierService pincodeCourierService;
 
-    @Autowired
-    CourierGroupService courierGroupService;
+  @Autowired
+  CourierGroupService courierGroupService;
 
-    @Autowired
-    CourierService courierService;
+  @Autowired
+  CourierService courierService;
 
-    @Autowired
-    PincodeDao pincodeDao;
+  @Autowired
+  PincodeDao pincodeDao;
 
-    TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
-    Courier applicableCourier;
+  TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
+  Courier applicableCourier;
 
-    @DefaultHandler
-    public Resolution pre() {
-        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
-    }
+  @DefaultHandler
+  public Resolution pre() {
+    return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+  }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
-    public Resolution saveActualShippingCostForShippingOrder() {
-        if (shippingOrderId != null) {
-            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-            if (shippingOrder != null) {
-                Shipment shipment = shippingOrder.getShipment();
-                if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                    if (weight != null && weight > 0D) {
-                        shipment.setBoxWeight(weight);
-                    }
-                    shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-                    shipment.setShipmentCostCalculateDate(new Date());
-                    shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                    shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-                    shipmentService.save(shipment);
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
-                }
-            }
+  @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
+  public Resolution saveActualShippingCostForShippingOrder() {
+    if (shippingOrderId != null) {
+      ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+      if (shippingOrder != null) {
+        Shipment shipment = shippingOrder.getShipment();
+        if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+          if (weight != null && weight > 0D) {
+            shipment.setBoxWeight(weight);
+          }
+          shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+          shipment.setShipmentCostCalculateDate(new Date());
+          shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+          shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+          shipmentService.save(shipment);
         } else {
-            addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
+          addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
         }
-        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+      }
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
     }
+    return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+  }
 
-    public Resolution calculateViaPincode() {
-        //todo courier set as false by default, take input from screen
-        courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, false);
-        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
-    }
+  public Resolution calculateViaPincode() {
+    //todo courier set as false by default, take input from screen
+    courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, false);
+    return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+  }
 
 
-    public Resolution calculateHKReachCost() {
-        if (shippingOrderId != null) {
-            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-            if (shippingOrder != null) {
-                Order order = shippingOrder.getBaseOrder();
-                Shipment shipment = shippingOrder.getShipment();
-                Double weight = 0D;
-                if (shippingOrder.getShipment() != null) {
-                    weight = shipment.getBoxWeight() * 1000;
-                } else {
-                    for (LineItem lineItem : shippingOrder.getLineItems()) {
-                        weight += lineItem.getSku().getProductVariant().getWeight();
-                    }
-                }
-                courierCostingMap = courierCostCalculator.getHKReachCostingMap(shippingOrder.getWarehouse(), order.getAddress().getPincode(), weight);
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("SO not found for the given SO ID"));
-            }
+  public Resolution calculateHKReachCost() {
+    if (shippingOrderId != null) {
+      ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+      if (shippingOrder != null) {
+        Order order = shippingOrder.getBaseOrder();
+        Shipment shipment = shippingOrder.getShipment();
+        Double weight = 0D;
+        if (shippingOrder.getShipment() != null) {
+          weight = shipment.getBoxWeight() * 1000;
         } else {
-            Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-            if (pincodeObj == null || srcWarehouse == null || weight == null) {
-                addRedirectAlertMessage(new SimpleMessage("All 3 parameters are required"));
-                return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
-            } else {
-                courierCostingMap = courierCostCalculator.getHKReachCostingMap(srcWarehouse, pincodeObj, weight);
-            }
+          for (LineItem lineItem : shippingOrder.getLineItems()) {
+            weight += lineItem.getSku().getProductVariant().getWeight();
+          }
         }
-
+        courierCostingMap = courierCostCalculator.getHKReachCostingMap(shippingOrder.getWarehouse(), order.getAddress().getPincode(), weight);
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("SO not found for the given SO ID"));
+      }
+    } else {
+      Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+      if (pincodeObj == null || srcWarehouse == null || weight == null) {
+        addRedirectAlertMessage(new SimpleMessage("All 3 parameters are required"));
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+      } else {
+        courierCostingMap = courierCostCalculator.getHKReachCostingMap(srcWarehouse, pincodeObj, weight);
+      }
     }
 
-    public Resolution calculateCourierCostingForShippingOrder() {
-        if (shippingOrderId != null) {
-            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-            if (shippingOrder != null) {
-                Order order = shippingOrder.getBaseOrder();
-                Shipment shipment = shippingOrder.getShipment();
-                Double weight = 0D;
-                if (shippingOrder.getShipment() != null) {
-                    weight = shipment.getBoxWeight() * 1000;
-                } else {
-                    for (LineItem lineItem : shippingOrder.getLineItems()) {
-                        weight += lineItem.getSku().getProductVariant().getWeight();
-                    }
-                }
-                ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
-                courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
-            }
+    return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+  }
+
+  public Resolution calculateCourierCostingForShippingOrder() {
+    if (shippingOrderId != null) {
+      ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+      if (shippingOrder != null) {
+        Order order = shippingOrder.getBaseOrder();
+        Shipment shipment = shippingOrder.getShipment();
+        Double weight = 0D;
+        if (shippingOrder.getShipment() != null) {
+          weight = shipment.getBoxWeight() * 1000;
         } else {
-            addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
+          for (LineItem lineItem : shippingOrder.getLineItems()) {
+            weight += lineItem.getSku().getProductVariant().getWeight();
+          }
         }
-        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+        ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+        courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
+      }
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
     }
+    return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+  }
 
 /*
     public Resolution findIciciPayment() {
@@ -200,148 +200,148 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }*/
 
-    @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
-    public Resolution saveHistoricalShipmentCost() {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
-        if (applicableCourier != null) {
-            shippingOrderSearchCriteria.setCourierList(Arrays.asList(applicableCourier));
-        }
-        List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
-        if (shippingOrderId != null) {
-            ShippingOrder so = shippingOrderService.find(shippingOrderId);
-            if (so != null)
-                shippingOrderList.add(so);
+  @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
+  public Resolution saveHistoricalShipmentCost() {
+    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+    shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
+    if (applicableCourier != null) {
+      shippingOrderSearchCriteria.setCourierList(Arrays.asList(applicableCourier));
+    }
+    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+    if (shippingOrderId != null) {
+      ShippingOrder so = shippingOrderService.find(shippingOrderId);
+      if (so != null)
+        shippingOrderList.add(so);
+    } else {
+      shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+    }
+
+    if (shippingOrderList != null) {
+      for (ShippingOrder shippingOrder : shippingOrderList) {
+        Shipment shipment = shippingOrder.getShipment();
+        if (shipment != null) {
+          if (overrideHistoricalShipmentCost && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+            shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+            shipment.setShipmentCostCalculateDate(new Date());
+            shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+            shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+            shipmentService.save(shipment);
+          }
         } else {
-            shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+          logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
         }
-
-        if (shippingOrderList != null) {
-            for (ShippingOrder shippingOrder : shippingOrderList) {
-                Shipment shipment = shippingOrder.getShipment();
-                if (shipment != null) {
-                    if (overrideHistoricalShipmentCost && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                        shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-                        shipment.setShipmentCostCalculateDate(new Date());
-                        shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                        shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-                        shipmentService.save(shipment);
-                    }
-                } else {
-                    logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
-                }
-            }
-        }
-        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+      }
     }
+    return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+  }
 
-    public Double getWeight() {
-        return weight;
-    }
+  public Double getWeight() {
+    return weight;
+  }
 
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
+  public void setWeight(Double weight) {
+    this.weight = weight;
+  }
 
-    public Warehouse getSrcWarehouse() {
-        return srcWarehouse;
-    }
+  public Warehouse getSrcWarehouse() {
+    return srcWarehouse;
+  }
 
-    public void setSrcWarehouse(Warehouse srcWarehouse) {
-        this.srcWarehouse = srcWarehouse;
-    }
+  public void setSrcWarehouse(Warehouse srcWarehouse) {
+    this.srcWarehouse = srcWarehouse;
+  }
 
-    public String getPincode() {
-        return pincode;
-    }
+  public String getPincode() {
+    return pincode;
+  }
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
-    }
+  public void setPincode(String pincode) {
+    this.pincode = pincode;
+  }
 
-    public Double getAmount() {
-        return amount;
-    }
+  public Double getAmount() {
+    return amount;
+  }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
 
-    public boolean isCod() {
-        return cod;
-    }
+  public boolean isCod() {
+    return cod;
+  }
 
-    public boolean getCod() {
-        return cod;
-    }
+  public boolean getCod() {
+    return cod;
+  }
 
-    public void setCod(boolean cod) {
-        this.cod = cod;
-    }
+  public void setCod(boolean cod) {
+    this.cod = cod;
+  }
 
-    public Long getShippingOrderId() {
-        return shippingOrderId;
-    }
+  public Long getShippingOrderId() {
+    return shippingOrderId;
+  }
 
-    public void setShippingOrderId(Long shippingOrderId) {
-        this.shippingOrderId = shippingOrderId;
-    }
+  public void setShippingOrderId(Long shippingOrderId) {
+    this.shippingOrderId = shippingOrderId;
+  }
 
-    public Courier getApplicableCourier() {
-        return applicableCourier;
-    }
+  public Courier getApplicableCourier() {
+    return applicableCourier;
+  }
 
-    public void setApplicableCourier(Courier applicableCourier) {
-        this.applicableCourier = applicableCourier;
-    }
+  public void setApplicableCourier(Courier applicableCourier) {
+    this.applicableCourier = applicableCourier;
+  }
 
-    public TreeMap<Courier, Long> getCourierCostingMap() {
-        return courierCostingMap;
-    }
+  public TreeMap<Courier, Long> getCourierCostingMap() {
+    return courierCostingMap;
+  }
 
-    public void setCourierCostingMap(TreeMap<Courier, Long> courierCostingMap) {
-        this.courierCostingMap = courierCostingMap;
-    }
+  public void setCourierCostingMap(TreeMap<Courier, Long> courierCostingMap) {
+    this.courierCostingMap = courierCostingMap;
+  }
 
-    public int getDays() {
-        return days;
-    }
+  public int getDays() {
+    return days;
+  }
 
-    public void setDays(int days) {
-        this.days = days;
-    }
+  public void setDays(int days) {
+    this.days = days;
+  }
 
-    public Date getShippedStartDate() {
-        return shippedStartDate;
-    }
+  public Date getShippedStartDate() {
+    return shippedStartDate;
+  }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
-    public void setShippedStartDate(Date shippedStartDate) {
-        this.shippedStartDate = shippedStartDate;
-    }
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setShippedStartDate(Date shippedStartDate) {
+    this.shippedStartDate = shippedStartDate;
+  }
 
-    public Date getShippedEndDate() {
-        return shippedEndDate;
-    }
+  public Date getShippedEndDate() {
+    return shippedEndDate;
+  }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
-    public void setShippedEndDate(Date shippedEndDate) {
-        this.shippedEndDate = shippedEndDate;
-    }
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setShippedEndDate(Date shippedEndDate) {
+    this.shippedEndDate = shippedEndDate;
+  }
 
-    public boolean isOverrideHistoricalShipmentCost() {
-        return overrideHistoricalShipmentCost;
-    }
+  public boolean isOverrideHistoricalShipmentCost() {
+    return overrideHistoricalShipmentCost;
+  }
 
-    public void setOverrideHistoricalShipmentCost(boolean overrideHistoricalShipmentCost) {
-        this.overrideHistoricalShipmentCost = overrideHistoricalShipmentCost;
-    }
+  public void setOverrideHistoricalShipmentCost(boolean overrideHistoricalShipmentCost) {
+    this.overrideHistoricalShipmentCost = overrideHistoricalShipmentCost;
+  }
 
-    public String getMerchantId() {
-        return merchantId;
-    }
+  public String getMerchantId() {
+    return merchantId;
+  }
 
-    public void setMerchantId(String merchantId) {
-        this.merchantId = merchantId;
-    }
+  public void setMerchantId(String merchantId) {
+    this.merchantId = merchantId;
+  }
 }

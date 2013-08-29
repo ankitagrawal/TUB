@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -100,8 +101,12 @@ public class PreferredWarehouseDecider {
             for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
                 Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCouriers);
                 for (Courier courier : couriers) {
-                    CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), warehouse);
-                    totalCost = taxIncurred + shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, isCod);
+                    if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+                      totalCost = shipmentPricingEngine.calculateHKReachCost(warehouse, pincode, weight);
+                    } else {
+                      CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), warehouse);
+                      totalCost = taxIncurred + shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, isCod);
+                    }
                     courierCostingMap.put(courier, totalCost);
                 }
             }

@@ -74,15 +74,16 @@ public class ShipmentPricingEngine {
       return null;
     }
     Warehouse srcWarehouse = shippingOrder.getWarehouse();
-    CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
-    if(courierPricingInfo == null)   {
-        if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-            return this.calculateHKReachCost(srcWarehouse,pincodeObj,weight);
-        } else {
-            return null;
-        }
+    if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+      return this.calculateHKReachCost(srcWarehouse,pincodeObj,weight);
+    } else {
+      CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+      if (courierPricingInfo != null) {
+        return calculateShipmentCost(courierPricingInfo, weight);
+      } else {
+        return null;
+      }
     }
-    return calculateShipmentCost(courierPricingInfo, weight);
   }
 
   public Double calculateShipmentCost(CourierPricingEngine courierPricingEngine, Double weight) {
@@ -121,14 +122,16 @@ public class ShipmentPricingEngine {
       logger.info("Courier is null for BO order " + order.getId());
       return null;
     }
-    CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
-    if(courierPricingInfo == null)   {
-      if(EnumCourier.HK_Delivery.asCourier().equals(courier)) {
-          calculateReconciliationCostForHKReach(shippingOrder);
-      } else
-          return null;
+    if(EnumCourier.HK_Delivery.asCourier().equals(courier)) {
+      return calculateReconciliationCostForHKReach(shippingOrder);
+    } else {
+      CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+      if(courierPricingInfo == null)   {
+        return null;
+      } else {
+        return calculateReconciliationCost(courierPricingInfo, shippingOrder);
+      }
     }
-    return calculateReconciliationCost(courierPricingInfo, shippingOrder);
   }
 
   public Double calculatePackagingCost(ShippingOrder shippingOrder) {

@@ -32,104 +32,108 @@ import java.util.*;
 @Component
 public class CourierCostCalculatorImpl implements CourierCostCalculator {
 
-    private static Logger logger = LoggerFactory.getLogger(CourierCostCalculatorImpl.class);
+  private static Logger logger = LoggerFactory.getLogger(CourierCostCalculatorImpl.class);
 
-    @Autowired
-    PincodeDao pincodeDao;
+  @Autowired
+  PincodeDao pincodeDao;
 
-    @Autowired
-    PincodeRegionZoneService pincodeRegionZoneService;
+  @Autowired
+  PincodeRegionZoneService pincodeRegionZoneService;
 
-    @Autowired
-    CourierPricingEngineDao courierPricingEngineDao;
+  @Autowired
+  CourierPricingEngineDao courierPricingEngineDao;
 
-    @Autowired
-    ShipmentPricingEngine shipmentPricingEngine;
+  @Autowired
+  ShipmentPricingEngine shipmentPricingEngine;
 
-    @Autowired
-    CourierGroupService courierGroupService;
+  @Autowired
+  CourierGroupService courierGroupService;
 
-    @Autowired
-    private PincodeCourierService pincodeCourierService;
+  @Autowired
+  private PincodeCourierService pincodeCourierService;
 
-    @Autowired
-    ShippingOrderDao shippingOrderDao;
+  @Autowired
+  ShippingOrderDao shippingOrderDao;
 
 
-    public Courier getCheapestCourier(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
-        Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
-        return courierCostingMapEntry.getKey();
+  public Courier getCheapestCourier(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+    Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
+    return courierCostingMapEntry.getKey();
+  }
+
+  public Long getCheapestCourierCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+    Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
+    return courierCostingMapEntry.getValue();
+  }
+
+  public Map.Entry<Courier, Long> getCheapestCourierEntry(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+    TreeMap<Courier, Long> courierCostingMap = getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, ground);
+    return courierCostingMap.lastEntry();
+  }
+
+  @SuppressWarnings("unchecked")
+  public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+    Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+    List<Courier> applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
+    Double totalCost = 0D;
+
+    if(pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()){
+      logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode + "cod " + cod + " ground " + ground);
+      return new TreeMap<Courier, Long>();
     }
 
-    public Long getCheapestCourierCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
-        Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
-        return courierCostingMapEntry.getValue();
-    }
-
-    public Map.Entry<Courier, Long> getCheapestCourierEntry(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
-        TreeMap<Courier, Long> courierCostingMap = getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, ground);
-        return courierCostingMap.lastEntry();
-    }
-
-    @SuppressWarnings("unchecked")
-    public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
-        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-	    List<Courier> applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
-        Double totalCost = 0D;
-
-        if(pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()){
-           logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode + "cod " + cod + " ground " + ground);
-            return new TreeMap<Courier, Long>();
+    List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
+    Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
+    for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
+      Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
+      for (Courier courier : couriers) {
+        if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+          totalCost = shipmentPricingEngine.calculateHKReachCost(srcWarehouse, pincodeObj, weight);
+        } else {
+          CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
+          if (courierPricingInfo == null) {
+            continue;
+          }
+          totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) +
+              shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
         }
+        logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
+        courierCostingMap.put(courier, totalCost.longValue());
+      }
 
-        List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
-	      Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
-        for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
-            Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
-            for (Courier courier : couriers) {
-              CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
-              if (courierPricingInfo == null) {
-                continue;
-              }
-              totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) +
-                  shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
-              logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
-              courierCostingMap.put(courier, totalCost.longValue());
-            }
-
-        }
-
-        MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
-        TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
-        sortedCourierCostingTreeMap.putAll(courierCostingMap);
-
-        return sortedCourierCostingTreeMap;
     }
 
-    @Override
-    public TreeMap<Courier, Long> getHKReachCostingMap(Warehouse warehouse, Pincode pincode, Double weight) {
-        Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
-        Double totalCost = -1D;
-        totalCost = shipmentPricingEngine.calculateHKReachCost(warehouse, pincode, weight);
-        courierCostingMap.put(EnumCourier.HK_Delivery.asCourier(), totalCost.longValue());
-        MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
-        TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
-        sortedCourierCostingTreeMap.putAll(courierCostingMap);
-        return sortedCourierCostingTreeMap;
-    }
+    MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
+    TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
+    sortedCourierCostingTreeMap.putAll(courierCostingMap);
 
-    public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse) {
-        CourierGroup courierGroup = courierGroupService.getCourierGroup(courier);
-        PincodeRegionZone pincodeRegionZone = pincodeRegionZoneService.getPincodeRegionZone(courierGroup, pincodeObj, srcWarehouse);
-        if (pincodeRegionZone == null) {
-            if (courierGroup == null) {
-                logger.error("courier group not found for courier " + courier.getName());
-                return null;
-            }
-            logger.info("prz null for " + pincodeObj.getPincode() + courierGroup.getName() + srcWarehouse.getCity());
-            return null;
-        }
-        return courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
+    return sortedCourierCostingTreeMap;
+  }
+
+  @Override
+  public TreeMap<Courier, Long> getHKReachCostingMap(Warehouse warehouse, Pincode pincode, Double weight) {
+    Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
+    Double totalCost = -1D;
+    totalCost = shipmentPricingEngine.calculateHKReachCost(warehouse, pincode, weight);
+    courierCostingMap.put(EnumCourier.HK_Delivery.asCourier(), totalCost.longValue());
+    MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
+    TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
+    sortedCourierCostingTreeMap.putAll(courierCostingMap);
+    return sortedCourierCostingTreeMap;
+  }
+
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse) {
+    CourierGroup courierGroup = courierGroupService.getCourierGroup(courier);
+    PincodeRegionZone pincodeRegionZone = pincodeRegionZoneService.getPincodeRegionZone(courierGroup, pincodeObj, srcWarehouse);
+    if (pincodeRegionZone == null) {
+      if (courierGroup == null) {
+        logger.error("courier group not found for courier " + courier.getName());
+        return null;
+      }
+      logger.info("prz null for " + pincodeObj.getPincode() + courierGroup.getName() + srcWarehouse.getCity());
+      return null;
     }
+    return courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
+  }
 }
 
