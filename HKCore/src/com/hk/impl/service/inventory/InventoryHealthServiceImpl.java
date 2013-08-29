@@ -66,7 +66,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   LineItemDao lineItemDao;
   @Autowired
   CartLineItemDao cartLineItemDao;
-  @Autowired
+
   ShippingOrderService shippingOrderService;
 /*  @Autowired
   AdminOrderService adminOrderService;*/
@@ -781,7 +781,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
   public ShippingOrderService getShippingOrderService() {
-    return shippingOrderService;
+    return ServiceLocatorFactory.getService(ShippingOrderService.class);
   }
 
 /*  public AdminOrderService getAdminOrderService() {
