@@ -48,9 +48,9 @@
                                 </c:forEach>
                             </s:select>
                         </td>&nbsp;&nbsp;
-                        <td>Inter City Cost:</td>
+                        <td>Inter City Cost(per kg):</td>
                         <td><s:text name="hkReachPricingEngine.interCityCost"/></td>&nbsp;&nbsp;
-                        <td>Fixed Cost:</td>
+                        <td>Fixed Cost(per kg):</td>
                         <td><s:text name="hkReachPricingEngine.fixedCost"/></td>
                         <td><s:submit name="saveOrUpdate" value="Add Values"/></td>
                     </tr>
@@ -66,8 +66,8 @@
                             <th>S No.</th>
                             <th style="width:150px;">Warehouse</th>
                             <th >Hub</th>
-                            <th>Inter City Cost</th>
-                            <th>Fixed Cost</th>
+                            <th>Inter City Cost(per kg)</th>
+                            <th>Fixed Cost(per kg)</th>
                             <th> &nbsp;</th>
                         </tr></thead>
                         <%int count=0; %>
