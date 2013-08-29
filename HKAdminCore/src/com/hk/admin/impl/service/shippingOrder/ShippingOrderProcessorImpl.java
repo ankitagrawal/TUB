@@ -5,6 +5,7 @@ import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.shippingOrder.ShippingOrderConstants;
@@ -101,7 +102,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
   @Transactional
   public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
     if(isShippingOrderAutoEscalable(shippingOrder, firewall)){
-      //		shippingOrderService.validateShippingOrder(shippingOrder);
       User activityUser = getUserService().getAdminUser();
       shippingOrderService.logShippingOrderActivity(shippingOrder, activityUser,
           EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
@@ -152,6 +152,10 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
         if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
           return false;
+        }
+        List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
+        if (!enumBuckets.isEmpty()) {
+          reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
         }
         if (shippingOrder.getShipment() == null) {
           reasons.add(EnumReason.ShipmentNotCreated.asReason());
@@ -236,14 +240,15 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     List<String> messages = new ArrayList<String>();
     Set<LineItem> selectedItems = new HashSet<LineItem>();
 
-    for (LineItem lineItem : shippingOrder.getLineItems()) {
-      if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
-        continue;
-      }
+    if (!shippingOrder.isDropShipping()) {
+      for (LineItem lineItem : shippingOrder.getLineItems()) {
+        if(lineItem.getCartLineItem().getCartLineItemConfig() != null){
+          continue;
+        }
 
-      Long orderedQty = lineItem.getQty();
-      // Check for inventory mismatch for non drop shipping orders
-      if (!shippingOrder.isDropShipping()) {
+        Long orderedQty = lineItem.getQty();
+        // Check for inventory mismatch for non drop shipping orders
+
         if (lineItem.getSkuItemLineItems()== null) {
           // if no inventory has been booked for the line item
           selectedItems.add(lineItem);
