@@ -77,40 +77,38 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
     List<Courier> applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
     Double totalCost = 0D;
 
-    if(pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()){
-      logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode + "cod " + cod + " ground " + ground);
-      return new TreeMap<Courier, Long>();
-    }
-
-    List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
-    Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
-    for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
-      Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
-      for (Courier courier : couriers) {
-        if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-          totalCost = shipmentPricingEngine.calculateHKReachCost(srcWarehouse, pincodeObj, weight);
-        } else {
-          CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
-          if (courierPricingInfo == null) {
-            continue;
+      if (pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()) {
+          logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode + "cod " + cod + " ground " + ground);
+          return new TreeMap<Courier, Long>();
+      }
+      List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
+      Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
+      for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
+          Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
+          for (Courier courier : couriers) {
+              if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+                  totalCost = shipmentPricingEngine.calculateHKReachCost(srcWarehouse, pincodeObj, weight);
+              } else {
+                  CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
+                  if (courierPricingInfo == null) {
+                      continue;
+                  }
+                  totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight);
+//                  + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
+              }
+              logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
+              courierCostingMap.put(courier, totalCost.longValue());
           }
-          totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) +
-              shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
-        }
-        logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
-        courierCostingMap.put(courier, totalCost.longValue());
       }
 
-    }
+      MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
+      TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
+      sortedCourierCostingTreeMap.putAll(courierCostingMap);
 
-    MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
-    TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
-    sortedCourierCostingTreeMap.putAll(courierCostingMap);
-
-    return sortedCourierCostingTreeMap;
+      return sortedCourierCostingTreeMap;
   }
 
-  @Override
+    @Override
   public TreeMap<Courier, Long> getHKReachCostingMap(Warehouse warehouse, Pincode pincode, Double weight) {
     Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
     Double totalCost = -1D;
