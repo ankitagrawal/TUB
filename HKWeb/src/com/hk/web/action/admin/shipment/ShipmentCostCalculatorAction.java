@@ -136,39 +136,6 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
 
-
-  public Resolution calculateHKReachCost() {
-    if (shippingOrderId != null) {
-      ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
-      if (shippingOrder != null) {
-        Order order = shippingOrder.getBaseOrder();
-        Shipment shipment = shippingOrder.getShipment();
-        Double weight = 0D;
-        if (shippingOrder.getShipment() != null) {
-          weight = shipment.getBoxWeight() * 1000;
-        } else {
-          for (LineItem lineItem : shippingOrder.getLineItems()) {
-            weight += lineItem.getSku().getProductVariant().getWeight();
-          }
-        }
-        courierCostingMap = courierCostCalculator.getHKReachCostingMap(shippingOrder.getWarehouse(),
-            order.getAddress().getPincode(), weight);
-      } else {
-        addRedirectAlertMessage(new SimpleMessage("SO not found for the given SO ID"));
-      }
-    } else {
-      Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-      if (pincodeObj == null || srcWarehouse == null || weight == null) {
-        addRedirectAlertMessage(new SimpleMessage("All 3 parameters are required"));
-        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
-      } else {
-        courierCostingMap = courierCostCalculator.getHKReachCostingMap(srcWarehouse, pincodeObj, weight);
-      }
-    }
-
-    return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
-  }
-
   public Resolution calculateCourierCostingForShippingOrder() {
     if (shippingOrderId != null) {
       ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);

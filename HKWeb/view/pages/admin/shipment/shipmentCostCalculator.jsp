@@ -85,41 +85,6 @@
     </div>
 
     <div style="float: left; width:30%">
-        <s:form beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction">
-            <fieldset class="top_label">
-                <legend> HK Reach Cost Calculator</legend>
-                <li>
-                    <label>Weight (gm)<label>
-                        <s:text name="weight" style="width:100px"/>
-                        <div class="clear"></div>
-                </li>
-                <li>
-                    <label>Pincode (Valid Dest)<label>
-                        <s:text name="pincode" style="width:100px"/>
-                        <div class="clear"></div>
-                </li>
-                <li>
-                    <label>Source Warehouse</label>
-                    <s:select name="srcWarehouse">
-                        <s:option value="">-Select-</s:option>
-                        <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.identifier}</s:option>
-                        </c:forEach>
-                    </s:select>
-                </li>
-
-                    <center>OR</center>
-
-                <li>
-                    <label> SO Order ID</label>
-                    <s:text name="shippingOrderId" style="width:200px"/>
-                </li>
-                <s:submit name="calculateHKReachCost" value="Get Shipping Cost (HK Reach)"/>
-            </fieldset>
-        </s:form>
-    </div>
-
-    <div style="float: left; width:30%">
         Applicable Couriers
 
         <c:forEach items="${calculator.courierCostingMap}" var="courierCostingMap">

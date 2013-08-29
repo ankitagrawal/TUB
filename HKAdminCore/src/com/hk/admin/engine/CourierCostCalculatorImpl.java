@@ -12,6 +12,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.PincodeRegionZone;
+import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -87,14 +88,18 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
           Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
           for (Courier courier : couriers) {
               if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-                  totalCost = shipmentPricingEngine.calculateHKReachCost(srcWarehouse, pincodeObj, weight);
+                  if (pincodeObj.getNearestHub() != null) {
+                      HKReachPricingEngine hkReachPricingEngine = courierPricingEngineDao.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub(), false);
+                      if(hkReachPricingEngine != null){
+                          totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
+                      }
+                  }
               } else {
                   CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
                   if (courierPricingInfo == null) {
                       continue;
                   }
                   totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight);
-//                  + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, cod);
               }
               logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
               courierCostingMap.put(courier, totalCost.longValue());
@@ -106,18 +111,6 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
       sortedCourierCostingTreeMap.putAll(courierCostingMap);
 
       return sortedCourierCostingTreeMap;
-  }
-
-    @Override
-  public TreeMap<Courier, Long> getHKReachCostingMap(Warehouse warehouse, Pincode pincode, Double weight) {
-    Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
-    Double totalCost = -1D;
-    totalCost = shipmentPricingEngine.calculateHKReachCost(warehouse, pincode, weight);
-    courierCostingMap.put(EnumCourier.HK_Delivery.asCourier(), totalCost.longValue());
-    MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
-    TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
-    sortedCourierCostingTreeMap.putAll(courierCostingMap);
-    return sortedCourierCostingTreeMap;
   }
 
   public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse) {
