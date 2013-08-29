@@ -1,0 +1,64 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/includes/_taglibInclude.jsp" %>
+<s:useActionBean beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction" var="supplierTransactionBean"/>
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Supplier List">
+    <s:layout-component name="content">
+
+        <s:form beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction">
+
+            <fieldset style="margin: 0em;">
+                <legend>Search Supplier List</legend>
+
+                <label>Tin Number:</label><s:text name="tinNumber" style="width:150px"/>
+                &nbsp; &nbsp;
+                <label>Name:</label><s:text name="supplierName" style="width:150px"/>
+	            &nbsp; &nbsp;
+
+
+                <s:submit name="pre" value="Search"/>
+            </fieldset>
+        </s:form>
+
+        <table class="zebra_vert" >
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>TIN</th>
+                <th>Address</th>
+                <th>Credit Days</th>
+                <th>Balance</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <c:forEach items="${supplierTransactionBean.supplierTransactionList}" var="supplierTransaction">
+                <tr>
+                    <td>${supplierTransaction.supplier.name}</td>
+                    <td>${supplierTransaction.supplier.tinNumber}</td>
+                    <td>${supplierTransaction.supplier.line1}<br/>${supplierTransaction.supplier.line2}<br/>${supplierTransaction.supplier.city}
+                        <br/>${supplierTransaction.supplier.pincode}<br/>${supplierTransaction.supplier.state}
+                    </td>
+                    <td>${supplierTransaction.supplier.creditDays}</td>
+                    <td>
+                        <fmt:formatNumber value="${supplierTransaction.currentBalance}" type="currency" currencySymbol=" " maxFractionDigits="2"/>
+                        <c:choose>
+                            <c:when test="${supplierTransaction.currentBalance > 0}">
+                                Cr
+                            </c:when>
+                            <c:otherwise>
+                                Dr
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <s:link beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction" event="viewDetails" target="_blank">View Details
+                            <s:param name="supplier" value="${supplierTransaction.supplier.id}"/>
+                            <s:param name="defaultView" value="1" />
+                        </s:link>
+
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+
+    </s:layout-component>
+</s:layout-render>

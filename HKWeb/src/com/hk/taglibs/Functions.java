@@ -935,4 +935,38 @@ public class Functions {
       return qty;
     }
 
+    public static Product showFreebie(Product product){
+          if(!(product.isOutOfStock() || product.isDeleted() || product.isHidden())){
+              for (ProductVariant productVariant : product.getProductVariants()) {
+                  if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
+                      ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
+                      if(freeProductVariant != null){
+//                          if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+                          if(!(freeProductVariant.isOutOfStock())){
+                              return freeProductVariant.getProduct();
+                          }
+                       }
+                  }
+              }
+          }
+        return null;
+    }
+
+    public static Product showFreebieForVariant(ProductVariant productVariant){
+        Product product = productVariant.getProduct();
+        if(!(product.isHidden() || product.isDeleted() || product.isOutOfStock())){
+            if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
+                ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
+                if(freeProductVariant != null){
+//                    if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+                    if(!(freeProductVariant.isOutOfStock())){
+                        return freeProductVariant.getProduct();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 }

@@ -7,12 +7,14 @@ import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.accounting.PaymentHistoryService;
 import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
+import com.hk.admin.pact.service.accounting.SupplierTransactionService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryLineItemService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
+import com.hk.constants.inventory.EnumSupplierTransactionType;
 import com.hk.constants.rtv.EnumExtraInventoryLineItemType;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -78,6 +80,10 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private PurchaseInvoiceService purchaseInvoiceService;
 	@Autowired
 	private PaymentHistoryService paymentHistoryService;
+    @Autowired
+    SupplierTransactionService supplierTransactionService;
+
+
 	private Integer defaultPerPage = 20;
 	private List<PurchaseInvoice> purchaseInvoiceList = new ArrayList<PurchaseInvoice>();
 	private List<ExtraInventoryLineItem> rtvExtraInventoryLineItemList;
@@ -349,11 +355,15 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
 				productVariant = productVariantDao.save(productVariant);
 			}
+            purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
 			if (purchaseInvoice.getReconciled() != null) {
 				if (purchaseInvoice.getReconciled() && purchaseInvoice.getReconcilationDate() == null) {
 					purchaseInvoice.setReconcilationDate(new Date());
 				}
+                supplierTransactionService.createSupplierTransaction(purchaseInvoice.getSupplier(), EnumSupplierTransactionType.Purchase.asSupplierTransactionType(),
+                        purchaseInvoice.getPiRtvShortTotal(), purchaseInvoice.getInvoiceDate(), purchaseInvoice);
 			}
+
 			purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount() + purchaseInvoice.getShortAmount() + purchaseInvoice.getRtvAmount());
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
