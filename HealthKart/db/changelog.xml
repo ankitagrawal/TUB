@@ -13981,6 +13981,11 @@
             (1210,'SO Not cancelled automatically',1570);
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-08-20-01">
+        <addColumn tableName="shipping_order">
+            <column name="promise_dispatch_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Shakti Singh (generated)" id="20130826-01">
         <sql>
             insert into classification(`id` ,`primary`,`secondary`) values
@@ -13988,6 +13993,84 @@
 
             insert into reason (`id`,`type`,`classification_id`) values
             (1450,'Reconciliation',1750);
+        </sql>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-1">
+        <createTable tableName="busy_api_call_log">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="create_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ip" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_url" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_data" type="TEXT"/>
+            <column name="request_header" type="TEXT"/>
+            <column name="api_key" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-2">
+        <createTable tableName="supplier_transaction_type">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-3">
+        <createTable tableName="supplier_transactions">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_transaction_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_invoice_id" type="INT"/>
+            <column name="debit_note_id" type="INT"/>
+            <column name="credit_note_id" type="INT"/>
+            <column name="busy_payment_id" type="VARCHAR(45)"/>
+            <column name="busy_supplier_balance" type="DOUBLE"/>
+            <column name="current_balance" type="DOUBLE"/>
+            <column name="narration" type="TEXT"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="create_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-4">
+        <addForeignKeyConstraint baseColumnNames="credit_note_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_credit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-5">
+        <addForeignKeyConstraint baseColumnNames="debit_note_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_debit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="debit_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-6">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-7">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-8">
+        <addForeignKeyConstraint baseColumnNames="supplier_transaction_type_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_supplier_transaction_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier_transaction_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (Written)" id="1372941433730-9">
+        <sql>
+            INSERT INTO `supplier_transaction_type` (`id`, `name`) VALUES (NULL, 'CREATE'), (NULL, 'PURC'), (NULL, 'BP'), (NULL, 'PRT');
         </sql>
     </changeSet>
 </databaseChangeLog>
