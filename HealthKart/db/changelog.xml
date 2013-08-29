@@ -14056,4 +14056,30 @@
             INSERT INTO `supplier_transaction_type` (`id`, `name`) VALUES (NULL, 'CREATE'), (NULL, 'PURC'), (NULL, 'BP'), (NULL, 'PRT');
         </sql>
     </changeSet>
+    <changeSet author="Ankit Chabra (generated)" id="1377614620135-1">
+        <createTable tableName="hk_reach_pricing_engine">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="inter_city_cost" type="DECIMAL(8,2)"/>
+            <column name="fixed_cost" type="DECIMAL(8,2)"/>
+            <column name="update_time" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chabra (generated)" id="1377614620135-2">
+        <addColumn tableName="pincode">
+            <column name="last_mile_cost" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chabra (generated)" id="1377614620135-3">
+        <addColumn tableName="pincode">
+            <column name="nearest_hub_id" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

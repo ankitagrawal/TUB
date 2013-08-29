@@ -6,8 +6,11 @@ import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.ShipmentServiceType;
@@ -15,6 +18,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
@@ -90,6 +94,9 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     @Autowired
     CourierService courierService;
 
+    @Autowired
+    PincodeDao pincodeDao;
+
     TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
     Courier applicableCourier;
 
@@ -126,6 +133,38 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     public Resolution calculateViaPincode() {
         //todo courier set as false by default, take input from screen
         courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, false);
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+    }
+
+
+    public Resolution calculateHKReachCost() {
+        if (shippingOrderId != null) {
+            ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
+            if (shippingOrder != null) {
+                Order order = shippingOrder.getBaseOrder();
+                Shipment shipment = shippingOrder.getShipment();
+                Double weight = 0D;
+                if (shippingOrder.getShipment() != null) {
+                    weight = shipment.getBoxWeight() * 1000;
+                } else {
+                    for (LineItem lineItem : shippingOrder.getLineItems()) {
+                        weight += lineItem.getSku().getProductVariant().getWeight();
+                    }
+                }
+                courierCostingMap = courierCostCalculator.getHKReachCostingMap(shippingOrder.getWarehouse(), order.getAddress().getPincode(), weight);
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("SO not found for the given SO ID"));
+            }
+        } else {
+            Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+            if (pincodeObj == null || srcWarehouse == null || weight == null) {
+                addRedirectAlertMessage(new SimpleMessage("All 3 parameters are required"));
+                return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+            } else {
+                courierCostingMap = courierCostCalculator.getHKReachCostingMap(srcWarehouse, pincodeObj, weight);
+            }
+        }
+
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
@@ -170,11 +209,11 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         }
         List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
         if (shippingOrderId != null) {
-          ShippingOrder so = shippingOrderService.find(shippingOrderId);
-          if (so != null)
-            shippingOrderList.add(so);
+            ShippingOrder so = shippingOrderService.find(shippingOrderId);
+            if (so != null)
+                shippingOrderList.add(so);
         } else {
-          shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+            shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
         }
 
         if (shippingOrderList != null) {

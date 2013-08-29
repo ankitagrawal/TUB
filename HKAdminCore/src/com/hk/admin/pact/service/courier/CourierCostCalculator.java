@@ -27,4 +27,6 @@ public interface CourierCostCalculator {
 
     public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse);
 
+    public TreeMap<Courier, Long> getHKReachCostingMap(Warehouse warehouse, Pincode pincode, Double weight);
+
 }
