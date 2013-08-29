@@ -101,12 +101,9 @@ public class PreferredWarehouseDecider {
             for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
                 Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCouriers);
                 for (Courier courier : couriers) {
-                    if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-                      totalCost = shipmentPricingEngine.calculateHKReachCost(warehouse, pincode, weight);
-                    } else {
+                    //todo courier, hk reach pricing
                       CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), warehouse);
                       totalCost = taxIncurred + shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, isCod);
-                    }
                     courierCostingMap.put(courier, totalCost);
                 }
             }
