@@ -107,8 +107,11 @@
                         </c:forEach>
                     </s:select>
                 </li>
+
+                    <center>OR</center>
+
                 <li>
-                    <label>Or SO Order ID</label>
+                    <label> SO Order ID</label>
                     <s:text name="shippingOrderId" style="width:200px"/>
                 </li>
                 <s:submit name="calculateHKReachCost" value="Get Shipping Cost (HK Reach)"/>

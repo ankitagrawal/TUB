@@ -77,7 +77,7 @@ public class ShipmentPricingEngine {
     CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
     if(courierPricingInfo == null)   {
         if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-            return this.calculateHKReachCost(srcWarehouse,pincodeObj,shippingOrder.getAmount(),weight,shippingOrder.getCOD());
+            return this.calculateHKReachCost(srcWarehouse,pincodeObj,weight);
         } else {
             return null;
         }
@@ -170,18 +170,15 @@ public class ShipmentPricingEngine {
     return reconciliationCharges;
   }
 
-  public Double calculateHKReachCost(Warehouse warehouse, Pincode destPincode, Double amount, Double weightInGrams,
-                                      Boolean isCod) {
+  public Double calculateHKReachCost(Warehouse warehouse, Pincode destPincode, Double weightInGrams) {
     List<HKReachPricingEngine> pricingEngines = courierPricingEngineDao.getHkReachPricingEngine(warehouse,
-                                                                          destPincode.getNearestHub());
+                                                                          destPincode.getNearestHub(), false);
     HKReachPricingEngine pricingEngine = null;
-    if (pricingEngines == null) {
+    if (pricingEngines == null || destPincode.getNearestHub() == null) {
       return -1.0;
     } else {
       pricingEngine = pricingEngines.get(0);
     }
-
-    // TODO: conditional check for amount of payment
 
     Double shippingCost =  (pricingEngine.getInterCityCost() + pricingEngine.getFixedCost()) * weightInGrams/1000 +
                                destPincode.getLastMileCost();

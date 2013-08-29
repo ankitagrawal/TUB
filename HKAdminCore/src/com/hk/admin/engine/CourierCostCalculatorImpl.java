@@ -106,6 +106,18 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         return sortedCourierCostingTreeMap;
     }
 
+    @Override
+    public TreeMap<Courier, Long> getHKReachCostingMap(Warehouse warehouse, Pincode pincode, Double weight) {
+        Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
+        Double totalCost = -1D;
+        totalCost = shipmentPricingEngine.calculateHKReachCost(warehouse, pincode, weight);
+        courierCostingMap.put(EnumCourier.HK_Delivery.asCourier(), totalCost.longValue());
+        MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
+        TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
+        sortedCourierCostingTreeMap.putAll(courierCostingMap);
+        return sortedCourierCostingTreeMap;
+    }
+
     public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse) {
         CourierGroup courierGroup = courierGroupService.getCourierGroup(courier);
         PincodeRegionZone pincodeRegionZone = pincodeRegionZoneService.getPincodeRegionZone(courierGroup, pincodeObj, srcWarehouse);

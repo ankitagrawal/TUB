@@ -10,10 +10,7 @@ import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.core.WarehouseService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -71,6 +68,13 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
         return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
       }
     } else {
+      List<HKReachPricingEngine> localEngines = courierPricingEngineDao.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
+              hkReachPricingEngine.getHub(),Boolean.FALSE);
+      if (localEngines != null && !localEngines.isEmpty()) {
+        addRedirectAlertMessage(new SimpleError("Duplicate data supplied, entry already exists."));
+        return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
+          .addParameter("warehouse",hkReachPricingEngine.getWarehouse()).addParameter("hub", hkReachPricingEngine.getHub());
+      }
       hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
       courierPricingEngineDao.save(hkReachPricingEngine);
     }
@@ -80,7 +84,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   public Resolution search() {
-    hkReachEngines = courierPricingEngineDao.getHkReachPricingEngine(warehouseParam,hubParam);
+    hkReachEngines = courierPricingEngineDao.getHkReachPricingEngine(warehouseParam,hubParam, true);
     if (hkReachEngines == null || hkReachEngines.isEmpty()) {
       addRedirectAlertMessage(new SimpleMessage("No results match your search."));
     }
