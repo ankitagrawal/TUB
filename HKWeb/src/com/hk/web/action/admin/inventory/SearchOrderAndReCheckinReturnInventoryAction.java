@@ -28,6 +28,7 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -73,6 +74,8 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 	private SkuItemDao							skuItemDao;
 	@Autowired
 	private SkuGroupService 			skuGroupService;
+  @Autowired
+  private SkuItemLineItemService skuItemLineItemService;
 
     Map<LineItem, String> lineItemRecheckinBarcodeMap = new HashMap<LineItem, String>();
 
@@ -194,6 +197,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 						String comments = "Re Checked-in Returned Item : " + conditionOfItem + "--" + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
 								productVariant.getOptionsCommaSeparated();
 						shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
+            skuItemLineItemService.freeBookingTable(shippingOrder);
 						addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
 					} else {
 						addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesn't match any of the items OR item not in correct status"));
