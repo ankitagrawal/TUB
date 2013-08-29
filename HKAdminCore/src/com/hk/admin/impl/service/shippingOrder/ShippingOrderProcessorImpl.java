@@ -578,7 +578,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     }
 
     this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
-        EnumReconciliationActionType.RefundAmount.getId(), false);
+        EnumReconciliationActionType.RewardPoints.getId(), false);
     shippingOrderService.logShippingOrderActivity(cancelledSO, user,
         shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
         EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
