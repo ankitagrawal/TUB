@@ -54,7 +54,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   public Resolution saveOrUpdate() {
     if (hkReachPricingEngine.getId() != null) {
-      HKReachPricingEngine localReachEngine = courierPricingEngineDao.getHKHkReachPricingEngineById(hkReachPricingEngine.getId());
+      HKReachPricingEngine localReachEngine = courierPricingEngineDao.get(HKReachPricingEngine.class, hkReachPricingEngine.getId());
       if (localReachEngine != null) {
         localReachEngine.setHub(hkReachPricingEngine.getHub());
         localReachEngine.setWarehouse(hkReachPricingEngine.getWarehouse());

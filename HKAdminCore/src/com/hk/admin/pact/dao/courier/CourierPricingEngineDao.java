@@ -24,8 +24,6 @@ public interface CourierPricingEngineDao extends BaseDao {
 
   public List<HKReachPricingEngine> getHkReachPricingEngine(Warehouse warehouse, Hub hub, Boolean acceptNull);
 
-  public HKReachPricingEngine getHKHkReachPricingEngineById (Long id);
-
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);
 
 }

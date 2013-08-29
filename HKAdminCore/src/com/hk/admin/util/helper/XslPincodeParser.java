@@ -83,8 +83,7 @@ public class XslPincodeParser {
                 String lastMileCostString = row.getColumnValue(XslConstants.LAST_MILE_COST);
                 Double lastMileCost = null;
                 if (StringUtils.isEmpty(pin) || StringUtils.isEmpty(cityName) || StringUtils.isEmpty(stateName)
-                    || StringUtils.isEmpty(zoneName) || StringUtils.isEmpty(nearestHubName)
-                    || StringUtils.isEmpty(lastMileCostString)) {
+                    || StringUtils.isEmpty(zoneName)) {
                     throw new ExcelBlankFieldException("Blank field for at row number " + rowCount);
                 }
                 if (pin.length() != 6) {
@@ -99,11 +98,12 @@ public class XslPincodeParser {
                 State state = stateService.getStateByName(stateName);
                 Zone zone = pincodeService.getZoneByName(zoneName);
                 Hub nearestHub = hubService.findHubByName(nearestHubName);
-                if (city == null || state == null || zone == null || nearestHub == null) {
+                if (city == null || state == null || zone == null) {
                     throw new ExcelBlankFieldException("Invalid city/state/zone/nearestHub name at row " + rowCount);
                 }
                 try {
-                  lastMileCost = Double.parseDouble(lastMileCostString);
+                  if(lastMileCostString!= null && !StringUtils.isEmpty(lastMileCostString))
+                    lastMileCost = Double.parseDouble(lastMileCostString);
                 } catch (NumberFormatException nfe) {
                   throw new ExcelBlankFieldException("Last mile cost should be a number only" + rowCount);
                 }

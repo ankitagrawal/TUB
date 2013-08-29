@@ -42,7 +42,6 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
 
   public List<HKReachPricingEngine> getHkReachPricingEngine(Warehouse warehouse, Hub hub, Boolean acceptNull) {
     DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
-
     if (!acceptNull) {
       if(warehouse == null || hub == null) {
       return null;
@@ -54,10 +53,7 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     if (hub != null) {
       criteria.add(Restrictions.eq("hub", hub));
     }
-    // TODO: add restrictions for active pricing engine
-
     List<HKReachPricingEngine> result = this.findByCriteria(criteria);
-
     if (result!=null && !result.isEmpty()) {
       return result;
     } else {
@@ -70,18 +66,5 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     DetachedCriteria courierPricingEngineCriteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     courierPricingEngineCriteria.add(Restrictions.eq("courier", courier));
     return findByCriteria(courierPricingEngineCriteria);
-  }
-
-  public HKReachPricingEngine getHKHkReachPricingEngineById (Long id) {
-    DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
-    criteria.add(Restrictions.idEq(id));
-
-    List<HKReachPricingEngine> engines = this.findByCriteria(criteria);
-
-    if (engines != null && !engines.isEmpty()) {
-      return engines.get(0);
-    } else {
-      return null;
-    }
   }
 }
