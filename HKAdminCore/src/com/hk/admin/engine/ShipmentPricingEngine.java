@@ -60,9 +60,11 @@ public class ShipmentPricingEngine {
         Courier courier = shipment.getAwb().getCourier();
         Double weight = shipment.getBoxWeight() * 1000;
         EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        if (enumBoxSize != null) {
-            if (enumBoxSize.getVolumetricWeight() > weight) {
-                weight = enumBoxSize.getVolumetricWeight();
+        if(!EnumCourier.HK_Delivery.getId().equals(courier.getId())){
+            if (enumBoxSize != null) {
+                if (enumBoxSize.getVolumetricWeight() > weight) {
+                    weight = enumBoxSize.getVolumetricWeight();
+                }
             }
         }
         Order order = shippingOrder.getBaseOrder();
