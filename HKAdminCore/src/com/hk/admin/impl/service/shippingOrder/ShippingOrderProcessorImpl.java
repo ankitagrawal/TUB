@@ -155,11 +155,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         //}
         // finding line items with inventory mismatch
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
-        if (shippingOrder == null) {
+        if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
           return false;
-        }
-        if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
-          reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
         }
         if (shippingOrder.containsJitProducts()) {
           reasons.add(EnumReason.Contains_Jit_Products.asReason());
@@ -216,13 +213,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             loggedInUser = getUserService().getAdminUser();
           }
           shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
-          if (shippingOrder == null) {
-            return false;
-          }
-          if (shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
-            shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder,
-                EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch,
-                EnumReason.InsufficientUnbookedInventoryManual.asReason());
+          if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
             return false;
           }
           if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
@@ -544,7 +535,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         // just log that jit items hence could not be cancelled automatically
         shippingOrderService.logShippingOrderActivity(shippingOrder,
             EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
-            null);
+            "JIT items or free product present.");
         return false;
       } else {
         // only split jit items but do not cancel those items and escalate rest of the order if possible
