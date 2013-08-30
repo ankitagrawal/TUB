@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.courier;
 
+import com.hk.pact.dao.MasterDataDao;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -29,14 +30,23 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   CourierPricingEngineDao courierPricingEngineDao;
   @Autowired
   BaseDao baseDao;
+  @Autowired
+  MasterDataDao masterDataDao;
 
   private Courier courier;
   private RegionType regionType;
   private List<CourierPricingEngine> courierPricingEngineList = new ArrayList<CourierPricingEngine>();
+  private List<Courier> courierList = new ArrayList<Courier>();
+  private List<RegionType> regionTypeList = new ArrayList<RegionType>();
 
   @DefaultHandler
   public Resolution pre() {
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
+  }
+
+  private void param() {
+    courierList = masterDataDao.getAvailableCouriers();
+    regionTypeList = masterDataDao.getRegionTypeList();
   }
 
   public Resolution search() {
@@ -47,6 +57,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
       if(courier != null && courierPricingEngineList.size() == 0) {
           addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
       }
+      param();
       return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
@@ -55,6 +66,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
           courierPricingEngineDao.save(courierPricingEngine);
       }
       addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
+      param();
       return new ForwardResolution(CreateUpdateCourierPricingAction.class, "search");
   }
 
@@ -80,5 +92,21 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
 
   public void setCourierPricingEngineList(List<CourierPricingEngine> courierPricingEngineList) {
     this.courierPricingEngineList = courierPricingEngineList;
+  }
+
+  public List<Courier> getCourierList() {
+    return courierList;
+  }
+
+  public void setCourierList(List<Courier> courierList) {
+    this.courierList = courierList;
+  }
+
+  public List<RegionType> getRegionTypeList() {
+    return regionTypeList;
+  }
+
+  public void setRegionTypeList(List<RegionType> regionTypeList) {
+    this.regionTypeList = regionTypeList;
   }
 }

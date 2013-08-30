@@ -23,10 +23,20 @@
         '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
         '<td>' + Math.round(nextIndex + 1) + '.</td>' +
         '<td>' +
-
+        '<select name="courierPricingEngineList[' + nextIndex + '].courier">' +
+        '<option value="-1">--Select--</option>' +
+         <c:forEach items="${cpea.courierList}" var="courier">
+        '<option value="' + ${courier.id} + '"> ' + "${courier.name}" + '</option>' +
+         </c:forEach>
+        '</select>' +
         '</td>' +
         '<td>' +
-
+        '<select name="courierPricingEngineList[' + nextIndex + '].regionType">' +
+        '<option value="-1">--Select--</option>' +
+         <c:forEach items="${cpea.regionTypeList}" var="regionType">
+        '<option value="' + ${regionType.id} + '"> ' + "${regionType.name}" + '</option>' +
+         </c:forEach>
+        '</select>' +
         '</td>' +
         '<td>' +
         '<input type="text" name="courierPricingEngineList[' + nextIndex + '].firstBaseWt" />' +
@@ -191,7 +201,7 @@
 
                     </table>
 
-                <a href="#" class="addRowButton" style="font-size:1.2em">Add new row</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" class="addRowButton" style="font-size:1.2em">Add new row</a> <br/>
                 <s:submit name="save" value="Save Values"/>
 
                 </c:if>
