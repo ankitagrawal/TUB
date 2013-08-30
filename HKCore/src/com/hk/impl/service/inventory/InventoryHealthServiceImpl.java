@@ -760,7 +760,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
             ShippingOrder shippingOrder = lineItemDao.getLineItem(cartLineItem).getShippingOrder();
             if(!lifeCycleActivityLoggedForSO.contains(shippingOrder)){
-              getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Sku Items booked after check in of: "+cartLineItem.getId());
+              getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Sku Items booked after check in of: "+cartLineItem.getProductVariant().getId());
               lifeCycleActivityLoggedForSO.add(shippingOrder);
             }
           }
