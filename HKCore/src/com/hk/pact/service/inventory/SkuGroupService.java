@@ -72,5 +72,8 @@ public interface SkuGroupService {
    * @return
    */
   public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<Long> skuItemOwners, Double mrp);
-
+  
+  public SkuItem getSkuItemByBarcode(String barcode);
+  
+  public void updateBookingAfterCheckin(SkuItem skuItem, SkuGroup skuGroup);
 }

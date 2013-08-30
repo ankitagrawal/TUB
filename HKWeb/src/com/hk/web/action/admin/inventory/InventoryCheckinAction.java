@@ -38,10 +38,12 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.warehouse.WarehouseDao;
 import com.hk.util.XslGenerator;
 import com.hk.util.HKDateUtil;
 import com.hk.web.HealthkartResponse;
@@ -113,6 +115,8 @@ public class InventoryCheckinAction extends BaseAction {
 	  private PurchaseInvoiceDao purchaseInvoiceDao;
     @Autowired
     InventoryBarcodeMapDao inventoryBarcodeMapDao;
+    @Autowired
+    WarehouseDao warehouseDao;
 
     @Validate(required = true, on = "save")
     private String upc;
@@ -135,6 +139,8 @@ public class InventoryCheckinAction extends BaseAction {
     private GrnLineItem grnLineItem;
     private String productVariantBarcode;
     private String invBarcode;
+    private Boolean isBrightSupplier = Boolean.FALSE;
+    private String barcode;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -157,6 +163,10 @@ public class InventoryCheckinAction extends BaseAction {
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
+    	Supplier supplier = grn.getPurchaseOrder().getSupplier();
+    	Warehouse warehouse = warehouseDao.findWarehouseByTin(supplier.getTinNumber());
+    	//TODO: Warehouse is Bright
+    	isBrightSupplier = Boolean.TRUE;
         return new ForwardResolution("/pages/admin/inventoryCheckin.jsp");
     }
 
@@ -201,131 +211,158 @@ public class InventoryCheckinAction extends BaseAction {
         return new JsonResolution(healthkartResponse);
     }
 
-    public Resolution save() {
-        User user = null;
-        Warehouse userWarehouse = null;
-        if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
-        }
-        if (getUserService().getWarehouseForLoggedInUser() != null) {
-            userWarehouse = userService.getWarehouseForLoggedInUser();
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
-            return new RedirectResolution(InventoryCheckinAction.class);
-        }
-        logger.debug("upc: " + upc);
-        try {
-            ProductVariant productVariant = getProductVariantService().findVariantFromUPC(upc);
-            if (productVariant == null) {
-                productVariant = getProductVariantService().getVariantById(upc);
-            }
-            if (productVariant != null) {
-                if (productVariant.getProduct().isDeleted()) {
-                  addRedirectAlertMessage(new SimpleMessage("Product is marked Deleted for Variant:" + productVariant.getId() + " - Plz get it fixed by Category Team"));
-                  return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                }
-                Sku sku = getSkuService().getSKU(productVariant, grn.getWarehouse());
-                // Check for In Progress Audit  for Variant.
-                List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
-                if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
-                    String closeAuditMsg = CycleCountDtoUtil.getCycleCountInProgress(cycleCountInProgressForVariantList);
-                    closeAuditMsg = closeAuditMsg + "  For  :  " + grn.getWarehouse().getCity();
-                    addRedirectAlertMessage(new SimpleMessage(closeAuditMsg));
-                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                }
+	public Resolution save() {
+		User user = null;
+		Warehouse userWarehouse = null;
+		if (getPrincipal() != null) {
+			user = getUserService().getUserById(getPrincipal().getId());
+		}
+		if (getUserService().getWarehouseForLoggedInUser() != null) {
+			userWarehouse = userService.getWarehouseForLoggedInUser();
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+			return new RedirectResolution(InventoryCheckinAction.class);
+		}
+		logger.debug("upc: " + upc);
+		try {
+			ProductVariant productVariant = getProductVariantService().findVariantFromUPC(upc);
+			if (productVariant == null) {
+				productVariant = getProductVariantService().getVariantById(upc);
+			}
+			if (productVariant != null) {
+				if (productVariant.getProduct().isDeleted()) {
+					addRedirectAlertMessage(new SimpleMessage("Product is marked Deleted for Variant:" + productVariant.getId() + " - Plz get it fixed by Category Team"));
+					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+				}
+				Sku sku = getSkuService().getSKU(productVariant, grn.getWarehouse());
+				List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
+				if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
+					String closeAuditMsg = CycleCountDtoUtil.getCycleCountInProgress(cycleCountInProgressForVariantList);
+					closeAuditMsg = closeAuditMsg + "  For  :  " + grn.getWarehouse().getCity();
+					addRedirectAlertMessage(new SimpleMessage(closeAuditMsg));
+					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+				}
 
-                Long askedQty = 0L;
-                GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
-                if (grnLineItem != null && sku != null) {
-                    askedQty = grnLineItem.getQty();
-                    Long alreadyCheckedInQty = getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem);
-                    //logger.info("Inventory Checkin ->ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
-                    if (qty > (askedQty - alreadyCheckedInQty)) {
-                        addRedirectAlertMessage(new SimpleMessage("Qty mentioned - " + qty + " is exceeding required checked in qty. Plz check."));
-                        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                    }
-                    if (StringUtils.isBlank(batch) || StringUtils.isEmpty(batch)) {
-                        addRedirectAlertMessage(new SimpleMessage("Batch is required. Plz check."));
-                        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                    }
-                    if (mrp != null && mrp.equals(0.0D)) {
-                        addRedirectAlertMessage(new SimpleMessage("MRP is required. Plz check."));
-                        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                    }
-//                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
-                  SkuGroup skuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
-                  getAdminInventoryService().createSkuItemsAndCheckinInventory(null, skuGroup, qty, null, grnLineItem, null, null,
-                      getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
-                  getInventoryService().checkInventoryHealth(productVariant);
+				Long askedQty = 0L;
+				GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
+				if (grnLineItem != null && sku != null) {
+					askedQty = grnLineItem.getQty();
+					Long alreadyCheckedInQty = getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem);
+					if (qty > (askedQty - alreadyCheckedInQty)) {
+						addRedirectAlertMessage(new SimpleMessage("Qty mentioned - " + qty + " is exceeding required checked in qty. Plz check."));
+						return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+					}
+					if (StringUtils.isBlank(batch) || StringUtils.isEmpty(batch)) {
+						addRedirectAlertMessage(new SimpleMessage("Batch is required. Plz check."));
+						return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+					}
+					if (mrp != null && mrp.equals(0.0D)) {
+						addRedirectAlertMessage(new SimpleMessage("MRP is required. Plz check."));
+						return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+					}
+					if (isBrightSupplier) {
+						SkuItem skuItem = skuGroupService.getSkuItemByBarcode(barcode);
+						if (skuItem == null) {
+							addRedirectAlertMessage(new SimpleMessage("Please Enter a valid barcode"));
+							return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+						} else {
+							// see if group needs to be created or the same can do
+							SkuGroup skuGroup = skuItem.getSkuGroup();
+							if (skuGroup.getMrp().equals(mrp) && skuGroup.getCostPrice().equals(costPrice) && skuGroup.getMfgDate().equals(mfgDate)
+									&& skuGroup.getExpiryDate().equals(expiryDate)) {
+								// things okk here. Do a checkin and corresponding updates
+							} else {
+								// create new sku group
+								SkuGroup newSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null,
+										skuGroup.getSku());
+								skuItem.setSkuGroup(newSkuGroup);
+								skuItem = (SkuItem) baseDao.save(skuItem);
+							}
+							adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, grnLineItem, null, null, EnumSkuItemStatus.Checked_IN,
+									EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), 1l, user);
+							getInventoryService().checkInventoryHealth(skuGroup.getSku().getProductVariant());
+							skuGroupService.updateBookingAfterCheckin(skuItem, skuGroup);
+						}
+					} else {
+						SkuGroup skuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
+						getAdminInventoryService().createSkuItemsAndCheckinInventory(null, skuGroup, qty, null, grnLineItem, null, null,
+								getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
+						getInventoryService().checkInventoryHealth(productVariant);
+					}
 
-                   // getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getCheckedInQty());
-                    if (getInventoryService().allInventoryCheckedIn(grn)) {
-                    	 getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
-                    	for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
-							if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+					if (getInventoryService().allInventoryCheckedIn(grn)) {
+						//TODO: Escalate all the shipping orders corresponding to this GRN
+						getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
+						for (PoLineItem poLineItem : grn.getPurchaseOrder().getPoLineItems()) {
+							if (poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
 								poLineItem.setFirstTimePurchased(true);
 							}
-                    	}
-                    	if(grn.getPurchaseOrder().isExtraInventoryCreated()){
-                        	PurchaseOrder po = grn.getPurchaseOrder();
-                        	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
-                        	po.setExtraInventoryId(id);
-                        }
-                    	
+						}
+						if (grn.getPurchaseOrder().isExtraInventoryCreated()) {
+							PurchaseOrder po = grn.getPurchaseOrder();
+							Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+							po.setExtraInventoryId(id);
+						}
+
 						List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
 						if (grnLineItems != null && grnLineItems.size() > 0) {
 							for (GrnLineItem item : grnLineItems) {
-							if (item.getQty() != null && item.getQty() == 0) {
-								if (grn.getPurchaseInvoices() != null && grn.getPurchaseInvoices().size() > 0) {
-									for (PurchaseInvoice invoice : grn.getPurchaseInvoices()) {
-										List<PurchaseInvoiceLineItem> items = invoice.getPurchaseInvoiceLineItems();
-										if (items != null && items.size() > 0) {
-										for (PurchaseInvoiceLineItem pili : items) {
-										if (pili.getGrnLineItem().equals(item)) {
-											pili.setGrnLineItem(null);
-											purchaseInvoiceDao.save(pili);
-											}}}}}
-								grnLineItemDao.delete(item);
+								if (item.getQty() != null && item.getQty() == 0) {
+									if (grn.getPurchaseInvoices() != null && grn.getPurchaseInvoices().size() > 0) {
+										for (PurchaseInvoice invoice : grn.getPurchaseInvoices()) {
+											List<PurchaseInvoiceLineItem> items = invoice.getPurchaseInvoiceLineItems();
+											if (items != null && items.size() > 0) {
+												for (PurchaseInvoiceLineItem pili : items) {
+													if (pili.getGrnLineItem().equals(item)) {
+														pili.setGrnLineItem(null);
+														purchaseInvoiceDao.save(pili);
+													}
+												}
+											}
+										}
+									}
+									grnLineItemDao.delete(item);
 								}
-								
-							}}
-                        grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
-                        getGoodsReceivedNoteDao().save(grn);
-                        getAdminEmailManager().sendGRNEmail(grn);
-                        editPVFillRate(grn);
-                    } else {
-                        grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
-                        getGoodsReceivedNoteDao().save(grn);
-                        editPVFillRate(grn);
-                    }
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));
-                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                }
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("No such UPC or Variant Id"));
-                return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-            }
-        } catch (Exception e) {
-            logger.error("Error while checkin : ", e);
-            addRedirectAlertMessage(new SimpleMessage("Duplicate UPC or Variants in PO - Please fix the same."));
-            return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-        }
 
-        addRedirectAlertMessage(new SimpleMessage("Inventory Checked in successfully. Qty = " + qty));
-        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-    }
+							}
+						}
+						grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
+						getGoodsReceivedNoteDao().save(grn);
+						getAdminEmailManager().sendGRNEmail(grn);
+						editPVFillRate(grn);
+					} else {
+						grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
+						getGoodsReceivedNoteDao().save(grn);
+						editPVFillRate(grn);
+					}
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));
+					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+				}
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("No such UPC or Variant Id"));
+				return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+			}
+		} catch (Exception e) {
+			logger.error("Error while checkin : ", e);
+			addRedirectAlertMessage(new SimpleMessage("Duplicate UPC or Variants in PO - Please fix the same."));
+			return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+		}
 
-    private void editPVFillRate(GoodsReceivedNote grn) {
-        if (grn != null) {
-            Supplier supplier = grn.getPurchaseOrder().getSupplier();
-            for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
-                ProductVariantSupplierInfo productVariantSupplierInfo =
-                        productVariantSupplierInfoService.getOrCreatePVSupplierInfo(grnLineItem.getSku().getProductVariant(), supplier);
-                productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
-            }
-        }
-    }
+		addRedirectAlertMessage(new SimpleMessage("Inventory Checked in successfully. Qty = " + qty));
+		return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+	}
+	
+	private void editPVFillRate(GoodsReceivedNote grn) {
+		if (grn != null) {
+			Supplier supplier = grn.getPurchaseOrder().getSupplier();
+			for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+				ProductVariantSupplierInfo productVariantSupplierInfo = productVariantSupplierInfoService.getOrCreatePVSupplierInfo(grnLineItem.getSku()
+						.getProductVariant(), supplier);
+				productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
+			}
+		}
+	}
 
     public Resolution checkinInvBarcode() {
       if (StringUtil.isBlank(invBarcode)) {
@@ -713,7 +750,7 @@ public class InventoryCheckinAction extends BaseAction {
         }
 
     }
-
+    
     public String getUpc() {
         return upc;
     }
@@ -937,5 +974,21 @@ public class InventoryCheckinAction extends BaseAction {
 	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
 		this.purchaseOrderService = purchaseOrderService;
 	}
-	
+
+	public Boolean getIsBrightSupplier() {
+		return isBrightSupplier;
+	}
+
+	public void setIsBrightSupplier(Boolean isBrightSupplier) {
+		this.isBrightSupplier = isBrightSupplier;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+
 }

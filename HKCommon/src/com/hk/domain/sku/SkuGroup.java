@@ -246,8 +246,22 @@ public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
 
 		if (this.id != null && skuGroup.getId() != null) {
 			return this.id.equals(skuGroup.getId());
+		}else {
+      EqualsBuilder equalsBuilder = new EqualsBuilder();
+      if(this.mrp!=null && skuGroup.getMrp()!=null){
+      	equalsBuilder.append(this.mrp, skuGroup.getMrp());
+      }
+      if(this.costPrice!=null && skuGroup.getCostPrice()!=null){
+      	equalsBuilder.append(this.costPrice, skuGroup.getCostPrice());
+      }
+      if(this.mfgDate!=null && skuGroup.getMfgDate()!=null){
+      	equalsBuilder.append(this.mfgDate, skuGroup.getMfgDate());
+      }
+      if(this.expiryDate!=null && skuGroup.getExpiryDate()!=null){
+      	equalsBuilder.append(this.expiryDate, skuGroup.getExpiryDate());
+      }
+      return equalsBuilder.isEquals();
 		}
-		return false;
 	}
 
 	@Override
