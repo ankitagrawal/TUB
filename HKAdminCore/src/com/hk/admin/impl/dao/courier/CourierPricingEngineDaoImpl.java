@@ -16,6 +16,8 @@ import com.hk.domain.courier.RegionType;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,13 +32,13 @@ import java.util.List;
 public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierPricingEngineDao {
 
   public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse){
-    if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-     return null;
-    }
     Criteria criteria = getSession().createCriteria(CourierPricingEngine.class);
     criteria.add(Restrictions.eq("courier", courier));
     criteria.add(Restrictions.eq("regionType", regionType));
 //    criteria.add(Restrictions.eq("warehouse", warehouse));
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.DATE,-1);
+    criteria.add(Restrictions.gt("validUpto", cal.getTime()));
     return (CourierPricingEngine) criteria.uniqueResult();
   }
 
