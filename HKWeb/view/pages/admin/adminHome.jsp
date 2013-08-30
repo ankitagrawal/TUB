@@ -70,6 +70,7 @@
 	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
 	
 	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchB2BUserAction">Search B2B Users</s:link></h3>
+	  <h3><a href="${pageContext.request.contextPath}/pages/admin/b2bPriceUpdate.jsp">Update B2B Price</a></h3>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">

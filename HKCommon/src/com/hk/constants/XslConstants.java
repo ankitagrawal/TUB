@@ -24,6 +24,7 @@ public class XslConstants {
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String MRP = "MRP";
     public static final String HK_PRICE = "HK_PRICE";
+    public static final String B2B_PRICE = "B2B_PRICE";
     public static final String PERCENTAGE_DISCOUNT = "PERCENTAGE_DISCOUNT";
     public static final String COST = "COST";
     public static final String SHIPPING = "SHIPPING";
