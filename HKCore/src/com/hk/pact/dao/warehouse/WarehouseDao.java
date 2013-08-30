@@ -25,5 +25,7 @@ public interface WarehouseDao extends BaseDao {
     public Warehouse findByIdentifier(String identifier);
 
   public List<Warehouse> findWarehouses(String tinPrefix);
+  
+  public Warehouse findWarehouseByTin(String tin);
 
 }

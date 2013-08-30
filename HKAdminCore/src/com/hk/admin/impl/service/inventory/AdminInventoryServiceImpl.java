@@ -212,6 +212,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         //  generating Barcode at Skuitem level
         barcode = BarcodeUtil.generateBarCodeForSKuItem(skuGroup.getId(), i + 1);
       }
+      skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
       skuItem.setBarcode(barcode);
       skuItem = (SkuItem) getBaseDao().save(skuItem);
 

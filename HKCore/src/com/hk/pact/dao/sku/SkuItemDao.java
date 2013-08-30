@@ -33,5 +33,7 @@ public interface SkuItemDao extends BaseDao {
   public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
   public SkuItem getSkuItem(Long fsicliId);
+  
+  public SkuItem getSkuItemByBarcode(String barcode);
 
 }

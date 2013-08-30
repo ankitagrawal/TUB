@@ -14,7 +14,12 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
   </s:layout-component>
-  <s:layout-component name="heading">Inventory Checkin - GRN#${ica.grn.id} (PO#${ica.grn.purchaseOrder.id})</s:layout-component>
+  <s:layout-component name="heading">
+  <c:choose>
+  <c:when test="${ica.isBrightSupplier}">Inventory Checkin Against Bright Shipping Order# ${ica.grn.invoiceNumber} : GRN#${ica.grn.id} (PO#${ica.grn.purchaseOrder.id})</c:when>
+  <c:otherwise>Inventory Checkin - GRN# ${ica.grn.id} (PO# ${ica.grn.purchaseOrder.id})</c:otherwise>
+  </c:choose>
+  </s:layout-component>
   <s:layout-component name="content">
     <div style="display:inline;float:left;">
        <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="invBarcodeCheckinForm">
@@ -44,10 +49,19 @@
       <hr/>
       <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="checkinForm">
         <s:hidden name="grn" value="${ica.grn.id}"/>
+        <s:hidden name="isBrightSupplier" value="${ica.isBrightSupplier}"/>
         <table border="1">
           <tr>
-            <td>UPC(Barcode) or VariantID:</td>
-            <td><s:text name="upc" class="variant"/></td>
+          <c:choose>
+			  <c:when test="${ica.isBrightSupplier}"><td>Barcode:</td>
+			  <td><s:text name="barcode" id="barcode"/></td>
+			  <tr><td>VariantID:</td>
+			  <td><s:text name="upc" class="variant"/></td></tr>
+			  </c:when>
+			  <c:otherwise><td>UPC(Barcode) or VariantID:</td>
+			  <td><s:text name="upc" class="variant"/></td>
+			  </c:otherwise>
+			  </c:choose>
           </tr>
           <tr>
             <td>Qty:</td>
@@ -96,6 +110,7 @@
         </script>
         <br/>
         <s:submit class="invCheckin" name="save" value="Save"/>
+        
       </s:form>
       <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.GRNAction">&lang;&lang;&lang;
         Back to GRN List</s:link></h2></span>
@@ -187,6 +202,7 @@
 		    	var cp = $('#costPrice').val();
 		    	var mrp = $('#mrp').val();
 		    	var qty = $('#qty').val();
+		    	var brightSupplier = ${ica.isBrightSupplier};
 	    		if (cp == "" || mrp == "" || qty=="") {
 					alert("Qty, CP, Mrp  fields are compulsory.");
 					return false;
@@ -195,7 +211,12 @@
 					alert("Qty, CP, Mrp  fields are compulsory.");
 					return false;
 				}
-	    		
+	    		if(brightSupplier){
+	    			if(!isNaN(qty)&&(qty==0 || qty>1)){
+	    				alert("Only one unit can be checked in");
+	    				return false;
+	    			}
+	    		}
 		    	if(parseFloat(cp)>parseFloat(mrp)){
 		    		alert("Cost Price cannot be greater than MRP");
 		    		return false;
@@ -206,16 +227,16 @@
 			    var saveBtn = $(this);
 			    saveBtn.hide();
 			    $.getJSON(
-					    $('#validationLink').attr('href'), {upc : $('.variant').val(), costPrice : $('#costPrice').val(), mrp : $('#mrp').val()},
+					    $('#validationLink').attr('href'), {upc : $('.variant').val(), costPrice : $('#costPrice').val(), mrp : $('#mrp').val(), barcode: $('#barcode').val()},
 					    function (res) {
 						    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-							    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
+						    	$('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
 							    $('#checkinForm').submit();
 							    $(this).css("display", "none");
 						    } else {
 							    var confirmMessage = confirm(res.message);
 							    if(confirmMessage == true) {
-								    $('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
+							    	$('#checkinForm').attr('action', $('#checkinForm').attr('action') + "?save=");
 								    $('#checkinForm').submit();
 								    $(this).css("display", "none");
 							    } else {
