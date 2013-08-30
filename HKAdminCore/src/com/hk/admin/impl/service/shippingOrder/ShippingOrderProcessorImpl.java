@@ -588,25 +588,22 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
     }
 
-    if (!cancelledSO.getBaseOrder().getPayment().isCODPayment()) {
+    Payment payment = cancelledSO.getBaseOrder().getPayment();
+    Store store = cancelledSO.getBaseOrder().getStore();
+    if (paymentService.isValidReconciliation(payment, store)) {
       this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
-              EnumReconciliationActionType.RefundAmount.getId(), false);
-      if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
-        emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
-      } else {
-        emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
-      }
+                                                        EnumReconciliationActionType.RefundAmount.getId(), false);
     } else {
-        Payment payment = cancelledSO.getBaseOrder().getPayment();
-        Store store = cancelledSO.getBaseOrder().getStore();
-        if (paymentService.isValidReconciliation(payment, store)) {
-            this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, EnumReconciliationActionType.RefundAmount.getId(), false);
-        } else {
-            this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, false);
-        }
+      this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, false);
     }
-      shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-              shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
+    // send mail
+    if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
+      emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
+    } else {
+      emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
+    }
+    shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
               EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
       return true;
   }
