@@ -7,6 +7,67 @@
 
     <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction" var="cpea"/>
 
+    <s:layout-component name="htmlHead">
+        <script type="text/javascript">
+
+        $(document).ready(function(){
+        $('.addRowButton').click(function () {
+        var lastIndex = $('.lastRow').attr('count');
+        if (!lastIndex) {
+        lastIndex = -1;
+        }
+        $('.lastRow').removeClass('lastRow');
+
+        var nextIndex = eval(lastIndex + "+1");
+        var newRowHtml =
+        '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
+        '<td>' + Math.round(nextIndex + 1) + '.</td>' +
+        '<td>' +
+
+        '</td>' +
+        '<td>' +
+
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].firstBaseWt" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].firstBaseCost" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].secondBaseWt" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].secondBaseCost" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].additionalWt" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].additionalCost" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].fuelSurcharge" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].minCodCharges" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].codCuttoffAmount" />' +
+        '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].variableCodCharges" />' +
+        '</td>' +
+        '</tr>';
+
+        $('.courier-prcng-tbl').append(newRowHtml);
+        return false;
+        });
+        });
+        </script>
+
+    </s:layout-component>
+
     <s:layout-component name="heading">
         Search and Update Courier Pricing
     </s:layout-component>
@@ -63,7 +124,7 @@
 
                         <tbody>
                             <c:forEach items="${cpea.courierPricingEngineList}" var="courierPricingEngine" varStatus="ctr">
-                                <tr count="${ctr.index}">
+                                <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                                     <td>
                                         ${ctr.index+1}.
                                         <input type="hidden" name="courierPricingEngineList[${ctr.index}].id" value="${courierPricingEngine.id}" />
@@ -130,6 +191,7 @@
 
                     </table>
 
+                <a href="#" class="addRowButton" style="font-size:1.2em">Add new row</a> &nbsp;&nbsp;&nbsp;&nbsp;
                 <s:submit name="save" value="Save Values"/>
 
                 </c:if>
