@@ -93,6 +93,8 @@
 <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 <c:set var="shippingOrderStatusReversePickup" value="<%=EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId()%>"/>
 <c:set var="shippingOrderStatusCheckedOut" value="<%=EnumShippingOrderStatus.SO_CheckedOut.getId()%>"/>
+<c:set var="soIdsForActionQueue" value="<%=EnumShippingOrderStatus.getStatusIdsForActionQueue()%>"/>
+<c:set var="soIdsForProcessingQueue" value="<%=EnumShippingOrderStatus.getStatusIdsForProcessingQueue()%>"/>
 
 <c:set var="TH" value="<%=VariantConfigOptionParam.THICKNESS.param()%>"/>
 <c:set var="THBF" value="<%=VariantConfigOptionParam.BFTHICKNESS.param()%>"/>
@@ -535,6 +537,8 @@
             <c:set var="sku" value="${lineItem.sku}"/>
 				<c:if test="${isActionQueue == true}">
 					<c:set var="skuNetInventory" value="${hk:netInventory(sku)}" />
+					<c:set var="bookedQtyActionQ" value="${hk:bookedQty(sku, soIdsForActionQueue)}" />
+					<c:set var="bookedQtyProcessingQ" value="${hk:bookedQty(sku, soIdsForProcessingQueue)}" />
 				</c:if>
 
 			<%--<tr>--%>
@@ -542,7 +546,7 @@
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
                 <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id || shippingOrderStatusHold == shippingOrder.orderStatus.id}">
                     <c:choose>
-                        <c:when test="${hk:bookedQty(sku) <= skuNetInventory}">
+                        <c:when test="${(bookedQtyActionQ+bookedQtyProcessingQ) <= skuNetInventory}">
                             <tr style="border-left:5px solid green;">
                         </c:when>
                         <c:otherwise>
@@ -676,8 +680,9 @@
                 ${lineItem.qty}
                 <c:if test="${isActionQueue == true}">
 							<c:if test="${!productVariant.product.service}">
-                    [${hk:bookedQty(sku)}]
-                    (${skuNetInventory})
+                    [AQ:${bookedQtyActionQ}]
+                    [PQ:${bookedQtyProcessingQ}]
+                    [Net-Phy:${skuNetInventory}]
                 </c:if>
 						</c:if>
             </td>
