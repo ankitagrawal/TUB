@@ -313,7 +313,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()) {
 				SkuItem skuItem = skuItemLineItem.getSkuItem();
 				if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())
-						|| skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+						|| skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())
+            || skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
 					skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 					skuItem = (SkuItem) getSkuItemDao().save(skuItem);
 					skuItemsToBeFreed.add(skuItem);
