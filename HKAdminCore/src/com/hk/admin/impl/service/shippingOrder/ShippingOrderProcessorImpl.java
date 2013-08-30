@@ -4,6 +4,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumReconciliationActionType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -20,6 +21,7 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
@@ -32,6 +34,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
@@ -98,6 +101,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
   @Autowired
   private ProductVariantService           productVariantService;
+
+  @Autowired
+  private PaymentService paymentService;
 
   @Transactional
   public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder, boolean firewall) {
@@ -582,20 +588,27 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
     }
 
-    this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
-        EnumReconciliationActionType.RefundAmount.getId(), false);
-    shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
-        EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
-
     if (!cancelledSO.getBaseOrder().getPayment().isCODPayment()) {
+      this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
+              EnumReconciliationActionType.RefundAmount.getId(), false);
       if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
         emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
       } else {
         emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
       }
+    } else {
+        Payment payment = cancelledSO.getBaseOrder().getPayment();
+        Store store = cancelledSO.getBaseOrder().getStore();
+        if (paymentService.isValidReconciliation(payment, store)) {
+            this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, EnumReconciliationActionType.RefundAmount.getId(), false);
+        } else {
+            this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, false);
+        }
     }
-    return true;
+      shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+              shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
+              EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
+      return true;
   }
 
 	/* Setters and getters begin*/
