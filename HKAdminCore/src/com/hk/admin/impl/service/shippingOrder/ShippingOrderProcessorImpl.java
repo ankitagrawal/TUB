@@ -588,12 +588,13 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
         EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
 
-    if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
-      emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
-    } else {
-      emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
+    if (!cancelledSO.getBaseOrder().getPayment().isCODPayment()) {
+      if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
+        emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
+      } else {
+        emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
+      }
     }
-
     return true;
   }
 
