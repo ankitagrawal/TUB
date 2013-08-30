@@ -95,6 +95,9 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "target_dispatch_date", nullable = true)
     private Date targetDispatchDate;
 
+    @Column(name = "promise_dispatch_date", nullable = true)
+    private Date promiseDispatchDate;
+
     @Column(name = "target_del_date", nullable = true)
     private Date targetDelDate;
 
@@ -348,4 +351,12 @@ public class ShippingOrder implements java.io.Serializable {
 	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
 		this.purchaseOrders = purchaseOrders;
 	}
+
+    public Date getPromiseDispatchDate() {
+        return promiseDispatchDate;
+    }
+
+    public void setPromiseDispatchDate(Date promiseDispatchDate) {
+        this.promiseDispatchDate = promiseDispatchDate;
+    }
 }

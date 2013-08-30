@@ -384,6 +384,11 @@
                 <h3>
         <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction"
+                title="View Supplier Accounts" event="pre">View Supplier Accounts</s:link></h3>
+
+
 </div>
 
 <%--<script type="text/javascript">
