@@ -238,6 +238,10 @@ public class Warehouse implements java.io.Serializable {
     this.users = users;
   }
 
+  public String getTinPrefix() {
+    return tin != null && tin.length() > 2 ? tin.substring(0,2) : null;
+  }
+
 }
 
 

@@ -31,6 +31,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.catalog.ProductService;
@@ -89,7 +90,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   CartLineItemDao cartLineItemDao;
   @Autowired
   SkuItemLineItemDao skuItemLineItemDao;
-
+  @Autowired
+  SkuGroupDao skuGroupDao;
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
@@ -639,7 +641,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           } else {
             //book inventory on Bright
            cartLineItem =  tempBookBrightInventory(cartLineItem);
-            cartLineItem =  createSkuGroupAndItem(cartLineItem) ;
+//            cartLineItem =  createSkuGroupAndItem(cartLineItem) ;
             populateSICLI(cartLineItem) ;
           }
         }
@@ -649,14 +651,28 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
    @Transactional
-  public CartLineItem createSkuGroupAndItem (CartLineItem cartLineItem) {
+  public CartLineItem createSkuGroupAndItem (CartLineItem cartLineItem, Long warehouseId) {
 
     if (cartLineItem.getForeignSkuItemCLIs() != null && cartLineItem.getForeignSkuItemCLIs().size() > 0) {
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
       ProductVariant productVariant = cartLineItem.getProductVariant();
-      Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-      SkuGroup skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
+      Warehouse warehouse = getBaseDao().get(Warehouse.class, warehouseId);
+      List<Warehouse> whs =  warehouseService.findWarehouses(warehouse.getTinPrefix());
+      whs.remove(warehouse);
+      // now whs contain aqua warehouse
+      Sku sku = skuService.getSKU(productVariant, whs.get(0));
+      SkuGroup skuGroup = null;
+
+      Long foreignSkuGroupId =  fsicli.getForeignSkuGroupId();
+      skuGroup = skuGroupDao.getForeignSkuGroup(foreignSkuGroupId);
+      if (skuGroup == null){
+         skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
           fsicli.getFsgCostPrice(), fsicli.getFsgMrp(), null, null, null, sku);
+          skuGroup.setForeignSkuGroupId(foreignSkuGroupId);
+         skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
+      }
+
+      // Need to discus about setting of foreign sku_group id
 
       List<SkuItem> skuItems = new ArrayList<SkuItem>();
       for (ForeignSkuItemCLI fsicli1 : cartLineItem.getForeignSkuItemCLIs()) {
@@ -691,7 +707,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   private CartLineItem tempBookBrightInventory(CartLineItem cartLineItem) {
     logger.debug("Going to book inv on Bright Side");
-
+   Long warehouseIdAtOrderPlacement = cartLineItem.getProductVariant().getWarehouse().getId();
     // now make a API call to booked inventory at Bright
     List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
     List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
@@ -737,6 +753,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     }
     cartLineItem = (CartLineItem)getBaseDao().save(cartLineItem);
+    createSkuGroupAndItem(cartLineItem, warehouseIdAtOrderPlacement);
     return cartLineItem;
   }
 

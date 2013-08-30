@@ -168,4 +168,12 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
         setParameter("grn", grn).list();
   }
 
+
+  public SkuGroup getForeignSkuGroup( Long foreignSkuGroupId) {
+    List<SkuGroup> skuGroups = getSession().
+        createQuery("from SkuGroup sg where sg.foreignSkuGroupId = :foreignSkuGroupId ").
+        setParameter("foreignSkuGroupId", foreignSkuGroupId).list();
+    return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
+  }
+
 }
