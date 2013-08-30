@@ -128,7 +128,7 @@ public enum EnumReason {
         acceptableReasons.add(EnumReason.PROD_DAMAGE.getId());
         acceptableReasons.add(EnumReason.PROD_EXPIRE.getId());
         acceptableReasons.add(EnumReason.PROD_INV_MISMATCH.getId());
-        acceptableReasons.add(EnumReason.MRP_LESS.getId());
+        //acceptableReasons.add(EnumReason.MRP_LESS.getId());
         acceptableReasons.add(EnumReason.MRP_MORE.getId());
 
         return  acceptableReasons;
