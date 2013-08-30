@@ -88,7 +88,7 @@ Partial Order Cancellation for Order ID ${order.gatewayOrderId}
                         <br/>
                         <br/>
 
-                        If you have any questions, you can call our Customer Care or at 0124-4616444.<br/>
+                        If you have any questions, you can call our Customer Care at 0124-4616444.<br/>
                         <br/>
 
 
