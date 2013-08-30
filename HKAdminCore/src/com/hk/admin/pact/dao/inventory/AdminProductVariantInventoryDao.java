@@ -36,6 +36,8 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
     public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem);
 
     public List<ProductVariantInventory> getPVIByLineItem(LineItem lineItem);
+    
+    public List<ProductVariantInventory> getPVIByGrnLineItem(GrnLineItem grnLineItem);
 
     public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem);
 

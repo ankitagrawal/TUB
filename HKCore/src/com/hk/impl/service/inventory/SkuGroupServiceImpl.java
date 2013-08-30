@@ -3,6 +3,7 @@ package com.hk.impl.service.inventory;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Arrays;
@@ -43,7 +45,7 @@ public class SkuGroupServiceImpl implements SkuGroupService {
   SkuItemLineItemService skuItemLineItemService;
   @Autowired
   SkuItemLineItemDao skuItemLineItemDao;
-  
+  @Autowired
   private ShippingOrderProcessor shippingOrderProcessor;
   
 
@@ -192,5 +194,4 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 			}
 		}
 	}
-
 }

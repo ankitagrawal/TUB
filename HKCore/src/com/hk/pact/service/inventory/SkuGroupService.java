@@ -76,4 +76,5 @@ public interface SkuGroupService {
   public SkuItem getSkuItemByBarcode(String barcode);
   
   public void updateBookingAfterCheckin(SkuItem skuItem, SkuGroup skuGroup);
+  
 }

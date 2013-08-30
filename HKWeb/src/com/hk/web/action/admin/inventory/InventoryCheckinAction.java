@@ -31,18 +31,22 @@ import com.hk.domain.inventory.crossDomain.InventoryBarcodeMapItem;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.dao.warehouse.WarehouseDao;
 import com.hk.util.XslGenerator;
 import com.hk.util.HKDateUtil;
@@ -117,6 +121,10 @@ public class InventoryCheckinAction extends BaseAction {
     InventoryBarcodeMapDao inventoryBarcodeMapDao;
     @Autowired
     WarehouseDao warehouseDao;
+    @Autowired
+    AdminProductVariantInventoryDao adminProductVariantInventoryDao;
+    @Autowired
+    SkuItemLineItemDao skuItemLineItemDao;
 
     @Validate(required = true, on = "save")
     private String upc;
@@ -140,7 +148,6 @@ public class InventoryCheckinAction extends BaseAction {
     private String productVariantBarcode;
     private String invBarcode;
     private Boolean isBrightSupplier = Boolean.FALSE;
-    private String barcode;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -260,38 +267,13 @@ public class InventoryCheckinAction extends BaseAction {
 						addRedirectAlertMessage(new SimpleMessage("MRP is required. Plz check."));
 						return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 					}
-					if (isBrightSupplier) {
-						SkuItem skuItem = skuGroupService.getSkuItemByBarcode(barcode);
-						if (skuItem == null) {
-							addRedirectAlertMessage(new SimpleMessage("Please Enter a valid barcode"));
-							return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-						} else {
-							// see if group needs to be created or the same can do
-							SkuGroup skuGroup = skuItem.getSkuGroup();
-							if (skuGroup.getMrp().equals(mrp) && skuGroup.getCostPrice().equals(costPrice) && skuGroup.getMfgDate().equals(mfgDate)
-									&& skuGroup.getExpiryDate().equals(expiryDate)) {
-								// things okk here. Do a checkin and corresponding updates
-							} else {
-								// create new sku group
-								SkuGroup newSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null,
-										skuGroup.getSku());
-								skuItem.setSkuGroup(newSkuGroup);
-								skuItem = (SkuItem) baseDao.save(skuItem);
-							}
-							adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, grnLineItem, null, null, EnumSkuItemStatus.Checked_IN,
-									EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), 1l, user);
-							getInventoryService().checkInventoryHealth(skuGroup.getSku().getProductVariant());
-							skuGroupService.updateBookingAfterCheckin(skuItem, skuGroup);
-						}
-					} else {
-						SkuGroup skuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
-						getAdminInventoryService().createSkuItemsAndCheckinInventory(null, skuGroup, qty, null, grnLineItem, null, null,
-								getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
-						getInventoryService().checkInventoryHealth(productVariant);
-					}
+					SkuGroup skuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
+					getAdminInventoryService().createSkuItemsAndCheckinInventory(null, skuGroup, qty, null, grnLineItem, null, null,
+							getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
+					getInventoryService().checkInventoryHealth(productVariant);
 
 					if (getInventoryService().allInventoryCheckedIn(grn)) {
-						//TODO: Escalate all the shipping orders corresponding to this GRN
+						// TODO: Escalate all the shipping orders corresponding to this GRN
 						getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 						for (PoLineItem poLineItem : grn.getPurchaseOrder().getPoLineItems()) {
 							if (poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
@@ -364,80 +346,99 @@ public class InventoryCheckinAction extends BaseAction {
 		}
 	}
 
-    public Resolution checkinInvBarcode() {
-      if (StringUtil.isBlank(invBarcode)) {
-        addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
-        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-      }
+	public Resolution checkinInvBarcode() {
+		if (StringUtil.isBlank(invBarcode)) {
+			addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
+			return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+		}
+		User loggedOnUser = null;
+		if (getPrincipal() != null) {
+			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+		}
+		InventoryBarcodeMapItem item = inventoryBarcodeMapDao.getInventoryBarcodeMapItem(invBarcode, grn.getPurchaseOrder());
+		if (item != null) {
+			ProductVariant productVariant = getProductVariantService().getVariantById(item.getVariantId());
+			if (productVariant != null) {
+				Sku sku = getSkuService().getSKU(productVariant, grn.getWarehouse());
+				if (sku != null) {
+					GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
+					if (grnLineItem != null) {
+						Long askedQty = grnLineItem.getQty();
+						Long alreadyCheckedInQty = getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem);
+						if (alreadyCheckedInQty >= askedQty) {
+							addRedirectAlertMessage(new SimpleMessage("Asked qty is already checked in."));
+							return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+						}
+						try {
+							SkuItem skuItem = skuGroupService.getSkuItemByBarcode(invBarcode);
+							if (skuItem != null) {
+								adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, grnLineItem, null, null, EnumSkuItemStatus.Checked_IN,
+										EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), 1l, loggedOnUser);
+								getInventoryService().checkInventoryHealth(sku.getProductVariant());
+								skuGroupService.updateBookingAfterCheckin(skuItem, skuItem.getSkuGroup());
+								addRedirectAlertMessage(new SimpleMessage("Inventory Checked in successfully. Qty = " + qty));
+								return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+							} else {
+								SkuGroup skuGroup = skuGroupService.getForeignSkuGroup(grn.getWarehouse().getId(), item.getSkuGroupId());
+								if (skuGroup == null)
+									skuGroup = getAdminInventoryService().createSkuGroup(null, item.getBatchNumber(), item.getMfgDate(), item.getExpDate(), item.getCostPrice(),
+											item.getMrp(), grn, null, null, sku, item.getSkuGroupId());
 
-      User loggedOnUser = null;
-      if (getPrincipal() != null) {
-        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-      }
-      InventoryBarcodeMapItem item = inventoryBarcodeMapDao.getInventoryBarcodeMapItem(invBarcode, grn.getPurchaseOrder());
-      if (item != null) {
-        ProductVariant productVariant = getProductVariantService().getVariantById(item.getVariantId());
-        if (productVariant != null) {
-          Sku sku = getSkuService().getSKU(productVariant, grn.getWarehouse());
-          if (sku != null) {
-            GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
-            if (grnLineItem != null) {
-              Long askedQty = grnLineItem.getQty();
-              Long alreadyCheckedInQty = getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem);
-              if (alreadyCheckedInQty >= askedQty) {
-                addRedirectAlertMessage(new SimpleMessage("Asked qty is already checked in."));
-                return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-              }
-              SkuGroup skuGroup = skuGroupService.getForeignSkuGroup(grn.getWarehouse().getId(), item.getSkuGroupId());
-              if (skuGroup == null)
-                skuGroup = getAdminInventoryService().createSkuGroup
-                    (null, item.getBatchNumber(), item.getMfgDate(), item.getExpDate(), item.getCostPrice(), item.getMrp(), grn, null, null, sku, item.getSkuGroupId());
+								String siBarcode = item.getSkuItemBarcode();
+								if (StringUtils.isNumeric(siBarcode)) {
+									siBarcode = new String(skuGroup.getId() + "-" + (skuGroup.getSkuItems().size() + 1));
+								}
+								getAdminInventoryService().createSkuItemsAndCheckinInventory(siBarcode, skuGroup, 1L, null, grnLineItem, null, null,
+										getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), loggedOnUser);
+								getInventoryService().checkInventoryHealth(productVariant);
+							}
 
-              try {
-                String siBarcode = item.getSkuItemBarcode();
-                if (StringUtils.isNumeric(siBarcode)) {
-                  siBarcode = new String(skuGroup.getId() + "-" + (skuGroup.getSkuItems().size() + 1));
-                }
-                getAdminInventoryService().createSkuItemsAndCheckinInventory(siBarcode, skuGroup, 1L, null, grnLineItem, null, null,
-                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), loggedOnUser);
-                getInventoryService().checkInventoryHealth(productVariant);
-
-                if (getInventoryService().allInventoryCheckedIn(grn)) {
-                  getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
-                  grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
-                  getGoodsReceivedNoteDao().save(grn);
-                  editPVFillRate(grn);
-                  addRedirectAlertMessage(new SimpleMessage("All inventory checked in. GRN is marked closed"));
-                  return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                } else {
-                  grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
-                  getGoodsReceivedNoteDao().save(grn);
-                  editPVFillRate(grn);
-                }
-              } catch (Exception e) {
-                  addRedirectAlertMessage(new SimpleMessage("Oops!! The Barcode is unique and it is already checked in."));
-                  return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-              }
-            } else {
-              addRedirectAlertMessage(new SimpleMessage("No GRN LineIten for SKU for " + productVariant.getId()+" in "+grn.getWarehouse().getIdentifier()+" in the GRN"));
-              return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-            }
-          } else {
-            addRedirectAlertMessage(new SimpleMessage("No SKU for " + productVariant.getId()+" in "+grn.getWarehouse().getIdentifier()));
-            return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-          }
-        } else {
-          addRedirectAlertMessage(new SimpleMessage("No Variant " + item.getVariantId() + " for barcode mapping# " + invBarcode));
-          return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-        }
-      } else {
-        addRedirectAlertMessage(new SimpleMessage("No barcode mapping availabe for barcode# " + invBarcode + " for PO#" + grn.getPurchaseOrder().getId()));
-        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-      }
-
-      addRedirectAlertMessage(new SimpleMessage("Checked In..."));
-      return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-    }
+							if (getInventoryService().allInventoryCheckedIn(grn)) {
+								String message = "All inventory checked in. GRN is marked closed";
+								Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
+								if(shippingOrders!=null&&shippingOrders.size()>0){
+									String escalated = "";
+									for (ShippingOrder shippingOrder : shippingOrders) {
+										escalated +=shippingOrder.getId().toString()+", ";
+									}
+									message.concat("<br>Shipping Order(s) - "+escalated+" were escalated.");
+								}
+								
+								getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
+								grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
+								getGoodsReceivedNoteDao().save(grn);
+								editPVFillRate(grn);
+								addRedirectAlertMessage(new SimpleMessage(message));
+								return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+							} else {
+								grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
+								getGoodsReceivedNoteDao().save(grn);
+								editPVFillRate(grn);
+							}
+						} catch (Exception e) {
+							addRedirectAlertMessage(new SimpleMessage("Oops!! The Barcode is unique and it is already checked in."));
+							return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+						}
+					} else {
+						addRedirectAlertMessage(new SimpleMessage("No GRN LineIten for SKU for " + productVariant.getId() + " in " + grn.getWarehouse().getIdentifier()
+								+ " in the GRN"));
+						return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+					}
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("No SKU for " + productVariant.getId() + " in " + grn.getWarehouse().getIdentifier()));
+					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+				}
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("No Variant " + item.getVariantId() + " for barcode mapping# " + invBarcode));
+				return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+			}
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("No barcode mapping availabe for barcode# " + invBarcode + " for PO#" + grn.getPurchaseOrder().getId()));
+			return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+		}
+		addRedirectAlertMessage(new SimpleMessage("Checkin Successful"));
+		return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+	}
 
 
     public Resolution saveStockTransfer() {
@@ -687,7 +688,6 @@ public class InventoryCheckinAction extends BaseAction {
 
     }
 
-
     public Resolution downloadAllBarcode() {
         String barcodeFilePath = null;
         Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
@@ -728,6 +728,18 @@ public class InventoryCheckinAction extends BaseAction {
         return new HTTPResponseResolution();
     }
 
+	public Resolution freezeCheckin() {
+		Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
+		if(shippingOrders!=null&&shippingOrders.size()>0){
+			String escalated = "";
+			for (ShippingOrder shippingOrder : shippingOrders) {
+				escalated +=shippingOrder.getId().toString()+", ";
+			}
+			addRedirectAlertMessage(new SimpleMessage("Shipping Order(s) - "+escalated+" were escalated."));
+		}
+		addRedirectAlertMessage(new SimpleMessage("No Shipping Orders were escalated"));
+    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+	}
 
     public class HTTPResponseResolution implements Resolution {
         public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -981,14 +993,6 @@ public class InventoryCheckinAction extends BaseAction {
 
 	public void setIsBrightSupplier(Boolean isBrightSupplier) {
 		this.isBrightSupplier = isBrightSupplier;
-	}
-
-	public String getBarcode() {
-		return barcode;
-	}
-
-	public void setBarcode(String barcode) {
-		this.barcode = barcode;
 	}
 
 }

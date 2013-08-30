@@ -89,6 +89,12 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         criteria.add(Restrictions.eq("lineItem", lineItem));
         return criteria.list();
     }
+    
+    public List<ProductVariantInventory> getPVIByGrnLineItem(GrnLineItem grnLineItem){
+    	Criteria criteria = getSession().createCriteria(ProductVariantInventory.class);
+      criteria.add(Restrictions.eq("grnLineItem", grnLineItem));
+      return criteria.list();
+    }
 
     public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem) {
         boolean isCheckedForSkuItem = false;
