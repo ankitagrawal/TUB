@@ -425,17 +425,6 @@ public class OrderManager {
             }
         }
 
-        if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
-            //for some orders userCodCall object is not created, a  check to create one
-            try{
-                    UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
-                    orderService.saveUserCodCall(userCodCall);
-            } catch (Exception e){
-                logger.info("User Cod Call already exists for " + order.getId());
-            }
-        }
-
-
       this.getUserService().updateIsProductBought(order);
 
       // if reward points redeemed then add reward point txns
