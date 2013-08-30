@@ -6,6 +6,7 @@ import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.hkDelivery.Hub;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -39,6 +40,7 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.DATE,-1);
     criteria.add(Restrictions.gt("validUpto", cal.getTime()));
+    criteria.addOrder(Order.asc("validUpto"));
     return (CourierPricingEngine) criteria.uniqueResult();
   }
 
