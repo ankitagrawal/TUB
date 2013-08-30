@@ -392,6 +392,7 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("shippingOrder", shippingOrder);
         valuesMap.put("order", order);
+        valuesMap.put("isCOD",order.getPayment().isCODPayment());
         Set<CartLineItem> cancelledItems = new HashSet<CartLineItem>();
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             cancelledItems.add(lineItem.getCartLineItem());

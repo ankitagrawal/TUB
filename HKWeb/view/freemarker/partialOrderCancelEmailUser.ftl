@@ -52,9 +52,9 @@ Partial Order Cancellation for Order ID ${order.gatewayOrderId}
                 <tr>
                     <td width="579" valign="top">Hi ${order.user.name}! <br/>
                         <br/>
-                        Our sincere apologies , the product your ordered dated ${order.payment.paymentDate}, for INR ${shippingOrder.amount}, with order
+                        Our sincere apologies, the product your ordered dated ${order.payment.paymentDate}, for INR ${shippingOrder.amount}, with order
                         confirmation number ${order.gatewayOrderId} could not be shipped.<br/>
-                        <#if !order.payment.isCODPayment>
+                        <#if !isCOD>
                           We have initiated refund for the same and the amount should reflect in your account in 7-10 business days.<br/>
                         </#if>
                         Please be assured that the remaining products of your order will be processed (if not processed yet) as communicated earlier.
