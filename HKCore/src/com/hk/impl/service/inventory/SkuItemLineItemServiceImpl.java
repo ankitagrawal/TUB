@@ -289,6 +289,40 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		}
 		return true;
 	}
+	public Boolean freeInventoryForRTOCheckIn(ShippingOrder shippingOrder) {
+		List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+		List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+
+		Set<LineItem> lineItems = shippingOrder.getLineItems();
+		for (LineItem lineItem : lineItems) {
+			for (SkuItemCLI skuItemCLI : lineItem.getCartLineItem().getSkuItemCLIs()) {
+				skuItemCLI.setSkuItemLineItems(null);
+				skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
+				skuItemCLIsToBeDeleted.add(skuItemCLI);
+			}
+
+			skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
+		}
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			CartLineItem cartLineItem = lineItem.getCartLineItem();
+			cartLineItem.setSkuItemCLIs(null);
+			cartLineItem = (CartLineItem) baseDao.save(cartLineItem);
+			lineItem.setSkuItemLineItems(null);
+			lineItem.setCartLineItem(cartLineItem);
+			lineItem = (LineItem) baseDao.save(lineItem);
+		}
+		for (Iterator<SkuItemLineItem> iterator = skuItemLineItemsToBeDeleted.iterator(); iterator.hasNext(); ) {
+			SkuItemLineItem skuItemLineItem = (SkuItemLineItem) iterator.next();
+			baseDao.delete(skuItemLineItem);
+			iterator.remove();
+		}
+		for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext(); ) {
+			SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+			baseDao.delete(skuItemCLI);
+			iterator.remove();
+		}
+		return true;
+	}
 
 	@Override
 	public SkuItemLineItem save(SkuItemLineItem skuItemLineItem) {
