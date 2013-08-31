@@ -98,7 +98,8 @@ public class HKStartupListener implements ServletContextListener {
 
             logger.info("START POPULATING ROLE CACHE");
             System.out.println("START POPULATING ROLE CACHE");
-            populateRoleCache();
+            //populateRoleCache();
+            RoleCache.getInstance().populateRoleCache();
             logger.info("END POPULATING ROLE CACHE");
             System.out.println("END POPULATING ROLE CACHE");
 
@@ -137,7 +138,7 @@ public class HKStartupListener implements ServletContextListener {
 
     }
 
-    private void populateRoleCache() {
+    /*private void populateRoleCache() {
         RoleCache.getInstance().reset();
         RoleCache roleCache = RoleCache.getInstance().getTransientCache();
 
@@ -148,7 +149,7 @@ public class HKStartupListener implements ServletContextListener {
         }
         roleCache.freeze();
 
-    }
+    }*/
 
     private void populateCategoryCache() {
         CategoryCache.getInstance().reset();
