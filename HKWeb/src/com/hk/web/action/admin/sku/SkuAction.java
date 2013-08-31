@@ -88,8 +88,7 @@ public class SkuAction extends BaseAction {
 
       if (productVariant.getWarehouse() == null) {
         productVariant.setWarehouse(sku.getWarehouse());
-        productVariant = (ProductVariant) getBaseDao().save(productVariant);
-        inventoryService.checkInventoryHealth(productVariant);
+        getBaseDao().save(productVariant);
 
       }
 
