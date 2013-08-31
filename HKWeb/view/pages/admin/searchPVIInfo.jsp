@@ -17,6 +17,7 @@
             <tr>
                 <th>Date</th>
                 <th>PVID</th>
+                <th>WH</th>
                 <th>GRN</th>
                 <th>RV</th>
                 <th>ST</th>
@@ -31,6 +32,7 @@
                 <tr>
                     <td>${pvi.txnDate}</td>
                     <td>${pvi.sku.productVariant.id}</td>
+                    <td>${pvi.sku.warehouse.identifier}</td>
                     <td>${pvi.grnLineItem.goodsReceivedNote.id}</td>
                     <td>${pvi.rvLineItem.reconciliationVoucher.id}</td>
                     <td>${pvi.stockTransferLineItem.stockTransfer.id}</td>
