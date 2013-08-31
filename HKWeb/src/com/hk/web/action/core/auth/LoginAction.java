@@ -65,7 +65,7 @@ public class LoginAction extends BaseAction {
             return new RedirectResolution(redirectUrl, false);
         }
 
-        if (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN))
+        /*if (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN))
                 || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.GOD))
                 || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CATEGORY_MANAGER))
                 || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.OPS_MANAGER))
@@ -73,7 +73,7 @@ public class LoginAction extends BaseAction {
                 || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.TICKETADMIN))
                 || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CUSTOMER_SUPPORT)))
             return new RedirectResolution(AdminHomeAction.class);
-        else
+        else*/
             return new RedirectResolution(HomeAction.class);
     }
 
