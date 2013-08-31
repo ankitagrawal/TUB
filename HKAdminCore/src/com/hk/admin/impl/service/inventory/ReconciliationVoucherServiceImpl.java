@@ -388,12 +388,13 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				// to be deleted. SO moved back to action awaiting.
 				baseDao.delete(skuItemLineItem);
 				baseDao.delete(cli);
-				item.getShippingOrder().setReason(EnumReason.InsufficientUnbookedInventory.asReason());
-				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder());
+				item.getShippingOrder().setReason(EnumReason.PROD_INV_MISMATCH.asReason());
 				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
-						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(), EnumReason.InsufficientUnbookedInventory.asReason(),
+						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(),
+            EnumReason.PROD_INV_MISMATCH.asReason(),
 						"The already booked unit has been freed for RV subtract and no spare unit could be found for variant:- "
 								+ item.getSku().getProductVariant() + ". Moving back to Action Queue");
+				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder(),true);
 				logger.debug("could not get a sibling to set on the entries in the booking table against SkuItem:- " + skuItem.getId()
 						+ " deleted the entries from the booking table.");
 			}
