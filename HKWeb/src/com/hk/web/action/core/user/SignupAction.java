@@ -59,7 +59,7 @@ public class SignupAction extends BaseAction {
 	@DefaultHandler
 	@DontValidate
 	public Resolution pre() {
-		return new ForwardResolution("/pages/signup.jsp");
+		return new ForwardResolution("/pages/signUpBeta.jsp");
 	}
 
 	@ValidationMethod()
