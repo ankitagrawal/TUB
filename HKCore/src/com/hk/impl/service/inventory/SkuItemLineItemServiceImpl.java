@@ -99,9 +99,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 				skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 				logger.debug("saving si to booked in replacement order ->  " + skuItem.getId());
 				skuItem = (SkuItem) getSkuItemDao().save(skuItem);
-
+        SkuItemCLI skuItemCLI;
 				if (createSkuCLIFlag) {
-					SkuItemCLI skuItemCLI = new SkuItemCLI();
+					skuItemCLI = new SkuItemCLI();
 					skuItemCLI.setSkuItem(skuItem);
 					skuItemCLI.setCartLineItem(lineItem.getCartLineItem());
 					skuItemCLI.setUnitNum(unitNum);
@@ -111,7 +111,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 					skuItemLineItem.setSkuItemCLI(skuItemCLI);
 
 				} else {
-					skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i - 1));
+          skuItemCLI = cartLineItem.getSkuItemCLIs().get(i - 1);
+          skuItemCLI.setSkuItem(skuItem);
+          skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+          skuItemLineItem.setSkuItemCLI(skuItemCLI);
 				}
 
 				//create skuItemLineItem entry
@@ -292,6 +295,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	public Boolean freeInventoryForRTOCheckIn(ShippingOrder shippingOrder) {
 		List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
 		List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+    Boolean hasReplacementOrder = shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder);
 
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
 		for (LineItem lineItem : lineItems) {
@@ -316,11 +320,14 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			baseDao.delete(skuItemLineItem);
 			iterator.remove();
 		}
-		for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext(); ) {
-			SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
-			baseDao.delete(skuItemCLI);
-			iterator.remove();
-		}
+
+    if(!hasReplacementOrder){
+      for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext(); ) {
+        SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+        baseDao.delete(skuItemCLI);
+        iterator.remove();
+      }
+    }
 		return true;
 	}
 
