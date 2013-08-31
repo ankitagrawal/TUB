@@ -1,13 +1,17 @@
 package com.hk.api.resource;
 
 
+import com.google.gson.Gson;
 import com.hk.api.pact.service.HKAPIProductService;
 import com.hk.constants.core.Keys;
+import com.hk.domain.api.HKAPIBookingInfo;
+import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.store.StoreProduct;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.store.StoreService;
@@ -21,10 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,6 +45,7 @@ public class ProductVariantResource {
     private SkuService skuService;
     private StoreService storeService;
     private WarehouseService warehouseService;
+    private InventoryHealthService inventoryHealthService;
 
     @Autowired
     private HKAPIProductService hkapiProductService;
@@ -150,12 +153,19 @@ public class ProductVariantResource {
 
     }
 
-    public ProductVariantService getProductVariantService() {
-        if (productVariantService == null) {
-            productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
-        }
-        return productVariantService;
+
+  @POST
+  @Path("/updateFreezedInventory/")
+  @Produces("application/json")
+  public String updateFreezedInventory(List<HKAPIForeignBookingResponseInfo> hKAPIForeignBookingResponseInfos) {
+    Gson gson = new Gson();
+    for(HKAPIForeignBookingResponseInfo info : hKAPIForeignBookingResponseInfos) {
+        getInventoryHealthService().updateForeignSICLITable(Arrays.asList(info));
     }
+
+
+
+  }
 
     public InventoryService getInventoryService() {
         if (inventoryService == null) {
@@ -184,6 +194,13 @@ public class ProductVariantResource {
         }
         return warehouseService;
     }
+
+  public InventoryHealthService getInventoryHealthService() {
+    if (inventoryHealthService == null) {
+      inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
+    }
+    return inventoryHealthService;
+  }
 
 
 }

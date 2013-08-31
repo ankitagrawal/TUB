@@ -1,5 +1,6 @@
 package com.hk.pact.service.inventory;
 
+import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -26,6 +27,8 @@ public interface InventoryHealthService {
   public void inventoryHealthCheck(ProductVariant productVariant);
 
   public void tempBookSkuLineItemForOrder(Order order);
+
+  public  void updateForeignSICLITable(List<HKAPIForeignBookingResponseInfo> infos);
 
 
   public static class InventoryInfo {

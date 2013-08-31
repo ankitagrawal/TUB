@@ -798,7 +798,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  private void updateForeignSICLITable(List<HKAPIForeignBookingResponseInfo> infos) {
+  public  void updateForeignSICLITable(List<HKAPIForeignBookingResponseInfo> infos) {
     for (HKAPIForeignBookingResponseInfo info : infos) {
       long fsiliId = info.getFsiCLIId();
       ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemService.getForeignSkuItemCLI(fsiliId);
