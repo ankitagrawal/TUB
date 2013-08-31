@@ -181,7 +181,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 	private boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
 		if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
 			if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-				if (!(shippingOrder.isServiceOrder())) {
+				if (!(shippingOrder.isServiceOrder()) && !(shippingOrder.containsJitProducts())) {
 
 					User loggedInUser = getUserService().getLoggedInUser();
 					if(loggedInUser == null){
