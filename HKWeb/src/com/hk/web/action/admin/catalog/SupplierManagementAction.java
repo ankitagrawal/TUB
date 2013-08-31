@@ -2,10 +2,12 @@ package com.hk.web.action.admin.catalog;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.accounting.SupplierTransactionService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.courier.StateList;
+import com.hk.constants.inventory.EnumSupplierTransactionType;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -31,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.Date;
 
 @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -47,6 +50,9 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
     @Autowired
     XslGenerator xslGenerator;
+
+    @Autowired
+    SupplierTransactionService supplierTransactionService;
 
     private List<Supplier> supplierList = new ArrayList<Supplier>();
     private Supplier supplier;
@@ -141,7 +147,8 @@ public class SupplierManagementAction extends BasePaginatedAction {
             if (oldSupplier == null) {
                 if (checkForMandatoryFields(supplier)) {
                     addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
-                    supplierDao.save(supplier);
+                    supplier = supplierDao.save(supplier);
+                    supplierTransactionService.createOpeningBalanceAccountForSupplier(supplier, EnumSupplierTransactionType.Create.asSupplierTransactionType(), 0.0, new Date());
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
                     //return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
