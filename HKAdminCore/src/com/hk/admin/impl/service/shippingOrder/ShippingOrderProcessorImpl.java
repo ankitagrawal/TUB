@@ -16,6 +16,7 @@ import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
@@ -239,7 +240,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
   }
 
   private ShippingOrder autoProcessInventoryMismatch(ShippingOrder shippingOrder, User user) {
-    shippingOrderService.validateShippingOrder(shippingOrder);
+    if (!(shippingOrder instanceof ReplacementOrder)) {
+      shippingOrderService.validateShippingOrder(shippingOrder);
+    }
     boolean cancelFlag = false;
     boolean isSOProcessable = false;
     Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
