@@ -1,10 +1,8 @@
 package com.hk.api.resource;
 
 
-import com.google.gson.Gson;
 import com.hk.api.pact.service.HKAPIProductService;
 import com.hk.constants.core.Keys;
-import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
@@ -26,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -163,13 +160,22 @@ public class ProductVariantResource {
     if (hKAPIForeignBookingResponseInfos != null && hKAPIForeignBookingResponseInfos.size() > 0) {
       baseOrderId = hKAPIForeignBookingResponseInfos.get(0).getFboId();
       for (HKAPIForeignBookingResponseInfo info : hKAPIForeignBookingResponseInfos) {
-        inventoryHealthService.freezeInventoryForAB(info);
+        getInventoryHealthService().freezeInventoryForAB(info);
       }
       inventoryUpdated = true;
     }
     return new JSONResponseBuilder().addField("orderId", baseOrderId).addField("inventoryUpdated", inventoryUpdated).build();
 
   }
+
+
+
+  public ProductVariantService getProductVariantService() {
+        if (productVariantService == null) {
+            productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
+        }
+        return productVariantService;
+    }
 
     public InventoryService getInventoryService() {
         if (inventoryService == null) {
@@ -205,14 +211,4 @@ public class ProductVariantResource {
     }
     return inventoryHealthService;
   }
-
-
-  public ProductVariantService getProductVariantService() {
-    if (productVariantService == null) {
-      productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
-    }
-    return productVariantService;
-  }
-
-
 }

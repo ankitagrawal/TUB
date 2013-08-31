@@ -6,6 +6,7 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemOwner;
@@ -34,6 +35,9 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
+
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +83,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
   private SkuGroupService skuGroupService;
   @Autowired
   private SkuItemDao skuItemDao;
+  @Autowired
+  private ShippingOrderProcessor shippingOrderProcessor;
 
   @Override
   public List<SkuGroup> getInStockSkuGroups(String upc) {
@@ -592,4 +598,54 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
   public List<SkuGroup> getInStockSkuGroup(Sku sku) {
     return adminSkuItemDao.getInStockSkuGroups(sku);
   }
+  
+	public Set<ShippingOrder> manuallyEscalateShippingOrdersForThisCheckin(GoodsReceivedNote goodsReceivedNote) {
+		int count = 0;
+		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+		Set<ShippingOrder> escalatedShippingOrders = new HashSet<ShippingOrder>();
+		List<GrnLineItem> grnLineItems = goodsReceivedNote.getGrnLineItems();
+		List<SkuItem> skuItems = new ArrayList<SkuItem>();
+		for (GrnLineItem grnLineItem : grnLineItems) {
+			List<ProductVariantInventory> productVariantInventories = adminPVIDao.getPVIByGrnLineItem(grnLineItem);
+			if (productVariantInventories != null && productVariantInventories.size() > 0) {
+				for (ProductVariantInventory inventory : productVariantInventories) {
+					SkuItem item = inventory.getSkuItem();
+					skuItems.add(item);
+				}
+			}
+		}
+
+		if (skuItems != null && skuItems.size() > 0) {
+			for (SkuItem skuItem : skuItems) {
+				SkuItemLineItem skuItemLineItem = skuItemLineItemDao.getSkuItemLineItem(skuItem);
+				ShippingOrder shippingOrder = skuItemLineItem.getLineItem().getShippingOrder();
+				shippingOrders.add(shippingOrder);
+			}
+		}
+
+		boolean isEscalable = true;
+		if (shippingOrders != null && shippingOrders.size() > 0) {
+			for (ShippingOrder shippingOrder : shippingOrders) {
+				for (LineItem lineItem : shippingOrder.getLineItems()) {
+					List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
+					if (skuItemLineItems != null && skuItemLineItems.size() > 0) {
+						for (SkuItemLineItem item : skuItemLineItems) {
+							if (!item.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
+								isEscalable = false;
+								break;
+							}
+						}
+					}
+				}
+				if (isEscalable) {
+					escalatedShippingOrders.add(shippingOrder);
+					shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
+					++count;
+				}
+			}
+		}
+		return escalatedShippingOrders;
+	}
+	
+	
 }

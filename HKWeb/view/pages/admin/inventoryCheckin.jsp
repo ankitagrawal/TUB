@@ -52,16 +52,8 @@
         <s:hidden name="isBrightSupplier" value="${ica.isBrightSupplier}"/>
         <table border="1">
           <tr>
-          <c:choose>
-			  <c:when test="${ica.isBrightSupplier}"><td>Barcode:</td>
-			  <td><s:text name="barcode" id="barcode"/></td>
-			  <tr><td>VariantID:</td>
-			  <td><s:text name="upc" class="variant"/></td></tr>
-			  </c:when>
-			  <c:otherwise><td>UPC(Barcode) or VariantID:</td>
+          <td>UPC(Barcode) or VariantID:</td>
 			  <td><s:text name="upc" class="variant"/></td>
-			  </c:otherwise>
-			  </c:choose>
           </tr>
           <tr>
             <td>Qty:</td>
@@ -163,30 +155,15 @@
           </tr>
 
       </table>
-      <%--<hr/>
-      <div style="display:inline;float:right; width:450px">
-        <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
-          <s:hidden name="grn" value="${actionBean.grn.id}"/>
-          <s:submit name="generateGRNExcel" value="Download GRN"/>
-        </s:form>
-      </div>
-
-      <div style="display:inline;float:right; width:450px">
-        <fieldset>
-          <legend>Upload Excel to Checkin</legend>
-          <br/>
-          <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
-            <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
-            <s:hidden name="grn" value="${actionBean.grn.id}"/>
-
-            <div class="buttons">
-              <s:submit name="parse" value="Checkin"/>
-            </div>
-          </s:form>
-        </fieldset>
-      </div>--%>     
 
     </div>
+    
+    <c:if test="${ica.isBrightSupplier}">
+    <div id = "freezeDiv">
+    <s:link class=" button_green" style="width: 150px; height: 16px;" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="freezeCheckin"> Freeze Checkin
+                  <s:param name="grn" value="${ica.grn.id}"/>
+            </s:link>
+    </div></c:if>
     <script type="text/javascript">
 	    $(document).ready(function() {
 		    $('.chkInInfo').each(function(){
@@ -202,7 +179,6 @@
 		    	var cp = $('#costPrice').val();
 		    	var mrp = $('#mrp').val();
 		    	var qty = $('#qty').val();
-		    	var brightSupplier = ${ica.isBrightSupplier};
 	    		if (cp == "" || mrp == "" || qty=="") {
 					alert("Qty, CP, Mrp  fields are compulsory.");
 					return false;
