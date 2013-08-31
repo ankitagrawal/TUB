@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.service.inventory.InventoryService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -39,6 +40,8 @@ public class SkuAction extends BaseAction {
   private static Logger logger = Logger.getLogger(SkuAction.class);
   @Autowired
   SkuService skuService;
+  @Autowired
+  InventoryService inventoryService;
   private Warehouse warehouse;
   private ProductVariant productVariant;
   private String category;
@@ -80,7 +83,16 @@ public class SkuAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("This Product Variant in this warehouse already exists."));
         return new RedirectResolution(SkuAction.class);
       }
-      skuService.saveSku(sku);
+      sku = (Sku) skuService.saveSku(sku);
+      ProductVariant productVariant = sku.getProductVariant();
+
+      if (productVariant.getWarehouse() == null) {
+        productVariant.setWarehouse(sku.getWarehouse());
+        productVariant = (ProductVariant) getBaseDao().save(productVariant);
+        inventoryService.checkInventoryHealth(productVariant);
+
+      }
+
       addRedirectAlertMessage(new SimpleMessage("New SKU saved successfully."));
       return new RedirectResolution(SkuAction.class);
     }
