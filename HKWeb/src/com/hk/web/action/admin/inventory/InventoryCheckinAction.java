@@ -390,9 +390,8 @@ public class InventoryCheckinAction extends BaseAction {
 								}
 								getAdminInventoryService().createSkuItemsAndCheckinInventory(siBarcode, skuGroup, 1L, null, grnLineItem, null, null,
 										getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), loggedOnUser);
-								getInventoryService().checkInventoryHealth(productVariant);
 							}
-
+							getInventoryService().checkInventoryHealth(productVariant);
 							if (getInventoryService().allInventoryCheckedIn(grn)) {
 								String message = "All inventory checked in. GRN is marked closed";
 								Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
