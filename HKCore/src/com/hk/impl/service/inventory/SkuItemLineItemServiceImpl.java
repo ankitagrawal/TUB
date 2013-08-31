@@ -295,7 +295,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	public Boolean freeInventoryForRTOCheckIn(ShippingOrder shippingOrder) {
 		List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
 		List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
-    Boolean hasReplacementOrder = shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder);
+    Boolean hasReplacementOrder = getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder);
 
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
 		for (LineItem lineItem : lineItems) {
