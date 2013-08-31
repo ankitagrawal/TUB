@@ -674,17 +674,18 @@
                      PO# <a href="${pageContext.request.contextPath}/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${po.id}" target="_blank">${po.id}</a>
                       </c:forEach>
                       </span></c:if>
+                        <c:if test="${isActionQueue == true}">
+                            <c:if test="${!productVariant.product.service}">
+                                <p>
+                                    [AQ:${bookedQtyActionQ}]
+                                    [PQ:${bookedQtyProcessingQ}]
+                                    [Net-Phy:${skuNetInventory}]
+                                </p>
+                            </c:if>
+                        </c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
-                <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
                 ${lineItem.qty}
-                <c:if test="${isActionQueue == true}">
-							<c:if test="${!productVariant.product.service}">
-                    [AQ:${bookedQtyActionQ}]
-                    [PQ:${bookedQtyProcessingQ}]
-                    [Net-Phy:${skuNetInventory}]
-                </c:if>
-						</c:if>
             </td>
             </tr>
             <%--</c:if>--%>
