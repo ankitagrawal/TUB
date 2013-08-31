@@ -414,7 +414,11 @@ public class OrderManager {
 
       // calling health check
       if (!order.isSubscriptionOrder()) {
-        inventoryHealthService.tempBookSkuLineItemForOrder(order);
+        try {
+          inventoryHealthService.tempBookSkuLineItemForOrder(order);
+        } catch (Exception e) {
+          logger.error("Exception while TEMP booking for order#"+order.getId() +" - "+ e.getMessage());
+        }
       }
 
 //       Check Inventory health of order lineItems
