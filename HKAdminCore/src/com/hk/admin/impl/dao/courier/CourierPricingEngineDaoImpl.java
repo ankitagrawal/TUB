@@ -33,22 +33,21 @@ import java.util.List;
 public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierPricingEngineDao {
 
   public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse){
-    Criteria criteria = getSession().createCriteria(CourierPricingEngine.class);
+    DetachedCriteria criteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     criteria.add(Restrictions.eq("courier", courier));
     criteria.add(Restrictions.eq("regionType", regionType));
 //    criteria.add(Restrictions.eq("warehouse", warehouse));
-    Calendar cal = Calendar.getInstance();
-    cal.add(Calendar.DATE,-1);
-    criteria.add(Restrictions.gt("validUpto", cal.getTime()));
-    criteria.addOrder(Order.asc("validUpto"));
-    return (CourierPricingEngine) criteria.uniqueResult();
+    criteria = this.addValidityCriteria(criteria);
+    List<CourierPricingEngine> engineList = this.findByCriteria(criteria);
+    if (engineList != null && !engineList.isEmpty()) return engineList.get(0);
+    return null;
   }
 
   public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub, Boolean acceptNull) {
     DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
     if (!acceptNull) {
       if(warehouse == null || hub == null) {
-      return null;
+        return null;
       }
     }
     if (warehouse != null) {
@@ -65,16 +64,24 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     }
   }
 
-    @Override
-    public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Boolean acceptNull) {
-       List<HKReachPricingEngine> hkReachPricingEngines = getHkReachPricingEngineList(warehouse, hub, acceptNull);
-        return hkReachPricingEngines != null && !hkReachPricingEngines.isEmpty() ? hkReachPricingEngines.get(0) : null;
-    }
+  @Override
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Boolean acceptNull) {
+    List<HKReachPricingEngine> hkReachPricingEngines = getHkReachPricingEngineList(warehouse, hub, acceptNull);
+    return hkReachPricingEngines != null && !hkReachPricingEngines.isEmpty() ? hkReachPricingEngines.get(0) : null;
+  }
 
-    @Override
+  @Override
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier) {
     DetachedCriteria courierPricingEngineCriteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     courierPricingEngineCriteria.add(Restrictions.eq("courier", courier));
     return findByCriteria(courierPricingEngineCriteria);
+  }
+
+  private DetachedCriteria addValidityCriteria(DetachedCriteria criteria) {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.DAY_OF_YEAR,-1);
+    criteria.add(Restrictions.gt("validUpto", cal.getTime()));
+    criteria.addOrder(Order.asc("validUpto"));
+    return criteria;
   }
 }

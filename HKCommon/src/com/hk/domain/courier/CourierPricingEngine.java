@@ -78,6 +78,7 @@ public class CourierPricingEngine implements java.io.Serializable {
   @Column(name = "variable_cod_charges", precision = 5, scale = 4)
   private Double variableCodCharges;
 
+  @Column(name = "valid_upto")
   private Date validUpto;
 
   public Long getId() {
