@@ -36,6 +36,8 @@ public interface SkuItemLineItemDao extends BaseDao {
   public List<SkuItemLineItem> getSkuItemLIsTemp(SkuItem skuItem);
 
   public boolean sicliAlreadyExists(CartLineItem cartLineItem);
+  
+  //================Methods For Foreign Table=========================
 
   public ForeignSkuItemCLI getForeignSkuItemCLI(Long id);
 

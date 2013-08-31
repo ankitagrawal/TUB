@@ -149,7 +149,7 @@ public class ProductVariantResource {
         return new JSONResponseBuilder().addField("variantId", variantId).addField("warehouseId", aquaSku.getId()).build();
 
     }
-
+    
     public ProductVariantService getProductVariantService() {
         if (productVariantService == null) {
             productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
@@ -184,6 +184,4 @@ public class ProductVariantResource {
         }
         return warehouseService;
     }
-
-
 }

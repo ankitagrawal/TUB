@@ -44,6 +44,9 @@ public interface SkuItemLineItemService {
 
   public ForeignSkuItemCLI getForeignSkuItemCLI(Long id);
 
+  
+  //==========Methods For Foreign Table=============
+  
   public SkuItem getSkuItem(Long fsicliId);
 
   public List<ForeignSkuItemCLI> updateSkuItemForABJit(List<HKAPIForeignBookingResponseInfo> infos);
