@@ -41,6 +41,8 @@ public interface SkuItemLineItemDao extends BaseDao {
 
   public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem);
 
+  public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId);
+
   public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
 
 }

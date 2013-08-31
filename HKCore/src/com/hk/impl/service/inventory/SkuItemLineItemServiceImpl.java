@@ -511,6 +511,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return skuItems;
   }
 
+  public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId){
+    return getSkuItemLineItemDao().getFSICI(foreignSkuItemId);
+  }
+
+
   public SkuItemLineItem getBySkuItemId(Long skuItemId) {
     return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);
   }

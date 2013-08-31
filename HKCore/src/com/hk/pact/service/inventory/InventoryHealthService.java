@@ -30,6 +30,8 @@ public interface InventoryHealthService {
 
   public  void updateForeignSICLITable(List<HKAPIForeignBookingResponseInfo> infos);
 
+  public void freezeInventoryForAB(HKAPIForeignBookingResponseInfo info);
+
 
   public static class InventoryInfo {
     private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

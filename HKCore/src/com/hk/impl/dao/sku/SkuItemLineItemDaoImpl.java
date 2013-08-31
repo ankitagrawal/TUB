@@ -90,10 +90,15 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
   }
 
   public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem){
-    String sql = "from ForeignSkuItemCLI f where f.cartLineItem :=cartLineItem";
+    String sql = "from ForeignSkuItemCLI f where f.cartLineItem = :cartLineItem";
     return (List<ForeignSkuItemCLI>)getSession().createQuery(sql).setParameter("cartLineItem", cartLineItem).list();
   }
 
+
+  public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId){
+    String sql = "from ForeignSkuItemCLI f where f.skuItem.id = :foreignSkuItemId";
+    return (ForeignSkuItemCLI) getSession().createQuery(sql).setParameter("foreignSkuItemId", foreignSkuItemId).uniqueResult();
+  }
   public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
     SkuGroup skuGroup = new SkuGroup();
     skuGroup.setBatchNumber(batch);

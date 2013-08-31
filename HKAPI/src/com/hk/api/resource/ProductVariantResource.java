@@ -158,12 +158,16 @@ public class ProductVariantResource {
   @Path("/updateFreezedInventory/")
   @Produces("application/json")
   public String updateFreezedInventory(List<HKAPIForeignBookingResponseInfo> hKAPIForeignBookingResponseInfos) {
-    Gson gson = new Gson();
-    for(HKAPIForeignBookingResponseInfo info : hKAPIForeignBookingResponseInfos) {
-        getInventoryHealthService().updateForeignSICLITable(Arrays.asList(info));
+    boolean inventoryUpdated = false;
+    Long baseOrderId = null;
+    if (hKAPIForeignBookingResponseInfos != null && hKAPIForeignBookingResponseInfos.size() > 0) {
+      baseOrderId = hKAPIForeignBookingResponseInfos.get(0).getFboId();
+      for (HKAPIForeignBookingResponseInfo info : hKAPIForeignBookingResponseInfos) {
+        inventoryHealthService.freezeInventoryForAB(info);
+      }
+      inventoryUpdated = true;
     }
-
-
+    return new JSONResponseBuilder().addField("orderId", baseOrderId).addField("inventoryUpdated", inventoryUpdated).build();
 
   }
 
@@ -200,6 +204,14 @@ public class ProductVariantResource {
       inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
     }
     return inventoryHealthService;
+  }
+
+
+  public ProductVariantService getProductVariantService() {
+    if (productVariantService == null) {
+      productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
+    }
+    return productVariantService;
   }
 
 
