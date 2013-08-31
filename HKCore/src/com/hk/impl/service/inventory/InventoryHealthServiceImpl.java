@@ -3,6 +3,7 @@ package com.hk.impl.service.inventory;
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
@@ -13,6 +14,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
@@ -29,6 +31,7 @@ import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
@@ -63,6 +66,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   LineItemDao lineItemDao;
   @Autowired
   CartLineItemDao cartLineItemDao;
+
+  ShippingOrderService shippingOrderService;
+/*  @Autowired
+  AdminOrderService adminOrderService;*/
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
@@ -726,6 +733,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
     InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
+    List<ShippingOrder> lifeCycleActivityLoggedForSO = new ArrayList<ShippingOrder>();
     for (CartLineItem cartLineItem : cartLineItems) {
       if (lineItemDao.getLineItem(cartLineItem) != null) {
 
@@ -756,6 +764,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           if (siliToBeCreated) {
             logger.debug("calling createNewSkuItemLineItem from InventoryHealthServiceImpl");
             skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
+            ShippingOrder shippingOrder = lineItemDao.getLineItem(cartLineItem).getShippingOrder();
+            if(!lifeCycleActivityLoggedForSO.contains(shippingOrder)){
+              getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Sku Items booked after check in of: "+cartLineItem.getProductVariant().getId());
+              lifeCycleActivityLoggedForSO.add(shippingOrder);
+            }
           }
           maxQty = maxQty - qtyToBeSet;
         }
@@ -773,5 +786,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     this.baseDao = baseDao;
   }
 
+  public ShippingOrderService getShippingOrderService() {
+    return ServiceLocatorFactory.getService(ShippingOrderService.class);
+  }
 
+/*  public AdminOrderService getAdminOrderService() {
+    return adminOrderService;
+  }*/
 }

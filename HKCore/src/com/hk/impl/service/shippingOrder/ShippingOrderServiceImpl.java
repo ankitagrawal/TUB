@@ -275,7 +275,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 	}
 
     
-	public void validateShippingOrder(ShippingOrder shippingOrder) {
+	public Boolean validateShippingOrder(ShippingOrder shippingOrder) {
+    if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()){
+      return false;
+    }
+
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
 		for (LineItem lineItem : lineItems) {
 			List<Sku> skuList = new ArrayList<Sku>();
@@ -393,6 +397,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
 			}
 		}
+    return true;
 	}
 	
     public UserService getUserService() {
