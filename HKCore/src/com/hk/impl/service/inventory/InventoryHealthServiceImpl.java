@@ -1074,10 +1074,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   public void freezeInventoryForAB(HKAPIForeignBookingResponseInfo info) {
     ForeignSkuItemCLI existingFscli = getBaseDao().get(ForeignSkuItemCLI.class, info.getFsiCLIId());
     SkuItem existingSkuItem = skuItemLineItemService.getSkuItem(existingFscli.getId());
-    SkuItemCLI existingSkuItemCLI = skuItemLineItemDao.getSkuItemCLI(existingSkuItem);
-    SkuItemLineItem existingSkuItemLI = existingSkuItemCLI.getSkuItemLineItems().get(0);
+
     updateForeignSICLITable(Arrays.asList(info));
-//     skuItemLineItemService.validateSkuItemAndGroup(info);
     Sku existingSku = existingSkuItem.getSkuGroup().getSku();
     Long actualSkuItemId = info.getFsiId();
     Long actualSkuGroupId = info.getFsgId();
