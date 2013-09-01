@@ -61,8 +61,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     UserService userService;
     @Autowired
     AdminEmailManager adminEmailManager;
-    @Autowired
-    ShipmentCostDistributor shipmentCostDistributor;
+
 
     public Shipment validateShipment(ShippingOrder shippingOrder) {
         Shipment validShipment = null;
@@ -134,6 +133,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                 shipment.setShipmentCostCalculateDate(new Date());
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                ShipmentCostDistributor shipmentCostDistributor = new ShipmentCostDistributor();
                 shipmentCostDistributor.distributeShippingCost(shippingOrder);
             }
             shippingOrder = shippingOrderService.save(shippingOrder);

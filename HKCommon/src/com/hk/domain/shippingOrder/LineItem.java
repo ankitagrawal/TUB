@@ -6,7 +6,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.hk.domain.queue.ActionItem;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.warehouse.WHReportLineItem;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -89,6 +91,10 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
     private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
+
+    @JsonSkip
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
+    private WHReportLineItem whReportLineItem;
 
     public Long getId() {
         return this.id;
@@ -330,4 +336,11 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
         this.createDate = createDate;
     }
 
+    public WHReportLineItem getWhReportLineItem() {
+        return whReportLineItem;
+    }
+
+    public void setWhReportLineItem(WHReportLineItem whReportLineItem) {
+        this.whReportLineItem = whReportLineItem;
+    }
 }
