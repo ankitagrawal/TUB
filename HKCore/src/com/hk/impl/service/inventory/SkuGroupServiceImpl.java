@@ -13,6 +13,7 @@ import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
 
@@ -45,7 +46,7 @@ public class SkuGroupServiceImpl implements SkuGroupService {
   SkuItemLineItemService skuItemLineItemService;
   @Autowired
   SkuItemLineItemDao skuItemLineItemDao;
-  @Autowired
+  
   private ShippingOrderProcessor shippingOrderProcessor;
   
 
@@ -190,8 +191,15 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 				}
 			}
 			if (escalable) {
-				shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
+				getShippingOrderProcessor().manualEscalateShippingOrder(shippingOrder);
 			}
 		}
 	}
+  
+  public ShippingOrderProcessor getShippingOrderProcessor() {
+    if (shippingOrderProcessor == null) {
+    	shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+    }
+    return shippingOrderProcessor;
+}
 }

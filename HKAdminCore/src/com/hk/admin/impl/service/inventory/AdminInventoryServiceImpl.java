@@ -6,7 +6,6 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
-import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemOwner;
@@ -36,6 +35,7 @@ import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
+import com.hk.service.ServiceLocatorFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -82,7 +82,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
   private SkuGroupService skuGroupService;
   @Autowired
   private SkuItemDao skuItemDao;
-  @Autowired
+  
   private ShippingOrderProcessor shippingOrderProcessor;
 
   @Override
@@ -638,7 +638,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 				}
 				if (isEscalable) {
 					escalatedShippingOrders.add(shippingOrder);
-					shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
+					getShippingOrderProcessor().manualEscalateShippingOrder(shippingOrder);
 					++count;
 				}
 			}
@@ -646,5 +646,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 		return escalatedShippingOrders;
 	}
 	
+	public ShippingOrderProcessor getShippingOrderProcessor() {
+    if (shippingOrderProcessor == null) {
+    	shippingOrderProcessor = ServiceLocatorFactory.getService(ShippingOrderProcessor.class);
+    }
+    return shippingOrderProcessor;
+}
 	
 }

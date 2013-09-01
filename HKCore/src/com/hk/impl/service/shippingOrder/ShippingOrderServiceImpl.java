@@ -69,11 +69,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     @Autowired
     private ReplacementOrderDao        replacementOrderDao;
     @Autowired
-	private EmailManager        emailManager;
+    private EmailManager        emailManager;
     @Autowired
     BucketService bucketService;
     private OrderService               orderService;
-	private ShipmentService 				shipmentService;
+    private ShipmentService 				shipmentService;
     @Autowired
     private RewardPointService rewardPointService;
     @Autowired
