@@ -70,7 +70,7 @@
         '<input type="text" name="courierPricingEngineList[' + nextIndex + '].variableCodCharges" class="variableCodCharges" />' +
         '</td>' +
         '<td>' +
-        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto" />' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto" title="dd/MM/yyyy"/>' +
         '</td>' +
         '</tr>';
 
@@ -222,7 +222,7 @@
                                     </td>
 
                                     <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" class="validUpto" style="width:90px;"/>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${hk:formatDateUI(courierPricingEngine.validUpto)}" class="validUpto" style="width:90px;"/>
                                     </td>
                                 </tr>
 
