@@ -67,7 +67,15 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_AUTO_PO_CREATED(1003l, "PO for SO created Automatically"),
   SO_PO_RECEIVED(1004l, "PO for SO Received"),
   SO_ITEM_RV_SUBTRACT(1100l, "Item Replaced with another one, when original was RVed"),
-  Reconciliation(1050l,"Reconciliation")
+  RewardPointOrderCancel(1005L,"Reward Point given on order cancellation"),
+  AmountRefundedOrderCancel(1006L,"Amount Refunded on order cancellation"),
+  RefundAmountFailed(1007L,"Refund Process on cancellation failed, Please contact tech support"),
+  RefundAmountExceedsFailed(1008L,"Amount exceeds the refundable amount"),
+  RewardPointsRevertBack(1009L,"Reward Points given back to user in SO cancellation"),
+  RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
+  SO_CancelledInventoryMismatch(1020L, "SO  Cancelled due to inventory mismatch"),
+  Reconciliation(1050l,"Reconciliation"),
+  SO_COULD_NOT_BE_CANCELLED_AUTO(1060l,"SO could not be cancelled automatically.")
   ;
 
   private String name;
