@@ -104,7 +104,7 @@
               </c:forEach>
             </td>
             <td><c:forEach items="${skus}" var="sku">${sku.warehouse.city}:${sku.cutOffInventory}<br></c:forEach></td>
-            <td>${hk:bookedQty(lowInventory.productVariant)}</td>
+            <td>${hk:bookedQty(lowInventory.productVariant, null)}</td>
             <td>${hk:netInventory(lowInventory.productVariant)}</td>
             <td>LI:${lowInventory.outOfStock}<br>PV:${lowInventory.productVariant.outOfStock}</td>
             <td>${lowInventory.productVariant.deleted}</td>

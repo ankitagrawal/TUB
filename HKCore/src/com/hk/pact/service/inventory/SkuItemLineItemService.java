@@ -31,7 +31,9 @@ public interface SkuItemLineItemService {
     public List<SkuItemLineItem> getSkuItemLineItemForLineItem(LineItem lineItem);
 
     public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder);
-    
+
+    public Boolean freeInventoryForRTOCheckIn(ShippingOrder shippingORder);
+
     public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
     
     public Boolean freeBookingTable(ShippingOrder shippingOrder);

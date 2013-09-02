@@ -38,7 +38,18 @@ public enum EnumClassification {
     ProductDamaged(540L, "Product Damaged", "Reverse Pickup Product Damaged "),
     ProductExpired(550L, "Product Expired", "Reverse Pickup Product Expired "),
     WrongColor(560L, "Wrong Color", "Reverse Pickup Wrong Color"),
-    WrongSize(570L, "Wrong Size", "Reverse Pickup Wrong Size");
+
+    CUSTOMER_REQUEST_PRODUCT_CHANGE(610L, "Customer Request", "Product Change"),
+    CUSTOMER_REQUEST_CANCEL(620L, "Customer Request", "Cancellation"),
+    CUSTOMER_REQUEST_ON_HOLD(630L, "Customer Request", "Put on Hold"),
+    PRODUCT_NOT_AVAILABLE_DAMAGE(640L, "Product Not Available", "Damaged"),
+    PRODUCT_NOT_AVAILABLE_EXPIRE(650L, "Product Not Available", "Expired"),
+    PRODUCT_NOT_AVAILABLE_INV_MISMATCH(660L, "Product Not Available", "Inventory Mismatch"),
+    MRP_MISMATCH_CHEAPER(670L, "Mrp Mismatch", "Invoice MRP > Product MRP"),
+    MRP_MISMATCH_DEARER(680L, "Mrp Mismatch", "Invoice MRP < 50% Product MRP && Diff > 1000"),
+    DISPATCH_ISSUE_COURIER_CHANGE(690L, "Dispatch Issue", "Courier service changed"),
+    INV_PRESENT_DIFF_WAREHOUSE(1560L, "SO Not cancelled automatically", "Inventory found in other warehouse"),
+    JIT_IN_SO(1570L, "SO Not cancelled automatically", "No inventory only for JIT items");
 
     private Long id;
     private String primary;
