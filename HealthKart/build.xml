@@ -297,7 +297,8 @@
 
 		<!-- compresses each JavaScript and CSS file -->
 		<!-- and saved as {original_name}-min.{extension} -->
-		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/view/static/js" todir="${temp.dir}"/>
+		<echo>${project.web.dir}/${project.minify.css.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.js.path}" todir="${temp.dir}"/>
 
 	</target>
 
@@ -305,7 +306,8 @@
 
 		<!-- compresses each JavaScript and CSS file -->
 		<!-- and saved as {original_name}-min.{extension} -->
-		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/view/static/css" todir="${temp.dir}" />
+		<echo>${project.web.dir}/${project.minify.css.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.css.path}" todir="${temp.dir}" />
 
 	</target>
 
