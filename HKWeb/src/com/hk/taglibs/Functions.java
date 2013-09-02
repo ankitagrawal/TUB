@@ -76,7 +76,6 @@ import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
-import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -296,7 +295,7 @@ public class Functions {
     }
 
     public static Long netAvailableUnbookedInventory(Object o) {
-        return netInventory(o) - bookedQty(o);
+        return netInventory(o) - bookedQty(o, null);
     }
 
     public static Long netInventory(Object o) {
@@ -323,14 +322,16 @@ public class Functions {
         }
     }
 
-    public static Long bookedQty(Object o) {
+    public static Long bookedQty(Object o, Collection c) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
         if (o instanceof Sku) {
             Sku sku = (Sku) o;
-            return adminInventoryService.getBookedInventory(sku);
+            List<Long> shippingOrderStatusIds = (List<Long>)c;
+            return adminInventoryService.getBookedInventory(sku, shippingOrderStatusIds);
         } else {
             ProductVariant productVariant = (ProductVariant) o;
-            return adminInventoryService.getBookedInventory(productVariant);
+            List<Long> shippingOrderStatusIds = (List<Long>)c;
+            return adminInventoryService.getBookedInventory(productVariant, shippingOrderStatusIds);
         }
     }
 

@@ -329,5 +329,4 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
-
 }

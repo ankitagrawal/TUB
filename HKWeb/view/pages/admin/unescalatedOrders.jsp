@@ -90,7 +90,7 @@
                 <c:if test="${lineItemTypeId_Product == lineItem.lineItemType.id}">
                   <c:if test="${orderStatusActionAwaiting == lineItem.lineItemStatus.id}">
                     <c:choose>
-                      <c:when test="${hk:bookedQty(lineItem.productVariant) <= lineItem.productVariant.netInventory}">
+                      <c:when test="${hk:bookedQty(lineItem.productVariant, null) <= lineItem.productVariant.netInventory}">
                         <tr style="border-left:5px solid green;">
                       </c:when>
                       <c:otherwise>
@@ -115,7 +115,7 @@
                           </span>
                       </c:if>
                     </td>
-                    <td>${lineItem.qty} <b>[${hk:bookedQty(lineItem.productVariant)}]</b>
+                    <td>${lineItem.qty} <b>[${hk:bookedQty(lineItem.productVariant, null)}]</b>
                       <b>(${lineItem.productVariant.netInventory})</b>
                     </td>
                     </tr>

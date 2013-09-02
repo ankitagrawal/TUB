@@ -363,9 +363,9 @@
         </description>
         <name>bookedQty</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long bookedQty(java.lang.Object)</function-signature>
+        <function-signature>java.lang.Long bookedQty(java.lang.Object, java.util.Collection)</function-signature>
         <example>
-            ${hk:bookedQty(${object})}
+            ${hk:bookedQty(${object}, ${collection)}
         </example>
     </function>
     <function>
