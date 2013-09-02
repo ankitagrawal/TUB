@@ -27,13 +27,7 @@ public interface ShippingOrderDao extends BaseDao {
 
 	public List<ShippingOrder> getShippingOrdersToSendShipmentEmail();
 
-	public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
-
-	/**
-	 * @param sku based on warehouse
-	 * @return Sum of Qty of lineitems for product variant which are not yet shipped
-	 */
-	public Long getBookedQtyOfSkuInQueue(Sku sku);
+	public Long getBookedQtyOfSkuInQueue(List<Sku> skuList, List<Long> shippingOrderStatus);
 
 	public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
