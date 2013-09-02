@@ -11,7 +11,7 @@
     String vanillaForumUrl = (String) ServiceLocatorFactory.getProperty(Keys.Env.vanillaForumUrl);
     pageContext.setAttribute("vanillaForumUrl", vanillaForumUrl);
 %>
-<s:layout-render name="/layouts/loginLayoutBeta.jsp" pageTitle="Login or Signup to HealthKart.com">
+<s:layout-render name="/layouts/loginLayoutBeta.jsp" pageTitle="Login to HealthKart.com">
     <s:layout-component name="checkoutStep">
         <div class='current_step_content'>
             <div class='right'>
