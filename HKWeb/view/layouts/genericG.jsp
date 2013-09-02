@@ -51,7 +51,7 @@
       <div class="floatfix"></div>
     </div>
 
-    <s:layout-render name="/includes/_footer.jsp"/>
+    <s:layout-render name="/includes/_footerBeta.jsp"/>
 
   </div>
 

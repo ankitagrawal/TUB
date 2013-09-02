@@ -2990,6 +2990,17 @@ label{
 }
 /**margin variation utils *ends**/
 
+/** display properties utils *starts**/
+.disp-inln{
+    display: inline-block;
+}
+
+.disp-blk{
+    display: block;
+}
+/** display properties utils *ends**/
+
+
 /** icons start**/
 .loader {
     background: url(../../images/logo/32x32.gif) no-repeat center;
@@ -3373,3 +3384,189 @@ label{
 
 /*Button utils *End*/
 
+
+/*text align variation start*/
+.txt-rgt {
+    text-align: right;
+}
+
+.txt-cntr {
+    text-align: center;
+}
+
+.txt-lft {
+    text-align: left;
+}
+
+.txt-top {
+    vertical-align: top;
+}
+
+.txt-middle {
+    vertical-align: middle;
+}
+
+.txt-small {
+    font-size: 0.9em;
+}
+
+.txt-medium {
+    font-size: 1.4em;
+}
+
+.txt-large {
+    font-size: 1.8em;
+}
+
+.txt-light {
+    color: #999;
+    font-size: 0.9em;
+}
+
+.txt-blue {
+    color: #0091d7;
+}
+
+/*text align variation ends*/
+
+/*font variation start*/
+.fnt-light {
+    color: #757171;
+}
+
+.fnt-sz9 {
+    font-size: 0.8em;
+}
+
+.fnt-sz10 {
+    font-size: 0.9em;
+}
+
+.fnt-sz12 {
+    font-size: 1em;
+}
+
+.fnt-sz13 {
+    font-size: 1.1em
+}
+
+.fnt-sz14 {
+    font-size: 1.2em
+}
+
+.fnt-sz16 {
+    font-size: 1.4em
+}
+
+.fnt-sz20 {
+    font-size: 1.8em
+}
+
+.fnt-sz22 {
+    font-size: 2em
+}
+
+.fnt-bold {
+    font-weight: 600;
+}
+
+.fnt-bolder {
+    font-weight: 700;
+}
+
+.fnt-caps {
+    text-transform: uppercase;
+    /*font-family: "OpenSansSB" !important;*/
+}
+
+/*font variation ends*/
+
+/* footer css begins */
+#footer {
+
+    /*margin: 50px 0 20px 0;*/
+}
+
+#footer .container {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+#footer .ftr-main-txt {
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.ftr-link-cntnr {
+    margin: 30px 0;
+
+}
+
+
+#footer .ftr-link-cntnr .footer-menu{
+    margin-left: 20px;
+    width: 160px;
+    float: left;
+    min-height: 1px;
+}
+
+
+#footer .ftr-link-cntnr ul {
+    list-style: none;
+    font-size: 0.9em;
+    text-transform: capitalize;
+    padding: 0px;
+    margin: 0px;
+}
+
+#footer .ftr-link-cntnr h4 {
+    margin-bottom: 2px;
+    color: #0091d7;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.subscibe-mail-cntnr {
+    text-align: right;
+    float: right;
+
+}
+
+.subscibe-mail-cntnr .label-txt {
+    text-align: left;
+    margin-left: 30px;
+    font-size: 0.9em;
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+.subscibe-mail-cntnr input[type="text"] {
+    width: 150px;
+    margin: 0;
+}
+
+.subscibe-mail-cntnr input[type="submit"] {
+    display: inline-block;
+}
+
+.about-hk {
+    border-bottom: 1px solid #ccc;
+    font-size: 0.8em;
+    text-align: left;
+}
+
+/*footer css ends*/
+
+/**Container css *begins**/
+
+.cont-lft {
+    float: left;
+}
+
+.cont-rht {
+    float: right;
+}
+
+/**Container css *ends**/
