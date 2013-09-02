@@ -57,6 +57,7 @@
                                 <th>Min COD Charge</th>
                                 <th>COD Cutoff Amount</th>
                                 <th>Variable COD Charges</th>
+                                <th>Valid till</th>
                             </tr>
                             </thead>
 
@@ -122,6 +123,9 @@
                                         <input type="text" name="courierPricingEngineList[${ctr.index}].variableCodCharges" value="${courierPricingEngine.variableCodCharges}" />
                                     </td>
 
+                                    <td>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" />
+                                    </td>
                                 </tr>
 
                             </c:forEach>

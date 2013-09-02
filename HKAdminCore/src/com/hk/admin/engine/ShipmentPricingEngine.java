@@ -116,7 +116,7 @@ public class ShipmentPricingEngine {
     }
 
 
-    public Double calculateReconciliationCost(ShippingOrder shippingOrder){
+  public Double calculateReconciliationCost(ShippingOrder shippingOrder){
     Shipment shipment = shippingOrder.getShipment();
     Order order = shippingOrder.getBaseOrder();
     Courier courier = shipment.getAwb().getCourier();
@@ -129,11 +129,15 @@ public class ShipmentPricingEngine {
       logger.info("Courier is null for BO order " + order.getId());
       return null;
     }
-      CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
-      if (courierPricingInfo == null) {
-          return null;
-      }
-      return calculateReconciliationCost(courierPricingInfo, shippingOrder);
+
+    if (EnumCourier.HK_Delivery.getId().equals(courier.getId()))
+      return this.calculateReconcillationCostHKReach(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
+
+    CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+    if (courierPricingInfo == null) {
+      return null;
+    }
+    return calculateReconciliationCost(courierPricingInfo, shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
   }
 
     public Double calculatePackagingCost(ShippingOrder shippingOrder) {
@@ -142,9 +146,6 @@ public class ShipmentPricingEngine {
     return enumBoxSize != null && enumBoxSize.getId() != -1 ? enumBoxSize.getPackagingCost() : 15.5D;
   }
 
-  public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, ShippingOrder shippingOrder) {
-    return calculateReconciliationCost(courierPricingEngine, shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
-  }
 
   public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, Payment payment, Double amount) {
     Double reconciliationCharges = 0D;
@@ -166,14 +167,26 @@ public class ShipmentPricingEngine {
 
   public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, Double amount, Boolean cod) {
     Double reconciliationCharges = 0D;
-    if (cod) {
-      reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
-      reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
-    } else {
-      reconciliationCharges = amount * 0.022;
+    if (courierPricingEngine != null) {
+      if (cod) {
+        reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount()
+            ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
+        reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
+      } else {
+        reconciliationCharges = amount * 0.022;
+      }
     }
     return reconciliationCharges;
   }
 
-
+  private Double calculateReconcillationCostHKReach(Payment payment, Double amount) {
+    Double reconciliationCharges = 0d;
+    GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),
+        payment.getGateway(), null);
+    if (gatewayIssuerMapping != null) {
+      reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
+      reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
+    }
+    return reconciliationCharges;
+  }
 }
