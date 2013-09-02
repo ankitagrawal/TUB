@@ -93,6 +93,8 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
                       if(hkReachPricingEngine != null){
                           totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
                       }
+                  } else {
+                    totalCost = 0d;
                   }
               } else {
                   CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
