@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.shipment;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.engine.ShipmentCostDistributor;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;

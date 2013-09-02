@@ -6,6 +6,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.WHReportLineItem;
 import com.hk.pact.service.shippingOrder.ShipmentService;
+import com.hk.service.ServiceLocatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,7 @@ import java.util.Map;
 
 public class ShipmentCostDistributor {
 
-    /*@Autowired
-    ShipmentService shipmentService;*/
-
-    public void distributeShippingCost(ShippingOrder shippingOrder) {
+    public static void distributeShippingCost(ShippingOrder shippingOrder) {
 
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
@@ -53,7 +51,7 @@ public class ShipmentCostDistributor {
                     Double skuWeight = lineItem.getSku().getProductVariant().getWeight();
                     skuWeight = skuWeight == null || skuWeight == 0D ? 0D : skuWeight;
                     lineItemPrice = lineItem.getHkPrice();
-                    if (flag == false) {
+                    if (!flag) {
                         estLineItemShipmentCost = ((skuWeight * lineItem.getQty()) / totalWt) * totalShipmentCharge;
                     } else {
                         estLineItemShipmentCost = ((lineItemPrice * lineItem.getQty()) / totalPrice) * totalShipmentCharge;
@@ -69,7 +67,7 @@ public class ShipmentCostDistributor {
                     whReportLineItem.setEstmShipmentCharge(estLineItemShipmentCost);
                     whReportLineItem.setEstmCollectionCharge(estLineItemReconCost);
                     whReportLineItem.setExtraCharge(estLineItemPackingCost);
-                    ShipmentService shipmentService = new ShipmentServiceImpl();
+                    ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
                     shipmentService.save(whReportLineItem);
                 }
             }

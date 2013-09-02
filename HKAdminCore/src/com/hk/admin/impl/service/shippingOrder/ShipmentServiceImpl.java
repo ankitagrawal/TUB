@@ -133,8 +133,6 @@ public class ShipmentServiceImpl implements ShipmentService {
                 shipment.setShipmentCostCalculateDate(new Date());
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-                ShipmentCostDistributor shipmentCostDistributor = new ShipmentCostDistributor();
-                shipmentCostDistributor.distributeShippingCost(shippingOrder);
             }
             shippingOrder = shippingOrderService.save(shippingOrder);
             String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();

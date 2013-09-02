@@ -3,6 +3,7 @@ package com.hk.admin.engine;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,7 @@ public class ShipmentPricingEngine {
         if(courierPricingInfo == null)   {
             return null;
         }
+        ShipmentCostDistributor.distributeShippingCost(shippingOrder);
         return calculateShipmentCost(courierPricingInfo, weight);
     }
 

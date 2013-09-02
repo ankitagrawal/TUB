@@ -226,6 +226,5 @@
         <mapping class="com.hk.domain.sku.SkuItemLineItem"/>
         <mapping class="com.hk.domain.sku.SkuItemCLI"/>
         <mapping class="com.hk.domain.sku.SkuItemOwner"/>
-        <mapping class="com.hk.domain.warehouse.WHReportLineItem"/>
     </session-factory>
 </hibernate-configuration>
