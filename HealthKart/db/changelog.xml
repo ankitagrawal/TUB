@@ -14091,5 +14091,11 @@
     <changeSet author="Ankit Chhabra (generated)" id="1377797848313-3">
         <addForeignKeyConstraint baseColumnNames="nearest_hub_id" baseTableName="pincode" constraintName="fk_nearest_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
     </changeSet>
-
+    <changeSet author="Ankit Chabra (generated)" id="1378101837752-1">
+        <addColumn tableName="courier_pricing_engine">
+            <column defaultValue="CURRENT_TIMESTAMP" name="valid_upto" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
