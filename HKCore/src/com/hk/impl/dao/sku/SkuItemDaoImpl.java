@@ -6,6 +6,7 @@ import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.*;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.dto.pos.PosProductSearchDto;
 import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -301,4 +302,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     return (Long) query.list().get(0);
   }
 
+
+ public List<ProductVariantInventory> getPVIInfo(String barcode) {
+    String sql = "select si from SkuItem si where si.barcode = :barcode";
+    Query query = getSession().createQuery(sql).setParameter("barcode", barcode);
+    SkuItem skuItem = (SkuItem) query.uniqueResult();
+    if (skuItem != null) {
+      String sql2 = "select pvi from ProductVariantInventory pvi where pvi.skuItem=:skuItem";
+      Query query2 = getSession().createQuery(sql2).setParameter("skuItem", skuItem);
+      return query2.list();
+    }
+    return null;
+  }
 }

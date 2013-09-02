@@ -148,9 +148,9 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
           case CustomerReturn:
             invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CUSTOMER_RETURN);
             break;
-          case PharmaReturn:
+          /*case PharmaReturn:
             invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_PHARMA_RETURN);
-            break;
+            break;*/
           case AddFreeVariant:
             invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_FREE_VARIANT_RECONCILE);
             break;
@@ -267,10 +267,10 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_BATCH_MISMATCH);
         skuItemStatus = EnumSkuItemStatus.BatchMismatch.getSkuItemStatus();
         break;
-      case MrpMismatch:
+      /*case MrpMismatch:
         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_MRP_MISMATCH);
         skuItemStatus = EnumSkuItemStatus.MrpMismatch.getSkuItemStatus();
-        break;
+        break;*/
       case NonMoving:
         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_NON_MOVING);
         skuItemStatus = EnumSkuItemStatus.NonMoving.getSkuItemStatus();
@@ -282,6 +282,10 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
       case SubtractIncorrectCounting:
         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_INCORRECT_COUNTING);
         skuItemStatus = EnumSkuItemStatus.IncorrectCounting.getSkuItemStatus();
+        break;
+      case DamagedLogistics:
+        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_DAMAGE_LOGISTICS);
+        skuItemStatus = EnumSkuItemStatus.Damaged.getSkuItemStatus();
         break;
     }
 
@@ -388,12 +392,13 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 				// to be deleted. SO moved back to action awaiting.
 				baseDao.delete(skuItemLineItem);
 				baseDao.delete(cli);
-				item.getShippingOrder().setReason(EnumReason.InsufficientUnbookedInventory.asReason());
-				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder());
+				item.getShippingOrder().setReason(EnumReason.PROD_INV_MISMATCH.asReason());
 				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
-						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(), EnumReason.InsufficientUnbookedInventory.asReason(),
+						EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue.asShippingOrderLifecycleActivity(),
+            EnumReason.PROD_INV_MISMATCH.asReason(),
 						"The already booked unit has been freed for RV subtract and no spare unit could be found for variant:- "
 								+ item.getSku().getProductVariant() + ". Moving back to Action Queue");
+				adminShippingOrderService.moveShippingOrderBackToActionQueue(item.getShippingOrder(),true);
 				logger.debug("could not get a sibling to set on the entries in the booking table against SkuItem:- " + skuItem.getId()
 						+ " deleted the entries from the booking table.");
 			}
