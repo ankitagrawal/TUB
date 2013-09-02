@@ -242,18 +242,6 @@
     </function>
     <function>
         <description>
-            Formats the date to the format better suited to UI so that stripes can read it
-        </description>
-        <name>formatDateUI</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String formatDateUI(java.util.Date)</function-signature>
-        <example>
-            ${hk:formatDateUI(${value})}
-        </example>
-    </function>
-
-    <function>
-        <description>
             Prints date in a perios format like x days, y hours ago.
         </description>
         <name>timeAgo</name>

@@ -20,15 +20,12 @@
 
         var nextIndex = eval(lastIndex + "+1");
         var newRowHtml =
-        '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
+        '<tr count="' + nextIndex + '" class="lastRow cpeRow">' +
         '<td>' + Math.round(nextIndex + 1) + '.</td>' +
-        '<td>' +
-        '<select name="courierPricingEngineList[' + nextIndex + '].courier" class="courier">' +
-        '<option value="">--Select--</option>' +
-         <c:forEach items="${cpea.courierList}" var="courier">
-        '<option value="' + ${courier.id} + '"> ' + "${courier.name}" + '</option>' +
-         </c:forEach>
-        '</select>' +
+        '<td>' + '${cpea.courier.name}' +
+        '<input type="hidden" name="courierPricingEngineList[' + nextIndex + '].courier" class="courier"' 
+        +	'value="${courierPricingEngineList[0].courier.id}"' +
+        '</input>' +
         '</td>' +
         '<td>' +
         '<select name="courierPricingEngineList[' + nextIndex + '].regionType" class="regionType">' +
@@ -70,7 +67,7 @@
         '<input type="text" name="courierPricingEngineList[' + nextIndex + '].variableCodCharges" class="variableCodCharges" />' +
         '</td>' +
         '<td>' +
-        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto" title="dd/MM/yyyy"/>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto" style="width:90px;" title="dd/MM/yyyy"/>' +
         '</td>' +
         '</tr>';
 
@@ -78,26 +75,28 @@
         return false;
         });
 
-        $('#save').click(function() {
-            var courier = $('.courier').val();
-            var regionType = $('.regionType').val();
-            var firstBaseWt = $('.firstBaseWt').val();
-            var firstBaseCost = $('.firstBaseCost').val();
-            var secondBaseWt = $('.secondBaseWt').val();
-            var secondBaseCost = $('.secondBaseCost').val();
-            var additionalWt = $('.additionalWt').val();
-            var additionalCost = $('.additionalCost').val();
-            var fuelSurcharge = $('.fuelSurcharge').val();
-            var minCodCharges = $('.minCodCharges').val();
-            var codCutoffAmount = $('.codCutoffAmount').val();
-            var variableCodCharges = $('.variableCodCharges').val();
-            var validUpto = $('.validUpto').val();
+        $('#save').click(function(){
+        	$.each($('.cpeRow'), function() {
+        	var currentRow = $(this);
+            var courier = currentRow.find('.courier').val();
+            var regionType = currentRow.find('.regionType').val();
+            var firstBaseWt = currentRow.find('.firstBaseWt').val();
+            var firstBaseCost = currentRow.find('.firstBaseCost').val();
+            var secondBaseWt = currentRow.find('.secondBaseWt').val();
+            var secondBaseCost = currentRow.find('.secondBaseCost').val();
+            var additionalWt = currentRow.find('.additionalWt').val();
+            var additionalCost = currentRow.find('.additionalCost').val();
+            var fuelSurcharge = currentRow.find('.fuelSurcharge').val();
+            var minCodCharges = currentRow.find('.minCodCharges').val();
+            var codCutoffAmount = currentRow.find('.codCutoffAmount').val();
+            var variableCodCharges = currentRow.find('.variableCodCharges').val();
+            var validUpto = currentRow.find('.validUpto').val();
             if(courier == "" || regionType == "" || firstBaseWt == "" || firstBaseCost == "" || secondBaseWt == "" || secondBaseCost == "" || additionalWt == "" ||
                    additionalCost == "" || fuelSurcharge == "" || minCodCharges == "" || codCutoffAmount == "" || variableCodCharges == "" || validUpto == "") {
                 alert("All fields are compulsory");
                 return false;
             }
-
+        });
         });
 
         });
@@ -162,7 +161,7 @@
 
                         <tbody>
                             <c:forEach items="${cpea.courierPricingEngineList}" var="courierPricingEngine" varStatus="ctr">
-                                <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+                                <tr count="${ctr.index}" class="${ctr.last ? 'lastRow cpeRow':'cpeRow'}">
                                     <td>
                                         ${ctr.index+1}.
                                         <input type="hidden" name="courierPricingEngineList[${ctr.index}].id" value="${courierPricingEngine.id}" />
@@ -172,7 +171,7 @@
 
                                     <td>
                                         ${courierPricingEngine.courier.name}
-                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].courier" value="${courierPricingEngine.courier.id}" />
+                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].courier" value="${courierPricingEngine.courier.id}" class ="courier" />
                                     </td>
 
                                     <td>
@@ -222,7 +221,7 @@
                                     </td>
 
                                     <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${hk:formatDateUI(courierPricingEngine.validUpto)}" class="validUpto" style="width:90px;"/>
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" class="validUpto" style="width:90px;"/>
                                     </td>
                                 </tr>
 

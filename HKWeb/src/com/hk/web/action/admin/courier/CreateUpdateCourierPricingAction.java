@@ -40,6 +40,9 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   }
 
   private void initialize() {
+	if (courier!=null) {
+	  courierName = courier.getName();
+	}
     courierList = courierPricingEngineService.getAvailableCouriers();
     regionTypeList = courierPricingEngineService.getRegionTypeList();
   }
