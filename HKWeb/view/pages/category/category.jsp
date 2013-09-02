@@ -12,14 +12,20 @@
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="java.util.List" %>
+<%@ page import="org.joda.time.DateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="java.util.Date" %>
 <%@ include file="/layouts/_userData.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CategoryAction" var="categoryBean" event="pre"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
-
+<%
+    DateTime dateTime = new DateTime();
+    Date startOfOfferDate = new Date(new DateTime(2013, 8, 15, 00, 00, 00, 00).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2012, 9, 15, 23, 59, 59, 59).getMillis());
+%>
 <c:if test="${categoryBean.category.name == 'services'}">
     <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
     <%
@@ -216,6 +222,9 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq personalCare}">
+                <%
+                if(dateTime.isAfter(startOfOfferDate.getTime()) && dateTime.isBefore(endOfOfferDate.getTime())){
+                %>
                 <a href="${pageContext.request.contextPath}/personal-care/misc/mosquito-repellents">
                 <img src="<hk:vhostImage/>/images/banners/mosquito-repellents.jpg" alt="14 Days Return Policy"
                      class="small_banner"/>
@@ -224,6 +233,21 @@
                     <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"
                          class="small_banner"/>
                 </a>
+                <%
+                    }    else{  %>
+
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
+                         class="small_banner"/>
+                </a>
+                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
+                    <img src="<hk:vhostImage/>/images/banners/product-of-the-week-omron-BP2.jpg" alt="Omron"
+                         class="small_banner"/>
+                </a>
+
+                <%
+                }
+                %>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthDevices}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
