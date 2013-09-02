@@ -30,7 +30,6 @@ public class HKCatalogUserResource {
     if (userApiBaseResponse == null) {
       userApiBaseResponse = new UserApiBaseResponse();
       userApiBaseResponse.setException(true);
-      userApiBaseResponse.setId(null);
       userApiBaseResponse.setMessage("There came an Error, please try again");
     }
     return new JSONResponseBuilder().addField("userResponse", userApiBaseResponse).build();

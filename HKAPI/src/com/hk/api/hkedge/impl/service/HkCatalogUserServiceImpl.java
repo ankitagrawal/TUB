@@ -42,7 +42,6 @@ public class HkCatalogUserServiceImpl implements HkCatalogUserService {
       return userApiBaseResponse;
     } else {
       userApiBaseResponse.setMessage("No Logged-in User");
-      userApiBaseResponse.setId(null);
       userApiBaseResponse.setException(false);
     }
     return userApiBaseResponse;
@@ -105,9 +104,6 @@ public class HkCatalogUserServiceImpl implements HkCatalogUserService {
       userApiResponse.setPermissions(permissions);
     } else {
       userApiResponse.setException(false);
-      userApiResponse.setId(null);
-      userApiResponse.setName(null);
-      userApiResponse.setRoles(null);
       userApiResponse.setMessage("User doesn't Exist");
     }
     return userApiResponse;
