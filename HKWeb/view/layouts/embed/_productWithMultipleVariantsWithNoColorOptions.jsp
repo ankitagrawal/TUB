@@ -94,7 +94,15 @@
 					  </c:if>
                     </c:forEach>
 	                <span>&nbsp;</span>
+                    <c:set var="freebie" value="${hk:showFreebieForVariant(variant)}"/>
+                    <c:if test="${freebie != null}">
+                        <div class="freebie-cntnr with-variants">
+                            <div class="cntr-align" >${freebie.name} FREE</div>
+                        </div>
+                    </c:if>
                 </div>
+
+
                 <c:if test="${variant.discountPercent > 0}">
                     <div class='prices'>
                         <div class='cut'>

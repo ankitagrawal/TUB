@@ -1,5 +1,6 @@
 package com.hk.impl.service.catalog.combo;
 
+import com.hk.cache.ProductCache;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
@@ -50,7 +51,15 @@ public class ComboServiceImpl implements ComboService {
     }
   }
 
-  public ComboDao getComboDao() {
+    @Override
+    public void recacheFreebieProducts(ProductVariant productVariant) {
+        List<Product> products = productService.getProductListWithFreebie(productVariant);
+        for (Product product : products) {
+            ProductCache.getInstance().refreshCache(product);
+        }
+    }
+
+    public ComboDao getComboDao() {
     return comboDao;
   }
 

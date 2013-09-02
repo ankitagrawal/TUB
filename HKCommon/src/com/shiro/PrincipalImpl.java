@@ -4,80 +4,82 @@ import com.akube.framework.shiro.Principal;
 import com.hk.domain.user.User;
 
 /**
- * Author: Kani
- * Date: Sep 16, 2008
+ * Author: Kani Date: Sep 16, 2008
  */
 public class PrincipalImpl implements Principal {
-  private Long id;
-  private String name;
-  private String email;
-  private String userHash;
 
-  private Long assumedId;
-  private String assumedName;
-  private String assumedEmail;
-  private String assumedUserHash;
+    static final long serialVersionUID = 999L;
 
-  private boolean isAssumed = false;
+    private Long      id;
+    private String    name;
+    private String    email;
+    private String    userHash;
 
-  public PrincipalImpl(User user) {
-    id = user.getId();
-    name = user.getName();
-    email = user.getEmail();
-    userHash = user.getUserHash();
-  }
+    private Long      assumedId;
+    private String    assumedName;
+    private String    assumedEmail;
+    private String    assumedUserHash;
 
-  /**
-   * Call this method to assume the identity of the passed assumedUser
-   * @param assumedUser
-   */
-  public void setAssumedIdentity(User assumedUser) {
-    this.assumedId = assumedUser.getId();
-    this.assumedName = assumedUser.getName();
-    this.assumedEmail = assumedUser.getEmail();
-    this.assumedUserHash = assumedUser.getUserHash();
-    this.isAssumed = true;
-  }
+    private boolean   isAssumed        = false;
 
-  public void clearAssumedIdentity() {
-    this.assumedId = null;
-    this.assumedName = null;
-    this.assumedEmail = null;
-    this.assumedUserHash = null;
-    isAssumed = false;
-  }
+    public PrincipalImpl(User user) {
+        id = user.getId();
+        name = user.getName();
+        email = user.getEmail();
+        userHash = user.getUserHash();
+    }
 
-  public Long getId() {
-    return assumedId == null ? id : assumedId;
-  }
+    /**
+     * Call this method to assume the identity of the passed assumedUser
+     * 
+     * @param assumedUser
+     */
+    public void setAssumedIdentity(User assumedUser) {
+        this.assumedId = assumedUser.getId();
+        this.assumedName = assumedUser.getName();
+        this.assumedEmail = assumedUser.getEmail();
+        this.assumedUserHash = assumedUser.getUserHash();
+        this.isAssumed = true;
+    }
 
-  public String getName() {
-    return assumedName == null ? name : assumedName;
-  }
-  
-  public String getFirstName() {
-    return assumedName == null ? name.split(" ")[0] : assumedName.split(" ")[0];
-  }
+    public void clearAssumedIdentity() {
+        this.assumedId = null;
+        this.assumedName = null;
+        this.assumedEmail = null;
+        this.assumedUserHash = null;
+        isAssumed = false;
+    }
 
-  /*
-  This method is explicitly added for handling the case
-  of changing user name. so that the change can be reflected
-  whithout any delay.
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
+    public Long getId() {
+        return assumedId == null ? id : assumedId;
+    }
 
-  public String getEmail() {
-    return assumedEmail == null ? email : assumedEmail;
-  }
+    public String getName() {
+        return assumedName == null ? name : assumedName;
+    }
 
-  public String getUserHash() {
-    return assumedUserHash == null ? userHash : assumedUserHash;
-  }
+    public String getFirstName() {
+        return assumedName == null ? name.split(" ")[0] : assumedName.split(" ")[0];
+    }
 
-  public boolean isAssumed() {
-    return isAssumed;
-  }
+    /*
+     * This method is explicitly added for handling the case of changing user name. so that the change can be reflected
+     * whithout any delay.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return assumedEmail == null ? email : assumedEmail;
+    }
+
+    public String getUserHash() {
+        return assumedUserHash == null ? userHash : assumedUserHash;
+    }
+
+    public boolean isAssumed() {
+        return isAssumed;
+    }
 
 }
