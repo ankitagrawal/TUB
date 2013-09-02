@@ -44,7 +44,7 @@ public class LoginAction extends BaseAction {
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        return new ForwardResolution("/pages/login.jsp");
+        return new ForwardResolution("/pages/loginBeta.jsp");
     }
 
     public Resolution login() {

@@ -45,7 +45,7 @@ public class ForgotPasswordAction extends BaseAction implements ValidationErrorH
     @DontValidate
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/modal/forgotPassword.jsp");        
+        return new ForwardResolution("/pages/modal/forgotPasswordBeta.jsp");
     }
 
     public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
