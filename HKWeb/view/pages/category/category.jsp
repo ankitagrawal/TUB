@@ -284,6 +284,9 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq diabetes}">
+                <%
+                    if (dateTime.isAfter(startOfOfferDate.getTime()) && dateTime.isBefore(endOfOfferDate.getTime())) {
+                %>
                 <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
                     <img src="<hk:vhostImage/>/images/banners/Contour-super-saver-pack.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
@@ -292,6 +295,17 @@
                     <img src="<hk:vhostImage/>/images/banners/quanto-diab.jpg" alt="diabetes"
                          class="small_banner"/>
                 </a>
+                <%
+                } else { %>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+                     class="small_banner"/>
+                <%
+                    }
+                %>
             </c:when>
             <c:otherwise>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
