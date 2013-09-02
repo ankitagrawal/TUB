@@ -203,7 +203,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     Sku sku = skuService.getSKU(productVariant, lineItem.getShippingOrder().getWarehouse());
                     Long inventory = adminInventoryService.getNetInventory(sku);
-                    Long bookedInventory = adminInventoryService.getBookedInventory(sku);
+                    Long bookedInventory = adminInventoryService.getBookedInventory(sku, null);
                     if (bookedInventory == null) {
                         bookedInventory = 0L;
                     }
@@ -515,7 +515,7 @@ public class JitShippingOrderPOCreationServiceImpl implements JitShippingOrderPO
                 }
                 Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
                 Long inventory = adminInventoryService.getNetInventory(sku);
-                Long bookedInventory = adminInventoryService.getBookedInventory(sku);
+                Long bookedInventory = adminInventoryService.getBookedInventory(sku, null);
                 if (bookedInventory == null) {
                     bookedInventory = 0L;
                 }
