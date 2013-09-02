@@ -222,7 +222,7 @@
                                     </td>
 
                                     <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" class="validUpto" />
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" class="validUpto" style="width:90px;"/>
                                     </td>
                                 </tr>
 
