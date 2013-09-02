@@ -4,7 +4,9 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.warehouse.WHReportLineItem;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,9 @@ public class ShipmentPricingEngine {
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
 
+    @Autowired
+    ShipmentService shipmentService;
+
     public Double calculateShipmentCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
         Courier courier = shipment.getAwb().getCourier();
@@ -73,7 +78,11 @@ public class ShipmentPricingEngine {
         if(courierPricingInfo == null)   {
             return null;
         }
-        ShipmentCostDistributor.distributeShippingCost(shippingOrder);
+
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            WHReportLineItem whReportLineItem = ShipmentCostDistributor.distributeShippingCost(lineItem);
+            shipmentService.save(whReportLineItem);
+        }
         return calculateShipmentCost(courierPricingInfo, weight);
     }
 
