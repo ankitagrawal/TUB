@@ -24,7 +24,7 @@
 <%
     DateTime dateTime = new DateTime();
     Date startOfOfferDate = new Date(new DateTime(2013, 8, 15, 00, 00, 00, 00).getMillis());
-    Date endOfOfferDate = new Date(new DateTime(2012, 9, 15, 23, 59, 59, 59).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 9, 01, 00, 00, 00, 00).getMillis());
 %>
 <c:if test="${categoryBean.category.name == 'services'}">
     <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
