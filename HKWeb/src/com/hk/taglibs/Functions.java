@@ -146,6 +146,10 @@ public class Functions {
         return FormatUtils.getDefaultFormattedDate(date);
     }
 
+    public static String formatDateUI(Date date) {
+        return FormatUtils.getDateFormatUI(date);
+    }
+
     public static String timeAgo(Date date) {
         DateTime dateTime = new DateTime(date);
 
@@ -968,6 +972,7 @@ public class Functions {
         }
         return null;
     }
+
 
 
 }

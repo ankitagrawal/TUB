@@ -97,6 +97,10 @@ public class FormatUtils {
     return dateFormatForUserEnd.format(date);
   }
 
+  public static String getDateFormatUI(Date date) {
+    if (date == null) return "";
+    return new SimpleDateFormat(uiDateFormatPattern).format(date);
+  }
 
   public static void main(String[] args) {
     System.out.println(currencyFormat.format(30.0));
