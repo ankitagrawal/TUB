@@ -1,5 +1,7 @@
 package com.hk.web.action.admin.courier;
 
+import com.hk.admin.pact.service.courier.CourierPricingEngineService;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.MasterDataDao;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -26,12 +28,9 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class CreateUpdateCourierPricingAction extends BaseAction {
+
   @Autowired
-  CourierPricingEngineDao courierPricingEngineDao;
-  @Autowired
-  BaseDao baseDao;
-  @Autowired
-  MasterDataDao masterDataDao;
+  CourierPricingEngineService courierPricingEngineService;
 
   private Courier courier;
   private RegionType regionType;
@@ -45,15 +44,15 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   }
 
   private void param() {
-    courierList = masterDataDao.getAvailableCouriers();
-    regionTypeList = masterDataDao.getRegionTypeList();
+    courierList = courierPricingEngineService.getAvailableCouriers();
+    regionTypeList = courierPricingEngineService.getRegionTypeList();
   }
 
   public Resolution search() {
       if(courier == null) {
           addRedirectAlertMessage(new SimpleMessage("Please select the Courier"));
       }
-      courierPricingEngineList = courierPricingEngineDao.getCourierPricingInfoByCourier(courier);
+      courierPricingEngineList = courierPricingEngineService.getCourierPricingInfoByCourier(courier);
       if(courier != null && courierPricingEngineList.size() == 0) {
           addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
       }
@@ -63,7 +62,18 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
 
   public Resolution save() {
       for(CourierPricingEngine courierPricingEngine : courierPricingEngineList) {
-          courierPricingEngineDao.save(courierPricingEngine);
+          if(courierPricingEngine.getId() == null) {
+              Courier courier1 = courierPricingEngine.getCourier();
+              RegionType regionType1 = courierPricingEngine.getRegionType();
+              CourierPricingEngine courierPricingEngine1 = courierPricingEngineService.getCourierPricingInfo(courier1, regionType1, null);
+              if(courierPricingEngine1 != null) {
+                  addRedirectAlertMessage(new SimpleMessage("Courier pricing of " + courier1.getName() + " for region " + regionType1.getName() + " already exists. Please update that"));
+              } else {
+                  courierPricingEngineService.saveCourierPricingInfo(courierPricingEngine);
+              }
+          } else {
+              courierPricingEngineService.saveCourierPricingInfo(courierPricingEngine);
+          }
       }
       addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
       param();
