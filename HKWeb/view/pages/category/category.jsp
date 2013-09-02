@@ -218,7 +218,7 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/bajaj-fx11-food-processor/BAJ125?camp=fx11">
+                <a href="${pageContext.request.contextPath}/product/bajaj-fx11-food-processor/BAJ125?camp=fx11">
                     <img src="<hk:vhostImage/>/images/banners/static-banner-home-and-living-bajaj.jpg"
                          alt="Brand of the Week"
                          class="small_banner"/>
