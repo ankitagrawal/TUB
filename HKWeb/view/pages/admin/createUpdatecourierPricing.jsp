@@ -69,6 +69,9 @@
         '<td>' +
         '<input type="text" name="courierPricingEngineList[' + nextIndex + '].variableCodCharges" class="variableCodCharges" />' +
         '</td>' +
+        '<td>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto" />' +
+        '</td>' +
         '</tr>';
 
         $('.courier-prcng-tbl').append(newRowHtml);
@@ -88,9 +91,10 @@
             var minCodCharges = $('.minCodCharges').val();
             var codCutoffAmount = $('.codCutoffAmount').val();
             var variableCodCharges = $('.variableCodCharges').val();
+            var validUpto = $('.validUpto').val();
             if(courier == "" || regionType == "" || firstBaseWt == "" || firstBaseCost == "" || secondBaseWt == "" || secondBaseCost == "" || additionalWt == "" ||
-                                additionalCost == "" || fuelSurcharge == "" || minCodCharges == "" || codCutoffAmount == "" || variableCodCharges == "") {
-                alert("aaaa");
+                   additionalCost == "" || fuelSurcharge == "" || minCodCharges == "" || codCutoffAmount == "" || variableCodCharges == "" || validUpto == "") {
+                alert("All fields are compulsory");
                 return false;
             }
 
@@ -151,7 +155,7 @@
                                 <th>Min COD Charge</th>
                                 <th>COD Cutoff Amount</th>
                                 <th>Variable COD Charges</th>
-                                <th>Valid till</th>
+                                <th>Valid Upto</th>
                             </tr>
                             </thead>
 
@@ -218,7 +222,7 @@
                                     </td>
 
                                     <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" />
+                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" class="validUpto" />
                                     </td>
                                 </tr>
 
