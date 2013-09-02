@@ -14,6 +14,9 @@ import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
 import com.hk.pact.dao.BaseDao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Seema
@@ -26,34 +29,33 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   CourierPricingEngineDao courierPricingEngineDao;
   @Autowired
   BaseDao baseDao;
-  private CourierPricingEngine courierPricingEngine;
 
   private Courier courier;
   private RegionType regionType;
+  private List<CourierPricingEngine> courierPricingEngineList = new ArrayList<CourierPricingEngine>();
 
   @DefaultHandler
   public Resolution pre() {
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
-  public Resolution getCourierPricing(){
-   courierPricingEngine = courierPricingEngineDao.getCourierPricingInfo(courier,regionType,null);
-   return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
+  public Resolution search() {
+      if(courier == null) {
+          addRedirectAlertMessage(new SimpleMessage("Please select the Courier"));
+      }
+      courierPricingEngineList = courierPricingEngineDao.getCourierPricingInfoByCourier(courier);
+      if(courier != null && courierPricingEngineList.size() == 0) {
+          addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
+      }
+      return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
   public Resolution save() {
-    courierPricingEngineDao.save(courierPricingEngine);
-    addRedirectAlertMessage(new SimpleMessage("courier info saved"));
-    return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
-  }
-
-
-  public CourierPricingEngine getCourierPricingEngine() {
-    return courierPricingEngine;
-  }
-
-  public void setCourierPricingEngine(CourierPricingEngine courierPricingEngine) {
-    this.courierPricingEngine = courierPricingEngine;
+      for(CourierPricingEngine courierPricingEngine : courierPricingEngineList) {
+          courierPricingEngineDao.save(courierPricingEngine);
+      }
+      addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
+      return new ForwardResolution(CreateUpdateCourierPricingAction.class, "search");
   }
 
   public RegionType getRegionType() {
@@ -70,5 +72,13 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
 
   public void setCourier(Courier courier) {
     this.courier = courier;
+  }
+
+  public List<CourierPricingEngine> getCourierPricingEngineList() {
+    return courierPricingEngineList;
+  }
+
+  public void setCourierPricingEngineList(List<CourierPricingEngine> courierPricingEngineList) {
+    this.courierPricingEngineList = courierPricingEngineList;
   }
 }
