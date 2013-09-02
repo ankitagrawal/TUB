@@ -32,7 +32,7 @@
             <label>Confirm Password <span class='aster' title="this field is required">*</span></label>
             <s:password class="signUpInputNew" name="passwordConfirm"/>
             <div class='label'>
-              <s:checkbox name="agreeToTerms"/>Agree to
+              <s:checkbox name="agreeToTerms" style="position: relative;margin: 0 5px;top: 3px;"/>Agree to
               <s:link href="/pages/termsAndConditions.jsp">terms and conditions</s:link>
               <span class='aster' title="this field is required">*</span>
             </div>
