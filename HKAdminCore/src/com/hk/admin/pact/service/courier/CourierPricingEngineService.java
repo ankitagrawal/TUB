@@ -16,13 +16,15 @@ import java.util.List;
  */
 public interface CourierPricingEngineService {
 
-    public List<Courier> getAvailableCouriers();
+  public List<Courier> getAvailableCouriers();
 
-    public List<RegionType> getRegionTypeList();
+  public List<RegionType> getRegionTypeList();
 
-    public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);
+  public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);
 
-    public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
 
-    public CourierPricingEngine saveCourierPricingInfo(CourierPricingEngine courierPricingEngine);
+  public CourierPricingEngine saveCourierPricingInfo(CourierPricingEngine courierPricingEngine);
+
+  public CourierPricingEngine getCourierPricingInfoById(Long courierPricingEngineId);
 }

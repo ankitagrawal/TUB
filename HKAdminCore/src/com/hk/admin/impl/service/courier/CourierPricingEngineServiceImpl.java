@@ -24,29 +24,33 @@ import java.util.List;
 @Service
 public class CourierPricingEngineServiceImpl implements CourierPricingEngineService {
 
-    @Autowired
-    MasterDataDao masterDataDao;
+  @Autowired
+  MasterDataDao masterDataDao;
 
-    @Autowired
-    CourierPricingEngineDao courierPricingEngineDao;
+  @Autowired
+  CourierPricingEngineDao courierPricingEngineDao;
 
-    public List<Courier> getAvailableCouriers() {
-        return masterDataDao.getAvailableCouriers();
-    }
+  public List<Courier> getAvailableCouriers() {
+    return masterDataDao.getAvailableCouriers();
+  }
 
-    public List<RegionType> getRegionTypeList() {
-        return masterDataDao.getRegionTypeList();
-    }
+  public List<RegionType> getRegionTypeList() {
+    return masterDataDao.getRegionTypeList();
+  }
 
-    public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier) {
-        return courierPricingEngineDao.getCourierPricingInfoByCourier(courier);
-    }
+  public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier) {
+    return courierPricingEngineDao.getCourierPricingInfoByCourier(courier);
+  }
 
-    public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse) {
-        return courierPricingEngineDao.getCourierPricingInfo(courier, regionType, warehouse);
-    }
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse) {
+    return courierPricingEngineDao.getCourierPricingInfo(courier, regionType, warehouse);
+  }
 
-    public CourierPricingEngine saveCourierPricingInfo(CourierPricingEngine courierPricingEngine) {
-        return (CourierPricingEngine)courierPricingEngineDao.save(courierPricingEngine);
-    }
+  public CourierPricingEngine saveCourierPricingInfo(CourierPricingEngine courierPricingEngine) {
+    return (CourierPricingEngine)courierPricingEngineDao.save(courierPricingEngine);
+  }
+
+  public CourierPricingEngine getCourierPricingInfoById(Long courierPricingEngineId) {
+    return courierPricingEngineDao.get(CourierPricingEngine.class, courierPricingEngineId);
+  }
 }

@@ -1,8 +1,6 @@
 package com.hk.web.action.admin.courier;
 
 import com.hk.admin.pact.service.courier.CourierPricingEngineService;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.MasterDataDao;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -11,11 +9,9 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
-import com.hk.pact.dao.BaseDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,41 +39,49 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
-  private void param() {
+  private void initialize() {
     courierList = courierPricingEngineService.getAvailableCouriers();
     regionTypeList = courierPricingEngineService.getRegionTypeList();
   }
 
   public Resolution search() {
-      if(courier == null) {
-          addRedirectAlertMessage(new SimpleMessage("Please select the Courier"));
-      }
-      courierPricingEngineList = courierPricingEngineService.getCourierPricingInfoByCourier(courier);
-      if(courier != null && courierPricingEngineList.size() == 0) {
-          addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
-      }
-      param();
-      return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
+    if(courier == null) {
+      addRedirectAlertMessage(new SimpleMessage("Please select the Courier"));
+    }
+    courierPricingEngineList = courierPricingEngineService.getCourierPricingInfoByCourier(courier);
+    if(courier != null && courierPricingEngineList.size() == 0) {
+      addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
+    }
+    this.initialize();
+    return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
   public Resolution save() {
-      for(CourierPricingEngine courierPricingEngine : courierPricingEngineList) {
-          if(courierPricingEngine.getId() == null) {
-              Courier courier1 = courierPricingEngine.getCourier();
-              RegionType regionType1 = courierPricingEngine.getRegionType();
-              CourierPricingEngine courierPricingEngine1 = courierPricingEngineService.getCourierPricingInfo(courier1, regionType1, null);
-              if(courierPricingEngine1 != null) {
-                  addRedirectAlertMessage(new SimpleMessage("Courier pricing of " + courier1.getName() + " for region " + regionType1.getName() + " already exists. Please update that"));
-              } else {
-                  courierPricingEngineService.saveCourierPricingInfo(courierPricingEngine);
-              }
-          } else {
-              courierPricingEngineService.saveCourierPricingInfo(courierPricingEngine);
-          }
+    for(CourierPricingEngine courierPricingEngine : courierPricingEngineList) {
+      if(courierPricingEngine.getId() != null) {
+        CourierPricingEngine localEngine = courierPricingEngineService.getCourierPricingInfoById(courierPricingEngine.getId());
+        if (localEngine != null) {
+          localEngine.setCourier(courierPricingEngine.getCourier());
+          localEngine.setRegionType(courierPricingEngine.getRegionType());
+          localEngine.setFirstBaseWt(courierPricingEngine.getFirstBaseWt());
+          localEngine.setFirstBaseCost(courierPricingEngine.getFirstBaseCost());
+          localEngine.setSecondBaseCost(courierPricingEngine.getSecondBaseCost());
+          localEngine.setSecondBaseWt(courierPricingEngine.getSecondBaseWt());
+          localEngine.setAdditionalCost(courierPricingEngine.getAdditionalCost());
+          localEngine.setFuelSurcharge(courierPricingEngine.getFuelSurcharge());
+          localEngine.setMinCodCharges(courierPricingEngine.getMinCodCharges());
+          localEngine.setCodCutoffAmount(courierPricingEngine.getCodCutoffAmount());
+          localEngine.setVariableCodCharges(courierPricingEngine.getVariableCodCharges());
+          localEngine.setValidUpto(courierPricingEngine.getValidUpto());
+          courierPricingEngineService.saveCourierPricingInfo(localEngine);
+        }
+      } else {
+        courierPricingEngineService.saveCourierPricingInfo(courierPricingEngine);
       }
-      addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
-      param();
-      return new ForwardResolution(CreateUpdateCourierPricingAction.class, "search");
+    }
+    addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
+    initialize();
+    return new ForwardResolution(CreateUpdateCourierPricingAction.class, "search");
   }
 
   public RegionType getRegionType() {

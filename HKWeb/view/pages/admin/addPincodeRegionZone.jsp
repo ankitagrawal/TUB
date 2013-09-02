@@ -102,7 +102,7 @@
 								<td><label>Warehouse</label></td>
 								<td><s:select name="pincodeRegionZone.warehouse" id="warehouse">
 									<s:option value="">--Select Warehouse--</s:option>
-									<s:options-collection collection="${warehouseList}" value="id" label="name"/>
+									<s:options-collection collection="${warehouseList}" value="id" label="identifier"/>
 								</s:select>
 
 								</td>
