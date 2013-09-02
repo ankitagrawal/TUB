@@ -15,6 +15,7 @@ import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.warehouse.WHReportLineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -114,6 +115,10 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                     shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                     shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
                     shipmentService.save(shipment);
+                    for (LineItem lineItem : shippingOrder.getLineItems()) {
+                        WHReportLineItem whReportLineItem = ShipmentCostDistributor.distributeShippingCost(lineItem);
+                        shipmentService.save(whReportLineItem);
+                    }
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
                 }
@@ -146,6 +151,10 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                 }
                 ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
                 courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(), (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    WHReportLineItem whReportLineItem = ShipmentCostDistributor.distributeShippingCost(lineItem);
+                    shipmentService.save(whReportLineItem);
+                }
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
