@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import com.hk.admin.engine.ShipmentCostDistributor;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
@@ -21,6 +22,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.Classification;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.WHReportLineItem;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -59,6 +61,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     UserService userService;
     @Autowired
     AdminEmailManager adminEmailManager;
+
 
     public Shipment validateShipment(ShippingOrder shippingOrder) {
         Shipment validShipment = null;
@@ -125,11 +128,8 @@ public class ShipmentServiceImpl implements ShipmentService {
             shippingOrder.setShipment(shipment);
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 Double estimatedShipmentCharge = shipmentPricingEngine.calculateShipmentCost(shippingOrder);
-                shipment.setEstmShipmentCharge(estimatedShipmentCharge);
                 shipment.setOrderPlacedShipmentCharge(estimatedShipmentCharge);
-                shipment.setShipmentCostCalculateDate(new Date());
-                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                shipment = calculateAndDistributeShipmentCost(shipment);
             }
             shippingOrder = shippingOrderService.save(shippingOrder);
             String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
@@ -137,6 +137,21 @@ public class ShipmentServiceImpl implements ShipmentService {
                     null, comment);
         }
         return shippingOrder.getShipment();
+    }
+
+    public Shipment calculateAndDistributeShipmentCost(Shipment shipment) {
+        ShippingOrder shippingOrder = shipment.getShippingOrder();
+        shippingOrder.setShipment(shipment);
+        shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+        shipment.setShipmentCostCalculateDate(new Date());
+        shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+        shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+        shipment = save(shipment);
+        List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
+        for (WHReportLineItem whReportLineItem : whReportLineItemList) {
+            save(whReportLineItem);
+        }
+        return shipment;
     }
 
     public Shipment save(Shipment shipment) {
@@ -149,6 +164,10 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public Shipment findByAwb(Awb awb) {
         return shipmentDao.findByAwb(awb);
+    }
+
+    private WHReportLineItem save(WHReportLineItem whReportLineItem) {
+        return (WHReportLineItem) shipmentDao.save(whReportLineItem);
     }
 
     @Transactional
