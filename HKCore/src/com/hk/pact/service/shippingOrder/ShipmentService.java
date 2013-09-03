@@ -32,4 +32,6 @@ public interface ShipmentService {
 
     public WHReportLineItem save(WHReportLineItem whReportLineItem);
 
+    public void calculateAndDistributeShipmentCost(Shipment shipment, ShippingOrder shippingOrder);
+
 }

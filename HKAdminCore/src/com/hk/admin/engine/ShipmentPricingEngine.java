@@ -78,11 +78,6 @@ public class ShipmentPricingEngine {
         if(courierPricingInfo == null)   {
             return null;
         }
-
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            WHReportLineItem whReportLineItem = ShipmentCostDistributor.distributeShippingCost(lineItem);
-            shipmentService.save(whReportLineItem);
-        }
         return calculateShipmentCost(courierPricingInfo, weight);
     }
 
