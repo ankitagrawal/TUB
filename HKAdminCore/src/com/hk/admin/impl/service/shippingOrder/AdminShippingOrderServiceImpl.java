@@ -390,7 +390,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                         EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.ManualRefundInitiated.asReason(),comment);
 
-            } else {
+            } else if (EnumGateway.getHKServiceEnabledGateways().contains(shippingOrder.getBaseOrder().getPayment().getGateway().getId())) {
 
                 try {
                     Payment payment = paymentService.refundPayment(shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(), shippingOrder.getAmount());

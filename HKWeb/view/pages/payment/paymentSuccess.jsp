@@ -245,7 +245,7 @@
   </script>
 
 	<!-- Start MicroAd Blade conversion Code  -->
-	<script type="text/javascript">
+	<%--<script type="text/javascript">
 		var blade_co_account_id='4184';
 		var blade_group_id='convtrack14344';
 
@@ -275,7 +275,7 @@
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(bs, s);
 		})();
-	</script>
+	</script>--%>
 	<!--End: Tracking code for MicroAd Blade-->
 	
 

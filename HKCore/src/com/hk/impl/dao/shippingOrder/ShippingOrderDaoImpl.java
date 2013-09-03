@@ -5,10 +5,8 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -17,11 +15,10 @@ import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.ArrayList;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -61,25 +58,21 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
 		return (List<ShippingOrder>) shippingOrderListQuery.list();
 	}
 
-	public Long getBookedQtyOfSkuInQueue(List<Sku> skuList) {
+	public Long getBookedQtyOfSkuInQueue(List<Sku> skuList, List<Long> shippingOrderStatus) {
 		Long qtyInQueue = 0L;
 		if (skuList != null && !skuList.isEmpty()) {
+      if(shippingOrderStatus == null || shippingOrderStatus.isEmpty()){
+        shippingOrderStatus = new ArrayList<Long>();
+        shippingOrderStatus.addAll(EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
+      }
 			String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
-			qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
-					EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory())).uniqueResult();
+			qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",shippingOrderStatus
+					).uniqueResult();
 			if (qtyInQueue == null) {
 				qtyInQueue = 0L;
 			}
 		}
 		return qtyInQueue;
-	}
-
-	/**
-	 * @param sku based on warehouse
-	 * @return Sum of Qty of lineitems for product variant which are not yet shipped
-	 */
-	public Long getBookedQtyOfSkuInQueue(Sku sku) {
-		return getBookedQtyOfSkuInQueue(Arrays.asList(sku));
 	}
 
 	@SuppressWarnings("unchecked")

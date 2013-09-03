@@ -2,6 +2,7 @@ package com.hk.pact.dao.sku;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.*;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.dto.pos.PosProductSearchDto;
 import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.pact.dao.BaseDao;
@@ -31,5 +32,7 @@ public interface SkuItemDao extends BaseDao {
   public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
 
   public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+
+  public List<ProductVariantInventory> getPVIInfo(String barcode); 
 
 }

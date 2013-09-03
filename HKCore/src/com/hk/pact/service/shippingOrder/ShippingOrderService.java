@@ -69,6 +69,6 @@ public interface ShippingOrderService {
 
   public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds);
 
-  public void validateShippingOrder(ShippingOrder shippingOrder);
+  public Boolean validateShippingOrder(ShippingOrder shippingOrder);
 
 }
