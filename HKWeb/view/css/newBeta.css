@@ -378,21 +378,6 @@ strong {
     font-weight: bold;
 }
 
-/* line 317, ../sass/_base.scss */
-input[type="text"], input[type="password"], select, textarea {
-
-    height: 24px;
-    border: 1px solid #a2c4e5;
-    background: #f2f7fb;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    padding: 2px 5px;
-    font-size: 16px;
-}
 
 input[type="text"], input[type="password"] {
     width: 300px;
@@ -402,22 +387,6 @@ textarea {
     height: 200px;
 }
 
-select: hover, select:focus {
-    border-color: #668;
-}
-
-/* line 325, ../sass/_base.scss */
-input[type="text"]:hover, input[type="text"]:focus, input[type="password"]:hover, input[type="password"]:focus {
-    border-color: #285f93;
-}
-
-/* line 328, ../sass/_base.scss */
-input[type="text"]:focus, input[type="password"]:focus {
-    -moz-box-shadow: inset 0 -2px 2px #cccccc;
-    -webkit-box-shadow: inset 0 -2px 2px #cccccc;
-    -o-box-shadow: inset 0 -2px 2px #cccccc;
-    box-shadow: inset 0 -2px 2px #cccccc;
-}
 
 /* line 332, ../sass/_base.scss */
 input.error {
@@ -1504,123 +1473,6 @@ h3 a.prod_link {
     color: #444;
     font-size: 12px;
     line-height: 18px;
-}
-
-/* line 613, ../sass/main.scss */
-.footer {
-    border: 1px solid #ddd;
-    box-shadow: 0 1px 3px #eee;
-    width: 960px;
-    margin-left: auto;
-    margin-right: auto;
-    background: #1d456b;
-    display: block;
-    border-top: 3px solid #f87500;
-    -moz-box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    -o-box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(255, 255, 255, 0.1)));
-    background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    background-image: linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    height: 310px;
-   /* margin-top: -250px;
-    position: absolute;
-    left: 0px; right: 0px;
-    bottom: 0px;*/
-    position:relative;
-    clear:both;
-
-}
-
-.footer-bottom {
-    width: 960px;
-    margin: 0 auto;
-    background: #FAFCFE;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0;
-    vertical-align: middle;
-    text-align: right;
-    /*width: 100%;
-  background: #e67817;
-  margin: 0px;
-  height: 66px;
-
-
-  clear: both;
-  bottom: 0px;
-  position: relative;*/
-}
-
-.footer-bottom .fb-contents {
-    width: 960px;
-    margin: 0px auto;
-}
-
-.footer-bottom .fb-contents .copyright {
-    display: inline;
-    float: left;
-    width: 480px;
-    font-weight: bold;
-    color: white;
-}
-
-/* line 623, ../sass/main.scss */
-.footer .contents {
-    width: 960px;
-    margin: 15px auto;
-    margin-bottom: 35px;
-}
-
-/* line 626, ../sass/main.scss */
-.footer .contents .column {
-    display: inline;
-    float: left;
-    margin-left: 10px;
-    margin-right: 10px;
-    width: 150px;
-}
-
-/* line 628, ../sass/main.scss */
-.footer .contents .column h5 {
-    color: white;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 21px;
-    border-bottom: 1px solid #f87500;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -o-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-}
-
-/* line 637, ../sass/main.scss */
-.footer .contents .column ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-/* line 641, ../sass/main.scss */
-.footer .contents .column ul li {
-    margin-top: 0.45em;
-    margin-bottom: 0.45em;
-}
-
-/* line 646, ../sass/main.scss */
-.footer .contents .column a {
-    font-size: 10px;
-    line-height: 18px;
-    color: white;
-    border-bottom-color: transparent;
-}
-
-/* line 651, ../sass/main.scss */
-.footer .contents .column a:hover {
-    border-bottom-color: #f87500;
 }
 
 /* line 659, ../sass/main.scss */
@@ -7333,4 +7185,27 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 /*error-success msg css ends*/
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    resize: none;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear .2s, box-shadow linear .2s;
+    -moz-transition: border linear .2s, box-shadow linear .2s;
+    -o-transition: border linear .2s, box-shadow linear .2s;
+    transition: border linear .2s, box-shadow linear .2s;
+    display: inline-block;
+    height: 20px;
+    padding: 4px 6px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555555;
+    vertical-align: middle;
+}
 
