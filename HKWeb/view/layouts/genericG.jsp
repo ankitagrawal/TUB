@@ -3,7 +3,8 @@
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%
-boolean hybridRelease = (Boolean) ServiceLocatorFactory.getProperty(Keys.Env.hybridRelease);
+String hybridReleaseStr = (String) ServiceLocatorFactory.getProperty(Keys.Env.hybridRelease);
+boolean hybridRelease = Boolean.parseBoolean(hybridReleaseStr);
 pageContext.setAttribute("hybridRelease", hybridRelease);
 %>
 <s:layout-definition>
