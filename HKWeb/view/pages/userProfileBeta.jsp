@@ -315,7 +315,7 @@
 </s:layout-render>
 <script type="text/javascript">
   window.onload = function() {
-    document.getElementById('myAccountLink').style.fontWeight = "bold";
+      $('#myAccountLink').addClass('selected')
   };
 
   $(document).ready(function() {
