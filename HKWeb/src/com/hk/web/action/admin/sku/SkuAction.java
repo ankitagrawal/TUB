@@ -81,6 +81,13 @@ public class SkuAction extends BaseAction {
         return new RedirectResolution(SkuAction.class);
       }
       skuService.saveSku(sku);
+
+      ProductVariant productVariant = sku.getProductVariant();
+      if (productVariant.getWarehouse() == null) {
+        productVariant.setWarehouse(sku.getWarehouse());
+        getBaseDao().save(productVariant);
+
+      }
       addRedirectAlertMessage(new SimpleMessage("New SKU saved successfully."));
       return new RedirectResolution(SkuAction.class);
     }
