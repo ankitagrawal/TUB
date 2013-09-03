@@ -1,7 +1,9 @@
 package com.hk.api.edge.ext.impl.service;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,32 +22,6 @@ public class HKCatalogUserServiceImpl implements HKCatalogUserService {
 
   @Autowired
   private UserService userService;
-
-  /*public UserApiBaseResponse getLoggedInUser() {
-    UserApiBaseResponse userApiBaseResponse = new UserApiBaseResponse();
-    User user = null;
-    try {
-      user = getUserService().getLoggedInUser();
-    } catch (Exception e) {
-      return null;
-    }
-    if (user != null) {
-      userApiBaseResponse.setId(user.getId());
-      userApiBaseResponse.setName(user.getName());
-      userApiBaseResponse.setException(false);
-      Set<String> roles = new HashSet<String>();
-      for (Role role : user.getRoles()) {
-        roles.add(role.getName());
-      }
-      userApiBaseResponse.setRoles(roles);
-      userApiBaseResponse.setMessage("User Logged In");
-      return userApiBaseResponse;
-    } else {
-      userApiBaseResponse.setMessage("No Logged-in User");
-      userApiBaseResponse.setException(false);
-    }
-    return userApiBaseResponse;
-  }*/
 
   public boolean isTempUser(Long userId) {
     if (userId == null) {
@@ -82,12 +58,12 @@ public class HKCatalogUserServiceImpl implements HKCatalogUserService {
     if (user != null) {
       userApiResponse.setException(false);
       userApiResponse.setId(user.getId());
-      userApiResponse.setName(user.getName());
-      userApiResponse.setBirthDate(user.getBirthDate());
+      userApiResponse.setNm(user.getName());
+      userApiResponse.setBirthDt(user.getBirthDate());
       userApiResponse.setEmail(user.getEmail());
       userApiResponse.setGender(user.getGender());
       userApiResponse.setLogin(user.getLogin());
-      userApiResponse.setPasswordChecksum(user.getPasswordChecksum());
+      userApiResponse.setPwd(user.getPasswordChecksum());
       Set<String> roles = new HashSet<String>();
       Set<String> permissions = new HashSet<String>();
       if (user.getRoles() != null && user.getRoles().size() > 0) {
@@ -103,8 +79,10 @@ public class HKCatalogUserServiceImpl implements HKCatalogUserService {
       userApiResponse.setRoles(roles);
       userApiResponse.setPermissions(permissions);
     } else {
+      List<String> messages = new ArrayList<String>();
+      messages.add("User doesn't Exist");
       userApiResponse.setException(false);
-      userApiResponse.setMessage("User doesn't Exist");
+      userApiResponse.setMsgs(messages);
     }
     return userApiResponse;
   }

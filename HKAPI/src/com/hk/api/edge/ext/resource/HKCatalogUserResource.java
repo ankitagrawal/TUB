@@ -21,26 +21,13 @@ public class HKCatalogUserResource {
     @Autowired
     private HKCatalogUserService hkCatalogUserService;
 
-  /*  @GET
-    @Path("/loggedInUser")
-    @Produces("application/json")
-    public String getLoggedInUser() {
-        UserApiBaseResponse userApiBaseResponse = getHkapiUserService().getLoggedInUser();
-        if (userApiBaseResponse == null) {
-            userApiBaseResponse = new UserApiBaseResponse();
-            userApiBaseResponse.setException(true);
-            userApiBaseResponse.setMessage("There came an Error, please try again");
-        }
-        return new JSONResponseBuilder().addField("userResponse", userApiBaseResponse).build();
-    }*/
-
     @GET
     @Path("/name/{login}")
     @Produces("application/json")
     public String getUserByLogin(@PathParam("login")
     String login) {
         UserApiResponse userApiResponse = getHkCatalogUserService().getUserResponseByLogin(login);
-        return new JSONResponseBuilder().addField("userResponse", userApiResponse).build();
+        return new JSONResponseBuilder().addField("results", userApiResponse).build();
     }
 
     @GET
@@ -49,7 +36,7 @@ public class HKCatalogUserResource {
     public String getUserById(@PathParam("id")
     Long userId) {
         UserApiResponse userApiResponse = getHkCatalogUserService().getUserResponseById(userId);
-        return new JSONResponseBuilder().addField("userResponse", userApiResponse).build();
+        return new JSONResponseBuilder().addField("results", userApiResponse).build();
     }
 
     @GET
@@ -61,9 +48,9 @@ public class HKCatalogUserResource {
         try {
             bool = getHkCatalogUserService().isTempUser(userId);
         } catch (InvalidParameterException ipe) {
-            return new JSONResponseBuilder().addField("isTempUser", bool).addField("exception", ipe.getMessage()).build();
+            return new JSONResponseBuilder().addField("isTempUser", bool).addField("msgs", ipe.getMessage()).build();
         }
-        return new JSONResponseBuilder().addField("isTempUser", bool).addField("message", "UserExist").build();
+        return new JSONResponseBuilder().addField("isTempUser", bool).addField("msgs", "UserExist").build();
     }
 
     public HKCatalogUserService getHkCatalogUserService() {

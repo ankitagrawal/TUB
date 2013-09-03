@@ -9,7 +9,7 @@ import java.util.Set;
 public class UserApiBaseResponse extends AbstractApiBaseResponse {
 
   private Long id;
-  private String name;
+  private String nm;
 
   private Set<String> roles = new HashSet<String>();
 
@@ -22,12 +22,12 @@ public class UserApiBaseResponse extends AbstractApiBaseResponse {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getNm() {
+    return nm;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setNm(String nm) {
+    this.nm = nm;
   }
 
   public Set<String> getRoles() {

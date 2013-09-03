@@ -10,10 +10,10 @@ public class UserApiResponse extends UserApiBaseResponse{
 
   private String login;
   private String email;
-  private String passwordChecksum;
+  private String pwd;
 
   private Set<String> permissions = new HashSet<String>();
-  private Date birthDate;
+  private Date birthDt;
   private String gender ;
 
   public String getLogin() {
@@ -32,12 +32,12 @@ public class UserApiResponse extends UserApiBaseResponse{
     this.email = email;
   }
 
-  public String getPasswordChecksum() {
-    return passwordChecksum;
+  public String getPwd() {
+    return pwd;
   }
 
-  public void setPasswordChecksum(String passwordChecksum) {
-    this.passwordChecksum = passwordChecksum;
+  public void setPwd(String pwd) {
+    this.pwd = pwd;
   }
 
   public Set<String> getPermissions() {
@@ -48,12 +48,12 @@ public class UserApiResponse extends UserApiBaseResponse{
     this.permissions = permissions;
   }
 
-  public Date getBirthDate() {
-    return birthDate;
+  public Date getBirthDt() {
+    return birthDt;
   }
 
-  public void setBirthDate(Date birthDate) {
-    this.birthDate = birthDate;
+  public void setBirthDt(Date birthDt) {
+    this.birthDt = birthDt;
   }
 
   public String getGender() {
