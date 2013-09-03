@@ -129,24 +129,23 @@ public class ShipmentServiceImpl implements ShipmentService {
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 Double estimatedShipmentCharge = shipmentPricingEngine.calculateShipmentCost(shippingOrder);
                 shipment.setOrderPlacedShipmentCharge(estimatedShipmentCharge);
-                shipment = calculateAndDistributeShipmentCost(shipment);
+                calculateAndDistributeShipmentCost(shipment);
             }
             shippingOrder = shippingOrderService.save(shippingOrder);
             String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
                     null, comment);
         }
+        this.shipmentDao.save(shippingOrder);
         return shippingOrder.getShipment();
     }
 
     public Shipment calculateAndDistributeShipmentCost(Shipment shipment) {
         ShippingOrder shippingOrder = shipment.getShippingOrder();
-        shippingOrder.setShipment(shipment);
         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
         shipment.setShipmentCostCalculateDate(new Date());
         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
         shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-        shipment = save(shipment);
         List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
         for (WHReportLineItem whReportLineItem : whReportLineItemList) {
             save(whReportLineItem);
