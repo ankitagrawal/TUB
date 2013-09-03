@@ -629,41 +629,66 @@
 </div>
 
 
-<div class="offerContainer">
-<shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
-    <div class='right_container coupon gotACoupon'>
-        <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
-            <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
-            <input class="couponInput" placeholder='Enter discount code' type='text' id="couponCode"/>
-            <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-                    class="button_grey new_button_grey">APPLY</s:link>
-        </shiro:hasAnyRoles>
 
-        <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
-            Got a discount coupon?
-            <br/>
-            <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
-                <s:param name="redirectUrl" value="${pageContext.request.contextPath}/core/cart/Cart.action"/>
-            </s:link>
-            to redeem it.
-            <br/>
-        </shiro:hasAnyRoles>
-        <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
-            Got a discount coupon?
-            <br/>
-            <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
-            </s:link>
-            to redeem it.
-            <br/>
-        </shiro:hasAnyRoles>
-
-    </div>
-</shiro:lacksRole>
-</div>
 
 
 <div class='right_container total checkoutContainer' style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;">
+    <div class="you-pay-container">
+        <div style="width:48%;overflow:hidden;display:inline-block">
+            <div class="fnt-light fnt-sz12">
+                YOU PAY
+            </div>
+            <div id="summaryGrandTotalPayable" class="fnt-sz14">
+                <fmt:formatNumber value="${cartAction.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+            </div>
+        </div>
+        <div style="width:48%;overflow:hidden;display:inline-block">
+            <s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
+                <s:hidden name="order" value="${cartAction.order}"/>
+                <s:submit name="checkout" value="PAY NOW" class="btn btn-blue" />
+
+            </s:form>
+
+        </div>
+
+        <strong>
+
+        </strong>
+    </div>
+    <hr>
+    <div class="offerContainer">
+        <div class="fnt-light fnt-caps">
+            APPLY COUPON
+        </div>
+        <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
+            <div class=''>
+                <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
+
+                    <input class="couponInput" placeholder='Enter discount code' type='text' id="couponCode"/>
+                    <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
+                            class="button_grey new_button_grey">APPLY</s:link>
+                </shiro:hasAnyRoles>
+
+                <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
+
+                    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
+                        <s:param name="redirectUrl" value="${pageContext.request.contextPath}/core/cart/Cart.action"/>
+                    </s:link>
+                    to redeem it.
+                    <br/>
+                </shiro:hasAnyRoles>
+                <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
+
+                    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
+                    </s:link>
+                    to redeem it.
+                    <br/>
+                </shiro:hasAnyRoles>
+
+            </div>
+        </shiro:lacksRole>
+    </div>
 <h5 class="checkoutHead5">Checkout</h5>
 <br/>
 
@@ -720,16 +745,6 @@
       </span>
 </div>
 
-<h1 style="position: relative;float: left;width: 100%;padding: 0px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important">
-      <span class="youPay">
-        You pay
-      </span>
-  <strong>
-        <span id="summaryGrandTotalPayable" class="youPayValue">
-          <fmt:formatNumber value="${cartAction.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
-        </span>
-  </strong>
-</h1>
 
 <div class='newShippingHandling'>
   (inclusive of shipping, handling and taxes.)
@@ -766,11 +781,6 @@
     (inclusive of shipping, handling and taxes.)
   </div>
 </c:if>
-<s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
-<s:hidden name="order" value="${cartAction.order}"/>
-<s:submit name="checkout" value="PLACE ORDER" class="placeOrderButtonNew" style="font-size: 1em"/>
-
-</s:form>
 <script type="text/javascript">
   $('#proceed').click(function() {
     $('#cartForm').submit();
@@ -972,15 +982,15 @@
         border-radius:0px;
         box-shadow: none;
     }
-    .jqStepper-down,.jqStepper-up{
+    .jqStepper-down, .jqStepper-up{
        border:1px solid #999;
        border-radius:100%;
-        height: 17px;
-        width:18px;
+        height: 20px;
+        width:20px;
         margin-right:5px;
         margin-top:2px;
         background: transparent;
-        font-size:14px;
+        font-size:12px;
         padding-top:1px;
 
     }
