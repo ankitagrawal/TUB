@@ -7074,3 +7074,8 @@ label{
 
 /*Button utils *End*/
 
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
+    cursor: not-allowed;
+    background-color: #eeeeee !important;
+    box-shadow: none;
+}
