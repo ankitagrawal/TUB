@@ -62,14 +62,14 @@
             <div class="floatfix"></div>
         </div>
 
-      <div class="lhsContent">
+      <div class="lhsContent cont-lft">
         <s:layout-component name="lhsContent"/>
 
         <div class="floatfix"></div>
       </div>
       <s:layout-component name="left_col"/>
 
-      <div class="rhsContent">
+      <div class="rhsContent cont-rht">
         <s:layout-component name="rhsContent"/>
 
         <div class="floatfix"></div>
