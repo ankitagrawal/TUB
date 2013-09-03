@@ -10,11 +10,11 @@
 <c:set var="outcome_linkExpired" value="<%=VerifyUserAction.outcome_linkExpired%>"/>
 <c:set var="outcome_success" value="<%=VerifyUserAction.outcome_success%>"/>
 
-<s:layout-render name="/layouts/default.jsp" pageTitle="Account Verification">
+<s:layout-render name="/layouts/defaultBeta.jsp" pageTitle="Account Verification">
     <s:layout-component name="heading">
-        <div>
+        <div class="ttl-cntnr">
             <span class="icn icn-sqre"></span>
-            Account Verification
+            <h1>Account Verification </h1>
             <span class="icn icn-sqre"></span>
         </div>
     </s:layout-component>

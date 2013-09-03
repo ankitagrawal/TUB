@@ -7186,6 +7186,64 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 /*error-success msg css ends*/
 
+/* title utils start*/
+.ttl-cntnr {
+    text-align: center;
+    clear: both;
+    font-family: 'Open Sans' SC;
+}
+
+.ttl-cntnr.ttl-left {
+    text-align: left
+}
+
+.ttl-cntnr span.icn {
+    margin-right: 10px;
+    margin-left: 10px;
+    position: relative;
+    bottom: 3px;
+    background: #111;
+    width: 7px;
+    height: 7px;
+}
+
+/*css for blue circles*/
+.ttl-cntnr span.icn{
+    background: url(../images/blue-circle.png);
+    width:12px;
+    height: 12px;
+    bottom:1px
+}
+.ttl-cntnr h1, .ttl-cntnr h2, .ttl-cntnr h3, .ttl-cntnr h4, .ttl-cntnr h5, .ttl-cntnr h6 {
+    display: inline-block;
+    max-width: 90%;
+}
+
+.ttl-cntnr h1.hide {
+    display: none;
+}
+
+.ttl-cntnr h1 {
+    margin: 20px 0;
+    line-height: 1em;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.ttl-cntnr h1.chckout-hdr {
+    margin: 20px 0 10px 0;
+}
+
+.ttl-cntnr h2 {
+    margin: 15px 0 5px;
+    line-height: 1em;
+    font-weight: 700;
+}
+
+/* title utils end*/
+
+
+
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
