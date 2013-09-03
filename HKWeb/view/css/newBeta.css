@@ -2737,7 +2737,18 @@ h2.prod_title {
 .current_step_content {
     display: inline;
     float: left;
-    margin-left: 260px;
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 910px;
+  display: block;
+  padding: 20px;
+  padding-top: 50px; /*border: 1px dotted #ddd;*/
+  margin-top: -25px;
+  margin-bottom: 20px;
+
+  border-radius: 0px;
+  font-size: 12px;
 }
 
 /* line 1085, ../sass/main.scss */
@@ -5571,7 +5582,7 @@ color: #e62580;
 }
 
 .offerContainer:hover {
-    border-color: #f87500;
+
 }
 
 .appliedOfferContainer{
@@ -5581,10 +5592,7 @@ color: #e62580;
 }
 
 .offerContainer{
-    position: relative;
-    float: left;
-    left: 30px;
-    border-radius:5px;
+
     margin-bottom: 10px;
     height: auto;
 }
@@ -7079,3 +7087,258 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     background-color: #eeeeee !important;
     box-shadow: none;
 }
+
+/*text align variation start*/
+.txt-rgt {
+    text-align: right;
+}
+
+.txt-cntr {
+    text-align: center;
+}
+
+.txt-lft {
+    text-align: left;
+}
+
+.txt-top {
+    vertical-align: top;
+}
+
+.txt-middle {
+    vertical-align: middle;
+}
+
+.txt-small {
+    font-size: 0.9em;
+}
+
+.txt-medium {
+    font-size: 1.4em;
+}
+
+.txt-large {
+    font-size: 1.8em;
+}
+
+.txt-light {
+    color: #999;
+    font-size: 0.9em;
+}
+
+.txt-blue {
+    color: #0091d7;
+}
+
+/*text align variation ends*/
+
+/*font variation start*/
+.fnt-light {
+    color: #757171;
+}
+
+.fnt-sz9 {
+    font-size: 0.8em;
+}
+
+.fnt-sz10 {
+    font-size: 0.9em;
+}
+
+.fnt-sz12 {
+    font-size: 1em;
+}
+
+.fnt-sz13 {
+    font-size: 1.1em
+}
+
+.fnt-sz14 {
+    font-size: 1.2em
+}
+
+.fnt-sz16 {
+    font-size: 1.4em
+}
+
+.fnt-sz20 {
+    font-size: 1.8em
+}
+
+.fnt-sz22 {
+    font-size: 2em
+}
+
+.fnt-bold {
+    font-weight: 600;
+}
+
+.fnt-bolder {
+    font-weight: 700;
+}
+
+.fnt-caps {
+    text-transform: uppercase;
+    /*font-family: "OpenSansSB" !important;*/
+}
+
+/*font variation ends*/
+
+/* footer css begins */
+#footer {
+
+    /*margin: 50px 0 20px 0;*/
+}
+
+#footer .container {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+#footer .ftr-main-txt {
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.ftr-link-cntnr {
+    margin: 30px 0;
+
+}
+
+
+#footer .ftr-link-cntnr .footer-menu{
+    margin-left: 20px;
+    width: 160px;
+    float: left;
+    min-height: 1px;
+}
+
+
+#footer .ftr-link-cntnr ul {
+    list-style: none;
+    font-size: 0.9em;
+    text-transform: capitalize;
+    padding: 0px;
+    margin: 0px;
+}
+
+#footer .ftr-link-cntnr h4 {
+    margin-bottom: 2px;
+    color: #0091d7;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.subscibe-mail-cntnr {
+    text-align: right;
+    float: right;
+
+}
+
+.subscibe-mail-cntnr .label-txt {
+    text-align: left;
+    margin-left: 30px;
+    font-size: 0.9em;
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+.subscibe-mail-cntnr input[type="text"] {
+    width: 150px;
+    margin: 0;
+}
+
+.subscibe-mail-cntnr input[type="submit"] {
+    display: inline-block;
+}
+
+.about-hk {
+    border-bottom: 1px solid #ccc;
+    font-size: 0.8em;
+    text-align: left;
+}
+
+/*footer css ends*/
+
+/**Container css *begins**/
+
+.cont-lft {
+    float: left;
+}
+
+.cont-rht {
+    float: right;
+}
+
+/**Container css *ends**/
+
+/*error-success msg css begins*/
+.err-cntnr {
+    border: 1px solid #ff0000;
+    padding: 10px;
+    color: #ff0000;
+    margin: 0 0 15px 0;
+}
+
+.alert-cntnr {
+    border: 1px solid #0091d7;
+    padding: 10px;
+    color: #0091d7;
+    margin: 0 0 15px 0;
+}
+
+.err-cntnr .icn-warning-small, .alert-cntnr .icn-success {
+    max-width: 10%;
+    vertical-align: top;
+    text-align: left;
+}
+
+.err-cntnr div, .alert-cntnr .alert-messages {
+    display: inline-block;
+    max-width: 90%;
+    margin: 0 0 0 10px;
+    text-align: left;
+}
+
+.err-cntnr div.sign-on-msg, .alert-cntnr .alert-messages.sign-on-msg {
+    max-width: 77%;
+}
+
+.err-cntnr div ul, err-cntnr div ul li, .alert-cntnr .alert-messages ul, .alert-cntnr .alert-messages ul li {
+    list-style: none;
+
+}
+
+.err-cntnr .icn-close2, .alert-cntnr  .icn-close2 {
+    max-width: 10%;
+    text-align: right;
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+    margin: 0 0 0 4px;
+}
+
+.err-icn {
+    float: right;
+    position: relative;
+    bottom: 55px;
+    left: 30px;
+}
+
+.err-txt {
+    color: #ff0000;
+    bottom: 10px;
+    position: relative;
+    font-size: 0.8em;
+
+}
+
+.err-brdr {
+    border: 2px solid #ff0000 !important;
+    border-radius: 0 !important;
+}
+
+/*error-success msg css ends*/
+
