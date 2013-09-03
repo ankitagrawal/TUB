@@ -61,9 +61,9 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
        <c:when test="${hybridRelease eq true}">
            <s:layout-render name="/includes/_footerBeta.jsp"/>
        </c:when>
-        <c:otherwise>
-            <s:layout-render name="/includes/_footer.jsp"/>
-        </c:otherwise>
+       <c:otherwise>
+           <s:layout-render name="/includes/_footer.jsp"/>
+       </c:otherwise>
     </c:choose>
   </div>
   </body>
