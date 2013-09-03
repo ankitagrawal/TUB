@@ -893,27 +893,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
       } else {
-        Product product = productVariant.getProduct();
-        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-        if (!updateStockStatus) {
-          productVariant.setOutOfStock(false);
-        } else {
-          productVariant.setOutOfStock(true);
-          productVariant.setNetQty(0L);
-          productVariant.setMrpQty(0L);
-
-        }
-
-        getBaseDao().save(productVariant);
-
-        List<ProductVariant> inStockVariants = product.getInStockVariants();
-        if (inStockVariants != null && inStockVariants.isEmpty()) {
-          product.setOutOfStock(true);
-        } else {
-          product.setOutOfStock(false);
-        }
-        getBaseDao().save(product);
+        productVariant.setOutOfStock(true);
+        productVariant.setNetQty(0L);
+        productVariant.setMrpQty(0L);
       }
+      Product product = productVariant.getProduct();
+      boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+      if (!updateStockStatus) {
+        productVariant.setOutOfStock(false);
+      }
+
+      getBaseDao().save(productVariant);
+
+      List<ProductVariant> inStockVariants = product.getInStockVariants();
+      if (inStockVariants != null && inStockVariants.isEmpty()) {
+        product.setOutOfStock(true);
+      } else {
+        product.setOutOfStock(false);
+      }
+      getBaseDao().save(product);
     }
 
   }
