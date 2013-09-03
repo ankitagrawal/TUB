@@ -97,6 +97,10 @@ public class VerifyUserAction extends BaseAction {
             outcome = outcome_alreadyVerified;
         }
 
+        //return new ForwardResolution("/pages/verifyUser.jsp");
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/verifyUserBeta.jsp");
+        }
         return new ForwardResolution("/pages/verifyUser.jsp");
     }
 
