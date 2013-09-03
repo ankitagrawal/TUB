@@ -66,7 +66,6 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
         </c:otherwise>
     </c:choose>
   </div>
-
   </body>
   </html>
 </s:layout-definition>
