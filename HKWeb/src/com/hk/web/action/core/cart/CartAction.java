@@ -93,6 +93,7 @@ public class CartAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
+
         User user = getPrincipalUser();
         if (user == null) {
             user = userManager.createAndLoginAsGuestUser(null, null);
@@ -140,6 +141,9 @@ public class CartAction extends BaseAction {
             itemsInCart += subscriptions.size();
         }
         freebieBanner = cartFreebieService.getFreebieBanner(order);
+        if (isHybridRelease()) {
+          return new ForwardResolution("/pages/cartBeta.jsp");
+        }
         return new ForwardResolution("/pages/cart.jsp");
     }
 

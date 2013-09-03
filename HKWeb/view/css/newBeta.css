@@ -2589,7 +2589,18 @@ h2.prod_title {
 .current_step_content {
     display: inline;
     float: left;
-    margin-left: 260px;
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 910px;
+  display: block;
+  padding: 20px;
+  padding-top: 50px; /*border: 1px dotted #ddd;*/
+  margin-top: -25px;
+  margin-bottom: 20px;
+
+  border-radius: 0px;
+  font-size: 12px;
 }
 
 /* line 1085, ../sass/main.scss */
@@ -5423,7 +5434,7 @@ color: #e62580;
 }
 
 .offerContainer:hover {
-    border-color: #f87500;
+
 }
 
 .appliedOfferContainer{
@@ -5433,10 +5444,7 @@ color: #e62580;
 }
 
 .offerContainer{
-    position: relative;
-    float: left;
-    left: 30px;
-    border-radius:5px;
+
     margin-bottom: 10px;
     height: auto;
 }
