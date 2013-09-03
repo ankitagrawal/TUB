@@ -31,7 +31,7 @@
                 <div class="footer-menu">
                     <h4>Get to Know Us</h4>
                     <ul>
-                        <li><a href="">About Us</a></li>
+                        <li><a href="">About Us</a> </li>
                         <li><a href="">Careers</a></li>
                         <li><a href="">Investor Relations</a></li>
                         <li><a href="">Press Releases</a></li>
