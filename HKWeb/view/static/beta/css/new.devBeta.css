@@ -3384,7 +3384,11 @@ label{
 
 /*Button utils *End*/
 
-
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
+    cursor: not-allowed;
+    background-color: #eeeeee !important;
+    box-shadow: none;
+}
 /*text align variation start*/
 .txt-rgt {
     text-align: right;
@@ -3570,3 +3574,71 @@ label{
 }
 
 /**Container css *ends**/
+/*error-success msg css begins*/
+.err-cntnr {
+    border: 1px solid #ff0000;
+    padding: 10px;
+    color: #ff0000;
+    margin: 0 0 15px 0;
+}
+
+.alert-cntnr {
+    border: 1px solid #0091d7;
+    padding: 10px;
+    color: #0091d7;
+    margin: 0 0 15px 0;
+}
+
+.err-cntnr .icn-warning-small, .alert-cntnr .icn-success {
+    max-width: 10%;
+    vertical-align: top;
+    text-align: left;
+}
+
+.err-cntnr div, .alert-cntnr .alert-messages {
+    display: inline-block;
+    max-width: 90%;
+    margin: 0 0 0 10px;
+    text-align: left;
+}
+
+.err-cntnr div.sign-on-msg, .alert-cntnr .alert-messages.sign-on-msg {
+    max-width: 77%;
+}
+
+.err-cntnr div ul, err-cntnr div ul li, .alert-cntnr .alert-messages ul, .alert-cntnr .alert-messages ul li {
+    list-style: none;
+
+}
+
+.err-cntnr .icn-close2, .alert-cntnr  .icn-close2 {
+    max-width: 10%;
+    text-align: right;
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+    margin: 0 0 0 4px;
+}
+
+.err-icn {
+    float: right;
+    position: relative;
+    bottom: 55px;
+    left: 30px;
+}
+
+.err-txt {
+    color: #ff0000;
+    bottom: 10px;
+    position: relative;
+    font-size: 0.8em;
+
+}
+
+.err-brdr {
+    border: 2px solid #ff0000 !important;
+    border-radius: 0 !important;
+}
+
+/*error-success msg css ends*/
+
