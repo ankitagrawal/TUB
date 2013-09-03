@@ -71,8 +71,10 @@ public class MyAccountAction extends BaseAction {
       }
       b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
     }
-
-    return new ForwardResolution("/pages/userProfile.jsp");
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/userProfileBeta.jsp");
+      }
+      return new ForwardResolution("/pages/userProfile.jsp");
   }
 
   public User getUser() {

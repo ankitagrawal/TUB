@@ -384,22 +384,6 @@ strong {
     font-weight: bold;
 }
 
-/* line 317, ../sass/_base.scss */
-input[type="text"], input[type="password"], select, textarea {
-
-    height: 24px;
-    border: 1px solid #a2c4e5;
-    background: #f2f7fb;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    padding: 2px 5px;
-    font-size: 16px;
-}
-
 input[type="text"], input[type="password"] {
     width: 300px;
 }
@@ -408,24 +392,8 @@ textarea {
     height: 200px;
 }
 
-select: hover, select:focus {
-    border-color: #668;
-}
 
-/* line 325, ../sass/_base.scss */
-input[type="text"]:hover, input[type="text"]:focus, input[type="password"]:hover, input[type="password"]:focus {
-    border-color: #285f93;
-}
 
-/* line 328, ../sass/_base.scss */
-input[type="text"]:focus, input[type="password"]:focus {
-    -moz-box-shadow: inset 0 -2px 2px #cccccc;
-    -webkit-box-shadow: inset 0 -2px 2px #cccccc;
-    -o-box-shadow: inset 0 -2px 2px #cccccc;
-    box-shadow: inset 0 -2px 2px #cccccc;
-}
-
-/* line 332, ../sass/_base.scss */
 input.error {
     border: 1px solid #cc0000;
     background: #fffafa;
@@ -2121,11 +2089,6 @@ h3 a.prod_link {
     background: #FAFCFE;
 }
 
-/*Typography*/
-body {
-    font-size: 12px;
-    line-height: 18px;
-}
 
 b {
     font-weight: bold;
@@ -3384,7 +3347,11 @@ label{
 
 /*Button utils *End*/
 
-
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
+    cursor: not-allowed;
+    background-color: #eeeeee !important;
+    box-shadow: none;
+}
 /*text align variation start*/
 .txt-rgt {
     text-align: right;
@@ -3570,3 +3537,126 @@ label{
 }
 
 /**Container css *ends**/
+/*error-success msg css begins*/
+.err-cntnr {
+    border: 1px solid #ff0000;
+    padding: 10px;
+    color: #ff0000;
+    margin: 0 0 15px 0;
+}
+
+.alert-cntnr {
+    border: 1px solid #0091d7;
+    padding: 10px;
+    color: #0091d7;
+    margin: 0 0 15px 0;
+}
+
+.err-cntnr .icn-warning-small, .alert-cntnr .icn-success {
+    max-width: 10%;
+    vertical-align: top;
+    text-align: left;
+}
+
+.err-cntnr div, .alert-cntnr .alert-messages {
+    display: inline-block;
+    max-width: 90%;
+    margin: 0 0 0 10px;
+    text-align: left;
+}
+
+.err-cntnr div.sign-on-msg, .alert-cntnr .alert-messages.sign-on-msg {
+    max-width: 77%;
+}
+
+.err-cntnr div ul, err-cntnr div ul li, .alert-cntnr .alert-messages ul, .alert-cntnr .alert-messages ul li {
+    list-style: none;
+
+}
+
+.err-cntnr .icn-close2, .alert-cntnr  .icn-close2 {
+    max-width: 10%;
+    text-align: right;
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+    margin: 0 0 0 4px;
+}
+
+.err-icn {
+    float: right;
+    position: relative;
+    bottom: 55px;
+    left: 30px;
+}
+
+.err-txt {
+    color: #ff0000;
+    bottom: 10px;
+    position: relative;
+    font-size: 0.8em;
+
+}
+
+.err-brdr {
+    border: 2px solid #ff0000 !important;
+    border-radius: 0 !important;
+}
+
+/*error-success msg css ends*/
+
+/* title utils start*/
+.ttl-cntnr {
+    text-align: center;
+    clear: both;
+    font-family: 'Open Sans' SC;
+}
+
+.ttl-cntnr.ttl-left {
+    text-align: left
+}
+
+.ttl-cntnr span.icn {
+    margin-right: 10px;
+    margin-left: 10px;
+    position: relative;
+    bottom: 3px;
+    background: #111;
+    width: 7px;
+    height: 7px;
+}
+
+/*css for blue circles*/
+.ttl-cntnr span.icn{
+    background: url(../../../images/blue-circle.png);
+    width:12px;
+    height: 12px;
+    bottom:1px
+}
+.ttl-cntnr h1, .ttl-cntnr h2, .ttl-cntnr h3, .ttl-cntnr h4, .ttl-cntnr h5, .ttl-cntnr h6 {
+    display: inline-block;
+    max-width: 90%;
+}
+
+.ttl-cntnr h1.hide {
+    display: none;
+}
+
+.ttl-cntnr h1 {
+    margin: 20px 0;
+    line-height: 1em;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.ttl-cntnr h1.chckout-hdr {
+    margin: 20px 0 10px 0;
+}
+
+.ttl-cntnr h2 {
+    margin: 15px 0 5px;
+    line-height: 1em;
+    font-weight: 700;
+}
+
+/* title utils end*/
