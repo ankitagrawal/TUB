@@ -210,50 +210,62 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
   @Override
   public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
-    Sku sku = null;
+    boolean itemsWasBookedAtAqua = true;
+    for (LineItem lineItem : shippingOrder.getLineItems()) {
+      Sku sku = getSkuService().getSKU(lineItem.getSku().getProductVariant(), targetWarehouse);
+
+      List<ForeignSkuItemCLI> fsclis = lineItem.getCartLineItem().getForeignSkuItemCLIs();
+      if (fsclis != null && fsclis.size() > 0) {
+        itemsWasBookedAtAqua = false;
+      }
+      List<SkuItem> itemsToBeFreed = getSkuItemsTobeFreed(lineItem, Arrays.asList(sku));
+      if (!lineItem.getCartLineItem().getProductVariant().getProduct().isJit()) {
+        if (itemsToBeFreed == null || itemsToBeFreed.size() <= 0) {
+          return false;
+        }
+      }
+      if (itemsWasBookedAtAqua) {
+        for (SkuItem skuItem : itemsToBeFreed) {
+          skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+          baseDao.save(skuItem);
+        }
+      } else {
+        List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryForSOCancellation(lineItem);
+        if (infos == null || infos.size() <= 0) {
+          return false;
+        }
+        itemsToBeFreed = updateForeignSICLIForCancelledOrder(infos);
+        baseDao.deleteAll(itemsToBeFreed);
+
+      }
+    }
+    return true;
+  }
+
+
+  private List<SkuItem> getSkuItemsTobeFreed(LineItem lineItem, List<Sku> skuList) {
+
     List<SkuItem> availableUnbookedSkuItems = null;
-    List<Sku> skuList = new ArrayList<Sku>();
-    List<Long> skuStatusIdList = new ArrayList<Long>();
-    List<Long> skuItemOwnerList = new ArrayList<Long>();
-
-    skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
-
     List<SkuItem> toBeFreedSkuItemList = new ArrayList<SkuItem>();
 
-    for (LineItem lineItem : shippingOrder.getLineItems()) {
-      sku = getSkuService().getSKU(lineItem.getSku().getProductVariant(), targetWarehouse);
-      skuList.add(sku);
-      availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-
+    List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
+    if (skuItemLineItems != null && skuItemLineItems.size() > 0) {
+      availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), lineItem.getMarkedPrice());
       if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() >= lineItem.getQty()) {
-        List<SkuItemLineItem> skuItemLineItemList = lineItem.getSkuItemLineItems();
-        // Incase of no skuItem line Item List  Just return true  and  rest taken care by Valiadate Method
-        if (skuItemLineItemList == null || skuItemLineItemList.size() == 0) {
-          return true;
-        }
-        for (SkuItemLineItem skuItemLineItem : skuItemLineItemList) {
+        for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
           SkuItem toBeFreedSkuItem = skuItemLineItem.getSkuItem();
           SkuItem skuItem = availableUnbookedSkuItems.get(skuItemLineItem.getUnitNum().intValue() - 1);
           skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-
           skuItemLineItem.setSkuItem(skuItem);
           skuItemLineItem.getSkuItemCLI().setSkuItem(skuItem);
-
-          toBeFreedSkuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
           toBeFreedSkuItemList.add(toBeFreedSkuItem);
         }
-        getSkuItemLineItemDao().saveOrUpdate(skuItemLineItemList);
-      } else {
-        return false;
+        getSkuItemLineItemDao().saveOrUpdate(skuItemLineItems);
       }
     }
-    if (toBeFreedSkuItemList != null && toBeFreedSkuItemList.size() > 0) {
-      getSkuItemDao().saveOrUpdate(toBeFreedSkuItemList);
-      return true;
-    }
-    return false;
+    return toBeFreedSkuItemList;
   }
+
 
   public Boolean freeInventoryForSOCancellation(ShippingOrder shippingOrder) {
     List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
@@ -266,7 +278,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       CartLineItem cartLineItem = lineItem.getCartLineItem();
       if (bookedOnBright(cartLineItem)) {
         logger.debug("Update booking on Bright");
-       List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryForSOCancellation(lineItem);
+        List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryForSOCancellation(lineItem);
 
         skuItemsToBeDeleted.addAll(updateForeignSICLIForCancelledOrder(infos));
       }
@@ -328,7 +340,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return false;
   }
 
-  private  List<HKAPIForeignBookingResponseInfo> freeBrightInventoryForSOCancellation(LineItem lineItem) {
+  private List<HKAPIForeignBookingResponseInfo> freeBrightInventoryForSOCancellation(LineItem lineItem) {
     List<HKAPIForeignBookingResponseInfo> infos = null;
     try {
       CartLineItem cartLineItem = lineItem.getCartLineItem();
@@ -441,7 +453,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return getSkuItemLineItemDao().getForeignSkuItemCLI(id);
   }
 
-  public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem){
+  public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem) {
     return getSkuItemLineItemDao().getForeignSkuItemCli(cartLineItem);
   }
 
@@ -487,17 +499,22 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
 
-  public List<SkuItem> updateForeignSICLIForCancelledOrder (List <HKAPIForeignBookingResponseInfo> infos ){
-   List<SkuItem> skuItems = new ArrayList<SkuItem>();
-    for (HKAPIForeignBookingResponseInfo info : infos ){
-      ForeignSkuItemCLI foreignSkuItemCLI =  getForeignSkuItemCLI(info.getFsiCLIId());
+  public List<SkuItem> updateForeignSICLIForCancelledOrder(List<HKAPIForeignBookingResponseInfo> infos) {
+    List<SkuItem> skuItems = new ArrayList<SkuItem>();
+    for (HKAPIForeignBookingResponseInfo info : infos) {
+      ForeignSkuItemCLI foreignSkuItemCLI = getForeignSkuItemCLI(info.getFsiCLIId());
       foreignSkuItemCLI.setProcessedStatus(info.getProcessed());
       foreignSkuItemCLI = (ForeignSkuItemCLI) baseDao.save(foreignSkuItemCLI);
-       SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
-       skuItems.add(skuItem);
+      SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
+      skuItems.add(skuItem);
     }
     return skuItems;
   }
+
+  public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId){
+    return getSkuItemLineItemDao().getFSICI(foreignSkuItemId);
+  }
+
 
   public SkuItemLineItem getBySkuItemId(Long skuItemId) {
     return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);

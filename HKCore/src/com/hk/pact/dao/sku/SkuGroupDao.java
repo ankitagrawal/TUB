@@ -34,4 +34,6 @@ public interface SkuGroupDao extends BaseDao {
 
   public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
 
+  public SkuGroup getForeignSkuGroup( Long foreignSkuGroupId);
+
 }

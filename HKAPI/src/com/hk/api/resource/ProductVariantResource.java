@@ -3,11 +3,13 @@ package com.hk.api.resource;
 
 import com.hk.api.pact.service.HKAPIProductService;
 import com.hk.constants.core.Keys;
+import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.store.StoreProduct;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.store.StoreService;
@@ -21,10 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.util.List;
 
 /**
@@ -43,6 +42,7 @@ public class ProductVariantResource {
     private SkuService skuService;
     private StoreService storeService;
     private WarehouseService warehouseService;
+    private InventoryHealthService inventoryHealthService;
 
     @Autowired
     private HKAPIProductService hkapiProductService;
@@ -149,8 +149,28 @@ public class ProductVariantResource {
         return new JSONResponseBuilder().addField("variantId", variantId).addField("warehouseId", aquaSku.getId()).build();
 
     }
-    
-    public ProductVariantService getProductVariantService() {
+
+
+  @POST
+  @Path("/updateFreezedInventory/")
+  @Produces("application/json")
+  public String updateFreezedInventory(List<HKAPIForeignBookingResponseInfo> hKAPIForeignBookingResponseInfos) {
+    boolean inventoryUpdated = false;
+    Long baseOrderId = null;
+    if (hKAPIForeignBookingResponseInfos != null && hKAPIForeignBookingResponseInfos.size() > 0) {
+      baseOrderId = hKAPIForeignBookingResponseInfos.get(0).getFboId();
+      for (HKAPIForeignBookingResponseInfo info : hKAPIForeignBookingResponseInfos) {
+        getInventoryHealthService().freezeInventoryForAB(info);
+      }
+      inventoryUpdated = true;
+    }
+    return new JSONResponseBuilder().addField("orderId", baseOrderId).addField("inventoryUpdated", inventoryUpdated).build();
+
+  }
+
+
+
+  public ProductVariantService getProductVariantService() {
         if (productVariantService == null) {
             productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
         }
@@ -184,4 +204,11 @@ public class ProductVariantResource {
         }
         return warehouseService;
     }
+
+  public InventoryHealthService getInventoryHealthService() {
+    if (inventoryHealthService == null) {
+      inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
+    }
+    return inventoryHealthService;
+  }
 }

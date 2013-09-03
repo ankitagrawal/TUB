@@ -30,6 +30,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.catalog.ProductService;
@@ -88,7 +89,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   CartLineItemDao cartLineItemDao;
   @Autowired
   SkuItemLineItemDao skuItemLineItemDao;
-
+  @Autowired
+  SkuGroupDao skuGroupDao;
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
@@ -638,7 +640,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           } else {
             //book inventory on Bright
             cartLineItem = tempBookBrightInventory(cartLineItem);
-            cartLineItem = createSkuGroupAndItem(cartLineItem);
+//            cartLineItem =  createSkuGroupAndItem(cartLineItem) ;
             populateSICLI(cartLineItem);
           }
         }
@@ -648,31 +650,45 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
   @Transactional
-  public CartLineItem createSkuGroupAndItem(CartLineItem cartLineItem) {
+  public CartLineItem createSkuGroupAndItem(CartLineItem cartLineItem, Long warehouseId) {
 
     if (cartLineItem.getForeignSkuItemCLIs() != null && cartLineItem.getForeignSkuItemCLIs().size() > 0) {
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
       ProductVariant productVariant = cartLineItem.getProductVariant();
-      Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-      if (fsicli.getSkuItemId() != null){
-       SkuGroup skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
-          fsicli.getFsgCostPrice(), fsicli.getFsgMrp(), null, null, null, sku);
+      Warehouse warehouse = getBaseDao().get(Warehouse.class, warehouseId);
+      List<Warehouse> whs = warehouseService.findWarehouses(warehouse.getTinPrefix());
+      whs.remove(warehouse);
+      // now whs contain aqua warehouse
+      Sku sku = skuService.getSKU(productVariant, whs.get(0));
+      SkuGroup skuGroup = null;
 
+      Long foreignSkuGroupId = fsicli.getForeignSkuGroupId();
+      skuGroup = skuGroupDao.getForeignSkuGroup(foreignSkuGroupId);
+      if (fsicli.getSkuItemId() != null) {
+        if (skuGroup == null) {
+          skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
+              fsicli.getFsgCostPrice(), fsicli.getFsgMrp(), null, null, null, sku);
+          skuGroup.setForeignSkuGroupId(foreignSkuGroupId);
+          skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
+        }
 
-      List<SkuItem> skuItems = new ArrayList<SkuItem>();
-      for (ForeignSkuItemCLI fsicli1 : cartLineItem.getForeignSkuItemCLIs()) {
-        SkuItem skuItem = new SkuItem();
-        skuItem.setSkuGroup(skuGroup);
-        skuItem.setCreateDate(new Date());
-        skuItem.setSkuItemStatus(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus());
-        skuItem.setBarcode(fsicli1.getForeignBarcode());
-        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-        skuItem.setForeignSkuItemCLI(fsicli1);
-        skuItem = (SkuItem) getBaseDao().save(skuItem);
-        skuItems.add(skuItem);
+        // Need to discus about setting of foreign sku_group id
+
+        List<SkuItem> skuItems = new ArrayList<SkuItem>();
+        for (ForeignSkuItemCLI fsicli1 : cartLineItem.getForeignSkuItemCLIs()) {
+          SkuItem skuItem = new SkuItem();
+          skuItem.setSkuGroup(skuGroup);
+          skuItem.setCreateDate(new Date());
+          skuItem.setSkuItemStatus(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus());
+          skuItem.setBarcode(fsicli1.getForeignBarcode());
+          skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+          skuItem.setForeignSkuItemCLI(fsicli1);
+          skuItem = (SkuItem) getBaseDao().save(skuItem);
+          skuItems.add(skuItem);
+        }
       }
-     }
     }
+
     return cartLineItem;
   }
 
@@ -693,7 +709,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   private CartLineItem tempBookBrightInventory(CartLineItem cartLineItem) {
     logger.debug("Going to book inv on Bright Side");
-
+    Long warehouseIdAtOrderPlacement = cartLineItem.getProductVariant().getWarehouse().getId();
     // now make a API call to booked inventory at Bright
     List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
     List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
@@ -739,6 +755,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     }
     cartLineItem = (CartLineItem) getBaseDao().save(cartLineItem);
+    createSkuGroupAndItem(cartLineItem, warehouseIdAtOrderPlacement);
     return cartLineItem;
   }
 
@@ -783,7 +800,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  private void updateForeignSICLITable(List<HKAPIForeignBookingResponseInfo> infos) {
+  public void updateForeignSICLITable(List<HKAPIForeignBookingResponseInfo> infos) {
     for (HKAPIForeignBookingResponseInfo info : infos) {
       long fsiliId = info.getFsiCLIId();
       ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemService.getForeignSkuItemCLI(fsiliId);
@@ -874,26 +891,29 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         logger.debug("hKApiSkuResponse got -" + hkApiSkuResponse.getVariantId() + ", qty - " + hkApiSkuResponse.getQty() + ", MRP -" + hkApiSkuResponse.getMrp());
         productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
 
-      } else {
-        productVariant.setOutOfStock(true);
-        productVariant.setNetQty(0L);
-        productVariant.setMrpQty(0L);
-      }
-      Product product = productVariant.getProduct();
-      boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-      if (!updateStockStatus) {
-        productVariant.setOutOfStock(false);
-      }
-      getBaseDao().save(productVariant);
 
-      List<ProductVariant> inStockVariants = product.getInStockVariants();
-      if (inStockVariants != null && inStockVariants.isEmpty()) {
-        product.setOutOfStock(true);
       } else {
-        product.setOutOfStock(false);
-      }
-      getBaseDao().save(product);
+        Product product = productVariant.getProduct();
+        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+        if (!updateStockStatus) {
+          productVariant.setOutOfStock(false);
+        } else {
+          productVariant.setOutOfStock(true);
+          productVariant.setNetQty(0L);
+          productVariant.setMrpQty(0L);
 
+        }
+
+        getBaseDao().save(productVariant);
+
+        List<ProductVariant> inStockVariants = product.getInStockVariants();
+        if (inStockVariants != null && inStockVariants.isEmpty()) {
+          product.setOutOfStock(true);
+        } else {
+          product.setOutOfStock(false);
+        }
+        getBaseDao().save(product);
+      }
     }
 
   }
@@ -1052,6 +1072,45 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     }
     return date;
+  }
+
+  public void freezeInventoryForAB(HKAPIForeignBookingResponseInfo info) {
+    ForeignSkuItemCLI existingFscli = getBaseDao().get(ForeignSkuItemCLI.class, info.getFsiCLIId());
+    SkuItem existingSkuItem = skuItemLineItemService.getSkuItem(existingFscli.getId());
+
+    updateForeignSICLITable(Arrays.asList(info));
+    Sku existingSku = existingSkuItem.getSkuGroup().getSku();
+    Long actualSkuItemId = info.getFsiId();
+    Long actualSkuGroupId = info.getFsgId();
+
+    // check SkuGroup is already created or not
+    SkuGroup skuGroup = skuGroupDao.getForeignSkuGroup(actualSkuGroupId);
+    if (skuGroup == null) {
+      skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(info.getBatch(), getFormattedDate(info.getMfgdt()), getFormattedDate(info.getExpdt()),
+          info.getCp(), info.getMrp(), null, null, null, existingSku);
+      skuGroup.setForeignSkuGroupId(actualSkuGroupId);
+      skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
+    }
+    if (actualSkuItemId.equals(existingSkuItem.getId())) {
+      existingSkuItem.setSkuGroup(skuGroup);
+
+    } else {
+      // need to check item which i got in response got booked in different order
+      ForeignSkuItemCLI fsicliBookedForDifferentOrder = skuItemLineItemService.getFSICI(actualSkuItemId);
+      if (fsicliBookedForDifferentOrder != null) {
+        SkuItem bookedSkuItemFordifferentOrder = skuItemLineItemService.getSkuItem(fsicliBookedForDifferentOrder.getId());
+        String tempBarcode = bookedSkuItemFordifferentOrder.getBarcode();
+        bookedSkuItemFordifferentOrder.setBarcode(existingSkuItem.getBarcode());
+        getBaseDao().save(bookedSkuItemFordifferentOrder);
+        existingSkuItem.setBarcode(tempBarcode);
+        existingSkuItem.setSkuGroup(skuGroup);
+
+      } else {
+        existingSkuItem.setBarcode(info.getBarcode());
+        existingSkuItem.setSkuGroup(skuGroup);
+      }
+    }
+    getBaseDao().save(existingSkuItem);
   }
 
 }

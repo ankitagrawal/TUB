@@ -446,6 +446,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		return shouldUpdate;
 	}
 
+
 	public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse) {
 
 		if (cartLineItems != null && !cartLineItems.isEmpty() && warehouse != null) {
