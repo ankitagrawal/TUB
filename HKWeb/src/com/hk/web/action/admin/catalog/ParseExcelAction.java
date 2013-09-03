@@ -5,12 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.FileBean;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
@@ -97,6 +92,25 @@ public class ParseExcelAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));
         return new ForwardResolution("/pages/admin/catalogDump.jsp");
     }
+
+  @DontValidate
+  public Resolution parseB2BPriceExcel() throws Exception {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String excelFilePath = adminUploadsPath + "/b2bPriceFiles/" + sdf.format(new Date()) + ".xls";
+    File excelFile = new File(excelFilePath);
+    excelFile.getParentFile().mkdirs();
+    fileBean.save(excelFile);
+
+    try {
+      xslParser.readAndUpdateB2BPrice(excelFile);
+      addRedirectAlertMessage(new SimpleMessage("B2B Price Updated Successfully."));
+    } catch (Exception e) {
+      logger.error("Exception while reading excel sheet.", e);
+      addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+    }
+    return new RedirectResolution("/pages/admin/b2bPriceUpdate.jsp");
+  }
+
 
     public String getCategory() {
         return category;

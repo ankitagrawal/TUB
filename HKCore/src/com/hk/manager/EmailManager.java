@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 
 import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
+import com.hk.domain.shippingOrder.LineItem;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
@@ -384,6 +385,25 @@ public class EmailManager {
         }
         
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
+    }
+
+    public boolean sendPartialOrderCancelEmailToUser(ShippingOrder shippingOrder) {
+        Order order = shippingOrder.getBaseOrder();
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("shippingOrder", shippingOrder);
+        valuesMap.put("order", order);
+        valuesMap.put("isCOD",order.getPayment().isCODPayment());
+        Set<CartLineItem> cancelledItems = new HashSet<CartLineItem>();
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            cancelledItems.add(lineItem.getCartLineItem());
+        }
+        valuesMap.put("pricingDto", new PricingDto(cancelledItems, order.getAddress()));
+
+        Template freemarkerTemplate
+                = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.partialOrderCancelEmailUser);
+
+        return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(),
+                order.getUser().getName());
     }
 
     public boolean sendOrderCancelEmailToAdmin(Order order) {

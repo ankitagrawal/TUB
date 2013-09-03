@@ -261,7 +261,6 @@ public class PaymentManager {
             payment.setBankCity(backCity);
             payment.setChequeNumber(chequeNumber);
             order = processOrder(payment);
-            orderEventPublisher.publishOrderPlacedEvent(order);
         }
         return order;
     }
@@ -281,9 +280,6 @@ public class PaymentManager {
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
             order = processOrder(payment);
-//            if(!order.isSubscriptionOrder()){
-//                inventoryHealthService.tempBookSkuLineItemForOrder(order);
-//            }
         }
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;
@@ -309,9 +305,25 @@ public class PaymentManager {
                 payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
             }
             order = authPending(gatewayOrderId, codContactName, codContactPhone, null, null, null, null);
-            pushCODToThirdParty(shouldCodCall, payment);
+            createUserCodCall(order);
+            pushCODToThirdParty(shouldCodCall, order.getPayment());
+            orderEventPublisher.publishOrderPlacedEvent(order);
         }
         return order;
+    }
+
+    @Transactional
+    private void createUserCodCall(Order order){
+        Payment payment = order.getPayment();
+        if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
+            //for some orders userCodCall object is not created, a  check to create one
+            try{
+                UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                orderService.saveUserCodCall(userCodCall);
+            } catch (Exception e){
+                logger.info("User Cod Call already exists for " + order.getId());
+            }
+        }
     }
 
     private void pushCODToThirdParty(boolean shouldCodCall, Payment payment) {

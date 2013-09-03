@@ -416,7 +416,7 @@
 
                 <h6 >Offer Available</h6>
                 <div>
-                        ${freebie.name} FREE with Select Variants of this product. Offer Valid till stocks last.
+                        ${freebie.name} FREE with selected variants of this product. Offer valid till stocks last.
                 </div>
             </div>
         </c:if>
