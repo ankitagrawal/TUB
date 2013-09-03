@@ -97,12 +97,9 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
   public List<RegionType> getRegionsForCourier(Courier courier) {
     DetachedCriteria criteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     criteria.add(Restrictions.eq("courier", courier));
-    ProjectionList projectionsList = Projections.projectionList();
-    projectionsList.add(Projections.alias(Projections.property("regionType"),"regions"));
-    projectionsList.add(Projections.distinct(Projections.property("regions")));
-    criteria.setProjection(projectionsList);
-    criteria.setResultTransformer(Transformers.aliasToBean(RegionType.class));
-
-    return this.findByCriteria(criteria);
+    criteria.setProjection(Projections.property("regionType"));
+ //   criteria.setResultTransformer(Transformers.aliasToBean(RegionType.class));
+    List<RegionType> results = this.findByCriteria(criteria); 
+    return results;
   }
 }

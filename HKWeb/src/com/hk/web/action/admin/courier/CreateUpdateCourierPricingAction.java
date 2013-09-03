@@ -14,7 +14,9 @@ import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +35,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   private List<CourierPricingEngine> courierPricingEngineList = new ArrayList<CourierPricingEngine>();
   private List<Courier> courierList = new ArrayList<Courier>();
   private List<RegionType> regionTypeList = new ArrayList<RegionType>();
-  private  List<RegionType> regionTypesForCourier= new ArrayList<RegionType>();
+  private Set<RegionType> regionTypesForCourier= new HashSet<RegionType>();
 
   @DefaultHandler
   public Resolution pre() {
@@ -54,7 +56,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
     }
     this.initialize();
-    this.regionTypesForCourier = courierPricingEngineService.getRegionsForCourier(courier);
+    this.regionTypesForCourier.addAll(courierPricingEngineService.getRegionsForCourier(courier));
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
@@ -126,11 +128,11 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     this.regionTypeList = regionTypeList;
   }
 
-  public List<RegionType> getRegionTypesForCourier() {
+  public Set<RegionType> getRegionTypesForCourier() {
     return regionTypesForCourier;
   }
 
-  public void setRegionTypesForCourier(List<RegionType> regionTypesForCourier) {
+  public void setRegionTypesForCourier(Set<RegionType> regionTypesForCourier) {
     this.regionTypesForCourier = regionTypesForCourier;
   }
 }
