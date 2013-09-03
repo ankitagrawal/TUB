@@ -110,7 +110,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                     if (weight != null && weight > 0D) {
                         shipment.setBoxWeight(weight);
                     }
-                    shipmentService.calculateAndDistributeShipmentCost(shipment, shippingOrder);
+                    shipment = shipmentService.calculateAndDistributeShipmentCost(shipment);
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
                 }

@@ -30,8 +30,6 @@ public interface ShipmentService {
 
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
 
-    public WHReportLineItem save(WHReportLineItem whReportLineItem);
-
-    public void calculateAndDistributeShipmentCost(Shipment shipment, ShippingOrder shippingOrder);
+    public Shipment calculateAndDistributeShipmentCost(Shipment shipment);
 
 }

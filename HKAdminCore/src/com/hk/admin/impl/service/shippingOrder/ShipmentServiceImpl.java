@@ -129,8 +129,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 Double estimatedShipmentCharge = shipmentPricingEngine.calculateShipmentCost(shippingOrder);
                 shipment.setOrderPlacedShipmentCharge(estimatedShipmentCharge);
-                shipment.setShipmentCostCalculateDate(new Date());
-                calculateAndDistributeShipmentCost(shipment, shippingOrder);
+                shipment = calculateAndDistributeShipmentCost(shipment);
             }
             shippingOrder = shippingOrderService.save(shippingOrder);
             String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
@@ -140,20 +139,20 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shippingOrder.getShipment();
     }
 
-    public void calculateAndDistributeShipmentCost(Shipment shipment, ShippingOrder shippingOrder) {
+    public Shipment calculateAndDistributeShipmentCost(Shipment shipment) {
+        ShippingOrder shippingOrder = shipment.getShippingOrder();
+        shippingOrder.setShipment(shipment);
         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
         shipment.setShipmentCostCalculateDate(new Date());
         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
         shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-        save(shipment);
+        shipment = save(shipment);
         List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
         for (WHReportLineItem whReportLineItem : whReportLineItemList) {
             save(whReportLineItem);
         }
-
+        return shipment;
     }
-
-
 
     public Shipment save(Shipment shipment) {
         return (Shipment) shipmentDao.save(shipment);
@@ -167,7 +166,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipmentDao.findByAwb(awb);
     }
 
-    public WHReportLineItem save(WHReportLineItem whReportLineItem) {
+    private WHReportLineItem save(WHReportLineItem whReportLineItem) {
         return (WHReportLineItem) shipmentDao.save(whReportLineItem);
     }
 
