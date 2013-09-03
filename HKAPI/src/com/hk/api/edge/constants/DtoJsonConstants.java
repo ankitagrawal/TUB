@@ -9,4 +9,7 @@ public class DtoJsonConstants {
     public static final String DISPLAY_ORDER = "do";
     public static final String HIGHLIGHTER = "high";
     public static final String CHILDREN = "ch";
+    
+    public static final String RESULTS = "results";
+    public static final String TOP_LEVEL_MENU_NODES = "tpMenuNode";
 }

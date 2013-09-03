@@ -5,7 +5,7 @@ import java.util.Locale;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
-import com.hk.api.edge.internal.dto.CatalogMenuNode;
+import com.hk.api.edge.internal.response.menu.CatalogMenuNode;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
 

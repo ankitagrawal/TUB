@@ -7,9 +7,9 @@ import com.hk.api.edge.constants.ServiceEndPoints;
 import com.hk.api.edge.constants.StoreConstants;
 import com.hk.api.edge.http.HkHttpClient;
 import com.hk.api.edge.http.URIBuilder;
-import com.hk.api.edge.internal.dto.CatalogMenuNode;
 import com.hk.api.edge.internal.pact.service.MenuService;
-import com.hk.api.edge.internal.response.MenuNodeResponseApiWrapper;
+import com.hk.api.edge.internal.response.menu.CatalogMenuNode;
+import com.hk.api.edge.internal.response.menu.MenuNodeResponseApiWrapper;
 
 /**
  * @author vaibhav.adlakha
