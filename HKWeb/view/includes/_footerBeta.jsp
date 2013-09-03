@@ -115,7 +115,6 @@
                 });
             }
             goToTop();
-
         </script>
     </s:layout-component>
 </s:layout-definition>
