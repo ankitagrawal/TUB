@@ -6,17 +6,14 @@ html, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, 
     outline: 0;
     font-weight: normal;
 }
-
 html {
     height: 100%;
 }
-
 fieldset {
     padding: 0;
     margin: 0;
     border: 0;
 }
-
 @font-face {
     font-family: 'Open Sans';
     font-style: normal;
@@ -171,6 +168,8 @@ p {
     margin-bottom: 1em;
 }
 */
+
+
 
 /* line 146, ../sass/_base.scss */
 ol, ul {
@@ -379,21 +378,6 @@ strong {
     font-weight: bold;
 }
 
-/* line 317, ../sass/_base.scss */
-input[type="text"], input[type="password"], select, textarea {
-
-    height: 24px;
-    border: 1px solid #a2c4e5;
-    background: #f2f7fb;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    padding: 2px 5px;
-    font-size: 16px;
-}
 
 input[type="text"], input[type="password"] {
     width: 300px;
@@ -403,22 +387,6 @@ textarea {
     height: 200px;
 }
 
-select: hover, select:focus {
-    border-color: #668;
-}
-
-/* line 325, ../sass/_base.scss */
-input[type="text"]:hover, input[type="text"]:focus, input[type="password"]:hover, input[type="password"]:focus {
-    border-color: #285f93;
-}
-
-/* line 328, ../sass/_base.scss */
-input[type="text"]:focus, input[type="password"]:focus {
-    -moz-box-shadow: inset 0 -2px 2px #cccccc;
-    -webkit-box-shadow: inset 0 -2px 2px #cccccc;
-    -o-box-shadow: inset 0 -2px 2px #cccccc;
-    box-shadow: inset 0 -2px 2px #cccccc;
-}
 
 /* line 332, ../sass/_base.scss */
 input.error {
@@ -471,10 +439,9 @@ span.error {
 
 /* line 22, ../sass/main.scss */
 .logoBox {
-    margin-left: 260px;
-    margin-top: 50px;
+  margin-left:260px;
+  margin-top: 50px;
 }
-
 .logoBox a {
     border: none;
 }
@@ -510,40 +477,23 @@ span.error {
 }
 
 .cartIcon {
-    width: 15px;
-    float: left;
+  width:15px; float:left;
 }
-
 .cartText {
-    float: left;
-    margin-right: 7px;
+  float:left; margin-right: 7px;
 }
-
 .offerAndBrands {
-    float: right;
-    margin-top: 5px;
-    font-size: 12px;
-    color: gray;
+  float:right; margin-top: 5px; font-size: 12px; color: gray;
 }
-
 .offerAndBrands a {
-    text-decoration: none;
-    font-size: 12px;
-    color: #23527F;
-    border-bottom: none;
+  text-decoration: none;
+  font-size: 12px;
+  color: #23527F;
+  border-bottom: none;
 }
-
-.offerAndBrands a:visited {
-    text-decoration: none;
-}
-
-.offerAndBrands a:hover {
-    color: black;
-}
-
-.offerAndBrands a:active {
-    text-decoration: none;
-}
+.offerAndBrands a:visited {text-decoration:none;}
+.offerAndBrands a:hover {color:black;}
+.offerAndBrands a:active {text-decoration:none;}
 
 /*
 .topBar .logo_hover {
@@ -645,7 +595,7 @@ span.error {
     margin-right: 5px;
     border: 1px solid #8db8e0;
     width: 125px;
-    float: right;
+    float:right;
 }
 
 /* line 103, ../sass/main.scss */
@@ -682,7 +632,7 @@ span.error {
     background: #23527f;
     position: relative;
     border-bottom: 2px solid #FF8213;
-    clear: both;
+    clear:both;
 }
 
 /* line 130, ../sass/main.scss */
@@ -701,10 +651,10 @@ span.error {
 
 /* line 138, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 {
-    max-width: 80px;
-    min-width: 65px;
-    word-wrap: normal;
-    text-align: center;
+    max-width:80px;
+    min-width:65px;
+    word-wrap:normal;
+    text-align:center;
     height: 38px;
     float: left;
     vertical-align: middle;
@@ -721,7 +671,6 @@ span.error {
     -o-box-shadow: 1px 0 0 rgba(255, 255, 255, 0.1), -1px 0 0 rgba(255, 255, 255, 0.1);
     box-shadow: 1px 0 0 rgba(255, 255, 255, 0.1), -1px 0 0 rgba(255, 255, 255, 0.1);
 }
-
 .menuBar ul.lvl1 li.new {
     background-image: url('../images/1327732146_new_2.png');
     background-repeat: no-repeat;
@@ -780,7 +729,7 @@ span.error {
 
 #home_button {
     padding: 6px 10px;
-    float: left;
+     float:left;
 }
 
 /* line 172, ../sass/main.scss */
@@ -798,11 +747,9 @@ span.error {
     border-bottom-color: transparent;
     font-size: 13px;
 }
-
 #offers_button a {
     color: #ffff00;
 }
-
 /* line 180, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 a:hover {
     text-decoration: none;
@@ -816,7 +763,7 @@ span.error {
 /* line 186, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 div.lvl2 {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=98)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=98);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 98);
     opacity: 0.98;
     margin-left: auto;
     margin-right: auto;
@@ -1054,7 +1001,7 @@ span.error {
     -khtml-border-bottom-right-radius: 0.5em 0.5em;
     border-bottom-right-radius: 0.5em 0.5em;
     border-top-color: transparent;
-    clear: both;
+    clear:both;
 }
 
 /* line 330, ../sass/main.scss */
@@ -1081,8 +1028,8 @@ span.error {
     float: none;
     vertical-align: middle;
     margin: 0 10px;
-    padding: 0;
-
+    padding:0;
+    
 }
 
 /* line 347, ../sass/main.scss */
@@ -1149,7 +1096,7 @@ span.error {
 .lvl2Bar li.lvl2 .head2 {
     margin: 0;
     padding: 7px 0px;
-    display: inline-block;
+    display:inline-block;
     /*width: 140px;  */
 }
 
@@ -1292,8 +1239,8 @@ span.error {
     width: 960px;
     margin-left: auto;
     margin-right: auto;
-    /* border: 1px solid #ddd;
-     box-shadow: 0 1px 3px #eee;*/
+   /* border: 1px solid #ddd;
+    box-shadow: 0 1px 3px #eee;*/
     padding-top: 5px;
     border-radius: 5px;
     border-top-width: 2px;
@@ -1464,7 +1411,7 @@ h3 a.prod_link {
 .main_container .products .product .prices {
     color: #222;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 90);
     opacity: 0.9;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -1506,7 +1453,7 @@ h3 a.prod_link {
 /* line 592, ../sass/main.scss */
 .main_container .products .product:hover .prices {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 100);
     opacity: 1;
 }
 
@@ -1526,123 +1473,6 @@ h3 a.prod_link {
     color: #444;
     font-size: 12px;
     line-height: 18px;
-}
-
-/* line 613, ../sass/main.scss */
-.footer {
-    border: 1px solid #ddd;
-    box-shadow: 0 1px 3px #eee;
-    width: 960px;
-    margin-left: auto;
-    margin-right: auto;
-    background: #1d456b;
-    display: block;
-    border-top: 3px solid #f87500;
-    -moz-box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    -o-box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
-    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(255, 255, 255, 0.1)));
-    background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    background-image: linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
-    height: 310px;
-    /* margin-top: -250px;
-     position: absolute;
-     left: 0px; right: 0px;
-     bottom: 0px;*/
-    position: relative;
-    clear: both;
-
-}
-
-.footer-bottom {
-    width: 960px;
-    margin: 0 auto;
-    background: #FAFCFE;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0;
-    vertical-align: middle;
-    text-align: right;
-    /*width: 100%;
-  background: #e67817;
-  margin: 0px;
-  height: 66px;
-
-
-  clear: both;
-  bottom: 0px;
-  position: relative;*/
-}
-
-.footer-bottom .fb-contents {
-    width: 960px;
-    margin: 0px auto;
-}
-
-.footer-bottom .fb-contents .copyright {
-    display: inline;
-    float: left;
-    width: 480px;
-    font-weight: bold;
-    color: white;
-}
-
-/* line 623, ../sass/main.scss */
-.footer .contents {
-    width: 960px;
-    margin: 15px auto;
-    margin-bottom: 35px;
-}
-
-/* line 626, ../sass/main.scss */
-.footer .contents .column {
-    display: inline;
-    float: left;
-    margin-left: 10px;
-    margin-right: 10px;
-    width: 150px;
-}
-
-/* line 628, ../sass/main.scss */
-.footer .contents .column h5 {
-    color: white;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 21px;
-    border-bottom: 1px solid #f87500;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -o-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-}
-
-/* line 637, ../sass/main.scss */
-.footer .contents .column ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-/* line 641, ../sass/main.scss */
-.footer .contents .column ul li {
-    margin-top: 0.45em;
-    margin-bottom: 0.45em;
-}
-
-/* line 646, ../sass/main.scss */
-.footer .contents .column a {
-    font-size: 10px;
-    line-height: 18px;
-    color: white;
-    border-bottom-color: transparent;
-}
-
-/* line 651, ../sass/main.scss */
-.footer .contents .column a:hover {
-    border-bottom-color: #f87500;
 }
 
 /* line 659, ../sass/main.scss */
@@ -1671,7 +1501,7 @@ h3 a.prod_link {
     float: none;
     cursor: pointer;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 70);
     opacity: 0.7;
     border: 1px solid transparent;
     -moz-border-radius: 3px;
@@ -1686,7 +1516,7 @@ h3 a.prod_link {
 .product_slideshow .slides .slide:hover {
     border-color: #ddd;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 100);
     opacity: 1;
 }
 
@@ -2367,7 +2197,7 @@ h2.prod_title {
     vertical-align: top;
     line-height: 24px;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 50);
     opacity: 0.5;
 }
 
@@ -2380,7 +2210,7 @@ h2.prod_title {
 /* line 931, ../sass/main.scss */
 .catalog .controls a.control:hover .icon {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 100);
     opacity: 1;
 }
 
@@ -2395,7 +2225,7 @@ h2.prod_title {
 /* line 941, ../sass/main.scss */
 .catalog .controls a.active .icon {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 100);
     opacity: 1;
 }
 
@@ -2581,6 +2411,7 @@ h2.prod_title {
     padding-left: 20px;
 }
 
+
 /* line 1030, ../sass/main.scss */
 .steps {
     display: inline;
@@ -2753,6 +2584,7 @@ h2.prod_title {
     color: #444;
 }
 
+
 /* line 1075, ../sass/main.scss */
 .current_step_content {
     display: inline;
@@ -2900,7 +2732,7 @@ h2.prod_title {
     width: 48px;
     float: left;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 50);
     opacity: 0.5;
     display: inline-block;
     float: none;
@@ -4379,8 +4211,8 @@ select:hover, select:focus {
     width: 16px;
     height: 16px;
     display: block;
-    float: left;
-
+    float:left;
+    
 }
 
 .faq .icon, .main_container .products a.faq .icon {
@@ -4607,7 +4439,7 @@ span.outOfStock {
     display: block;
     text-align: center;
     color: #aaa;
-    margin-bottom: 10px;
+	margin-bottom:10px;
 }
 
 .modal_header {
@@ -5038,20 +4870,10 @@ td.top {
     text-decoration: line-through;
 }
 
-.clear {
-    clear: both;
-    height: 1px;
-    overflow: hidden;
-    margin-top: -1px;
-}
 
-.floatleft {
-    float: left;
-}
-
-.floatright {
-    float: right;
-}
+.clear {clear: both; height: 1px; overflow: hidden; margin-top: -1px;}
+.floatleft {float: left;}
+.floatright {float: right;}
 
 /*
 .acResults {
@@ -5101,10 +4923,11 @@ td.top {
 }
 
 .paymentH2 {
-    font-size: 1em;
-    margin-left: 15px;
+    font-size:1em;
+    margin-left:15px;
     margin-bottom: 10px;
 }
+
 
 .jcarousel-skin-tango .jcarousel-container {
     -moz-border-radius: 10px;
@@ -5139,7 +4962,7 @@ td.top {
 }
 
 .jcarousel-skin-tango .jcarousel-clip-vertical {
-    width: 75px;
+    width:  75px;
     height: 245px;
 }
 
@@ -5293,9 +5116,9 @@ td.top {
     background-position: 0 -96px;
 }
 
-.mandatory {
-    color: red;
-    font-weight: bold;
+.mandatory{
+	color:red;
+	font-weight:bold;
 }
 
 /*
@@ -5316,8 +5139,8 @@ slider pages start
     -moz-box-shadow: -2px 0px 5px #aaa;
     -webkit-box-shadow: -2px 0px 5px #aaa;
     box-shadow: -2px 0px 5px #aaa;
-    z-index: 3;
-    line-height: 1.3;
+    z-index:3;
+  line-height: 1.3;
 }
 
 #slidebox p, a.more {
@@ -5339,7 +5162,7 @@ a.more:hover {
 #slidebox h2 {
     color: #e62580;
     font-size: 16px;
-    font-weight: bold;
+    font-weight:bold;
     margin: 10px 20px 10px 0px;
 }
 
@@ -5357,12 +5180,12 @@ a.close:hover {
     background-position: 0px -13px;
 }
 
-.gosfDisc {
-    font-weight: bold;
-    color: #e62580;
+.gosfDisc{
+font-weight:bold;
+color: #e62580;
 }
 
-.appliedOffer {
+.appliedOffer{
     border-radius: 8px;
     position: relative;
     float: left;
@@ -5373,7 +5196,7 @@ a.close:hover {
     left: 35px;
 }
 
-.appliedOfferHead {
+.appliedOfferHead{
     position: relative;
     float: left;
     left: 15px;
@@ -5384,7 +5207,7 @@ a.close:hover {
     font-size: 13px;
 }
 
-.couponInput {
+.couponInput{
     font-size: 13px !important;
     border-radius: 0px !important;
     border: 1px solid #808080 !important;
@@ -5393,7 +5216,7 @@ a.close:hover {
     width: 168px !important;
 }
 
-.new_button_grey {
+.new_button_grey{
     border-radius: 0px !important;
     background: #808080 !important;
     height: 15px !important;
@@ -5405,7 +5228,7 @@ a.close:hover {
     margin-right: 0px !important;
 }
 
-.appliedOfferTitle {
+.appliedOfferTitle{
     position: relative;
     float: left;
     top: 10px;
@@ -5415,14 +5238,14 @@ a.close:hover {
     color: #888;
 }
 
-.appliedOfferDetails {
+.appliedOfferDetails{
     position: relative;
     margin-left: 5px;
     float: right;
     cursor: pointer;
 }
 
-.couponPopUp {
+.couponPopUp{
     position: absolute;
     float: left;
     border-radius: 9px;
@@ -5439,7 +5262,7 @@ a.close:hover {
     background: #fffAF0;
 }
 
-.couponPopUpMsg {
+.couponPopUpMsg{
     position: relative;
     float: left;
     left: 10px;
@@ -5450,7 +5273,7 @@ a.close:hover {
     font-size: 12px;
 }
 
-.couponPopUpTerms {
+.couponPopUpTerms{
     position: relative;
     float: left;
     left: 10px;
@@ -5461,7 +5284,7 @@ a.close:hover {
     font-size: 12px;
 }
 
-.couponPopUpDate {
+.couponPopUpDate{
     position: relative;
     float: left;
     left: 10px;
@@ -5473,14 +5296,14 @@ a.close:hover {
     font-style: italic;
 }
 
-.popupArrow {
+.popupArrow{
     position: relative;
     float: left;
     left: 75%;
     top: -12px
 }
 
-.applicableOfferDesc {
+.applicableOfferDesc{
     position: relative;
     float: left;
     top: 10px;
@@ -5491,7 +5314,7 @@ a.close:hover {
     color: #888;
 }
 
-.applicableOfferHead {
+.applicableOfferHead{
     position: relative;
     float: left;
     left: 6px;
@@ -5501,7 +5324,7 @@ a.close:hover {
     color: #888;
 }
 
-.applicableOffer {
+.applicableOffer{
     left: 3px;
     width: 202px;
     height: auto;
@@ -5514,11 +5337,11 @@ a.close:hover {
     background: #fffdd6;
 }
 
-.minHeight {
+.minHeight{
     min-height: 95px !important;
 }
 
-.applicableOfferTerms {
+.applicableOfferTerms{
     position: relative;
     float: left;
     left: 15px;
@@ -5530,7 +5353,7 @@ a.close:hover {
     font-size: 11px;
 }
 
-.offerEndDate {
+.offerEndDate{
     position: relative;
     float: left;
     left: 15px;
@@ -5540,7 +5363,7 @@ a.close:hover {
     width: 100%;
 }
 
-.offerCount {
+.offerCount{
     position: relative;
     float: left;
     left: 10px;
@@ -5556,7 +5379,7 @@ a.close:hover {
     color: #888;
 }
 
-.couponModal {
+.couponModal{
     z-index: 4000;
     display: none;
     position: fixed;
@@ -5570,14 +5393,14 @@ a.close:hover {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
 }
 
-.fadeBackground {
-    transition: background-color 0.2s linear;
-    -moz-transition: background-color 0.2s linear;
-    -webkit-transition: background-color 0.2s linear;
-    -ms-transition: background-color 0.2s linear;
+.fadeBackground{
+    transition: background-color 0.2s linear; 
+   -moz-transition: background-color 0.2s linear;  
+   -webkit-transition: background-color 0.2s linear; 
+   -ms-transition: background-color 0.2s linear; 
 }
 
-.modalWindow {
+.modalWindow{
     display: none;
     position: fixed;
     top: 12%;
@@ -5590,7 +5413,7 @@ a.close:hover {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
 }
 
-.applicableOfferContainer {
+.applicableOfferContainer{
     position: relative;
     float: left;
     width: 73%;
@@ -5603,22 +5426,22 @@ a.close:hover {
     border-color: #f87500;
 }
 
-.appliedOfferContainer {
+.appliedOfferContainer{
     position: relative;
     float: left;
     border: 1px solid;
 }
 
-.offerContainer {
+.offerContainer{
     position: relative;
     float: left;
     left: 30px;
-    border-radius: 5px;
+    border-radius:5px;
     margin-bottom: 10px;
     height: auto;
 }
 
-.gotACoupon {
+.gotACoupon{
     left: 0px !important;
     margin-bottom: 5px !important;
     border: none !important;
@@ -5629,7 +5452,7 @@ a.close:hover {
     margin-top: 10px !important;
 }
 
-.checkoutContainer {
+.checkoutContainer{
     left: 30px !important;
     margin-bottom: 2px !important;
     width: 258px !important;
@@ -5639,7 +5462,7 @@ a.close:hover {
     padding: 0px !important;
 }
 
-.checkoutContainerText {
+.checkoutContainerText{
     position: relative;
     float: left;
     font-size: 12px;
@@ -5647,7 +5470,7 @@ a.close:hover {
     color: rgb(136, 136, 136);
 }
 
-.checkoutContainerTextRight {
+.checkoutContainerTextRight{
     position: relative;
     float: right;
     font-size: 12px;
@@ -5655,7 +5478,7 @@ a.close:hover {
     color: rgb(136, 136, 136);
 }
 
-.youPay {
+.youPay{
     font-size: 18px;
     color: #ce731a;
     position: relative;
@@ -5665,14 +5488,14 @@ a.close:hover {
     font-weight: bold;
 }
 
-.youPayValue {
+.youPayValue{
     font-size: 18px;
     color: #ce731a;
     position: relative;
     float: right;
 }
 
-.newShippingHandling {
+.newShippingHandling{
     position: relative;
     float: left;
     text-align: left;
@@ -5682,12 +5505,12 @@ a.close:hover {
     color: rgb(68, 68, 68);
 }
 
-.checkoutHead5 {
+.checkoutHead5{
     border-bottom: 1px solid #ccc !important;
     padding-bottom: 15px;
 }
 
-.button_raj {
+.button_raj{
     background: #ddd !important;
     color: black !important;
     font-size: 9px !important;
@@ -5703,7 +5526,7 @@ a.close:hover {
     top: 5px !important;
 }
 
-.applicableOfferBottomContainer {
+.applicableOfferBottomContainer{
     position: relative;
     float: left;
     clear: both;
@@ -5711,7 +5534,7 @@ a.close:hover {
     height: auto;
 }
 
-.gotoCheckout {
+.gotoCheckout{
     position: relative;
     float: left;
     left: 60px;
@@ -5725,7 +5548,7 @@ a.close:hover {
     width: 120px;
 }
 
-.gotoCheckoutInner {
+.gotoCheckoutInner{
     position: relative;
     float: left;
     font-size: 9px;
@@ -5733,18 +5556,18 @@ a.close:hover {
     left: 3px;
 }
 
-.removeButton {
+.removeButton{
     position: relative;
     float: left;
     width: 0px;
 }
 
-.noCoupons {
+.noCoupons{
     position: relative;
     float: left;
 }
 
-.appliedButton {
+.appliedButton{
     font-size: 9px;
     color: black;
     font-weight: bold;
@@ -5761,13 +5584,13 @@ a.close:hover {
     margin-right: 10px;
 }
 
-.applyFormButton {
+.applyFormButton{
     position: relative;
     float: left;
     left: 10px;
 }
 
-.appliedOfferText {
+.appliedOfferText{
     position: relative;
     float: left;
     clear: both;
@@ -5776,11 +5599,11 @@ a.close:hover {
     top: 5px;
     font-size: 13px;
     font-weight: bold;
-    color: brown;
+    color:brown;
     margin-bottom: 3px;
 }
 
-.appliedOfferNew {
+.appliedOfferNew{
     left: 35px !important;
     width: 255px !important;
     border: 1px solid #DCA !important;
@@ -5788,7 +5611,7 @@ a.close:hover {
     border-radius: 0px !important;
 }
 
-.offerCloseButton {
+.offerCloseButton{
     position: relative;
     float: left;
     width: 17px;
@@ -5798,7 +5621,7 @@ a.close:hover {
     color: brown;
 }
 
-.offerTextOnTop {
+.offerTextOnTop{
     position: relative;
     float: left;
     border: 1px solid #DCA;
@@ -5809,25 +5632,25 @@ a.close:hover {
     background: #fffdd6;
 }
 
-.offerTextOnTopButton {
+.offerTextOnTopButton{
     position: relative;
     cursor: pointer;
     float: left;
     text-decoration: underline;
 }
 
-.offerRow {
+.offerRow{
     position: relative;
     float: left;
     width: 100%;
 }
 
-.offerTextOnTopText {
+.offerTextOnTopText{
     position: relative;
     float: left;
 }
 
-.loginLinkCSS {
+.loginLinkCSS{
     position: relative;
     float: left;
     left: 16px;
@@ -5835,7 +5658,7 @@ a.close:hover {
     margin-top: 5px;
 }
 
-.newBox {
+.newBox{
     position: relative;
     border: 1px solid rgb(160, 160, 160);
     width: 100%;
@@ -5846,32 +5669,32 @@ a.close:hover {
     display: none;
 }
 
-.newBoxLabel {
+.newBoxLabel{
     position: relative;
     float: left;
     width: 250px !important;
     margin: 10px;
 }
 
-.newBoxItem {
+
+.newBoxItem{
     position: relative;
 }
 
-.newBoxItem label {
+.newBoxItem label{
     font-size: 10px;
 }
 
-.actionQueue {
+.actionQueue{
     position: relative;
     margin: 0px;
     left: 20px;
 }
 
-.trimPadding {
+.trimPadding{
     padding: 5px 5px !important;
 }
-
-.newStepCount {
+.newStepCount{
     width: 30px;
     height: 23px;
     border-radius: 15px;
@@ -5885,14 +5708,14 @@ a.close:hover {
     z-index: 1;
 }
 
-.newStep {
+.newStep{
     position: relative;
     float: left;
     margin-right: 10px;
     margin-left: 10px;
 }
 
-.newStepText {
+.newStepText{
     position: relative;
     float: left;
     clear: both;
@@ -5904,7 +5727,7 @@ a.close:hover {
     padding-top: 7px;
 }
 
-.stepLine {
+.stepLine{
     position: absolute;
     float: left;
     width: 100%;
@@ -5913,18 +5736,18 @@ a.close:hover {
     border-color: #ddd;
 }
 
-.widthInitial {
+.widthInitial{
     width: 100px !important;
     margin-right: 10px;
 }
 
-.shippingAddressheading {
+.shippingAddressheading{
     color: #3379bb;
     position: relative;
     float: left;
 }
 
-.dispatchedDate {
+.dispatchedDate{
     position: relative;
     float: left;
     left: 77px;
@@ -5933,7 +5756,7 @@ a.close:hover {
     font-style: italic;
 }
 
-.newLabel {
+.newLabel{
     position: relative;
     float: left;
     margin-top: 5px !important;
@@ -5942,25 +5765,25 @@ a.close:hover {
     margin-right: 5px;
 }
 
-.newLabel2 {
+.newLabel2{
     position: relative;
     float: left;
-    margin-top: 10px !important;
+    margin-top:10px !important;
     width: 90px !important;
     text-align: right;
     margin-right: 5px;
 }
 
-.newLabel3 {
+.newLabel3{
     position: relative;
     float: left;
-    margin-top: 10px !important;
+    margin-top:10px !important;
     width: 95px !important;
     text-align: right;
     margin-right: 5px;
 }
 
-.specialNew2 {
+.specialNew2{
     position: relative;
     float: left;
     font-size: 13px;
@@ -5969,7 +5792,7 @@ a.close:hover {
     clear: both;
 }
 
-.goBackButtonNew2 {
+.goBackButtonNew2{
     position: relative;
     cursor: pointer;
     float: left;
@@ -5985,13 +5808,13 @@ a.close:hover {
     text-shadow: none !important;
 }
 
-.billingAddressLeftNew2 {
+.billingAddressLeftNew2{
     position: relative;
     float: left;
     width: 40%;
 }
 
-.signUpButtonNew {
+.signUpButtonNew{
     position: relative !important;
     float: left;
     margin: 22px !important;
@@ -6004,7 +5827,7 @@ a.close:hover {
     text-shadow: none !important;
 }
 
-.placeOrderButtonNew {
+.placeOrderButtonNew{
     position: relative !important;
     float: left;
     margin: 22px !important;
@@ -6017,7 +5840,7 @@ a.close:hover {
     text-shadow: none !important;
 }
 
-.dispatchedDateNew {
+.dispatchedDateNew{
     position: relative;
     float: left;
     margin-left: 15px;
@@ -6025,14 +5848,14 @@ a.close:hover {
     width: 100px;
 }
 
-.dispatchedDateNew2 {
+.dispatchedDateNew2{
     position: relative;
     float: left;
     margin-left: 30px;
     left: 15px;
 }
 
-.signUpInputNew {
+.signUpInputNew{
     border-radius: 0px !important;
     box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     margin-bottom: 20px;
@@ -6041,7 +5864,7 @@ a.close:hover {
     height: 30px !important;
 }
 
-.signUpInputNew2 {
+.signUpInputNew2{
     border-radius: 0px !important;
     box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     background: none !important;
@@ -6050,14 +5873,14 @@ a.close:hover {
     height: 30px !important;
 }
 
-.tableTitleNew {
+.tableTitleNew{
     background: none !important;
     border: 1px solid #ddd;
     height: 20px;
     border-radius: 0px;
 }
 
-.dispatchDateQuesMark {
+.dispatchDateQuesMark{
     border: 1px solid #ddd;
     background: #ddd;
     border-radius: 9px;
@@ -6071,14 +5894,14 @@ a.close:hover {
     top: -3px;
 }
 
-.dispatchDateText2 {
+.dispatchDateText2{
     margin-bottom: 7px;
     position: relative;
     float: left;
     margin-right: 5px;
 }
 
-.popUpDDate {
+.popUpDDate{
     display: none;
     position: absolute;
     border: 1px solid #ddd;
@@ -6092,7 +5915,7 @@ a.close:hover {
     z-index: 1;
 }
 
-.learnMore {
+.learnMore{
     text-decoration: underline;
     cursor: pointer;
     position: relative;
@@ -6100,7 +5923,7 @@ a.close:hover {
     margin-top: 8px;
 }
 
-.arrowNew {
+.arrowNew{
     position: relative;
     z-index: 1000;
     float: left;
@@ -6111,7 +5934,7 @@ a.close:hover {
     border-right: 22px solid transparent;
 }
 
-.arrowNew2 {
+.arrowNew2{
     position: relative;
     z-index: 1000;
     float: left;
@@ -6122,14 +5945,14 @@ a.close:hover {
     border-right: 22px solid transparent;
 }
 
-.deliveryDateText {
+.deliveryDateText{
     position: relative;
     float: left;
     font-size: 9px;
     font-weight: normal;
 }
 
-.orderSummaryHeading {
+.orderSummaryHeading{
     position: relative;
     float: left;
     border: 1px solid #ddd;
@@ -6137,7 +5960,7 @@ a.close:hover {
     left: 5px;
 }
 
-.newProductContainer {
+.newProductContainer{
     border: 1px solid #ddd;
     height: auto;
     padding-bottom: 20px;
@@ -6147,7 +5970,7 @@ a.close:hover {
     width: 100%;
 }
 
-.productGrid {
+.productGrid{
     position: relative;
     float: left;
     width: 47%;
@@ -6155,14 +5978,14 @@ a.close:hover {
     margin-left: 5px;
 }
 
-.prodQuantityGrid {
+.prodQuantityGrid{
     position: relative;
     float: left;
     width: 3%;
     margin-top: 5px;
 }
 
-.prodPriceGrid {
+.prodPriceGrid{
     position: relative;
     float: left;
     width: 25%;
@@ -6171,7 +5994,7 @@ a.close:hover {
     text-align: center;
 }
 
-.newTotals {
+.newTotals{
     padding: 0px !important;
     top: -35px;
     width: 20% !important;
@@ -6181,7 +6004,7 @@ a.close:hover {
     border-top: 1px solid #ddd !important;
 }
 
-.newTotals2 {
+.newTotals2{
     padding: 0px !important;
     width: 107% !important;
     margin: 0px !important;
@@ -6191,19 +6014,18 @@ a.close:hover {
     left: 0px !important;
 }
 
-.newTotals2 .left {
+.newTotals2 .left{
+    position: relative;
+    float: left;
+    line-height: 20px;
+}
+.newTotals2 .right{
     position: relative;
     float: left;
     line-height: 20px;
 }
 
-.newTotals2 .right {
-    position: relative;
-    float: left;
-    line-height: 20px;
-}
-
-.deliveryDetails {
+.deliveryDetails{
     position: relative;
     left: 30px;
     font-size: 14px;
@@ -6211,7 +6033,7 @@ a.close:hover {
     margin-bottom: -10px;
 }
 
-.orderShippedTo {
+.orderShippedTo{
     margin-top: 10px;
     float: right;
     margin-right: 5px;
@@ -6220,19 +6042,19 @@ a.close:hover {
     clear: both;
 }
 
-.leftHalf {
+.leftHalf{
     position: relative;
     width: 70%;
     float: left;
 }
 
-.rightHalf {
+.rightHalf{
     position: relative;
     width: 30%;
     float: left;
 }
 
-.backTOHomeButton {
+.backTOHomeButton{
     width: 265px;
     float: right;
     left: -10px;
@@ -6250,27 +6072,27 @@ a.close:hover {
     margin-right: 10px;
 }
 
-.topFullContainer {
+.topFullContainer{
     position: relative;
     width: 140%;
     float: left;
     font-size: 13px;
 }
 
-.commentTypeText {
+.commentTypeText{
     position: relative;
     float: left;
     font-size: 13px;
     color: rgb(53, 53, 53);
 }
 
-.commentType {
+.commentType{
     width: 11px;
     top: 3px;
     position: relative;
 }
 
-.raj_address {
+.raj_address{
     position: relative;
     float: left;
     width: auto;
@@ -6279,7 +6101,7 @@ a.close:hover {
     margin-bottom: 25px !important;
 }
 
-.raj_addressLink {
+.raj_addressLink{
     position: relative;
     float: left;
     width: 100%;
@@ -6287,7 +6109,7 @@ a.close:hover {
     border-bottom: 0px;
 }
 
-.orderIdText {
+.orderIdText{
     font-size: 1em;
     margin-top: 20px;
     padding-bottom: 10px;
@@ -6297,7 +6119,7 @@ a.close:hover {
     float: left;
 }
 
-.congratsText {
+.congratsText{
     position: relative;
     float: left;
     width: 100%;
@@ -6307,13 +6129,13 @@ a.close:hover {
     margin-top: 45px;
 }
 
-.confirmationEmailText {
+.confirmationEmailText{
     position: relative;
     float: left;
     width: 94%;
 }
 
-.useAddressButton {
+.useAddressButton{
     display: block;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
@@ -6331,7 +6153,7 @@ a.close:hover {
     padding-right: 7px;
 }
 
-.steps_new {
+.steps_new{
     display: inline;
     float: right;
     margin-left: 5px;
@@ -6346,7 +6168,7 @@ a.close:hover {
     padding-left: 20px;
 }
 
-.newTextArea {
+.newTextArea{
     width: 97%;
     height: 40px;
     font-size: 10px;
@@ -6357,14 +6179,14 @@ a.close:hover {
     margin-bottom: 15px;
 }
 
-.newTextHeading {
+.newTextHeading{
     font-size: 13px;
     border-bottom: 1px solid rgb(53, 53, 53) !important;
     color: rgb(53, 53, 53);
     font-weight: bold;
 }
 
-.rewardsPointsNew {
+.rewardsPointsNew{
     position: relative;
     float: left;
     font-size: 11px;
@@ -6375,18 +6197,18 @@ a.close:hover {
     margin-bottom: 15px;
 }
 
-.rewardsPointsNew a {
+.rewardsPointsNew a{
     font-size: 12px;
     color: #228;
     text-decoration: none;
     border-bottom: 1px solid #228;
 }
 
-.lightBlue {
+.lightBlue{
     color: #0081bd !important;
 }
 
-.rewardPointsRightContainer {
+.rewardPointsRightContainer{
     left: 0px !important;
     width: 245px !important;
     border: none !important;
@@ -6394,7 +6216,7 @@ a.close:hover {
     padding: 0px !important;
 }
 
-.addressChangeButtonNew {
+.addressChangeButtonNew{
     color: rgb(68, 68, 68);
     border: 1px solid #ddd;
     padding: 5px;
@@ -6408,7 +6230,7 @@ a.close:hover {
     font-size: 10px;
 }
 
-.orderSummaryNew {
+.orderSummaryNew{
     position: relative;
     float: left;
     width: 27%;
@@ -6416,13 +6238,13 @@ a.close:hover {
     margin-bottom: 15px;
 }
 
-.itemSummaryNew {
+.itemSummaryNew{
     position: relative;
     float: left;
     width: 70%;
 }
 
-.youPaid {
+.youPaid{
     position: relative;
     float: right;
     width: 28%;
@@ -6431,69 +6253,69 @@ a.close:hover {
     margin-bottom: 35px;
 }
 
-.arialBlackBold {
+.arialBlackBold{
     color: rgb(82, 82, 82) !important;
     font-weight: bold !important;
 }
 
-.arialGrayBold {
+.arialGrayBold{
     color: #888 !important;
     font-weight: bold !important;
 }
 
-.arialBold {
+.arialBold{
     font-weight: bold !important;
 }
 
-.orangeBold {
+.orangeBold{
     color: #ce731a;
     font-weight: bold;
 }
 
-.greenBold {
+.greenBold{
     color: #4fae5a;
     font-weight: bold;
 }
 
-.codMessage {
+.codMessage{
     width: 90%;
     position: relative;
     float: left;
 }
-
-.leftCOD {
+.leftCOD{
     position: relative;
     float: left;
     width: 20%;
 }
 
-.rightCOD {
+.rightCOD{
     position: relative;
     float: left;
     width: 80%;
 }
 
-.codContact {
+.codContact{
     position: relative;
     float: left;
     width: 100%;
     margin-bottom: 10px;
 }
 
-.leftPS {
+.leftPS{
     position: relative;
     float: left;
     width: 70%;
 }
 
-.rightPS {
+.rightPS{
     position: relative;
     float: left;
     width: 30%;
     top: 50px;
 }
 
-.bulkOrderModal {
+
+.bulkOrderModal{
     display: none;
     position: absolute;
     top: 20%;
@@ -6503,14 +6325,14 @@ a.close:hover {
     left: 21%;
 }
 
-.bulkModalFrame {
+.bulkModalFrame{
     position: relative;
     float: left;
     height: 100%;
     width: 630px;
 }
 
-.topHeadingBillingAddress {
+.topHeadingBillingAddress{
     font-size: 18px;
     position: relative;
     float: left;
@@ -6522,14 +6344,13 @@ a.close:hover {
     color: white;
 }
 
-.sports_frameNew {
+.sports_frameNew{
     position: relative;
     float: left;
     width: 100%;
     height: 100%;
     overflow: scroll;
 }
-
 /*
 slider pager end
 */
@@ -6538,64 +6359,56 @@ slider pager end
 css for loyalty related message
 */
 .loyaltyMessage {
-    width: 95%;
-    padding: 5px;
-    font-size: 12px;
-    line-height: 18px;
-    background: rgb(186, 255, 147);
-    position: relative;
-    float: left;
+	width: 95%;
+	padding: 5px;
+	font-size: 12px;
+	line-height: 18px;
+	background: rgb(186, 255, 147);
+	position: relative;
+	float: left;
 }
 
-.paymentFailureMessageTop {
+.paymentFailureMessageTop{
     position: relative;
     float: left;
-    width: 100%;
+   width: 100%;
     padding-bottom: 10px;
     margin-bottom: 20px;
     border-bottom: 1px solid #ddd;
 }
 
-.paymentFailureMessageTop h4 {
+.paymentFailureMessageTop h4{
     color: rgb(240, 53, 53);
     font-size: 1.533em;
     font-weight: normal;
 }
 
-.paymentFailureMessageTop p {
-    font-size: 13px;
+.paymentFailureMessageTop p{
+     font-size: 13px;
+     padding: 0px;
+ }
+
+.freebie-cntnr{
+background: #FBFF90;padding: 10px;margin: 25px 0 25px 0;font-size: 11px;color: #000;
+}
+
+.freebie-cntnr.with-variants{
+    margin:5px 0px;
     padding: 0px;
 }
-
-.freebie-cntnr {
-    background: #FBFF90;
-    padding: 10px;
-    margin: 25px 0 25px 0;
-    font-size: 11px;
-    color: #000;
-}
-
-.freebie-cntnr.with-variants {
-    margin: 5px 0px;
-    padding: 0px;
-}
-
-.freebie-cntnr h6 {
+.freebie-cntnr h6{
     font-weight: bold;
     text-decoration: none;
-    font-size: 1.3em !important;
+    font-size:1.3em !important;
     padding: 5px;;
 }
-
-.freebie-cntnr div {
-    padding: 5px;
+.freebie-cntnr div{
+    padding:5px ;
 }
-
-.freebie-cntnr div.cntr-align {
+.freebie-cntnr div.cntr-align{
     text-align: center;
 }
-
-label {
+label{
     display: block;
     margin-bottom: 5px;
 }
@@ -6728,7 +6541,6 @@ label {
     margin: 0 auto;
     float: none;
 }
-
 /**margin variation utils *ends**/
 
 /** icons start**/
@@ -6960,7 +6772,6 @@ label {
     width: 107px;
     height: 22px;
 }
-
 .strikethrough {
     text-decoration: line-through;
     font-family: 'Open Sans';
@@ -7030,13 +6841,13 @@ label {
     background-image: none;
     background-image: none;
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffffff', endColorstr = '#ffe6e6e6', GradientType = 0);
     border-color: transparent;
 
     *background-color: transparent;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 
     -webkit-border-radius: none;
     -moz-border-radius: none;
@@ -7115,13 +6926,199 @@ label {
 
 /*Button utils *End*/
 
-input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
     cursor: not-allowed;
     background-color: #eeeeee !important;
     box-shadow: none;
 }
 
-/*error-success msg css begins */
+/*text align variation start*/
+.txt-rgt {
+    text-align: right;
+}
+
+.txt-cntr {
+    text-align: center;
+}
+
+.txt-lft {
+    text-align: left;
+}
+
+.txt-top {
+    vertical-align: top;
+}
+
+.txt-middle {
+    vertical-align: middle;
+}
+
+.txt-small {
+    font-size: 0.9em;
+}
+
+.txt-medium {
+    font-size: 1.4em;
+}
+
+.txt-large {
+    font-size: 1.8em;
+}
+
+.txt-light {
+    color: #999;
+    font-size: 0.9em;
+}
+
+.txt-blue {
+    color: #0091d7;
+}
+
+/*text align variation ends*/
+
+/*font variation start*/
+.fnt-light {
+    color: #757171;
+}
+
+.fnt-sz9 {
+    font-size: 0.8em;
+}
+
+.fnt-sz10 {
+    font-size: 0.9em;
+}
+
+.fnt-sz12 {
+    font-size: 1em;
+}
+
+.fnt-sz13 {
+    font-size: 1.1em
+}
+
+.fnt-sz14 {
+    font-size: 1.2em
+}
+
+.fnt-sz16 {
+    font-size: 1.4em
+}
+
+.fnt-sz20 {
+    font-size: 1.8em
+}
+
+.fnt-sz22 {
+    font-size: 2em
+}
+
+.fnt-bold {
+    font-weight: 600;
+}
+
+.fnt-bolder {
+    font-weight: 700;
+}
+
+.fnt-caps {
+    text-transform: uppercase;
+    /*font-family: "OpenSansSB" !important;*/
+}
+
+/*font variation ends*/
+
+/* footer css begins */
+#footer {
+
+    /*margin: 50px 0 20px 0;*/
+}
+
+#footer .container {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+#footer .ftr-main-txt {
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.ftr-link-cntnr {
+    margin: 30px 0;
+
+}
+
+
+#footer .ftr-link-cntnr .footer-menu{
+    margin-left: 20px;
+    width: 160px;
+    float: left;
+    min-height: 1px;
+}
+
+
+#footer .ftr-link-cntnr ul {
+    list-style: none;
+    font-size: 0.9em;
+    text-transform: capitalize;
+    padding: 0px;
+    margin: 0px;
+}
+
+#footer .ftr-link-cntnr h4 {
+    margin-bottom: 2px;
+    color: #0091d7;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.subscibe-mail-cntnr {
+    text-align: right;
+    float: right;
+
+}
+
+.subscibe-mail-cntnr .label-txt {
+    text-align: left;
+    margin-left: 30px;
+    font-size: 0.9em;
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+.subscibe-mail-cntnr input[type="text"] {
+    width: 150px;
+    margin: 0;
+}
+
+.subscibe-mail-cntnr input[type="submit"] {
+    display: inline-block;
+}
+
+.about-hk {
+    border-bottom: 1px solid #ccc;
+    font-size: 0.8em;
+    text-align: left;
+}
+
+/*footer css ends*/
+
+/**Container css *begins**/
+
+.cont-lft {
+    float: left;
+}
+
+.cont-rht {
+    float: right;
+}
+
+/**Container css *ends**/
+
+/*error-success msg css begins*/
 .err-cntnr {
     border: 1px solid #ff0000;
     padding: 10px;
@@ -7188,3 +7185,27 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 /*error-success msg css ends*/
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    resize: none;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear .2s, box-shadow linear .2s;
+    -moz-transition: border linear .2s, box-shadow linear .2s;
+    -o-transition: border linear .2s, box-shadow linear .2s;
+    transition: border linear .2s, box-shadow linear .2s;
+    display: inline-block;
+    height: 20px;
+    padding: 4px 6px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555555;
+    vertical-align: middle;
+}
+
