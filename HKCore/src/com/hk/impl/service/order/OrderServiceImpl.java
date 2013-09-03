@@ -691,9 +691,9 @@ public class OrderServiceImpl implements OrderService {
                     getShippingOrderService().logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated,
                             EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
-                if (!(shippingOrder instanceof ReplacementOrder)){
-                    shippingOrderService.validateShippingOrder(shippingOrder);
-                }
+//                if (!(shippingOrder instanceof ReplacementOrder)){
+//                    shippingOrderService.validateShippingOrder(shippingOrder);
+//                }
             }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
