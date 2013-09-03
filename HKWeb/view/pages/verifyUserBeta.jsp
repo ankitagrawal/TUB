@@ -14,6 +14,7 @@
     <s:layout-component name="heading">
         <div class="ttl-cntnr">
             <span class="icn icn-sqre"></span>
+
             <h1>Account Verification </h1>
             <span class="icn icn-sqre"></span>
         </div>
@@ -21,31 +22,51 @@
     <s:layout-component name="rhsContent">
 
         <c:if test="${verifyUserBean.outcome == outcome_alreadyVerified}">
-            <p class="imp_note">
-                Your account is already active.
-            </p>
+            <div class="alert-cntnr">
+            <span class="icn-success "></span>
+
+            <div class="alert-messages txt-cntr">
+
+                <div>
+                    Your account is already active.
+                </div>
+                <span class="icn icn-close2 remove-success"></span>
+
+            </div>
         </c:if>
         <c:if test="${verifyUserBean.outcome == outcome_invalidLink}">
-            <p class="imp_note">
-                Invalid Link.
-            </p>
+            <div class="err-cntnr">
+                <span class="icn-warning-small"></span>
+
+                <div>
+                    Invalid Link.
+                </div>
+                <span class="icn icn-close2 remove-error"></span>
+
+
+            </div>
+
         </c:if>
         <c:if test="${verifyUserBean.outcome == outcome_linkExpired}">
             <div class="err-cntnr">
                 <span class="icn-warning-small"></span>
 
-                <div id="error-messages"><s:messages key="errorMessages"/></div>
-                <span class="icn icn-close2 remove-error"></span>
-
-                <p class="imp_note">
+                <div>
                     The activation link has expired.
-                </p>
+
+                </div>
+                <span class="icn icn-close2 remove-error"></span>
             </div>
 
             <shiro:hasRole name="<%=RoleConstants.HK_USER%>">
+                <div class="err-cntnr txt-cntr">
+                    <span class="icn-warning-small"></span>
 
-                <p>Your account has already been activated!</p>
-
+                    <div>
+                        <p>Your account has already been activated!</p>
+                    </div>
+                    <span class="icn icn-close2 remove-error"></span>
+                </div>
             </shiro:hasRole>
 
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_NEEDS_ACTIVATION%>">
@@ -59,13 +80,13 @@
         </c:if>
         <c:if test="${verifyUserBean.outcome == outcome_success}">
             <div class="alert-cntnr">
-                <span class="icn-success "></span>
+            <span class="icn-success "></span>
 
-                <div class="alert-messages"><s:messages key="generalMessages"/></div>
-                <p class="imp_note">
+            <div class="alert-messages txt-cntr ">
 
+                <div>
                     Thanks! Your account has now been activated.
-                </p>
+                </div>
                 <span class="icn icn-close2 remove-success"></span>
 
             </div>
@@ -75,8 +96,8 @@
                     beanclass="com.hk.web.action.core.cart.CartAction">PROCEED TO CART</s:link></div>
         </c:if>
 
-        <div class="button" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
-            START SHOPPING
+        <div class="button " align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
+            Start Shopping
         </s:link></div>
 
 
