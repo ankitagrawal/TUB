@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 
-
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -638,9 +637,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
           } else {
             //book inventory on Bright
-           cartLineItem =  tempBookBrightInventory(cartLineItem);
-            cartLineItem =  createSkuGroupAndItem(cartLineItem) ;
-            populateSICLI(cartLineItem) ;
+            cartLineItem = tempBookBrightInventory(cartLineItem);
+            cartLineItem = createSkuGroupAndItem(cartLineItem);
+            populateSICLI(cartLineItem);
           }
         }
       }
@@ -648,8 +647,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     baseDao.save(order);
   }
 
-   @Transactional
-  public CartLineItem createSkuGroupAndItem (CartLineItem cartLineItem) {
+  @Transactional
+  public CartLineItem createSkuGroupAndItem(CartLineItem cartLineItem) {
 
     if (cartLineItem.getForeignSkuItemCLIs() != null && cartLineItem.getForeignSkuItemCLIs().size() > 0) {
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
@@ -675,17 +674,17 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  public void populateSICLI(CartLineItem cartLineItem)  {
+  public void populateSICLI(CartLineItem cartLineItem) {
 
-     for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs())    {
-       SkuItemCLI skuItemCLI = new SkuItemCLI();
-       skuItemCLI.setCartLineItem(cartLineItem);
-       skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
-       skuItemCLI.setCreateDate(new Date());
-       skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-       skuItemCLI.setSkuItem(skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId()))  ;
-       skuItemCLI=(SkuItemCLI)getBaseDao().save(skuItemCLI) ;
-     }
+    for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs()) {
+      SkuItemCLI skuItemCLI = new SkuItemCLI();
+      skuItemCLI.setCartLineItem(cartLineItem);
+      skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
+      skuItemCLI.setCreateDate(new Date());
+      skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+      skuItemCLI.setSkuItem(skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId()));
+      skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+    }
 
   }
 
@@ -732,11 +731,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         logger.error("Exception while booking Bright Inventory against BO# " + cartLineItem.getOrder().getId() + e.getMessage());
       }
       if (infos != null && infos.size() > 0) {
-            updateForeignSICLITable(infos);
+        updateForeignSICLITable(infos);
       }
 
     }
-    cartLineItem = (CartLineItem)getBaseDao().save(cartLineItem);
+    cartLineItem = (CartLineItem) getBaseDao().save(cartLineItem);
     return cartLineItem;
   }
 
@@ -751,7 +750,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         foreignSkuItemCLI.setSkuItemId(entry.getValue());
         foreignSkuItemCLI.setCounter(1L);
         foreignSkuItemCLI.setCartLineItem(cartLineItem);
-        foreignSkuItemCLI = (ForeignSkuItemCLI)getBaseDao().save(foreignSkuItemCLI);
+        foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
       }
     }
 
@@ -771,13 +770,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       foreignSkuItemCLI.setUpdateDate(new Date());
       foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
       foreignSkuItemCLI.setCounter(1L);
-      foreignSkuItemCLI = (ForeignSkuItemCLI)getBaseDao().save(foreignSkuItemCLI);
+      foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
       foreignSkuItemCLIs.add(foreignSkuItemCLI);
 
 
     }
 
-    return foreignSkuItemCLIs ;
+    return foreignSkuItemCLIs;
   }
 
 
@@ -790,22 +789,20 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         foreignSkuItemCLI.setForeignSkuGroupId(info.getFsgId());
         foreignSkuItemCLI.setFsgCostPrice(info.getCp());
         foreignSkuItemCLI.setSkuItemId(info.getFsiId());
-        if(info.getExpdt()!=null){
+        if (info.getExpdt() != null) {
           foreignSkuItemCLI.setFsgExpiryDate(getFormattedDate(info.getExpdt()));
-        }
-        else {
+        } else {
           foreignSkuItemCLI.setFsgExpiryDate(new Date());
         }
-        if(info.getMfgdt()!=null){
+        if (info.getMfgdt() != null) {
           foreignSkuItemCLI.setFsgMfgDate(getFormattedDate(info.getMfgdt()));
-        }
-        else {
+        } else {
           foreignSkuItemCLI.setFsgMfgDate(new Date());
         }
         foreignSkuItemCLI.setFsgMrp(info.getMrp());
         foreignSkuItemCLI.setFsgBatchNumber(info.getBatch());
         foreignSkuItemCLI.setProcessedStatus(info.getProcessed());
-        foreignSkuItemCLI = (ForeignSkuItemCLI)getBaseDao().save(foreignSkuItemCLI);
+        foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
       }
     }
   }
@@ -874,29 +871,26 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         logger.debug("hKApiSkuResponse got -" + hkApiSkuResponse.getVariantId() + ", qty - " + hkApiSkuResponse.getQty() + ", MRP -" + hkApiSkuResponse.getMrp());
         productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
 
-
       } else {
-        Product product = productVariant.getProduct();
-        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-        if (!updateStockStatus) {
-          productVariant.setOutOfStock(false);
-        } else {
-          productVariant.setOutOfStock(true);
-          productVariant.setNetQty(0L);
-          productVariant.setMrpQty(0L);
-
-        }
-
-        getBaseDao().save(productVariant);
-
-        List<ProductVariant> inStockVariants = product.getInStockVariants();
-        if (inStockVariants != null && inStockVariants.isEmpty()) {
-          product.setOutOfStock(true);
-        } else {
-          product.setOutOfStock(false);
-        }
-        getBaseDao().save(product);
+        productVariant.setOutOfStock(true);
+        productVariant.setNetQty(0L);
+        productVariant.setMrpQty(0L);
       }
+      Product product = productVariant.getProduct();
+      boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+      if (!updateStockStatus) {
+        productVariant.setOutOfStock(false);
+      }
+      getBaseDao().save(productVariant);
+
+      List<ProductVariant> inStockVariants = product.getInStockVariants();
+      if (inStockVariants != null && inStockVariants.isEmpty()) {
+        product.setOutOfStock(true);
+      } else {
+        product.setOutOfStock(false);
+      }
+      getBaseDao().save(product);
+
     }
 
   }
