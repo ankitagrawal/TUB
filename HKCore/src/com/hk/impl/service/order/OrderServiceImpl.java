@@ -719,34 +719,34 @@ public class OrderServiceImpl implements OrderService {
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         }
+      {
+        logger.debug("post split will create sku item line item");
+        for (ShippingOrder shippingOrder : order.getShippingOrders()){
+          //Check to ignore old orders whose status is greater equal than 180
+          if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()){
+            continue;
+          }
+          for (LineItem lineItem : shippingOrder.getLineItems()){
+            //lineItemDao.refresh(lineItem);
+            CartLineItem cartLineItem = lineItem.getCartLineItem();
+            if(bookedOnBright(cartLineItem)){
+              logger.debug("Update booking on Bright");
+              List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem);
+              List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
+              skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
 
-        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0){
-	        logger.debug("post split will create sku item line item");
-            for (ShippingOrder shippingOrder : order.getShippingOrders()){
-                //Check to ignore old orders whose status is greater equal than 180
-                if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()){
-                    continue;
-                }
-                for (LineItem lineItem : shippingOrder.getLineItems()){
-	                  //lineItemDao.refresh(lineItem);
-                	CartLineItem cartLineItem = lineItem.getCartLineItem();
-                  if(bookedOnBright(cartLineItem)){
-                    logger.debug("Update booking on Bright");
-                    List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem);
-                    List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
-                    skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
-
-                  }
-                	else
-                    if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
-                        Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
-                        if(!skuItemLineItemStatus){
-                            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
-                        }
-                    }
-                }
             }
+            else
+            if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
+              Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+              if(!skuItemLineItemStatus){
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+              }
+            }
+          }
         }
+      }
+        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0)
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {

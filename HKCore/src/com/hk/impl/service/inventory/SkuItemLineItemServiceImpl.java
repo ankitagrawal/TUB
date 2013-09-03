@@ -489,7 +489,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
       skuItemLineItem.setProductVariant(foreignSkuItemCLI.getProductVariant());
       skuItemLineItem.setUnitNum(foreignSkuItemCLI.getUnitNum());
-      skuItemLineItem.setSkuItem(getSkuItem(foreignSkuItemCLI.getId()));
+      SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
+      skuItemLineItem.setSkuItem(skuItem);
       skuItemLineItem.setLineItem(lineItem);
       SkuItemCLI skuItemCli = skuItemLineItemDao.getSkuItemCLI(foreignSkuItemCLI.getCartLineItem(), foreignSkuItemCLI.getUnitNum());
       skuItemLineItem.setSkuItemCLI(skuItemCli);
