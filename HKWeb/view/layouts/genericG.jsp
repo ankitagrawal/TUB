@@ -57,8 +57,15 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
       </s:layout-component>
       <div class="floatfix"></div>
     </div>
+    <c:choose>
+       <c:when test="${hybridRelease eq true}">
+           <s:layout-render name="/includes/_footerBeta.jsp"/>
+       </c:when>
+        <c:otherwise>
+            <s:layout-render name="/includes/_footer.jsp"/>
+        </c:otherwise>
+    </c:choose>
 
-    <s:layout-render name="/includes/_footerBeta.jsp"/>
 
   </div>
 
