@@ -3,6 +3,8 @@ package com.hk.api.edge.internal.impl.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.hk.api.edge.constants.ServiceEndPoints;
 import com.hk.api.edge.constants.StoreConstants;
 import com.hk.api.edge.http.HkHttpClient;
@@ -14,6 +16,7 @@ import com.hk.api.edge.internal.response.menu.MenuNodeResponseApiWrapper;
 /**
  * @author vaibhav.adlakha
  */
+@Service
 public class MenuServiceImpl implements MenuService {
 
     @Override

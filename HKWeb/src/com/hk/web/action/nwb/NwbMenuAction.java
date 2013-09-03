@@ -8,6 +8,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.api.edge.internal.pact.service.MenuService;
@@ -16,6 +17,7 @@ import com.hk.api.edge.internal.response.menu.CatalogMenuNode;
 /**
  * @author vaibhav.adlakha
  */
+@Component
 public class NwbMenuAction extends BaseAction {
 
     private List<CatalogMenuNode> menuNodes = new ArrayList<CatalogMenuNode>(0);

@@ -60,12 +60,10 @@
           </li>
         </c:forEach>
         <li class="gm-mc brdr-t">
-          <s:link beanclass="com.hk.web.action.beta.pack.PackAction" class="gm-mc-nm">Packs</s:link>
-          <span style="">&raquo;</span>
+          Packs<span style="">&raquo;</span>
         </li>
         <li class="gm-mc">
-          <s:link beanclass="com.hk.web.action.beta.brand.BrandListingAction" class="gm-mc-nm">Brands</s:link>
-          <span style="">&raquo;</span>
+          Brands<span style="">&raquo;</span>
         </li>
       </ul>
         <%--<div class="seperator"></div>
