@@ -6,143 +6,184 @@
 
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.nwb.NwbMenuAction" var="menuAction" event="pre"/>
 
 <s:layout-definition>
-    <c:set var="topCategoryUrl" value="/${topCategory}"/>
-    <c:set var="allCategories" value="${allCategories}"/>
- <div class="clear"></div>
-  <div id="logoBoxContainer" style="cursor:default; width: 960px; margin: 35px auto 7px;">
-
-    <div class='logoBox' style="float:left;">
-      <s:link href="/" title='go to healthkart home'>
-        <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
-      </s:link>
+  <c:set var="maxLeafElms" value="5"/>
+  <div class="flyout-menu">
+    <div id="dropDownButton" class="menu-hdr">
+      <div class="hdr-title font-caps">Categories</div>
+      <div class="icn-dwn-cs2"></div>
     </div>
-    
-    <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="float:left">
-      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...' style="height:22px; font-size: 15px; width: 400px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
-      <s:image title="Search" name="search" src="/images/icons/search2.png" style="left:50px; width:20px; vertical-align:middle;"/>
-    </s:form>
+    <div id="dropDownbox1" class="dropDownboxHomePage ${showMenu!=null && showMenu=='true'?'':'hide'}">
+      <div class="brdr-t-blu-strip"></div>
+      <ul class="gm gl">
+        <c:forEach items="${menuAction.menuNodes}" var="menuNode">
+          <li class="gm-mc">
+            <a href="${pageContext.request.contextPath}/${menuNode.url}" class="gm-mc-nm">${menuNode.name}</a>
+            <span style="">&raquo;</span>
 
-    <div class="offerAndBrands">
-      <div style="float:left"><s:link href='/resources'>HealthMag&nbsp;</s:link></div><div style="float:left; margin-right: 12px;"><s:link href='/resources'><img src="<hk:vhostImage/>/images/resources_16.png"></s:link></div>
-      <div style="float:left"><s:link href='/brands'>Brands&nbsp;</s:link></div><div style="float:left; margin-right: 12px;"><s:link href='/brands'><img src="<hk:vhostImage/>/images/brand_16.png"></s:link></div>
-      <%--<div style="float:left"><s:link href='/super-savers'>Offers&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/super-savers'><img src="<hk:vhostImage/>/images/offer_16.png"></s:link></div>--%>
-      <div style="float:left"><a href='http://www.healthkartplus.com?src=hk' target='_blank' style="color:#000;">HealthKartPlus&nbsp;</a></div><div style="float:left;"><a href='http://www.healthkartplus.com?src=hk' title="HealthKartPlus.com"><img src="${pageContext.request.contextPath}/images/hkp-favicon.jpg"></a></div>
-      <div style="float:left; margin-right: 15px;">&nbsp;&nbsp;&nbsp;<s:link href='${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action' target="_blank" 
-      style="background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/loyalty-bg.png');" >hk<strong>loyalty</strong></s:link></div>
+            <div class="hide gm-sc-cntnr">
+              <div class="brdr-t-blu-strip" style="position: relative;"></div>
+              <h3>
+                <a href="${pageContext.request.contextPath}/${menuNode.url}" class="gm-mc-nm">${menuNode.name}</a>
+                <hr class="mrgn-b-25">
+              </h3>
+
+              <ul class="gm-sc-list">
+                <div class="span3">
+                  <c:forEach items="${menuNode.childNodes}" var="l1child" varStatus="cntr">
+
+                  <c:if test="${cntr.index > 0 && cntr.index%2 ==0}">
+                </div>
+                <div class="span3">
+                  </c:if>
+
+                  <a href="${pageContext.request.contextPath}/${l1child.url}" class="gm-sc-nm">${l1child.name}</a>
+                  <span style="display:inline-block">&raquo;</span>
+                  <c:set var="leafElms"
+                         value="${fn:length(l1child.childNodes)>maxLeafElms?maxLeafElms:fn:length(l1child.childNodes)}"/>
+                  <c:set var="seeMore" value="${fn:length(l1child.childNodes)>maxLeafElms?'true':'false'}"/>
+                  <div class="gl gm-tc-list">
+
+                    <c:forEach items="${l1child.childNodes}" var="l2child" end="${leafElms}" varStatus="counter">
+                      <a href="${pageContext.request.contextPath}/${l2child.url}" class="gm-tc-nm">${l2child.name}</a>
+                      <%--c:if test="${counter.last && seeMore}">
+                      <a href="#" class="seeMore">See All in ${l1child.name}</a>
+                      </c:if--%>
+                    </c:forEach>
+                  </div>
+                  </c:forEach>
+                </div>
+              </ul>
+            </div>
+          </li>
+        </c:forEach>
+        <li class="gm-mc brdr-t">
+          Packs<span style="">&raquo;</span>
+        </li>
+        <li class="gm-mc">
+          Brands<span style="">&raquo;</span>
+        </li>
+      </ul>
+        <%--<div class="seperator"></div>
+      <div class="dropDownitem">Separated link</div>--%>
     </div>
-
-    <div style="clear:both;"></div>
   </div>
-
   <script type="text/javascript">
     $(document).ready(function() {
-      $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
+      /*Dropdown js */
+      $('#dropDownButton').mouseenter(function() {
+        //deactivateSubmenu($("#dropDownbox1").find('.maintainHover').parents('.gm-mc'));
+        $("#dropDownbox1").css("display", "block");
+        //$("#dropDownButton").addClass("menu-hdr-hover");
+        $(".icn-dwn-cs2").addClass("icn-dwn-cs-hover");
+      });
+      $('#dropDownButton').mouseleave(function() {
+        $("#dropDownbox1").css("display", "none");
+
+        $(".icn-dwn-cs2").removeClass("icn-dwn-cs-hover");
+      });
+
+      $('#dropDownbox1').hover(function() {
+        $("#dropDownbox1").css("display", "block");
+        //$("#dropDownButton").addClass("menu-hdr-hover");
+        $(".icn-dwn-cs2").addClass("icn-dwn-cs-hover");
+      },
+          function() {
+            $("#dropDownbox1").css("display", "none");
+            $(".gm-sc-cntnr").css("display", "none");
+            $(".maintainHover").removeClass("maintainHover");
+
+            $(".icn-dwn-cs2").removeClass("icn-dwn-cs-hover");
+          }
+          );
+
+      $('.gm-mc').mouseover(function(e) {
+        var ele = e.currentTarget;
+        setTimeout(function() {
+
+          if ($('.gm-sc-cntnr:visible').length == 0 && $(ele).find('a').attr('href') == $('.gm-mc:hover').find('a').attr('href')) {
+            $(ele).find('.gm-sc-cntnr').show();
+            console.log('in');
+          }
+        }, 200);
+
+      });
+
+
+      var $menu = $(".gm");
+      $menu.mouseleave(function() {
+        $('.gm-sc-cntnr:visible').hide();
+      });
+      // jQuery-menu-aim: <meaningful part of the example>
+      // Hook up events to be fired on menu row activation.
+      $menu.menuAim({
+        activate: activateSubmenu,
+        deactivate: deactivateSubmenu
+      });
+      // jQuery-menu-aim: </meaningful part of the example>
+
+      // jQuery-menu-aim: the following JS is used to show and hide the submenu
+      // contents. Again, this can be done in any number of ways. jQuery-menu-aim
+      // doesn't care how you do this, it just fires the activate and deactivate
+      // events at the right times so you know when to show and hide your submenus.
+      function activateSubmenu(row) {
+
+
+        var $row = $(row),
+
+            $submenu = $row.find('.gm-sc-cntnr')
+        height = $menu.outerHeight(),
+            width = $menu.outerWidth();
+        var maxHeight = 0;
+        $submenu.find('.span3:last').css('border-right', 'none');
+        $row.find('.gm-sc-cntnr').css('font-weight', 'bold');
+        // Show the submenu
+        $submenu.css({
+          display: "block",
+          top: -5,
+          left: width - 3
+
+        });
+
+        // Keep the currently activated row's highlighted look
+        $row.find("a").addClass("maintainHover");
+
+        //Fix vertical line height
+
+        $submenu.find('.span3').each(function(){getMaxHeight($(this))});
+      //  maxHeight = 'auto';
+        if(maxHeight>100){
+            $submenu.find('.span3').height(maxHeight);
+        }
+
+        function getMaxHeight(ref){
+               maxHeight = (maxHeight < ref.height()) ? ref.height() : maxHeight;
+        }
+
+
+      }
+
+      function deactivateSubmenu(row) {
+        var $row = $(row),
+            submenuId = $row.data("submenuId"),
+            $submenu = $row.find('.gm-sc-cntnr');
+
+        // Hide the submenu and remove the row's highlighted look
+        $submenu.css("display", "none");
+        $row.find("a").removeClass("maintainHover");
+      }
+
+      // Bootstrap's dropdown menus immediately close on document click.
+      // Don't let this event close the menu if a submenu is being clicked.
+      // This event propagation control doesn't belong in the menu-aim plugin
+      // itself because the plugin is agnostic to bootstrap.
+      $(".gm li").click(function(e) {
+        e.stopPropagation();
+      });
     });
-  </script>
 
-	<%--<%
-		DateTime dateTime = new DateTime();
-		Date endOfOfferDate = new Date(new DateTime(2012, 12, 26, 18, 59, 59, 59).getMillis());
-		if (dateTime.isBefore(endOfOfferDate.getTime())) {
-	%>
-	<div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
-			--%><%--<div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
-									<strong>Great Online Shopping Festival</strong>! Over 500 products, upto <strong>80% off! *</strong>, <strong><a href="http://www.healthkart.com/online-shopping-festival?src=hk2">Click here to start Shopping!</a></strong><br/>
-									<span style="font-size: 1.2em; color: #e62580">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
-							</div>--%><%--
 
-		<div
-				style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 20px; padding-top: 3px; font-size: 1em;">
-			Our customer care phone lines are down due to technical issues. Sincere apologies for the inconvenience caused.
-		</div>
-	</div>
-	<%
-		}
-	%>--%>
-
-    <div class='menuBar' id="top">
-
-        <ul id="menuUl" class='lvl1'>
-            <%--<li class='lvl1' title='go to healthkart home' id='home_button'><s:link href='/'>
-                <div id='homeIcon'></div>
-            </s:link></li>--%>
-            <c:forEach items='${menuAction.menuNodes}' var='topMenuNode' varStatus='idx'>
-                <%--<c:if test="${topMenuNode.url != '/home-living'}">--%>
-                    <li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''} ${topMenuNode.url == '/home-living' ? 'new' : ''}'>
-	                      <s:link href="${topMenuNode.url}" rel="${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'noFollow'}">${topMenuNode.name}</s:link>
-                        <%--<a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a>--%>
-                    </li>
-                <%--</c:if>--%>
-            </c:forEach>
-             <%--  <li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'>
-                  <a href='http://www.healthkartplus.com' style='color: yellow; border-bottom: 0;' target='_blank'>HealthKartPlus &gt;</a>
-                </li>--%>
-        </ul>
-
-    </div>
-
-    <c:if test="${hk:isNotBlank(topCategoryUrl) && topCategoryUrl != '/'}">
-        <div id="secondaryMenuUl" class='lvl2BarWrapper'>
-            <c:forEach items="${menuAction.menuNodes}" var="topMenuNode" varStatus="idx">
-                <c:if test="${topMenuNode.url == topCategoryUrl}">
-                    <div class='lvl2BarWrapper'>
-                        <div class='lvl2Bar'>
-                            <ul>
-                                <c:forEach items="${topMenuNode.childNodes}" var="firstLevelMenuNode">
-                                    <li class='lvl2'>
-                                        <a href="${pageContext.request.contextPath}${firstLevelMenuNode.url}">
-                                            <span class='head2'>${firstLevelMenuNode.name}</span>
-                                        </a>
-
-                                        <div class='lvl3Container'>
-                                            <ul>
-                                                <c:forEach items="${firstLevelMenuNode.childNodes}"
-                                                           var="secondLevelMenuNode">
-                                                    <c:if test="${hk:firstStringContainsSecond(allCategories, firstLevelMenuNode.slug)}">
-                                                        <li>
-                                                            <a href="${pageContext.request.contextPath}${secondLevelMenuNode.url}">${secondLevelMenuNode.name}</a>
-                                                        </li>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </div>
-                    </div>
-                </c:if>
-            </c:forEach>
-        </div>
-    </c:if>
-
-    <span style="display:none;" id="topCategoryContainer">${topCategory}</span>
-
-    <script type="text/javascript">
-        $('li.search').click(function() {
-            return false;
-        });
-        $(".lvl2Bar li.lvl2 .lvl3Container ul li,  .menuBar ul.lvl1 li.lvl1 div.lvl2 .categories li").click(function() {
-            url = $(this).children("a").attr("href");
-            document.location.href = url;
-        });
-        $('[placeholder]').each(function(i, el) {
-            var str = $(this).attr("placeholder");
-            $(this).val(str);
-            $(this).click(function() {
-                if ($(this).val() == str) {
-                    $(this).val("");
-                }
-            });
-            $(this).blur(function() {
-                if ($(this).val() == str) {
-                    $(this).val(str);
-                }
-            });
-        });
-    </script>
-
+  </script>  
 </s:layout-definition>
