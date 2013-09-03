@@ -308,7 +308,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     Query query = getSession().createQuery(sql).setParameter("fsicliId" , fsicliId);
      List<SkuItem> skuItems =  (List<SkuItem>)query.list();
     if(skuItems!=null && skuItems.size() > 0){
-      skuItems.get(0);
+      return skuItems.get(0);
     }
     return  null;
   }
