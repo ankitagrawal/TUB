@@ -1,27 +1,27 @@
 package com.hk.api.edge.impl.service;
 
-import com.hk.api.edge.pact.service.HkCatalogUserService;
-import com.hk.api.edge.response.user.UserApiBaseResponse;
+import java.security.InvalidParameterException;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hk.api.edge.pact.service.HKCatalogUserService;
 import com.hk.api.edge.response.user.UserApiResponse;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.security.InvalidParameterException;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
-public class HkCatalogUserServiceImpl implements HkCatalogUserService {
+public class HKCatalogUserServiceImpl implements HKCatalogUserService {
 
   @Autowired
   private UserService userService;
 
-  public UserApiBaseResponse getLoggedInUser() {
+  /*public UserApiBaseResponse getLoggedInUser() {
     UserApiBaseResponse userApiBaseResponse = new UserApiBaseResponse();
     User user = null;
     try {
@@ -45,7 +45,7 @@ public class HkCatalogUserServiceImpl implements HkCatalogUserService {
       userApiBaseResponse.setException(false);
     }
     return userApiBaseResponse;
-  }
+  }*/
 
   public boolean isTempUser(Long userId) {
     if (userId == null) {
