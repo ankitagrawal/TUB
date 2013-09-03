@@ -17,7 +17,7 @@
 	boolean isSecure = WebContext.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
-<s:layout-render name="/layouts/cartLayout.jsp" pageTitle="Shopping Cart">
+<s:layout-render name="/layouts/cartLayoutBeta.jsp" pageTitle="Shopping Cart">
 
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
 
@@ -367,81 +367,7 @@
     <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;" :>
         <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.product.name}  </a>
         ${cartLineItem.productVariant.variantName}<br/>
-      <table style="display: inline-block; font-size: 11px;">
-        <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
-	        <tr>
-		        <c:if test="${hk:showOptionOnUI(productOption.name)}">
-			        <td style="text-align: left;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;">${productOption.name}</td>
-			        <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;">
-				        <c:if test="${fn:startsWith(productOption.value, '-')}">
-					        ${productOption.value}
-				        </c:if>
-				        <c:if test="${!fn:startsWith(productOption.value, '-')}">
-					        &nbsp;${productOption.value}
-				        </c:if>
-			        </td>
-		        </c:if>
-	        </tr>
-        </c:forEach>
-	      <c:forEach items="${cartLineItem.cartLineItemExtraOptions}" var="extraOption">
-		      <tr>
-			      <td style="text-align: left;  padding: 0.3em 2em; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>
-			      <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0;background: #fff;">
-				      <c:if test="${fn:startsWith(extraOption.value, '-')}">
-					      ${extraOption.value}
-				      </c:if>
-				      <c:if test="${!fn:startsWith(extraOption.value, '-')}">
-					      &nbsp;${extraOption.value}
-				      </c:if>
-			      </td>
-		      </tr>
-	      </c:forEach>
-        <c:set var="TH" value="TH"/>
-        <c:set var="THBF" value="THBF"/>
-        <c:set var="CO" value="CO"/>
-        <c:set var="COBF" value="COBF"/>
-        <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
-          <tr>
-            <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${cartLineItem.productVariant.product.name}</td>
-            <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
-              Rs. ${cartLineItem.productVariant.hkPrice}</td>
-          </tr>
-          <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}" var="configValue">
-            <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
-            <tr>
-              <c:set var="addParam" value="${variantConfigOption.additionalParam}"/>
-              <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${variantConfigOption.displayName}
-                : ${configValue.value}
-                <c:if test="${(addParam ne TH) or (addParam ne THBF) or (addParam ne CO) or (addParam ne COBF) }">
-                  <c:if
-                      test="${fn:startsWith(variantConfigOption.name, 'R')==true}">
-                    (R)
-                  </c:if>
-                    <c:if
-                      test="${fn:startsWith(variantConfigOption.name, 'L')==true}">
-                    (L)
-                  </c:if>
-                </c:if>
-              </td>
-              <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
-                  <%--<c:set var="addParam" value="${variantConfigOption.additionalParam}"/>--%>
-                <c:choose>
-                  <c:when test="${configValue.additionalPrice eq 0}">
-                    included
-                  </c:when>
-                  <c:otherwise>
-                    +Rs. ${configValue.additionalPrice}
-                    <%--<c:if test="${(addParam eq TH) or (addParam eq THBF) or (addParam eq CO) or (addParam eq COBF) }">--%>
-                    <%--/Eye--%>
-                    <%--</c:if>--%>
-                  </c:otherwise>
-                </c:choose>
-              </td>
-            </tr>
-          </c:forEach>
-        </c:if>
 
-      </table>
     </div>
 
       <%--HTML code for dispatch date--%>
@@ -1006,14 +932,14 @@
     }
     .remove.removeLink,.remove.removeComboLink{
         position:absolute;
-        margin-left:200px !important;
-        height: 17px;
-        width:18px;
+        margin-left:137px !important;
+        height: 20px;
+        width:20px;
         background: transparent;
         margin-top:0px !important;
         border:1px solid #999 !important;
         border-radius: 100%;
-        font-size:14px !important;
+        font-size:12px !important;
         padding-top:1px;
         text-transform: lowercase;
     }

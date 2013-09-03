@@ -470,8 +470,7 @@ span.error {
 
 /* line 22, ../sass/main.scss */
 .logoBox {
-  margin-left:260px;
-  margin-top: 50px;
+
 }
 .logoBox a {
     border: none;
@@ -483,11 +482,11 @@ span.error {
 }
 
 /* line 36, ../sass/main.scss */
-/*
+
 .logoBox img {
     max-height: 26px;
 }
-*/
+
 
 /* line 39, ../sass/main.scss */
 .logoBox .links {
@@ -3677,12 +3676,7 @@ h2.prod_title {
 
 /* line 1488, ../sass/main.scss */
 .shopping_cart .products_container .product .quantity .remove {
-    font-weight: normal;
-    display: block;
-    border: 0;
-    font-size: 10px;
-    color: #ccc;
-    margin: 1.5em 0 0 0;
+
 }
 
 /* line 1497, ../sass/main.scss */
