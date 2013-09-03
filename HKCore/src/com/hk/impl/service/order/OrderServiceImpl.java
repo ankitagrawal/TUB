@@ -25,10 +25,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.ForeignSkuItemCLI;
@@ -654,16 +651,6 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
         }
 
-        //for some orders userCodCall object is not created, a last check to create one
-        try{
-            if (order.getUserCodCall() == null) {
-                UserCodCall userCodCall = createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
-                saveUserCodCall(userCodCall);
-            }
-        } catch (Exception e){
-            logger.info("User Cod Call already exists for " + order.getId());
-        }
-
         logger.debug("Trying to split order " + order.getId());
 
         User adminUser = getUserService().getAdminUser();
@@ -703,6 +690,9 @@ public class OrderServiceImpl implements OrderService {
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     getShippingOrderService().logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated,
                             EnumReason.DROP_SHIPPED_ORDER.asReason());
+                }
+                if (!(shippingOrder instanceof ReplacementOrder)){
+                    shippingOrderService.validateShippingOrder(shippingOrder);
                 }
             }
             // auto escalate shipping orders if possible

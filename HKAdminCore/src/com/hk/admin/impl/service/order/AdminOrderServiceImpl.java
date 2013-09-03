@@ -94,6 +94,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RewardPointService rewardPointService;
     @Autowired
     private OrderService orderService;
+    @Autowired
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     ShippingOrderService shippingOrderService;
@@ -664,9 +665,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AdminShippingOrderService getAdminShippingOrderService() {
-        if (adminShippingOrderService == null) {
+       /* if (adminShippingOrderService == null) {
             adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
-        }
+        }*/
         return adminShippingOrderService;
     }
 
