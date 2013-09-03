@@ -65,8 +65,6 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
             <s:layout-render name="/includes/_footer.jsp"/>
         </c:otherwise>
     </c:choose>
-
-
   </div>
 
   </body>
