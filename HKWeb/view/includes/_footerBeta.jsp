@@ -31,11 +31,11 @@
                 <div class="footer-menu">
                     <h4>Get to Know Us</h4>
                     <ul>
-                        <li><a href="">About Us</a> </li>
+                        <li><a href="/beta/hk/AboutUs.action">About Us</a> </li>
                         <li><a href="">Careers</a></li>
                         <li><a href="">Investor Relations</a></li>
                         <li><a href="">Press Releases</a></li>
-                        <li><a href="">Terms & Conditions</a></li>
+                        <li><a href="/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
                         <li><a href="">Privacy Notice</a></li>
                         <li><a href="">Blog</a></li>
                     </ul>
@@ -45,9 +45,9 @@
                     <ul>
                         <li><a href="">Your Account</a></li>
                         <li><a href="">Shipping Rates & Policies</a></li>
-                        <li><a href="">FAQs</a></li>
-                        <li><a href="">Returns Policy</a></li>
-                        <li><a href="">Contact Us</a></li>
+                        <li><a href="/beta/hk/FAQ.action">FAQs</a></li>
+                        <li><a href="/beta/hk/ReturnPolicy.action">Returns Policy</a></li>
+                        <li><a href="/beta/hk/ContactUs.action">Contact Us</a></li>
                         <li><a href="">Help</a></li>
                     </ul>
                 </div>
