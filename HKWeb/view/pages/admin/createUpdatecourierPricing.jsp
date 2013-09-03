@@ -30,7 +30,7 @@
         '<td>' +
         '<select name="courierPricingEngineList[' + nextIndex + '].regionType" class="regionType">' +
         '<option value="">--Select--</option>' +
-         <c:forEach items="${cpea.regionTypeList}" var="regionType">
+         <c:forEach items="${cpea.regionTypesForCourier}" var="regionType">
         '<option value="' + ${regionType.id} + '"> ' + "${regionType.name}" + '</option>' +
          </c:forEach>
         '</select>' +

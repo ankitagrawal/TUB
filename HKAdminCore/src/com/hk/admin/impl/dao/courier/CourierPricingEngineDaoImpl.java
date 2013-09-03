@@ -4,10 +4,10 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.hkDelivery.Hub;
+import com.hk.store.CategoryDto;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
@@ -36,10 +36,19 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     DetachedCriteria criteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     criteria.add(Restrictions.eq("courier", courier));
     criteria.add(Restrictions.eq("regionType", regionType));
-//    criteria.add(Restrictions.eq("warehouse", warehouse));
     criteria = this.addValidityCriteria(criteria);
     List<CourierPricingEngine> engineList = this.findByCriteria(criteria);
     if (engineList != null && !engineList.isEmpty()) return engineList.get(0);
+
+    // if nothing found then return the last used entry
+    DetachedCriteria criteriaForOld = DetachedCriteria.forClass(CourierPricingEngine.class);
+    criteriaForOld.add(Restrictions.eq("courier", courier));
+    criteriaForOld.add(Restrictions.eq("regionType", regionType));
+    criteriaForOld.addOrder(Order.desc("validUpto"));
+    List<CourierPricingEngine> engineListOld = this.findByCriteria(criteriaForOld);
+    if (engineListOld != null && !engineListOld.isEmpty()) return engineListOld.get(0);
+
+    // still no entry found then return null
     return null;
   }
 
@@ -83,5 +92,17 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     criteria.add(Restrictions.gt("validUpto", cal.getTime()));
     criteria.addOrder(Order.asc("validUpto"));
     return criteria;
+  }
+
+  public List<RegionType> getRegionsForCourier(Courier courier) {
+    DetachedCriteria criteria = DetachedCriteria.forClass(CourierPricingEngine.class);
+    criteria.add(Restrictions.eq("courier", courier));
+    ProjectionList projectionsList = Projections.projectionList();
+    projectionsList.add(Projections.alias(Projections.property("regionType"),"regions"));
+    projectionsList.add(Projections.distinct(Projections.property("regions")));
+    criteria.setProjection(projectionsList);
+    criteria.setResultTransformer(Transformers.aliasToBean(RegionType.class));
+
+    return this.findByCriteria(criteria);
   }
 }

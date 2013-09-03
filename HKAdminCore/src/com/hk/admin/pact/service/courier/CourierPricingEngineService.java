@@ -27,4 +27,6 @@ public interface CourierPricingEngineService {
   public CourierPricingEngine saveCourierPricingInfo(CourierPricingEngine courierPricingEngine);
 
   public CourierPricingEngine getCourierPricingInfoById(Long courierPricingEngineId);
+
+  public List<RegionType> getRegionsForCourier(Courier courier);
 }

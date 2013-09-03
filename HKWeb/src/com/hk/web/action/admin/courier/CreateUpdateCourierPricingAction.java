@@ -33,6 +33,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   private List<CourierPricingEngine> courierPricingEngineList = new ArrayList<CourierPricingEngine>();
   private List<Courier> courierList = new ArrayList<Courier>();
   private List<RegionType> regionTypeList = new ArrayList<RegionType>();
+  private  List<RegionType> regionTypesForCourier= new ArrayList<RegionType>();
 
   @DefaultHandler
   public Resolution pre() {
@@ -40,9 +41,6 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   }
 
   private void initialize() {
-	if (courier!=null) {
-	  courierName = courier.getName();
-	}
     courierList = courierPricingEngineService.getAvailableCouriers();
     regionTypeList = courierPricingEngineService.getRegionTypeList();
   }
@@ -56,6 +54,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
     }
     this.initialize();
+    this.regionTypesForCourier = courierPricingEngineService.getRegionsForCourier(courier);
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
@@ -125,5 +124,13 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
 
   public void setRegionTypeList(List<RegionType> regionTypeList) {
     this.regionTypeList = regionTypeList;
+  }
+
+  public List<RegionType> getRegionTypesForCourier() {
+    return regionTypesForCourier;
+  }
+
+  public void setRegionTypesForCourier(List<RegionType> regionTypesForCourier) {
+    this.regionTypesForCourier = regionTypesForCourier;
   }
 }

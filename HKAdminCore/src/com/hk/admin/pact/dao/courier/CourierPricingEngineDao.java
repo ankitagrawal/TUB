@@ -28,4 +28,5 @@ public interface CourierPricingEngineDao extends BaseDao {
 
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);
 
+  public List<RegionType> getRegionsForCourier(Courier courier);
 }

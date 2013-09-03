@@ -53,4 +53,8 @@ public class CourierPricingEngineServiceImpl implements CourierPricingEngineServ
   public CourierPricingEngine getCourierPricingInfoById(Long courierPricingEngineId) {
     return courierPricingEngineDao.get(CourierPricingEngine.class, courierPricingEngineId);
   }
+
+  public List<RegionType> getRegionsForCourier(Courier courier) {
+    return courierPricingEngineDao.getRegionsForCourier(courier);
+  }
 }
