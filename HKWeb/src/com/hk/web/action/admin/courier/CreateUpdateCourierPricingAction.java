@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.courier;
 
 import com.hk.admin.pact.service.courier.CourierPricingEngineService;
+import com.hk.admin.pact.service.courier.CourierService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -29,6 +30,8 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
 
   @Autowired
   CourierPricingEngineService courierPricingEngineService;
+  @Autowired
+  CourierService courierService;
 
   private Courier courier;
   private RegionType regionType;
@@ -43,7 +46,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   }
 
   private void initialize() {
-    courierList = courierPricingEngineService.getAvailableCouriers();
+    courierList = courierService.getAllActiveCourier();
     regionTypeList = courierPricingEngineService.getRegionTypeList();
   }
 

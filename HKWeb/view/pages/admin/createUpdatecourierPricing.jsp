@@ -105,7 +105,7 @@
     </s:layout-component>
 
     <s:layout-component name="heading">
-        Search and Update Courier Pricing
+        Add and Update Courier Pricing
     </s:layout-component>
 
     <s:layout-component name="content">

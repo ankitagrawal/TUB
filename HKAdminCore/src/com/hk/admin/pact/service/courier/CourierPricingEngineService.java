@@ -16,8 +16,6 @@ import java.util.List;
  */
 public interface CourierPricingEngineService {
 
-  public List<Courier> getAvailableCouriers();
-
   public List<RegionType> getRegionTypeList();
 
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);

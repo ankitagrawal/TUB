@@ -25,17 +25,10 @@ import java.util.List;
 public class CourierPricingEngineServiceImpl implements CourierPricingEngineService {
 
   @Autowired
-  MasterDataDao masterDataDao;
-
-  @Autowired
   CourierPricingEngineDao courierPricingEngineDao;
 
-  public List<Courier> getAvailableCouriers() {
-    return masterDataDao.getAvailableCouriers();
-  }
-
   public List<RegionType> getRegionTypeList() {
-    return masterDataDao.getRegionTypeList();
+    return courierPricingEngineDao.getAll(RegionType.class);
   }
 
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier) {
