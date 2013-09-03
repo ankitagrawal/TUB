@@ -17,7 +17,7 @@
       </c:choose>
       | HealthKart.com
     </title>
-    <jsp:include page="/includes/_styleBeta.jsp"/>
+    <jsp:include page="/includes/_style.jsp"/>
     <s:layout-component name="analytics">
       <s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="cart" allCategories="cart" brand="" isProd="<%=false%>"/>
     </s:layout-component>
