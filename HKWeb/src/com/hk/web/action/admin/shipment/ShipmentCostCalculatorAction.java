@@ -124,6 +124,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
       } else {
         addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
       }
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Please enter SO ID"));
     }
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
