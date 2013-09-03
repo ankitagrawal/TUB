@@ -654,8 +654,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
       ProductVariant productVariant = cartLineItem.getProductVariant();
       Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-      SkuGroup skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
+      if (fsicli.getSkuItemId() != null){
+       SkuGroup skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
           fsicli.getFsgCostPrice(), fsicli.getFsgMrp(), null, null, null, sku);
+
 
       List<SkuItem> skuItems = new ArrayList<SkuItem>();
       for (ForeignSkuItemCLI fsicli1 : cartLineItem.getForeignSkuItemCLIs()) {
@@ -669,6 +671,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         skuItem = (SkuItem) getBaseDao().save(skuItem);
         skuItems.add(skuItem);
       }
+     }
     }
     return cartLineItem;
   }
