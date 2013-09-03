@@ -306,7 +306,8 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   public SkuItem getSkuItem(Long fsicliId) {
     String sql = "select si from SkuItem si where si.foreignSkuItemCLI.id = :fsicliId";
     Query query = getSession().createQuery(sql).setParameter("fsicliId" , fsicliId);
-    return (SkuItem) query.list().get(0);
+    List<SkuItem> skuItems = (List<SkuItem>) query.list();
+    return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
   }
   
   public SkuItem getSkuItemByBarcode(String barcode){

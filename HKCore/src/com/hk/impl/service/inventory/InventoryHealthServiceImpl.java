@@ -408,7 +408,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     boolean brightInventoryInfoAdded = false;
     Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
-    if (infos != null && infos.size() <= 0) {
+    if ((infos != null && infos.size() <= 0) && (skuItemCLIs != null && skuItemCLIs.size() <= 0 )) {
       // make a call to Bright side for inventory Info
       infos = avaialbleSkuInfoInfoOfBright(variant, cartLineItem.getId());
       brightInventoryInfoAdded = true;
@@ -893,25 +893,27 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
       } else {
-        productVariant.setOutOfStock(true);
-        productVariant.setNetQty(0L);
-        productVariant.setMrpQty(0L);
-      }
-      Product product = productVariant.getProduct();
-      boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-      if (!updateStockStatus) {
-        productVariant.setOutOfStock(false);
-      }
+        Product product = productVariant.getProduct();
+        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+        if (!updateStockStatus) {
+          productVariant.setOutOfStock(false);
+        } else {
+          productVariant.setOutOfStock(true);
+          productVariant.setNetQty(0L);
+          productVariant.setMrpQty(0L);
 
-      getBaseDao().save(productVariant);
+        }
 
-      List<ProductVariant> inStockVariants = product.getInStockVariants();
-      if (inStockVariants != null && inStockVariants.isEmpty()) {
-        product.setOutOfStock(true);
-      } else {
-        product.setOutOfStock(false);
+        getBaseDao().save(productVariant);
+
+        List<ProductVariant> inStockVariants = product.getInStockVariants();
+        if (inStockVariants != null && inStockVariants.isEmpty()) {
+          product.setOutOfStock(true);
+        } else {
+          product.setOutOfStock(false);
+        }
+        getBaseDao().save(product);
       }
-      getBaseDao().save(product);
     }
 
   }
