@@ -1,14 +1,15 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.shippingOrder.ShippingOrderConstants;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -41,264 +42,300 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
-    private static Logger              logger            = LoggerFactory.getLogger(PackingAwaitingQueueAction.class);
+  private static Logger              logger            = LoggerFactory.getLogger(PackingAwaitingQueueAction.class);
 
-    Page                               shippingOrderPage;
-    List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
+  Page                               shippingOrderPage;
+  List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
 
-    @Autowired
-    private ShippingOrderService       shippingOrderService;
-    @Autowired
-    private AdminShippingOrderService  adminShippingOrderService;
-    @Autowired
-    private ShippingOrderStatusService shippingOrderStatusService;
-    @Autowired
-    CategoryDao categoryDao;
+  @Autowired
+  private ShippingOrderService       shippingOrderService;
+  @Autowired
+  private AdminShippingOrderService  adminShippingOrderService;
+  @Autowired
+  private ShippingOrderStatusService shippingOrderStatusService;
 
-    private List<String> basketCategories = new ArrayList<String>();
+  @Autowired
+  ShippingOrderProcessor             shippingOrderProcessor;
 
-    private Long                       shippingOrderId;
-    private Long                       baseOrderId;
-    private String                     gatewayOrderId;
-    private String                     baseGatewayOrderId;
-    private Date                       startDate;
-    private Date                       endDate;
-    private Date                       paymentStartDate;
-    private Date                       paymentEndDate;
-    private Category                   category;
-    private ShippingOrderStatus        shippingOrderStatus;
-    private Integer                    defaultPerPage    = 30;
+  @Autowired
+  ShippingOrderLifecycleService      shippingOrderLifecycleService;
 
-    @DontValidate
-    @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
-    public Resolution pre() {
-        Long startTime = (new Date()).getTime();
-        if (shippingOrderStatus == null) {
-            shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess);
-        }
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
-        shippingOrderSearchCriteria.setServiceOrder(false);
-        shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
-        if (shippingOrderPage != null) {
-            shippingOrderList = shippingOrderPage.getList();
-            logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        }
-        return new ForwardResolution("/pages/admin/packingAwaitingQueue.jsp");
+  @Autowired
+  CategoryDao categoryDao;
+
+  private List<String> basketCategories = new ArrayList<String>();
+
+  private Long                       shippingOrderId;
+  private Long                       baseOrderId;
+  private String                     gatewayOrderId;
+  private String                     baseGatewayOrderId;
+  private Date                       startDate;
+  private Date                       endDate;
+  private Date                       paymentStartDate;
+  private Date                       paymentEndDate;
+  private Category                   category;
+  private ShippingOrderStatus        shippingOrderStatus;
+  private Integer                    defaultPerPage    = 30;
+
+  @DontValidate
+  @DefaultHandler
+  @Secure(hasAnyPermissions = { PermissionConstants.VIEW_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
+  public Resolution pre() {
+    Long startTime = (new Date()).getTime();
+    if (shippingOrderStatus == null) {
+      shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess);
     }
+    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+    shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
+    shippingOrderSearchCriteria.setServiceOrder(false);
+    shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
+    if (shippingOrderPage != null) {
+      shippingOrderList = shippingOrderPage.getList();
+      logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
+    }
+    return new ForwardResolution("/pages/admin/packingAwaitingQueue.jsp");
+  }
 
-    public Resolution searchOrders() {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(gatewayOrderId);
-        shippingOrderSearchCriteria.setBaseOrderId(baseOrderId).setBaseGatewayOrderId(baseGatewayOrderId);
-        if (shippingOrderStatus == null) {
-            shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForProcessingQueue()));
-        } else {
-            shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
+  public Resolution searchOrders() {
+    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+    shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(gatewayOrderId);
+    shippingOrderSearchCriteria.setBaseOrderId(baseOrderId).setBaseGatewayOrderId(baseGatewayOrderId);
+    if (shippingOrderStatus == null) {
+      shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForProcessingQueue()));
+    } else {
+      shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
+    }
+    if(!basketCategories.isEmpty()){
+      Set<Category> basketCategoryList = new HashSet<Category>();
+      for (String category : basketCategories) {
+        if (category != null) {
+          Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+          basketCategoryList.add(basketCategory);
         }
-        if(!basketCategories.isEmpty()){
-            Set<Category> basketCategoryList = new HashSet<Category>();
-            for (String category : basketCategories) {
-                if (category != null) {
-                    Category basketCategory = (Category) categoryDao.getCategoryByName(category);
-                    basketCategoryList.add(basketCategory);
-                }
+      }
+      shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
+    }
+    shippingOrderSearchCriteria.setLastEscStartDate(startDate).setLastEscEndDate(endDate);
+    shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
+
+    shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
+
+    if (shippingOrderPage != null) {
+      shippingOrderList = shippingOrderPage.getList();
+    }
+    return new ForwardResolution("/pages/admin/packingAwaitingQueue.jsp");
+  }
+
+  @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
+  public Resolution moveToActionAwaiting() {
+    if (!shippingOrderList.isEmpty()) {
+      // Creating acceptable reasons for escalate back
+      Set<Long> acceptableReasons = EnumReason.getAcceptableReasonIDsEscalateBack();
+
+      boolean isAutoEscalateBackAllowed;
+      List<Long> shippingOrderIdsWithInvalidReason = new ArrayList<Long>();
+      List<Long> shippingOrdersWithoutFixedLI = new ArrayList<Long>();
+
+      for (ShippingOrder shippingOrder : shippingOrderList) {
+        isAutoEscalateBackAllowed = false;
+        if (shippingOrder.getReason() != null) {
+          if (acceptableReasons.contains(shippingOrder.getReason().getId())) {
+            List<ShippingOrderLifecycle> lifeCycles =
+                shippingOrderLifecycleService.getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(),
+                    EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed.getId());
+            if (lifeCycles != null && !lifeCycles.isEmpty() ) {
+              // then only allow auto escalate back
+              isAutoEscalateBackAllowed = true;
+            } else {
+              shippingOrdersWithoutFixedLI.add(shippingOrder.getId());
+              continue;
             }
-            shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
-        }
-        shippingOrderSearchCriteria.setLastEscStartDate(startDate).setLastEscEndDate(endDate);
-        shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
-
-        shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
-
-        if (shippingOrderPage != null) {
-            shippingOrderList = shippingOrderPage.getList();
-        }
-        return new ForwardResolution("/pages/admin/packingAwaitingQueue.jsp");
-    }
-
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
-    public Resolution moveToActionAwaiting() {
-           if (!shippingOrderList.isEmpty()) {
-               List<ShippingOrder> shippingOrdersWithoutReason = new ArrayList<ShippingOrder>();
-               String shippingOrderIds = "";
-               for (ShippingOrder shippingOrder : shippingOrderList) {
-                   if (shippingOrder.getReason() == null) {
-                       shippingOrdersWithoutReason.add(shippingOrder);
-                       shippingOrderIds = shippingOrderIds + shippingOrder.getId() + ",";
-                   } else {
-                       adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
-                   }
-               }
-               if (shippingOrdersWithoutReason.size() > 0) {
-                   addRedirectAlertMessage(new SimpleMessage("Reasons must be slected for shipping order -> " + shippingOrderIds));
-                    return new RedirectResolution(PackingAwaitingQueueAction.class);
-               }
-
-               addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));
-           } else {
-               addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be moved back to action awaiting"));
-           }
-
-           return new RedirectResolution(PackingAwaitingQueueAction.class);
-       }
-
-
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
-    public Resolution reAssignToPackingQueue() {
-
-        if (!shippingOrderList.isEmpty()) {
-            for (ShippingOrder shippingOrder : shippingOrderList) {
-                adminShippingOrderService.moveShippingOrderBackToPackingQueue(shippingOrder);
-            }
-            addRedirectAlertMessage(new SimpleMessage("Orders have been re-assigned for processing"));
+          }
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be assigned back for processing"));
+          shippingOrderIdsWithInvalidReason.add(shippingOrder.getId());
         }
+        if (isAutoEscalateBackAllowed) {
+          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder, true);
+        } else {
+          adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+        }
+      }
 
-        return new RedirectResolution(PackingAwaitingQueueAction.class);
+      if (shippingOrderIdsWithInvalidReason.size() > 0) {
+        addRedirectAlertMessage(new SimpleMessage("No reasons selected for shipping order -> "
+            + shippingOrderIdsWithInvalidReason ));
+      }
+      if (shippingOrdersWithoutFixedLI.size() > 0 ) {
+        addRedirectAlertMessage(new SimpleMessage("Fix it not tried for shipping order -> "
+            + shippingOrdersWithoutFixedLI));
+      }
+      if (shippingOrderList.size() != shippingOrderIdsWithInvalidReason.size() + shippingOrdersWithoutFixedLI.size()) {
+        addRedirectAlertMessage(new SimpleMessage("Orders with no errors have been moved back to Action" +
+            " Awaiting and auto escalated forward if possible."));
+      }
+
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be moved back to action awaiting"));
     }
 
-    public List<String> getBasketCategories() {
-        return basketCategories;
+    return new RedirectResolution(PackingAwaitingQueueAction.class);
+  }
+
+
+  @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
+  public Resolution reAssignToPackingQueue() {
+
+    if (!shippingOrderList.isEmpty()) {
+      for (ShippingOrder shippingOrder : shippingOrderList) {
+        adminShippingOrderService.moveShippingOrderBackToPackingQueue(shippingOrder);
+      }
+      addRedirectAlertMessage(new SimpleMessage("Orders have been re-assigned for processing"));
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be assigned back for processing"));
     }
 
-    public void setBasketCategories(List<String> basketCategories) {
-        this.basketCategories = basketCategories;
-    }
+    return new RedirectResolution(PackingAwaitingQueueAction.class);
+  }
 
-    public int getPerPageDefault() {
-        return defaultPerPage;
-    }
+  public List<String> getBasketCategories() {
+    return basketCategories;
+  }
 
-    public Integer getDefaultPerPage() {
-        return defaultPerPage;
-    }
+  public void setBasketCategories(List<String> basketCategories) {
+    this.basketCategories = basketCategories;
+  }
 
-    public void setDefaultPerPage(Integer defaultPerPage) {
-        this.defaultPerPage = defaultPerPage;
-    }
+  public int getPerPageDefault() {
+    return defaultPerPage;
+  }
 
-    public int getPageCount() {
-        return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalPages();
-    }
+  public Integer getDefaultPerPage() {
+    return defaultPerPage;
+  }
 
-    public int getResultCount() {
-        return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalResults();
-    }
+  public void setDefaultPerPage(Integer defaultPerPage) {
+    this.defaultPerPage = defaultPerPage;
+  }
 
-    public Set<String> getParamSet() {
-        HashSet<String> params = new HashSet<String>();
-        params.add("startDate");
-        params.add("endDate");
-        params.add("paymentStartDate");
-        params.add("paymentEndDate");
-        params.add("shippingOrderId");
-        params.add("baseOrderId");
-        // params.add("gatewayOrderId");
-        params.add("baseGatewayOrderId");
-        params.add("shippingOrderStatus");
-        return params;
-    }
+  public int getPageCount() {
+    return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalPages();
+  }
 
-    public List<ShippingOrder> getShippingOrderList() {
-        return shippingOrderList;
-    }
+  public int getResultCount() {
+    return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalResults();
+  }
 
-    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
-        this.shippingOrderList = shippingOrderList;
-    }
+  public Set<String> getParamSet() {
+    HashSet<String> params = new HashSet<String>();
+    params.add("startDate");
+    params.add("endDate");
+    params.add("paymentStartDate");
+    params.add("paymentEndDate");
+    params.add("shippingOrderId");
+    params.add("baseOrderId");
+    // params.add("gatewayOrderId");
+    params.add("baseGatewayOrderId");
+    params.add("shippingOrderStatus");
+    return params;
+  }
 
-    public Long getShippingOrderId() {
-        return shippingOrderId;
-    }
+  public List<ShippingOrder> getShippingOrderList() {
+    return shippingOrderList;
+  }
 
-    public void setShippingOrderId(Long shippingOrderId) {
-        this.shippingOrderId = shippingOrderId;
-    }
+  public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+    this.shippingOrderList = shippingOrderList;
+  }
 
-    public void setGatewayOrderId(String gatewayOrderId) {
-        this.gatewayOrderId = gatewayOrderId;
-    }
+  public Long getShippingOrderId() {
+    return shippingOrderId;
+  }
 
-    public Long getBaseOrderId() {
-        return baseOrderId;
-    }
+  public void setShippingOrderId(Long shippingOrderId) {
+    this.shippingOrderId = shippingOrderId;
+  }
 
-    public void setBaseOrderId(Long baseOrderId) {
-        this.baseOrderId = baseOrderId;
-    }
+  public void setGatewayOrderId(String gatewayOrderId) {
+    this.gatewayOrderId = gatewayOrderId;
+  }
 
-    public String getBaseGatewayOrderId() {
-        return baseGatewayOrderId;
-    }
+  public Long getBaseOrderId() {
+    return baseOrderId;
+  }
 
-    public void setBaseGatewayOrderId(String baseGatewayOrderId) {
-        this.baseGatewayOrderId = baseGatewayOrderId;
-    }
+  public void setBaseOrderId(Long baseOrderId) {
+    this.baseOrderId = baseOrderId;
+  }
 
-    public Date getStartDate() {
-        return startDate;
-    }
+  public String getBaseGatewayOrderId() {
+    return baseGatewayOrderId;
+  }
 
-    public ShippingOrderStatus getShippingOrderStatus() {
-        return shippingOrderStatus;
-    }
+  public void setBaseGatewayOrderId(String baseGatewayOrderId) {
+    this.baseGatewayOrderId = baseGatewayOrderId;
+  }
 
-    public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
-        this.shippingOrderStatus = shippingOrderStatus;
-    }
+  public Date getStartDate() {
+    return startDate;
+  }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+  public ShippingOrderStatus getShippingOrderStatus() {
+    return shippingOrderStatus;
+  }
 
-    public Date getEndDate() {
-        return endDate;
-    }
+  public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
+    this.shippingOrderStatus = shippingOrderStatus;
+  }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
 
-    public Category getCategory() {
-        return category;
-    }
+  public Date getEndDate() {
+    return endDate;
+  }
 
-    public String getGatewayOrderId() {
-        return gatewayOrderId;
-    }
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+  public Category getCategory() {
+    return category;
+  }
 
-    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-        this.shippingOrderService = shippingOrderService;
-    }
+  public String getGatewayOrderId() {
+    return gatewayOrderId;
+  }
 
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
-    }
+  public void setCategory(Category category) {
+    this.category = category;
+  }
 
-    public Date getPaymentStartDate() {
-        return paymentStartDate;
-    }
+  public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+    this.shippingOrderService = shippingOrderService;
+  }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
-    public void setPaymentStartDate(Date paymentStartDate) {
-        this.paymentStartDate = paymentStartDate;
-    }
+  public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+    this.shippingOrderStatusService = shippingOrderStatusService;
+  }
 
-    public Date getPaymentEndDate() {
-        return paymentEndDate;
-    }
+  public Date getPaymentStartDate() {
+    return paymentStartDate;
+  }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
-    public void setPaymentEndDate(Date paymentEndDate) {
-        this.paymentEndDate = paymentEndDate;
-    }
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setPaymentStartDate(Date paymentStartDate) {
+    this.paymentStartDate = paymentStartDate;
+  }
+
+  public Date getPaymentEndDate() {
+    return paymentEndDate;
+  }
+
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setPaymentEndDate(Date paymentEndDate) {
+    this.paymentEndDate = paymentEndDate;
+  }
 }

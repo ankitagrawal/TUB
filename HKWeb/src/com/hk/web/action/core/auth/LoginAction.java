@@ -1,5 +1,18 @@
 package com.hk.web.action.core.auth;
 
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.LocalizableError;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.RoleConstants;
@@ -9,41 +22,37 @@ import com.hk.manager.UserManager;
 import com.hk.pact.dao.RoleDao;
 import com.hk.web.action.HomeAction;
 import com.hk.web.action.admin.AdminHomeAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.LocalizableError;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
 
 @Component
 public class LoginAction extends BaseAction {
 
     @Validate(required = true)
-    String email;
+    String                     email;
 
     @Validate(required = true)
-    String password;
+    String                     password;
 
-    private String redirectUrl;
-    private boolean rememberMe;
-    private String source;
+    private String             redirectUrl;
+    private boolean            rememberMe;
+    private String             source;
 
     @SuppressWarnings("unused")
     @Session(key = HealthkartConstants.Session.userId)
-    private String userId;
+    private String             userId;
 
     public static final String SOURCE_CHECKOUT = "checkout";
 
     @Autowired
-    UserManager userManager;
+    UserManager                userManager;
     @Autowired
-    RoleDao roleDao;
+    RoleDao                    roleDao;
 
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/loginBeta.jsp");
+        }
         return new ForwardResolution("/pages/login.jsp");
     }
 
@@ -59,22 +68,38 @@ public class LoginAction extends BaseAction {
 
         userId = userLoginDto.getLoggedUser().getId().toString();
 
-        getContext().getRequest().getSession().setAttribute(HealthkartConstants.Session.orderCountSetBoolean, false); // this will force the orderCount var to be re-set for this session
+        getContext().getRequest().getSession().setAttribute(HealthkartConstants.Session.orderCountSetBoolean, false); // this
+        // will
+        // force
+        // the
+        // orderCount
+        // var
+        // to
+        // be
+        // re-set
+        // for
+        // this
+        // session
 
         if (!StringUtils.isBlank(redirectUrl)) {
             return new RedirectResolution(redirectUrl, false);
         }
 
-        /*if (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN))
-                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.GOD))
-                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CATEGORY_MANAGER))
-                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.OPS_MANAGER))
-                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.WH_MANAGER))
-                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.TICKETADMIN))
-                || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CUSTOMER_SUPPORT)))
-            return new RedirectResolution(AdminHomeAction.class);
-        else*/
+        if (isHybridRelease()) {
             return new RedirectResolution(HomeAction.class);
+        } else {
+
+            if (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN))
+                    || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.GOD))
+                    || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CATEGORY_MANAGER))
+                    || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.OPS_MANAGER))
+                    || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.WH_MANAGER))
+                    || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.TICKETADMIN))
+                    || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CUSTOMER_SUPPORT)))
+                return new RedirectResolution(AdminHomeAction.class);
+            else
+                return new RedirectResolution(HomeAction.class);
+        }
     }
 
     public String getEmail() {

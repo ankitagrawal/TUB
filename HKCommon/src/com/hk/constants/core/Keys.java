@@ -124,22 +124,23 @@ public class Keys {
         public static final String fedExMeterNo                    = "fedExMeterNo";
         public static final String fedExAccountNo                  = "fedExAccountNo";
 
-        /*To be removed later on. just a safety mehchanism to route calls to outside hk*/
-        public static final String maxCODCallCount                  = "maxCODCallCount";
+        /* To be removed later on. just a safety mehchanism to route calls to outside hk */
+        public static final String maxCODCallCount                 = "maxCODCallCount";
 
-        public static final String hkApiAccessKey = "healthkartAPIAccessKey";
-        public static final String eyeTryOnXmls = "eyeTryOnXmls";
+        public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
+        public static final String eyeTryOnXmls                    = "eyeTryOnXmls";
 
-		    public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
+        public static final String maxReturnPolicyDays             = "maxReturnPolicyDays";
 
-        public static final String hkBridgeRestUrl = "hkBridgeRestUrl";
-        public static final String userEmailLinksRedirected = "userEmailLinksRedirected";
+        public static final String hkBridgeRestUrl                 = "hkBridgeRestUrl";
+        public static final String userEmailLinksRedirected        = "userEmailLinksRedirected";
 
-        public static final String vanillaForumUrl = "vanillaForumUrl";
-        
-        public static final String aquaBrightSeparatedFor = "aquaBrightSeparatedFor";
-        public static final String aquaBrightSeparateDate = "aquaBrightSeparateDate";
+        public static final String vanillaForumUrl                 = "vanillaForumUrl";
 
+        public static final String aquaBrightSeparatedFor          = "aquaBrightSeparatedFor";
+        public static final String aquaBrightSeparateDate          = "aquaBrightSeparateDate";
+
+        public static final String hybridRelease          = "hybridRelease";
 
     }
 

@@ -1,5 +1,6 @@
 package com.hk.impl.service.inventory;
 
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.order.CartLineItem;
@@ -14,6 +15,8 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.service.ServiceLocatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	@Autowired
 	BaseDao baseDao;
 	private Logger logger = LoggerFactory.getLogger(SkuItemLineItemServiceImpl.class);
+  ShippingOrderService shippingOrderService;
 
 	@Override
 	public List<SkuItemLineItem> getSkuItemLineItem(LineItem lineItem, Long skuItemStatusId) {
@@ -95,9 +99,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 				skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
 				logger.debug("saving si to booked in replacement order ->  " + skuItem.getId());
 				skuItem = (SkuItem) getSkuItemDao().save(skuItem);
-
+        SkuItemCLI skuItemCLI;
 				if (createSkuCLIFlag) {
-					SkuItemCLI skuItemCLI = new SkuItemCLI();
+					skuItemCLI = new SkuItemCLI();
 					skuItemCLI.setSkuItem(skuItem);
 					skuItemCLI.setCartLineItem(lineItem.getCartLineItem());
 					skuItemCLI.setUnitNum(unitNum);
@@ -107,7 +111,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 					skuItemLineItem.setSkuItemCLI(skuItemCLI);
 
 				} else {
-					skuItemLineItem.setSkuItemCLI(cartLineItem.getSkuItemCLIs().get(i - 1));
+          skuItemCLI = cartLineItem.getSkuItemCLIs().get(i - 1);
+          skuItemCLI.setSkuItem(skuItem);
+          skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+          skuItemLineItem.setSkuItemCLI(skuItemCLI);
 				}
 
 				//create skuItemLineItem entry
@@ -285,6 +292,44 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		}
 		return true;
 	}
+	public Boolean freeInventoryForRTOCheckIn(ShippingOrder shippingOrder) {
+		List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+		List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+    Boolean hasReplacementOrder = getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder);
+
+		Set<LineItem> lineItems = shippingOrder.getLineItems();
+		for (LineItem lineItem : lineItems) {
+			for (SkuItemCLI skuItemCLI : lineItem.getCartLineItem().getSkuItemCLIs()) {
+				skuItemCLI.setSkuItemLineItems(null);
+				skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
+				skuItemCLIsToBeDeleted.add(skuItemCLI);
+			}
+
+			skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
+		}
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			CartLineItem cartLineItem = lineItem.getCartLineItem();
+			cartLineItem.setSkuItemCLIs(null);
+			cartLineItem = (CartLineItem) baseDao.save(cartLineItem);
+			lineItem.setSkuItemLineItems(null);
+			lineItem.setCartLineItem(cartLineItem);
+			lineItem = (LineItem) baseDao.save(lineItem);
+		}
+		for (Iterator<SkuItemLineItem> iterator = skuItemLineItemsToBeDeleted.iterator(); iterator.hasNext(); ) {
+			SkuItemLineItem skuItemLineItem = (SkuItemLineItem) iterator.next();
+			baseDao.delete(skuItemLineItem);
+			iterator.remove();
+		}
+
+    if(!hasReplacementOrder){
+      for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext(); ) {
+        SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+        baseDao.delete(skuItemCLI);
+        iterator.remove();
+      }
+    }
+		return true;
+	}
 
 	@Override
 	public SkuItemLineItem save(SkuItemLineItem skuItemLineItem) {
@@ -309,7 +354,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()) {
 				SkuItem skuItem = skuItemLineItem.getSkuItem();
 				if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())
-						|| skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+						|| skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())
+            || skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
 					skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 					skuItem = (SkuItem) getSkuItemDao().save(skuItem);
 					skuItemsToBeFreed.add(skuItem);
@@ -350,6 +396,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			baseDao.delete(skuItemCLI);
 			iterator.remove();
 		}
+    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Inventory freed for SO.");
 		return true;
 	}
 
@@ -378,4 +425,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	public LineItemDao getLineItemDao() {
 		return lineItemDao;
 	}
+
+  public ShippingOrderService getShippingOrderService() {
+    return ServiceLocatorFactory.getService(ShippingOrderService.class);
+  }
 }

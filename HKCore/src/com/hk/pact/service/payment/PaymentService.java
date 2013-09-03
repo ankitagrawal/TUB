@@ -16,6 +16,7 @@ import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.store.Store;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pojo.HkPaymentResponse;
 
@@ -66,7 +67,7 @@ public interface PaymentService {
 
     public Map<Long,Object> reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) ;
 
-    public boolean isValidReconciliation(Payment payment) ;
+    public boolean isValidReconciliation(Payment payment, Store store) ;
 
     public double getRefundableAmount(Payment payment);
 

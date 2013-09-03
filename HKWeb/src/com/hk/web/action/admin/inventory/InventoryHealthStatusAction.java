@@ -202,13 +202,13 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
             mumInventory = adminInventoryService.getNetInventory(mumSKU);
             if (unbookedInventoryRequired){
                if (loggedInSKU != null) {
-                loggedInWHUnbookedInventory = loggedInWHInventory - adminInventoryService.getBookedInventory(loggedInSKU);
+                loggedInWHUnbookedInventory = loggedInWHInventory - adminInventoryService.getBookedInventory(loggedInSKU, null);
                }
                 if (mumSKU != null) {
-                   mumUnbookedInventory = mumInventory - adminInventoryService.getBookedInventory(mumSKU);
+                   mumUnbookedInventory = mumInventory - adminInventoryService.getBookedInventory(mumSKU, null);
                 }
                 if (ggnSKU != null) {
-                  ggnUnbookedInventory = ggnInventory - adminInventoryService.getBookedInventory(ggnSKU);
+                  ggnUnbookedInventory = ggnInventory - adminInventoryService.getBookedInventory(ggnSKU, null);
                 }
 
             }
