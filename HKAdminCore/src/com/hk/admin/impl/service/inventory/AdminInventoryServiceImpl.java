@@ -109,20 +109,21 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
   /**
    * @param sku
+   * @param shippingOrderStatusIds
    * @return Inventory count of all action awaiting and in process orders
    */
-  public Long getBookedInventory(Sku sku) {
-    Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(sku);
+  public Long getBookedInventory(Sku sku, List<Long> shippingOrderStatusIds) {
+    Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(Arrays.asList(sku), shippingOrderStatusIds);
     Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(sku.getProductVariant());
     return bookedInventoryForSku + bookedInventoryForProductVariant;
   }
 
-  public Long getBookedInventory(ProductVariant productVariant) {
+  public Long getBookedInventory(ProductVariant productVariant, List<Long> shippingOrderStatusIds) {
     // List<Sku> skuList =
     // getSkuService().getSKUsForProductVariant(productVariant);
     List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
     if (skuList != null && !skuList.isEmpty()) {
-      Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
+      Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList, shippingOrderStatusIds);
       Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
       return bookedInventoryForSku + bookedInventoryForProductVariant;
     } else {

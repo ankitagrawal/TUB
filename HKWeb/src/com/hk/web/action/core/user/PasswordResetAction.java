@@ -39,6 +39,9 @@ public class PasswordResetAction extends BaseAction {
     @DontValidate
     @DefaultHandler
     public Resolution pre() {
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/passwordResetBeta.jsp");
+        }
         return new ForwardResolution("/pages/passwordReset.jsp");
     }
 
