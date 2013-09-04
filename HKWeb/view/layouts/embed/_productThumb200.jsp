@@ -180,8 +180,12 @@
 						</c:if>
 					</c:otherwise>
 				</c:choose>
-
-				<div class="floatfix"></div>
+                <c:if test="${fn:length(productVO.freebieDesc) > 3}">
+                    <div class="freebie-cntnr with-variants">
+                        <h6>${productVO.freebieDesc} FREE</h6>
+                    </div>
+                </c:if>
+                <div class="floatfix"></div>
 			</div>
 	</c:if>
 </s:layout-definition>
