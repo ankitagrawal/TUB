@@ -67,11 +67,16 @@ public class ShipmentCostDistributor {
         Double skuWeight = lineItem.getSku().getProductVariant().getWeight();
         skuWeight = skuWeight == null || skuWeight == 0D ? 0D : skuWeight;
         lineItemPrice = lineItem.getHkPrice();
-        if (!flag) {
-            estLineItemShipmentCost = ((skuWeight * lineItem.getQty()) / totalWt) * totalShipmentCharge;
-        } else {
-            estLineItemShipmentCost = ((lineItemPrice * lineItem.getQty()) / totalPrice) * totalShipmentCharge;
+        if (totalPrice > 0) {
+            if (!flag) {
+                estLineItemShipmentCost = ((skuWeight * lineItem.getQty()) / totalWt) * totalShipmentCharge;
+            } else {
+                estLineItemShipmentCost = ((lineItemPrice * lineItem.getQty()) / totalPrice) * totalShipmentCharge;
+            }
+        }  else {
+            estLineItemShipmentCost = (lineItem.getQty() / totalQtyOrdered) * totalShipmentCharge;
         }
+
         estLineItemReconCost = ((lineItemPrice * lineItem.getQty()) / totalPrice) * totalReconciliationCharge;
         estLineItemPackingCost = (lineItem.getQty() / totalQtyOrdered) * totalExtraCost;
 
