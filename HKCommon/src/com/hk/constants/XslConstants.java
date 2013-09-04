@@ -83,7 +83,7 @@ public class XslConstants {
     public static final String DEFAULT_COURIER_SHEET = "PincodeDefaultCourier";
     public static final String ZONE = "ZONE";
     public static final String NEAREST_HUB = "NEAREST_HUB";
-    public static final String LAST_MILE_COST = "LAST_MILE_COST";
+    public static final String CONVEYANCE_COST = "CONVEYANCE_COST";
     
     public static final String SUPPLIER_TIN = "SUPPLIER_TIN";
     public static final String SUPPLIER_STATE = "SUPPLIER_STATE";
