@@ -42,7 +42,7 @@ public class FedExPickupServiceImpl implements ThirdPartyPickupService {
   @Override
   public List<String> createPickupRequest(ShippingOrder shippingOrder, Date date){
     String fedExAccountNo = null;
-    if (EnumWarehouseIdentifier.GGN_Bright_Warehouse.equals(shippingOrder.getWarehouse())) {
+    if (EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName().equals(shippingOrder.getWarehouse().getIdentifier())) {
       fedExAccountNo = fedExAccountNoGGN;
     } else {
       fedExAccountNo = fedExAccountNoMUM;
