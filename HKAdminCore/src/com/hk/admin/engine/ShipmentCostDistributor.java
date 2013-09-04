@@ -73,11 +73,11 @@ public class ShipmentCostDistributor {
             } else {
                 estLineItemShipmentCost = ((lineItemPrice * lineItem.getQty()) / totalPrice) * totalShipmentCharge;
             }
+            estLineItemReconCost = ((lineItemPrice * lineItem.getQty()) / totalPrice) * totalReconciliationCharge;
         }  else {
             estLineItemShipmentCost = (lineItem.getQty() / totalQtyOrdered) * totalShipmentCharge;
+            estLineItemReconCost = (lineItem.getQty() / totalQtyOrdered) * totalReconciliationCharge;
         }
-
-        estLineItemReconCost = ((lineItemPrice * lineItem.getQty()) / totalPrice) * totalReconciliationCharge;
         estLineItemPackingCost = (lineItem.getQty() / totalQtyOrdered) * totalExtraCost;
 
         if (whReportLineItem == null) {
