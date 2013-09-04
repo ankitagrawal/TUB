@@ -105,14 +105,11 @@
 <div class="mrgn-l-40">
 
 <div class="basicInformation" style="float:left; margin-top: 5px; margin-bottom: 5px; width: 100%;">
-
-  <div style="margin-top: 10px"></div>
-
   <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
     <s:errors/>
     <h2 class="strikeline"> Basic Information</h2>
 
-    <div style="float:left; width:58%">
+    <div style="float:left; width:100% ">
 
       <div class="row">
         <label class="rowLabel">Name</label>
@@ -177,40 +174,36 @@
           </c:choose>
         </label>
       </div>
+        <div class="clear"></div>
+        <div class="row">
+            <label class="rowLabel">DOB</label>
+            <label class="rowText" style="">
+                <c:choose>
+                    <c:when test="${maa.user.birthDate != null}">
+                        <%--<s:label class="rowText" name="<%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>" style=" font-size: 0.8em;"/>--%>
+                        <%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>
+                    </c:when>
+                    <c:otherwise>
+                        --
+                    </c:otherwise>
+                </c:choose>
+            </label>
+        </div>
+
     </div>
     <div class="clear"></div>
 
-    <div>
-      <div class="row">
-        <label class="rowLabel">DOB</label>
-        <label class="rowText" style="">
-          <c:choose>
-            <c:when test="${maa.user.birthDate != null}">
-              <%--<s:label class="rowText" name="<%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>" style=" font-size: 0.8em;"/>--%>
-              <%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>
-            </c:when>
-            <c:otherwise>
-              --
-            </c:otherwise>
-          </c:choose>
-        </label>
-      </div>
-
       <s:hidden name="user" value="${maa.user}"/>
-
-      <div style="float: right;">
-        <s:submit class="btn btn-blue" name="editPassword" value="Change Password"/>
-        <s:submit class="btn btn-blue" name="editBasicInformation" value="Edit Profile"/>
+      <div style="float:left; width:100%; text-align: right">
+        <s:submit class="btn btn-blue dis" style="display:inline-block; " name="editPassword" value="Change Password"/>
+        <s:submit class="btn btn-blue" style="display:inline-block; " name="editBasicInformation" value="Edit Profile"/>
       </div>
-    </div>
   </s:form>
 </div>
 
-<div class="contactInformation" style="width: 100%; margin-top: 5px; margin-bottom: 5px; float:left;">
+<div class="contactInformation" style="width: 100%; margin-top: 20px; margin-bottom: 5px; float:left;">
   <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction">
     <h2 class="strikeline"> Contact Information</h2>
-
-    <div style="margin-top: 10px"></div>
 
     <%--<c:if test="${!empty addresses}">--%>
     <c:set var="address" value="${maa.affiliateDefaultAddress}"/>
@@ -232,7 +225,7 @@
         </c:choose>
 
         <div>
-          <div style="float:left; font-size:small; width:70%">
+          <div style="font-size:small; width:100%; margin-top: 15px;">
             <p>${address.line1} ${address.line2}</p>
 
             <p>${address.city}</p>
@@ -241,9 +234,9 @@
 
             <p>Phone: ${address.phone}</p>
           </div>
-          <div style=" margin-top:65px; margin-right:15px; ">
+          <div style=" width:100%; text-align: right; ">
             <s:link class="btn btn-gray" beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
-                    style="font-size:small; color:black; text-align:center;">View all addresses
+                    style="font-size:small; color:black; text-align:center;display:inline-block;">View all addresses
               <%--<s:param name="address.id" value="${address.id}"/>--%>
               <%--<s:param name="user" value="${maa.user}"/>--%>
             </s:link>
@@ -324,7 +317,7 @@
 </s:layout-render>
 <script type="text/javascript">
   window.onload = function() {
-      $('#myAccountLink').addClass('selected')
+      $('#myAccountLink').addClass('selected');
   };
 
   $(document).ready(function() {
@@ -433,7 +426,7 @@
     float: left;
     margin-left: 0;
     padding-top: 2px;
-    padding-left: 26px;
+
   }
 
   .rowLabel {
@@ -443,7 +436,6 @@
     width: 70px;
     height: 24px;
     margin-top: 5px;
-    font-weight: bold;
   }
 
   .rowText {
