@@ -22,9 +22,6 @@
       <span class="sml gry">${ica.productVariant.optionsCommaSeparated}</span>
       <strong>MRP=${ica.productVariant.markedPrice}</strong>
       </span>
-      <span style="float:right">
-        <strong>Unbooked Inventory in Bright: ${hk:getUnbookedInventoryOfBright(ica.productVariant)}</strong>
-      </span>
     </div>
     <br/>
 
