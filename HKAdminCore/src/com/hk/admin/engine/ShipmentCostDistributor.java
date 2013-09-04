@@ -26,10 +26,6 @@ public class ShipmentCostDistributor {
         List<WHReportLineItem> whReportLineItemList = new ArrayList<WHReportLineItem>();
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
-            Double estLineItemShipmentCost = 0D;
-            Double estLineItemReconCost = 0D;
-            Double estLineItemPackingCost = 0D;
-            Double lineItemPrice = 0D;
             if (shipment != null) {
                 boolean flag = false;
                 Double totalShipmentCharge = shipment.getEstmShipmentCharge();
@@ -40,7 +36,9 @@ public class ShipmentCostDistributor {
                 Double totalPrice = 0D;
                 for(LineItem lineItem : shippingOrder.getLineItems()) {
                     totalQtyOrdered += lineItem.getQty();
-                    totalWt += lineItem.getSku().getProductVariant().getWeight() * lineItem.getQty();
+                    if(lineItem.getSku().getProductVariant().getWeight() != null) {
+                        totalWt += lineItem.getSku().getProductVariant().getWeight() * lineItem.getQty();
+                    }
                     totalPrice += lineItem.getHkPrice() * lineItem.getQty();
                     if(lineItem.getSku().getProductVariant().getWeight() == 0) {
                         flag = true;

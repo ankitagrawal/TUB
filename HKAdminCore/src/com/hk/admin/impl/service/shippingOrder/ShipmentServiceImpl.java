@@ -148,7 +148,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
         for (WHReportLineItem whReportLineItem : whReportLineItemList) {
-            save(whReportLineItem);
+            shipmentDao.save(whReportLineItem);
         }
         return shipment;
     }
@@ -163,10 +163,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public Shipment findByAwb(Awb awb) {
         return shipmentDao.findByAwb(awb);
-    }
-
-    private WHReportLineItem save(WHReportLineItem whReportLineItem) {
-        return (WHReportLineItem) shipmentDao.save(whReportLineItem);
     }
 
     @Transactional
