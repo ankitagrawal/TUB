@@ -102,7 +102,7 @@
 
 
 
-<div class="mrgn-l-40">
+<div class="mrgn-l-40 my-acnt-ht">
 
 <div class="basicInformation" style="float:left; margin-top: 5px; margin-bottom: 5px; width: 100%;">
   <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
@@ -432,7 +432,6 @@
   .rowLabel {
     float: left;
     padding-right: 5px;
-    padding-left: 5px;
     width: 70px;
     height: 24px;
     margin-top: 5px;

@@ -18,12 +18,11 @@
   <s:layout-component name="rhsContent">
     <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
       <s:errors/>
-      <div>
-        <h4 class="strikeline"> Basic Information</h4>
+      <div class="mrgn-l-40 my-acnt-ht">
+        <h2 class="strikeline" style="margin-bottom: 10px;"> Basic Information</h2>
 
-        <div style="margin-top: 15px"></div>
 
-        <div style="font-size:0.8em;">
+        <div>
           <s:hidden name="user"/>
           <div class="row">
             <s:label class="rowLabel" name="Name"/>
@@ -69,20 +68,10 @@
               <%--<s:option value="Female">Female</s:option>--%>
               <%--<s:option value="Male">Male</s:option>--%>
               <%--</s:select>--%>
-            <s:select name="user.gender" class="rowText" style="height: 24px; border:1px solid #A2C4E5;">
-              <s:option value="${gender}" selected="true">${gender}</s:option>
-              <c:choose>
-                <c:when test="${gender == null}">
-                  <s:option value="Female">Female</s:option>
-                  <s:option value="Male">Male</s:option>
-                </c:when>
-                <c:when test="${gender == 'Female'}">
-                  <s:option value="Male">Male</s:option>
-                </c:when>
-                <c:otherwise>
-                  <s:option value="Female">Female</s:option>
-                </c:otherwise>
-              </c:choose>
+            <s:select name="user.gender" class="rowText" value="${maa.user.gender}" style="height: 24px; border:1px solid #A2C4E5;">
+                <s:option value="">-Select One-</s:option>
+                <s:option value="Male">Male</s:option>
+                <s:option value="Female">Female</s:option>
             </s:select>
           </div>
 
@@ -100,8 +89,8 @@
         <div class="clear"></div>
         <div style="margin-top: 10px"></div>
 
-        <div style="float: right; font-size: 0.7em;">
-          <s:submit name="saveBasicInformation" value="Update" class="button_orange"/>
+        <div style="float: right; width: 315px;">
+          <s:submit name="saveBasicInformation" value="Update" class="btn btn-blue"/>
         </div>
 
       </div>
@@ -112,7 +101,7 @@
 
 <script type="text/javascript">
   window.onload = function() {
-    document.getElementById('myAccountLink').style.fontWeight = "bold";
+    $('#myAccountLink').addClass('selected');
     document.getElementById('birthDate').labelify({labelledClass: 'input_tip'});
   };
 
@@ -148,17 +137,15 @@
     float: left;
     margin-left: 0;
     padding-top: 2px;
-    padding-left: 26px;
   }
 
   .rowLabel {
     float: left;
     padding-right: 5px;
-    padding-left: 5px;
     width: 100px;
     height: 24px;
     margin-top: 5px;
-    font-weight: bold;
+
   }
 
   .rowText {
@@ -186,4 +173,7 @@
     padding-bottom: 0;
     margin-left: 20px;
   }
+  .row a{
+        float: right;
+    }
 </style>

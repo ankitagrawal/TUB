@@ -7256,6 +7256,9 @@ input[type="text"]:focus, input[type="password"]:focus{
 
 
 /*account page css begins*/
+.my-acnt-ht {
+    min-height: 500px;
+}
 .accnt-nav-box,.faq-nav-box {
     border: 1px solid #c8c8c8;
     text-align: left;
