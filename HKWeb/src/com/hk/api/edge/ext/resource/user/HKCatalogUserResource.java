@@ -1,4 +1,4 @@
-package com.hk.api.edge.ext.resource;
+package com.hk.api.edge.ext.resource.user;
 
 import java.security.InvalidParameterException;
 
@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.api.edge.ext.pact.service.HKCatalogUserService;
+import com.hk.api.edge.ext.pact.service.user.HKCatalogUserService;
 import com.hk.api.edge.ext.response.user.UserApiResponse;
 import com.hk.util.json.JSONResponseBuilder;
 

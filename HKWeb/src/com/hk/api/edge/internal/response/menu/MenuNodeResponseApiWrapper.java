@@ -17,5 +17,16 @@ public class MenuNodeResponseApiWrapper extends AbstractApiBaseResponse {
     public void setMenuResponse(MenuResponse menuResponse) {
       this.menuResponse = menuResponse;
     }
-  }
+
+
+    @Override
+    protected String[] getKeys() {
+        return new String[0];
+    }
+
+    @Override
+    protected Object[] getValues() {
+        return new Object[0];
+    }
+}
 

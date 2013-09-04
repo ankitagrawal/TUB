@@ -19,4 +19,15 @@ public class MenuResponse extends AbstractApiBaseResponse {
     public void setMenuNodes(List<CatalogMenuNode> menuNodes) {
       this.menuNodes = menuNodes;
     }
-  }
+
+
+    @Override
+    protected String[] getKeys() {
+        return new String[0];
+    }
+
+    @Override
+    protected Object[] getValues() {
+        return new Object[0];
+    }
+}

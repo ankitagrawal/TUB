@@ -1,4 +1,4 @@
-package com.hk.api.edge.ext.impl.service;
+package com.hk.api.edge.ext.impl.service.user;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hk.api.edge.ext.pact.service.HKCatalogUserService;
+import com.hk.api.edge.ext.pact.service.user.HKCatalogUserService;
 import com.hk.api.edge.ext.response.user.UserApiResponse;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.user.Permission;
