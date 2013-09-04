@@ -639,9 +639,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
           } else {
             //book inventory on Bright
+           if( isBookingRequireAtBright(cartLineItem) ){
             cartLineItem = tempBookBrightInventory(cartLineItem);
 //            cartLineItem =  createSkuGroupAndItem(cartLineItem) ;
             populateSICLI(cartLineItem);
+           }
           }
         }
       }
@@ -1111,6 +1113,15 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       }
     }
     getBaseDao().save(existingSkuItem);
+  }
+
+
+  public boolean isBookingRequireAtBright (CartLineItem cartLineItem){
+     Product product = cartLineItem.getProductVariant().getProduct();
+     if(product.isJit() || product.isDropShipping() || product.isService()){
+       return false;
+     }
+    return true;
   }
 
 }

@@ -32,6 +32,8 @@ public interface InventoryHealthService {
 
   public void freezeInventoryForAB(HKAPIForeignBookingResponseInfo info);
 
+  public boolean isBookingRequireAtBright (CartLineItem cartLineItem);
+
 
   public static class InventoryInfo {
     private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
