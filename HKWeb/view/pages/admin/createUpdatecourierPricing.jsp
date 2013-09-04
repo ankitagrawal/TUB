@@ -28,8 +28,7 @@
         '<tr count="' + nextIndex + '" class="lastRow cpeRow">' +
         '<td>' + Math.round(nextIndex + 1) + '.</td>' +
         '<td>' + '${cpea.courier.name}' +
-        '<input type="hidden" name="courierPricingEngineList[' + nextIndex + '].courier"'
-        +	'value="${courierPricingEngineList[0].courier.id}"' +
+        '<input type="hidden" name="courierPricingEngineList[' + nextIndex + '].courier" value="${cpea.courierPricingEngineList[0].courier.id}"' +
         '</input>' +
         '</td>' +
         '<td>' +
@@ -75,7 +74,42 @@
         '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto input_tip date_input" style="width:90px;" title="dd/MM/yyyy"/>' +
         '</td>' +
         '</tr>';
-
+         newRowHtml = $(newRowHtml);
+            (function(){
+                var ref= newRowHtml.find('.date_input')
+            var fieldName = ref.attr('name');
+            if (ref.hasClass("startDate")) {
+                ref.after('<a href="#"><img src="<hk:vhostImage/>/images/act_cal.gif"/></a>').
+                        dynDateTime({
+                            showsTime: false,
+                            ifFormat: "%Y-%m-%d 00:00:00",
+                            button: '.next()',
+                            onUpdate: function() {$(':text[name=' + fieldName + ']').removeClass('input_tip').labelify({ labelledClass:'input_tip'});}
+                        }).
+                        attr('title', 'yyyy-mm-dd hh:mm:ss').
+                        labelify({ labelledClass:'input_tip'});
+            } else if (ref.hasClass("endDate")) {
+                ref.after('<a href="#"><img src="<hk:vhostImage/>/images/act_cal.gif"/></a>').
+                        dynDateTime({
+                            showsTime: false,
+                            ifFormat: "%Y-%m-%d 23:59:59",
+                            button: '.next()',
+                            onUpdate: function() {$(':text[name=' + fieldName + ']').removeClass('input_tip').labelify({ labelledClass:'input_tip'});}
+                        }).
+                        attr('title', 'yyyy-mm-dd hh:mm:ss').
+                        labelify({ labelledClass:'input_tip'});
+            } else {
+                ref.after('<a href="#"><img src="<hk:vhostImage/>/images/act_cal.gif"/></a>').
+                        dynDateTime({
+                            showsTime: false,
+                            ifFormat: "%Y-%m-%d",
+                            button: '.next()',
+                            onUpdate: function() {$(':text[name=' + fieldName + ']').removeClass('input_tip').labelify({ labelledClass:'input_tip'});}
+                        }).
+                        attr('title', 'yyyy-mm-dd').
+                        labelify({ labelledClass:'input_tip'});
+            }
+            }());
         $('.courier-prcng-tbl').append(newRowHtml);
         return false;
         });
