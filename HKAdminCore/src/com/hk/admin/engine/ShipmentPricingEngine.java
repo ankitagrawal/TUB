@@ -4,7 +4,10 @@ import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.payment.GatewayIssuerMapping;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.warehouse.WHReportLineItem;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +58,11 @@ public class ShipmentPricingEngine {
   @Autowired
   private CourierPricingEngineDao courierPricingEngineDao;
 
-    public Double calculateShipmentCost(ShippingOrder shippingOrder) {
+
+    @Autowired
+    ShipmentService shipmentService;
+
+    public Double calculateShipmentCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
         Courier courier = shipment.getAwb().getCourier();
         Double weight = shipment.getBoxWeight() * 1000;

@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.shipment;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.engine.ShipmentCostDistributor;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
@@ -17,6 +18,7 @@ import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.warehouse.WHReportLineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShipmentService;
@@ -111,21 +113,19 @@ public class ShipmentCostCalculatorAction extends BaseAction {
       ShippingOrder shippingOrder = shippingOrderService.find(shippingOrderId);
       if (shippingOrder != null) {
         Shipment shipment = shippingOrder.getShipment();
-        if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-          if (weight != null && weight > 0D) {
-            shipment.setBoxWeight(weight);
-          }
-          shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-          shipment.setShipmentCostCalculateDate(new Date());
-          shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-          shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-          shipmentService.save(shipment);
-        } else {
-          addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
-        }
+         if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+            if (weight != null && weight > 0D) {
+               shipment.setBoxWeight(weight);
+            }
+            shipment = shipmentService.calculateAndDistributeShipmentCost(shipment);
+         } else {
+           addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
+         }
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
       }
     } else {
-      addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
+      addRedirectAlertMessage(new SimpleMessage("Please enter SO ID"));
     }
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
