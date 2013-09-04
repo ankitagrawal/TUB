@@ -220,7 +220,7 @@
 
                         </table>
 
-                        <div>
+                        <div style="display: none;">
                             <a href="#" class="addRowButton" style="font-size:1.2em">Add new row</a> <br/> <br/>
                             <s:submit  class ="saveall" name="savePincodeRegionList" value="Save"/>
                         </div>
