@@ -32,7 +32,7 @@
             <s:layout-render name="/layouts/embed/_header.jsp"/>
         </s:layout-component>
         <s:layout-component name="menu">
-            <s:layout-render name="/includes/_menuBeta.jsp" topCategory="${topCategory}"/>
+            <s:layout-render name="/includes/_menuBeta.jsp"/>
         </s:layout-component>
         <div class="main_container">
             <s:layout-component name="breadcrumbs">
