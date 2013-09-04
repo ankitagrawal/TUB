@@ -48,9 +48,6 @@ public class AddPincodeRegionZoneAction extends BaseAction {
     WarehouseService warehouseService;
     @Autowired
     CourierGroupService courierGroupService;
-    @Autowired
-    CourierPricingEngineService courierPricingEngineService;
-
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminDownloadsPath;
@@ -79,7 +76,7 @@ public class AddPincodeRegionZoneAction extends BaseAction {
 
     public void initialize() {
         courierGroupList = courierGroupService.getAllCourierGroup();
-        regionTypeList = courierPricingEngineService.getRegionTypeList();
+        regionTypeList = courierService.getRegionTypeList();
         warehouseList = warehouseService.getServiceableWarehouses();
     }
 

@@ -74,42 +74,48 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
   }
 
   @SuppressWarnings("unchecked")
-  public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
+  public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount,
+                                                     Double weight, boolean ground) {
     Pincode pincodeObj = pincodeDao.getByPincode(pincode);
     List<Courier> applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
     Double totalCost = 0D;
 
       if (pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()) {
-          logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode + "cod " + cod + " ground " + ground);
+          logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode
+              + "cod " + cod + " ground " + ground);
           return new TreeMap<Courier, Long>();
       }
-      List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
-      Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
-      for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
-          Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCourierList);
-          for (Courier courier : couriers) {
-              if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-                  if (pincodeObj.getNearestHub() != null) {
-                      HKReachPricingEngine hkReachPricingEngine = courierPricingEngineDao.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub(), false);
-                      if(hkReachPricingEngine != null){
-                          totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
-                      }
-                  } else {
-                    totalCost = 0d;
-                  }
-              } else {
-                  CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
-                  if (courierPricingInfo == null) {
-                      continue;
-                  }
-                  totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight);
-              }
-              logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
-              courierCostingMap.put(courier, Math.round(totalCost));
+      List<PincodeRegionZone> sortedApplicableZoneList =
+                    pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
+    Map<Courier, Long> courierCostingMap = new HashMap<Courier, Long>();
+    for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
+      Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(),
+          applicableCourierList);
+      for (Courier courier : couriers) {
+        if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+          if (pincodeObj.getNearestHub() != null) {
+            HKReachPricingEngine hkReachPricingEngine = courierPricingEngineDao.getHkReachPricingEngine(srcWarehouse,
+                pincodeObj.getNearestHub(), false);
+            if(hkReachPricingEngine != null){
+              totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
+            }
+          } else {
+            totalCost = 0d;
           }
+        } else {
+          CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier,
+              pincodeRegionZone.getRegionType(), srcWarehouse);
+          if (courierPricingInfo == null) {
+            continue;
+          }
+          totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight);
+        }
+        logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
+        courierCostingMap.put(courier, Math.round(totalCost));
       }
+    }
 
-      MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
+    MapValueComparator mapValueComparator = new MapValueComparator(courierCostingMap);
       TreeMap<Courier, Long> sortedCourierCostingTreeMap = new TreeMap(mapValueComparator);
       sortedCourierCostingTreeMap.putAll(courierCostingMap);
 
@@ -118,7 +124,8 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
 
   public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse) {
     CourierGroup courierGroup = courierGroupService.getCourierGroup(courier);
-    PincodeRegionZone pincodeRegionZone = pincodeRegionZoneService.getPincodeRegionZone(courierGroup, pincodeObj, srcWarehouse);
+    PincodeRegionZone pincodeRegionZone = pincodeRegionZoneService.getPincodeRegionZone(courierGroup, pincodeObj,
+        srcWarehouse);
     if (pincodeRegionZone == null) {
       if (courierGroup == null) {
         logger.error("courier group not found for courier " + courier.getName());
