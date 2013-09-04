@@ -1,6 +1,7 @@
 package com.hk.admin.engine;
 
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
+import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.payment.GatewayIssuerMapping;
@@ -59,43 +60,45 @@ public class ShipmentPricingEngine {
   private CourierPricingEngineDao courierPricingEngineDao;
 
 
-    @Autowired
-    ShipmentService shipmentService;
+  @Autowired
+  ShipmentService shipmentService;
 
-    public Double calculateShipmentCost(ShippingOrder shippingOrder){
-        Shipment shipment = shippingOrder.getShipment();
-        Courier courier = shipment.getAwb().getCourier();
-        Double weight = shipment.getBoxWeight() * 1000;
-        EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        if(!EnumCourier.HK_Delivery.getId().equals(courier.getId())){
-            if (enumBoxSize != null) {
-                if (enumBoxSize.getVolumetricWeight() > weight) {
-                    weight = enumBoxSize.getVolumetricWeight();
-                }
-            }
+  public Double calculateShipmentCost(ShippingOrder shippingOrder){
+    Shipment shipment = shippingOrder.getShipment();
+    Courier courier = shipment.getAwb().getCourier();
+    Double weight = shipment.getBoxWeight() * 1000;
+    EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
+    // weight remains as physical weight if HK delivery or courier with physical weight restriction
+    if(!EnumCourier.HK_Delivery.getId().equals(courier.getId())
+        || !(courier.getOperationsBitset() % EnumCourierOperations.PHYSICAL_WT_PREFERRED.getId() == 0)){
+      if (enumBoxSize != null) {
+        if (enumBoxSize.getVolumetricWeight() > weight) {
+          weight = enumBoxSize.getVolumetricWeight();
         }
-        Order order = shippingOrder.getBaseOrder();
-        Pincode pincodeObj = order.getAddress().getPincode();
-        Warehouse srcWarehouse = shippingOrder.getWarehouse();
-        if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
-            if (pincodeObj.getNearestHub() != null) {
-                HKReachPricingEngine hkReachPricingEngine = courierPricingEngineDao.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub(), false);
-                if(hkReachPricingEngine != null){
-                    return calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
-                }
-            }
-        } else {
-            CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
-            if (courierPricingInfo != null) {
-                return calculateShipmentCost(courierPricingInfo, weight);
-            } else {
-                return null;
-            }
-        }
-        return 0D;
+      }
     }
+    Order order = shippingOrder.getBaseOrder();
+    Pincode pincodeObj = order.getAddress().getPincode();
+    Warehouse srcWarehouse = shippingOrder.getWarehouse();
+    if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+      if (pincodeObj.getNearestHub() != null) {
+        HKReachPricingEngine hkReachPricingEngine = courierPricingEngineDao.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub(), false);
+        if(hkReachPricingEngine != null){
+          return calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
+        }
+      }
+    } else {
+      CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+      if (courierPricingInfo != null) {
+        return calculateShipmentCost(courierPricingInfo, weight);
+      } else {
+        return null;
+      }
+    }
+    return 0D;
+  }
 
-    public Double calculateShipmentCost(CourierPricingEngine courierPricingEngine, Double weight) {
+  public Double calculateShipmentCost(CourierPricingEngine courierPricingEngine, Double weight) {
     if(courierPricingEngine == null){
       return 0D;
     }
@@ -118,9 +121,9 @@ public class ShipmentPricingEngine {
     return (baseCost + additionalCost) * (1 + courierPricingEngine.getFuelSurcharge()) * (1 + EnumTax.VAT_12_36.getValue());
   }
 
-    public Double calculateHKReachCost(HKReachPricingEngine hkReachPricingEngine, Double weight, Pincode pincode) {
-        return (hkReachPricingEngine.getInterCityCost() + hkReachPricingEngine.getFixedCost()) * weight / 1000 + pincode.getLastMileCost();
-    }
+  public Double calculateHKReachCost(HKReachPricingEngine hkReachPricingEngine, Double weight, Pincode pincode) {
+    return (hkReachPricingEngine.getInterCityCost() + hkReachPricingEngine.getFixedCost()) * weight / 1000 + pincode.getLastMileCost();
+  }
 
 
   public Double calculateReconciliationCost(ShippingOrder shippingOrder){
@@ -147,7 +150,7 @@ public class ShipmentPricingEngine {
     return calculateReconciliationCost(courierPricingInfo, shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
   }
 
-    public Double calculatePackagingCost(ShippingOrder shippingOrder) {
+  public Double calculatePackagingCost(ShippingOrder shippingOrder) {
     Shipment shipment = shippingOrder.getShipment();
     EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
     return enumBoxSize != null && enumBoxSize.getId() != -1 ? enumBoxSize.getPackagingCost() : 15.5D;
