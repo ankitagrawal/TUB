@@ -83,7 +83,7 @@ public class SelectAddressAction extends BaseAction {
             }
         }
 
-        return new ForwardResolution("/pages/addressBook.jsp").addParameter("printAlert",printAlert);
+        return new ForwardResolution("/pages/addressBookBeta.jsp").addParameter("printAlert",printAlert);
 
     }
 
