@@ -38,7 +38,7 @@
   <body id="${bodyId}">
   <s:layout-component name="modal"/>
 
-  <div id="container">
+  <div id="container" class="container_24">
     <s:layout-component name="header">
       <s:layout-render name="/layouts/embed/_header.jsp"/>
     </s:layout-component>
@@ -49,27 +49,32 @@
 
     <div class="main_container">
         <s:layout-component name="steps"/>
-        <h1 style="text-align: center; margin-bottom: 0.5em; font-weight: bold; font-size: 22px">
-          <s:layout-component name="heading"/>
-        </h1>
-      
-        <s:errors/>
         <div class="alert messages"><s:messages key="generalMessages"/></div>
-       <%-- central content should be used only when you don't use lhscontent and rhscontent--%>
+            <%-- central content should be used only when you don't use lhscontent and rhscontent--%>
         <div class="centralContent">
             <s:layout-component name="centralContent"/>
 
             <div class="floatfix"></div>
         </div>
 
-      <div class="lhsContent">
+
+        <div class="ttl-cntnr">
+            <span class="icn icn-sqre "></span>
+            <h1 class=""><s:layout-component name="heading"/></h1>
+            <span class="icn icn-sqre"></span>
+        </div>
+
+      
+        <s:errors/>
+
+      <div class="lhsContent cont-lft">
         <s:layout-component name="lhsContent"/>
 
         <div class="floatfix"></div>
       </div>
       <s:layout-component name="left_col"/>
 
-      <div class="rhsContent">
+      <div class="rhsContent cont-lft">
         <s:layout-component name="rhsContent"/>
 
         <div class="floatfix"></div>
