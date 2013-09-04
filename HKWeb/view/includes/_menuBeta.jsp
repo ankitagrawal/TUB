@@ -32,12 +32,12 @@
                           </h3>
 
                           <ul class="gm-sc-list">
-                              <div class="span3">
+                              <div class="grid_4">
                                   <c:forEach items="${menuNode.childNodes}" var="l1child" varStatus="cntr">
 
                                       <c:if test="${cntr.index > 0 && cntr.index%2 ==0}">
                               </div>
-                              <div class="span3">
+                              <div class="grid_4">
                                   </c:if>
 
                                   <a href="${pageContext.request.contextPath}/${l1child.url}" class="gm-sc-nm">${l1child.name}</a>
@@ -327,7 +327,7 @@
         height = $menu.outerHeight(),
             width = $menu.outerWidth();
         var maxHeight = 0;
-        $submenu.find('.span3:last').css('border-right', 'none');
+        $submenu.find('.grid_4:last').css('border-right', 'none');
         $row.find('.gm-sc-cntnr').css('font-weight', 'bold');
         // Show the submenu
         $submenu.css({
@@ -342,10 +342,10 @@
 
         //Fix vertical line height
 
-        $submenu.find('.span3').each(function(){getMaxHeight($(this))});
+        $submenu.find('.grid_4').each(function(){getMaxHeight($(this))});
       //  maxHeight = 'auto';
         if(maxHeight>100){
-            $submenu.find('.span3').height(maxHeight);
+            $submenu.find('.grid_4').height(maxHeight);
         }
 
         function getMaxHeight(ref){
@@ -482,11 +482,12 @@
     }
 
     .gm-sc-list {
-        width: 580px;
+        width: 526px;
+        padding-left:20px;
 
     }
 
-    .gm-sc-list .span3 {
+    .gm-sc-list .grid_4 {
         border-right: 1px solid #ddd;
         padding-right: 12px;
 
@@ -506,7 +507,7 @@
         font-weight: 600;
         text-transform: capitalize;
         display: inline-block;
-        width: 93%;
+        width: 91%;
     }
 
     .gm-tc-nm {

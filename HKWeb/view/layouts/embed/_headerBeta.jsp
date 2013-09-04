@@ -54,15 +54,18 @@
     Date endOfOfferDate = new Date(new DateTime(2013, 01, 27, 8, 59, 59, 59).getMillis());
   %>
 
-  <div class='topBar main_container'>
-      <div class="fnt-sz9 fnt-light" style="text-align:right">
-          <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-              14 day return policy</a> |
-          <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link> | Email : <a href="mailto:info@healthkart.com">info@healthkart.com</a>
-          <img src="/beta/assets/images/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/>
-          <img src="/beta/assets/images/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus">
+  <div class='topBar container_24'>
+      <div class="fnt-sz10 fnt-light" style="text-align:right">
+
+              14 day return policy &nbsp;
+          Contact Us &nbsp;
+          <img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/>&nbsp;&nbsp;
+          <img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/>
       </div>
-    <div class='topBarContent'>
+
+      <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart"/>&nbsp;&nbsp
+
+    <div class='topBarContent' style="position: absolute;right:0px;">
 
       <div class="message">
         <div class="arrow"></div>
@@ -136,7 +139,7 @@
                       <span style="font-size:1.1em;color:white;
                       background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/bronze1.png');">Bronze</span>
                     </c:when>
-                    
+
                   </c:choose>
                   </a>
                   </c:if>

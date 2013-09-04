@@ -408,10 +408,6 @@ span.error {
 
     width: 100%;
     z-index: 1000;
-
-    border-bottom: 2px solid #f0f0f0;
-    height: 20px;
-
 }
 
 /* line 15, ../sass/main.scss */
@@ -1225,9 +1221,9 @@ span.error {
     margin-right: auto;
    /* border: 1px solid #ddd;
     box-shadow: 0 1px 3px #eee;*/
-    padding-top: 5px;
+
     border-radius: 5px;
-    border-top-width: 2px;
+
 }
 
 /* line 478, ../sass/main.scss */
@@ -2635,9 +2631,9 @@ h2.prod_title {
 .step2 .products_container {
     display: inline;
     float: left;
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 630px;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 650px;
 
 
     height: auto;
@@ -3362,6 +3358,8 @@ h2.prod_title {
 .shopping_cart {
     margin-top: 10px;
     padding-top: 10px;
+  padding-left:0px;
+  margin-left:0px;
 }
 
 /* line 1418, ../sass/main.scss */
