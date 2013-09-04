@@ -17,7 +17,6 @@ import com.hk.pact.service.core.CityService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.core.WarehouseService;
-import com.hk.util.NumberUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import org.apache.commons.lang.StringUtils;
@@ -80,7 +79,7 @@ public class XslPincodeParser {
                 String locality = row.getColumnValue(XslConstants.LOCALITY);
                 String region = row.getColumnValue(XslConstants.REGION);
                 String nearestHubName = row.getColumnValue(XslConstants.NEAREST_HUB);
-                String lastMileCostString = row.getColumnValue(XslConstants.LAST_MILE_COST);
+                String lastMileCostString = row.getColumnValue(XslConstants.CONVEYANCE_COST);
                 Double lastMileCost = null;
                 if (StringUtils.isEmpty(pin) || StringUtils.isEmpty(cityName) || StringUtils.isEmpty(stateName)
                     || StringUtils.isEmpty(zoneName)) {
@@ -154,7 +153,7 @@ public class XslPincodeParser {
         setCellValue(row, 3, XslConstants.LOCALITY);
         setCellValue(row, 4, XslConstants.ZONE);
         setCellValue(row, 5, XslConstants.NEAREST_HUB);
-        setCellValue(row, 6, XslConstants.LAST_MILE_COST);
+        setCellValue(row, 6, XslConstants.CONVEYANCE_COST);
 
       int initialRowNo = 1;
         for (Pincode pincode : pincodeList) {

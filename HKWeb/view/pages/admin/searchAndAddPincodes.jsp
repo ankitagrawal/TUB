@@ -161,9 +161,18 @@
                     <tr>
                         <td>Nearest Hub:</td>
                         <td>
-                            <c:if test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
-                                ${mpaBean.pincode.nearestHub.name}
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
+                                    ${mpaBean.pincode.nearestHub.name}
+                                </c:when>
+                                <c:otherwise>
+                                    <s:select name="pincode.nearestHub" id="nearestHub">
+                                        <s:option value="">--Select--</s:option>
+                                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="hubList"
+                                                                   value="id" label="name"/>
+                                    </s:select>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                     </tr>
                     <tr>
@@ -171,9 +180,15 @@
                             <label>Last Mile Cost:</label>
                         </td>
                         <td>
-                            <c:if test="${mpaBean.pincode!=null}">
-                                ${mpaBean.pincode.lastMileCost}
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${mpaBean.pincode!=null}">
+                                    ${mpaBean.pincode.lastMileCost}
+                                </c:when>
+                                <c:otherwise>
+                                    <s:text name="pincode.lastMileCost" id="lastMileCost"></s:text>
+                                </c:otherwise>
+                            </c:choose>
+
                         </td>
                     </tr>
 					<tr>
@@ -213,7 +228,7 @@
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
              (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 7 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION
-                        &nbsp;LOCALITY &nbsp;ZONE &nbsp;NEAREST_HUB &nbsp;LAST_MILE_COST)</li>
+                        &nbsp;LOCALITY &nbsp;ZONE &nbsp;NEAREST_HUB &nbsp;CONVEYANCE_COST)</li>
                     <br>
                     <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 					</s:form>
