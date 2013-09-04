@@ -40,7 +40,7 @@ public class ShipmentCostDistributor {
                         totalWt += lineItem.getSku().getProductVariant().getWeight() * lineItem.getQty();
                     }
                     totalPrice += lineItem.getHkPrice() * lineItem.getQty();
-                    if(lineItem.getSku().getProductVariant().getWeight() == 0) {
+                    if(lineItem.getSku().getProductVariant().getWeight() == null) {
                         flag = true;
                     }
                 }
