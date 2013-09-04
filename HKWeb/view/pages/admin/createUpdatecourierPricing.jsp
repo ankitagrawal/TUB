@@ -1,4 +1,5 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -8,6 +9,10 @@
     <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction" var="cpea"/>
 
     <s:layout-component name="htmlHead">
+        <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+        <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
         <script type="text/javascript">
 
         $(document).ready(function(){
@@ -67,7 +72,7 @@
         '<input type="text" name="courierPricingEngineList[' + nextIndex + '].variableCodCharges" class="variableCodCharges" />' +
         '</td>' +
         '<td>' +
-        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto" style="width:90px;" title="dd/MM/yyyy"/>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto input_tip date_input" style="width:90px;" title="dd/MM/yyyy"/>' +
         '</td>' +
         '</tr>';
 
@@ -139,100 +144,101 @@
 
                     <table class="courier-prcng-tbl">
 
-                            <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Courier</th>
-                                <th>Region</th>
-                                <th>First Base Weight</th>
-                                <th>First Base Cost</th>
-                                <th>Second Base Weight</th>
-                                <th>Second Base Cost</th>
-                                <th>Additional Weight</th>
-                                <th>Additional Cost</th>
-                                <th>Fuel Surcharge(in Decimal)</th>
-                                <th>Min COD Charge</th>
-                                <th>COD Cutoff Amount</th>
-                                <th>Variable COD Charges</th>
-                                <th>Valid Upto</th>
-                            </tr>
-                            </thead>
+                        <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Courier</th>
+                            <th>Region</th>
+                            <th>First Base Weight</th>
+                            <th>First Base Cost</th>
+                            <th>Second Base Weight</th>
+                            <th>Second Base Cost</th>
+                            <th>Additional Weight</th>
+                            <th>Additional Cost</th>
+                            <th>Fuel Surcharge(in Decimal)</th>
+                            <th>Min COD Charge</th>
+                            <th>COD Cutoff Amount</th>
+                            <th>Variable COD Charges</th>
+                            <th>Valid Upto</th>
+                        </tr>
+                        </thead>
 
 
                         <tbody>
-                            <c:forEach items="${cpea.courierPricingEngineList}" var="courierPricingEngine" varStatus="ctr">
-                                <tr count="${ctr.index}" class="${ctr.last ? 'lastRow cpeRow':'cpeRow'}">
-                                    <td>
-                                        ${ctr.index+1}.
-                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].id" value="${courierPricingEngine.id}" />
-                                    </td>
+                        <c:forEach items="${cpea.courierPricingEngineList}" var="courierPricingEngine" varStatus="ctr">
+                            <tr count="${ctr.index}" class="${ctr.last ? 'lastRow cpeRow':'cpeRow'}">
+                                <td>
+                                    ${ctr.index+1}.
+                                    <input type="hidden" name="courierPricingEngineList[${ctr.index}].id" value="${courierPricingEngine.id}" />
+                                </td>
 
-                                    <input type="hidden" name="courierPricingEngineList[${ctr.index}].warehouse" value="${courierPricingEngine.warehouse.id}" />
+                                <input type="hidden" name="courierPricingEngineList[${ctr.index}].warehouse" value="${courierPricingEngine.warehouse.id}" />
 
-                                    <td>
-                                        ${courierPricingEngine.courier.name}
-                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].courier" value="${courierPricingEngine.courier.id}" class ="courier" />
-                                    </td>
+                                <td>
+                                    ${courierPricingEngine.courier.name}
+                                    <input type="hidden" name="courierPricingEngineList[${ctr.index}].courier" value="${courierPricingEngine.courier.id}" class ="courier" />
+                                </td>
 
-                                    <td>
-                                        ${courierPricingEngine.regionType.name}
-                                        <input type="hidden" name="courierPricingEngineList[${ctr.index}].regionType" value="${courierPricingEngine.regionType.id}" class="regionType" />
-                                    </td>
+                                <td>
+                                    ${courierPricingEngine.regionType.name}
+                                    <input type="hidden" name="courierPricingEngineList[${ctr.index}].regionType" value="${courierPricingEngine.regionType.id}" class="regionType" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].firstBaseWt" value="${courierPricingEngine.firstBaseWt}" class="firstBaseWt" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].firstBaseWt" value="${courierPricingEngine.firstBaseWt}" class="firstBaseWt" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].firstBaseCost" value="${courierPricingEngine.firstBaseCost}" class="firstBaseCost" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].firstBaseCost" value="${courierPricingEngine.firstBaseCost}" class="firstBaseCost" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].secondBaseWt" value="${courierPricingEngine.secondBaseWt}" class="secondBaseWt" />
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].secondBaseWt" value="${courierPricingEngine.secondBaseWt}" class="secondBaseWt" />
 
-                                    </td>
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].secondBaseCost" value="${courierPricingEngine.secondBaseCost}" class="secondBaseCost" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].secondBaseCost" value="${courierPricingEngine.secondBaseCost}" class="secondBaseCost" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].additionalWt" value="${courierPricingEngine.additionalWt}" class="additionalWt" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].additionalWt" value="${courierPricingEngine.additionalWt}" class="additionalWt" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].additionalCost" value="${courierPricingEngine.additionalCost}" class="additionalCost" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].additionalCost" value="${courierPricingEngine.additionalCost}" class="additionalCost" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].fuelSurcharge" value="${courierPricingEngine.fuelSurcharge}" class="fuelSurcharge" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].fuelSurcharge" value="${courierPricingEngine.fuelSurcharge}" class="fuelSurcharge" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].minCodCharges" value="${courierPricingEngine.minCodCharges}" class="minCodCharges" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].minCodCharges" value="${courierPricingEngine.minCodCharges}" class="minCodCharges" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].codCutoffAmount" value="${courierPricingEngine.codCutoffAmount}" class="codCutoffAmount" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].codCutoffAmount" value="${courierPricingEngine.codCutoffAmount}" class="codCutoffAmount" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].variableCodCharges" value="${courierPricingEngine.variableCodCharges}" class="variableCodCharges" />
-                                    </td>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].variableCodCharges" value="${courierPricingEngine.variableCodCharges}" class="variableCodCharges" />
+                                </td>
 
-                                    <td>
-                                        <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" value="${courierPricingEngine.validUpto}" class="validUpto" style="width:90px;"/>
-                                    </td>
-                                </tr>
+                                <td>
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto"
+                                           value="${courierPricingEngine.validUpto}" class="validUpto input_tip date_input" style="width:90px;"/>
+                                </td>
+                            </tr>
 
-                            </c:forEach>
+                        </c:forEach>
 
                         </tbody>
 
                     </table>
 
-                <a href="#" class="addRowButton" style="font-size:1.2em">Add new row</a> <br/>
-                <s:submit name="save" id="save" value="Save Values" />
+                    <a href="#" class="addRowButton" style="font-size:1.2em">Add new row</a> <br/>
+                    <s:submit name="save" id="save" value="Save Values" />
 
                 </c:if>
 
