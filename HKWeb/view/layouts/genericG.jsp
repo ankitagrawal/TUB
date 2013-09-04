@@ -41,11 +41,26 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
   <div id="container" class="container_24">
 
     <s:layout-component name="header">
-      <s:layout-render name="/layouts/embed/_header.jsp"/>
+    <c:choose>
+       <c:when test="${hybridRelease eq true}">
+           <s:layout-render name="/layouts/embed/_headerBeta.jsp"/>
+       </c:when>
+       <c:otherwise>
+           <s:layout-render name="/layouts/embed/_header.jsp"/>
+       </c:otherwise>
+    </c:choose>
     </s:layout-component>
 
     <s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+    <c:choose>
+       <c:when test="${hybridRelease eq true}">
+           <s:layout-render name="/includes/_menuBeta.jsp"/>
+       </c:when>
+       <c:otherwise>
+           <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+       </c:otherwise>
+    </c:choose>
+      
     </s:layout-component>
 
     <s:layout-component name="topBanner"></s:layout-component>
