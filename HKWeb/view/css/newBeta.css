@@ -171,14 +171,6 @@ p {
 
 
 
-/* line 146, ../sass/_base.scss */
-ol, ul {
-    font-size: 12px;
-    list-style: none;
-    padding-left: 30px;
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
-}
 
 /* line 153, ../sass/_base.scss */
 ol {
@@ -3864,10 +3856,10 @@ h2.prod_title {
     margin-left: 10px;*/
 }
 
-.centralContent {
+/*.centralContent {
     width: 700px;
     margin-left: 120px;
-}
+}*/
 
 .tab_content {
     min-height: 200px;
@@ -7091,7 +7083,6 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .subscibe-mail-cntnr .label-txt {
     text-align: left;
-    margin-left: 30px;
     font-size: 0.9em;
     margin-top: 25px;
     margin-bottom: 5px;

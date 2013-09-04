@@ -11,6 +11,48 @@
 
 <s:layout-render name="/layouts/defaultBeta.jsp">
 <s:layout-component name="heading">My Account</s:layout-component>
+<s:layout-component name="centralContent">
+    <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
+        <div class="err-cntnr">
+            <span class="icn-warning-small"></span>
+
+            <div>
+                <ul>
+                    <li>Your email id is not verified, kindly click on the link sent to your mail to apply offer coupons.
+                        <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre"
+                                class="resendActivationEmailLink">click here</s:link> to resend the email.
+                    </li>
+                </ul>
+                <p class="emailSendMessage alert" style="display: none; font-weight:bold;"></p>
+                <p style="display:none;" class="emailNotReceived">
+                    If you do not receive this email, please check your spam/bulk folder.
+                    Write to us at info@healthkart.com if you face problems.
+                </p>
+            </div>
+            <span class="icn icn-close2 remove-error"></span>
+        </div>
+
+        <script type="text/javascript">
+
+            <%-- Re-Send Activation Link --%>
+            $('.resendActivationEmailLink').click(function() {
+
+                var clickedLink = $(this);
+                var clickedP = clickedLink.parents('div');
+                clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        clickedP.find('.emailSendMessage').html(res.data.message).show();
+                        $('.emailNotReceived').show();
+                    }
+                });
+                return false;
+            });
+
+        </script>
+    </shiro:hasRole>
+
+</s:layout-component>
 
 <s:layout-component name="lhsContent">
   <jsp:include page="myaccount-navBeta.jsp"/>
@@ -56,45 +98,11 @@
 </s:layout-component>
 
 <s:layout-component name="rhsContent">
-<div>
-  <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
-    <div class="prom yellow help" style="margin-bottom:20px; padding:5px;">
-      <p class="lrg"><strong>Unverified Account</strong><br/>
-        To verify, please click on the activation link sent to you via e-mail when signing up.</p>
 
-      <p><strong>If you haven't received the mail,
-        <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre"
-                class="resendActivationEmailLink">click here to resend it.</s:link>
-      </strong>
-        <br/><br/>
-        <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
-      </p>
 
-      <p style="display:none;" class="emailNotReceived">
-        If you do not receive this email, please check your spam/bulk folder.
-        <br/>Write to us at info@healthkart.com if you face problems.
-      </p>
-    </div>
-    <script type="text/javascript">
 
-      <%-- Re-Send Activation Link --%>
-      $('.resendActivationEmailLink').click(function() {
 
-        var clickedLink = $(this);
-        var clickedP = clickedLink.parents('p');
-        clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
-        $.getJSON(clickedLink.attr('href'), function(res) {
-          if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-            clickedP.find('.emailSendMessage').html(res.data.message).show();
-            $('.emailNotReceived').show();
-          }
-        });
-        return false;
-      });
-
-    </script>
-  </shiro:hasRole>
-</div>
+<div class="mrgn-l-40">
 
 <div class="basicInformation" style="float:left; margin-top: 5px; margin-bottom: 5px; width: 100%;">
 
@@ -102,9 +110,9 @@
 
   <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
     <s:errors/>
-    <h4 class="strikeline"> Basic Information</h4>
+    <h2 class="strikeline"> Basic Information</h2>
 
-    <div style="font-size:0.8em; float:left; width:58%">
+    <div style="float:left; width:58%">
 
       <div class="row">
         <label class="rowLabel">Name</label>
@@ -175,7 +183,7 @@
     <div>
       <div class="row">
         <label class="rowLabel">DOB</label>
-        <label class="rowText" style="font-size: 0.8em;">
+        <label class="rowText" style="">
           <c:choose>
             <c:when test="${maa.user.birthDate != null}">
               <%--<s:label class="rowText" name="<%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>" style=" font-size: 0.8em;"/>--%>
@@ -190,9 +198,9 @@
 
       <s:hidden name="user" value="${maa.user}"/>
 
-      <div style="float: right;font-size: 0.7em;">
-        <s:submit name="editPassword" value="Change Password"/>
-        <s:submit name="editBasicInformation" value="Edit Profile"/>
+      <div style="float: right;">
+        <s:submit class="btn btn-blue" name="editPassword" value="Change Password"/>
+        <s:submit class="btn btn-blue" name="editBasicInformation" value="Edit Profile"/>
       </div>
     </div>
   </s:form>
@@ -200,7 +208,7 @@
 
 <div class="contactInformation" style="width: 100%; margin-top: 5px; margin-bottom: 5px; float:left;">
   <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction">
-    <h4 class="strikeline"> Contact Information</h4>
+    <h2 class="strikeline"> Contact Information</h2>
 
     <div style="margin-top: 10px"></div>
 
@@ -233,8 +241,8 @@
 
             <p>Phone: ${address.phone}</p>
           </div>
-          <div style="float: right; font-size: 0.7em; margin-top:65px; margin-right:15px; width:20%">
-            <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
+          <div style=" margin-top:65px; margin-right:15px; ">
+            <s:link class="btn btn-gray" beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
                     style="font-size:small; color:black; text-align:center;">View all addresses
               <%--<s:param name="address.id" value="${address.id}"/>--%>
               <%--<s:param name="user" value="${maa.user}"/>--%>
@@ -256,7 +264,7 @@
   <div style="margin-top: 10px"></div>
   <c:if test="${!empty recentOrders}">
     <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
-      <h4 class="strikeline"> Recent Orders</h4>
+      <h2 class="strikeline"> Recent Orders</h2>
       <table class="cont footer_color">
         <th>Order Id</th>
         <th>Order Date</th>
@@ -310,6 +318,7 @@
       </table>
     </s:form>
   </c:if>
+</div>
 </div>
 </s:layout-component>
 </s:layout-render>
