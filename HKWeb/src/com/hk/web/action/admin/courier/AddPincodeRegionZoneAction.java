@@ -108,10 +108,10 @@ public class AddPincodeRegionZoneAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution searchPincodeRegion() {
-        Pincode pincode = pincodeRegionZone.getPincode();
-        if (pincode == null) {
+        if (pincodeRegionZone == null) {
             addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
         } else {
+            Pincode pincode = pincodeRegionZone.getPincode();
             pincodeRegionZoneList = pincodeRegionZoneService.getPincodeRegionZoneList(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
             if (pincodeRegionZoneList == null) {
                 addRedirectAlertMessage(new SimpleMessage("Pincode Region zone does not exist for Pincode"));

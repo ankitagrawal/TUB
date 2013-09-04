@@ -161,18 +161,9 @@
                     <tr>
                         <td>Nearest Hub:</td>
                         <td>
-                            <c:choose>
-                                <c:when test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
-                                    ${mpaBean.pincode.hub.name}
-                                </c:when>
-                                <c:otherwise>
-                                    <s:select name="pincode.nearestHub" id="nearestHub">
-                                        <s:option value="">--Select--</s:option>
-                                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="hubList"
-                                                                   value="id" label="name"/>
-                                    </s:select>
-                                </c:otherwise>
-                            </c:choose>
+                            <c:if test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
+                                ${mpaBean.pincode.nearestHub.name}
+                            </c:if>
                         </td>
                     </tr>
                     <tr>
@@ -180,14 +171,9 @@
                             <label>Last Mile Cost:</label>
                         </td>
                         <td>
-                            <c:choose>
-                                <c:when test="${mpaBean.pincode!=null}">
-                                    ${mpaBean.pincode.lastMileCost}
-                                </c:when>
-                                <c:otherwise>
-                                    <s:text name="pincode.lastMileCost" id="lastMileCost"></s:text>
-                                </c:otherwise>
-                            </c:choose>
+                            <c:if test="${mpaBean.pincode!=null}">
+                                ${mpaBean.pincode.lastMileCost}
+                            </c:if>
                         </td>
                     </tr>
 					<tr>
