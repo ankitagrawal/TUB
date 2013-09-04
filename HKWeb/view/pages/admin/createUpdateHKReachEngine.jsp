@@ -5,8 +5,25 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
     <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" var="updateReachEngineAction"/>
-    <s:layout-component name="content">
 
+    <s:layout-component name="content">
+        <script type="text/javascript">
+
+            $(document).ready(function() {
+                $('.save').click(function(e) {
+                    var parentRow = $(this).parent().parent();
+                    var fixedCost = parentRow.find('.fixedCost').val();
+                    var interCityCost = parentRow.find('.interCityCost').val();
+                    if (isNaN(fixedCost) || isNaN(interCityCost) || fixedCost < 0 || interCityCost < 0) {
+                        alert("Fixed cost and Inter City Cost should be numbers greater than 0");
+                        e.preventDefault();
+                        return false;
+                    }
+                    return true;
+                });
+            });
+
+        </script>
         <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" id="searchForm">
             <h4>Search HKReach Pricing Engine </h4>
             <br>Warehouse
@@ -42,17 +59,16 @@
                         <td>Select Hub: </td>
                         <td>
                             <s:select name="hkReachPricingEngine.hub">
-                                <s:option value="">-Select-</s:option>
-                                <<c:forEach items="${updateReachEngineAction.hubs}" var="hub">
+                                <c:forEach items="${updateReachEngineAction.hubs}" var="hub">
                                 <s:option value="${hub.id}">${hub.name}</s:option>
                                 </c:forEach>
                             </s:select>
                         </td>&nbsp;&nbsp;
                         <td>Inter City Cost(per kg):</td>
-                        <td><s:text name="hkReachPricingEngine.interCityCost"/></td>&nbsp;&nbsp;
+                        <td><s:text name="hkReachPricingEngine.interCityCost" class="interCityCost"/></td>&nbsp;&nbsp;
                         <td>Fixed Cost(per kg):</td>
-                        <td><s:text name="hkReachPricingEngine.fixedCost"/></td>
-                        <td><s:submit name="saveOrUpdate" value="Add Values"/></td>
+                        <td><s:text name="hkReachPricingEngine.fixedCost" class="fixedCost"/></td>
+                        <td><s:submit name="saveOrUpdate" value="Add Values" class="save" /></td>
                     </tr>
 
                 </s:form>
@@ -90,11 +106,11 @@
                                             </c:forEach>
                                         </s:select>
                                     </td>
-                                    <td><s:text name="hkReachPricingEngine.interCityCost" value="${hkRE.interCityCost}" /></td>
-                                    <td><s:text name="hkReachPricingEngine.fixedCost" value="${hkRE.fixedCost}" /></td>
+                                    <td><s:text name="hkReachPricingEngine.interCityCost" value="${hkRE.interCityCost}" class="interCityCost" /></td>
+                                    <td><s:text name="hkReachPricingEngine.fixedCost" value="${hkRE.fixedCost}" class="fixedCost" /></td>
                                     <td >
                                         <s:submit beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction"
-                                                  name="saveOrUpdate" class="green" >Save</s:submit>
+                                                  name="saveOrUpdate" class="green save" >Save</s:submit>
                                     </td>
                                 </s:form>
                             </tr></tbody>

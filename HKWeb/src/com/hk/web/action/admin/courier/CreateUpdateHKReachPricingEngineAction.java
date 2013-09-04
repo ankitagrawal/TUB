@@ -77,7 +77,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
     }
     addRedirectAlertMessage(new SimpleMessage("HK Reach courier info saved"));
     this.prepareEngineData();
-    return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
+    return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search");
   }
 
   public Resolution search() {
