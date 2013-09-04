@@ -6,7 +6,7 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre" var="addressBean"/>
 
-<s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a shipping address">
+<s:layout-render name="/layouts/checkoutLayoutBeta.jsp" pageTitle="Select a shipping address">
 <%@ include file="/layouts/_userData.jsp" %>
 <%
   boolean isSecure = WebContext.isSecure();
@@ -54,43 +54,43 @@
   <div class="jqmWindow" id="jqmWindowNewAddress"><h1>Loading..</h1></div>
 </s:layout-component>
 
-<%--<s:layout-component name="steps">--%>
-  <%--<div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">--%>
-    <%--<s:link href="/" title='go to healthkart home'>--%>
-      <%--<img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>--%>
-    <%--</s:link>--%>
-  <%--</div>--%>
-  <%--<div class='steps_new'>--%>
-    <%--<hr noshade class="stepLine">--%>
-    <%--<div class='newStep '>--%>
-      <%--<div class="newStepCount current_step">1</div>--%>
-      <%--<div class='newStepText'>--%>
-        <%--Select A shipping address--%>
-      <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class='newStep'>--%>
-      <%--<div class="newStepCount">2</div>--%>
+<s:layout-component name="steps">
+  <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
+    <s:link href="/" title='go to healthkart home'>
+      <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+    </s:link>
+  </div>
+  <div class='steps_new'>
+    <hr noshade class="stepLine">
+    <div class='newStep '>
+      <div class="newStepCount current_step">1</div>
+      <div class='newStepText'>
+        Select A shipping address
+      </div>
+    </div>
+    <div class='newStep'>
+      <div class="newStepCount">2</div>
 
-      <%--<div class='newStepText'>--%>
-        <%--Confirm your order--%>
-      <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class='newStep'>--%>
-      <%--<div class="newStepCount">3</div>--%>
+      <div class='newStepText'>
+        Confirm your order
+      </div>
+    </div>
+    <div class='newStep'>
+      <div class="newStepCount">3</div>
 
-      <%--<div class='newStepText'>--%>
-        <%--Choose Payment Method--%>
-      <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class='newStep' style="margin-left: 28px;">--%>
-      <%--<div class="newStepCount">4</div>--%>
+      <div class='newStepText'>
+        Choose Payment Method
+      </div>
+    </div>
+    <div class='newStep' style="margin-left: 28px;">
+      <div class="newStepCount">4</div>
 
-      <%--<div class='newStepText'>--%>
-        <%--Completed !--%>
-      <%--</div>--%>
-    <%--</div>--%>
-  <%--</div>--%>
-<%--</s:layout-component>--%>
+      <div class='newStepText'>
+        Completed !
+      </div>
+    </div>
+  </div>
+</s:layout-component>
 <s:layout-component name="steps_content">
   <div class='span16 mrgn-t-50'>
 
