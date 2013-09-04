@@ -28,7 +28,7 @@
         '<tr count="' + nextIndex + '" class="lastRow cpeRow">' +
         '<td>' + Math.round(nextIndex + 1) + '.</td>' +
         '<td>' + '${cpea.courier.name}' +
-        '<input type="hidden" name="courierPricingEngineList[' + nextIndex + '].courier" class="courier"' 
+        '<input type="hidden" name="courierPricingEngineList[' + nextIndex + '].courier"'
         +	'value="${courierPricingEngineList[0].courier.id}"' +
         '</input>' +
         '</td>' +
@@ -80,7 +80,7 @@
         return false;
         });
 
-        $('#save').click(function(){
+        $('#save').click(function(e){
         	$.each($('.cpeRow'), function() {
         	var currentRow = $(this);
             var courier = currentRow.find('.courier').val();
@@ -99,8 +99,10 @@
             if(courier == "" || regionType == "" || firstBaseWt == "" || firstBaseCost == "" || secondBaseWt == "" || secondBaseCost == "" || additionalWt == "" ||
                    additionalCost == "" || fuelSurcharge == "" || minCodCharges == "" || codCutoffAmount == "" || variableCodCharges == "" || validUpto == "") {
                 alert("All fields are compulsory");
+                e.preventDefault();
                 return false;
             }
+            return true;
         });
         });
 

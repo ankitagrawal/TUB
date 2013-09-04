@@ -83,6 +83,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
           courierPricingEngineService.saveCourierPricingInfo(localEngine);
         }
       } else {
+        courierPricingEngine.setCourier(courier);
         courierPricingEngineService.saveCourierPricingInfo(courierPricingEngine);
       }
     }
