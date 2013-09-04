@@ -364,84 +364,10 @@
       </c:choose>
     </a>
 
-    <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;" :>
+    <div class="name" style="width: 200px;position: relative;float: left;" :>
         <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.product.name}  </a>
         ${cartLineItem.productVariant.variantName}<br/>
-      <table style="display: inline-block; font-size: 11px;">
-        <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
-	        <tr>
-		        <c:if test="${hk:showOptionOnUI(productOption.name)}">
-			        <td style="text-align: left;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;">${productOption.name}</td>
-			        <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;">
-				        <c:if test="${fn:startsWith(productOption.value, '-')}">
-					        ${productOption.value}
-				        </c:if>
-				        <c:if test="${!fn:startsWith(productOption.value, '-')}">
-					        &nbsp;${productOption.value}
-				        </c:if>
-			        </td>
-		        </c:if>
-	        </tr>
-        </c:forEach>
-	      <c:forEach items="${cartLineItem.cartLineItemExtraOptions}" var="extraOption">
-		      <tr>
-			      <td style="text-align: left;  padding: 0.3em 2em; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>
-			      <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0;background: #fff;">
-				      <c:if test="${fn:startsWith(extraOption.value, '-')}">
-					      ${extraOption.value}
-				      </c:if>
-				      <c:if test="${!fn:startsWith(extraOption.value, '-')}">
-					      &nbsp;${extraOption.value}
-				      </c:if>
-			      </td>
-		      </tr>
-	      </c:forEach>
-        <c:set var="TH" value="TH"/>
-        <c:set var="THBF" value="THBF"/>
-        <c:set var="CO" value="CO"/>
-        <c:set var="COBF" value="COBF"/>
-        <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
-          <tr>
-            <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${cartLineItem.productVariant.product.name}</td>
-            <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
-              Rs. ${cartLineItem.productVariant.hkPrice}</td>
-          </tr>
-          <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}" var="configValue">
-            <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
-            <tr>
-              <c:set var="addParam" value="${variantConfigOption.additionalParam}"/>
-              <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${variantConfigOption.displayName}
-                : ${configValue.value}
-                <c:if test="${(addParam ne TH) or (addParam ne THBF) or (addParam ne CO) or (addParam ne COBF) }">
-                  <c:if
-                      test="${fn:startsWith(variantConfigOption.name, 'R')==true}">
-                    (R)
-                  </c:if>
-                    <c:if
-                      test="${fn:startsWith(variantConfigOption.name, 'L')==true}">
-                    (L)
-                  </c:if>
-                </c:if>
-              </td>
-              <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
-                  <%--<c:set var="addParam" value="${variantConfigOption.additionalParam}"/>--%>
-                <c:choose>
-                  <c:when test="${configValue.additionalPrice eq 0}">
-                    included
-                  </c:when>
-                  <c:otherwise>
-                    +Rs. ${configValue.additionalPrice}
-                    <%--<c:if test="${(addParam eq TH) or (addParam eq THBF) or (addParam eq CO) or (addParam eq COBF) }">--%>
-                    <%--/Eye--%>
-                    <%--</c:if>--%>
-                  </c:otherwise>
-                </c:choose>
-              </td>
-            </tr>
-          </c:forEach>
-        </c:if>
 
-      </table>
     </div>
 
       <%--HTML code for dispatch date--%>
@@ -473,7 +399,7 @@
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
             <div class="num">
-              <span class="lineItemSubTotalMrp arialBlackBold">Rs <fmt:formatNumber
+              <span class="lineItemSubTotalMrp fnt-sz16">Rs <fmt:formatNumber
                   value="${cartLineItem.hkPrice * cartLineItem.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
@@ -481,7 +407,7 @@
         </c:when>
         <c:otherwise>
           <div class="cut">
-            <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
+            <div class="num lineItemSubTotalMrp fnt-light"> Rs
               <fmt:formatNumber value="${cartLineItem.markedPrice * cartLineItem.qty}"
                                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
           </div>
@@ -549,7 +475,7 @@
       </c:choose>
     </a>
 
-    <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;">
+    <div class="name" style="width: 200px;position: relative;float: left;">
         <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
       <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
@@ -633,10 +559,10 @@
 
 
 
-<div class='right_container total checkoutContainer' style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;">
+<div class='right_container total checkoutContainer' style="">
     <div class="you-pay-container">
-        <div style="width:48%;overflow:hidden;display:inline-block">
-            <div class="fnt-light fnt-sz12">
+        <div style="width:48%;overflow:hidden;display:inline-block;float:left">
+            <div class="fnt-light fnt-sz13 fnt-bold">
                 YOU PAY
             </div>
             <div id="summaryGrandTotalPayable" class="fnt-sz14">
@@ -658,7 +584,7 @@
     </div>
     <hr>
     <div class="offerContainer">
-        <div class="fnt-light fnt-caps">
+        <div class="fnt-light fnt-caps fnt-bold fnt-sz13 mrgn-b-10">
             APPLY COUPON
         </div>
         <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
@@ -672,27 +598,29 @@
 
                 <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
 
-                    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
+                    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg fnt-caps btn btn-gray" event="pre"> Login to apply
                         <s:param name="redirectUrl" value="${pageContext.request.contextPath}/core/cart/Cart.action"/>
                     </s:link>
-                    to redeem it.
-                    <br/>
+
+
                 </shiro:hasAnyRoles>
                 <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
 
-                    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
+                    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg fnt-caps btn btn-gray" event="pre"> Verify your Account
                     </s:link>
-                    to redeem it.
-                    <br/>
+
+
                 </shiro:hasAnyRoles>
 
             </div>
         </shiro:lacksRole>
     </div>
-<h5 class="checkoutHead5">Checkout</h5>
-<br/>
+    <hr>
+<div class="mrgn-b-20 fnt-sz16 fnt-light fnt-bold fnt-caps">CHECK OUT DETAILS</div>
 
-<div style="font-weight: normal; color: #888; text-align: center; line-height: 21px;">
+
+
+<div style="">
   <c:if
       test="${cartAction.pricingDto.productsMrpSubTotal + cartAction.pricingDto.prepaidServiceMrpSubTotal + cartAction.pricingDto.postpaidServiceMrpSubTotal > cartAction.pricingDto.productsHkSubTotal + cartAction.pricingDto.prepaidServiceHkSubTotal + cartAction.pricingDto.postpaidServiceHkSubTotal}">
       <span class="checkoutContainerText">Total MRP:</span>
@@ -1006,14 +934,14 @@
     }
     .remove.removeLink,.remove.removeComboLink{
         position:absolute;
-        margin-left:200px !important;
-        height: 17px;
-        width:18px;
+        margin-left:137px !important;
+        height: 20px;
+        width:20px;
         background: transparent;
         margin-top:0px !important;
         border:1px solid #999 !important;
         border-radius: 100%;
-        font-size:14px !important;
+        font-size:12px !important;
         padding-top:1px;
         text-transform: lowercase;
     }
