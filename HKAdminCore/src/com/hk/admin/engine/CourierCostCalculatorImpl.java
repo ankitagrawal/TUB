@@ -16,6 +16,7 @@ import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.util.NumberUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +105,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
                   totalCost = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight);
               }
               logger.debug("courier " + courier.getName() + "totalCost " + totalCost);
-              courierCostingMap.put(courier, totalCost.longValue());
+              courierCostingMap.put(courier, Math.round(totalCost));
           }
       }
 
