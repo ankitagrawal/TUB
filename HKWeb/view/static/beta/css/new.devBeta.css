@@ -158,22 +158,14 @@ h1, h2, h3, h4, h5, h6 {
 : first clear : both;
 }
 
+/*
 p {
     padding-left: 1.5em;
     font-size: 1em;
     margin-top: 1em;
     margin-bottom: 1em;
 }
-
-
-/* line 146, ../sass/_base.scss */
-ol, ul {
-    font-size: 12px;
-    list-style: none;
-    padding-left: 30px;
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
-}
+*/
 
 /* line 153, ../sass/_base.scss */
 ol {
@@ -3503,7 +3495,6 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .subscibe-mail-cntnr .label-txt {
     text-align: left;
-    margin-left: 30px;
     font-size: 0.9em;
     margin-top: 25px;
     margin-bottom: 5px;
@@ -3660,3 +3651,205 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 /* title utils end*/
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+    resize: none;
+    display: inline-block;
+    padding: 0 6px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555555;
+    vertical-align: middle;
+    border-radius: 0px !important;
+    box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    -webkit-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    -moz-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    margin-bottom: 20px;
+    background: none !important;
+    border: 1px solid rgb(214, 214, 214) !important;
+    height: 30px !important;
+}
+input[type="text"]:focus, input[type="password"]:focus{
+    -moz-box-shadow: inset 0 -2px 2px #cccccc;
+    -webkit-box-shadow: inset 0 -2px 2px #cccccc;
+    -o-box-shadow: inset 0 -2px 2px #cccccc;
+    box-shadow: inset 0 -2px 2px #cccccc;
+}
+
+/*account page css begins*/
+.accnt-nav-box,.faq-nav-box {
+    border: 1px solid #c8c8c8;
+    text-align: left;
+    box-shadow: 0px 0px 20px #ccc;
+    position: relative;
+    list-style: none;
+    text-transform: capitalize;
+}
+
+.nav-box {
+    border: 1px solid #c8c8c8;
+    text-align: left;
+    box-shadow: 0px 0px 20px #ccc;
+    /*position: relative;*/
+    list-style: none;
+    text-transform: capitalize;
+    width: 175px;
+}
+
+.accnt-nav-box li,.faq-nav-box li {
+    padding: 10px 15px;
+}
+
+.nav-box li.menu-head {
+    padding: 10px 15px;
+    background: #1b75bb;
+    color: #ffffff;
+}
+
+.nav-box li.menu-options a span {
+    float: right;
+}
+
+.accnt-nav-box li:hover, .faq-nav-box li:hover, .nav-box li.menu-options:hover {
+    background: #e6e6e6;
+    color: #1b75bb;
+}
+
+.accnt-nav-box li.selected, .accnt-nav-box li a.selected-cat, .faq-nav-box li.selected, .faq-nav-box li a.selected-cat, .nav-box li.menu-options.active, .nav-box li.menu-options.active a, .faq-nav-box li.active, .faq-nav-box li.active a {
+    color: #1b75bb;
+    font-weight: bold;
+}
+
+.accnt-nav-box li.selected a, .faq-nav-box li.selected a, .nav-box li.menu-options.selected a {
+    color: #1b75bb;
+    font-weight: bold;
+}
+
+.accnt-nav-box li:hover > a, .nav-box li.menu-options:hover > a {
+    color: #1b75bb;
+}
+
+.faq-nav-box li:hover > a{
+    color: #1b75bb;
+    background: #e6e6e6;
+}
+
+.accnt-nav-box li a {
+    display: inline-block;
+    width: 175px;
+}
+
+.nav-box li a {
+    display: inline-block;
+    width: 145px;
+    padding: 10px 15px;
+}
+
+.faq-nav-box li a {
+    display: inline-block;
+    width: 180px;
+}
+
+.acnt-details label, .acnt-details span.label-txt, .pwd-cont label, .pwd-cont span.label-txt, .edit-mail-cont label, .edit-mail-cont span.label-txt {
+    display: inline-block;
+    width: 125px;
+    float: left;
+}
+
+.acnt-details .date-widget-cont {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.acnt-details .date-widget-cont .date-widget {
+    display: inline-block;
+    width: 100px;
+    float: left;
+}
+
+.acnt-details .date-widget-cont .date-widget label {
+    display: inline-block;
+    width: 30px;
+
+}
+
+.acnt-details .date-widget-cont .date-widget select {
+    display: inline-block;
+    width: 75px;
+    margin-left: 0;
+
+}
+
+.edit-mail-cont p.email-note {
+    /*float: right;*/
+    width: 250px;
+    font-size: 12px;
+    color: #0091d7;
+}
+
+.acnt-details input[type="text"], .acnt-details input[type="password"], .edit-mail-cont input[type="text"], .pwd-cont input[type="text"], .pwd-cont input[type="password"] {
+    display: inline-block;
+    width: 260px;
+    border-radius: 0;
+    border: 1px solid #c8c8c8;
+
+}
+
+.pwd-cont span.email-txt, .edit-mail-cont span.email-txt {
+    display: inline-block;
+    width: 200px;
+    border-radius: 0;
+}
+
+.acnt-details select {
+    display: inline-block;
+    width: 275px;
+    border-radius: 0;
+
+}
+
+.acnt-details .btn-blue, .edit-mail-cont .btn-blue, .pwd-cont .btn-blue {
+    margin: 20px 14px 0 0;
+    float: right;
+    margin-right: 40px;
+}
+
+.address-cntnr {
+    padding: 10px;
+    height: 220px;
+    margin-bottom: 20px;
+    border: 1px solid #c8c8c8;
+}
+
+.address-cntnr:hover {
+    padding: 10px;
+    box-shadow: 0 0 10px #ccc;
+}
+
+.address-cntnr .address-action-cntnr {
+    padding: 10px 0;
+
+}
+
+.address-cntnr .usr-add .add-cntnr {
+    overflow-y: auto;
+    max-height: 170px;
+    overflow-x: hidden;
+}
+
+.address-cntnr .address-action-cntnr a {
+    color: #0091d7;
+}
+
+.reward-tbl{
+    border-top: 5px solid #0091d7;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.load-more-cntnr{
+    text-align: center;
+}
+.load-more-cntnr #loadMore{
+    display: inline-block;
+}
+/** Account page css ends **/

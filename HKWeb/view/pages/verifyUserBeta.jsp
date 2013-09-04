@@ -12,12 +12,7 @@
 
 <s:layout-render name="/layouts/defaultBeta.jsp" pageTitle="Account Verification">
     <s:layout-component name="heading">
-        <div class="ttl-cntnr">
-            <span class="icn icn-sqre"></span>
-
             <h1>Account Verification </h1>
-            <span class="icn icn-sqre"></span>
-        </div>
     </s:layout-component>
     <s:layout-component name="rhsContent">
 
