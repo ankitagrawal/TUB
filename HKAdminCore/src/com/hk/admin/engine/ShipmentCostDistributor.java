@@ -36,13 +36,12 @@ public class ShipmentCostDistributor {
                 Double totalPrice = 0D;
                 for(LineItem lineItem : shippingOrder.getLineItems()) {
                     totalQtyOrdered += lineItem.getQty();
-                    if(lineItem.getSku().getProductVariant().getWeight() != null) {
+                    if(lineItem.getSku().getProductVariant().getWeight() != null && lineItem.getSku().getProductVariant().getWeight() > 0) {
                         totalWt += lineItem.getSku().getProductVariant().getWeight() * lineItem.getQty();
-                    }
-                    totalPrice += lineItem.getHkPrice() * lineItem.getQty();
-                    if(lineItem.getSku().getProductVariant().getWeight() == null) {
+                    }else{
                         flag = true;
                     }
+                    totalPrice += lineItem.getHkPrice() * lineItem.getQty();
                 }
                 for(LineItem lineItem : shippingOrder.getLineItems()) {
                     WHReportLineItem whReportLineItem = distributeShippingCostForLineItem(lineItem, totalShipmentCharge,
