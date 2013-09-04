@@ -884,28 +884,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
       }
     } else {
-
+      
       // check available inventory for aqua  in Bright
-      if (getUnbookedInventoryOfBright(productVariant) >= 0) {
+      if (getUnbookedInventoryOfBright(productVariant) > 0) {
         // now need to update pv with Bright Inventory
         logger.debug("Unbooked Qty of Bright - " + getUnbookedInventoryOfBright(productVariant));
         HKApiSkuResponse hkApiSkuResponse = getPVInfoFromBright(productVariant);
         logger.debug("hKApiSkuResponse got -" + hkApiSkuResponse.getVariantId() + ", qty - " + hkApiSkuResponse.getQty() + ", MRP -" + hkApiSkuResponse.getMrp());
         productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
 
-
       } else {
+        productVariant.setOutOfStock(true);
+        productVariant.setNetQty(0L);
+        productVariant.setMrpQty(0L);
+      }
         Product product = productVariant.getProduct();
         boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
         if (!updateStockStatus) {
           productVariant.setOutOfStock(false);
-        } else {
-          productVariant.setOutOfStock(true);
-          productVariant.setNetQty(0L);
-          productVariant.setMrpQty(0L);
-
         }
-
         getBaseDao().save(productVariant);
 
         List<ProductVariant> inStockVariants = product.getInStockVariants();
@@ -916,7 +913,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
         getBaseDao().save(product);
       }
-    }
+
 
   }
 
