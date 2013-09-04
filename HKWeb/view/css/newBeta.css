@@ -405,27 +405,16 @@ span.error {
 
 /* line 4, ../sass/main.scss */
 .topBar {
-    -moz-box-shadow: 0 3px 1px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 3px 1px rgba(0, 0, 0, 0.2);
-    -o-box-shadow: 0 3px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 3px 1px rgba(0, 0, 0, 0.2);
-    text-shadow: 0 1px 0 white;
-    position: fixed;
-    top: 0;
+
     width: 100%;
     z-index: 1000;
-    background: #fafafa;
-    border-bottom: 2px solid #f0f0f0;
-    height: 20px;
-    left: 0;
 }
 
 /* line 15, ../sass/main.scss */
 .topBar .topBarContent {
-    background: #fafafa;
-    width: 960px;
+
+
     margin: 0 auto;
-    height: 20px;
     position: relative;
 }
 
@@ -1232,9 +1221,9 @@ span.error {
     margin-right: auto;
    /* border: 1px solid #ddd;
     box-shadow: 0 1px 3px #eee;*/
-    padding-top: 5px;
+
     border-radius: 5px;
-    border-top-width: 2px;
+
 }
 
 /* line 478, ../sass/main.scss */
@@ -2642,9 +2631,9 @@ h2.prod_title {
 .step2 .products_container {
     display: inline;
     float: left;
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 630px;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 650px;
 
 
     height: auto;
@@ -3369,6 +3358,8 @@ h2.prod_title {
 .shopping_cart {
     margin-top: 10px;
     padding-top: 10px;
+  padding-left:0px;
+  margin-left:0px;
 }
 
 /* line 1418, ../sass/main.scss */
@@ -3830,7 +3821,7 @@ h2.prod_title {
 }*/
 
 .strikeline {
-    border-bottom: 1px solid #3379BB;
+    border-bottom: 1px solid #0091d7;
     padding-bottom: 0.2em;
 }
 
@@ -7263,6 +7254,9 @@ input[type="text"]:focus, input[type="password"]:focus{
 
 
 /*account page css begins*/
+.my-acnt-ht {
+    min-height: 500px;
+}
 .accnt-nav-box,.faq-nav-box {
     border: 1px solid #c8c8c8;
     text-align: left;

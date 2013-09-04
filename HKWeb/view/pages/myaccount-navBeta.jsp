@@ -4,7 +4,7 @@
   <ul class="accnt-nav-box" style="width: 220px; line-height: 20px;float: left;padding: 0;font-size: 14px;">
     <li id="myAccountLink">
       <s:link  beanclass="com.hk.web.action.core.user.MyAccountAction" title="My Account">
-            ACCOUNT
+          Account
       </s:link>
         <span>&raquo;</span>
     </li>

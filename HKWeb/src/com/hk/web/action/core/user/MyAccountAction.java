@@ -111,19 +111,29 @@ public class MyAccountAction extends BaseAction {
 
   public Resolution editBasicInformation() {
     logger.debug("Editing basic information for " + user.getName());
-    return new ForwardResolution("/pages/editBasicInformation.jsp");
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/editBasicInformationBeta.jsp");
+      }
+      return new ForwardResolution("/pages/editBasicInformation.jsp");
   }
 
   public Resolution saveBasicInformation() {
     if (user.getName().length() > 80) {
       logger.debug("new user name entered exceeded the allowed limit");
       addRedirectAlertMessage(new SimpleMessage("Please enter a valid name!"));
-      return new ForwardResolution("/pages/editBasicInformation.jsp");
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/editBasicInformationBeta.jsp");
+        }
+        return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     if (!BaseUtils.isValidEmail(user.getEmail())) {
       logger.info("email id  " + user.getEmail() + " invalid!");
       addRedirectAlertMessage(new SimpleMessage("PLEASE ENTER A VALID EMAIL ID!"));
-      return new ForwardResolution("/pages/editBasicInformation.jsp");
+
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/editBasicInformationBeta.jsp");
+        }
+        return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     user = userDao.save(user);
     Role b2bRole = RoleCache.getInstance().getRoleByName(EnumRole.B2B_USER).getRole();
@@ -137,6 +147,9 @@ public class MyAccountAction extends BaseAction {
 
     public Resolution subscribeForEmails() {
         user = getUserService().getUserById(getPrincipal().getId());
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/emailSubscriptionsBeta.jsp");
+        }
         return new ForwardResolution("/pages/emailSubscriptions.jsp");
     }
 
@@ -149,7 +162,10 @@ public class MyAccountAction extends BaseAction {
 
   public Resolution editPassword() {
     logger.debug("Editing password for " + user.getName());
-    return new ForwardResolution("/pages/editPassword.jsp");
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/editPasswordBeta.jsp");
+      }
+      return new ForwardResolution("/pages/editPassword.jsp");
   }
 
   public Resolution changePassword() {
