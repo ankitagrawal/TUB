@@ -50,7 +50,7 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
   @Override
   public ThirdPartyAwbDetails getThirdPartyAwbDetails(ShippingOrder shippingOrder, Double weightInKg) {
     String fedExAccount = null;
-    if (EnumWarehouseIdentifier.GGN_Bright_Warehouse.equals(shippingOrder.getWarehouse())) {
+    if (EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName().equals(shippingOrder.getWarehouse().getIdentifier())) {
       fedExAccount = fedExAccountNoGGN;
     } else {
       fedExAccount = fedExAccountNoMUM;
