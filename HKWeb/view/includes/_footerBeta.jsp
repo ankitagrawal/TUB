@@ -87,7 +87,7 @@
                     <span class="txt-middle fnt-caps">CopyRight &copy; 2013-2014, HealthKart.com, or its affiliates </span>
                     <span class="txt-middle mrgn-r-5"> | Connect with us:</span>
 
-                    <span class="disp-inln txt-middle mrgn-t-10">
+                    <span style="display: inline-block;" class="disp-inln txt-middle mrgn-t-10">
                         <a class="icn icn-fb" target="_blank" href="https://www.facebook.com/healthkart"></a>
                         <a class="icn icn-twitter" target="_blank" href="https://twitter.com/healthkart"></a>
                         <a class="icn icn-google-plus" target="_blank" href="https://plus.google.com/+healthkart/posts"></a>

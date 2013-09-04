@@ -54,21 +54,16 @@
     Date endOfOfferDate = new Date(new DateTime(2013, 01, 27, 8, 59, 59, 59).getMillis());
   %>
 
-  <div class='topBar'>
-    <div class='topBarContent'>
-      <div style='float: left; margin-left: 5px; margin-top: 2px; line-height: 18px;' title='Write to us on our customer care email for help regarding anything'>
-          <div style="font-size: 12px; float: left;">
-            <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+  <div class='topBar main_container'>
+      <div class="fnt-sz9 fnt-light" style="text-align:right">
+          <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
               14 day return policy</a> |
-              <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link> | Email : <a href="mailto:info@healthkart.com">info@healthkart.com</a>
-	          <c:if test="${projectEnv != 'prod'}">
-		           <span style="color:#FFFFFF">[Env: ${projectEnv}]</span>
-	          </c:if>
-          </div>
-              <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())){%>
-                <div style="color: red; float: left; ">&nbsp;(not available on 26th Jan 2013)</div>
-              <%}%>
+          <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link> | Email : <a href="mailto:info@healthkart.com">info@healthkart.com</a>
+          <img src="/beta/assets/images/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/>
+          <img src="/beta/assets/images/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus">
       </div>
+    <div class='topBarContent'>
+
       <div class="message">
         <div class="arrow"></div>
         <span class="line1"></span>
@@ -107,7 +102,7 @@
         </div>
 
         <div style="margin-top: 2px; float: right; margin-right: 10px; font-size: 12px;">
-           </a>
+
           Welcome,
             <span class='name'>
               <c:if test="${hk:collectionContains(userRoles, tempUser)}">

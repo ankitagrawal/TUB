@@ -26,10 +26,10 @@
         <s:layout-component name="htmlHead"/>
     </head>
     <body id="${bodyId}">
-    <div id="container">
+    <div id="container" class="container_24">
         <s:layout-component name="modal"/>
         <s:layout-component name="header">
-            <s:layout-render name="/layouts/embed/_header.jsp"/>
+            <s:layout-render name="/layouts/embed/_headerBeta.jsp"/>
         </s:layout-component>
         <s:layout-component name="menu">
             <s:layout-render name="/includes/_menuBeta.jsp"/>
@@ -47,7 +47,7 @@
             </div>
             <div class="floatfix"></div>
         </div>
-        <s:layout-render name="/includes/_footer.jsp"/>
+        <s:layout-render name="/includes/_footerBeta.jsp"/>
 
         <%--<s:layout-component name="zopim">
           <jsp:include page="/includes/_zopim.jsp"/>
