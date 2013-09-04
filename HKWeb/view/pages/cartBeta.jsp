@@ -591,9 +591,9 @@
             <div class=''>
                 <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
 
-                    <input class="couponInput" placeholder='Enter discount code' type='text' id="couponCode"/>
+                    <input class="couponInput" placeholder='Enter discount code' type='text' style="float:left;margin-right:10px;" id="couponCode"/>
                     <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-                            class="button_grey new_button_grey">APPLY</s:link>
+                            class="btn btn-gray" style="display:inline-block">APPLY</s:link>
                 </shiro:hasAnyRoles>
 
                 <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
@@ -717,7 +717,7 @@
 </div>
 <div id="applicableOfferDiv"></div>
 
-<div class='orderSummaryHeading'>
+<!--div class='orderSummaryHeading'>
     <div class="deliveryDetails"> DELIVERY DETAILS</div>
     <ul>
         <li>
@@ -736,7 +736,7 @@
             - For Rest of India Non Serviceable through Couriers: 7-15 business days (Delivery done by Indian Post)
         </li>
     </ul>
-</div>
+</div-->
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
@@ -934,7 +934,7 @@
     }
     .remove.removeLink,.remove.removeComboLink{
         position:absolute;
-        margin-left:137px !important;
+        margin-left:130px !important;
         height: 20px;
         width:20px;
         background: transparent;

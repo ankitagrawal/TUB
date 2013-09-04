@@ -45,8 +45,6 @@
       <s:layout-component name="menu">
           <s:layout-render name="/includes/_menuBeta.jsp" topCategory="${topCategory}"/>
       </s:layout-component>
-
-
     <div class="main_container">
         <s:layout-component name="steps"/>
         <div class="alert messages"><s:messages key="generalMessages"/></div>
@@ -57,15 +55,12 @@
             <div class="floatfix"></div>
         </div>
 
-
+        <s:errors/>
         <div class="ttl-cntnr">
             <span class="icn icn-sqre "></span>
             <h1 class=""><s:layout-component name="heading"/></h1>
             <span class="icn icn-sqre"></span>
         </div>
-
-      
-        <s:errors/>
 
       <div class="lhsContent cont-lft">
         <s:layout-component name="lhsContent"/>
