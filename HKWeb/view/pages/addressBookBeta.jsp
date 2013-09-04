@@ -92,131 +92,139 @@
   </div>
 </s:layout-component>
 <s:layout-component name="steps_content">
-  <div class='span16 mrgn-t-50'>
+  <div class='current_step_content' style="font-size: 14px;">
 
-  <c:if test="${fn:length(addressBean.addresses)>0}">
-    <div class="span6 txt-cntr fnt-caps alpha">
-      select an address for delivery
-    </div>
-  </c:if>
-  <c:if test="${fn:length(addressBean.addresses)>0}">
-    <div class="span10 txt-cntr fnt-caps"> or
-  </c:if>
-  <c:if test="${fn:length(addressBean.addresses)<=0}">
-    <div class="span10 txt-cntr mrgn-cntr fnt-caps">
-  </c:if>
-  enter an address for delivery
-  </div>
-  </div>
+      <%--<h3 style="text-align: center; margin-bottom: 20px; color: #888;">
+        What address should we ship your order to?
+      </h3>--%>
 
-  <div class="span16">
     <c:if test="${fn:length(addressBean.addresses)>0}">
-    <div class="span6 alpha selct-add-section">
-      <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
-        <div class="usr-add-cntnr">
-          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="icn icn-close2 cont-rht" style="display:inline-block;" event="checkout"
-                  title="Click to use this address and proceed">&nbsp;
-          <s:param name="selectedAddress" value="${address.id}"/>
-            <div class="usr-add">
-              <h5 class="name">${address.name}</h5>
+      <div class='left2'>
+        <h3 class="arialBlackBold" style="text-align: left; margin-bottom: 20px;">
+          Use one of your saved addresses
+        </h3>
+
+        <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
+          <div class="address raj_address usr-add-cntnr">
+            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="usr-add" event="checkout"
+                    title="Click to use this address and proceed" style="display: block; margin-bottom: 30px;">
+              <s:param name="selectedAddress" value="${address.id}"/>
+
+              <h5 class="name fnt-caps adresss-usr-name">${address.name}</h5>
+
               <div class='street street1'>${address.line1}</div>
               <c:if test="${hk:isNotBlank(address.line2)}">
                 <div class="street street2">${address.line2}</div>
               </c:if>
-              <div class='city'>${address.city}</div>
+              <div class='city address-cityId'>${address.city}</div>
               <div class='state'>${address.state}</div>
               <div class='pin'>${address.pincode.pincode}</div>
               <div class='phone'>${address.phone}</div>
-              <span class="appliedButton edit">EDIT</span>
-              <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="appliedButton delete">
+
+              <s:link style="display:inline-block " beanclass="com.hk.web.action.core.user.SelectAddressAction"
+                      event="remove" class=" delete span2 btn btn-gray ">
                 <s:param name="deleteAddress" value="${address.id}"/>
                 DELETE
               </s:link>
-            </div>
-          </s:link>
-          <div class="useAddressButton">
-            Click to use this address
-            and proceed
-        </div>
-      </c:forEach>
-    </div>
-    </c:if>
-      </div>
-    <h3 class="shippingAddressheading arialBlackBold" style="position: relative;left: 16%;">
-      Or add a new shipping address
-    </h3>
 
-      <div class="${fn:length(addressBean.addresses)>0 ? 'span8 new-add-sectn' : 'span8 mrgn-cntr new-add-sectn'}">
-        <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm" style="width:425px;">
-          <s:layout-render name="/layouts/addressLayout.jsp"/>
+              <span style="display:inline-block;margin-left: 20px; " class=" edit btn btn-gray">EDIT</span>
+
+              <div class="useAddressButton">
+                Click to use this address
+                and proceed
+              </div>
+              <div class="clear"></div>
+            </s:link>
+          </div>
+        </c:forEach>
+        <script type="text/javascript">
+          $(document).ready(function () {
+            var bool = false;
+            $('.edit').click(function () {
+              form = $('#newAddressForm');
+              addressBlock = $(this).parents('.address');
+              name = addressBlock.find('.name').text();
+              street1 = addressBlock.find('.street1').text();
+              street2 = addressBlock.find('.street2').text();
+              city = addressBlock.find('.city').text();
+              state = addressBlock.find('.state').text();
+              pin = addressBlock.find('.pin').text();
+              phone = addressBlock.find('.phone').text();
+              id = addressBlock.find('.address_id').val();
+              form.find("input[type='text'][name='address.name']").val(name);
+              form.find("input[type='text'][name='address.line1']").val(street1);
+              if (street2) {
+                form.find("input[type='text'][name='address.line2']").val(street2);
+              }
+              form.find("input[type='text'][name='address.city']").val(city);
+              form.find("[name='address.state']").val(state.toUpperCase());
+              form.find("input[type='text'][name='address.pincode']").val(pin);
+              form.find("input[type='text'][name='address.phone']").val(phone);
+              form.find("input[type='hidden'][name='address.id']").val(id);
+            });
+            $('.delete').click(function () {
+              if (confirm('Are you sure you want to delete this address?')) {
+                bool = true;
+                return true;
+              } else {
+                return false;
+              }
+            });
+
+            $('.address').hover(
+                function () {
+                  $(this).children('.hidden').slideDown(100);
+                  $(this).children('.edit').click(function () {
+                    return false;
+                  });
+                  $(this).children('.delete').click(function () {
+                    if (bool) return true;
+                    else
+                      return false;
+                  });
+                },
+                function () {
+                  $(this).children('.hidden').slideUp(50);
+                }
+            );
+            $('.address').click(function () {
+              var add_url = $(this).children('a').attr('href');
+              document.location.href = add_url;
+            });
+          });
+
+        </script>
+
+
+      </div>
+    </c:if>
+
+    <div class='right' style="width: 440px; background: initial; position: relative;left: 15%; border: none; padding-top: 0;   ${fn:length(addressBean.addresses)<=0 ? 'float: none;margin: 0 auto; left:0;' : ''} " >
+      <h3 class="shippingAddressheading arialBlackBold" style="margin-bottom: 20px;">
+        <c:if test="${fn:length(addressBean.addresses)>0}">
+          Or
+        </c:if>
+        add a new shipping address
+      </h3>
+
+
+      <div class="addressContainer shipping_address">
+        <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
+          <s:layout-render name="/layouts/addressLayoutBeta.jsp"/>
           <s:hidden name="countryId" value="${countryId}"/>
-          <s:submit name="create" value="Use this address and continue" class="button placeOrderButtonNew" />
+          <div style="display: inline-block; margin: 20px 0 0;">
+            <s:submit name="create" value="Continue" class="btn btn-blue continue"/>
+          </div>
         </s:form>
       </div>
 
-      <%--<div class="addressSuccessContainer" style="display:none;">--%>
-        <%--<h2>New address has been added</h2>--%>
+      <div class="addressSuccessContainer" style="display:none;">
+        <h3>New address has been added</h3>
 
-        <%--<p>Reloading the address book..</p>--%>
-      <%--</div>--%>
+        <p>Reloading the address book..</p>
+      </div>
+    </div>
   </div>
-  <script type="text/javascript">
-    $(document).ready(function () {
-      var bool = false;
-      $('.edit').click(function () {
-        form = $('#newAddressForm');
-        addressBlock = $(this).parents('.address');
-        name = addressBlock.find('.name').text();
-        street1 = addressBlock.find('.street1').text();
-        street2 = addressBlock.find('.street2').text();
-        city = addressBlock.find('.city').text();
-        state = addressBlock.find('.state').text();
-        pin = addressBlock.find('.pin').text();
-        phone = addressBlock.find('.phone').text();
-        id = addressBlock.find('.address_id').val();
-        form.find("input[type='text'][name='address.name']").val(name);
-        form.find("input[type='text'][name='address.line1']").val(street1);
-        if (street2) {
-          form.find("input[type='text'][name='address.line2']").val(street2);
-        }
-        form.find("input[type='text'][name='address.city']").val(city);
-        //          form.find("input[type='text'][name='address.state']").val(state);
-        form.find("[name='address.state']").val(state.toUpperCase());
-        form.find("input[type='text'][name='address.pincode']").val(pin);
-        form.find("input[type='text'][name='address.phone']").val(phone);
-        form.find("input[type='hidden'][name='address.id']").val(id);
-      });
-      $('.delete').click(function () {
-        if (confirm('Are you sure you want to delete this address?')) {
-          bool = true;
-          return true;
-        } else {
-          return false;
-        }
-      });
-
-      $('.address').hover(
-          function () {
-            $(this).children('.hidden').slideDown(100);
-            $(this).children('.edit').click(function () {
-              return false;
-            });
-            $(this).children('.delete').click(function () {
-              if (bool) return true;
-              else
-                return false;
-            });
-          },
-          function () {
-            $(this).children('.hidden').slideUp(50);
-          }
-      );
-      $('.address').click(function () {
-        var add_url = $(this).children('a').attr('href');
-        document.location.href = add_url;
-      });
-    });
-  </script>
   <c:if test="${not isSecure }">
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1"
             height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>

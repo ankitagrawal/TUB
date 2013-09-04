@@ -3263,35 +3263,20 @@ h2.prod_title {
     -ms-border-radius: 5px;
     -khtml-border-radius: 5px;
     border-radius: 5px;
-    margin-bottom: 5px;
-    background: #fafafa;
-    border: 1px dotted #ddd;
+    border: 1px dotted #ccc;
     padding: 10px 15px;
     cursor: pointer;
 }
 
 /* line 1389, ../sass/main.scss */
 .left2 .address:hover {
-    background: #f2f7fb;
-    border: 1px dotted #2e6ca7;
+  box-shadow: 0px 0px 20px #ccc;
 }
+
 
 /* line 1392, ../sass/main.scss */
 .left2 .address:hover .tip {
     color: #f87500;
-}
-
-.left2 .address .delete {
-    color: #666;
-    padding-left: 0;
-}
-
-.left2 .address:hover .delete {
-    color: #a00;
-}
-
-.left2 .delete:hover {
-    color: #a00;
 }
 
 /* line 1396, ../sass/main.scss */
@@ -6130,21 +6115,14 @@ color: #e62580;
 }
 
 .useAddressButton{
-    display: block;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
-    font-size: 12.5px !important;
-    color: #df6900;
+  font-size: 12px;
+  margin-top: 5px;
+    color: #0091d7;
     font-weight: bold;
-    position: relative;
     float: left;
     width: 240px;
-    padding: 5px;
+    padding: 5px 5px 5px 0;
     text-align: left;
-    padding-left: 10px;
-    padding-right: 7px;
 }
 
 .steps_new{
@@ -6249,7 +6227,7 @@ color: #e62580;
 
 .arialBlackBold{
     color: rgb(82, 82, 82) !important;
-    font-weight: bold !important;
+   text-transform: uppercase;
 }
 
 .arialGrayBold{

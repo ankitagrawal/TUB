@@ -63,7 +63,7 @@ public class UserManageAddressAction extends BaseAction {
     }
     addresses = addressDao.getVisibleAddresses(user);
     affiliate = affiliateDao.getAffilateByUser(user);
-    return new ForwardResolution("/pages/manageUserAddresses.jsp");
+    return new ForwardResolution("/pages/manageUserAddressesBeta.jsp");
   }
 
   public Resolution editUserAddresses() {
@@ -71,7 +71,7 @@ public class UserManageAddressAction extends BaseAction {
       user = getUserService().getUserById(getPrincipal().getId());
       affiliate = affiliateDao.getAffilateByUser(user);
     }
-    return new ForwardResolution("/pages/editUserAddresses.jsp");
+    return new ForwardResolution("/pages/editUserAddressesBeta.jsp");
 
   }
 
@@ -80,7 +80,7 @@ public class UserManageAddressAction extends BaseAction {
     if (user != null) {
       if(address.getPincode()==null){
          addRedirectAlertMessage(new SimpleMessage("<style=\"color:red;font-size:14px; font-weight:bold;\"> We don't Service to this Pincode, please enter again or Contact to Customer Care!!!</style>"));
-         return new ForwardResolution("/pages/editUserAddresses.jsp").addParameter("address",address.getId());
+         return new ForwardResolution("/pages/editUserAddressesBeta.jsp").addParameter("address",address.getId());
       }
       address.setUser(user);
       Country country = addressDao.getCountry(countryId);
@@ -101,9 +101,9 @@ public class UserManageAddressAction extends BaseAction {
       }
     }
     if (addresses.size() > 0) {
-      return new ForwardResolution("/pages/manageUserAddresses.jsp");
+      return new ForwardResolution("/pages/manageUserAddressesBeta.jsp");
     } else {
-      return new ForwardResolution("/pages/editUserAddresses.jsp");
+      return new ForwardResolution("/pages/editUserAddressesBeta.jsp");
     }
   }
 
