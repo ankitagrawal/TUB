@@ -28,6 +28,10 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.ShipmentServiceMapper;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +65,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     UserService userService;
     @Autowired
     AdminEmailManager adminEmailManager;
+    private static Logger logger = LoggerFactory.getLogger(ShipmentServiceImpl.class);
 
 
     public Shipment validateShipment(ShippingOrder shippingOrder) {
@@ -148,7 +153,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
         for (WHReportLineItem whReportLineItem : whReportLineItemList) {
-            save(whReportLineItem);
+            logger.debug("Line Item" + whReportLineItem.getLineItem() + " shipment charge "
+                    + whReportLineItem.getEstmShipmentCharge() + " collection charge "
+                    + whReportLineItem.getEstmCollectionCharge() + " extra charge " + whReportLineItem.getExtraCharge());
+            shipmentDao.save(whReportLineItem);
         }
         return shipment;
     }
@@ -163,10 +171,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public Shipment findByAwb(Awb awb) {
         return shipmentDao.findByAwb(awb);
-    }
-
-    private WHReportLineItem save(WHReportLineItem whReportLineItem) {
-        return (WHReportLineItem) shipmentDao.save(whReportLineItem);
     }
 
     @Transactional
