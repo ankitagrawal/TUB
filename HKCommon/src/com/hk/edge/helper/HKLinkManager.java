@@ -6,7 +6,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
 import com.hk.edge.response.menu.CatalogMenuNode;
-import com.hk.edge.response.variant.AbstractStoreVariantApiResponse;
+import com.hk.edge.response.variant.AbstractStoreVariantResponse;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
 
@@ -36,7 +36,7 @@ public class HKLinkManager {
         return SslUtil.encodeUrlFullForced(WebContext.getRequest(), WebContext.getResponse(), url, contextPath);
     }
 
-    public static String getVariantUrl(AbstractStoreVariantApiResponse abstractStoreVariantApiResponse) {
+    public static String getVariantUrl(AbstractStoreVariantResponse abstractStoreVariantApiResponse) {
         StringBuilder variantUrl = new StringBuilder("/variant/");
         variantUrl.append(abstractStoreVariantApiResponse.getUrlFragment());
         variantUrl.append("?" + NAV_KEY + "=").append(abstractStoreVariantApiResponse.getNavKey());

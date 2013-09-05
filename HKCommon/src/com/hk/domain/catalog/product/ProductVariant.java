@@ -33,8 +33,8 @@ import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.edge.pact.service.StoreVariantService;
-import com.hk.edge.response.variant.StoreVariantBasicApiResponse;
+import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.response.variant.StoreVariantBasicResponse;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
 
@@ -269,8 +269,8 @@ public class ProductVariant implements java.io.Serializable {
 
     public String getVariantName() {
         if (AppConstants.isHybridRelease) {
-            StoreVariantService storeVariantService = ServiceLocatorFactory.getService(StoreVariantService.class);
-            StoreVariantBasicApiResponse storeVariantBasicApiResponse = storeVariantService.getStoreVariantBasicDetails(this.id);
+            HybridStoreVariantService storeVariantService = ServiceLocatorFactory.getService(HybridStoreVariantService.class);
+            StoreVariantBasicResponse storeVariantBasicApiResponse = storeVariantService.getStoreVariantBasicDetailsFromEdge(this.id);
             if (storeVariantBasicApiResponse != null) {
                 return storeVariantBasicApiResponse.getName();
             }
