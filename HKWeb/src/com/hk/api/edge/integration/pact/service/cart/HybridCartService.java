@@ -7,5 +7,5 @@ import com.hk.api.edge.integration.response.cart.CartSummaryFromHKR;
  */
 public interface HybridCartService {
 
-    public CartSummaryFromHKR getUserCartSummaryFromHKR();
+    public CartSummaryFromHKR getUserCartSummaryFromHKR(Long userId);
 }
