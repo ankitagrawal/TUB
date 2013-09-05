@@ -8,6 +8,9 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.hkDelivery.HKReachPricingEngine;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,13 +88,22 @@ public class CourierServiceImpl implements CourierService {
      courierPricingEngineDao.saveOrUpdate(courierPricingEngine);
   }
 
-  public CourierPricingEngine getCourierPricingInfoById(Long courierPricingEngineId) {
-    return courierPricingEngineDao.get(CourierPricingEngine.class, courierPricingEngineId);
-  }
-
   public List<RegionType> getRegionsForCourier(Courier courier) {
     return courierPricingEngineDao.getRegionsForCourier(courier);
   }
+
+  public List<HKReachPricingEngine> searchHKReachPricing(Warehouse warehouse, Hub hub) {
+    return courierPricingEngineDao.getHkReachPricingEngineList(warehouse, hub);
+  }
+
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub) {
+    if (warehouse != null && hub != null) {
+      return  courierPricingEngineDao.getHkReachPricingEngine(warehouse,hub);
+    } else {
+      return null;
+    }
+  }
+
 
   public CourierDao getCourierDao() {
     return courierDao;

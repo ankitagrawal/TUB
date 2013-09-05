@@ -1,10 +1,7 @@
 package com.hk.admin.engine;
 
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.service.courier.CourierCostCalculator;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
+import com.hk.admin.pact.service.courier.*;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
@@ -57,6 +54,8 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
   @Autowired
   ShippingOrderDao shippingOrderDao;
 
+  @Autowired
+  CourierService courierService;
 
   public Courier getCheapestCourier(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
     Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight, ground);
@@ -94,8 +93,8 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
       for (Courier courier : couriers) {
         if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
           if (pincodeObj.getNearestHub() != null) {
-            HKReachPricingEngine hkReachPricingEngine = courierPricingEngineDao.getHkReachPricingEngine(srcWarehouse,
-                pincodeObj.getNearestHub(), false);
+            HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse,
+                pincodeObj.getNearestHub());
             if(hkReachPricingEngine != null){
               totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
             }

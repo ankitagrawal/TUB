@@ -22,9 +22,9 @@ public interface CourierPricingEngineDao extends BaseDao {
 
   public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
 
-  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub, Boolean acceptNull);
+  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub);
 
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Boolean acceptNull);
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub);
 
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);
 

@@ -1,35 +1,30 @@
 package com.hk.admin.engine;
 
-import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
+import com.hk.admin.pact.service.courier.CourierCostCalculator;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.core.EnumTax;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.CourierPricingEngine;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.GatewayIssuerMapping;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.warehouse.WHReportLineItem;
+import com.hk.domain.payment.Payment;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.hk.admin.pact.service.courier.CourierCostCalculator;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.constants.core.EnumTax;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.shipment.EnumBoxSize;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierPricingEngine;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.payment.Payment;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.courier.PincodeDao;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,11 +52,10 @@ public class ShipmentPricingEngine {
   GatewayIssuerMappingService gatewayIssuerMappingService;
 
   @Autowired
-  private CourierPricingEngineDao courierPricingEngineDao;
-
+  ShipmentService shipmentService;
 
   @Autowired
-  ShipmentService shipmentService;
+  CourierService courierService;
 
   public Double calculateShipmentCost(ShippingOrder shippingOrder){
     Shipment shipment = shippingOrder.getShipment();
@@ -82,7 +76,7 @@ public class ShipmentPricingEngine {
     Warehouse srcWarehouse = shippingOrder.getWarehouse();
     if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
       if (pincodeObj.getNearestHub() != null) {
-        HKReachPricingEngine hkReachPricingEngine = courierPricingEngineDao.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub(), false);
+        HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub());
         if(hkReachPricingEngine != null){
           return calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
         }

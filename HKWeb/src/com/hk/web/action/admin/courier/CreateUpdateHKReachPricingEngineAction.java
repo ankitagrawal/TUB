@@ -2,6 +2,7 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.hkDelivery.Hub;
@@ -30,6 +31,9 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   @Autowired
   HubService hubService;
+
+  @Autowired
+  CourierService courierService;
 
   private HKReachPricingEngine hkReachPricingEngine;
 
@@ -65,9 +69,9 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
         return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
       }
     } else {
-      List<HKReachPricingEngine> localEngines = courierPricingEngineDao.getHkReachPricingEngineList(hkReachPricingEngine.getWarehouse(),
-              hkReachPricingEngine.getHub(), Boolean.FALSE);
-      if (localEngines != null && !localEngines.isEmpty()) {
+      HKReachPricingEngine localEngines = courierService.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
+              hkReachPricingEngine.getHub());
+      if (localEngines != null) {
         addRedirectAlertMessage(new SimpleError("Duplicate data supplied, entry already exists."));
         return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
           .addParameter("warehouse",hkReachPricingEngine.getWarehouse()).addParameter("hub", hkReachPricingEngine.getHub());
@@ -81,7 +85,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   public Resolution search() {
-    hkReachEngines = courierPricingEngineDao.getHkReachPricingEngineList(warehouseParam, hubParam, true);
+    hkReachEngines = courierService.searchHKReachPricing(warehouseParam, hubParam);
     if (hkReachEngines == null || hkReachEngines.isEmpty()) {
       addRedirectAlertMessage(new SimpleMessage("No results match your search."));
     }

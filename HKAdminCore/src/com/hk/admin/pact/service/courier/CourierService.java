@@ -5,6 +5,8 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.hkDelivery.HKReachPricingEngine;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.warehouse.Warehouse;
 
 import java.util.List;
@@ -33,8 +35,10 @@ public interface CourierService {
 
   public void saveUpdateCourierPricingInfo(CourierPricingEngine courierPricingEngine);
 
-  public CourierPricingEngine getCourierPricingInfoById(Long courierPricingEngineId);
-
   public List<RegionType> getRegionsForCourier(Courier courier);
+
+  public List<HKReachPricingEngine> searchHKReachPricing(Warehouse warehouse, Hub hub);
+
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub);
 
 }
