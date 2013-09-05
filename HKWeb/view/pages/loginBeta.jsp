@@ -13,8 +13,8 @@
 %>
 <s:layout-render name="/layouts/loginLayoutBeta.jsp" pageTitle="Login to HealthKart.com">
     <s:layout-component name="checkoutStep">
-        <div class='current_step_content'>
-            <div class='right'>
+        <div class='current_step_content' style="font-size: 14px; margin-top: 15px; padding-top: 0;">
+            <div class='right' style="margin: 0 auto;float: none;">
                 <h4 class="mrgn-b-20">
                     SIGN IN
                 </h4>
@@ -44,17 +44,18 @@
 
                             <label class="">Password</label>
                             <s:password class="signUpInputNew" name="password" tabindex="20"/>
-                        </fieldset>
-                        <div style="float: left;">
-                            <s:submit name="login" value="Sign In" class="btn btn-blue"/>
-                            <s:submit name="createNew" class="btn btn-blue" style="display:none;" value="Create an account"/>
 
-                        </div>
-                        <div style="float: right;" name="forgot-link-cntnr">
-                            <span class="icn icn-sqre-blue"></span>
-                            <s:link beanclass="com.hk.web.action.core.user.ForgotPasswordAction" id="forgotPasswordLink"
-                                    style="color: #0091d7;">forgot password</s:link>
-                        </div>
+                            <div style="float: left;">
+                                <s:submit name="login" value="Sign In" class="btn btn-blue"/>
+                                <s:submit name="createNew" class="btn btn-blue" style="display:none;" value="Create an account"/>
+
+                            </div>
+                            <div style="float: right;" name="forgot-link-cntnr">
+                                <span class="icn icn-sqre-blue"></span>
+                                <s:link beanclass="com.hk.web.action.core.user.ForgotPasswordAction" id="forgotPasswordLink"
+                                        style="color: #0091d7;">forgot password</s:link>
+                            </div>
+                        </fieldset>
                         <s:hidden name="redirectUrl"
                                   value="${actionBean.redirectUrl!=null?actionBean.redirectUrl:param[redirectParam]}"/>
                         <s:hidden name="source"/>

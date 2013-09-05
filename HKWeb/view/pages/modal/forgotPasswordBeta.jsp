@@ -7,8 +7,8 @@
 <s:useActionBean beanclass="com.hk.web.action.core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
 <s:layout-render name="/layouts/loginLayoutBeta.jsp" pageTitle="Forgot Password | Healthkart.com">
   <s:layout-component name="checkoutStep">
-      <div class='current_step_content'>
-          <div class='left'>
+      <div class='current_step_content' style="font-size: 14px; margin-top: 15px; padding-top: 0;">
+          <div class='left' style="margin: 0 auto;float: none;">
               <h4 class="mrgn-b-20">
                   FORGOT PASSWORD
               </h4>
@@ -27,7 +27,6 @@
                           <label class="mrgn-t-10">Email Id</label>
                           <s:text id="forgotEmail" name="email" class="signUpInputNew"/>
                           <br/>
-                      </fieldset>
                       <s:submit style="float: left;" id="forgotPassword" value="Continue" class="btn btn-blue" name="forgotPassword" />
                       <div style="float: right;">
                           <span class="icn icn-sqre-blue"></span>
@@ -35,6 +34,8 @@
                               go back &amp; login</s:link>
 
                       </div>
+                      </fieldset>
+
                   </s:form>
               </div>
           </div>

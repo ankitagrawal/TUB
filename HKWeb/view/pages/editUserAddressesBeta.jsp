@@ -11,7 +11,7 @@
     <div class="mrgn-l-40 my-acnt-ht">
        <c:choose>
          <c:when test="${umaa.address ==null}">
-           <h2 class="strikeline">New Address</h2>
+           <h2 class="strikeline" style="margin-bottom: 10px;">New Address</h2>
          </c:when>
          <c:otherwise>
            <h2 class="strikeline">Edit Address</h2>
@@ -20,7 +20,7 @@
   <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction" id="addressForm">
       <s:layout-render name="/layouts/addressLayoutBeta.jsp" />
       <s:hidden name="countryId" value="${countryId}"/>
-      <s:submit name="saveAddress" value="Save Address" class="btn btn-blue continue" />
+      <s:submit name="saveAddress" value="Save Address" class="btn btn-blue continue"  style="margin-top:20px;margin-left:0;"/>
   </s:form>
     </div>
 </s:layout-component>

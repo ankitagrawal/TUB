@@ -13,8 +13,8 @@
 %>
 <s:layout-render name="/layouts/loginLayoutBeta.jsp" pageTitle="Signup to HealthKart.com">
   <s:layout-component name="checkoutStep">
-    <div class='current_step_content'>
-      <div class='left'>
+    <div class='current_step_content' style="font-size: 14px; margin-top: 15px; padding-top: 0;">
+      <div class='left' style="margin: 0 auto;float: none;">
         <h4 class="mrgn-b-20">
             REGISTRATION
         </h4>
@@ -31,12 +31,12 @@
             <s:password name="password" class="signUpInputNew" />
             <label>Confirm Password <span class='aster' title="this field is required">*</span></label>
             <s:password class="signUpInputNew" name="passwordConfirm"/>
-            <div class='label'>
+            <div class='label' style="margin-bottom: 15px;margin-top: 0;">
               <s:checkbox name="agreeToTerms" style="position: relative;margin: 0 5px;top: 3px;"/>Agree to
               <s:link href="/pages/termsAndConditions.jsp">terms and conditions</s:link>
               <span class='aster' title="this field is required">*</span>
             </div>
-              </fieldset>
+
             <s:submit style="float: left;" name="signup" value="Create Account" class="btn btn-blue"/>
               <div style="float: right;">
                   <span class="icn icn-sqre-blue"></span>
@@ -45,6 +45,7 @@
 
 
               </div>
+              </fieldset>
             <s:hidden name="redirectUrl" value="${actionBean.redirectUrl!=null?actionBean.redirectUrl:param[redirectParam]}"/>
             <s:hidden name="source"/>
           </s:form>

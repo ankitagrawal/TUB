@@ -143,10 +143,8 @@
     .rowLabel {
       display: block;
       padding-right: 5px;
-      padding-left: 5px;
       width: 150px;
       margin-top: 5px;
-      font-size: 1.22em;
       margin-bottom: 5px;
     }
 
