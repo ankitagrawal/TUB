@@ -5,16 +5,12 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -59,31 +55,37 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   }
 
   public Resolution save() {
-    for(CourierPricingEngine courierPricingEngine : courierPricingEngineList) {
-      /*if(courierPricingEngine.getId() != null) {
-        CourierPricingEngine localEngine = courierPricingEngineService.getCourierPricingInfoById(courierPricingEngine.getId());
-        if (localEngine != null) {
-          localEngine.setCourier(courierPricingEngine.getCourier());
-          localEngine.setRegionType(courierPricingEngine.getRegionType());
-          localEngine.setFirstBaseWt(courierPricingEngine.getFirstBaseWt());
-          localEngine.setFirstBaseCost(courierPricingEngine.getFirstBaseCost());
-          localEngine.setSecondBaseCost(courierPricingEngine.getSecondBaseCost());
-          localEngine.setSecondBaseWt(courierPricingEngine.getSecondBaseWt());
-          localEngine.setAdditionalCost(courierPricingEngine.getAdditionalCost());
-          localEngine.setFuelSurcharge(courierPricingEngine.getFuelSurcharge());
-          localEngine.setMinCodCharges(courierPricingEngine.getMinCodCharges());
-          localEngine.setCodCutoffAmount(courierPricingEngine.getCodCutoffAmount());
-          localEngine.setVariableCodCharges(courierPricingEngine.getVariableCodCharges());
-          localEngine.setValidUpto(courierPricingEngine.getValidUpto());
-          courierService.saveUpdateCourierPricingInfo(localEngine);
-        }
-      } else {*/
-        courierService.saveUpdateCourierPricingInfo(courierPricingEngine);
-      }
-    //}
-    addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
+    CourierPricingEngine duplicatePricingEngine = findDuplicateCourierPricingEngine(courierPricingEngineList);
+    if (duplicatePricingEngine == null) {
+      courierService.saveUpdateCourierPricingInfo(courierPricingEngineList);
+      addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
+    } else {
+      addRedirectAlertMessage(new SimpleError("You are trying to save duplicate entry for courier "
+          + duplicatePricingEngine.getCourier().getName() + " and region "
+          + duplicatePricingEngine.getRegionType().getName() + "and date " +
+          new SimpleDateFormat("yyyy-MM-dd").format(duplicatePricingEngine.getValidUpto())));
+    }
     initialize();
-    return new ForwardResolution(CreateUpdateCourierPricingAction.class, "search");
+    return new RedirectResolution(CreateUpdateCourierPricingAction.class, "search").addParameter("courier", courier);
+  }
+
+  private CourierPricingEngine findDuplicateCourierPricingEngine(List<CourierPricingEngine> courierPricingEngineList) {
+    Map<String, CourierPricingEngine> cpeMap = new HashMap<String, CourierPricingEngine>();
+    StringBuilder key;
+    String keySeparator = "#";
+    for (CourierPricingEngine currentEngine: courierPricingEngineList) {
+      key = new StringBuilder();
+      key.append(currentEngine.getCourier().getName()).append(keySeparator);
+      key.append(currentEngine.getRegionType().getName()).append(keySeparator);
+      key.append(currentEngine.getValidUpto().toString());
+
+      if (!cpeMap.containsKey(key.toString())) {
+        cpeMap.put(key.toString(),currentEngine);
+      } else {
+        return currentEngine;
+      }
+    }
+    return null;
   }
 
   public RegionType getRegionType() {

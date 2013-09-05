@@ -1,7 +1,6 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
@@ -22,9 +21,6 @@ import java.util.List;
  * Time: 12:17 PM
  */
 public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
-
-  @Autowired
-  CourierPricingEngineDao courierPricingEngineDao;
 
   @Autowired
   WarehouseService warehouseService;
@@ -54,31 +50,18 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   public Resolution saveOrUpdate() {
-    if (hkReachPricingEngine.getId() != null) {
-      HKReachPricingEngine localReachEngine = courierPricingEngineDao.get(HKReachPricingEngine.class, hkReachPricingEngine.getId());
-      if (localReachEngine != null) {
-        localReachEngine.setHub(hkReachPricingEngine.getHub());
-        localReachEngine.setWarehouse(hkReachPricingEngine.getWarehouse());
-        localReachEngine.setFixedCost(hkReachPricingEngine.getFixedCost());
-        localReachEngine.setInterCityCost(hkReachPricingEngine.getInterCityCost());
-        localReachEngine.setUpdateTime(Calendar.getInstance().getTime());
-        courierPricingEngineDao.save(localReachEngine);
-      } else {
-        addRedirectAlertMessage(new SimpleError("Invalid data supplied."));
-        this.prepareEngineData();
-        return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
-      }
-    } else {
-      HKReachPricingEngine localEngines = courierService.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
+    if (hkReachPricingEngine.getId() == null) {
+      HKReachPricingEngine localEngine = courierService.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
               hkReachPricingEngine.getHub());
-      if (localEngines != null) {
+      if (localEngine != null) {
         addRedirectAlertMessage(new SimpleError("Duplicate data supplied, entry already exists."));
         return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
           .addParameter("warehouse",hkReachPricingEngine.getWarehouse()).addParameter("hub", hkReachPricingEngine.getHub());
       }
-      hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
-      courierPricingEngineDao.save(hkReachPricingEngine);
     }
+
+    hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
+    courierService.saveHKReachPricingEngine(hkReachPricingEngine);
     addRedirectAlertMessage(new SimpleMessage("HK Reach courier info saved"));
     this.prepareEngineData();
     return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search");
@@ -97,14 +80,6 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
     onlineWarehouses = warehouseService.getServiceableWarehouses();
     hubs = hubService.getAllHubs();
 
-  }
-
-  public CourierPricingEngineDao getCourierPricingEngineDao() {
-    return courierPricingEngineDao;
-  }
-
-  public void setCourierPricingEngineDao(CourierPricingEngineDao courierPricingEngineDao) {
-    this.courierPricingEngineDao = courierPricingEngineDao;
   }
 
   public HKReachPricingEngine getHkReachPricingEngine() {

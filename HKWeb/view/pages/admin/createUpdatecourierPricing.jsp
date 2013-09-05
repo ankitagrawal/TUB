@@ -71,7 +71,7 @@
         '<input type="text" name="courierPricingEngineList[' + nextIndex + '].variableCodCharges" class="variableCodCharges" />' +
         '</td>' +
         '<td>' +
-        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" class="validUpto input_tip date_input endDate" style="width:90px;" title="dd/MM/yyyy"/>' +
+        '<input type="text" name="courierPricingEngineList[' + nextIndex + '].validUpto" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" class="validUpto input_tip date_input" style="width:75px;" title="dd/MM/yyyy"/>' +
         '</td>' +
         '</tr>';
          newRowHtml = $(newRowHtml);
@@ -263,7 +263,9 @@
 
                                 <td>
                                     <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto"
-                                           value="${courierPricingEngine.validUpto}" class="validUpto input_tip date_input endDate" style="width:90px;"/>
+                                           value="${courierPricingEngine.validUpto}"
+                                           formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                           class="validUpto input_tip date_input" style="width:75px;"/>
                                 </td>
                             </tr>
 

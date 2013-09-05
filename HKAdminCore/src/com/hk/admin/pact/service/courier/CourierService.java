@@ -33,12 +33,14 @@ public interface CourierService {
 
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);
 
-  public void saveUpdateCourierPricingInfo(CourierPricingEngine courierPricingEngine);
+  public void saveUpdateCourierPricingInfo(List<CourierPricingEngine> courierPricingEngines);
 
   public List<RegionType> getRegionsForCourier(Courier courier);
 
   public List<HKReachPricingEngine> searchHKReachPricing(Warehouse warehouse, Hub hub);
 
   public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub);
+
+  public HKReachPricingEngine saveHKReachPricingEngine(HKReachPricingEngine hkReachPricingEngine);
 
 }
