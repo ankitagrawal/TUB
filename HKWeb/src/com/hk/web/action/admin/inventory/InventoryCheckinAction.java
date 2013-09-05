@@ -405,6 +405,14 @@ public class InventoryCheckinAction extends BaseAction {
 			Sku sku = skuItem.getSkuGroup().getSku();
 			ProductVariant productVariant = sku.getProductVariant();
 			GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
+			if(grnLineItem!=null){
+				Long askedQty = grnLineItem.getQty();
+				Long alreadyCheckedInQty = getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem);
+				if (alreadyCheckedInQty >= askedQty) {
+					addRedirectAlertMessage(new SimpleMessage("Asked qty is already checked in."));
+					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+				}
+			}
 			Long foreignShippingOrderId = skuItem.getForeignSkuItemCLI().getForeignShippingOrderId();
 			if (foreignShippingOrderId != null && foreignShippingOrderId.toString().equals(grn.getInvoiceNumber())) {
 				adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, grnLineItem, null, null, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF,
