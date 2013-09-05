@@ -110,7 +110,7 @@
         <h3 style="margin-bottom: 15px;" class="arialBlackBold">
             Your Order
         </h3>
-        <s:layout-render name="/layouts/embed/itemSummaryTable.jsp" pricingDto="${orderSummary.pricingDto}"
+        <s:layout-render name="/layouts/embed/itemSummaryTableBeta.jsp" pricingDto="${orderSummary.pricingDto}"
                          orderDate="${orderDate}"/>
         <script type="text/javascript">
 
