@@ -40,13 +40,13 @@ public class HybridCartServiceImpl implements HybridCartService {
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {
                     Set<CartLineItem> productCartLineItems = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Product).filter();
                     if (productCartLineItems != null) {
-                        itemsInCart = order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size();
+                        itemsInCart = order.getExclusivelyProductCartLineItems().size() ;
                         // itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() +
                         // order.getExclusivelyComboCartLineItems().size());
                     }
                 }
-                int inCartSubscriptions = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
-                itemsInCart += inCartSubscriptions;
+                /*int inCartSubscriptions = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
+                itemsInCart += inCartSubscriptions;*/
             }
         }
 

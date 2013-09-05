@@ -24,24 +24,27 @@ public abstract class AbstractResponseFromHKR extends JSONObject {
         return exception;
     }
 
-    public void setException(boolean exception) {
+    public AbstractResponseFromHKR setException(boolean exception) {
         this.exception = exception;
+        return this;
     }
 
     public List<String> getMsgs() {
         return msgs;
     }
 
-    public void setMsgs(List<String> msgs) {
+    public AbstractResponseFromHKR setMsgs(List<String> msgs) {
         this.msgs = msgs;
+        return this;
     }
 
     public Long getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
+    public AbstractResponseFromHKR addMessage(String message) {
+        this.msgs.add(message);
+        return this;
     }
 
 }
