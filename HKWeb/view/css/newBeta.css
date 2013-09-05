@@ -2630,11 +2630,10 @@ h2.prod_title {
     float: left;
     margin-left: 0px;
     margin-right: 0px;
-    width: 650px;
-
-
+    width: 630px;
     height: auto;
-    min-height: 300px;
+    position: relative;
+    left: 5px;
 }
 
 /* line 1117, ../sass/main.scss */
@@ -2794,6 +2793,8 @@ h2.prod_title {
     left: 50px;
     background: transparent;
     font-size: 14px;
+    padding: 10px 0;
+    border: none;
 }
 
 /* line 1192, ../sass/main.scss */
@@ -2847,7 +2848,7 @@ h2.prod_title {
 }
 
 /* line 1220, ../sass/main.scss */
-.step2 .right_container h5 {
+.step2 .right_container h3 {
     font-weight: normal;
     border-bottom: 1px dotted #ccc;
     margin-bottom: 0.75em;
@@ -5446,7 +5447,7 @@ color: #e62580;
 
 .youPay{
     font-size: 18px;
-    color: #ce731a;
+    color: #0091d7;
     position: relative;
     float: left;
     left: 0px;
@@ -5456,7 +5457,7 @@ color: #e62580;
 
 .youPayValue{
     font-size: 18px;
-    color: #ce731a;
+    color: #0091d7;
     position: relative;
     float: right;
 }
@@ -6137,9 +6138,8 @@ color: #e62580;
 
 .newTextHeading{
     font-size: 13px;
-    border-bottom: 1px solid rgb(53, 53, 53) !important;
+    border-bottom: 1px solid #ccc;
     color: rgb(53, 53, 53);
-    font-weight: bold;
 }
 
 .rewardsPointsNew{

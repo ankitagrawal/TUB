@@ -57,7 +57,7 @@
 
 <s:layout-component name="steps">
     <%-- checkout strip flow begins--%>
-    <s:layout-render name="/layouts/embed/_checkoutStripBeta.jsp"/>
+    <s:layout-render name="/layouts/embed/_checkoutStripBeta.jsp" index="2"/>
 
     <%--checkout strip flow ends--%>
 
@@ -111,9 +111,9 @@
                </div>
            <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" class="newTextArea" placeholder="(e.g. preferred delivery time)"/>--%>
                 <div class="title">
-                    <h5>
+                    <h3>
                         Confirm order
-                    </h5>
+                    </h3>
                 </div>
 
                 <s:layout-render name="/layouts/embed/orderSummaryTableBeta.jsp" pricingDto="${orderSummary.pricingDto}"
@@ -168,29 +168,26 @@
                     (inclusive of shipping, handling and taxes.)
                 </div>
 
-                <div style="margin:10px; padding-top:0px">
                     <div class="buttons">
                         <s:submit
-                                style="margin: 0px !important;margin-left: 11px !important;margin-bottom: 10px !important;"
+                                style="margin: 0px !important;"
                                 name="orderReviewed" value="PLACE ORDER"
-                                class="requiredFieldValidator placeOrderButtonNew"/>
+                                class="requiredFieldValidator btn btn-blue"/>
                     </div>
-                </div>
 
             </div>
             </s:form>
 
         </div>
         <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 15px;border: none;">
-          <span class="small">
-          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="addressChangeButtonNew">
-              CHANGE </s:link>
-        </span>
 
-            <div class='title'>
-                <h5 class="newTextHeading arialBlackBold">
+
+            <div class='title newTextHeading ' style="float: left;padding-bottom:5px;width: 100%;">
+                <h4 class="arialBlackBold" style="display: inline-block;">
                     SHIPPING DETAILS
-                </h5>
+                </h4>
+                <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="btn btn-gray" style="display: inline-block; float:right;font-size: 10px; ">
+                    CHANGE </s:link>
             </div>
             <div class='detail'>
                 <div class='name'>
