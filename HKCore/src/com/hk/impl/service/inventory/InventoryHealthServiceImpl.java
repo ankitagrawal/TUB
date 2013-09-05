@@ -603,8 +603,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           for (Warehouse warehouse : servicableWarehouse) {
             whIds.add(warehouse.getId());
           }
+
+          Long warehouseIdAtPV = productVariant.getWarehouse().getId();
           //HardCoding
-          if (whIds.contains(productVariant.getWarehouse().getId())) {
+          if (whIds.contains(warehouseIdAtPV)) {
             logger.debug("Temp Booking On Aqua Side");
             // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
             List<Sku> skus = new ArrayList<Sku>();
