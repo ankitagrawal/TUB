@@ -225,9 +225,9 @@
                         </s:link>
                     </li>
                     <li>
-                        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre">
+                        <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction">
                             Addresses
-                            <s:param name="tabId" value="4"/>
+                            <s:param name="manageAddresses" value=""/>
                         </s:link>
                     </li>
 

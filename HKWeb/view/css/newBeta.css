@@ -424,6 +424,9 @@ span.error {
 }
 .logoBox a {
     border: none;
+    margin: 0 auto;
+    display: block;
+    width: 450px;
 }
 
 .logoBox a.logo:hover {
@@ -432,11 +435,6 @@ span.error {
 }
 
 /* line 36, ../sass/main.scss */
-
-.logoBox img {
-    max-height: 26px;
-}
-
 
 /* line 39, ../sass/main.scss */
 .logoBox .links {
@@ -2567,8 +2565,7 @@ h2.prod_title {
 
 /* line 1075, ../sass/main.scss */
 .current_step_content {
-    display: inline;
-    float: left;
+  display: inline;
   float: left;
   margin-left: 5px;
   margin-right: 5px;
@@ -3851,15 +3848,18 @@ h2.prod_title {
 
 select {
     font-size: 16px;
-    height: 30px;
     padding: 5px 5px;
-    background: #F2F7FB;
-    border: 1px solid #A2C4E5;
+    box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    -webkit-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    -moz-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    border: 1px solid rgb(214, 214, 214) !important;
+    height: 30px !important;
 }
-
-select:hover, select:focus {
-    background: #e2e7eb;
-    border-color: #99d;
+select:focus {
+    -moz-box-shadow: inset 0 -2px 2px #cccccc;
+    -webkit-box-shadow: inset 0 -2px 2px #cccccc;
+    -o-box-shadow: inset 0 -2px 2px #cccccc;
+    box-shadow: inset 0 -2px 2px #cccccc
 }
 
 *:focus {
@@ -5543,7 +5543,8 @@ color: #e62580;
     height: 14px;
 
     border: 1px solid #ddd;
-    padding-top: 7px;
+    padding-top: 2px;
+    padding-bottom:4px;
     background: #ddd;
     text-align: center;
     margin-right: 10px;
@@ -6881,7 +6882,7 @@ label{
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
     cursor: not-allowed;
     background-color: #eeeeee !important;
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 /*text align variation start*/
@@ -6983,7 +6984,8 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 /* footer css begins */
 #footer {
 
-    /*margin: 50px 0 20px 0;*/
+    margin: 50px auto 20px auto;
+    width: 960px;
 }
 
 #footer .container {
@@ -7074,7 +7076,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     border: 1px solid #ff0000;
     padding: 10px;
     color: #ff0000;
-    margin: 0 0 15px 0;
+    margin: 10px 0 5px 0;
 }
 
 .alert-cntnr {
@@ -7208,7 +7210,7 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
     -webkit-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     -moz-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     margin-bottom: 20px;
-    background: none !important;
+    background: none;
     border: 1px solid rgb(214, 214, 214) !important;
     height: 30px !important;
 }
@@ -7400,3 +7402,19 @@ input[type="text"]:focus, input[type="password"]:focus{
     display: inline-block;
 }
 /** Account page css ends **/
+/* checkout strip utils begins*/
+.page-title {
+    border-bottom: 5px solid #c8c8c8;
+    padding: 5px 10px;
+    margin: 0;
+    text-transform: uppercase;
+    color: #757171;
+}
+
+.page-title.current {
+    border-bottom: 5px solid #0091d7;
+    font-weight: 600;
+    color: #424242;
+}
+
+/* checkout strip utils ends*/
