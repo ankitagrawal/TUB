@@ -21,9 +21,9 @@
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
 
 <s:layout-component name="htmlHead">
-<script src="${pageContext.request.contextPath}/js/handlebars.js"></script>
-<script src="${pageContext.request.contextPath}/js/ember.js"></script>
-<script src="${pageContext.request.contextPath}/js/loader.js"></script>
+<script src="<hk:vhostImage/>/js/handlebars.js"></script>
+<script src="<hk:vhostImage/>/js/ember.js"></script>
+<script src="<hk:vhostImage/>/js/loader.js"></script>
 
 <script type="text/javascript">
 jQuery.fn.jqStepper = function(minValue, maxValue) {
