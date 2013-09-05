@@ -1,4 +1,4 @@
-package com.hk.api.edge.ext.response;
+package com.hk.edge;
 
 import java.util.ArrayList;
 import java.util.List;

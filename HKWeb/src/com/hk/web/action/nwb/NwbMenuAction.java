@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.api.edge.internal.pact.service.MenuService;
-import com.hk.api.edge.internal.response.menu.CatalogMenuNode;
+import com.hk.edge.response.menu.CatalogMenuNode;
 
 /**
  * @author vaibhav.adlakha
@@ -28,7 +28,7 @@ public class NwbMenuAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         menuNodes = getMenuService().getMenu();
-        return new ForwardResolution("/includes/menuInclude.jsp");
+        return new ForwardResolution("/includes/_menuBeta.jsp");
     }
 
     public List<CatalogMenuNode> getMenuNodes() {
