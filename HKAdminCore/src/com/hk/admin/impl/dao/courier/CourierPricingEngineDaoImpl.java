@@ -83,7 +83,7 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
 
   private DetachedCriteria addValidityCriteria(DetachedCriteria criteria) {
     Calendar cal = Calendar.getInstance();
-    cal.add(Calendar.DAY_OF_YEAR,-1);
+  //  cal.add(Calendar.DAY_OF_YEAR,-1);
     criteria.add(Restrictions.gt("validUpto", cal.getTime()));
     criteria.addOrder(Order.asc("validUpto"));
     return criteria;
