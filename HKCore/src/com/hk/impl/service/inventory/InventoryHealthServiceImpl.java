@@ -714,7 +714,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   private CartLineItem tempBookBrightInventory(CartLineItem cartLineItem) {
     logger.debug("Going to book inv on Bright Side");
-    Long warehouseIdAtOrderPlacement = cartLineItem.getProductVariant().getWarehouse().getId();
+    ProductVariant productVariant = cartLineItem.getProductVariant();
+    productVariant = productVariantService.getVariantById(productVariant.getId());
+    Long warehouseIdAtOrderPlacement = productVariant.getWarehouse().getId();
     // now make a API call to booked inventory at Bright
     List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
     List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
