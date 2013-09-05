@@ -56,7 +56,8 @@ public class HKCatalogCartResource {
     }
     
     public String addVariantToCart(){
-        if (isVariantConfigProvided()) {
+        return null;
+        /*if (isVariantConfigProvided()) {
             if (productVariantList != null && productVariantList.size() > 0) {
                 setVariantId(productVariantList.get(0).getId());
             }
@@ -91,9 +92,9 @@ public class HKCatalogCartResource {
 
                 ComboInstance comboInstance = null;
                 if (combo != null) {
-                    /**
+                    *//**
                      * do combo specific validations
-                     */
+                     *//*
                     if (combo != null && combo.getId() != null) {
                         Long maxQty = 0L;
                         Long netQty = 0L;
@@ -248,7 +249,7 @@ public class HKCatalogCartResource {
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Product has not been added to cart", dataMap);
             noCache();
             return new JsonResolution(healthkartResponse);
-        }
+        }*/
     }
 
 
