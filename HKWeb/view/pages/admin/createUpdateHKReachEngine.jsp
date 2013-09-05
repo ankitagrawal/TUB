@@ -14,7 +14,7 @@
                     var parentRow = $(this).parent().parent();
                     var fixedCost = parentRow.find('.fixedCost').val();
                     var interCityCost = parentRow.find('.interCityCost').val();
-                    if (isNaN(fixedCost) || isNaN(interCityCost) || fixedCost < 0 || interCityCost < 0) {
+                    if (isNaN(fixedCost) || isNaN(interCityCost) || fixedCost < 0 || interCityCost < 0 || fixedCost == "" || interCityCost == "") {
                         alert("Fixed cost and Inter City Cost should be numbers greater than 0");
                         e.preventDefault();
                         return false;

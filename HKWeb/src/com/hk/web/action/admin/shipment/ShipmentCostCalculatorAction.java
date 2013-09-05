@@ -118,6 +118,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                shipment.setBoxWeight(weight);
             }
             shipment = shipmentService.calculateAndDistributeShipmentCost(shipment);
+            addRedirectAlertMessage(new SimpleMessage("Shipment cost saved for SO ID " + shippingOrderId));
          } else {
            addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
          }
@@ -193,6 +194,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
           if (overrideHistoricalShipmentCost && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
             shipmentService.calculateAndDistributeShipmentCost(shipment);
             shipmentService.save(shipment);
+            addRedirectAlertMessage(new SimpleMessage("Shipment cost saved"));
           }
         } else {
           logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
