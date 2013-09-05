@@ -63,4 +63,7 @@ public interface WarehouseService {
   public Warehouse findShippingWarehouse(ShippingOrder shippingOrder);
 
   public List<Warehouse> findWarehouses(String tinPrefix);
+
+  public Warehouse getAquaDefaultWarehouse();
+
 }

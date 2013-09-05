@@ -164,7 +164,7 @@ public class OrderEventPublisher {
             UserThreadLocal.set(loggedInUser);
 
             if (!order.isSubscriptionOrder()) {
-              logger.info("22 Temp booking for order " + order.getId() + " for thread id " + Thread.currentThread().getId() + " name " + Thread.currentThread().getName());
+              logger.info(" Temp booking for order " + order.getId() + " for thread id " + Thread.currentThread().getId() + " name " + Thread.currentThread().getName());
               inventoryHealthService.tempBookSkuLineItemForOrder(order);
             }
 
