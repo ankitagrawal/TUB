@@ -262,7 +262,7 @@
                                 </td>
 
                                 <td>
-                                    <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto" disabled="true"
+                                    <input type="text" name="courierPricingEngineList[${ctr.index}].validUpto"
                                            value="${courierPricingEngine.validUpto}"
                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                            class="validUpto input_tip date_input" style="width:75px;"/>
