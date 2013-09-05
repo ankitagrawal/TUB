@@ -120,77 +120,71 @@ public class ShipmentPricingEngine {
   }
 
 
-  public Double calculateReconciliationCost(ShippingOrder shippingOrder){
-    Shipment shipment = shippingOrder.getShipment();
-    Order order = shippingOrder.getBaseOrder();
-    Courier courier = shipment.getAwb().getCourier();
-    Pincode pincodeObj = order.getAddress().getPincode();
-    if(pincodeObj == null)   {
-      return null;
-    }
-    Warehouse srcWarehouse = shippingOrder.getWarehouse();
-    if(courier == null || courier.getId().equals(EnumCourier.MIGRATE.getId())) {
-      logger.info("Courier is null for BO order " + order.getId());
-      return null;
-    }
-
-    if (EnumCourier.HK_Delivery.getId().equals(courier.getId()))
-      return this.calculateReconcillationCostHKReach(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
-
-    CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
-    if (courierPricingInfo == null) {
-      return null;
-    }
-    return calculateReconciliationCost(courierPricingInfo, shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
-  }
-
-  public Double calculatePackagingCost(ShippingOrder shippingOrder) {
-    Shipment shipment = shippingOrder.getShipment();
-    EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-    return enumBoxSize != null && enumBoxSize.getId() != -1 ? enumBoxSize.getPackagingCost() : 15.5D;
-  }
-
-
-  public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, Payment payment, Double amount) {
-    Double reconciliationCharges = 0D;
-    if (payment != null) {
-      if (payment.isCODPayment()) {
-        reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
-        reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
-      } else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.ONLINE_PAYMENT.getId())) {
-        GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(), payment.getGateway(), null);
-        if (gatewayIssuerMapping == null) {
-          return 0D;
+    public Double calculateReconciliationCost(ShippingOrder shippingOrder) {
+        Shipment shipment = shippingOrder.getShipment();
+        Order order = shippingOrder.getBaseOrder();
+        Courier courier = shipment.getAwb().getCourier();
+        Pincode pincodeObj = order.getAddress().getPincode();
+        if (pincodeObj == null) {
+            return null;
         }
-        reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
-        reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
-      }
+        Warehouse srcWarehouse = shippingOrder.getWarehouse();
+        if (courier == null || courier.getId().equals(EnumCourier.MIGRATE.getId())) {
+            logger.info("Courier is null for BO order " + order.getId());
+            return null;
+        }
+        Payment payment = shippingOrder.getBaseOrder().getPayment();
+        if (payment.getPaymentMode().getId().equals(EnumPaymentMode.ONLINE_PAYMENT.getId())) {
+            GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(), payment.getGateway(), null);
+            if (gatewayIssuerMapping == null) {
+                return 0D;
+            }
+            return payment.getAmount() * gatewayIssuerMapping.getReconciliationCharge() * (1 + EnumTax.VAT_12_36.getValue());
+        } else if (payment.isCODPayment()) {
+            if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
+                return 0D;
+            } else {
+                CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+                if (courierPricingInfo == null) {
+                    return null;
+                }
+                return calculateReconciliationCost(courierPricingInfo, payment, payment.getAmount());
+            }
+        } else {
+            return 0D;
+        }
     }
-    return reconciliationCharges;
-  }
 
-  public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, Double amount, Boolean cod) {
-    Double reconciliationCharges = 0D;
-    if (courierPricingEngine != null) {
-      if (cod) {
-        reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount()
-            ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
-        reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
-      } else {
-        reconciliationCharges = amount * 0.022;
-      }
+    public Double calculatePackagingCost(ShippingOrder shippingOrder) {
+        Shipment shipment = shippingOrder.getShipment();
+        EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
+        return enumBoxSize != null && enumBoxSize.getId() != -1 ? enumBoxSize.getPackagingCost() : 15.5D;
     }
-    return reconciliationCharges;
-  }
 
-  private Double calculateReconcillationCostHKReach(Payment payment, Double amount) {
-    Double reconciliationCharges = 0d;
-    GatewayIssuerMapping gatewayIssuerMapping = gatewayIssuerMappingService.getGatewayIssuerMapping(payment.getIssuer(),
-        payment.getGateway(), null);
-    if (gatewayIssuerMapping != null) {
-      reconciliationCharges = amount * gatewayIssuerMapping.getReconciliationCharge();
-      reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
+    public Double calculateReconciliationCost(CourierPricingEngine courierPricingInfo, Payment payment, Double amount) {
+        Double reconciliationCharges = 0D;
+        if (payment != null) {
+            if (payment.isCODPayment()) {
+                return calculateReconciliationCost(courierPricingInfo, payment.getAmount(), true);
+            } else {
+                return calculateReconciliationCost(courierPricingInfo, payment.getAmount(), true);
+            }
+        }
+        return reconciliationCharges;
     }
-    return reconciliationCharges;
-  }
+
+    public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, Double amount, Boolean cod) {
+        Double reconciliationCharges = 0D;
+        if (courierPricingEngine != null) {
+            if (cod) {
+                reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount()
+                        ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
+                reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
+            } else {
+                reconciliationCharges = amount * 0.022;
+            }
+        }
+        return reconciliationCharges;
+    }
+
 }
