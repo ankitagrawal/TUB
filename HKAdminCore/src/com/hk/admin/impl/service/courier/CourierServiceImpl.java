@@ -15,9 +15,7 @@ import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CourierServiceImpl implements CourierService {
@@ -84,9 +82,10 @@ public class CourierServiceImpl implements CourierService {
     return courierPricingEngineDao.getCourierPricingInfoByCourier(courier);
   }
 
-  public void saveUpdateCourierPricingInfo(CourierPricingEngine courierPricingEngine) {
-     courierPricingEngineDao.saveOrUpdate(courierPricingEngine);
+  public void saveUpdateCourierPricingInfo(List<CourierPricingEngine> courierPricingEngines) {
+     courierPricingEngineDao.saveOrUpdate(courierPricingEngines);
   }
+
 
   public List<RegionType> getRegionsForCourier(Courier courier) {
     return courierPricingEngineDao.getRegionsForCourier(courier);
@@ -98,12 +97,15 @@ public class CourierServiceImpl implements CourierService {
 
   public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub) {
     if (warehouse != null && hub != null) {
-      return  courierPricingEngineDao.getHkReachPricingEngine(warehouse,hub);
+      return  courierPricingEngineDao.getHkReachPricingEngine(warehouse, hub);
     } else {
       return null;
     }
   }
 
+  public HKReachPricingEngine saveHKReachPricingEngine(HKReachPricingEngine hkReachPricingEngine) {
+    return (HKReachPricingEngine) courierPricingEngineDao.save(hkReachPricingEngine);
+  }
 
   public CourierDao getCourierDao() {
     return courierDao;
