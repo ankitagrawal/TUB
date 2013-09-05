@@ -40,7 +40,7 @@
 
   <div id="container" class="container_24">
     <s:layout-component name="header">
-      <s:layout-render name="/layouts/embed/_header.jsp"/>
+      <s:layout-render name="/layouts/embed/_headerBeta.jsp"/>
     </s:layout-component>
       <s:layout-component name="menu">
           <s:layout-render name="/includes/_menuBeta.jsp" topCategory="${topCategory}"/>

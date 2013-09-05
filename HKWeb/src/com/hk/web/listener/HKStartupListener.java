@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.api.edge.internal.pact.service.LoadPropertyService;
+import com.hk.api.edge.integration.pact.service.LoadPropertyService;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.HkApiUserCache;
 import com.hk.cache.RoleCache;
