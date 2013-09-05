@@ -53,7 +53,7 @@ public class HybridCartResource {
     @GET
     @Path("{usrId}/summary/")
     @Produces("application/json")
-    public String getUserCartSummaryFromHKR(@QueryParam("usrId") Long userId) {
+    public String getUserCartSummaryFromHKR(@PathParam("usrId") Long userId) {
         CartSummaryFromHKR cartSummaryFromHKR = getHybridCartService().getUserCartSummaryFromHKR(userId);
         return new JSONResponseBuilder().addField("results", cartSummaryFromHKR).build();
     }
