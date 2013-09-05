@@ -420,6 +420,13 @@ function _updateTotals(responseData) {
                     </div>
                 </c:when>
                 <c:otherwise>
+                    <div class="hk">
+                        <div class="num">
+              <span class="lineItemHkTotal ">Rs <fmt:formatNumber
+                      value="${cartLineItem.hkPrice * cartLineItem.qty}"
+                      pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
+                        </div>
+                    </div>
                     <div class="cut">
                         <div class="num lineItemSubTotalMrp fnt-light"> Rs
                             <fmt:formatNumber value="${cartLineItem.markedPrice * cartLineItem.qty}"
@@ -434,13 +441,7 @@ function _updateTotals(responseData) {
                                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                               </span>
                     </div>--%>
-                    <div class="hk">
-                        <div class="num">
-              <span class="lineItemHkTotal arialBlackBold">Rs <fmt:formatNumber
-                      value="${cartLineItem.hkPrice * cartLineItem.qty}"
-                      pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
-                        </div>
-                    </div>
+
 
                 </c:otherwise>
             </c:choose>
@@ -582,7 +583,7 @@ function _updateTotals(responseData) {
 <div class='right_container total checkoutContainer' style="">
     <div class="you-pay-container">
         <div style="width:48%;overflow:hidden;display:inline-block;float:left">
-            <div class="fnt-light fnt-sz13 fnt-bold">
+            <div class="fnt-light fnt-bold">
                 YOU PAY
             </div>
             <div id="summaryGrandTotalPayable" class="fnt-sz14">
@@ -605,7 +606,7 @@ function _updateTotals(responseData) {
     </div>
     <hr>
     <div class="offerContainer">
-        <div class="fnt-light fnt-caps fnt-bold fnt-sz13 mrgn-b-10">
+        <div class="fnt-light fnt-caps fnt-bold mrgn-b-10">
             APPLY COUPON
         </div>
         <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
@@ -613,7 +614,7 @@ function _updateTotals(responseData) {
                 <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
 
                     <input class="couponInput" placeholder='Enter discount code' type='text'
-                           style="float:left;margin-right:10px;" id="couponCode"/>
+                           style="float:left;margin-right:5px;" id="couponCode"/>
                     <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink"
                             onclick="return false;"
                             class="btn btn-gray" style="display:inline-block">APPLY</s:link>
@@ -641,7 +642,7 @@ function _updateTotals(responseData) {
         </shiro:lacksRole>
     </div>
     <hr>
-    <div class="mrgn-b-20 fnt-sz16 fnt-light fnt-bold fnt-caps">CHECK OUT DETAILS</div>
+    <div class="mrgn-b-20 fnt-light fnt-bold fnt-caps">CHECK OUT DETAILS</div>
 
 
     <div style="">
