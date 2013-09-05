@@ -4,27 +4,28 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>
 <s:layout-render name="/layouts/defaultBeta.jsp">
+    <s:layout-component name="heading">Email Subscriptions</s:layout-component>
+
     <s:layout-component name="lhsContent">
         <jsp:include page="myaccount-navBeta.jsp"/>
     </s:layout-component>
-
     <s:layout-component name="rhsContent">
         <s:form beanclass="com.hk.web.action.core.user.MyAccountAction" var="accountAction">
             <s:errors/>
-            <div>
-                <h4 class="strikeline"> Email Subscriptions</h4>
-                <div style="margin-top: 15px"></div>
+            <div class="mrgn-l-40 my-acnt-ht">
+                <h2 class="strikeline" style="margin-bottom: 10px;"> Email Subscriptions</h2>
 
                 <c:if test="${maa.user.subscribedForNotify}">
-                    <div style="float: left; font-size: 0.7em;">
+                    <div style="float: left;">
                         You are already subscribed for emails
                     </div>
+
                 </c:if>
                 <c:if test="${!maa.user.subscribedForNotify}">
                     Click here to subscribe for emails
                     </br>
-                    <div style="float: right; font-size: 0.7em;">
-                        <s:submit name="subscribeForNotifications" value="Subscribe" class="button_orange"/>
+                    <div style="float: right;">
+                        <s:submit name="subscribeForNotifications" value="Subscribe" class="btn btn-blue"/>
                     </div>
                 </c:if>
 
@@ -35,7 +36,7 @@
 
 <script type="text/javascript">
     window.onload = function() {
-        document.getElementById('myAccountLink').style.fontWeight = "bold";
+        $('#emailLink').addClass('selected');
         document.getElementById('birthDate').labelify({labelledClass: 'input_tip'});
     };
 

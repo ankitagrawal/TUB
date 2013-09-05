@@ -3229,11 +3229,9 @@ h2.prod_title {
 
 /* line 1374, ../sass/main.scss */
 .left2 {
-    display: inline;
-    float: left;
+    display: inline-block;
     margin-left: 5px;
     margin-right: 5px;
-    width: 350px;
 }
 
 /* line 1376, ../sass/main.scss */
@@ -3820,10 +3818,8 @@ h2.prod_title {
     background: #FAFCFE;*/
 }
 
-.rhsContent {/*
-    float: left;
-    width: 700px;
-    margin-left: 10px;*/
+.rhsContent {
+    width: 730px;
 }
 
 /*.centralContent {
@@ -6063,9 +6059,6 @@ color: #e62580;
 }
 
 .raj_address{
-    position: relative;
-    float: left;
-    width: auto;
     border: 1px solid #ddd !important;
     border-radius: 0px !important;
     margin-bottom: 25px !important;
