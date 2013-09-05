@@ -424,6 +424,9 @@ span.error {
 }
 .logoBox a {
     border: none;
+    margin: 0 auto;
+    display: block;
+    width: 450px;
 }
 
 .logoBox a.logo:hover {
@@ -432,11 +435,6 @@ span.error {
 }
 
 /* line 36, ../sass/main.scss */
-
-.logoBox img {
-    max-height: 26px;
-}
-
 
 /* line 39, ../sass/main.scss */
 .logoBox .links {
@@ -2567,8 +2565,7 @@ h2.prod_title {
 
 /* line 1075, ../sass/main.scss */
 .current_step_content {
-    display: inline;
-    float: left;
+  display: inline;
   float: left;
   margin-left: 5px;
   margin-right: 5px;
@@ -6885,7 +6882,7 @@ label{
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
     cursor: not-allowed;
     background-color: #eeeeee !important;
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 /*text align variation start*/
@@ -7212,7 +7209,7 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
     -webkit-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     -moz-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     margin-bottom: 20px;
-    background: none !important;
+    background: none
     border: 1px solid rgb(214, 214, 214) !important;
     height: 30px !important;
 }
