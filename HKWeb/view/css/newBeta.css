@@ -6984,7 +6984,8 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 /* footer css begins */
 #footer {
 
-    /*margin: 50px 0 20px 0;*/
+    margin: 50px auto 20px auto;
+    width: 960px;
 }
 
 #footer .container {
@@ -7075,7 +7076,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     border: 1px solid #ff0000;
     padding: 10px;
     color: #ff0000;
-    margin: 0 0 15px 0;
+    margin: 10px 0 5px 0;
 }
 
 .alert-cntnr {
@@ -7209,7 +7210,7 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
     -webkit-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     -moz-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     margin-bottom: 20px;
-    background: none
+    background: none;
     border: 1px solid rgb(214, 214, 214) !important;
     height: 30px !important;
 }
