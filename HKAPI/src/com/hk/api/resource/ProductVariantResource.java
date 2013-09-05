@@ -1,6 +1,7 @@
 package com.hk.api.resource;
 
 
+import com.google.gson.Gson;
 import com.hk.api.pact.service.HKAPIProductService;
 import com.hk.constants.core.Keys;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
@@ -155,16 +156,18 @@ public class ProductVariantResource {
   @Path("/updateFreezedInventory/")
   @Produces("application/json")
   public String updateFreezedInventory(List<HKAPIForeignBookingResponseInfo> hKAPIForeignBookingResponseInfos) {
-    boolean inventoryUpdated = false;
+    Boolean inventoryUpdated = Boolean.FALSE;
+    Gson gson = new Gson();
     Long baseOrderId = null;
     if (hKAPIForeignBookingResponseInfos != null && hKAPIForeignBookingResponseInfos.size() > 0) {
       baseOrderId = hKAPIForeignBookingResponseInfos.get(0).getFboId();
       for (HKAPIForeignBookingResponseInfo info : hKAPIForeignBookingResponseInfos) {
         getInventoryHealthService().freezeInventoryForAB(info);
       }
-      inventoryUpdated = true;
+      inventoryUpdated = Boolean.TRUE;
     }
-    return new JSONResponseBuilder().addField("orderId", baseOrderId).addField("inventoryUpdated", inventoryUpdated).build();
+    String returnVal = gson.toJson(inventoryUpdated);
+    return returnVal;
 
   }
 

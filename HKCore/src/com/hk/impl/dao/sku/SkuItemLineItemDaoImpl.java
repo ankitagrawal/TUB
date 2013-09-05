@@ -96,7 +96,7 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
 
 
   public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId){
-    String sql = "from ForeignSkuItemCLI f where f.skuItem.id = :foreignSkuItemId";
+    String sql = "from ForeignSkuItemCLI f where f.skuItemId = :foreignSkuItemId";
     return (ForeignSkuItemCLI) getSession().createQuery(sql).setParameter("foreignSkuItemId", foreignSkuItemId).uniqueResult();
   }
   public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {

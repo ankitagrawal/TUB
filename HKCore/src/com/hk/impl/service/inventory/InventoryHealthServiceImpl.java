@@ -824,6 +824,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         foreignSkuItemCLI.setFsgMrp(info.getMrp());
         foreignSkuItemCLI.setFsgBatchNumber(info.getBatch());
         foreignSkuItemCLI.setProcessedStatus(info.getProcessed());
+        if(info.getFboId() != null){
+          foreignSkuItemCLI.setForeignOrderId(info.getFboId());
+        }
+       if(info.getFsoId() != null){
+         foreignSkuItemCLI.setForeignShippingOrderId(info.getFsoId());
+       }
         foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
       }
     }
@@ -884,11 +890,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
       }
     } else {
-      
+      Long unBoookedInventoryOfBright = getUnbookedInventoryOfBright(productVariant);
+
       // check available inventory for aqua  in Bright
-      if (getUnbookedInventoryOfBright(productVariant) > 0) {
+      if (unBoookedInventoryOfBright > 0) {
         // now need to update pv with Bright Inventory
-        logger.debug("Unbooked Qty of Bright - " + getUnbookedInventoryOfBright(productVariant));
+        logger.debug("Unbooked Qty of Bright - " + unBoookedInventoryOfBright);
         HKApiSkuResponse hkApiSkuResponse = getPVInfoFromBright(productVariant);
         logger.debug("hKApiSkuResponse got -" + hkApiSkuResponse.getVariantId() + ", qty - " + hkApiSkuResponse.getQty() + ", MRP -" + hkApiSkuResponse.getMrp());
         productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
@@ -1076,8 +1083,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   public void freezeInventoryForAB(HKAPIForeignBookingResponseInfo info) {
     ForeignSkuItemCLI existingFscli = getBaseDao().get(ForeignSkuItemCLI.class, info.getFsiCLIId());
     SkuItem existingSkuItem = skuItemLineItemService.getSkuItem(existingFscli.getId());
+    Long existingSkuItemId =existingFscli.getSkuItemId();
 
-    updateForeignSICLITable(Arrays.asList(info));
     Sku existingSku = existingSkuItem.getSkuGroup().getSku();
     Long actualSkuItemId = info.getFsiId();
     Long actualSkuGroupId = info.getFsgId();
@@ -1090,7 +1097,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       skuGroup.setForeignSkuGroupId(actualSkuGroupId);
       skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
     }
-    if (actualSkuItemId.equals(existingSkuItem.getId())) {
+    if (actualSkuItemId.equals(existingSkuItemId)) {
       existingSkuItem.setSkuGroup(skuGroup);
 
     } else {
@@ -1110,6 +1117,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       }
     }
     getBaseDao().save(existingSkuItem);
+    updateForeignSICLITable(Arrays.asList(info));
   }
 
 
