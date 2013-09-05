@@ -348,7 +348,7 @@
   <div class='floatfix'></div>
 </div>
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
-  <div class="lineItemRow product" style="border: 1px solid #ddd;border-width: 0px 0px 1px 0px;">
+  <div class="lineItemRow product" style="">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
     <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}" style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
@@ -366,7 +366,7 @@
 
     <div class="name" style="width: 200px;position: relative;float: left;" :>
         <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.variantName}  </a>
-        ${cartLineItem.productVariant.variantName}<br/>
+       <br/>
 
     </div>
 
@@ -399,13 +399,19 @@
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
             <div class="num">
-              <span class="lineItemSubTotalMrp fnt-sz16">Rs <fmt:formatNumber
+              <span class="lineItemSubTotalMrp ">Rs <fmt:formatNumber
                   value="${cartLineItem.hkPrice * cartLineItem.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
         </c:when>
         <c:otherwise>
+            <div class="hk">
+                <div class="num">
+              <span class="lineItemHkTotal ">Rs <fmt:formatNumber
+                      value="${cartLineItem.hkPrice * cartLineItem.qty}"
+                      pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
+                </div>
           <div class="cut">
             <div class="num lineItemSubTotalMrp fnt-light"> Rs
               <fmt:formatNumber value="${cartLineItem.markedPrice * cartLineItem.qty}"
@@ -420,12 +426,7 @@
                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                     </span>
           </div>--%>
-          <div class="hk">
-            <div class="num">
-              <span class="lineItemHkTotal arialBlackBold">Rs <fmt:formatNumber
-                  value="${cartLineItem.hkPrice * cartLineItem.qty}"
-                  pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
-            </div>
+
           </div>
 
         </c:otherwise>
@@ -500,17 +501,13 @@
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
             <div class="num">
-      <span class="lineItemSubTotalMrp arialBlackBold">Rs <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
+      <span class="lineItemSubTotalMrp ">Rs <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
                                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
         </c:when>
         <c:otherwise>
-          <div class="cut">
-            <div class="num lineItemSubTotalMrp arialGrayBold">  Rs
-              <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
-                                pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
-          </div>
+
           <%--<div class='special green'>
             (saved
       <span class='num '>
@@ -521,11 +518,16 @@
           </div>--%>
           <div class="hk">
             <div class="num">
-      <span class="lineItemHkTotal arialBlackBold"> Rs <fmt:formatNumber
+      <span class="lineItemHkTotal"> Rs <fmt:formatNumber
           value="${cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
+              <div class="cut">
+                  <div class="num lineItemSubTotalMrp arialGrayBold">  Rs
+                      <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
+                                        pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+              </div>
         </c:otherwise>
       </c:choose>
     </div>
@@ -562,7 +564,7 @@
 <div class='right_container total checkoutContainer' style="">
     <div class="you-pay-container">
         <div style="width:48%;overflow:hidden;display:inline-block;float:left">
-            <div class="fnt-light fnt-sz13 fnt-bold">
+            <div class="fnt-light fnt-bold">
                 YOU PAY
             </div>
             <div id="summaryGrandTotalPayable" class="fnt-sz14">
@@ -584,14 +586,14 @@
     </div>
     <hr>
     <div class="offerContainer">
-        <div class="fnt-light fnt-caps fnt-bold fnt-sz13 mrgn-b-10">
+        <div class="fnt-light fnt-caps fnt-bold mrgn-b-10">
             APPLY COUPON
         </div>
         <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
             <div class=''>
                 <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
 
-                    <input class="couponInput" placeholder='Enter discount code' type='text' style="float:left;margin-right:10px;" id="couponCode"/>
+                    <input class="couponInput" placeholder='Enter discount code' type='text' style="float:left;margin-right:5px;" id="couponCode"/>
                     <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
                             class="btn btn-gray" style="display:inline-block">APPLY</s:link>
                 </shiro:hasAnyRoles>
@@ -616,7 +618,7 @@
         </shiro:lacksRole>
     </div>
     <hr>
-<div class="mrgn-b-20 fnt-sz16 fnt-light fnt-bold fnt-caps">CHECK OUT DETAILS</div>
+<div class="mrgn-b-10 fnt-sz14 fnt-light fnt-bold fnt-caps">CHECK OUT DETAILS</div>
 
 
 
@@ -948,7 +950,7 @@
     .tabletitle.tableTitleNew{
         padding-bottom:4px;
         font-weight:100;
-        font-size:1.2em;
+        font-size:1.1em;
     }
     .tableTitleNew{
         height:auto;
