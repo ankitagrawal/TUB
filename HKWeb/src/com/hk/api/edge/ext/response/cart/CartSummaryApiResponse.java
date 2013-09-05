@@ -22,14 +22,18 @@ public class CartSummaryApiResponse extends AbstractApiBaseResponse {
     @Override
     protected String[] getKeys() {
         return new String[]{
-                "noItemsInCart"
+                "noItemsInCart",
+                "exception",
+                "msgs"
         };
     }
 
     @Override
     protected Object[] getValues() {
         return new Object[]{
-                this.itemsInCart
+                this.itemsInCart,
+                this.exception,
+                this.msgs
         };
     }
 }

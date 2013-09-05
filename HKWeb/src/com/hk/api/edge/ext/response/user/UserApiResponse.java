@@ -76,7 +76,9 @@ public class UserApiResponse extends UserApiBaseResponse {
                 "gender",
                 "id",
                 "nm",
-                "roles"
+                "roles",
+                "exception",
+                "msgs"
         };
     }
 
@@ -91,7 +93,9 @@ public class UserApiResponse extends UserApiBaseResponse {
                 this.gender,
                 this.getId(),
                 this.getNm(),
-                this.getRoles()
+                this.getRoles(),
+                this.exception,
+                this.msgs
         };
     }
 }
