@@ -194,13 +194,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
           if (overrideHistoricalShipmentCost && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
             shipmentService.calculateAndDistributeShipmentCost(shipment);
             shipmentService.save(shipment);
-            addRedirectAlertMessage(new SimpleMessage("Shipment cost saved"));
           }
         } else {
           logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
         }
       }
     }
+    addRedirectAlertMessage(new SimpleMessage("Shipment cost saved"));
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
 
