@@ -63,11 +63,11 @@
           <img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/>
       </div>
 
-      <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart"/>&nbsp;&nbsp
+      <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart" style="position:absolute;top:-2px;"/><br>
 
     <div class='topBarContent' style="position: absolute;right:0px;">
 
-      <div class="message">
+      <!--div class="message">
         <div class="arrow"></div>
         <span class="line1"></span>
         <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link" rel="noFollow">
@@ -102,102 +102,188 @@
 		        </s:link>
 	        </div>
 
-        </div>
+        </div-->
 
-        <div style="margin-top: 2px; float: right; margin-right: 10px; font-size: 12px;">
+        <div style="margin-top: 2px; float: right; margin-right: 10px;">
+               <style>
+                       /** header drop downs **/
+                   .popUp .bdySctn{
+                       background-color: #FFF;
+                   min-height: 50px;
+                   text-align: left;
+                   border: 1px solid #F5EC13;
+                   font-size: 0.9em;
+                   line-height: 1.5em;
+                       }
+                   #cartPop.popUp {
+                       position: absolute;
+                       z-index: 1;
+                       width: 200px;
+                       margin-left: -92px;
+                       margin-top: -2px;
+                   }
+                   #cartPop.popUp .bdySctn{
+                       border: 1px solid #C8C8C8;
+                       box-shadow: 0px 0px 20px #C8C8C8;
+                   }
+                   #cartPop.popUp .bdySctn .body > .msg{
+                       font-size: 1.1em;
+                       padding: 8px;
+                       text-align: center
+                   }
+                   .popUp .bdySctn {
+                       background-color: #FFF;
+                       min-height: 50px;
+                       text-align: left;
 
-          Welcome,
-            <span class='name'>
-              <c:if test="${hk:collectionContains(userRoles, tempUser)}">
-              Guest
-             </c:if>
-             <shiro:guest>
-               Guest
-             </shiro:guest>
-                <strong>
-                  <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
-                    ${user.firstName}
-                  </c:if>
-                </strong>
-              	<c:if test="${hk:collectionContains(userRoles, loyaltyUser)}">
-                <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}"/>
-          		 <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
-                  <c:choose>
-                    <c:when test="${badge.badgeName == 'PLATINUM'}">
-                      <span style="font-size:1.1em;color:white;
-                       background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/platinum1.png');">Platinum</span>
-                    </c:when>
-                    <c:when test="${badge.badgeName == 'GOLD'}">
-                      <span style="font-size:1.1em;color:white;
-                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/gold1.png');">Gold</span>
-                    </c:when>
-                    <c:when test="${badge.badgeName == 'SILVER'}">
-                      <span style="font-size:1.1em;color:white;
-                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/silver1.png');">Silver</span>
-                    </c:when>
-                    <c:when test="${badge.badgeName == 'BRONZE'}">
-                      <span style="font-size:1.1em;color:white;
-                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/bronze1.png');">Bronze</span>
-                    </c:when>
+                       font-size: 0.9em;
+                       line-height: 1.5em;
+                   }
+                   .hdr-drop-cntnr, .cart-pop-container {
 
-                  </c:choose>
-                  </a>
-                  </c:if>
-              </span>
-          <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
-            <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction"
-                    title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber
-                value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}"
-                pattern="<%=FormatUtils.currencyFormatPattern%>"/>)</span>
-            </s:link>
-          </c:if>
+                       position: relative;
+                       top: -10px;
+                       display: inline-block;
+                       width:100px;
+                       background-color: white;
+                       /*   border: 1px solid transparent;*/
+                   }
 
-          <span class='links'>
-            |
-            <c:if test="${hk:collectionContains(userRoles, tempUser)}">
-              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
-                      rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
-                                                                            value="<%=originalUrlHeader%>"/><%}%>
-                Login</s:link> |
-              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
-                      rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
-                                                                            value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
-            </c:if>
-            <shiro:guest>
-              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
-                      rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
-                                                                            value="<%=originalUrlHeader%>"/><%}%>
-                Login</s:link> |
-              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary"
-                      rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl"
-                                                                            value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
-            </shiro:guest>
-            <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
-                <s:link beanclass="com.hk.web.action.core.user.MyAccountAction"
-                        title='view past orders / edit personal details' rel="noFollow">Your Account</s:link> |
-                <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, groupAdminRoles)}">
-                  <s:link beanclass="com.hk.web.action.admin.AdminHomeAction" class="sml" rel="noFollow">Admin</s:link>
-                  |
-                </c:if>
-                <%
-                  if (principal != null && principal.isAssumed()) {
-                %>
-                <s:link beanclass="com.hk.web.action.admin.user.AssumedLogoutAction" class="sml" rel="noFollow">(Release
-                  assumed
-                  identity)</s:link> |
-                 <c:if test="${hk:collectionContains(userRoles, b2bUser)}">
-                  <s:link beanclass = "com.hk.web.action.core.b2b.B2BCartAction" class="sml" rel="noFollow">B2B Cart</s:link> |
-                </c:if>
-                <%
-                  }
-                %>
-                <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
-                        rel="noFollow">Logout</s:link>
-              </c:if>
-          </span>
+                   .hdr-drop-cntnr-hover, .cart-pop-container-hover {
+                       z-index: 2;
+                       background-color: white;
+                       border-color: #C8C8C8;
+                       box-shadow: 0px -1px 20px #C8C8C7;
+                       border-bottom: 0;
+                   }
+
+                   .hdr-drop-label, .cart-pop-label, .offers-label {
+                       padding: 4px;
+                       padding-right: 8px;
+                       text-align: right;
+                       position: relative;
+                       z-index: 11;
+
+                   }
+
+                   .hdr-drop-cntnr-hover .hdr-drop-label, .cart-pop-container-hover .cart-pop-label {
+                       background: white;
+                   }
+
+                   .hdr-drop-down {
+                       background-color: white;
+                       position: absolute;
+                       width: 147px;
+                       margin-left: -41px;
+                       margin-top: -2px;
+                       padding-top: 10px;
+                       padding-bottom: 10px;
+                       border: 1px solid #c8c8c8;
+                       box-shadow: 0px 4px 20px #c8c8c8;
+                       z-index: 10;
+                   }
+
+                   .hdr-drop-down li {
+                       padding: 5px 0px 5px 10px;
+
+                   }
+
+                   .hdr-drop-down li:hover {
+
+                       background-color: #e6e6e6;
+
+                   }
+
+                       /** **/
+               </style>
+
+
+
+
+
+            <div class="hdr-drop-cntnr">
+                <div class="hdr-drop-label">
+                    <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
+                        <div class="fnt-caps">Account</div>
+                        <span class="fnt-sz10">Hi <span style="max-width: 64%;line-height:1em;display: inline-block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">${user.firstName}</span>  <span class="icn icn-dwn-arrow"></span></span>
+                    </c:if>
+                    <c:if test="${hk:collectionContains(userRoles, tempUser)}">
+                        <div class="fnt-caps">Account</div>
+                        <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="fnt-sz10" > Sign in</s:link> <span class="icn icn-dwn-arrow"></span>
+                    </c:if>
+                    <shiro:guest>
+                        <div class="fnt-caps" >Account</div>
+                        <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="fnt-sz10"> Sign in</s:link> <span class="icn icn-dwn-arrow"></span>
+                    </shiro:guest>
+
+                </div>
+                <ul class="hdr-drop-down gl pad hide ">
+                    <li>
+                        <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" event="pre">
+                            Profile
+                            <s:param name="tabId" value="1"/>
+                        </s:link>
+                    </li>
+                    <li>
+                        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre">
+                            Addresses
+                            <s:param name="tabId" value="4"/>
+                        </s:link>
+                    </li>
+
+                    <!--li>Orders</li>
+                    <li>Rewards</li-->
+                    <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
+                        <li class="brdr-t"><s:link beanclass="com.hk.web.action.core.auth.LogoutAction">LOG OUT</s:link></li>
+                    </c:if>
+                </ul>
+
+            </div>
+
+
+               <div class="span2 cart-pop-container">
+                   <div class="cart-pop-label">
+                       <div class="fnt-caps">Your cart</div>
+                       <span class="fnt-sz10"><span data-role="cart-counter">${cartAction.itemsInCart}</span> item  <span class="icn icn-dwn-arrow"></span></span>
+                   </div>
+                   <div id='cartPop' class='popUp hide'>
+                       <div class=bdySctn>
+                           <div class=body>
+                               <div class=msg>
+                                   <div class="fnt-bold mrgn-t-5">Cart Summary</div>
+                                   <div>${cartAction.itemsInCart} item</div>
+
+                                   <s:link beanclass="com.hk.web.action.core.cart.CartAction" class="btn btn-blue mrgn-bt-10" style="display:inline-block">PROCEED TO CART</s:link>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+
+
         </div>
 
       </div>
     </div>
   </div>
+  <script>
+      $('.hdr-drop-cntnr').hover(function () {
+                  $(this).addClass('hdr-drop-cntnr-hover').find('.hdr-drop-down').show();
+              },
+              function () {
+                  $(this).removeClass('hdr-drop-cntnr-hover').find('.hdr-drop-down').hide();
+              });
+
+      $('.cart-pop-container').hover(function () {
+                  $(this).addClass('cart-pop-container-hover').find('#cartPop').show();
+              },
+              function () {
+                  $(this).removeClass('cart-pop-container-hover').find('#cartPop').hide();
+              });
+
+      $(document).click(function(){
+        $('.cart-pop-container').removeClass('cart-pop-container-hover');
+      });
+  </script>
 </s:layout-definition>
