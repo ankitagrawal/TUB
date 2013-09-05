@@ -86,7 +86,7 @@
               </div>
             </c:forEach>
             <div align="center">
-              <s:submit name="addToCart" value="Place Order" class="addToCartButton"/>
+              <s:submit name="addToCart" value="Place Order" class="addToCartButton btn btn-blue"/>
             </div>
 
           </fieldset>

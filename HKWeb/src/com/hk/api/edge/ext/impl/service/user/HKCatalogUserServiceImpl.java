@@ -1,10 +1,9 @@
 package com.hk.api.edge.ext.impl.service.user;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,11 @@ public class HKCatalogUserServiceImpl implements HKCatalogUserService {
       userApiResponse.setException(false);
       userApiResponse.setId(user.getId());
       userApiResponse.setNm(user.getName());
-      userApiResponse.setBirthDt(user.getBirthDate());
+      if(user.getBirthDate()!=null) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        String dateString = df.format(user.getBirthDate());
+        userApiResponse.setBirthDt(dateString);
+      }
       userApiResponse.setEmail(user.getEmail());
       userApiResponse.setGender(user.getGender());
       userApiResponse.setLogin(user.getLogin());
