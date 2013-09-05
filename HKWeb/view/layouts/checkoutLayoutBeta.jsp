@@ -36,14 +36,14 @@
   <div id="container" class="container_24">
     <s:layout-component name="modal"/>
     <s:layout-component name="header">
-      <s:layout-render name="/layouts/embed/_header.jsp"/>
+      <s:layout-render name="/layouts/embed/_headerCheckoutBeta.jsp"/>
     </s:layout-component>
 	<%--<s:layout-component name="menu">
     </s:layout-component>--%>
     <div class="main_container">
       <s:layout-component name="steps"/>
       <s:layout-component name="steps_content"/>
-      <div class="floatfix" style="margin-bottom: 150px;"></div>
+      <div class="floatfix" ></div>
     </div>
     <s:layout-render name="/includes/_footerBeta.jsp"/>
   </div>
