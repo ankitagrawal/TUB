@@ -81,6 +81,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.warehouse.WarehouseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -142,6 +143,8 @@ public class InventoryCheckinAction extends BaseAction {
 	private PurchaseInvoiceDao purchaseInvoiceDao;
 	@Autowired
 	InventoryBarcodeMapDao inventoryBarcodeMapDao;
+	@Autowired
+  WarehouseDao warehouseDao;
 
 	@Validate(required = true, on = "save")
 	private String upc;
@@ -164,6 +167,7 @@ public class InventoryCheckinAction extends BaseAction {
 	private GrnLineItem grnLineItem;
 	private String productVariantBarcode;
 	private String invBarcode;
+	private Boolean isBrightSupplier = Boolean.FALSE;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
@@ -190,6 +194,10 @@ public class InventoryCheckinAction extends BaseAction {
 	@DefaultHandler
 	@DontValidate
 	public Resolution pre() {
+		Supplier supplier = grn.getPurchaseOrder().getSupplier();
+  	Warehouse warehouse = warehouseDao.findWarehouseByTin(supplier.getTinNumber());
+  	//TODO: Warehouse is Bright
+  	isBrightSupplier = Boolean.TRUE;
 		return new ForwardResolution("/pages/admin/inventoryCheckin.jsp");
 	}
 
@@ -1036,6 +1044,14 @@ public class InventoryCheckinAction extends BaseAction {
 
 	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
 		this.purchaseOrderService = purchaseOrderService;
+	}
+
+	public Boolean getIsBrightSupplier() {
+		return isBrightSupplier;
+	}
+
+	public void setIsBrightSupplier(Boolean isBrightSupplier) {
+		this.isBrightSupplier = isBrightSupplier;
 	}
 
 }
