@@ -199,8 +199,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
           logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
         }
       }
+      addRedirectAlertMessage(new SimpleMessage("Shipment cost saved"));
     }
-    addRedirectAlertMessage(new SimpleMessage("Shipment cost saved"));
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
 
