@@ -28,7 +28,7 @@ public class NwbMenuAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         menuNodes = getMenuService().getMenu();
-        return new ForwardResolution("/includes/menuInclude.jsp");
+        return new ForwardResolution("/includes/_menuBeta.jsp");
     }
 
     public List<CatalogMenuNode> getMenuNodes() {
