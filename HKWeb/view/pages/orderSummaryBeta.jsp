@@ -17,7 +17,7 @@
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>"/>
 
 
-<s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Order Summary">
+<s:layout-render name="/layouts/checkoutLayoutBeta.jsp" pageTitle="Order Summary">
 <s:layout-component name="htmlHead">
     <script type="text/javascript">
         $(document).ready(function() {
