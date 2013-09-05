@@ -20,7 +20,6 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +49,6 @@ public class ShipmentPricingEngine {
 
   @Autowired
   GatewayIssuerMappingService gatewayIssuerMappingService;
-
-  @Autowired
-  ShipmentService shipmentService;
 
   @Autowired
   CourierService courierService;
