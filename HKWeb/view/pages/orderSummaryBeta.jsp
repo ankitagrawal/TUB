@@ -179,7 +179,7 @@
             </s:form>
 
         </div>
-        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 15px;border: none;">
+        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 15px;border: none;margin-top: 20px;">
 
 
             <div class='title newTextHeading ' style="float: left;padding-bottom:5px;width: 100%;">

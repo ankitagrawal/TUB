@@ -2886,13 +2886,12 @@ h2.prod_title {
 
 /* line 1235, ../sass/main.scss */
 .step2 .right_container .detail .address {
-    font-style: italic;
     color: rgb(68, 68, 68);
 }
 
 /* line 1240, ../sass/main.scss */
 .step2 .address_box:hover .name {
-    color: #f87500;
+    color:#0091d7;
 }
 
 /* line 1244, ../sass/main.scss */
