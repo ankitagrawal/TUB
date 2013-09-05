@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -60,7 +61,9 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
     } else {
       addRedirectAlertMessage(new SimpleError("You are trying to save duplicate entry for courier "
-          + duplicatePricingEngine.getCourier().getName() + " and region " + duplicatePricingEngine.getRegionType().getName()));
+          + duplicatePricingEngine.getCourier().getName() + " and region "
+          + duplicatePricingEngine.getRegionType().getName() + "and date " +
+          new SimpleDateFormat("yyyy-MM-dd").format(duplicatePricingEngine.getValidUpto())));
     }
     initialize();
     return new RedirectResolution(CreateUpdateCourierPricingAction.class, "search").addParameter("courier", courier);
