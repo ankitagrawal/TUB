@@ -359,13 +359,13 @@
         <c:otherwise>
           <img class="prod48"
                src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
-               alt="${cartLineItem.productVariant.product.name}"/>
+               alt="${cartLineItem.productVariant.variantName}"/>
         </c:otherwise>
       </c:choose>
     </a>
 
     <div class="name" style="width: 200px;position: relative;float: left;" :>
-        <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.product.name}  </a>
+        <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.variantName}  </a>
         ${cartLineItem.productVariant.variantName}<br/>
 
     </div>
@@ -483,7 +483,7 @@
             </span>
 
             <span style="font-size:10px;">
-            ${comboVariant.productVariant.product.name} - ${comboVariant.productVariant.optionsCommaSeparated}
+            ${comboVariant.productVariant.variantName} - ${comboVariant.productVariant.optionsCommaSeparated}
             </span>
         <br/>
       </c:forEach>
@@ -847,7 +847,7 @@
                                              <c:otherwise>
                                                  <img class="prod48"
                                                       src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
-                                                      alt="${cartLineItem.productVariant.product.name}"/>
+                                                      alt="${cartLineItem.productVariant.variantName}"/>
                                              </c:otherwise>
                                          </c:choose>
                                      </c:otherwise>
@@ -867,7 +867,7 @@
                                                      </c:if>
                                                   </c:when>
                                                   <c:otherwise>
-                                                       ${cartLineItem.productVariant.product.name}
+                                                       ${cartLineItem.productVariant.variantName}
                                                   </c:otherwise>
                                                </c:choose>
                                        </td>

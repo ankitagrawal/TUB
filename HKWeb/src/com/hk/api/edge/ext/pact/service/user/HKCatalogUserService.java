@@ -1,4 +1,4 @@
-package com.hk.api.edge.ext.pact.service;
+package com.hk.api.edge.ext.pact.service.user;
 
 import com.hk.api.edge.ext.response.user.UserApiResponse;
 

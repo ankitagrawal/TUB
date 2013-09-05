@@ -34,4 +34,6 @@ public interface LoadPropertyService {
        * @return
        */
       public Object getProperty(String propertyName);
+      
+      public boolean isHybridRelease();
   }

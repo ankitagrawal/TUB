@@ -1,11 +1,12 @@
-package com.hk.api.edge.internal.response.menu;
-
-import com.hk.api.edge.constants.DtoJsonConstants;
-import com.hk.api.edge.helper.HKLinkManager;
-import org.codehaus.jackson.annotate.JsonProperty;
+package com.hk.edge.response.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import com.hk.edge.constants.DtoJsonConstants;
+import com.hk.edge.helper.HKLinkManager;
 
 /**
  * @author vaibhav.adlakha

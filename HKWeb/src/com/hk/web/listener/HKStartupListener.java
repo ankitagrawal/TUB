@@ -13,14 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.api.edge.internal.pact.service.LoadPropertyService;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.HkApiUserCache;
 import com.hk.cache.RoleCache;
 import com.hk.cache.vo.CategoryVO;
-import com.hk.cache.vo.RoleVO;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.user.Role;
 import com.hk.pact.dao.BaseDao;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
@@ -51,6 +50,10 @@ public class HKStartupListener implements ServletContextListener {
 
         AppConstants.contextPath = event.getServletContext().getContextPath();
         AppConstants.appBasePath = event.getServletContext().getRealPath("/");
+
+        LoadPropertyService loadPropertyService = ServiceLocatorFactory.getService(LoadPropertyService.class);
+        
+        AppConstants.isHybridRelease = loadPropertyService.isHybridRelease();
 
         /*
          * PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties"); logger.info("logger
@@ -98,7 +101,7 @@ public class HKStartupListener implements ServletContextListener {
 
             logger.info("START POPULATING ROLE CACHE");
             System.out.println("START POPULATING ROLE CACHE");
-            //populateRoleCache();
+            // populateRoleCache();
             RoleCache.getInstance().populateRoleCache();
             logger.info("END POPULATING ROLE CACHE");
             System.out.println("END POPULATING ROLE CACHE");
@@ -138,18 +141,11 @@ public class HKStartupListener implements ServletContextListener {
 
     }
 
-    /*private void populateRoleCache() {
-        RoleCache.getInstance().reset();
-        RoleCache roleCache = RoleCache.getInstance().getTransientCache();
-
-        List<Role> allRoles = getBaseDao().getAll(Role.class);
-
-        for (Role role : allRoles) {
-            roleCache.addRole(new RoleVO(role));
-        }
-        roleCache.freeze();
-
-    }*/
+    /*
+     * private void populateRoleCache() { RoleCache.getInstance().reset(); RoleCache roleCache =
+     * RoleCache.getInstance().getTransientCache(); List<Role> allRoles = getBaseDao().getAll(Role.class); for (Role
+     * role : allRoles) { roleCache.addRole(new RoleVO(role)); } roleCache.freeze(); }
+     */
 
     private void populateCategoryCache() {
         CategoryCache.getInstance().reset();
