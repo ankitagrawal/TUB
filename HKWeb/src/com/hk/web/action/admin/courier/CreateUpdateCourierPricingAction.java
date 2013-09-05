@@ -5,10 +5,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -83,7 +80,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     //}
     addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
     initialize();
-    return new ForwardResolution(CreateUpdateCourierPricingAction.class, "search");
+    return new RedirectResolution(CreateUpdateCourierPricingAction.class, "search").addParameter("courier", courier);
   }
 
   public RegionType getRegionType() {
