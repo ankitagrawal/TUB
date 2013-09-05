@@ -28,6 +28,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -49,6 +50,7 @@ import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.TaxDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.reward.RewardPointTxnDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -146,6 +148,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
   @Autowired
   B2BOrderService b2BOrderService;
+
+  @Autowired
+  TaxDao taxDao;
 
 
 	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType,
@@ -786,10 +791,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
     else{
       if(b2BOrderService.checkCForm(baseOrder)){
+        Tax cstTax = taxDao.findById(EnumTax.CST.getId());
         for(LineItem lineItem : shippingOrder.getLineItems()){
-          lineItem.setTax(EnumTax.CST.asTax());
+          lineItem.setTax(cstTax);
+          getAdminShippingOrderDao().save(lineItem);
         }
-        getAdminShippingOrderDao().save(shippingOrder);
+ //       getAdminShippingOrderDao().save(shippingOrder.getLineItems());
       }
       return true;
     }
