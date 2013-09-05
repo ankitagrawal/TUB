@@ -598,6 +598,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
         if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
           ProductVariant productVariant = cartLineItem.getProductVariant();
+          productVariant =(ProductVariant) productVariantService.getVariantById(productVariant.getId());
           List<Warehouse> servicableWarehouse = warehouseService.getServiceableWarehouses();
           List<Long> whIds = new ArrayList<Long>();
           for (Warehouse warehouse : servicableWarehouse) {
