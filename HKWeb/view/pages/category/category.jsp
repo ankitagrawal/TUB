@@ -247,8 +247,8 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthDevices}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
+                <a href="${pageContext.request.contextPath}/brand/health-devices/Ginni?camp=ginni">
+                    <img src="<hk:vhostImage/>/images/banners/ginni-banner.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
