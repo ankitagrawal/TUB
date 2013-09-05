@@ -75,8 +75,8 @@ public class MasterDataService {
 	OrderLifecycleActivitySeedData orderLifecycleActivitySeedData;
 	@Autowired
 	ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
-	@Autowired
-	BoxSizeSeedData boxSizeSeedData;
+//	@Autowired
+//	BoxSizeSeedData boxSizeSeedData;
 	@Autowired
 	PurchaseOrderStatusSeedData poStatusSeedData;
 	@Autowired
@@ -220,8 +220,8 @@ public class MasterDataService {
 		logger.debug("inserting shippingOrderLifecycleActivity");
 		shippingOrderLifecycleActivitySeedData.invokeInsert();
 
-		logger.debug("inserting boxSize");
-		boxSizeSeedData.invokeInsert();
+//		logger.debug("inserting boxSize");
+//		boxSizeSeedData.invokeInsert();
 
 		logger.debug("inserting purchaseOrderStatus");
 		poStatusSeedData.invokeInsert();
