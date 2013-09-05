@@ -1,4 +1,4 @@
-package com.hk.api.edge.constants;
+package com.hk.edge.constants;
 
 
 public class DtoJsonConstants {

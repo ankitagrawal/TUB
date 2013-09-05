@@ -1,12 +1,13 @@
-package com.hk.api.edge.internal.response.variant;
+package com.hk.edge.response.variant;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.hk.api.edge.constants.DtoJsonConstants;
+import com.hk.edge.constants.DtoJsonConstants;
 
 /**
  * @author vaibhav.adlakha
  */
+@SuppressWarnings("serial")
 public class StoreVariantBasicApiResponse extends AbstractStoreVariantApiResponse {
 
     @JsonProperty(DtoJsonConstants.COD_ALLOWED)
@@ -49,6 +50,16 @@ public class StoreVariantBasicApiResponse extends AbstractStoreVariantApiRespons
 
     public void setMaxDispatchDays(Long maxDispatchDays) {
         this.maxDispatchDays = maxDispatchDays;
+    }
+
+    @Override
+    protected String[] getKeys() {
+        return null;
+    }
+
+    @Override
+    protected Object[] getValues() {
+        return null;
     }
 
     /*

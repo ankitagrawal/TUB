@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.hk.api.edge.constants.DtoJsonConstants;
 import com.hk.api.edge.ext.response.AbstractApiBaseResponse;
+import com.hk.edge.constants.DtoJsonConstants;
+import com.hk.edge.response.menu.CatalogMenuNode;
 
 
 public class MenuResponse extends AbstractApiBaseResponse {

@@ -1,6 +1,6 @@
 package com.hk.edge.pact.service;
 
-import com.hk.api.edge.internal.response.variant.StoreVariantBasicApiResponse;
+import com.hk.edge.response.variant.StoreVariantBasicApiResponse;
 
 /**
  * 
@@ -8,7 +8,6 @@ import com.hk.api.edge.internal.response.variant.StoreVariantBasicApiResponse;
  *
  */
 public interface StoreVariantService {
-
     
     public StoreVariantBasicApiResponse getStoreVariantBasicDetails(String oldVariantId);
 }

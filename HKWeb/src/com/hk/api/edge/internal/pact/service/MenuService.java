@@ -2,7 +2,7 @@ package com.hk.api.edge.internal.pact.service;
 
 import java.util.List;
 
-import com.hk.api.edge.internal.response.menu.CatalogMenuNode;
+import com.hk.edge.response.menu.CatalogMenuNode;
 
 /**
  * 

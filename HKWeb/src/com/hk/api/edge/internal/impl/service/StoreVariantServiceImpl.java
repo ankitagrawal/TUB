@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import com.hk.api.edge.constants.ServiceEndPoints;
 import com.hk.api.edge.http.HkHttpClient;
 import com.hk.api.edge.http.URIBuilder;
-import com.hk.api.edge.internal.response.variant.StoreVariantBasicApiResponse;
-import com.hk.api.edge.internal.response.variant.VariantBasicResponseApiWrapper;
 import com.hk.edge.pact.service.StoreVariantService;
+import com.hk.edge.response.variant.StoreVariantBasicApiResponse;
+import com.hk.edge.response.variant.VariantBasicResponseApiWrapper;
 
 /**
  * @author vaibhav.adlakha

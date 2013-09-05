@@ -34,6 +34,7 @@ import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.edge.pact.service.StoreVariantService;
+import com.hk.edge.response.variant.StoreVariantBasicApiResponse;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
 
@@ -269,7 +270,11 @@ public class ProductVariant implements java.io.Serializable {
     public String getVariantName() {
         if (AppConstants.isHybridRelease) {
             StoreVariantService storeVariantService = ServiceLocatorFactory.getService(StoreVariantService.class);
-                StorestoreVariantService.getStoreVariantBasicDetails(this.id);
+            StoreVariantBasicApiResponse storeVariantBasicApiResponse = storeVariantService.getStoreVariantBasicDetails(this.id);
+            if (storeVariantBasicApiResponse != null) {
+                return storeVariantBasicApiResponse.getName();
+            }
+            return variantName;
         }
 
         return variantName;

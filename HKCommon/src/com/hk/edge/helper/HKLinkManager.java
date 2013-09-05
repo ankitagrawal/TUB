@@ -1,12 +1,12 @@
-package com.hk.api.edge.helper;
+package com.hk.edge.helper;
 
 import java.util.Locale;
 
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
-import com.hk.api.edge.internal.response.menu.CatalogMenuNode;
-import com.hk.api.edge.internal.response.variant.AbstractStoreVariantApiResponse;
+import com.hk.edge.response.menu.CatalogMenuNode;
+import com.hk.edge.response.variant.AbstractStoreVariantApiResponse;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
 

@@ -1,9 +1,9 @@
-package com.hk.api.edge.internal.response.variant;
+package com.hk.edge.response.variant;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.hk.api.edge.constants.DtoJsonConstants;
-import com.hk.api.edge.internal.response.AbstractBaseResponseApiWrapper;
+import com.hk.edge.AbstractBaseResponseApiWrapper;
+import com.hk.edge.constants.DtoJsonConstants;
 
 public class VariantBasicResponseApiWrapper extends AbstractBaseResponseApiWrapper {
 
