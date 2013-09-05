@@ -316,7 +316,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
       adminInventoryService.damageInventoryCheckin(skuItem, null);
     }
     // Check inventory health now.
-    inventoryService.checkInventoryHealth(rvLineItem.getSku().getProductVariant());
+    getInventoryService().checkInventoryHealth(rvLineItem.getSku().getProductVariant());
     return rvLineItem;
   }
 
@@ -448,4 +448,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     getBaseDao().delete(reconciliationVoucher);
   }
 
+  public InventoryService getInventoryService() {
+    return inventoryService;
+  }
+
+  public void setInventoryService(InventoryService inventoryService) {
+    this.inventoryService = inventoryService;
+  }
 }
