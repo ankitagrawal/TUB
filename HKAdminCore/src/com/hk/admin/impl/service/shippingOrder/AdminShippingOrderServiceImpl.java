@@ -11,6 +11,7 @@ import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.core.EnumTax;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
@@ -60,6 +61,7 @@ import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.B2BOrderService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
@@ -141,6 +143,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
   @Autowired
   ShippingOrderProcessor shippingOrderProcessor;
+
+  @Autowired
+  B2BOrderService b2BOrderService;
 
 
 	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType,
@@ -606,6 +611,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
 		getBucketService().popFromActionQueue(shippingOrder);
 		getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
+    if(shippingOrder.getBaseOrder().getB2bOrder()){
+      updateSOForB2BOrders(shippingOrder);
+    }
 		return shippingOrder;
 	}
 
@@ -770,7 +778,24 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
 	}
 
-	public ShippingOrderService getShippingOrderService() {
+  @Override
+  public Boolean updateSOForB2BOrders(ShippingOrder shippingOrder) {
+    Order baseOrder = shippingOrder.getBaseOrder();
+    if(!baseOrder.getB2bOrder()){
+      return false;
+    }
+    else{
+      if(b2BOrderService.checkCForm(baseOrder)){
+        for(LineItem lineItem : shippingOrder.getLineItems()){
+          lineItem.setTax(EnumTax.CST.asTax());
+        }
+        getAdminShippingOrderDao().save(shippingOrder);
+      }
+      return true;
+    }
+  }
+
+  public ShippingOrderService getShippingOrderService() {
 		return shippingOrderService;
 	}
 
