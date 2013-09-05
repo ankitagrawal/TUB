@@ -33,14 +33,14 @@
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>"/>
 <c:set var="prePaidPaymentType" value="<%=EnumPaymentType.PrePaid.getId()%>"/>
 
-<s:layout-render name="/layouts/checkoutLayout.jsp"
+<s:layout-render name="/layouts/checkoutLayoutBeta.jsp"
                  pageTitle="Payment Options">
 <s:layout-component name="htmlHead">
     <script type="text/javascript"
             src="<hk:vhostJs/>/otherScripts/jquery.session.js"></script>
 </s:layout-component>
 <s:layout-component name="steps">
-    <s:layout-render name="layouts/embed/_c" />
+    <s:layout-render name="/layouts/embed/_checkoutStripBeta.jsp" index="3" />
 </s:layout-component>
 
 
