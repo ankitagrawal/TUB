@@ -1,17 +1,5 @@
 package com.hk.api.edge.integration.resource.cart;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.api.edge.constants.MessageConstants;
 import com.hk.api.edge.integration.pact.service.cart.HybridCartService;
 import com.hk.api.edge.integration.request.variant.AddProductVariantToCartRequest;
@@ -30,6 +18,13 @@ import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.util.json.JSONResponseBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Rimal
@@ -39,27 +34,27 @@ import com.hk.util.json.JSONResponseBuilder;
 public class HybridCartResource {
 
     @Autowired
-    private HybridCartService         hybridCartService;
+    private HybridCartService hybridCartService;
     @Autowired
-    private UserService               userService;
+    private UserService userService;
     @Autowired
-    private UserManager               userManager;
+    private UserManager userManager;
     @Autowired
-    private OrderManager              orderManager;
+    private OrderManager orderManager;
     @Autowired
-    private ProductVariantService     productVariantService;
+    private ProductVariantService productVariantService;
     @Autowired
-    UserCartDao                       userCartDao;
+    UserCartDao userCartDao;
     @Autowired
-    UserProductHistoryDao             userProductHistoryDao;
+    UserProductHistoryDao userProductHistoryDao;
     @Autowired
     private HybridStoreVariantService hybridStoreVariantService;
 
     @GET
-    @Path("/summary")
+    @Path("{usrId}/summary/")
     @Produces("application/json")
-    public String getUserCartSummaryFromHKR() {
-        CartSummaryFromHKR cartSummaryFromHKR = getHybridCartService().getUserCartSummaryFromHKR();
+    public String getUserCartSummaryFromHKR(@PathParam("usrId") Long userId) {
+        CartSummaryFromHKR cartSummaryFromHKR = getHybridCartService().getUserCartSummaryFromHKR(userId);
         return new JSONResponseBuilder().addField("results", cartSummaryFromHKR).build();
     }
 
@@ -70,7 +65,7 @@ public class HybridCartResource {
 
         if (StringUtils.isNotBlank(addProductVariantToCartRequest.getOldVariantId())) {
             User user = null;
-            if(addProductVariantToCartRequest.getUserId() !=null){
+            if (addProductVariantToCartRequest.getUserId() != null) {
                 user = getUserService().getUserById(addProductVariantToCartRequest.getUserId());
             }
             if (user == null) {

@@ -71,6 +71,9 @@ public class PaymentModeAction extends BaseAction {
         codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
         bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
         cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
+        if(isHybridRelease()){
+          return new ForwardResolution("/pages/paymentModeBeta.jsp");
+        }
         return new ForwardResolution("/pages/paymentMode.jsp");
     }
 

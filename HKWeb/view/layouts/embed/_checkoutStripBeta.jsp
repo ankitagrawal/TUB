@@ -16,11 +16,47 @@
 
     <span class="icn icn-sqre"></span>
 </div>
-<div class="ttl-cntnr mrgn-b-35">
-    <span class="page-title current"> Shipping address </span>
-    <span class="page-title "> Confirm order </span>
-    <span class="page-title "> Payment </span>
-    <span class="page-title"> Order complete </span>
+  <c:if test="${index==null}">
+    <c:set var="index" value="1" />
+  </c:if>
+  <div class="ttl-cntnr mrgn-b-35">
+    <span class="page-title ${index eq 1 ? 'current' : ''}">
+    <c:choose>
+      <c:when test="${index gt 1}">
+         <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" >Shipping address</s:link>
+      </c:when>
+      <c:otherwise>
+        Shipping address
+      </c:otherwise>
+    </c:choose>
+    </span>
+    <span class="page-title ${index eq 2 ? 'current' : ''}">
+      <c:choose>
+        <c:when test="${index gt 2}">
+          <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" >
+            Confirm order
+          </s:link>
+        </c:when>
+        <c:otherwise>
+          Confirm order
+        </c:otherwise>
+      </c:choose>
+    </span>
+    <span class="page-title ${index eq 3 ? 'current' : ''}">
+      <c:choose>
+        <c:when test="${index gt 3}">
+          <s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction" >
+            Payment
+          </s:link>
+        </c:when>
+        <c:otherwise>
+          Payment
+        </c:otherwise>
+      </c:choose>
+    </span>
+    <span class="page-title ${index eq 4 ? 'current' : ''}">
+      Order complete
+    </span>
 </div>
 </s:layout-definition>
 <%--checkout strip flow ends--%>
