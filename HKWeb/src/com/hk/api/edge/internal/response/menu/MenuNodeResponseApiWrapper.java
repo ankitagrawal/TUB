@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import com.hk.api.edge.constants.DtoJsonConstants;
 import com.hk.api.edge.ext.response.AbstractApiBaseResponse;
 
+
 public class MenuNodeResponseApiWrapper extends AbstractApiBaseResponse {
 
     @JsonProperty(DtoJsonConstants.RESULTS)

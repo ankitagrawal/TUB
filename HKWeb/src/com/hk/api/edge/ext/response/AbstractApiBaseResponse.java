@@ -24,4 +24,6 @@ public abstract class AbstractApiBaseResponse{
   public void setMsgs(List<String> msgs) {
     this.msgs = msgs;
   }
+  
+ 
 }
