@@ -43,7 +43,7 @@
             <%--<s:layout-component name="menu">
             <s:layout-render name="/includes/_menuBeta.jsp" topCategory="${topCategory}"/>
             </s:layout-component>--%>
-        <div id="logoBoxContainer" style="cursor:default; width: 960px; margin: 0 auto 20px;">
+        <div id="logoBoxContainer" style="cursor:default; width: 960px; margin: 50px auto 20px;">
             <div class='logoBox'>
                 <s:link href="/" title='go to healthkart home'>
                     <img src='<hk:vhostImage/>/images/HK-logo.png' alt="Healthkart logo"/>

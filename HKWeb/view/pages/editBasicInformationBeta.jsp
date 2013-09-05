@@ -89,8 +89,8 @@
         <div class="clear"></div>
         <div style="margin-top: 10px"></div>
 
-        <div style="float: right; width: 315px;">
-          <s:submit name="saveBasicInformation" value="Update" class="btn btn-blue"/>
+        <div style="float: left; width: 210px;text-align: right;">
+          <s:submit name="saveBasicInformation" value="Update" style="display:inline-block;" class="btn btn-blue"/>
         </div>
 
       </div>

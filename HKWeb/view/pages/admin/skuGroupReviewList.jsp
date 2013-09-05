@@ -35,7 +35,7 @@
                     <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                         <td>${skuGroup.id}</td>
                         <td> ${skuGroup.sku.productVariant} </td>
-                        <td> ${skuGroup.sku.warehouse.name} </td>
+                        <td> ${skuGroup.sku.warehouse.identifier} </td>
                         <td>${skuGroup.batchNumber} </td>
                         <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="dd/MM/yyyy"/></td>
                         <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>

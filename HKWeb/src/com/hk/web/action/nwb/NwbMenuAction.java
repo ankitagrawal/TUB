@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.api.edge.internal.pact.service.MenuService;
+import com.hk.api.edge.integration.pact.service.menu.HybridMenuService;
 import com.hk.edge.response.menu.CatalogMenuNode;
 
 /**
@@ -23,11 +23,11 @@ public class NwbMenuAction extends BaseAction {
     private List<CatalogMenuNode> menuNodes = new ArrayList<CatalogMenuNode>(0);
 
     @Autowired
-    private MenuService           menuService;
+    private HybridMenuService     hybridMenuService;
 
     @DefaultHandler
     public Resolution pre() {
-        menuNodes = getMenuService().getMenu();
+        menuNodes = getHybridMenuService().getMenuFromEdge();
         return new ForwardResolution("/includes/_menuBeta.jsp");
     }
 
@@ -39,7 +39,8 @@ public class NwbMenuAction extends BaseAction {
         this.menuNodes = menuNodes;
     }
 
-    public MenuService getMenuService() {
-        return menuService;
+    public HybridMenuService getHybridMenuService() {
+        return hybridMenuService;
     }
+
 }
