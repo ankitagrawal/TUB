@@ -10,7 +10,7 @@
 
 <s:layout-definition>
   <c:set var="maxLeafElms" value="5"/>
-  <div class="container_24">
+  <div class="container_24 mrgn-t-10">
   <div class="flyout-menu">
       <div id="dropDownButton" class="menu-hdr">
           <div class="hdr-title font-caps">Categories</div>
