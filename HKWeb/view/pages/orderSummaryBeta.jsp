@@ -56,14 +56,13 @@
 </s:layout-component>
 
 <s:layout-component name="steps">
-    <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
-        <s:link href="/" title='go to healthkart home'>
-            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
-        </s:link>
-    </div>
-    <div class='steps_new'>
-        <hr noshade class="stepLine">
-        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
+    <%-- checkout strip flow begins--%>
+    <s:layout-render name="/layouts/embed/_checkoutStripBeta.jsp"/>
+
+    <%--checkout strip flow ends--%>
+
+
+        <%--<s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
             <div class='newStep'>
                 <div class="newStepCount">1</div>
 
@@ -71,30 +70,7 @@
                     Select A shipping address
                 </div>
             </div>
-        </s:link>
-
-        <div class='newStep '>
-            <div class="newStepCount current_step">2</div>
-
-            <div class='newStepText'>
-                Confirm your order
-            </div>
-        </div>
-        <div class='newStep'>
-            <div class="newStepCount">3</div>
-
-            <div class='newStepText'>
-                Choose Payment Method
-            </div>
-        </div>
-        <div class='newStep' style="margin-left: 28px;">
-            <div class="newStepCount">4</div>
-
-            <div class='newStepText'>
-                Completed !
-            </div>
-        </div>
-    </div>
+        </s:link>--%>
 </s:layout-component>
 
 <s:layout-component name="steps_content">
@@ -140,7 +116,7 @@
                     </h5>
                 </div>
 
-                <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${orderSummary.pricingDto}"
+                <s:layout-render name="/layouts/embed/orderSummaryTableBeta.jsp" pricingDto="${orderSummary.pricingDto}"
                                  orderDate="${orderDate}"/>
 
                 <c:if test="${orderSummary.redeemableRewardPoints > 0}">

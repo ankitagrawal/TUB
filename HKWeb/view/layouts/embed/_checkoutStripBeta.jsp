@@ -24,3 +24,13 @@
 </div>
 </s:layout-definition>
 <%--checkout strip flow ends--%>
+
+<%--<s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
+            <div class='newStep'>
+                <div class="newStepCount">1</div>
+
+                <div class='newStepText'>
+                    Select A shipping address
+                </div>
+            </div>
+        </s:link>--%>
