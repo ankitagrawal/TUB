@@ -23,7 +23,7 @@ public class WHReportLineItem implements Serializable {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "line_item_id", nullable = false)
+    @JoinColumn(name = "line_item_id", unique = true, nullable = false)
     LineItem lineItem;
 
     @Column(name = "shipment_charge")
