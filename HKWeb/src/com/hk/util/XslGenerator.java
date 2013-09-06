@@ -1,32 +1,9 @@
 package com.hk.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
-import com.hk.constants.courier.ReverseOrderTypeConstants;
 import com.hk.constants.core.Keys;
+import com.hk.constants.courier.ReverseOrderTypeConstants;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
@@ -47,11 +24,21 @@ import com.hk.domain.user.Address;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Component
 public class XslGenerator {
 
-  @Autowired
   private InventoryService inventoryService;
   private AdminInventoryService adminInventoryService;
 
@@ -229,7 +216,7 @@ public class XslGenerator {
           setCellValue(row, this.getColumnIndex(XslConstants.DELETED), productVariant.isDeleted() ? "Y" : "N");
           Long inventory = getAdminInventoryService().getNetInventoryAtServiceableWarehouses(productVariant);
           setCellValue(row, this.getColumnIndex(XslConstants.INVENTORY), inventory);
-          Long cutoffInventory = inventoryService.getAggregateCutoffInventory(productVariant);
+          Long cutoffInventory = getInventoryService().getAggregateCutoffInventory(productVariant);
           setCellValue(row, this.getColumnIndex(XslConstants.CUTOFF_INVENTORY), cutoffInventory);
           setCellValue(row, this.getColumnIndex(XslConstants.AFFILIATE_CATEGORY),
               productVariant.getAffiliateCategory() != null ? productVariant.getAffiliateCategory().getAffiliateCategoryName() : "");
@@ -864,6 +851,13 @@ public class XslGenerator {
 
   private Integer getColumnIndex(String columnHeader) {
     return headerMap.get(columnHeader);
+  }
+
+  public InventoryService getInventoryService() {
+    if (inventoryService == null) {
+      inventoryService = ServiceLocatorFactory.getService(InventoryService.class);
+    }
+    return inventoryService;
   }
 
   public AdminInventoryService getAdminInventoryService() {
