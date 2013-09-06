@@ -14115,4 +14115,9 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Vidur (generated)" id="06-09-2013(1)">
+        <createIndex indexName="line_item_UNIQUE" tableName="wh_report_line_item" unique="true">
+            <column name="line_item_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
