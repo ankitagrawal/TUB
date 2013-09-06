@@ -25,11 +25,11 @@
                    var zone      = $('#zone').val();
                    var hub       = $('#nearestHub').val();
                    var lastMCost = $('#lastMileCost').val();
-                    if(pincode == null || pincode == "" || isNaN(pincode) || pincode.length!=6){
+                    /*if(pincode == null || pincode == "" || isNaN(pincode) || pincode.length!=6){
                         alert("pincode can't be empty or must contain numbers only and length must be 6!!");
                         $('#pincode').val("");
                         return false;
-                    }
+                    }*/
                     if(region == null || region == "" || locality == null || locality == ""){
                         alert("Value can't be left empty!!");
                         return false;
@@ -60,7 +60,6 @@
 			 </s:form>
         </fieldset>
         <div style="display:inline-block;">
-            <h2 style="color:red;">Pincode once saved can't be edit</h2>
        <fieldset style="float:left;">
          <legend>Add Pincode Or Edit Pincode Details</legend>
 			<table>
@@ -95,14 +94,7 @@
 					<tr>
 						<td>Locality:</td>
                         <td>
-						<c:choose>
-                        <c:when test="${mpaBean.pincode!=null}">
-						${mpaBean.pincode.locality}
-                        </c:when>
-                         <c:otherwise>
-                             <s:text name="pincode.locality" id="locality"/>
-                         </c:otherwise>
-                        </c:choose>
+                             <s:text name="pincode.locality" value="${mpaBean.pincode.locality}" id="locality"/>
                         </td>
 					</tr>
 					<tr>
@@ -146,7 +138,11 @@
 						 <td>
                        <c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
-						${mpaBean.pincode.zone.name}
+
+                        <s:select name="pincode.zone" id="zone">
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+                                                           value="id" label="name"/>
+                            </s:select>
                         </c:when>
                          <c:otherwise>
                              <s:select name="pincode.zone" id="zone">
@@ -161,9 +157,14 @@
                     <tr>
                         <td>Nearest Hub:</td>
                         <td>
+
                             <c:choose>
-                                <c:when test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
-                                    ${mpaBean.pincode.nearestHub.name}
+                                <c:when test="${mpaBean.pincode!=null}">
+
+                                    <s:select name="pincode.nearestHub" id="nearestHub">
+                                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="hubList"
+                                                                   value="id" label="name"/>
+                                    </s:select>
                                 </c:when>
                                 <c:otherwise>
                                     <s:select name="pincode.nearestHub" id="nearestHub">
@@ -180,21 +181,11 @@
                             <label>Last Mile Cost:</label>
                         </td>
                         <td>
-                            <c:choose>
-                                <c:when test="${mpaBean.pincode!=null}">
-                                    ${mpaBean.pincode.lastMileCost}
-                                </c:when>
-                                <c:otherwise>
-                                    <s:text name="pincode.lastMileCost" id="lastMileCost"></s:text>
-                                </c:otherwise>
-                            </c:choose>
-
+                            <s:text name="pincode.lastMileCost" id="lastMileCost"></s:text>
                         </td>
                     </tr>
 					<tr>
-                        <c:if test="${mpaBean.pincode==null}">
 						<td><s:submit name="save" value="Save" id="save"/></td>
-                        </c:if>
 					</tr>
 				</s:form>
 			</table>

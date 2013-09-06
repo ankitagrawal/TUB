@@ -43,28 +43,39 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   private List<HKReachPricingEngine> hkReachEngines;
 
+  Warehouse warehouse;
+
+  Hub hub;
+
   @DefaultHandler
   public Resolution pre() {
     this.prepareEngineData();
     return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
   }
 
-  public Resolution saveOrUpdate() {
-    if (hkReachPricingEngine.getId() == null) {
-      HKReachPricingEngine localEngine = courierService.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
-              hkReachPricingEngine.getHub());
-      if (localEngine != null) {
-        addRedirectAlertMessage(new SimpleError("Duplicate data supplied, entry already exists."));
-        return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
-          .addParameter("warehouse",hkReachPricingEngine.getWarehouse()).addParameter("hub", hkReachPricingEngine.getHub());
+  public Resolution save() {
+      for(HKReachPricingEngine hkReachPricingEngine : hkReachEngines) {
+          courierService.saveHKReachPricingEngine(hkReachPricingEngine);
       }
-    }
+      addRedirectAlertMessage(new SimpleMessage("Pricing info updated"));
+      prepareEngineData();
+      return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search");
+  }
 
-    hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
-    courierService.saveHKReachPricingEngine(hkReachPricingEngine);
-    addRedirectAlertMessage(new SimpleMessage("HK Reach courier info saved"));
-    this.prepareEngineData();
-    return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search");
+  public Resolution add() {
+      HKReachPricingEngine hkReachPricingEngine1 = courierService.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
+                                            hkReachPricingEngine.getHub());
+      if(hkReachPricingEngine1 != null) {
+          addRedirectAlertMessage(new SimpleMessage("Entry already exists for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
+                    " corresponding to " + hkReachPricingEngine.getHub().getName()));
+      } else {
+          courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+          addRedirectAlertMessage(new SimpleMessage("Successfully added entry for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
+                            " corresponding to " + hkReachPricingEngine.getHub().getName()));
+      }
+      prepareEngineData();
+      return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
+                                    .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
   }
 
   public Resolution search() {
@@ -129,4 +140,21 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   public void setHkReachEngines(List<HKReachPricingEngine> hkReachEngines) {
     this.hkReachEngines = hkReachEngines;
   }
+
+  public Hub getHub() {
+    return hub;
+  }
+
+  public void setHub(Hub hub) {
+    this.hub = hub;
+  }
+
+  public Warehouse getWarehouse() {
+    return warehouse;
+  }
+
+  public void setWarehouse(Warehouse warehouse) {
+    this.warehouse = warehouse;
+  }
+
 }
