@@ -20,10 +20,6 @@
         margin-bottom: 10px;
       }
     </style>
-
-    <link href="<hk:vhostCss/>/css/new.css?v=1.1" rel="stylesheet" type="text/css"/>
-    <%--<link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css"/>--%>
-
   </s:layout-component>
   <s:layout-component name="heading">Reward Point Txn Statement</s:layout-component>
 
@@ -34,8 +30,8 @@
     <s:layout-component name="modal">
       <div class="jqmWindow" id="referralTerms"></div>
     </s:layout-component>
-
-    <table class="cont footer_color" style="font-size: 14px;" id="summary">
+    <div class="mrgn-l-40 my-acnt-ht">
+        <table class="cont footer_color" style="font-size: 14px;" id="summary">
       <tr>
         <td>Redeemable Points:</td>
         <td>
@@ -60,24 +56,8 @@
         </td>
       </tr>
     </table>
-
     <div class="clear"></div>
-    <div style="margin-top:15px;"></div>
-
-    <%--<div style="font-size: 12px; line-height: 18px;">--%>
-    <%--<strong>Redeemable Points:</strong><fmt:formatNumber value="${rpBean.redeemablePoint}"--%>
-    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/><br/>--%>
-
-    <%--<strong>Overused Reward Points: </strong><fmt:formatNumber--%>
-    <%--value="${rpBean.user.userAccountInfo.overusedRewardPoints}"--%>
-    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/><br/>--%>
-
-    <%--<span class="orange"><strong>Balance Reward--%>
-    <%--Points: </strong><fmt:formatNumber--%>
-    <%--value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}"--%>
-    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>--%>
-    <%--</div>--%>
-    <table class="cont footer_color" style="font-size: 14px;" id="detail">
+    <table class="cont footer_color" style="font-size: 14px;margin-top:15px;" id="detail">
       <tr>
         <th>S.No.</th>
         <th>Value</th>
@@ -97,6 +77,8 @@
         </tr>
       </c:forEach>
     </table>
+    </div>
+
   </s:layout-component>
 
 </s:layout-render>

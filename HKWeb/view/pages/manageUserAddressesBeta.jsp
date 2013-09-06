@@ -16,7 +16,7 @@
         <c:if test="${!empty addresses}">
           <c:set var="mainAddressId" value="${userBean.affiliate.mainAddressId}"/>
           <c:forEach var="address" items="${addresses}" varStatus="addressCount">
-            <div class="address raj_address usr-add-cntnr" style="height: 200px; float:left;width: 250px;display:inline-block;margin-right: 10px;">
+            <div class="address raj_address usr-add-cntnr" style="height: 215px; float:left;width: 250px;display:inline-block;margin-right: 10px;">
               <h5 class="name fnt-caps adresss-usr-name">${address.name}</h5>
 
                 <div style="overflow-y: auto;max-height: 120px;overflow-x: hidden;">
@@ -29,23 +29,7 @@
                     <div class='pin'>${address.pincode.pincode}</div>
                     <div class='phone'>${address.phone}</div>
                 </div>
-                <shiro:hasAnyRoles
-                    name='<%=RoleConstants.HK_AFFILIATE + "," + RoleConstants.HK_AFFILIATE_UNVERIFIED%>'>
-                  <c:choose>
-                    <c:when test="${mainAddressId != address.id}">
-                      <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction"
-                              event="setAsDefaultAddress"
-                              class="save" onclick="return confirm('Your cheque will sent here!!')">
-                        <s:param name="address" value="${address.id}"/>
-                        <s:param name="affiliate" value="${userBean.affiliate.id}"/>
-                        (Set as Default)
-                      </s:link>
-                    </c:when>
-                    <c:otherwise>
-                      <strong>(Default Address Set)</strong>
-                    </c:otherwise>
-                  </c:choose>
-                </shiro:hasAnyRoles>
+
                 <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="editUserAddresses"
                         class="edit btn btn-gray" style="width:65px;float:left; margin:10px 20px 0 0;">
                   <s:param name="address" value="${address.id}"/>
@@ -56,6 +40,25 @@
                   <s:param name="address" value="${address.id}"/>
                   delete
                 </s:link>
+
+                <shiro:hasAnyRoles
+                        name='<%=RoleConstants.HK_AFFILIATE + "," + RoleConstants.HK_AFFILIATE_UNVERIFIED%>'>
+                    <c:choose>
+                        <c:when test="${mainAddressId != address.id}">
+                            <s:link style="position: relative;margin-top: 10px;padding: 0;font-size: 12px;clear:both; font-weight: bold;display: inline-block;" beanclass="com.hk.web.action.core.user.UserManageAddressAction"
+                                    event="setAsDefaultAddress"
+                                    class="save" onclick="return confirm('Your cheque will sent here!!')">
+                                <s:param name="address" value="${address.id}"/>
+                                <s:param name="affiliate" value="${userBean.affiliate.id}"/>
+                                Set as Default
+                            </s:link>
+
+                        </c:when>
+                        <c:otherwise>
+                            <strong style="position: relative;margin-top: 10px;padding: 0;font-size: 12px;clear: both;display: inline-block;">Default Address Set</strong>
+                        </c:otherwise>
+                    </c:choose>
+                </shiro:hasAnyRoles>
             </div>
           </c:forEach>
         </c:if>
