@@ -286,7 +286,7 @@ public class CycleCountHelper {
             if (skuGroup.getBarcode() != null) {
                 xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
             } else {
-                xlsWriter.addCell(xlsRow, BarcodeUtil.BARCODE_SKU_ITEM_PREFIX + skuGroup.getId());
+                xlsWriter.addCell(xlsRow, BarcodeUtil.BARCODE_SKU_ITEM_PREFIX_AQ + skuGroup.getId());
             }
 
             xlsWriter.addCell(xlsRow, "0");
@@ -340,7 +340,7 @@ public class CycleCountHelper {
 
         for (SkuGroup skuGroup : skuGroupList) {
             if (skuGroup.getBarcode() == null || skuGroup.getBarcode().isEmpty()) {
-                xlsWriter.addCell(xlsRow, BarcodeUtil.BARCODE_SKU_ITEM_PREFIX + skuGroup.getId());
+                xlsWriter.addCell(xlsRow, BarcodeUtil.BARCODE_SKU_ITEM_PREFIX_AQ + skuGroup.getId());
             } else {
                 xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
             }

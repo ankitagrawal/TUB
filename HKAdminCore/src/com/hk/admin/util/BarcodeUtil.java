@@ -13,15 +13,15 @@ import java.util.*;
 public class BarcodeUtil {
 
   public static final String BARCODE_SKU_GROUP_PREFIX = "HK-INVN-";
-  public static final String BARCODE_SKU_ITEM_PREFIX = "IV-";
-  public static final String BARCODE_SKU_ITEM_PREFIX_IVN = "IVN-";
+  public static final String BARCODE_SKU_ITEM_PREFIX_AQ = "IV-";
+  public static final String BARCODE_SKU_ITEM_PREFIX_BRT = "IVN-";
 
     public static String generateBarCodeForSKuGroup(Long skuGroupId) {
         return BARCODE_SKU_GROUP_PREFIX + skuGroupId;
     }
 
       public static String generateBarCodeForSKuItem(Long skuGroupId, int skuItemNumber) {
-          return BARCODE_SKU_ITEM_PREFIX + skuGroupId + "-" + skuItemNumber ;
+          return BARCODE_SKU_ITEM_PREFIX_AQ + skuGroupId + "-" + skuItemNumber ;
     }
 
     public static void createBarcodeFile(String barcodeFilePath, String data) throws IOException {

@@ -5,7 +5,7 @@
 <%@ page import="com.hk.admin.util.BarcodeUtil" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <c:set var="cycleCount" value="<%=EnumSkuItemTransferMode.CYCLE_COUNT.getId()%>"/>
-<c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX%>"/>
+<c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX_AQ%>"/>
 <c:set var="cycleCountStatusId" value="<%=EnumCycleCountStatus.RequestForApproval.getId()%>"/>
 <c:set var="totalSkuItem" value="<%=EnumSkuItemTransferMode.CYCLE_COUNT_SKU_ITEM_MISSED.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
