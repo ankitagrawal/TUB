@@ -76,7 +76,6 @@ import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
-import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -296,7 +295,7 @@ public class Functions {
     }
 
     public static Long netAvailableUnbookedInventory(Object o) {
-        return netInventory(o) - bookedQty(o);
+        return netInventory(o) - bookedQty(o, null);
     }
 
     public static Long netInventory(Object o) {
@@ -323,14 +322,16 @@ public class Functions {
         }
     }
 
-    public static Long bookedQty(Object o) {
+    public static Long bookedQty(Object o, Collection c) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
         if (o instanceof Sku) {
             Sku sku = (Sku) o;
-            return adminInventoryService.getBookedInventory(sku);
+            List<Long> shippingOrderStatusIds = (List<Long>)c;
+            return adminInventoryService.getBookedInventory(sku, shippingOrderStatusIds);
         } else {
             ProductVariant productVariant = (ProductVariant) o;
-            return adminInventoryService.getBookedInventory(productVariant);
+            List<Long> shippingOrderStatusIds = (List<Long>)c;
+            return adminInventoryService.getBookedInventory(productVariant, shippingOrderStatusIds);
         }
     }
 
@@ -416,6 +417,12 @@ public class Functions {
     public static List<SkuItem> getInStockSkuItems(Object o) {
         AdminSkuItemDao adminSkuItemDao = ServiceLocatorFactory.getService(AdminSkuItemDao.class);
         return adminSkuItemDao.getInStockSkuItems((SkuGroup) o);
+    }
+
+
+    public static List<SkuItem> getNetPhysicalAvailableStockSkuItems(Object o) {
+        AdminSkuItemDao adminSkuItemDao = ServiceLocatorFactory.getService(AdminSkuItemDao.class);
+        return adminSkuItemDao.getNetPhysicalAvailableStockSkuItems((SkuGroup) o);
     }
 
     public static Long getComboCount(Object o1) {
@@ -913,5 +920,55 @@ public class Functions {
         ProductVariantNotifyMeEmailService productVariantNotifyMeEmailService = ServiceLocatorFactory.getService(ProductVariantNotifyMeEmailService.class);
         return productVariantNotifyMeEmailService.getProductVariantsOfSimilarProductWithAvailableUnbookedInventory(productVariant);
     }
+
+    public static boolean isBOCancelable(Long orderId) {
+        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.isBOCancelable(orderId);
+    }
+
+    public static Long countLineItemQty(ShippingOrder shippingOrder) {
+      long qty=0;
+      if(shippingOrder.getLineItems()!=null && shippingOrder.getLineItems().size()>0)
+      for(LineItem lineItem : shippingOrder.getLineItems())
+      {
+          qty=qty+lineItem.getQty();
+      }
+      return qty;
+    }
+
+    public static Product showFreebie(Product product){
+          if(!(product.isOutOfStock() || product.isDeleted() || product.isHidden())){
+              for (ProductVariant productVariant : product.getProductVariants()) {
+                  if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
+                      ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
+                      if(freeProductVariant != null){
+//                          if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+                          if(!(freeProductVariant.isOutOfStock())){
+                              return freeProductVariant.getProduct();
+                          }
+                       }
+                  }
+              }
+          }
+        return null;
+    }
+
+    public static Product showFreebieForVariant(ProductVariant productVariant){
+        Product product = productVariant.getProduct();
+        if(!(product.isHidden() || product.isDeleted() || product.isOutOfStock())){
+            if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
+                ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
+                if(freeProductVariant != null){
+//                    if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
+                    if(!(freeProductVariant.isOutOfStock())){
+                        return freeProductVariant.getProduct();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 
 }

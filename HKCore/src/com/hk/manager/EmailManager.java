@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 
 import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
+import com.hk.domain.shippingOrder.LineItem;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
@@ -384,6 +385,25 @@ public class EmailManager {
         }
         
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
+    }
+
+    public boolean sendPartialOrderCancelEmailToUser(ShippingOrder shippingOrder) {
+        Order order = shippingOrder.getBaseOrder();
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("shippingOrder", shippingOrder);
+        valuesMap.put("order", order);
+        valuesMap.put("isCOD",order.getPayment().isCODPayment());
+        Set<CartLineItem> cancelledItems = new HashSet<CartLineItem>();
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            cancelledItems.add(lineItem.getCartLineItem());
+        }
+        valuesMap.put("pricingDto", new PricingDto(cancelledItems, order.getAddress()));
+
+        Template freemarkerTemplate
+                = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.partialOrderCancelEmailUser);
+
+        return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(),
+                order.getUser().getName());
     }
 
     public boolean sendOrderCancelEmailToAdmin(Order order) {
@@ -972,15 +992,15 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
     }
 
-    public boolean sendSoFixedMail(HashMap<String, String> map){
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixedMail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
-    }
-    
-    public boolean sendSoFixFailedMail(HashMap<String, String> map){
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixFailedMail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
-    }
+//    public boolean sendSoFixedMail(HashMap<String, String> map){
+//        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixedMail);
+//        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
+//    }
+//
+//    public boolean sendSoFixFailedMail(HashMap<String, String> map){
+//        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.soFixFailedMail);
+//        return emailService.sendHtmlEmail(freemarkerTemplate, map, hkContactEmail, "Admin");
+//    }
     
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();

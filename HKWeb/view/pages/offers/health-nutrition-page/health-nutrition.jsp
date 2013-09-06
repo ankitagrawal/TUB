@@ -7,7 +7,7 @@
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/categoryBlankLanding.jsp"
-                 pageTitle="personal-care Offer">
+                 pageTitle="Health Nutrition Offer">
 
 <s:layout-component name="htmlHead">
 	<link href="${pageContext.request.contextPath}/css/health-nutrition.css"
@@ -17,15 +17,15 @@
 <s:layout-component name="breadcrumbs">
 	<div class='crumb_outer'><s:link
 			beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
-		&gt; <span class="crumb last" style="font-size: 12px;">health-nutrition Offers</span>
+		&gt; <span class="crumb last" style="font-size: 12px;">Health Nutrition Offers</span>
 
-		<h1 class="title">health-nutrition Offers</h1>
+		<h1 class="title">Health Nutrition Offers</h1>
 	</div>
 
 </s:layout-component>
 
-<s:layout-component name="metaDescription">health-nutrition Offers</s:layout-component>
-<s:layout-component name="metaKeywords">health-nutrition Offers</s:layout-component>
+<s:layout-component name="metaDescription">Health Nutrition Offers</s:layout-component>
+<s:layout-component name="metaKeywords">Health Nutrition Offers</s:layout-component>
 
 <s:layout-component name="content">
     <div class="container">

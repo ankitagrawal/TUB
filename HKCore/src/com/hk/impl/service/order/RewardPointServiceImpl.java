@@ -52,8 +52,6 @@ import com.hk.util.OfferTriggerMatcher;
 public class RewardPointServiceImpl implements RewardPointService {
 
     @Autowired
-    private PaymentService      paymentService;
-    @Autowired
     private RewardPointDao      rewardPointDao;
     @Autowired
     private OfferInstanceDao    offerInstanceDao;
@@ -174,6 +172,11 @@ public class RewardPointServiceImpl implements RewardPointService {
     }
 
     @Override
+    public List<RewardPoint> findRewardPoints(Order order, List<RewardPointMode> rewardPointModes) {
+        return  getRewardPointDao().findRewardPoints(order,rewardPointModes);
+    }
+
+    @Override
     public void approvePendingRewardPointsForOrder(Order order) {
         List<RewardPoint> rewardPointList = getRewardPointDao().findByReferredOrder(order);
         RewardPointStatus rewardPointPendingStatus = getRewardPointStatus(EnumRewardPointStatus.PENDING);
@@ -285,9 +288,10 @@ public class RewardPointServiceImpl implements RewardPointService {
 
     }
 
-    
+
+    @Override
     @Transactional
-    private void cancelRewardPoints(User user, Double cancelRewardPoints) {
+    public void cancelRewardPoints(User user, Double cancelRewardPoints) {
         redeemOrCancelRedeemableRewardPoints(EnumRewardPointTxnType.REFERRED_ORDER_CANCELLED, user, cancelRewardPoints, null);
     }
 
@@ -349,14 +353,6 @@ public class RewardPointServiceImpl implements RewardPointService {
 
     public List<RewardPoint> findByReferredOrder(Order order) {
         return getRewardPointDao().findByReferredOrder(order);
-    }
-
-    public PaymentService getPaymentService() {
-        return paymentService;
-    }
-
-    public void setPaymentService(PaymentService paymentService) {
-        this.paymentService = paymentService;
     }
 
     public RewardPointDao getRewardPointDao() {

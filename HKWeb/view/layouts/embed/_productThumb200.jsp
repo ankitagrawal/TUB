@@ -1,21 +1,32 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
 <%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="com.hk.pact.service.catalog.ProductService" %>
+<%@ page import="com.hk.cache.vo.ProductVO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.BigThumbSize%>"/>
 <s:layout-definition>
 	<%
 		Product product_productThumb = (Product) pageContext.getAttribute("product");
+        ProductVO productVO = null;
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
 		if (product_productThumb == null) {
 			ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
 			String product_productThumbId = (String) pageContext.getAttribute("productId");
 			product_productThumb = productDao.getProductById(product_productThumbId);
-		}
+            productVO = productService.getProductVO(product_productThumbId);
+		}    else {
+		      productVO = productService.createProductVO(product_productThumb);
+		    }
+
+		    pageContext.setAttribute("productVO", productVO);
+
 
 		pageContext.setAttribute("product", product_productThumb);
 
@@ -35,6 +46,17 @@
 			opacity: 1.0;
 			filter: alpha(opacity = 100);
 		}
+        .hk-offer{
+                  background: #fbff90;
+                  color:#000;
+                  text-transform: uppercase;
+                  width: 50px;
+                  padding: 1px;
+                  position: relative;
+                  bottom: 40px;
+                  font-weight: bold;
+                  right: 10px;
+              }
 	</style>
 	<c:if test="${!product.googleAdDisallowed && !product.deleted && !product.hidden}">
 			<div class='grid_6 product' style="width:240px;height:300px;">
@@ -44,6 +66,14 @@
 						<img style="max-height:180px;max-width:180px;" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 					</s:link>
+					<shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
+						Missing Image - <a
+							href="${pageContext.request.contextPath}/rest/api/product/resizeImage/${product.id}/m/bt"
+							target="_blank">Click here</a>
+					</shiro:hasAnyRoles>
+                    <c:if test="${fn:length(productVO.freebieDesc) > 3}">
+                                  <div class="hk-offer">Offer</div>
+                              </c:if>
 				</div>
 				<div>
 					<span style="height:20px;max-width:240px;">
@@ -150,8 +180,12 @@
 						</c:if>
 					</c:otherwise>
 				</c:choose>
-
-				<div class="floatfix"></div>
+                <c:if test="${fn:length(productVO.freebieDesc) > 3}">
+                    <div class="freebie-cntnr with-variants">
+                        <h6>${productVO.freebieDesc} FREE</h6>
+                    </div>
+                </c:if>
+                <div class="floatfix"></div>
 			</div>
 	</c:if>
 </s:layout-definition>

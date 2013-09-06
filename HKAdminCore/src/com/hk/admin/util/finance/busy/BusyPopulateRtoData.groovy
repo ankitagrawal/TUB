@@ -48,7 +48,7 @@ public class BusyPopulateRtoData {
     if(lastUpdateDate == null){
       lastUpdateDate = "2009-01-01";
     }
-//	  lastUpdateDate = "2013-04-01";
+//	  lastUpdateDate = "2012-04-01";
     sql.eachRow("""
 
 									select so.id as shipping_order_id,
@@ -73,7 +73,7 @@ public class BusyPopulateRtoData {
 									left join gateway pay_gate on p.gateway_id = pay_gate.id
 									inner join warehouse w on w.id = so.warehouse_id
 
-									where ((so.shipping_order_status_id in (200, 220, 230, 250, 260) OR bo.order_status_id in (45,50,60,70)) and so.shipping_order_status_id <> 999)
+									where so.shipping_order_status_id in (200, 220, 230, 250, 260,270,280)
 									and (ship.return_date >=${lastUpdateDate}
 									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
 									and ship.return_date is not null
@@ -123,6 +123,12 @@ public class BusyPopulateRtoData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
       date = accountingInvoice.return_date;	    
 
@@ -216,6 +222,12 @@ public class BusyPopulateRtoData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";

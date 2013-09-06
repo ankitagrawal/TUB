@@ -14,5 +14,7 @@ public interface ComboService {
   public void markRelatedCombosOutOfStock(ProductVariant productVariant);
 
   public void markProductOutOfStock(ProductVariant productVariant);
+
+    public void recacheFreebieProducts(ProductVariant productVariant);
   
 }

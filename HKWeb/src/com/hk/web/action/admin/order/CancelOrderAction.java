@@ -1,12 +1,31 @@
 package com.hk.web.action.admin.order;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.inventory.EnumReconciliationActionType;
+import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.core.PaymentStatus;
+import com.hk.domain.inventory.rv.ReconciliationType;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.domain.payment.Payment;
+import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.PaymentService;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -33,6 +52,8 @@ public class CancelOrderAction extends BaseAction {
     AdminOrderService             adminOrderService;
     @Autowired
     private UserService      userService;
+    @Autowired
+    private PaymentService paymentService;
 
     @Validate(required = true)
     private Order            order;
@@ -42,14 +63,14 @@ public class CancelOrderAction extends BaseAction {
 
     private String           cancellationRemark;
 
+    //@Validate(required = true, on = "pre")
+    private Long reconciliationType;
+
     @JsonHandler
     public Resolution pre() {
-        User loggedOnUser = null;
-        if (getPrincipal() != null) {
-            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        }
+        User loggedOnUser = userService.getLoggedInUser();
         // TODO: need to tighten logic for cancellation of order
-        adminOrderService.cancelOrder(order, cancellationType, cancellationRemark, loggedOnUser);
+        adminOrderService.cancelOrder(order, cancellationType, cancellationRemark, loggedOnUser, reconciliationType);
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "cancelled", data);
@@ -75,6 +96,12 @@ public class CancelOrderAction extends BaseAction {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-    
-    
+
+    public Long getReconciliationType() {
+        return reconciliationType;
+    }
+
+    public void setReconciliationType(Long reconciliationType) {
+        this.reconciliationType = reconciliationType;
+    }
 }

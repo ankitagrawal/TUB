@@ -29,6 +29,8 @@ import com.hk.pact.service.inventory.OrderReviewService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
+import javax.ws.rs.core.Variant;
+
 @Service
 public class OrderReviewServiceImpl implements OrderReviewService {
 
@@ -87,7 +89,8 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 			throw fail(lineItem, "No Sku Item is available with Higher MRP. Escalate back to action queue.");
 		}
 		
-		inventoryHealthService.checkInventoryHealth(variant);
+//		inventoryHealthService.checkInventoryHealth(variant);
+        inventoryHealthService.inventoryHealthCheck(variant);
 	}
 	
 	private void updateHighMrp(LineItem lineItem, SkuInfo skuInfo) {
@@ -129,7 +132,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		map.put("quantity", String.valueOf(lineItem.getQty()));
 		map.put("mrp", String.valueOf(lineItem.getMarkedPrice()));
 		map.put("reason", reason);
-		emailManager.sendSoFixFailedMail(map);
+//		emailManager.sendSoFixFailedMail(map);
 		return new CouldNotFixException(reason);
 	}
 }

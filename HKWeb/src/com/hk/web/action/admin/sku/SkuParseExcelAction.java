@@ -168,8 +168,8 @@ public class SkuParseExcelAction extends BaseAction {
             xlsWriter.addCell(row, skuObj.getForecastedQuantity());
             xlsWriter.addCell(row, skuObj.getTax().getName());
             xlsWriter.addCell(row, getAdminInventoryService().getNetInventory(skuObj));
-            xlsWriter.addCell(row, getAdminInventoryService().getBookedInventory(skuObj));
-            xlsWriter.addCell(row, (getAdminInventoryService().getNetInventory(skuObj) - getAdminInventoryService().getBookedInventory(skuObj)));
+            xlsWriter.addCell(row, getAdminInventoryService().getBookedInventory(skuObj, null));
+            xlsWriter.addCell(row, (getAdminInventoryService().getNetInventory(skuObj) - getAdminInventoryService().getBookedInventory(skuObj, null)));
 
             row++;
         }

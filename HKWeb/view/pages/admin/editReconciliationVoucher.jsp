@@ -274,6 +274,7 @@
             
             $('#upc').change(function() {
             	var supplier = "${pa.reconciliationVoucher.supplier.id}";
+            	if(supplier!=null && supplier.length>0){
             	var barcode = $('#upc').val();
             	var warehouseId = ${pa.reconciliationVoucher.warehouse.id};
             	var productSupplier;
@@ -296,7 +297,9 @@
                   }
             	);
             	return false;
+            }
             });
+            
             
             if(${pa.isDebitNoteCreated!=null && pa.isDebitNoteCreated}){
     			$("#createDebitNoteButton").hide();

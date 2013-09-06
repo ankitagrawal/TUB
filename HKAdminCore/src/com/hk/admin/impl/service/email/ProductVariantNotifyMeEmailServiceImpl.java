@@ -101,7 +101,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                             }
                         } else {
                             /* inStock product*/
-                            unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
+                            unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant, null).intValue());
                         }
                         /* calculate number of users eligible for sending mails */
                         if (unbookedInventory > 0) {
@@ -211,7 +211,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                 List<ProductVariant> similarProductVariantList = similarProduct.getSimilarProduct().getProductVariants();
                 int availableUnbookedInventoryForProduct = 0;
                 for (ProductVariant similarProductVariant : similarProductVariantList) {
-                    int bookedInvn = adminInventoryService.getBookedInventory(similarProductVariant).intValue();
+                    int bookedInvn = adminInventoryService.getBookedInventory(similarProductVariant, null).intValue();
                     int netInvn = adminInventoryService.getNetInventory(similarProductVariant).intValue();
                     availableUnbookedInventoryForProduct = availableUnbookedInventoryForProduct + (netInvn - bookedInvn);
                 }

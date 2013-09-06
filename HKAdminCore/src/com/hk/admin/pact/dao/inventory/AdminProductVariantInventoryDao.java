@@ -13,6 +13,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.pact.dao.BaseDao;
@@ -41,7 +43,7 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse);
 
-    public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
+
 
     public List<ProductVariantInventory> getPVIForStockTransfer(Sku sku, StockTransferLineItem stockTransferLineItem);
 
@@ -51,7 +53,7 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty);
 
-    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant, List<SkuItemStatus> itemStatus, List<SkuItemOwner> itemOwners);
 
     public void deletePVIBySkuItem(List<SkuItem> skuItemList);
 

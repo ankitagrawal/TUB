@@ -126,4 +126,9 @@ public interface ProductService {
     public ProductVO createProductVO(Product product);
 
     public String getAppendedProductURL(String baseUrl, String parameter, String value);
+
+		public List<String> getAllBrands(String brandLike);
+
+    public List<Product> getProductListWithFreebie(ProductVariant productVariant);
+
 }

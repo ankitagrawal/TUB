@@ -44,13 +44,14 @@ public class OrderSplitterFilter {
         Map<String, List<CartLineItem>> bucketCartLineItems = new HashMap<String, List<CartLineItem>>();
         for (CartLineItem cartLineItem : cartLineItems) {
             Product product = cartLineItem.getProductVariant().getProduct();
-            if(product.getMaxDays() == null || product.getMaxDays() <= 3){
+            Long maxDays = product.isJit() ? product.getMaxDays() : 3; //if an inStock product is ordered, all such products lies in same bucket
+            if(maxDays == null || maxDays <= 3){
                 bucketCartLineItems = getPutMap(bucketCartLineItems, "B3", cartLineItem);
-            }else if(product.getMaxDays() <= 6){
+            }else if(maxDays <= 6){
                 bucketCartLineItems = getPutMap(bucketCartLineItems, "B6", cartLineItem);
-            }else if(product.getMaxDays() <= 9){
+            }else if(maxDays <= 9){
                 bucketCartLineItems = getPutMap(bucketCartLineItems, "B9", cartLineItem);
-            }else if(product.getMaxDays() <= 12){
+            }else if(maxDays <= 12){
                 bucketCartLineItems = getPutMap(bucketCartLineItems, "B12", cartLineItem);
             }else {
                 bucketCartLineItems = getPutMap(bucketCartLineItems, "BMX", cartLineItem);

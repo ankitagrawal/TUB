@@ -1,27 +1,38 @@
 package com.hk.pact.dao.sku;
 
-import java.util.List;
-
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.sku.*;
+import com.hk.domain.inventory.ProductVariantInventory;
+import com.hk.dto.pos.PosProductSearchDto;
+import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.pact.dao.BaseDao;
+
+import java.util.List;
 
 public interface SkuItemDao extends BaseDao {
 
+  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-    public List<SkuGroup> getInStockSkuGroups(Sku sku);
+  public SkuItem getSkuItem(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
 
-    public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
+  public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
 
-    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
+  public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners);
 
-    public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
+  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> skuItemStatusIds, List<Long> skuItemOwners, Double mrp);
 
-    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+  public List<PosProductSearchDto> getCheckedInSkuItems(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
 
-    public List<SkuItem> getCheckedInSkuItems(Sku sku);
+  public List<PosSkuGroupSearchDto> getCheckedInSkuItemsByGroup(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
+
+  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
+
+  public Long getInventoryCount(List<Sku> skuList, List<Long> skuItemStatusIds);
+
+  public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
+
+  public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
+
+  public List<ProductVariantInventory> getPVIInfo(String barcode); 
 
 }

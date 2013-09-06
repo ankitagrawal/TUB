@@ -92,7 +92,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 				filter.setMinQty(cartLineItem.getQty());
 				filter.setMrp(cartLineItem.getMarkedPrice());
 				
-				Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkus(cartLineItem.getProductVariant(), filter);
+				Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkusForSplitter(cartLineItem.getProductVariant(), filter, cartLineItem);
 				for (SkuInfo skuInfo : skuList) {
 					Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
 					if(whs.contains(sku.getWarehouse())) {
@@ -171,8 +171,12 @@ public class OrderSplitterImpl implements OrderSplitter {
 				boolean isDropShipped = false;
 				boolean containsJitProducts = false;
 				for (CartLineItem cartLineItem : bucketedCartLineItemMapEntry.getValue()) {
+                    if(!isDropShipped){
 					isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
-					containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
+                    }
+			        if(!containsJitProducts){
+                        containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit() || cartLineItem.getCartLineItemConfig() != null;
+                    }
 					Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
 					LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
 					shippingOrder.getLineItems().add(shippingOrderLineItem);

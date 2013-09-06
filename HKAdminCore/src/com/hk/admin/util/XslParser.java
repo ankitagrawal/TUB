@@ -555,6 +555,55 @@ public class XslParser {
         return poLineItems;
     }
 
+    public void readAndUpdateB2BPrice(File objInFile) throws Exception {
+      logger.debug("parsing b2b price : " + objInFile.getAbsolutePath());
+
+      InputStream poiInputStream = new FileInputStream(objInFile);
+      POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
+
+      HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+
+      // Assuming there is only one sheet, the first one only will be picked
+      HSSFSheet sheet = workbook.getSheetAt(0);
+      Iterator<Row> objRowIt = sheet.rowIterator();
+
+      // Declaring data elements
+      Map<Integer, String> headerMap;
+      Map<Integer, String> rowMap;
+      int rowCount = 1;
+      List<ProductVariant> productVariants = new ArrayList<ProductVariant>();
+      try {
+        headerMap = getRowMap(objRowIt);
+        while (objRowIt.hasNext()) {
+          rowMap = getRowMap(objRowIt);
+          ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap));
+          if (productVariant != null) {
+            Double b2bPrice = getDouble(getCellValue(XslConstants.B2B_PRICE, rowMap, headerMap));
+            if (b2bPrice == null || b2bPrice == 0D) {
+              b2bPrice = productVariant.getHkPrice();
+            } else if (b2bPrice < productVariant.getCostPrice()) {
+              throw new Exception("B2B Price is below Cost Price");
+            }else if (b2bPrice > productVariant.getMarkedPrice()) {
+              throw new Exception("B2B Price is more than Marked Price");
+            }
+            productVariant.setB2bPrice(b2bPrice);
+            productVariants.add(productVariant);
+          }
+          logger.debug("read row " + rowCount);
+          rowCount++;
+        }
+        getBaseDao().saveOrUpdate(productVariants);
+      } catch (Exception e) {
+        logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
+        throw new Exception("Exception @ Row:" + rowCount +" - "+ e.getMessage(), e);
+      } finally {
+        if (poiInputStream != null) {
+          IOUtils.closeQuietly(poiInputStream);
+        }
+      }
+    }
+
+
     public HashMap<ReconciliationStatus, List<String>> readAndUpdateReconciliationStatus(File objInFile) throws Exception {
         HashMap<ReconciliationStatus, List<String>> reconciliationMap = new HashMap<ReconciliationStatus, List<String>>();
         List<String> reconciledOrders = new ArrayList<String>();
@@ -816,7 +865,8 @@ public class XslParser {
                     }
                 }
                 shipment.setEstmCollectionCharge(collectionChargeFromExcel);
-                shipment.setEstmShipmentCharge(shippingChargeFromExcel);
+                //estimated shipping cost will always be calculated via system
+//                shipment.setEstmShipmentCharge(shippingChargeFromExcel);
                 shipment.setExtraCharge(extraCharges);
                 getShipmentService().save(shipment);
             }
