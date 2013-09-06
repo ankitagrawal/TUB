@@ -129,6 +129,8 @@ $(document).ready(function() {
     <tr>
         <td><b>Tin</b></td>
         <td>${debitNoteSummary.debitNote.supplier.tinNumber}</td>
+        <td><b>Supplier Invoice</b></td>
+       <td> <c:if test="${debitNoteSummary.debitNote.purchaseInvoice!=null }">${debitNoteSummary.debitNote.purchaseInvoice}</c:if></td>
         <td colspan="2"></td>
     </tr>
 </table>
@@ -140,6 +142,8 @@ $(document).ready(function() {
   <tr>
     <th>S.No.</th>
     <th>VariantID</th>
+    <th>Indicator</th>
+
     <th>UPC</th>
     <th>Details</th>
     <th>Qty</th>
@@ -169,6 +173,9 @@ $(document).ready(function() {
        <td>
           ${debitNoteDto.debitNoteLineItem.sku.productVariant.id}
       </td>
+          <td>
+
+          </td>
       <td>
           ${debitNoteDto.debitNoteLineItem.sku.productVariant.upc}
       </td>

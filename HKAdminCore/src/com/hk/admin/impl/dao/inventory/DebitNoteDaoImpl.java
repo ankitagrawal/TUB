@@ -18,11 +18,12 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
 
-  public Page searchDebitNote(GoodsReceivedNote grn,DebitNote debitNote, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse,String supplierInvoice, int pageNo, int perPage) {
+  public Page searchDebitNote(GoodsReceivedNote grn,DebitNote debitNote,String debitNoteNo, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse,String supplierInvoice, int pageNo, int perPage) {
 
     DetachedCriteria debitNoteCriteria = DetachedCriteria.forClass(DebitNote.class);
-    if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName) || StringUtils.isNotBlank(supplierInvoice)) {
+    if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName) || StringUtils.isNotBlank(supplierInvoice) || StringUtils.isNotBlank(debitNoteNo) ) {
       DetachedCriteria supplierCriteria = debitNoteCriteria.createCriteria("supplier");
+      DetachedCriteria purchaseInvoiceCriteria = debitNoteCriteria.createCriteria("purchaseInvoice");
       if (StringUtils.isNotBlank(tinNumber)) {
         supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
       }
@@ -30,7 +31,10 @@ public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
         supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
       }
       if (StringUtils.isNotBlank(supplierInvoice)) {
-        supplierCriteria.add(Restrictions.like("invoice", "%" + supplierInvoice + "%"));
+        purchaseInvoiceCriteria.add(Restrictions.like("invoiceNumber", "%" + supplierInvoice + "%"));
+      }
+      if (StringUtils.isNotBlank(debitNoteNo)) {
+        debitNoteCriteria.add(Restrictions.like("debitNoteNumber", "%" + debitNoteNo + "%"));
       }
     }
     if (warehouse != null) {
@@ -40,7 +44,7 @@ public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
       debitNoteCriteria.add(Restrictions.eq("debitNoteStatus", debitNoteStatus));
     }
     if (debitNote != null) {
-         debitNoteCriteria.add(Restrictions.eq("debitNote", debitNote));
+         debitNoteCriteria.add(Restrictions.eq("id",debitNote.getId()));
        }
     debitNoteCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
     return list(debitNoteCriteria, pageNo, perPage);

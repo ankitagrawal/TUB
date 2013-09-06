@@ -19,7 +19,8 @@
       <legend>Search Debit Note</legend>
       <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
         <%--<label>GRN ID:</label><s:text name="grn"/>--%>
-          <label>Debit Note:</label><s:text name="debitNote"/>
+          <label>DN ID:</label><s:text name="debitNote"/>
+          <label>Debit Note Number:</label><s:text name="debitNoteNo"/>
         <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Supplier Name:</label><s:text name="supplierName"/>
         <label>Status:</label><s:select name="debitNoteStatus">
@@ -46,6 +47,7 @@
       <thead>
       <tr>
         <th>DN ID</th>
+          <th>DebitNote no</th>
           <%--<th>GRN ID</th>--%>
         <th>Create Date</th>
         <th>Supplier</th>
@@ -55,12 +57,12 @@
         <!-- <th>Reconciled</th> -->
         <th>Actions</th>
           <th>VendorInvoice</th>
-          <th>ShortQty</th>
       </tr>
       </thead>
       <c:forEach items="${poa.debitNoteList}" var="debitNote" varStatus="ctr">
         <tr>
           <td>${debitNote.id}</td>
+            <td>${debitNote.debitNoteNumber}</td>
             <%--<td>
               <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">
                 <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/>
@@ -98,6 +100,7 @@
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
               </c:if>
           </td>
+            <td><c:if test="${debitNote.purchaseInvoice!=null }">${debitNote.purchaseInvoice.invoiceNumber}</c:if></td>
         </tr>
       </c:forEach>
     </table>
