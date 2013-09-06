@@ -19,6 +19,7 @@
       <legend>Search Debit Note</legend>
       <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
         <%--<label>GRN ID:</label><s:text name="grn"/>--%>
+          <label>Debit Note:</label><s:text name="debitNote"/>
         <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Supplier Name:</label><s:text name="supplierName"/>
         <label>Status:</label><s:select name="debitNoteStatus">
@@ -33,6 +34,7 @@
             <s:option value="${wh.id}">${wh.identifier}</s:option>
           </c:forEach>
         </s:select>
+          <label>Supplier Invoice:</label><s:text name="supplierInvoice"/>
         <s:submit name="pre" value="Search Debit Note"/>
       </s:form>
     </fieldset>
@@ -52,6 +54,8 @@
         <th>Status</th>
         <!-- <th>Reconciled</th> -->
         <th>Actions</th>
+          <th>VendorInvoice</th>
+          <th>ShortQty</th>
       </tr>
       </thead>
       <c:forEach items="${poa.debitNoteList}" var="debitNote" varStatus="ctr">

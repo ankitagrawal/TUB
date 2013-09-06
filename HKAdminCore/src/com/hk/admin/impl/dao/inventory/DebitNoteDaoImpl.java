@@ -1,5 +1,6 @@
 package com.hk.admin.impl.dao.inventory;
 
+import com.hk.domain.inventory.po.PurchaseInvoice;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -17,16 +18,19 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
 
-  public Page searchDebitNote(GoodsReceivedNote grn, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse, int pageNo, int perPage) {
+  public Page searchDebitNote(GoodsReceivedNote grn,DebitNote debitNote, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse,String supplierInvoice, int pageNo, int perPage) {
 
     DetachedCriteria debitNoteCriteria = DetachedCriteria.forClass(DebitNote.class);
-    if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName)) {
+    if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName) || StringUtils.isNotBlank(supplierInvoice)) {
       DetachedCriteria supplierCriteria = debitNoteCriteria.createCriteria("supplier");
       if (StringUtils.isNotBlank(tinNumber)) {
         supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
       }
       if (StringUtils.isNotBlank(supplierName)) {
         supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
+      }
+      if (StringUtils.isNotBlank(supplierInvoice)) {
+        supplierCriteria.add(Restrictions.like("invoice", "%" + supplierInvoice + "%"));
       }
     }
     if (warehouse != null) {
@@ -35,6 +39,9 @@ public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
     if (debitNoteStatus != null) {
       debitNoteCriteria.add(Restrictions.eq("debitNoteStatus", debitNoteStatus));
     }
+    if (debitNote != null) {
+         debitNoteCriteria.add(Restrictions.eq("debitNote", debitNote));
+       }
     debitNoteCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
     return list(debitNoteCriteria, pageNo, perPage);
 

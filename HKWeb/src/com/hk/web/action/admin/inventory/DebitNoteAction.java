@@ -89,6 +89,7 @@ public class DebitNoteAction extends BasePaginatedAction {
     private String                  tinNumber;
     private String                  supplierName;
     private Warehouse               warehouse;
+    private String                  supplierInvoice;
 
     private Integer                 defaultPerPage     = 20;
     public PurchaseInvoice purchaseInvoice; 
@@ -104,7 +105,7 @@ public class DebitNoteAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        debitNotePage = debitNoteDao.searchDebitNote(grn, debitNoteStatus, tinNumber, supplierName, warehouse, getPageNo(), getPerPage());
+        debitNotePage = debitNoteDao.searchDebitNote(grn,debitNote,debitNoteStatus, tinNumber, supplierName, warehouse,supplierInvoice, getPageNo(), getPerPage());
         debitNoteList = debitNotePage.getList();
         return new ForwardResolution("/pages/admin/debitNoteList.jsp");
     }
