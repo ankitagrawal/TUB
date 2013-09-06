@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.constants.warehouse.EnumWarehouseType" %>
+<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -11,8 +12,8 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <%
     WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-    List<Warehouse> whList = warehouseDao.getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
-    whList.remove(soaActionBean.getShippingOrder().getWarehouse());
+    List<Warehouse> whList = warehouseDao.getAllWarehouses(Arrays.asList(EnumWarehouseType.Online_B2B.getId()), Boolean.FALSE, Boolean.TRUE);
+   whList.remove(soaActionBean.getShippingOrder().getWarehouse());
     pageContext.setAttribute("whList", whList);
   %>
   <s:layout-component name="heading">Flip Warehouse - SO#${soaActionBean.shippingOrder.id}, WH=${soaActionBean.shippingOrder.warehouse.identifier}</s:layout-component>
