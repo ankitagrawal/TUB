@@ -10,6 +10,7 @@
         <title>Healthkart Google Product Feed</title>
         <link>http://www.healthkart.com</link>
         <description>Healthkart Online Health Store</description>
+	      <fmt:setLocale value="en_US"/>
         <c:set var="excludeCategories" value=""/>
         <c:forEach items="${googleBean.products}" var="product">
             <c:choose>
