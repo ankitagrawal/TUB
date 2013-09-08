@@ -18,6 +18,7 @@ import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
 import com.hk.domain.queue.TrafficState;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.service.UserService;
@@ -266,29 +267,33 @@ public class BucketServiceImpl implements BucketService {
 
     @Override
     public List<EnumBucket> getCategoryDefaultersBuckets(ShippingOrder shippingOrder) {
-        List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
-        Set<String> categoryNames = new HashSet<String>();
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            Long availableUnbookedInv = inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice());
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-           
-            Long availableNetPhysicalInventory = inventoryService.getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
-            Long bookedQty = 0L;
-            Long orderedQty = lineItem.getQty();
-            if (lineItem.getSkuItemLineItems() != null){
-                bookedQty = (long)lineItem.getSkuItemLineItems().size();
-            }
-            if (!(bookedQty >= orderedQty)) {
-            	if (availableNetPhysicalInventory < 0  || availableUnbookedInv < 0) {
-                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
-            	}
-            }
-            if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
-                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
-            }
+      List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
+      Set<String> categoryNames = new HashSet<String>();
+      for (LineItem lineItem : shippingOrder.getLineItems()) {
+        Long availableUnbookedInv = inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), lineItem.getMarkedPrice());
+        ProductVariant productVariant = lineItem.getSku().getProductVariant();
+
+        Long availableNetPhysicalInventory = inventoryService.getAvailableUnbookedInventory(Arrays.asList(lineItem.getSku()), false);
+        Long bookedQty = 0L;
+        Long orderedQty = lineItem.getQty();
+        if (lineItem.getSkuItemLineItems() != null) {
+          bookedQty = (long) lineItem.getSkuItemLineItems().size();
         }
-        actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
-        return actionableBuckets;
+        List<ForeignSkuItemCLI> fsiclis  = lineItem.getCartLineItem().getForeignSkuItemCLIs();
+        if (fsiclis != null && fsiclis.size() > 0) {
+          categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+        }
+        if (!(bookedQty >= orderedQty)) {
+          if (availableNetPhysicalInventory < 0 || availableUnbookedInv < 0) {
+            categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+          }
+        }
+        if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
+          categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+        }
+      }
+      actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
+      return actionableBuckets;
     }
 
 

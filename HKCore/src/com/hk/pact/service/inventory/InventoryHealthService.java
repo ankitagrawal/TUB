@@ -7,10 +7,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public interface InventoryHealthService {
 

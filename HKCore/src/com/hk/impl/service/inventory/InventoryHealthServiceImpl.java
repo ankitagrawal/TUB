@@ -598,14 +598,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
         if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
           ProductVariant productVariant = cartLineItem.getProductVariant();
-//          productVariant =(ProductVariant) productVariantService.getVariantById(productVariant.getId());
+         productVariant =(ProductVariant) productVariantService.getVariantById(productVariant.getId());
           List<Warehouse> servicableWarehouse = warehouseService.getServiceableWarehouses();
           List<Long> whIds = new ArrayList<Long>();
           for (Warehouse warehouse : servicableWarehouse) {
             whIds.add(warehouse.getId());
           }
-
-          Long warehouseIdAtPV = productVariant.getWarehouse().getId();
+          Long warehouseIdAtPV =productVariant.getWarehouse().getId();
           //HardCoding
           if (whIds.contains(warehouseIdAtPV)) {
             logger.debug("Temp Booking On Aqua Side");
@@ -651,7 +650,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
       }
     }
-    baseDao.save(order);
+   order =  (Order) baseDao.save(order);
+    Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+    // calling health check
+    for (CartLineItem cartLineItem : productCartLineItems) {
+      inventoryHealthCheck(cartLineItem.getProductVariant());
+    }
+
   }
 
   @Transactional

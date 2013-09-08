@@ -25,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -147,7 +144,8 @@ public class OrderEventPublisher {
     return messagePublished;
   }
 
-  public boolean publishOrderPlacedEvent(final Order order) {
+  public boolean publishOrderPlacedEvent(final Order order ) {
+
     boolean messagePublished = false;
     try {
       final Long userId = order.getUser().getId();

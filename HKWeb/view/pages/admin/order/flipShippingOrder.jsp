@@ -12,7 +12,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <%
     WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-    List<Warehouse> whList = warehouseDao.getAllWarehouses(Arrays.asList(EnumWarehouseType.Online_B2B.getId()), Boolean.FALSE, Boolean.TRUE);
+    List<Warehouse> whList = warehouseDao.getAllWarehouses(Arrays.asList(EnumWarehouseType.Online_B2B.getId()), null, Boolean.TRUE);
    whList.remove(soaActionBean.getShippingOrder().getWarehouse());
     pageContext.setAttribute("whList", whList);
   %>

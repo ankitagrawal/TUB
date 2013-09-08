@@ -1,6 +1,7 @@
 package com.hk.pact.service.order;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
@@ -80,5 +81,6 @@ public interface OrderService {
   public Order findCart(User user, Store store);
 
   public boolean isBOCancelable(Long orderId);
+
 }
 

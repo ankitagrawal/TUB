@@ -411,14 +411,14 @@ public class OrderManager {
       // Order lifecycle activity logging - Order Placed
       this.getOrderLoggingService().logOrderActivity(order, order.getUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
-      Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-      // calling health check
-
-
-//       Check Inventory health of order lineItems
-      for (CartLineItem cartLineItem : productCartLineItems) {
-        this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-      }
+//      Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+//      // calling health check
+//
+//
+////       Check Inventory health of order lineItems
+//      for (CartLineItem cartLineItem : productCartLineItems) {
+//        this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+//      }
 
         if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
             //for some orders userCodCall object is not created, a  check to create one

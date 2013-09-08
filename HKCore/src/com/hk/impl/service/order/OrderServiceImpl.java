@@ -65,6 +65,7 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
+import freemarker.ext.beans.HashAdapter;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.client.ClientRequest;
@@ -870,5 +871,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return isBOCancelable;
     }
+
 
 }
