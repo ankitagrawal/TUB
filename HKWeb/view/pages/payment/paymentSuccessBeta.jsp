@@ -315,7 +315,7 @@
                     we get to know that you have a valid email id and we can send special offers on your email.</p>
 
                 <p><strong>If you haven't received the mail,
-                    <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
+                    <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" style="color:#fff;" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
                 </strong>
                     <br/><br/>
                     <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
@@ -364,7 +364,7 @@
             <p>Did you know about our Loyalty Program yet?<br>
                 It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
                 <br>
-                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
+                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" style="color: #fff;" target="_blank">Click here</a>, to know more.
             </p>
         </div>
         <br/>
@@ -517,8 +517,9 @@
 
 </div>
 
-<a href="/" class="backTOHomeButton">GO BACK TO HEALTHKART.COM</a>
-
+<s:link href="/" title='go to healthkart home'>
+<a href="/" class="btn btn-blue">GO BACK TO HEALTHKART.COM</a>
+</s:link>
 <div class="floatfix" style="margin-bottom: 40px;"></div>
 </c:when>
 <c:otherwise>

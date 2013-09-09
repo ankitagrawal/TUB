@@ -6318,9 +6318,10 @@ css for loyalty related message
 	padding: 5px;
 	font-size: 12px;
 	line-height: 18px;
-	background: rgb(186, 255, 147);
+	background: #0091d7;
 	position: relative;
 	float: left;
+    color:#ffffff;
 }
 
 .paymentFailureMessageTop{
