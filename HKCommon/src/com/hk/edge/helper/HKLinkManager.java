@@ -37,7 +37,7 @@ public class HKLinkManager {
     }
 
     public static String getVariantUrl(AbstractStoreVariantResponse abstractStoreVariantApiResponse) {
-        StringBuilder variantUrl = new StringBuilder("/variant/");
+        StringBuilder variantUrl = new StringBuilder("/variant");
         variantUrl.append(abstractStoreVariantApiResponse.getUrlFragment());
         variantUrl.append("?" + NAV_KEY + "=").append(abstractStoreVariantApiResponse.getNavKey());
 
