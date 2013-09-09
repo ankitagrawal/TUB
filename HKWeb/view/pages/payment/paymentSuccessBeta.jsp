@@ -46,7 +46,7 @@
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="steps">
-    <s:layout-render name="/layouts/embed/_checkoutStripBeta.jsp"  index="4" />
+    <s:layout-render name="/layouts/embed/_checkoutStripBeta.jsp"  index="5" />
 </s:layout-component>
 <s:layout-component name="heading">
     <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
@@ -276,16 +276,16 @@
                 <c:choose>
                     <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
                         <%--your cod ka message--%>
-                        <div class="congratsText">Your order has been received and is <span class="orangeBold">pending verification</span></div>
+                        <div class="congratsText">Your order has been received and is <span style="color: #0091d7;">pending verification</span></div>
                         <h2 class="orderIdText">
                             Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
                         </h2>
-                        <p class="codMessage">You will shortly get an automated <span class="orangeBold">verification call</span>. Please take the call and respond as per instructions to verify
+                        <p class="codMessage">You will shortly get an automated <span style="color: #0091d7;">verification call</span>. Please take the call and respond as per instructions to verify
                             your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
                         <br/>
                     </c:when>
                     <c:otherwise>
-                        <div class="congratsText">Your order has been received and is <span class="orangeBold">pending authorization</span> from the gateway.</div>
+                        <div class="congratsText">Your order has been received and is <span style="color: #0091d7;">pending authorization</span> from the gateway.</div>
                         <h2 class="orderIdText">
                             Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
                         </h2>
@@ -318,7 +318,7 @@
                     <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" style="color:#fff;" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
                 </strong>
                     <br/><br/>
-                    <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
+                    <span class="emailSendMessage alert" style="display: none; font-weight:600;"></span>
                 </p>
 
                 <p style="display:none;" class="emailNotReceived">
@@ -389,7 +389,7 @@
 
     <div class="confirmationEmailText" >
         <p>The estimated dispatch time for each product is mentioned below. The delivery time would be extra and will vary according to your location.</p>
-        <p id="learnMore" class="learnMore" style="margin: 0px;float: right;" >learn more</p>
+        <p id="learnMore" class="learnMore" style="margin: 0px;float: right; color:#0091d7;" >learn more</p>
     </div>
 
     <div class="confirmationEmailText">
@@ -409,7 +409,7 @@
         </div>
     </c:if>
 
-    <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;margin-bottom: 20px;">
+    <div class="step2 success_order_summary" style="padding: 5px 5px 5px 0; float: left; margin-right: 5px;margin-bottom: 20px;">
         <h2 class="paymentH2">Order Summary</h2>
 
         <div class="itemSummaryNew">
@@ -433,31 +433,31 @@
 
     <div style="clear:both;"></div>
 
-    <div class='orderSummaryHeading' style="margin-bottom: 50px;left: 10px;margin-top: 50px;">
-        <div class="deliveryDetails"> DELIVERY DETAILS</div>
-        <ul>
+    <div class='orderSummaryHeading' style="margin-bottom: 50px;margin-top: 50px;">
+        <div class="deliveryDetails" style="padding-left: 7px;font-weight: 600"> DELIVERY DETAILS</div>
+        <ol style="padding-left:25px;">
             <li>
-                - The time taken for delivery after dispatch from our warehouse varies with location.
+               The time taken for delivery after dispatch from our warehouse varies with location.
             </li>
             <li>
-                - For Metros: 1-3 business days
+               For Metros: 1-3 business days
             </li>
             <li>
-                - For Major Cities: 2-4 business days
+               For Major Cities: 2-4 business days
             </li>
             <li>
-                - For Other Town/Cities: 3-6 business days
+               For Other Town/Cities: 3-6 business days
             </li>
             <li>
-                - For Rest of India Non Serviceable through Couriers: 7-15 business days (Delivery done by Indian Post)
+                For Rest of India Non Serviceable through Couriers: 7-15 business days (Delivery done by Indian Post)
             </li>
-        </ul>
+        </ol>
     </div>
 </div>
 
 <div class="rightPS">
 
-    <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
+    <div class="orderSummaryNew" style="width: 100%;left:0;margin-bottom: 30px;">
         <s:layout-render name="/layouts/embed/orderSummaryTableBeta.jsp" pricingDto="${actionBean.pricingDto}"
                          orderDate="${actionBean.payment.paymentDate}"/>
     </div>
@@ -465,7 +465,7 @@
     <c:choose>
         <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
             <%--your cod ka message--%>
-            <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+            <h1 class="youPaid" style="border-bottom: 1px solid #ddd;width: 100%;">
                           <span class="youPay">
                             Pay on delivery:
                           </span>
@@ -482,7 +482,7 @@
         </c:when>
         <%--your non cod ka message--%>
         <c:otherwise>
-            <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+            <h1 class="youPaid" style="border-bottom: 1px solid #ddd;width: 100%;">
                           <span class="youPay">
                             You paid:
                           </span>
@@ -499,8 +499,8 @@
         </c:otherwise>
     </c:choose>
 
-    <div class="orderShippedTo" style="margin-bottom: 60px;width: 105%;">
-        <h2 class="paymentH2" style="font-weight:bold;border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER SHIPPED TO</h2>
+    <div class="orderShippedTo" style="margin-bottom: 30px;width: 100%;margin-right: 0;">
+        <h2 class="paymentH2" style="font-weight:600;border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER SHIPPED TO</h2>
 
         <p>
             <c:set var="address" value="${actionBean.payment.order.address}"/>
@@ -515,11 +515,11 @@
         </p>
     </div>
 
+    <s:link class="btn btn-blue" href="/" title='go to healthkart home'>
+        GO BACK TO HOME Page
+    </s:link>
 </div>
 
-<s:link href="/" title='go to healthkart home'>
-<a href="/" class="btn btn-blue">GO BACK TO HEALTHKART.COM</a>
-</s:link>
 <div class="floatfix" style="margin-bottom: 40px;"></div>
 </c:when>
 <c:otherwise>
