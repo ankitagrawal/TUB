@@ -10,7 +10,7 @@
             alt="Flat 25% Off" usemap="#Map">
       <map name="Map" id="Map">
           <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
-              <area shape="rect" coords="62,-7,253,92"/>
+              <area shape="rect" coords="62,-7,253,92" href="javascript:void(0);"/>
           </s:link>
         <area shape="rect" coords="262,-7,453,94" href="${pageContext.request.contextPath}/home-living/cook-fry/induction-cooker" />
         <area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/home-living/mix-grind-chop/juicer-mixer-grinder" />
