@@ -65,10 +65,8 @@
 
   <fieldset>
     <c:if test="${!empty productVariants}">
-      <ul style="list-style: none; line-height: 25px;">
-
+      <ul style="list-style: none; line-height: 25px;max-width: 220px;word-break: break-word; margin-top: 25px;">
         <s:label name="Recently Ordered Items" />
-
         <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
           <fieldset>
             <c:forEach items="${productVariants}" var="variant" varStatus="ctr">
@@ -85,7 +83,7 @@
                 </div>
               </div>
             </c:forEach>
-            <div align="center">
+            <div align="center" style="text-align: left;margin-top:15px;">
               <s:submit name="addToCart" value="Place Order" class="addToCartButton btn btn-blue"/>
             </div>
 
