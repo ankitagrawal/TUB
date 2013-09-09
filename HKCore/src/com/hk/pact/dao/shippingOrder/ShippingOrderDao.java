@@ -3,6 +3,7 @@ package com.hk.pact.dao.shippingOrder;
 import com.akube.framework.dao.Page;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
@@ -26,16 +27,12 @@ public interface ShippingOrderDao extends BaseDao {
 
 	public List<ShippingOrder> getShippingOrdersToSendShipmentEmail();
 
-	public Long getBookedQtyOfSkuInQueue(List<Sku> skuList);
-
-	/**
-	 * @param sku based on warehouse
-	 * @return Sum of Qty of lineitems for product variant which are not yet shipped
-	 */
-	public Long getBookedQtyOfSkuInQueue(Sku sku);
+	public Long getBookedQtyOfSkuInQueue(List<Sku> skuList, List<Long> shippingOrderStatus);
 
 	public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
 	public Long getBookedQtyOfSkuInProcessingQueue(List<Sku> skuList);
+
+    public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds);
 	
 }

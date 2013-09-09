@@ -53,9 +53,9 @@ public class RewardPointDaoImpl extends BaseDaoImpl implements RewardPointDao {
     public RewardPoint addRewardPoints(User referredBy, User referredUser, Order referredOrder, Double value, String comment, EnumRewardPointStatus rewardPointStatus,
             RewardPointMode rewardPointMode) throws InvalidRewardPointsException {
 
-        if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
+        /*if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
             throw new InvalidRewardPointsException(value);
-        }
+        }*/
         RewardPoint rewardPoint = new RewardPoint();
         rewardPoint.setReferredUser(referredUser);
         rewardPoint.setUser(referredBy);
@@ -94,6 +94,14 @@ public class RewardPointDaoImpl extends BaseDaoImpl implements RewardPointDao {
         criteria.add(Restrictions.eq("referredOrder", order));
         criteria.add(Restrictions.eq("rewardPointMode", rewardPointMode));
         return (RewardPoint) criteria.uniqueResult();
+    }
+
+    @Override
+    public List<RewardPoint> findRewardPoints(Order order, List<RewardPointMode> rewardPointModes) {
+        Criteria criteria = getSession().createCriteria(RewardPoint.class);
+        criteria.add(Restrictions.eq("referredOrder", order));
+        criteria.add(Restrictions.in("rewardPointMode", rewardPointModes));
+        return criteria.list();
     }
 
     public RewardPoint cancelRewardPoint(RewardPoint rewardPoint) {

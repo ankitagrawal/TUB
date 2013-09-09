@@ -1,18 +1,14 @@
 package com.hk.admin.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Tax;
+import com.hk.domain.sku.Sku;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.HealthKartCatalogUploadException;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.TaxService;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.SkuService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -27,15 +23,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.Tax;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.HealthKartCatalogUploadException;
-import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.core.TaxService;
-import com.hk.pact.service.core.WarehouseService;
-import com.hk.pact.service.inventory.SkuService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: Rajni Date: Apr 3, 2012 Time: 12:15:53 PM To change this template use File | Settings |
@@ -160,18 +152,18 @@ public class SkuXslParser {
                         throw new HealthKartCatalogUploadException("Invalid tax id in excel.", rowCount);
                     }
 
-                    skuProduct = getSkuService().findSKU(productVariantObj, warehouseObj);
-                    if (skuProduct == null) {
-                        skuProduct = new Sku();
-                        skuProduct.setProductVariant(productVariantObj);
-                        skuProduct.setWarehouse(warehouseObj);
-                        skuProduct.setTax(taxObj);
-                        skuProduct.setCutOffInventory(cutOffInventory);
-                        skuProduct.setForecastedQuantity(forecastedQty);
-	                    skuProduct.setCreateDate(new Date());
-	                    skuProduct.setUpdateDate(new Date());
-                        skuSet.add(skuProduct);
-                    } else {
+		                skuProduct = getSkuService().findSKU(productVariantObj, warehouseObj);
+		                if (skuProduct == null) {
+			                skuProduct = new Sku();
+			                skuProduct.setProductVariant(productVariantObj);
+			                skuProduct.setWarehouse(warehouseObj);
+			                skuProduct.setTax(taxObj);
+			                skuProduct.setCutOffInventory(cutOffInventory);
+			                skuProduct.setForecastedQuantity(forecastedQty);
+			                skuProduct.setCreateDate(new Date());
+			                skuProduct.setUpdateDate(new Date());
+			                skuSet.add(skuProduct);
+		                } else {
                         throw new HealthKartCatalogUploadException("SKU already exists in db.", rowCount);
                     }
                     pVariantWarehouseList.add(variant_warehouse_id);

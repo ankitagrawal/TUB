@@ -94,7 +94,15 @@
 					  </c:if>
                     </c:forEach>
 	                <span>&nbsp;</span>
+                    <c:set var="freebie" value="${hk:showFreebieForVariant(variant)}"/>
+                    <c:if test="${freebie != null}">
+                        <div class="freebie-cntnr with-variants">
+                            <div class="cntr-align" >${freebie.name} FREE</div>
+                        </div>
+                    </c:if>
                 </div>
+
+
                 <c:if test="${variant.discountPercent > 0}">
                     <div class='prices'>
                         <div class='cut'>
@@ -159,12 +167,13 @@
 
                     </c:when>
                     <c:otherwise>
-                      <c:if test="${!empty subscriptionProduct}">
+	                    <%--Subscription Commented--%>
+                      <%--<c:if test="${!empty subscriptionProduct}">
                         <div style="text-align: center">
                         <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
                           <s:param name="productVariant" value="${variant}"/> </s:link>
                         </div>
-                       </c:if>
+                       </c:if>--%>
                       <s:submit name="addToCart" value="Place Order"
                                 class="addToCartButton cta button_green"
                                 style="float:right;"/>

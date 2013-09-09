@@ -407,6 +407,22 @@ public class Product  implements java.io.Serializable {
         return minMRPPV;
     }
 
+    public Product hasFreebie() {
+        if (!(this.isHidden() || this.isDeleted() || this.isOutOfStock())) {
+            for (ProductVariant productVariant : this.getProductVariants()) {
+                if (!(productVariant.isOutOfStock() || productVariant.isDeleted())) {
+                    ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
+                    if (freeProductVariant != null) {
+                        if (!(freeProductVariant.isOutOfStock())) {
+                            return freeProductVariant.getProduct();
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public ProductVariant getMinimumHKPriceProductVariant() {
         ProductVariant minMRPPV = new ProductVariant();
         minMRPPV.setHkPrice(1000000.0);

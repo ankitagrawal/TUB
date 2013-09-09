@@ -88,9 +88,10 @@
                 Misc
             </h5>
           <ul>
-            <li><s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction"
+	          <%--Subscriptions Commented--%>
+            <%--<li><s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction"
                         event="pre">Subscriptions </s:link></li>
-            <li>
+            <li>--%>
               <s:link beanclass="com.hk.web.action.core.catalog.SuperSaversAction"><span class="txt-white">Super Savers</span></s:link>
             </li>
           </ul>
@@ -125,16 +126,16 @@
       </div>
     </div>
   </div>
-  <div id="bulkOrderModal" class="bulkOrderModal"></div>
+  <div id="bulkOrderModal" class="bulkOrderModal" style="top:100px; height:630px; " ></div>
   <div class='floatfix'></div>
 
-  <script type="text/javascript">
+  <%--<script type="text/javascript">
     $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
     $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
     $(".bulkOrder").click(function(){
       $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
     });
-  </script>
+  </script>--%>
   <%--<script type="text/javascript">
 
 	  // Set the number of snowflakes (more than 30 - 40 not recommended)

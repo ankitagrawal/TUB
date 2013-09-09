@@ -318,7 +318,7 @@ $(document).ready(function() {
 </script>
 </s:layout-component>
 <s:layout-component name="heading">
-    Edit GRN of PO # ${pa.grn.purchaseOrder.id}
+    Edit GRN # ${pa.grn.id} of PO # ${pa.grn.purchaseOrder.id}
 </s:layout-component>
 <s:layout-component name="content">
 <div style="display: none;">

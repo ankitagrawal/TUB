@@ -63,7 +63,7 @@ public class BusyPopulateSalesData {
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
+							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
@@ -106,10 +106,12 @@ public class BusyPopulateSalesData {
       String against_form;
       Double net_amount;
       byte imported_flag;
+      String warehouse_state;
 
 	  String gateway_order_id;
 	  String awb_number;
 
+      warehouse_state = accountingInvoice.warehouse_state;
       shippingOrderId = accountingInvoice.shipping_order_id
 	     Long warehouseId =  accountingInvoice.warehouse_id;
 
@@ -128,6 +130,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
 
       date = accountingInvoice.order_date;
@@ -205,10 +213,10 @@ public class BusyPopulateSalesData {
         state = state.substring(0, 39);
       }
 
-      if ("haryana".equalsIgnoreCase(state)) {
-        out_of_state = 0;
+      if (warehouse_state != null && warehouse_state.equalsIgnoreCase(state)) {
+          out_of_state = 0;
       } else {
-        out_of_state = 1;
+          out_of_state = 1;
       }
 
    //  material_centre = accountingInvoice.warehouse;
@@ -228,6 +236,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
@@ -276,7 +290,7 @@ public class BusyPopulateSalesData {
        transactionFooterForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
     }
       catch (Exception e) {
-            logger.info("Unable to insert in  transaction header: ",e);
+            logger.info("Unable to insert in  transaction header for SO ID : "+ accountingInvoice.shipping_order_id);
           }
     }
   }
@@ -296,7 +310,7 @@ public class BusyPopulateSalesData {
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-							so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no, bo.gateway_order_id, aw.awb_number
+							so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
@@ -339,12 +353,13 @@ public class BusyPopulateSalesData {
       String against_form;
       Double net_amount;
       byte imported_flag;
+      String warehouse_state;
 
 	  String gateway_order_id;
 	  String awb_number;
 
       shippingOrderId = accountingInvoice.shipping_order_id
-
+      warehouse_state = accountingInvoice.warehouse_state;
       Long warehouseId =  accountingInvoice.warehouse_id;
 
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
@@ -362,6 +377,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
       date = accountingInvoice.order_date;
 /*
@@ -438,10 +459,10 @@ public class BusyPopulateSalesData {
         state = state.substring(0, 39);
       }
 
-      if ("haryana".equalsIgnoreCase(state)) {
-        out_of_state = 0;
+      if (warehouse_state != null && warehouse_state.equalsIgnoreCase(state)) {
+          out_of_state = 0;
       } else {
-        out_of_state = 1;
+          out_of_state = 1;
       }
 
 //      material_centre = accountingInvoice.warehouse;
@@ -460,6 +481,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
@@ -527,7 +554,7 @@ public class BusyPopulateSalesData {
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type, th.hk_ref_no,
-							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
+							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
@@ -540,11 +567,11 @@ public class BusyPopulateSalesData {
 							left join courier c on aw.courier_id = c.id
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
-							left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
+                            left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
 							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and bo.is_b2b_order = 1
-							and th.hk_ref_no is null
+                            and th.hk_ref_no is null
 							GROUP BY so.id
 							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
@@ -570,12 +597,13 @@ public class BusyPopulateSalesData {
       String against_form;
       Double net_amount;
       byte imported_flag;
+      String warehouse_state;
 
 	  String gateway_order_id;
 	  String awb_number;  
 
       shippingOrderId = accountingInvoice.shipping_order_id
-
+      warehouse_state = accountingInvoice.warehouse_state;
       Long warehouseId =  accountingInvoice.warehouse_id;
 
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
@@ -593,8 +621,15 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      series = "DL";
 		    }
+        else if(warehouseId == 1000 ){
+            series = "CHD";
+        }
+        else if(warehouseId == 1001){
+            series = "GK";
+        }
 
-      date = accountingInvoice.order_date;
+
+          date = accountingInvoice.order_date;
 /*
       if(accountingInvoice.Order_type.equals("B2B")){
         vch_prefix = "T";
@@ -669,7 +704,7 @@ public class BusyPopulateSalesData {
         state = state.substring(0, 39);
       }
 
-      if ("haryana".equalsIgnoreCase(state)) {
+      if (warehouse_state != null && warehouse_state.equalsIgnoreCase(state)) {
         out_of_state = 0;
       } else {
         out_of_state = 1;
@@ -691,6 +726,12 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 401){
 			      material_centre = "Kapashera Warehouse";
 		    }
+        else if(warehouseId == 1000 ){
+            material_centre = "Chandigarh Aqua Store";
+        }
+        else if(warehouseId == 1001){
+            material_centre = "Greater Kailash Aqua Store";
+        }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";

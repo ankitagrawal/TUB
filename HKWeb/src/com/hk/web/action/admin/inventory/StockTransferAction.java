@@ -1,11 +1,8 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.sku.EnumSkuItemOwner;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -31,6 +28,8 @@ import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemOwner;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
@@ -121,6 +120,16 @@ public class StockTransferAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
+    	//TODO: ERP Checkout
+    	List<SkuItemStatus> itemStatus = new ArrayList<SkuItemStatus>();
+    	itemStatus.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+    	itemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+    	itemStatus.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+    	
+    	List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+    	skuItemOwners.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+    	
+    	
         SkuItem skuItem = null;
         if (stockTransfer == null) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
@@ -137,21 +146,30 @@ public class StockTransferAction extends BasePaginatedAction {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
 
-        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId(), EnumSkuItemStatus.Checked_IN.getId());
+        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId(), itemStatus, skuItemOwners);
         if (skuItemBarcode != null) {
             skuItem = skuItemBarcode;
         } else {
-            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse());
+            List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse(), itemStatus, skuItemOwners);
             if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
                 skuItem = inStockSkuItemList.get(0);
             }
         }
         if (skuItem != null) {
-            if (!skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())) {
+        	
+        	if (!itemStatus.contains(skuItem.getSkuItemStatus())) {
                 addRedirectAlertMessage(new SimpleMessage("Seems to be multiple Scanning of Same Barcode"));
                 return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
             }
+        	
+        	boolean validateSkuItem = stockTransferService.validateSkuItem(skuItem);
+        	if(!validateSkuItem){
+        		addRedirectAlertMessage(new SimpleMessage("The SkuItem cannot be freed for Stock Transfer"));
+                return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+        	}
+        	
             skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
             SkuGroup skuGroup = skuItem.getSkuGroup();
             Sku sku = skuGroup.getSku();
             StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, sku, skuGroup);
@@ -166,9 +184,11 @@ public class StockTransferAction extends BasePaginatedAction {
                 stockTransferLineItem.setTax(sku.getTax());
                 stockTransferLineItem.setMfgDate(skuGroup.getMfgDate());
                 stockTransferLineItem.setExpiryDate(skuGroup.getExpiryDate());
-                stockTransferDao.save(stockTransferLineItem);
-            } 
-            stockTransferLineItem = stockTransferService.updateStockTransferLineItem(stockTransferLineItem.getId(), ADD_STOCK_TRANSFER_LINE_ITEM);
+                stockTransferLineItem.setCheckedoutQty(1l);
+                stockTransferLineItem = (StockTransferLineItem)stockTransferDao.save(stockTransferLineItem);
+            } else {
+            	stockTransferLineItem = stockTransferService.updateStockTransferLineItem(stockTransferLineItem, ADD_STOCK_TRANSFER_LINE_ITEM);
+            }
 
             if (stockTransfer.getStockTransferStatus().equals(EnumStockTransferStatus.Generated.getStockTransferStatus())) {
                 stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getStockTransferStatus());
@@ -222,22 +242,23 @@ public class StockTransferAction extends BasePaginatedAction {
             }
 
         } else {
-            skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, Arrays.asList(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus()));
         }
         if (skuItemToBeReverted == null) {
             addRedirectAlertMessage(new SimpleMessage("Some error occurred. Stock not transferred against this Barcode "));
             return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
         }
         skuItemToBeReverted.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemToBeReverted.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
         baseDao.save(skuGroupToBeReverted);
 
         adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null,
-        		stliToBeReduced, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+        		stliToBeReduced,EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
 
         getInventoryService().checkInventoryHealth(skuGroupToBeReverted.getSku().getProductVariant());
         
         // to control concurrency and avoid dirty read
-        stliToBeReduced = stockTransferService.updateStockTransferLineItem(stliToBeReduced.getId(), REVERT_STOCK_TRANSFER_LINE_ITEM);
+        stliToBeReduced = stockTransferService.updateStockTransferLineItem(stliToBeReduced, REVERT_STOCK_TRANSFER_LINE_ITEM);
         
         addRedirectAlertMessage(new SimpleMessage("Qty reduced by 1."));
         return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");

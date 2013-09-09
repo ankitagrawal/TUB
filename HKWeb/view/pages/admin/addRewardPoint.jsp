@@ -16,10 +16,14 @@
   <s:layout-component name="heading">Add Reward Point for user ${rpBean.user.login}</s:layout-component>
   <s:layout-component name="content">
     <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
+      <fieldset>
+           <label style="color: #ff0000; font-weight: bold; font-size: 25px;">Reward Points given due to cancellations will not be given from this screen. They will be given automatically</label>
+      </fieldset>
       <fieldset class="left_label">
         <ul>
           <s:hidden name="user" value="${rpBean.user.id}"/>
           <li><label>Value</label><s:text name="value"/></li>
+          <li><label>Order Id</label><s:text name="orderId"/></li>
           <li><label>Mode</label>
             <s:select name="rewardPointMode"><hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
             </s:select></li>

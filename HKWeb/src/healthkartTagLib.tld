@@ -363,9 +363,9 @@
         </description>
         <name>bookedQty</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long bookedQty(java.lang.Object)</function-signature>
+        <function-signature>java.lang.Long bookedQty(java.lang.Object, java.util.Collection)</function-signature>
         <example>
-            ${hk:bookedQty(${object})}
+            ${hk:bookedQty(${object}, ${collection)}
         </example>
     </function>
     <function>
@@ -548,6 +548,19 @@
             ${hk:getInStockSkuItems(${object})}
         </example>
     </function>
+
+     <function>
+        <description>
+            returns list of available skuitems of a skugroup
+        </description>
+        <name>getNetPhysicalAvailableStockSkuItems</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getNetPhysicalAvailableStockSkuItems(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getInStockSkuItems(${object})}
+        </example>
+    </function>
+
 
     <function>
         <description>
@@ -1295,6 +1308,50 @@
         <function-signature>java.util.List similarProductWithUnbookedInventory(com.hk.domain.catalog.product.ProductVariant)</function-signature>
         <example>
             ${hk:similarProductWithUnbookedInventory(${productVariant})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns whether a BO is cancellable or not based on whether all SO are in action awaiting state
+        </description>
+        <name>isBOCancelable</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isBOCancelable(java.lang.Long)</function-signature>
+        <example>
+            ${hk:isSOCanceled(${orderId})}
+        </example>
+    </function>
+  <function>
+    <description>
+      returns count of LineItem quantity
+    </description>
+    <name>countLineItemQty</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>java.lang.Long countLineItemQty( com.hk.domain.order.ShippingOrder)</function-signature>
+    <example>
+      ${hk:countLineItemQty(${shipingOrder})}
+    </example>
+  </function>
+    <function>
+        <description>
+            returns if Freebie offer should be shown
+        </description>
+        <name>showFreebie</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.catalog.product.Product showFreebie(com.hk.domain.catalog.product.Product)</function-signature>
+        <example>
+            ${hk:showFreebie(${product})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns if Freebie offer should be shown
+        </description>
+        <name>showFreebieForVariant</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.catalog.product.Product showFreebieForVariant(com.hk.domain.catalog.product.ProductVariant)</function-signature>
+        <example>
+            ${hk:showFreebie(${product})}
         </example>
     </function>
 </taglib>

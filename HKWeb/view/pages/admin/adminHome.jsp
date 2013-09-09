@@ -70,6 +70,7 @@
 	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
 	
 	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchB2BUserAction">Search B2B Users</s:link></h3>
+	  <h3><a href="${pageContext.request.contextPath}/pages/admin/b2bPriceUpdate.jsp">Update B2B Price</a></h3>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">
@@ -80,6 +81,7 @@
 
     <shiro:hasRole name="<%=RoleConstants.GOD%>">
         <h3><s:link beanclass="com.hk.web.action.core.menu.DataIndexRefreshAction">Refresh Data Indexes</s:link></h3>
+        <h3><s:link beanclass="com.hk.web.action.core.RefreshCacheAction">Refresh Cache</s:link></h3>
     </shiro:hasRole>
 
     <c:if test="${whAction.setWarehouse == null}">
@@ -155,13 +157,13 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.ShipmentInstallationAwaitingQueueAction">Installation Awaiting Queue</s:link></h3>
-
+    </c:if>
     <h3>
-        </c:if>
         <s:link
                 beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction"
                 event="downloadWHInventorySnapshot">WH Inventory Excel
         </s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchPVIInfoAction">Search PVI Info</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
@@ -223,13 +225,21 @@
       <h3><s:link
           beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
 
-      <h3>
-        <s:link
-            beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
-      </h3>
+        <h3>
+            <s:link
+                    beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
+        </h3>
 
-      <h3>
-        <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
+        <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
+            <h3><s:link
+                beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction">Reverse Pickup List</s:link></h3>
+
+            <h3><s:link
+                    beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction">RPWarehouse Checkin</s:link></h3>
+        </shiro:hasPermission>
+
+        <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
 
     </c:if>
     <h3>
@@ -375,6 +385,11 @@
                 
                 <h3>
         <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
+
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction"
+                title="View Supplier Accounts" event="pre">View Supplier Accounts</s:link></h3>
+
 
 </div>
 

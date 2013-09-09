@@ -409,6 +409,17 @@
 				Recommended Products &darr;
 			</a>
 		</c:if>
+
+        <c:set var="freebie" value="${hk:showFreebie(product)}"/>
+        <c:if test="${freebie != null}">
+            <div class="freebie-cntnr">
+
+                <h6 >Offer Available</h6>
+                <div>
+                        ${freebie.name} FREE with selected variants of this product. Offer valid till stocks last.
+                </div>
+            </div>
+        </c:if>
 <%--
         <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
             <div id="tryOnLink" class="content">
@@ -420,7 +431,6 @@
 --%>
 	</div>
 	<c:if test="${!empty subscriptionProduct}">
-		<%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
 		<div class="jqmWindow" style="display:none;" id="subscriptionWindow"></div>
 
 		<script type="text/javascript">
@@ -804,7 +814,7 @@
 				People who bought this also bought these products
 			</h4>
 
-			<c:forEach items="${relatedProducts}" var="relatedProduct" begin="1" end="6">
+			<c:forEach items="${relatedProducts}" var="relatedProduct" begin="0" end="5">
                  <c:if test="${!relatedProduct.outOfStock and !relatedProduct.deleted and !relatedProduct.hidden and !relatedProduct.googleAdDisallowed}">
 				<s:layout-render name="/layouts/embed/_productVOThumbG.jsp" product="${relatedProduct}"/>
                      <c:set var="check_related_products" value="1"/>

@@ -258,7 +258,7 @@ public class JobCartAction extends BaseAction {
 
         try {
             if (productVariant != null && skuGroupField != null) {
-                Sku sku = skuService.findSKU(productVariant, grn.getWarehouse());
+                Sku sku = skuService.getSKU(productVariant, grn.getWarehouse());
                 logger.debug("Sku :  " + sku);
                 if (bin != null) {
                     boolean status = binManager.assignBinToSkuItems(skuGroupField.getSkuItems(), bin);
@@ -306,7 +306,7 @@ public class JobCartAction extends BaseAction {
 
         try {
             if (productVariant != null) {
-                Sku sku = skuService.findSKU(productVariant, grn.getWarehouse());
+                Sku sku = skuService.getSKU(productVariant, grn.getWarehouse());
                 logger.debug("Sku :  " + sku);
                 if (skuGroupField != null) {
                     Bin updatedBin = binDao.createBin(bin, userWarehouse);

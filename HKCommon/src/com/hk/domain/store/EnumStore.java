@@ -1,5 +1,7 @@
 package com.hk.domain.store;
 
+import java.util.Arrays;
+import java.util.List;
 
 public enum EnumStore {
 	
@@ -30,4 +32,8 @@ public enum EnumStore {
 		 store.setPrefix(this.prefix);
 		 return store;
 	 }
+
+    public static List<Long> getReconciliationEnabledStores() {
+        return Arrays.asList(HEALTHKART.asStore().getId(), LOYALTYPG.asStore().getId());
+    }
 }

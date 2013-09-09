@@ -4,15 +4,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map;
 
+import com.hk.domain.catalog.product.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
 import com.hk.pact.dao.BaseDao;
 
 public interface ProductDao extends BaseDao {
@@ -104,4 +100,7 @@ public interface ProductDao extends BaseDao {
 
     public List<Product> getOOSHiddenDeletedProducts();
 
+		public List<String> getAllBrands(String brandLike);
+
+    public List<Product> getProductsWithFreebie(ProductVariant productVariant);
 }

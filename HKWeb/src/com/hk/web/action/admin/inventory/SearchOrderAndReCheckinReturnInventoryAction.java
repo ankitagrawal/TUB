@@ -12,6 +12,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
@@ -27,6 +28,7 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -72,6 +74,8 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 	private SkuItemDao							skuItemDao;
 	@Autowired
 	private SkuGroupService 			skuGroupService;
+  @Autowired
+  private SkuItemLineItemService skuItemLineItemService;
 
     Map<LineItem, String> lineItemRecheckinBarcodeMap = new HashMap<LineItem, String>();
 
@@ -158,8 +162,9 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(GOOD)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
+										null,EnumSkuItemStatus.Checked_IN,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
@@ -167,8 +172,9 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(DAMAGED)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 0L, loggedOnUser);
+										null,EnumSkuItemStatus.Damaged,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
+                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
@@ -176,9 +182,10 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(EXPIRED)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 0L, loggedOnUser);
-								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
-								skuItemDao.save(skuItem);
+										null,EnumSkuItemStatus.Expired,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 0L, loggedOnUser);
+//								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
+//                                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+//								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
 							}
@@ -190,6 +197,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 						String comments = "Re Checked-in Returned Item : " + conditionOfItem + "--" + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
 								productVariant.getOptionsCommaSeparated();
 						shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
+            skuItemLineItemService.freeInventoryForRTOCheckIn(shippingOrder);
 						addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
 					} else {
 						addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesn't match any of the items OR item not in correct status"));

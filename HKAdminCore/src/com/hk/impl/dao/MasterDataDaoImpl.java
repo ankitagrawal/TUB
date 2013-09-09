@@ -1,53 +1,50 @@
 package com.hk.impl.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.cache.CategoryCache;
+import com.hk.cache.RoleCache;
+import com.hk.cache.vo.RoleVO;
+import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.analytics.EnumReasonType;
+import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumCancellationType;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.EnumUserCodCalling;
-import com.hk.constants.courier.*;
+import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumCourierOperations;
+import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import com.hk.constants.inventory.EnumCycleCountStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.pos.DiscountConstants;
+import com.hk.constants.reversePickup.EnumReversePickupStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
-import com.hk.domain.courier.*;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.service.core.WarehouseService;
-import com.hk.domain.review.Mail;
-import com.hk.pact.service.review.MailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import com.hk.admin.pact.dao.courier.CourierDao;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.admin.pact.service.hkDelivery.RunSheetService;
-import com.hk.cache.RoleCache;
-import com.hk.cache.vo.RoleVO;
-import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
-import com.hk.constants.core.EnumRole;
-import com.hk.constants.hkDelivery.EnumRunsheetStatus;
-import com.hk.constants.inventory.EnumPurchaseOrderStatus;
-import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.constants.inventory.EnumReconciliationType;
-import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.*;
+import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -60,11 +57,13 @@ import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.review.Mail;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
@@ -72,8 +71,16 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.CityService;
 import com.hk.pact.service.core.StateService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.marketing.MarketingService;
+import com.hk.pact.service.review.MailService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.*;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
@@ -112,6 +119,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private ConsignmentService consignmentService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    ShippingOrderService shippingOrderService;
+    @Autowired
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -220,7 +231,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(DebitNoteStatus.class);
     }
 
-  public List<CreditNoteStatus> getCreditNoteStatusList() {
+    public List<CreditNoteStatus> getCreditNoteStatusList() {
         return getBaseDao().getAll(CreditNoteStatus.class);
     }
 
@@ -235,9 +246,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<ReconciliationType> getReconciliationTypeList() {
         return EnumReconciliationType.getSubtractReconciliationType();
     }
-    
-    public List<ReconciliationType> getDebitNoteReconciliationType(){
-    	return EnumReconciliationType.getDebitNoteReconciliationType();
+
+    public List<ReconciliationType> getDebitNoteReconciliationType() {
+        return EnumReconciliationType.getDebitNoteReconciliationType();
     }
 
     public List<Mail> getAllMailType() {
@@ -532,7 +543,39 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<EnumUserCodCalling> getUserCodCallStatus() {
-        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO,EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
     }
 
+    public List<Reason> getCustomerReasonForReversePickup() {
+        return shippingOrderLifecycleService.getReasonByType(EnumReasonType.Reverse_Pickup_Customer.getName());
+    }
+
+    public List<Reason> getWarehouseReceivedCondition() {
+        return shippingOrderLifecycleService.getReasonByType(EnumReasonType.Reverse_Pickup_Warehouse.getName());
+    }
+
+    public List<Courier> getCouriersForReversePickup() {
+        return courierService.getCouriers(null, null, null, EnumCourierOperations.REVERSE_PICKUP.getId());
+    }
+
+    public List<EnumReversePickupStatus> getAllReversePickUpStatus() {
+        return Arrays.asList(EnumReversePickupStatus.RPU_Initiated, EnumReversePickupStatus.RPU_Picked, EnumReversePickupStatus.RPU_Received, EnumReversePickupStatus.RPU_QC_Checked_In);
+    }
+
+
+		public List<Category> getCategoriesForPOS() {
+				List<Category> posCategoryList = new ArrayList<Category>();
+				String categoryNames = CategoryConstants.HEALTH_DEVICES + "," + CategoryConstants.SPORTS_NUTRITION + "," + CategoryConstants.HEALTH_NUTRITION + "," + CategoryConstants.SPORTS;
+
+				Set<Category> categorySet = new HashSet<Category>();
+
+				for (String categoryName : categoryNames.split(",")) {
+					categorySet.add(CategoryCache.getInstance().getCategoryByName(categoryName).getCategory());
+				}
+
+				for (Category category : categorySet) {
+					posCategoryList.add(category);
+				}
+				return posCategoryList;
+		}
 }

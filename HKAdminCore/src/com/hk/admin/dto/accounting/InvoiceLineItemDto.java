@@ -1,8 +1,9 @@
 package com.hk.admin.dto.accounting;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.hk.constants.core.TaxConstants;
 import com.hk.constants.courier.StateList;
@@ -13,6 +14,8 @@ import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemLineItem;
 
 /**
  * Created by IntelliJ IDEA. User: Rahul Date: Mar 14, 2012 Time: 6:10:49 PM To change this template use File | Settings |
@@ -25,8 +28,10 @@ public class InvoiceLineItemDto {
     private List<ProductOption>           productOptions;
     private List<CartLineItemExtraOption> cartLineItemExtraOptions;
     private Set<CartLineItemConfigValues> cartLineItemConfigValues;
+    private List<SkuItemLineItem>         skuItemLineItems;
     private String                        productName;
     private String                        variantName;
+    private String                        variantId;
     private long                          qty;
     private double                        markedPrice;
     private double                        hkPrice;
@@ -42,14 +47,18 @@ public class InvoiceLineItemDto {
     private double                        taxable;
     private double                        tax;
     private double                        surcharge;
+    //Map<String, QtyExp> skuGroupLongMap;
+    DateFormat dateFormat = new SimpleDateFormat("MM/yy");
 
     public InvoiceLineItemDto(LineItem productLineItem) {
         productCategories = productLineItem.getSku().getProductVariant().getProduct().getCategories();
         productName = productLineItem.getSku().getProductVariant().getProduct().getName();
         variantName = productLineItem.getSku().getProductVariant().getVariantName();
+        variantId   = productLineItem.getSku().getProductVariant().getId();
         productOptions = productLineItem.getSku().getProductVariant().getProductOptions();
         cartLineItemExtraOptions = productLineItem.getCartLineItem().getCartLineItemExtraOptions();
         CartLineItemConfig cartLineItemConfig = productLineItem.getCartLineItem().getCartLineItemConfig();
+        skuItemLineItems = productLineItem.getSkuItemLineItems();
         if ( cartLineItemConfig!= null) {
             cartLineItemConfigValues = cartLineItemConfig.getCartLineItemConfigValues();
         }
@@ -83,6 +92,14 @@ public class InvoiceLineItemDto {
         }
         tax = taxable * taxValue;
 
+    }
+
+    public String getVariantId() {
+        return variantId;
+    }
+
+    public void setVariantId(String variantId) {
+        this.variantId = variantId;
     }
 
     public InvoiceLineItemDto() {
@@ -184,6 +201,10 @@ public class InvoiceLineItemDto {
 
     public Set<CartLineItemConfigValues> getCartLineItemConfigValues() {
         return cartLineItemConfigValues;
+    }
+
+    public List<SkuItemLineItem> getSkuItemLineItems() {
+        return skuItemLineItems;
     }
 
     public String getExtraOptionsPipeSeparated() {

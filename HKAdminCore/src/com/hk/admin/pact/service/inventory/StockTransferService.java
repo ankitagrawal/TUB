@@ -1,6 +1,7 @@
 package com.hk.admin.pact.service.inventory;
 
 import com.hk.domain.inventory.StockTransferLineItem;
+import com.hk.domain.sku.SkuItem;
 
 /**
  * @author Ankit Chhabra
@@ -8,7 +9,9 @@ import com.hk.domain.inventory.StockTransferLineItem;
  */
 public interface StockTransferService {
 
-	public StockTransferLineItem updateStockTransferLineItem(Long itemId, String actionType);
+	public StockTransferLineItem updateStockTransferLineItem(StockTransferLineItem stockTransferLineItem, String actionType);
+	
+	public boolean validateSkuItem(SkuItem skuItem);
 
 }
 

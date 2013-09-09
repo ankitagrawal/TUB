@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ public class OzoneCatalogAction extends BaseAction {
     @Autowired
     private CategoryService categoryService;
 
-    private List<Product> products = new ArrayList<Product>();
+    private List<Product> products;
 
 
 
@@ -43,7 +42,7 @@ public class OzoneCatalogAction extends BaseAction {
     public Resolution pre() {
         Category category = categoryService.getCategoryByName(CategoryConstants.DIABETES);
         List<Product> diabetesProducts = new ArrayList<Product>();
-        List<Product> finalProductList = new ArrayList<Product>();
+        products = new ArrayList<Product>();
         if (category != null){
             diabetesProducts = category.getProducts();
         }
@@ -56,17 +55,15 @@ public class OzoneCatalogAction extends BaseAction {
         //Only products with MRP > 5 will get added.
         for (Product product : diabetesProducts){
             if (product.getMinimumHKPriceProductVariant().getHkPrice() > 5.0){
-                diabetesProducts.add(product);
+                products.add(product);
             }
         }
         for (Product product : healthDevicesProduct){
             if (product.getMinimumHKPriceProductVariant().getHkPrice() > 5.0){
-                diabetesProducts.add(product);
+                products.add(product);
             }
         }
 
-        //diabetesProducts.addAll(healthDevicesProduct);
-        products = diabetesProducts;
         return new ForwardResolution("/pages/ozoneCatalog.jsp");
     }
 
