@@ -86,14 +86,14 @@
         <div style="clear:both;">
             <c:if test="${not empty updateReachEngineAction.hkReachEngines}">
                 <div id="hkReachTable">
-                    <table style="width:100%;">
+                    <table>
                         <thead><tr>
-                            <th>S No.</th>
+                            <th style="width: 70px;">S No.</th>
                             <th style="width:150px;">Warehouse</th>
-                            <th >Hub</th>
-                            <th>Inter City Cost(Rs. per kg)</th>
-                            <th>Fixed Hub Cost(Rs. per kg)</th>
-                            <th> &nbsp;</th>
+                            <th style="width: 150px;">Hub</th>
+                            <th style="width: 70px;">Inter City Cost(Rs. per kg)</th>
+                            <th style="width: 70px;">Fixed Hub Cost(Rs. per kg)</th>
+                            <th style="width: 70px;"> Tick to update</th>
                         </tr></thead>
                         <c:forEach items="${updateReachEngineAction.hkReachEngines}" var="hkRE" varStatus="ctr">
                             <tbody><tr count="${ctr.index}">
@@ -109,9 +109,14 @@
                                         ${hkRE.hub.name}
                                             <input type="hidden" name="hkReachEngines[${ctr.index}].hub" value="${hkRE.hub.id}" />
                                     </td>
-                                    <td><s:text name="hkReachEngines[${ctr.index}].interCityCost" value="${hkRE.interCityCost}" class="interCityCost" /></td>
-                                    <td><s:text name="hkReachEngines[${ctr.index}].fixedCost" value="${hkRE.fixedCost}" class="fixedCost" /></td>
                                     <td>
+                                        <s:text name="hkReachEngines[${ctr.index}].interCityCost" value="${hkRE.interCityCost}" class="interCityCost" />
+                                    </td>
+                                    <td>
+                                        <s:text name="hkReachEngines[${ctr.index}].fixedCost" value="${hkRE.fixedCost}" class="fixedCost" />
+                                    </td>
+                                    <td>
+                                        <s:checkbox name="hkReachEngines[${ctr.index}].selected" />
                                     </td>
                             </tr></tbody>
                         </c:forEach>

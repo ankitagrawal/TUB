@@ -54,12 +54,19 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   public Resolution save() {
+      boolean flag = false;
       for(HKReachPricingEngine hkReachPricingEngine : hkReachEngines) {
-          courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+          if (hkReachPricingEngine.isSelected()) {
+              hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
+              courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+              flag = true;
+          }
       }
-      addRedirectAlertMessage(new SimpleMessage("Pricing info updated"));
-      prepareEngineData();
-      return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search");
+      if (flag) {
+          addRedirectAlertMessage(new SimpleMessage("Pricing info updated"));
+      }
+      return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
+                                    .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
   }
 
   public Resolution add() {
@@ -69,6 +76,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("Entry already exists for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
                     " corresponding to " + hkReachPricingEngine.getHub().getName()));
       } else {
+          hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
           courierService.saveHKReachPricingEngine(hkReachPricingEngine);
           addRedirectAlertMessage(new SimpleMessage("Successfully added entry for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
                             " corresponding to " + hkReachPricingEngine.getHub().getName()));
