@@ -14120,4 +14120,11 @@
             <column name="line_item_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-1">
+        <addColumn tableName="hk_reach_pricing_engine">
+            <column name="valid_from" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

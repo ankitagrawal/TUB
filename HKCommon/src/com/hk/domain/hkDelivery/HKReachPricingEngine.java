@@ -38,6 +38,9 @@ public class HKReachPricingEngine {
   @Column(name = "update_time")
   private Date updateTime;
 
+  @Column(name = "valid_from", nullable = false)
+  private Date validFrom;
+
   public Long getId() {
     return id;
   }
@@ -84,5 +87,13 @@ public class HKReachPricingEngine {
 
   public void setUpdateTime(Date updateTime) {
     this.updateTime = updateTime;
+  }
+
+  public Date getValidFrom() {
+    return validFrom;
+  }
+
+  public void setValidFrom(Date validFrom) {
+    this.validFrom = validFrom;
   }
 }

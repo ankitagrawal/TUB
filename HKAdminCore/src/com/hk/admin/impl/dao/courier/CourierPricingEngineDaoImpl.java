@@ -52,7 +52,7 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     return null;
   }
 
-  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub) {
+  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub, Date validFromDate) {
     DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
     if (warehouse != null) {
       criteria.add(Restrictions.eq("warehouse", warehouse));
@@ -60,6 +60,11 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     if (hub != null) {
       criteria.add(Restrictions.eq("hub", hub));
     }
+    if (validFromDate!=null) {
+      criteria.add(Restrictions.le("validFrom",validFromDate));
+    }
+    criteria.addOrder(Order.desc("validFrom"));
+
     List<HKReachPricingEngine> result = this.findByCriteria(criteria);
     if (result!=null && !result.isEmpty()) {
       return result;
@@ -69,8 +74,8 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
   }
 
   @Override
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub) {
-    List<HKReachPricingEngine> hkReachPricingEngines = getHkReachPricingEngineList(warehouse, hub);
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Date validFrom) {
+    List<HKReachPricingEngine> hkReachPricingEngines = getHkReachPricingEngineList(warehouse, hub, validFrom);
     return hkReachPricingEngines != null && !hkReachPricingEngines.isEmpty() ? hkReachPricingEngines.get(0) : null;
   }
 
@@ -78,6 +83,7 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier) {
     DetachedCriteria courierPricingEngineCriteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     courierPricingEngineCriteria.add(Restrictions.eq("courier", courier));
+    courierPricingEngineCriteria.addOrder(Order.desc("validUpto"));
     return findByCriteria(courierPricingEngineCriteria);
   }
 

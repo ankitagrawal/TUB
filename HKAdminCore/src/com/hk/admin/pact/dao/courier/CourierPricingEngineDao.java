@@ -9,6 +9,7 @@ import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,9 +23,9 @@ public interface CourierPricingEngineDao extends BaseDao {
 
   public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
 
-  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub);
+  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub, Date validFrom);
 
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub);
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Date validFrom);
 
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier);
 

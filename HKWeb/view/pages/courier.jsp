@@ -73,6 +73,9 @@
                         <li>
                             <s:checkbox name="operationBitSetList" value="17"/><label>REVERSE PICKUP</label>
                         </li>
+                        <li>
+                            <s:checkbox name="operationBitSetList" value="23"/><label>PHYSICAL WEIGHT PREFERRED</label>
+                        </li>
 					</ul>
 				</div>
 				<div class="clear"></div>
