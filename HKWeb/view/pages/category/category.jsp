@@ -23,8 +23,8 @@
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
 <%
     DateTime dateTime = new DateTime();
-    Date startOfOfferDate = new Date(new DateTime(2013, 9, 01, 00, 00, 00, 00).getMillis());
-    Date endOfOfferDate = new Date(new DateTime(2013, 9, 07, 00, 00, 00, 00).getMillis());
+    Date startOfOfferDate = new Date(new DateTime(2013, 9, 9, 00, 00, 00, 00).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 9, 14, 23, 59, 59, 00).getMillis());
 %>
 <c:if test="${categoryBean.category.name == 'services'}">
     <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
