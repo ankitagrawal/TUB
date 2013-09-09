@@ -2,10 +2,11 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 
-<s:layout-component name="metaDescription">Health Nutrition Offers</s:layout-component>
-<s:layout-component name="metaKeywords">Health Nutrition Offers</s:layout-component>
 
-<s:layout-component name="content">
+    	<link href="${pageContext.request.contextPath}/pages/offers/devils-circuit-webpage/devil.css"
+    	      rel="stylesheet" type="text/css"/>
+
+
     <div class="container">
     	<div class="row" align="center"><a href="http://bit.ly/17E3ISc"><img src="images/are-you-in.jpg" alt="We're taking on the devil - Are you in? | October 6th 2013, adjacent to Buddha International Circuit" /></a></div>
         <div class="row videoBg">
@@ -38,9 +39,6 @@
             <div class="clr pad1"></div>
         </div>
 
-
-
-
         <div class="row powerUpBg">
         	<div class="row">
         		<div class="leftBar">
@@ -71,4 +69,3 @@
         </div>
         <div class="row">&nbsp;</div>
     </div>
-</s:layout-component>
