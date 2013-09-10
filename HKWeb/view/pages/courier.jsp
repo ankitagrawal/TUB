@@ -1,6 +1,7 @@
 <%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.courier.EnumCourierOperations" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.AddCourierAction" var="cou"/>
@@ -52,30 +53,11 @@
 				<div class="row">
 					<s:label class="rowLabel" name="Operation Type*"/>
 					<ul class="rowUl">
-						<li>
-							<s:checkbox name="operationBitSetList" value="2"/> <label>HK SHIPPING</label>
-						</li>
-						<li>
-							<s:checkbox name="operationBitSetList" value="3"/><label>CUSTOMER RETURNS</label>
-						</li>
-						<li>
-							<s:checkbox name="operationBitSetList" value="5"/> <label>COLLECT FROM SUPPLIER</label>
-						</li>
-						<li>
-							<s:checkbox name="operationBitSetList" value="7"/><label>DEBIT NOTE</label>
-						</li>
-						<li>
-							<s:checkbox name="operationBitSetList" value="11"/><label>DISPATCH LOT</label>
-						</li>
-						<li>
-							<s:checkbox name="operationBitSetList" value="13"/><label>VENDOR DROP SHIP</label>
-						</li>
+						<c:forEach items="<%=EnumCourierOperations.values()%>" var="cOp">
                         <li>
-                            <s:checkbox name="operationBitSetList" value="17"/><label>REVERSE PICKUP</label>
-                        </li>
-                        <li>
-                            <s:checkbox name="operationBitSetList" value="23"/><label>PHYSICAL WEIGHT PREFERRED</label>
-                        </li>
+							<s:checkbox name="operationBitSetList" value="${cOp.id}" /> <label>${cOp.name}</label>
+						</li>
+                        </c:forEach>
 					</ul>
 				</div>
 				<div class="clear"></div>
