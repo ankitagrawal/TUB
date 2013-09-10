@@ -130,7 +130,7 @@ $(document).ready(function() {
         <td><b>Tin</b></td>
         <td>${debitNoteSummary.debitNote.supplier.tinNumber}</td>
         <td><b>Supplier Invoice</b></td>
-       <td> <c:if test="${debitNoteSummary.debitNote.purchaseInvoice!=null }">${debitNoteSummary.debitNote.purchaseInvoice}</c:if></td>
+       <td> <c:if test="${debitNoteSummary.debitNote.purchaseInvoice!=null }">${debitNoteSummary.debitNote.purchaseInvoice.invoiceNumber}</c:if></td>
         <td colspan="2"></td>
     </tr>
 </table>
@@ -143,7 +143,6 @@ $(document).ready(function() {
     <th>S.No.</th>
     <th>VariantID</th>
     <th>Indicator</th>
-
     <th>UPC</th>
     <th>Details</th>
     <th>Qty</th>
@@ -174,7 +173,13 @@ $(document).ready(function() {
           ${debitNoteDto.debitNoteLineItem.sku.productVariant.id}
       </td>
           <td>
-
+          <c:choose>
+              <c:when test="${debitNoteSummary.debitNote.purchaseInvoice!=null}">PI-${debitNoteSummary.debitNote.purchaseInvoice}</c:when>
+              <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">RV-${debitNoteSummary.debitNote.reconciliationVoucher}</c:when>
+              <c:otherwise>
+                  <td></td>
+              </c:otherwise>
+          </c:choose>
           </td>
       <td>
           ${debitNoteDto.debitNoteLineItem.sku.productVariant.upc}
