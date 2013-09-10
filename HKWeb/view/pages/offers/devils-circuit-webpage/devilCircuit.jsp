@@ -20,7 +20,7 @@
                         <p><img src="images/text1.jpg" alt="For those who walk the talk & for those bodies that can do what they look like." /></p>
                         <p><img src="images/text2.jpg" alt="The supreme test of fitness, strength, endurance, will & camaraderie." /></p>
                         <p><img src="images/text3.jpg" alt="Join in with your friends & take this 5km trail that will challenge every single muscle in your body & every ounce of your will." /></p>
-                        <p><img src="images/text4.jpg" alt="Beware you will be severely tested." /></p>
+                        <p><img src="images/text4.jpg" alt="Beware! you will be severely tested." /></p>
                     </div>
                 </div>
             </div>
