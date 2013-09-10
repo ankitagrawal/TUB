@@ -616,7 +616,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
 		getBucketService().popFromActionQueue(shippingOrder);
 		getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
-    if(shippingOrder.getBaseOrder().getB2bOrder()){
+    if(shippingOrder.getBaseOrder().getB2bOrder() != null && shippingOrder.getBaseOrder().getB2bOrder()){
       updateSOForB2BOrders(shippingOrder);
     }
 		return shippingOrder;
