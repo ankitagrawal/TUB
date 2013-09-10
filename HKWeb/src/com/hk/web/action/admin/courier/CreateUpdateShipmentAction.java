@@ -121,10 +121,7 @@ import java.util.List;
                 shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
             }
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-                shipment.setShipmentCostCalculateDate(new Date());
-                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                shipment = shipmentService.calculateAndDistributeShipmentCost(shipment);
             }
             shippingOrderService.save(shippingOrder);
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, null, shipment.getAwb().toString());
