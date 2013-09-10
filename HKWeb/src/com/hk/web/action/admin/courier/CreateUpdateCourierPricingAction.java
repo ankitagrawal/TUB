@@ -5,6 +5,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
+import com.hk.util.HKCollectionUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,8 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   }
 
   public Resolution save() {
-    CourierPricingEngine duplicatePricingEngine = findDuplicateCourierPricingEngine(courierPricingEngineList);
+    CourierPricingEngine duplicatePricingEngine = (CourierPricingEngine)HKCollectionUtils.findDuplicate(courierPricingEngineList,
+                null, "courier", "regionType", "validUpto");
     if (duplicatePricingEngine == null) {
       courierService.saveUpdateCourierPricingInfo(courierPricingEngineList);
       addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
@@ -67,25 +69,6 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     }
     initialize();
     return new RedirectResolution(CreateUpdateCourierPricingAction.class, "search").addParameter("courier", courier);
-  }
-
-  private CourierPricingEngine findDuplicateCourierPricingEngine(List<CourierPricingEngine> courierPricingEngineList) {
-    Map<String, CourierPricingEngine> cpeMap = new HashMap<String, CourierPricingEngine>();
-    StringBuilder key;
-    String keySeparator = "#";
-    for (CourierPricingEngine currentEngine: courierPricingEngineList) {
-      key = new StringBuilder();
-      key.append(currentEngine.getCourier().getName()).append(keySeparator);
-      key.append(currentEngine.getRegionType().getName()).append(keySeparator);
-      key.append(currentEngine.getValidUpto().toString());
-
-      if (!cpeMap.containsKey(key.toString())) {
-        cpeMap.put(key.toString(),currentEngine);
-      } else {
-        return currentEngine;
-      }
-    }
-    return null;
   }
 
   public RegionType getRegionType() {
