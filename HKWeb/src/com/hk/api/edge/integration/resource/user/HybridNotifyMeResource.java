@@ -14,10 +14,7 @@ import com.hk.util.json.JSONResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.util.List;
 
 @Component
@@ -34,11 +31,11 @@ public class HybridNotifyMeResource {
   private ProductVariantService productVariantService;
 
   @GET
-  @Path("/details/")
+  @Path("/details/{userId}")
   @Produces("application/json")
-  public String getNotifyUserDetails(){
+  public String getNotifyUserDetails(@PathParam("userId") Long userId){
     NotifyUserDetails notifyUserDetails = new NotifyUserDetails();
-    User user = getUserService().getLoggedInUser();
+    User user = getUserService().getUserById(userId);
       if (user != null) {
         if(user.getEmail() != null){
           notifyUserDetails.setEmail(user.getEmail());
@@ -55,7 +52,7 @@ public class HybridNotifyMeResource {
           notifyUserDetails.addMessage("You Have Unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
         }
       }else{
-        notifyUserDetails.addMessage("No Logged-in User");
+        notifyUserDetails.addMessage("User Doesn't Exist");
       }
     return new JSONResponseBuilder().addField("results",notifyUserDetails).build();
   }
@@ -85,7 +82,7 @@ public class HybridNotifyMeResource {
         return new JSONResponseBuilder().addField("exception",true).addField("msgs","We have received your request for this variant. We will get back to you very soon. Thanks for your visit.").build();
       }
     }else{
-       return new JSONResponseBuilder().addField("exception",true).addField("msgs","Something went wrong").build();
+       return new JSONResponseBuilder().addField("exception",true).addField("msgs", "Something went wrong").build();
     }
     try{
       NotifyMe notifyMe = new NotifyMe();

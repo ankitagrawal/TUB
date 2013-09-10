@@ -2,6 +2,7 @@ package com.hk.api.edge.integration.response.user;
 
 
 import com.hk.api.edge.integration.response.AbstractResponseFromHKR;
+import com.hk.edge.constants.DtoJsonConstants;
 
 public class NotifyUserDetails extends AbstractResponseFromHKR{
 
@@ -47,13 +48,13 @@ public class NotifyUserDetails extends AbstractResponseFromHKR{
   @Override
   protected String[] getKeys() {
     return new String[]{
-        "nm",
-        "email",
-        "cntNum",
+        DtoJsonConstants.NAME,
+        DtoJsonConstants.EMAIL,
+        DtoJsonConstants.CONTACT_NUMBER,
         "isSubscribedForNotify",
-        "msgs",
-        "exception",
-        "stId"
+        DtoJsonConstants.MESSAGES,
+        DtoJsonConstants.EXCEPTION,
+        DtoJsonConstants.STORE_ID
     };
   }
 
