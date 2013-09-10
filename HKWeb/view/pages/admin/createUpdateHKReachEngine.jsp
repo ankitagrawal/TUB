@@ -22,7 +22,7 @@
                     var fixedCost = parentRow.find('.fixedCost').val();
                     var interCityCost = parentRow.find('.interCityCost').val();
                     if (isNaN(fixedCost) || isNaN(interCityCost) || fixedCost < 0 || interCityCost < 0 ||
-                                                                           fixedCost == "" || interCityCost == "") {
+                              fixedCost == "" || interCityCost == "" || validFrom == "" || validFrom == null) {
                         alert("Fixed cost and Inter City Cost should be numbers greater than 0");
                         e.preventDefault();
                         return false;
@@ -33,9 +33,10 @@
                 $('.save1').click(function(e) {
                     var fixedCost1 = $('.fixedCost1').val();
                     var interCityCost1 = $('.interCityCost1').val();
+                    var validFrom1 = $('.validFrom1').val();
                     if (isNaN(fixedCost1) || isNaN(interCityCost1) || fixedCost1 < 0 || interCityCost1 < 0 ||
-                                                                     fixedCost1 == "" || interCityCost1 == "") {
-                        alert("Fixed cost and Inter City Cost should be numbers greater than 0");
+                           fixedCost1 == "" || interCityCost1 == "" || validFrom1 == "" || validFrom1 == null) {
+                        alert("Fixed cost and Inter City Cost should be numbers greater than 0 and date should not be empty");
                         e.preventDefault();
                         return false;
                     }
@@ -89,7 +90,8 @@
                         <td> Valid From </td>
                         <td>
                                 <s:text name="hkReachPricingEngine.validFrom" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                    class="validFrom input_tip date_input" style="width:75px;" />
+                                                    class="validFrom1 input_tip date_input" style="width:75px;"
+                                                    readonly="readonly" />
                         </td>
                         <td><s:submit name="add" value="Add Values" class="save1" /></td>
                     </tr>
@@ -108,7 +110,7 @@
                             <th style="width: 70px;">Inter City Cost(Rs. per kg)</th>
                             <th style="width: 70px;">Fixed Hub Cost(Rs. per kg)</th>
                             <th style="width: 70px;">Valid From</th>
-                            <th style="width: 75px;"> Tick to update</th>
+                            <th style="width: 75px;"> Tick to mark updated</th>
                         </tr></thead>
                         <c:forEach items="${updateReachEngineAction.hkReachEngines}" var="hkRE" varStatus="ctr">
                             <tbody><tr count="${ctr.index}">
@@ -133,7 +135,8 @@
                                     <td>
                                         <s:text name="hkReachEngines[${ctr.index}].validFrom" value="${hkRE.fixedCost}"
                                                 formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                class="validFrom input_tip date_input" style="width:75px;" />
+                                                class="validFrom input_tip date_input" style="width:75px;"
+                                                readonly="readonly" />
                                     </td>
                                     <td>
                                         <s:checkbox name="hkReachEngines[${ctr.index}].selected" />
