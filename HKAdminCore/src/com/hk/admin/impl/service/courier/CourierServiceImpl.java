@@ -103,6 +103,14 @@ public class CourierServiceImpl implements CourierService {
     }
   }
 
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Date validFrom){
+    if (warehouse != null && hub != null && validFrom!=null) {
+      return  courierPricingEngineDao.getHkReachPricingEngine(warehouse, hub, validFrom);
+    } else {
+      return null;
+    }
+  }
+
   public HKReachPricingEngine saveHKReachPricingEngine(HKReachPricingEngine hkReachPricingEngine) {
     return (HKReachPricingEngine) courierPricingEngineDao.save(hkReachPricingEngine);
   }
