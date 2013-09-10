@@ -1,5 +1,6 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -7,6 +8,12 @@
     <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction" var="updateReachEngineAction"/>
 
     <s:layout-component name="content">
+
+        <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+        <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+
         <script type="text/javascript">
 
             $(document).ready(function() {
@@ -14,7 +21,8 @@
                     var parentRow = $(this).parent().parent();
                     var fixedCost = parentRow.find('.fixedCost').val();
                     var interCityCost = parentRow.find('.interCityCost').val();
-                    if (isNaN(fixedCost) || isNaN(interCityCost) || fixedCost < 0 || interCityCost < 0 || fixedCost == "" || interCityCost == "") {
+                    if (isNaN(fixedCost) || isNaN(interCityCost) || fixedCost < 0 || interCityCost < 0 ||
+                                                                           fixedCost == "" || interCityCost == "") {
                         alert("Fixed cost and Inter City Cost should be numbers greater than 0");
                         e.preventDefault();
                         return false;
@@ -25,7 +33,8 @@
                 $('.save1').click(function(e) {
                     var fixedCost1 = $('.fixedCost1').val();
                     var interCityCost1 = $('.interCityCost1').val();
-                    if (isNaN(fixedCost1) || isNaN(interCityCost1) || fixedCost1 < 0 || interCityCost1 < 0 || fixedCost1 == "" || interCityCost1 == "") {
+                    if (isNaN(fixedCost1) || isNaN(interCityCost1) || fixedCost1 < 0 || interCityCost1 < 0 ||
+                                                                     fixedCost1 == "" || interCityCost1 == "") {
                         alert("Fixed cost and Inter City Cost should be numbers greater than 0");
                         e.preventDefault();
                         return false;
@@ -57,7 +66,7 @@
                 <table>
                     <s:hidden name="hkReachPricingEngine.id"/>
                     <tr>
-                        <td>Select Warehouse:</td>
+                        <td>Warehouse:</td>
                         <td>
                             <s:select name="hkReachPricingEngine.warehouse">
                                 <c:forEach items="${updateReachEngineAction.onlineWarehouses}" var="warehouse">
@@ -65,7 +74,7 @@
                                 </c:forEach>
                             </s:select>
                         </td> &nbsp;&nbsp;
-                        <td>Select Hub: </td>
+                        <td>Hub: </td>
                         <td>
                             <s:select name="hkReachPricingEngine.hub">
                                 <c:forEach items="${updateReachEngineAction.hubs}" var="hub">
@@ -77,6 +86,11 @@
                         <td><s:text name="hkReachPricingEngine.interCityCost" class="interCityCost1" /></td>&nbsp;&nbsp;
                         <td>Fixed Hub Cost(Rs. per kg):</td>
                         <td><s:text name="hkReachPricingEngine.fixedCost" class="fixedCost1" /></td>
+                        <td> Valid From </td>
+                        <td>
+                                <s:text name="hkReachPricingEngine.validFrom" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                    class="validFrom input_tip date_input" style="width:75px;" />
+                        </td>
                         <td><s:submit name="add" value="Add Values" class="save1" /></td>
                     </tr>
 
@@ -93,7 +107,8 @@
                             <th style="width: 150px;">Hub</th>
                             <th style="width: 70px;">Inter City Cost(Rs. per kg)</th>
                             <th style="width: 70px;">Fixed Hub Cost(Rs. per kg)</th>
-                            <th style="width: 70px;"> Tick to update</th>
+                            <th style="width: 70px;">Valid From</th>
+                            <th style="width: 75px;"> Tick to update</th>
                         </tr></thead>
                         <c:forEach items="${updateReachEngineAction.hkReachEngines}" var="hkRE" varStatus="ctr">
                             <tbody><tr count="${ctr.index}">
@@ -114,6 +129,11 @@
                                     </td>
                                     <td>
                                         <s:text name="hkReachEngines[${ctr.index}].fixedCost" value="${hkRE.fixedCost}" class="fixedCost" />
+                                    </td>
+                                    <td>
+                                        <s:text name="hkReachEngines[${ctr.index}].validFrom" value="${hkRE.fixedCost}"
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                class="validFrom input_tip date_input" style="width:75px;" />
                                     </td>
                                     <td>
                                         <s:checkbox name="hkReachEngines[${ctr.index}].selected" />

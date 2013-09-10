@@ -62,7 +62,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     } else {
       addRedirectAlertMessage(new SimpleError("You are trying to save duplicate entry for courier "
           + duplicatePricingEngine.getCourier().getName() + " and region "
-          + duplicatePricingEngine.getRegionType().getName() + "and date " +
+          + duplicatePricingEngine.getRegionType().getName() + " and date " +
           new SimpleDateFormat("yyyy-MM-dd").format(duplicatePricingEngine.getValidUpto())));
     }
     initialize();
