@@ -42,8 +42,6 @@ public interface CourierService {
 
   public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub);
 
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Date validFrom);
-
   public HKReachPricingEngine saveHKReachPricingEngine(HKReachPricingEngine hkReachPricingEngine);
 
 }

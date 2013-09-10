@@ -56,34 +56,38 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   }
 
   public Resolution save() {
-    boolean flag = false;
     HKReachPricingEngine duplicateEngine =
           (HKReachPricingEngine) HKCollectionUtils.findDuplicate(hkReachEngines,null,"warehouse","hub","validFrom");
     if (duplicateEngine != null ) {
       addRedirectAlertMessage(new SimpleMessage("You provided duplicate values for " + duplicateEngine.getWarehouse().getIdentifier() +
           " corresponding to " + duplicateEngine.getHub().getName() + " and valid from " +
           new SimpleDateFormat("yyyy-MM-dd").format(duplicateEngine.getValidFrom())));
-    }
-
-    for(HKReachPricingEngine hkReachPricingEngine : hkReachEngines) {
-      if (hkReachPricingEngine.isSelected()) {
-        hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
-        courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+    } else {
+      for(HKReachPricingEngine hkReachPricingEngine : hkReachEngines) {
+        if (hkReachPricingEngine.isSelected()) {
+          hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
+          courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+        }
       }
+      addRedirectAlertMessage(new SimpleMessage("Pricing info updated"));
     }
-
-    addRedirectAlertMessage(new SimpleMessage("Pricing info updated"));
+    prepareEngineData();
     return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
         .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
   }
 
   public Resolution add() {
-    HKReachPricingEngine localHKReachEngine = courierService.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
-        hkReachPricingEngine.getHub(), hkReachPricingEngine.getValidFrom());
-    if(localHKReachEngine != null) {
-      addRedirectAlertMessage(new SimpleMessage("Entry already exists for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
-          " corresponding to " + hkReachPricingEngine.getHub().getName() + " and valid from " +
-          new SimpleDateFormat("yyyy-MM-dd").format(localHKReachEngine.getValidFrom())));
+    List<HKReachPricingEngine> localEngines= courierService.searchHKReachPricing(hkReachPricingEngine.getWarehouse(),
+        hkReachPricingEngine.getHub());
+    localEngines.add(hkReachPricingEngine);
+
+    HKReachPricingEngine duplicateEngine =
+        (HKReachPricingEngine) HKCollectionUtils.findDuplicate(hkReachEngines,null,"warehouse","hub","validFrom");
+
+    if(duplicateEngine != null) {
+      addRedirectAlertMessage(new SimpleMessage("Entry already exists for " + duplicateEngine.getWarehouse().getIdentifier() +
+          " corresponding to " + duplicateEngine.getHub().getName() + " and valid from " +
+          new SimpleDateFormat("yyyy-MM-dd").format(duplicateEngine.getValidFrom())));
     } else {
       if(hkReachPricingEngine.getValidFrom() == null) {
         addRedirectAlertMessage(new SimpleMessage("Entry could not be saved. Please select a valid from date"));
