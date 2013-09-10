@@ -266,7 +266,7 @@ img.prod48 {
 .hk .num {
     font-size: 12px; /*color: #f87500;*/
     color: #090;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 /* line 200, ../sass/_base.scss */
@@ -313,7 +313,7 @@ a.prod_link {
     display: inline-block;
     padding: 4px 8px;
     font-size: 10px;
-    font-weight: bold;
+    font-weight: 600;
     margin: 2px 1px;
     border: 1px solid #ddd;
     -moz-border-radius: 5px;
@@ -336,7 +336,7 @@ a.prod_link {
 /* line 239, ../sass/_base.scss */
 .pagi .links a.current {
     color: #444;
-    font-weight: bold;
+    font-weight: 600;
     border: none;
 }
 
@@ -373,7 +373,7 @@ a.prod_link {
 
 /* line 314, ../sass/_base.scss */
 strong {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 input[type="text"], input[type="password"] {
@@ -549,7 +549,7 @@ span.error {
 
 /* line 76, ../sass/main.scss */
 .topBar .userCP .left .name {
-    font-weight: bold;
+    font-weight: 600;
     font-style: italic;
     border-bottom: 1px solid transparent;
 }
@@ -601,7 +601,7 @@ span.error {
 /* line 106, ../sass/main.scss */
 .topBar .userCP .right .cartButton span.num {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     color: #df6900;
 }
 
@@ -824,7 +824,7 @@ span.error {
 /* line 214, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 div.lvl2 .categories .head2 {
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 600;
     color: #df6900;
     line-height: 20px;
     text-shadow: 0 1px 0 white;
@@ -881,7 +881,7 @@ span.error {
 /* line 250, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 div.lvl2 .brands_wrapper .brands h2, .menuBar ul.lvl1 li.lvl1 div.lvl2 .brands_wrapper .brands a {
     font-size: 10px;
-    font-weight: bold;
+    font-weight: 600;
     color: #666;
     line-height: 18px;
 }
@@ -1190,7 +1190,7 @@ span.error {
 }
 
 .crumb_outer .last {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 /* line 457, ../sass/main.scss */
@@ -1303,7 +1303,7 @@ span.error {
 /* line 514, ../sass/main.scss */
 .main_container .products h2 a {
     font-size: 1.333em;
-    font-weight: bold;
+    font-weight: 600;
     margin-top: 0.75em;
     margin-bottom: 0;
 }
@@ -1441,7 +1441,7 @@ h3 a.prod_link {
 .main_container .products .product .prices .hk .num {
     font-size: 12px; /*color: #f87500;*/
     color: #090;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 /* line 590, ../sass/main.scss */
@@ -1519,7 +1519,7 @@ h3 a.prod_link {
     color: white;
     border-radius: 3px;
     text-align: right;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 16px;
     padding: 3px;
     width: auto;
@@ -1598,7 +1598,7 @@ h3 a.prod_link {
 }
 
 .catalog_filters ul li.active {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .catalog_filters ul li.active a {
@@ -1607,7 +1607,7 @@ h3 a.prod_link {
 }
 
 .catalog_filters ul li.selected_filter a {
-    font-weight: bold;
+    font-weight: 600;
     color: #f87500;
     border: none;
 }
@@ -1694,7 +1694,7 @@ h3 a.prod_link {
 }
 
 .catalog .controls a.active {
-    font-weight: bold;
+    font-weight: 600;
     color: #222;
     letter-spacing: 0;
     font-size: 1.2em;
@@ -1722,7 +1722,7 @@ h3 a.prod_link {
 }
 
 .catalog .controls .per .active {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 1.2em;
 }
 
@@ -1821,7 +1821,7 @@ h3 a.prod_link {
 }
 .bx-captions {
     font-size: 1.2em;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
     color: #f57300;
 }
@@ -1923,7 +1923,7 @@ h3 a.prod_link {
 
 .slider_controls .active a, .slider_controls .active:hover a {
     color: #fff;
-    font-weight: bold;
+    font-weight: 600;
 
 }
 
@@ -1985,7 +1985,7 @@ h3 a.prod_link {
 
 
 b {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 
@@ -2004,12 +2004,12 @@ b {
     font-size: 1.3em;
     text-transform: none;
     margin-bottom: 0px;
-    font-weight: bold;
+    font-weight: 600;
     text-shadow: 0 1px 0 #888;
 }
 
 .jqmWindow h2 {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .modal_content {
@@ -2154,7 +2154,7 @@ ul.lvl1 li.lvl1.search:hover a, ul.lvl1 li.lvl1.search a{
 /*product page*/
 h2.prod_title {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
     margin: 0.5em 0 0 0;
     margin-left: 0;
     padding: 0;
@@ -2217,7 +2217,7 @@ h2.prod_title {
 
 /* line 715, ../sass/main.scss */
 .product_details .infos .info {
-    font-weight: bold;
+    font-weight: 600;
     padding-right: 5px;
 }
 
@@ -2328,7 +2328,7 @@ h2.prod_title {
     color: white;
     border-radius: 3px;
     text-align: right;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 16px;
     padding: 3px;
     width: auto;
@@ -2359,7 +2359,7 @@ h2.prod_title {
     text-align: center;
     display: block;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 600;
     background: #fffab2;
     border-radius: 5px;
     padding: 5px;
@@ -2371,14 +2371,14 @@ h2.prod_title {
     text-align: center;
     display: block;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 600;
     background: #fffab2;
     border-radius: 5px;
     padding: 5px;
 }
 
 .add_message a {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 15px;
 }
 
@@ -2486,7 +2486,7 @@ i{
     background: #444;
     color: #f0f0f0;
     font-size: 1.2em;
-    font-weight: bold;
+    font-weight: 600;
 }
 .product_table tbody{
     height: 300px;
@@ -2500,7 +2500,7 @@ i{
 }
 .product_table thead td{
     border: 0;
-    font-weight: bold;
+    font-weight: 600;
 }
 .product_table tbody tr:hover{
     background: #FAFCFE;
@@ -2586,7 +2586,7 @@ i{
 
 .mandatory{
 	color:red;
-	font-weight:bold;
+	font-weight:600;
 }
 /*
 slider pages start
@@ -2628,7 +2628,7 @@ a.more:hover {
 #slidebox h2 {
     color: #e62580;
     font-size: 16px;
-    font-weight:bold;
+    font-weight:600;
     margin: 10px 20px 10px 0px;
 }
 
@@ -2647,7 +2647,7 @@ a.close:hover {
 }
 
 .gosfDisc{
-font-weight:bold;
+font-weight:600;
 color: #e62580;
 }
 
@@ -2933,7 +2933,7 @@ label{
     height: 8px;
     padding: 0 13px 0 0;
     color: #ff0000;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .icn-plus {
@@ -3620,12 +3620,12 @@ input[type="text"]:focus, input[type="password"]:focus{
 
 .accnt-nav-box li.selected, .accnt-nav-box li a.selected-cat, .faq-nav-box li.selected, .faq-nav-box li a.selected-cat, .nav-box li.menu-options.active, .nav-box li.menu-options.active a, .faq-nav-box li.active, .faq-nav-box li.active a {
     color: #1b75bb;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .accnt-nav-box li.selected a, .faq-nav-box li.selected a, .nav-box li.menu-options.selected a {
     color: #1b75bb;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .accnt-nav-box li:hover > a, .nav-box li.menu-options:hover > a {

@@ -83,7 +83,7 @@
       We are working on getting the payment gateway back up asap.
     </div>--%>
 
-<div class='payment_container'><c:choose>
+<div class='payment_container' ><c:choose>
 <c:when
         test="${orderSummary.pricingDto.grandTotalPayable == 0 && orderSummary.pricingDto.productLineCount > 0}">
     <s:form
@@ -124,6 +124,8 @@
         </shiro:hasRole>
     </ul>
 </div>
+<span class="cntnr-border"> </span>
+
 <div class='right_content'>
 <div id="tabs_content1" class="tab_content"><s:form
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
@@ -136,17 +138,16 @@
             <td style="padding: 4px;"><img src="<hk:vhostImage/>${hk:readIssuerImageIcon(cardIssuer.imageIcon, cardIssuer.name)}"
                                            height="30px" alt="gateway image">
             </td>
-            <td style="padding: 4px;">${cardIssuer.name}<br/>
-                <label style="font-size: .9em;font-weight: bold;color: #000000;">${cardIssuer.tagLine}</label>
+            <td style="padding: 4px;position: relative;right: 70px;">${cardIssuer.name}<br/>
+                <label style="font-size: .9em;font-weight: 600;color: #000000;">${cardIssuer.tagLine}</label>
             </td>
 
         </tr>
         <%--check for paypal, give it an id so that js can work--%>
     </c:forEach>
     </table>
-    <div style="float: right; width: 90%;"><s:submit
-            name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
-            disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
+    <div style="float: right; width: 99%;margin-top:40px; "><s:submit
+            name="proceed" value="Make Payment" class="button makePayment btn btn-blue"  disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
     </div>
 </s:form></div>
 <div id="tabs_content3" class="tab_content" style="display: none;">
@@ -154,7 +155,7 @@
             method="post">
         <s:hidden name="order" value="${orderSummary.order.id}" />
 
-        <div style="float: left; margin-left: 20px; line-height: 21px;">
+        <div style="float: left; line-height: 21px;">
             <div class="paymentBox">
                 <table width="100%">
                     <c:forEach items="${paymentModeBean.bankIssuers}" var="bankIssuer"
@@ -172,9 +173,8 @@
                 <div class="floatfix"></div>
             </div>
         </div>
-        <div style="float: right; width: 90%;"><s:submit
-                name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
-                disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
+        <div style="float: right; width: 99%;"><s:submit
+                name="proceed" value="Make Payment" class="button makePayment btn btn-blue" disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
         </div>
     </s:form></div>
 <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
@@ -212,13 +212,11 @@
 
                 <c:otherwise>
                     <div class="grid_5" style="width: 100%;">
-                        <h4>Order Total</h4>
-                        <br/>
-
+                        <h4 class="fnt-bold mrgn-b-10" >Order Total</h4>
                         <div class="leftCOD">
                             <p>Order Total</p>
                             <p>COD Charges</p>
-                            <p><strong class="orangeBold">Grand Total</strong></p>
+                            <p><strong style="color: #0091d7;">Grand Total</strong></p>
                         </div>
                         <div class="rightCOD">
                             <p>
@@ -231,16 +229,16 @@
                             </p>
                             <p>
                                 <strong
-                                    class="orangeBold"><fmt:formatNumber
+                                    style="color: #0091d7;"><fmt:formatNumber
                                     value="${orderSummary.pricingDto.grandTotalPayable + orderSummary.codCharges}"
                                     currencySymbol="Rs. " type="currency"/>
                                 </strong><br/>
                             </p>
                         </div>
                     </div>
-                    <h4 class="codContact">Contact Details</h4>
+                    <h4 class="codContact fnt-bold" >Contact Details</h4>
 
-                    <p>Please verify the name and contact number of the person
+                    <p class="mrgn-b-20 cont-lft">Please verify the name and contact number of the person
                         who would receive this order. <br/>  <br/>
                         You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
                         your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
@@ -250,20 +248,19 @@
                         <s:hidden name="order" value="${orderSummary.order}"/>
 
                         <div style="margin-bottom: 15px;">
-                            <div class="label newLabel" style="width: 100px !important;">Contact Name</div>
+                            <div class="label newLabel" style="width: 110px !important;padding: 0;text-align:left;margin-right: 20px;">Contact Name</div>
                             <s:text class="signUpInputNew2" name="codContactName"
                                     value="${orderSummary.order.address.name}"/>
                         </div>
                         <div>
-                            <div class="label newLabel" style="width: 100px !important;">Contact Phone</div>
+                            <div class="label newLabel" style="width: 112px !important;padding: 0;text-align:left; margin-right: 17px;">Contact Phone</div>
                             <s:text class="signUpInputNew2" name="codContactPhone"
                                     value="${orderSummary.order.address.phone}" id="phoneNo"/>
                         </div>
 
                         <div class="buttons" style="font-size: 1.3em;"><br/>
                             <br/>
-                            <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="PLACE ORDER"
-                                      class="positive phoneValidation placeOrderButtonNew"/></div>
+                            <s:submit name="pre" value="PLACE ORDER" style="margin-left: 8px;" class="positive phoneValidation btn btn-blue"/></div>
                         <br/>
                         <br/>
 
@@ -332,12 +329,12 @@
                 </script>
                 <div class="label">Total Payable Amount</div>
                 <div class="num"
-                     style="font-size: 1.8em; font-weight: bold; color: #F87500;">
+                     style="font-size: 1.8em; font-weight: 600; color: #F87500;">
                     <fmt:formatNumber
                             value="${orderSummary.pricingDto.grandTotalPayable}"
                             currencySymbol="Rs. " type="currency"/></div>
                 <div style="width: 50%;">
-                    <s:submit name="pre" value="PLACE ORDER" class="button makePayment signUpButtonNew" style="font-size: 1.5em;width: 125px;left: 0px !important;margin: 0px !important;margin-top: 20px !important;"/></div>
+                    <s:submit name="pre" value="PLACE ORDER" class="button makePayment btn btn-blue" style="font-size: 1.5em;left: 0px !important;margin: 0px !important;margin-top: 20px !important;"/></div>
             </s:form></div>
             <div class="right"
                  style="width: 30%; padding: 10px; line-height: 21px;">
@@ -363,6 +360,8 @@
         </div>
     </c:if>
 </shiro:lacksRole>
+
+
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
 <div id="tabs_content6" class="tab_content" style="display: none;">
     <h2 class="offer">Payment Details</h2>
@@ -375,17 +374,19 @@
                   value="<%=EnumPaymentMode.COUNTER_CASH.getId()%>"/>
         <div class="label">Total Payable Amount</div>
         <div class="num"
-             style="font-size: 1.8em; font-weight: bold; color: #F87500;">
+             style="font-size: 1.8em; font-weight: 600; color: #F87500;">
             <fmt:formatNumber
                     value="${orderSummary.pricingDto.grandTotalPayable}"
                     currencySymbol="Rs. " type="currency"/></div>
         <div style="width: 50%; float: right;"><s:submit name="pre"
-                                                         value="PLACE ORDER" class="button makePayment placeOrderButtonNew"
+                                                         value="PLACE ORDER" class="button makePayment btn btn-blue"
                                                          style="font-size: 1.5em;"/></div>
     </s:form></div>
 
 </div>
 </div>
+
+
 </shiro:hasAnyRoles>
 <c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action" />
 <script type="text/javascript">
@@ -486,9 +487,10 @@
         });
     });
 </script>
-<div class='floftfix'></div>
+
 
 </div>
+<span class="cntnr-border" style="float: left;clear: both;margin-bottom: 40px;"> </span>
 </c:otherwise>
 </c:choose></div>
 </div>
@@ -705,11 +707,10 @@
       /*border-bottom: solid 2px #336699;*/
       /*background-color: #336699;*/
      font-size: 16px;
-     font-weight: bold;
+     font-weight: 600;
      padding: 5px;
       background-color: #f2f7fb;
       color: White;
-      font-weight:bold;
    }
    .web_dialog_title a
    {

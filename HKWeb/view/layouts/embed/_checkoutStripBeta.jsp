@@ -22,7 +22,7 @@
   <div class="ttl-cntnr mrgn-b-35">
     <span class="page-title ${index eq 1 ? 'current' : ''}">
     <c:choose>
-      <c:when test="${index gt 1 and index ne 4}">
+      <c:when test="${index gt 1 and index ne 5}">
          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" >Shipping address</s:link>
       </c:when>
       <c:otherwise>
@@ -32,7 +32,7 @@
     </span>
     <span class="page-title ${index eq 2 ? 'current' : ''}">
       <c:choose>
-        <c:when test="${index gt 2 and index ne 4}">
+        <c:when test="${index gt 2 and index ne 5}">
           <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" >
             Confirm order
           </s:link>
@@ -44,7 +44,7 @@
     </span>
     <span class="page-title ${index eq 3 ? 'current' : ''}">
       <c:choose>
-        <c:when test="${index gt 3 and index ne 4}">
+        <c:when test="${index gt 3 and index ne 5}">
           <s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction" >
             Payment
           </s:link>
@@ -54,7 +54,12 @@
         </c:otherwise>
       </c:choose>
     </span>
-    <span class="page-title ${index eq 4 ? 'current' : ''}">
+      <c:if test="${index eq 4 }">
+        <span class="page-title current">
+        Billing Address
+        </span>
+      </c:if>
+    <span class="page-title ${index eq 5 ? 'current' : ''}">
       Order complete
     </span>
 </div>
