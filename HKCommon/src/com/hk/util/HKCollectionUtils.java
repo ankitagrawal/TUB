@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,11 @@ public class HKCollectionUtils {
       for (String propertyName : propertyNames) {
         try {
           Object propertyObject = PropertyUtils.getProperty(object, propertyName);
-          key.append(propertyObject.toString()).append(delimiter);
+          if (propertyObject instanceof Date) {
+            key.append(((Date) propertyObject).getTime()).append(delimiter);
+          } else {
+            key.append(propertyObject.toString()).append(delimiter);
+          }
         } catch (IllegalAccessException iae) {
           logger.error(iae.getMessage());
           return object;

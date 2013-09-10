@@ -9,11 +9,11 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.HKCollectionUtils;
 import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,11 +78,10 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   public Resolution add() {
     List<HKReachPricingEngine> localEngines= courierService.searchHKReachPricing(hkReachPricingEngine.getWarehouse(),
-        hkReachPricingEngine.getHub());
+            hkReachPricingEngine.getHub());
     localEngines.add(hkReachPricingEngine);
-
     HKReachPricingEngine duplicateEngine =
-        (HKReachPricingEngine) HKCollectionUtils.findDuplicate(hkReachEngines,null,"warehouse","hub","validFrom");
+        (HKReachPricingEngine) HKCollectionUtils.findDuplicate(localEngines,null,"warehouse","hub","validFrom");
 
     if(duplicateEngine != null) {
       addRedirectAlertMessage(new SimpleMessage("Entry already exists for " + duplicateEngine.getWarehouse().getIdentifier() +
@@ -99,7 +98,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
       }
     }
     prepareEngineData();
-    return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
+    return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
         .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
   }
 
