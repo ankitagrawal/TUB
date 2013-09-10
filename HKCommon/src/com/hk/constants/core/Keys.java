@@ -122,7 +122,7 @@ public class Keys {
         public static final String fedExAuthKey                    = "fedExAuthKey";
         public static final String fedExPassword                   = "fedExPassword";
         public static final String fedExMeterNo                    = "fedExMeterNo";
-        public static final String fedExAccountNo                  = "fedExAccountNo";
+        public static final String fedExAccountNoGGN               = "fedExAccountNoGGN";
 
         /* To be removed later on. just a safety mehchanism to route calls to outside hk */
         public static final String maxCODCallCount                 = "maxCODCallCount";
@@ -140,7 +140,9 @@ public class Keys {
         public static final String aquaBrightSeparatedFor          = "aquaBrightSeparatedFor";
         public static final String aquaBrightSeparateDate          = "aquaBrightSeparateDate";
 
-        public static final String hybridRelease          = "hybridRelease";
+        public static final String hybridRelease                   = "hybridRelease";
+
+        public static final String fedExAccountNoMUM               = "fedExAccountNoMUM";
 
     }
 

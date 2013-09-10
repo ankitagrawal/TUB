@@ -21,9 +21,9 @@
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
 
 <s:layout-component name="htmlHead">
-<script src="<hk:vhostImage/>/js/handlebars.js"></script>
-<script src="<hk:vhostImage/>/js/ember.js"></script>
-<script src="<hk:vhostImage/>/js/loader.js"></script>
+<script src="<hk:vhostJs/>/js/handlebars.js"></script>
+<script src="<hk:vhostJs/>/js/ember.js"></script>
+<script src="<hk:vhostJs/>/js/loader.js"></script>
 
 <script type="text/javascript">
 jQuery.fn.jqStepper = function(minValue, maxValue) {
@@ -940,7 +940,7 @@ function _updateTotals(responseData) {
         </tr>
     </table>
 </div>
-<script src="${pageContext.request.contextPath}/js/app.js"></script>
+<script src="<hk:vhostJs/>/js/app.js"></script>
 
 <style type="text/css">
     .main_container {

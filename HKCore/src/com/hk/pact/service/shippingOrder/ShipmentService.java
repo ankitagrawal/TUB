@@ -4,6 +4,7 @@ import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.WHReportLineItem;
 
 public interface ShipmentService {
 
@@ -28,5 +29,7 @@ public interface ShipmentService {
     public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder);
 
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
+
+    public Shipment calculateAndDistributeShipmentCost(Shipment shipment);
 
 }

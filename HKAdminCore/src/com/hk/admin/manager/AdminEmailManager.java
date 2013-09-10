@@ -1141,7 +1141,7 @@ public class AdminEmailManager {
 			categoryAdmins = emailManager.categoryAdmins(category);
 		}
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-		//categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
+		categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
 		File pdfFile = null;
 		File xlsFile = null;
 		try {

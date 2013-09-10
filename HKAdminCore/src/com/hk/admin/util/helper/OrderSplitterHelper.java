@@ -109,9 +109,9 @@ public class OrderSplitterHelper {
     }
 
 
-    public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, DummyOrder dummyOrder) {
+   /* public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, DummyOrder dummyOrder) {
         return shipmentPricingEngine.calculateReconciliationCost(courierPricingEngine, dummyOrder.getPayment(), dummyOrder.getAmount());
-    }
+    }*/
 
 
 }
