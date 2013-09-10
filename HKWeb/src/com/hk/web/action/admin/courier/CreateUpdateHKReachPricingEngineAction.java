@@ -76,10 +76,14 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("Entry already exists for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
                     " corresponding to " + hkReachPricingEngine.getHub().getName()));
       } else {
-          hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
-          courierService.saveHKReachPricingEngine(hkReachPricingEngine);
-          addRedirectAlertMessage(new SimpleMessage("Successfully added entry for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
-                            " corresponding to " + hkReachPricingEngine.getHub().getName()));
+          if(hkReachPricingEngine.getValidFrom() == null) {
+              addRedirectAlertMessage(new SimpleMessage("Entry could not be saved. Please select a valid from date"));
+          } else {
+              hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
+              courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+              addRedirectAlertMessage(new SimpleMessage("Successfully added entry for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
+                      " corresponding to " + hkReachPricingEngine.getHub().getName()));
+          }
       }
       prepareEngineData();
       return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
