@@ -32,37 +32,36 @@
                     <h4>Get to Know Us</h4>
                     <ul>
                         <li><a href="/beta/hk/AboutUs.action">About Us</a> </li>
-                        <li><a href="">Careers</a></li>
-                        <li><a href="">Investor Relations</a></li>
-                        <li><a href="">Press Releases</a></li>
+                        <%--<li><a href="">Careers</a></li>--%>
+                        <%--<li><a href="">Investor Relations</a></li>--%>
+                        <%--<li><a href="">Press Releases</a></li>--%>
                         <li><a href="/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
-                        <li><a href="">Privacy Notice</a></li>
-                        <li><a href="">Blog</a></li>
+                        <%--<li><a href="">Privacy Notice</a></li>--%>
+                        <%--<li><a href="">Blog</a></li>--%>
                     </ul>
                 </div>
                 <div class="footer-menu">
                     <h4>Can We Help You</h4>
                     <ul>
-                        <li><a href="">Your Account</a></li>
-                        <li><a href="">Shipping Rates & Policies</a></li>
+                        <li><a href="/beta/account/MyAccount.action">Your Account</a></li>
+                        <%--<li><a href="">Shipping Rates & Policies</a></li>--%>
                         <li><a href="/beta/hk/FAQ.action">FAQs</a></li>
-                        <li><a href="/beta/hk/ReturnPolicy.action">Returns Policy</a></li>
+                        <li><a href="/beta/hk/FAQ.action#return">Returns Policy</a></li>
                         <li><a href="/beta/hk/ContactUs.action">Contact Us</a></li>
-                        <li><a href="">Help</a></li>
                     </ul>
                 </div>
-                <div class="footer-menu">
-                    <h4>Whats new</h4>
-                    <ul>
-                        <li><a href="">New At HK</a></li>
-                        <li><a href="">Shop By Occassion</a></li>
-                        <li><a href="">Shop By Brands</a></li>
-                        <li><a href="">Looks & Trends</a></li>
-                        <li><a href="">48hr Sale</a></li>
-                        <li><a href="">Gift Cards</a></li>
-                    </ul>
-                </div>
-                <div class="span5 alpha subscibe-mail-cntnr">
+                <%--<div class="footer-menu">--%>
+                    <%--<h4>Whats new</h4>--%>
+                    <%--<ul>--%>
+                        <%--<li><a href="">New At HK</a></li>--%>
+                        <%--<li><a href="">Shop By Occassion</a></li>--%>
+                        <%--<li><a href="">Shop By Brands</a></li>--%>
+                        <%--<li><a href="">Looks & Trends</a></li>--%>
+                        <%--<li><a href="">48hr Sale</a></li>--%>
+                        <%--<li><a href="">Gift Cards</a></li>--%>
+                    <%--</ul>--%>
+                <%--</div>--%>
+                <div class="span5 offset3 subscibe-mail-cntnr">
                     <p class="label-txt">Sign Up for emails and latest offers</p>
                     <input type="text" name="subscriptionEmail" id="subscriptionEmail" placeholder="Email address"
                            value=""/>

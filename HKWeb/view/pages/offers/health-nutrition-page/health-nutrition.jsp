@@ -6,6 +6,7 @@
   boolean isSecure = pageContext.getRequest().isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
+
 <s:layout-render name="/layouts/categoryBlankLanding.jsp"
                  pageTitle="Health Nutrition Offer">
 
