@@ -373,3 +373,12 @@ fieldset input[type='text'], input[type='text']{
     width: 100px;
     max-width: 300px;
 }
+.courier-prcng-tbl{
+    max-width:1000px;
+}
+.courier-prcng-tbl th, .courier-prcng-tbl td{
+    width:70px;
+}
+.courier-prcng-tbl td input[type="text"]{
+    width:50px;
+}

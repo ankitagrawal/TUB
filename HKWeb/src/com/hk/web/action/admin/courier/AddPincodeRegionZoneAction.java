@@ -1,17 +1,18 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
+import com.hk.admin.pact.service.courier.*;
 import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.PincodeCourierMapping;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.courier.PincodeRegionZone;
+import com.hk.domain.courier.RegionType;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
@@ -21,9 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,7 +33,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class AddPinCodeRegionZoneAction extends BaseAction {
+public class AddPincodeRegionZoneAction extends BaseAction {
 
     @Autowired
     CourierService courierService;
@@ -41,10 +41,13 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
     PincodeRegionZoneService pincodeRegionZoneService;
     @Autowired
     PincodeService pincodeService;
-    @Autowired
-    BaseDao baseDao;
+
     @Autowired
     XslPincodeParser xslPincodeParser;
+    @Autowired
+    WarehouseService warehouseService;
+    @Autowired
+    CourierGroupService courierGroupService;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminDownloadsPath;
@@ -56,12 +59,14 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
     private PincodeRegionZone pincodeRegionZone;
     private List<PincodeRegionZone> pincodeRegionZoneList = null;
     private List<Pincode> pincodeList;
+    private List<CourierGroup> courierGroupList = new ArrayList<CourierGroup>();
+    private List<RegionType> regionTypeList = new ArrayList<RegionType>();
+    private List<Warehouse> warehouseList = new ArrayList<Warehouse>();
 
     @Autowired
     PincodeCourierService pincodeCourierService;
 
-
-    private static Logger logger = LoggerFactory.getLogger(AddPinCodeRegionZoneAction.class);
+    private static Logger logger = LoggerFactory.getLogger(AddPincodeRegionZoneAction.class);
 
     @DefaultHandler
     @DontValidate
@@ -69,60 +74,50 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
         return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
 
-    public Resolution savePincodeRegionList() {
-        for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
-            pincodeRegionZoneService.saveOrUpdate(pincodeRegionZone);
-        }
-        addRedirectAlertMessage(new SimpleMessage("Pincode Region saved"));
-        return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
+    public void initialize() {
+        courierGroupList = courierGroupService.getAllCourierGroup();
+        regionTypeList = courierService.getRegionTypeList();
+        warehouseList = warehouseService.getServiceableWarehouses();
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
-    public Resolution savePincodeRegion() {
-        if(pincodeRegionZone!=null){
-            if (pincodeRegionZone.getPincode() == null) {
-                addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
-            } else {
-                try {
-                    PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneService.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincodeRegionZone.getPincode(), pincodeRegionZone.getWarehouse());
-                    if (pincodeRegionZoneDb != null) {
-                        pincodeRegionZoneDb.setRegionType(pincodeRegionZone.getRegionType());
-                    } else {
-                        pincodeRegionZoneDb = pincodeRegionZone;
-                    }
-                    pincodeRegionZoneService.save(pincodeRegionZoneDb);
-                } catch (Exception ex) {
-                    addRedirectAlertMessage(new SimpleMessage("EXCEPTION IN SAVING" + ex.getMessage()));
-                    return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+    public Resolution savePincodeRegionList() {
+        for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
+            if(pincodeRegionZone.getId() == null) {
+                Pincode pincode1 = pincodeRegionZone.getPincode();
+                CourierGroup courierGroup1 = pincodeRegionZone.getCourierGroup();
+                Warehouse warehouse1 = pincodeRegionZone.getWarehouse();
+                PincodeRegionZone pincodeRegionZone1 = pincodeRegionZoneService.getPincodeRegionZone(courierGroup1, pincode1, warehouse1);
+                if(pincodeRegionZone1 != null) {
+                    addRedirectAlertMessage(new SimpleMessage("Entry already exists for pincode "
+                            + pincode1.getPincode() + " for courier group " + courierGroup1.getName() + " correponsing to "
+                            + warehouse1.getIdentifier() + " . Please update that"));
+                } else {
+                    pincodeRegionZoneService.save(pincodeRegionZone);
                 }
-                addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
+            } else {
+                pincodeRegionZoneService.save(pincodeRegionZone);
             }
         }
-        return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+        addRedirectAlertMessage(new SimpleMessage("Pincode Region saved"));
+        return new ForwardResolution(AddPincodeRegionZoneAction.class, "searchPincodeRegion")
+                                .addParameter("pincodeRegionZone",pincodeRegionZone);
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution searchPincodeRegion() {
-        Pincode pincode = pincodeRegionZone.getPincode();
-        if (pincode == null) {
+        if (pincodeRegionZone == null) {
             addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
         } else {
+            Pincode pincode = pincodeRegionZone.getPincode();
             pincodeRegionZoneList = pincodeRegionZoneService.getPincodeRegionZoneList(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
             if (pincodeRegionZoneList == null) {
                 addRedirectAlertMessage(new SimpleMessage("Pincode Region zone does not exist for Pincode"));
             }
+            initialize();
         }
         return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
 
-    public Resolution showRemainingPrz() {
-        pincodeList = pincodeService.getPincodeNotInPincodeRegionZone();
-        return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
-    }
-
-    public Resolution directToPincodeRegionZone(){
-        return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
-    }
 
     public CourierService getCourierService() {
         return courierService;
@@ -148,13 +143,7 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
         this.pincodeService = pincodeService;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
 
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
     public XslPincodeParser getXslPincodeParser() {
         return xslPincodeParser;
@@ -225,7 +214,7 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
     }
 
     public static void setLogger(Logger logger) {
-        AddPinCodeRegionZoneAction.logger = logger;
+        AddPincodeRegionZoneAction.logger = logger;
     }
 
     public List<Pincode> getPincodeList() {
@@ -234,5 +223,29 @@ public class AddPinCodeRegionZoneAction extends BaseAction {
 
     public void setPincodeList(List<Pincode> pincodeList) {
         this.pincodeList = pincodeList;
+    }
+
+    public List<CourierGroup> getCourierGroupList() {
+        return courierGroupList;
+    }
+
+    public void setCourierGroupList(List<CourierGroup> courierGroupList) {
+        this.courierGroupList = courierGroupList;
+    }
+
+    public List<RegionType> getRegionTypeList() {
+        return regionTypeList;
+    }
+
+    public void setRegionTypeList(List<RegionType> regionTypeList) {
+        this.regionTypeList = regionTypeList;
+    }
+
+    public List<Warehouse> getWarehouseList() {
+        return warehouseList;
+    }
+
+    public void setWarehouseList(List<Warehouse> warehouseList) {
+        this.warehouseList = warehouseList;
     }
 }
