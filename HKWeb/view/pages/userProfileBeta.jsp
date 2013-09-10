@@ -256,56 +256,67 @@
   <c:if test="${!empty recentOrders}">
     <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
       <h2 class="strikeline"> Recent Orders</h2>
-      <table class="cont footer_color">
-        <th>Order Id</th>
-        <th>Order Date</th>
-        <th>Invoices</th>
-        <th>Order Status</th>
-
-        <c:forEach items="${recentOrders}" end="2" var="order">
-          <tr>
-            <td>
-                ${order.gatewayOrderId}
-              <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
-                <s:param name="order" value="${order}"/>
-                (View Order)
-              </s:link>
-            </td>
-            <td>
-              <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
-            </td>
-            <td>
-              <c:set var="shippingOrders" value="${order.shippingOrders}"/>
-              <c:choose>
-                <c:when test="${!empty shippingOrders}">
-                  <c:forEach items="${shippingOrders}" var="shippingOrder">
-                    <%--<p>--%>
-                    <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank">
-                      <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-                      R-${shippingOrder.id}
-                    </s:link>
-                    <%--</p>--%>
-                  </c:forEach>
-                </c:when>
-                <c:otherwise>
-                  <%--<p>--%>
-                  <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
-                    <s:param name="order" value="${order.id}"/>
-                    R-${order.id}
-                  </s:link>
-                  <%--</p>--%>
-                </c:otherwise>
-              </c:choose>
-            </td>
-            <td>
-                ${order.orderStatus.name}
-              <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" target="_blank">
-                <s:param name="order" value="${order.id}"/>
-                (View Order Details)
-              </s:link>
-            </td>
-          </tr>
-        </c:forEach>
+        <table class="order-tbl">
+            <tr class="order-specs-hdr btm-brdr">
+                <th class="fnt-bold">Order Id</th>
+                <th class="fnt-bold">Order Date</th>
+                <th class="fnt-bold">Invoices</th>
+                <th class="fnt-bold">Order Status</th>
+            </tr>
+            <tbody>
+                <c:forEach items="${recentOrders}" end="2" var="order" varStatus="ctr">
+                <c:if test="${ctr.first}">
+                <tr class="order-tr top-brdr">
+                    </c:if>
+                    <c:if test="${ctr.last}">
+                <tr class="${ctr.index%2==0? 'order-tr btm-brdr':'order-tr btm-brdr bg-gray'}">
+                    </c:if>
+                    <c:if test="${!(ctr.first || ctr.last)}">
+                <tr class="${ctr.index%2==0? 'order-tr':'order-tr bg-gray'}">
+                    </c:if>
+                    <td>
+                        ${order.gatewayOrderId}
+                      <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
+                        <s:param name="order" value="${order}"/>
+                        (View Order)
+                      </s:link>
+                    </td class="border-td">
+                    <td>
+                      <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
+                    </td>
+                    <td class="border-td">
+                      <c:set var="shippingOrders" value="${order.shippingOrders}"/>
+                      <c:choose>
+                        <c:when test="${!empty shippingOrders}">
+                          <c:forEach items="${shippingOrders}" var="shippingOrder">
+                            <%--<p>--%>
+                            <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank">
+                              <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                              R-${shippingOrder.id}
+                            </s:link>
+                            <%--</p>--%>
+                          </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                          <%--<p>--%>
+                          <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
+                            <s:param name="order" value="${order.id}"/>
+                            R-${order.id}
+                          </s:link>
+                          <%--</p>--%>
+                        </c:otherwise>
+                      </c:choose>
+                    </td>
+                    <td>
+                        ${order.orderStatus.name}
+                      <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" target="_blank">
+                        <s:param name="order" value="${order.id}"/>
+                        (View Order Details)
+                      </s:link>
+                    </td>
+                </tr>
+                </c:forEach>
+            <tbody>
       </table>
     </s:form>
   </c:if>
@@ -448,23 +459,23 @@
     margin-bottom: 2px;
   }
 
-  table {
-    width: 100%;
-    margin-bottom: 10px;
-    margin-top: 5px;
-    border: 1px solid;
-    border-collapse: separate;
-  }
+  /*table {*/
+    /*width: 100%;*/
+    /*margin-bottom: 10px;*/
+    /*margin-top: 5px;*/
+    /*border: 1px solid;*/
+    /*border-collapse: separate;*/
+  /*}*/
 
-  table th {
-    background: #f0f0f0;
-    padding: 5px;
-    text-align: left;
-  }
+  /*table th {*/
+    /*background: #f0f0f0;*/
+    /*padding: 5px;*/
+    /*text-align: left;*/
+  /*}*/
 
-  table td {
-    padding: 5px;
-    text-align: left;
-    font-size: small;
-  }
+  /*table td {*/
+    /*padding: 5px;*/
+    /*text-align: left;*/
+    /*font-size: small;*/
+  /*}*/
 </style>

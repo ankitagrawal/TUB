@@ -65,7 +65,7 @@ public class UserManageAddressAction extends BaseAction {
         affiliate = affiliateDao.getAffilateByUser(user);
 
         if (isHybridRelease()) {
-            return new ForwardResolution("/pages/manageUserAddresses.jsp");
+            return new ForwardResolution("/pages/manageUserAddressesBeta.jsp");
         }
         return new ForwardResolution("/pages/manageUserAddresses.jsp");
     }
