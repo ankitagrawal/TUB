@@ -545,11 +545,10 @@
     /*border-bottom: solid 2px #336699;*/
     /*background-color: #336699;*/
         font-size: 16px;
-        font-weight: bold;
         padding: 5px;
         background-color: #f2f7fb;
         color: White;
-        font-weight: bold;
+        font-weight: 600;
     }
 
     .web_dialog_title a {
