@@ -526,7 +526,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       Long bookedQty = adminInventoryService.getBookedInventory(lineItem.getSku().getProductVariant(), null);
       if (!((netQty - bookedQty) >= lineItem.getQty())){
         ProductVariant itemVariant = lineItem.getSku().getProductVariant();
-        if (itemVariant.getProduct().isJit() || productVariantService.isFreeVariant(itemVariant)) {
+        if (itemVariant.getProduct().isJit()) {
           outOfStockJitItems.add(lineItem);
         } else {
           outOfStockLineItems.add(lineItem);

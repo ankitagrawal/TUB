@@ -85,21 +85,16 @@ public class MasterPincodeAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
-        Pincode dbPincode = pincodeService.getByPincode(pincodeString);
-        if (dbPincode != null && !dbPincode.getCity().equals(pincode.getCity())) {
-            pincode = pincodeService.save(pincode);
-            pincodeRegionZoneService.assignPincodeRegionZoneToPincode(pincode);
-            addRedirectAlertMessage(new SimpleMessage("Assigned Region Zone !!!!"));
-            return new RedirectResolution(MasterPincodeAction.class, "searchPincodeRegion").addParameter("pincodeString", pincode.getPincode());
-        } else if(dbPincode==null){
-          pincode = pincodeService.save(pincode);
-          addRedirectAlertMessage(new SimpleMessage("Pincode changes saved Successfully"));
-          return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
-          }
-          else {
-        }
+        Pincode dbPincode = pincodeService.getByPincode(pincode.getPincode());
+        if (dbPincode != null) {
             addRedirectAlertMessage(new SimpleMessage("Pincode already exist in the Database!!!"));
             return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
+        } else {
+            pincode = pincodeService.save(pincode);
+            pincodeRegionZoneService.assignPincodeRegionZoneToPincode(pincode);
+            addRedirectAlertMessage(new SimpleMessage("Pincode changes saved Successfully"));
+            return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
+        }
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
@@ -156,53 +151,7 @@ public class MasterPincodeAction extends BaseAction {
         return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
     }
 
-  public Resolution directToPincodeRegionZone(){
-    return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
-  }
-    public Resolution savePincodeRegionList() {
-        for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
-            pincodeRegionZoneService.saveOrUpdate(pincodeRegionZone);
-        }
-        addRedirectAlertMessage(new SimpleMessage("Pincode Region saved"));
-        return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
-    }
-
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
-    public Resolution savePincodeRegion() {
-       if(pincodeRegionZone!=null){
-        if (pincodeRegionZone.getPincode() == null) {
-            addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
-        } else {
-            try {
-                PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneService.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
-                if (pincodeRegionZoneDb != null) {
-                    pincodeRegionZoneDb.setRegionType(pincodeRegionZone.getRegionType());
-                } else {
-                    pincodeRegionZone.setPincode(pincode);
-                    pincodeRegionZoneDb = pincodeRegionZone;
-                }
-                pincodeRegionZoneService.save(pincodeRegionZoneDb);
-            } catch (Exception ex) {
-                addRedirectAlertMessage(new SimpleMessage("EXCEPTION IN SAVING" + ex.getMessage()));
-                return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
-            }
-            addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
-        }
-    }
-        return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
-    }
-
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_VIEW}, authActionBean = AdminPermissionAction.class)
-    public Resolution searchPincodeRegion() {
-        Pincode pincode = pincodeRegionZone.getPincode();
-        if (pincode == null) {
-            addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
-        } else {
-            pincodeRegionZoneList = pincodeRegionZoneService.getPincodeRegionZoneList(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
-            if (pincodeRegionZoneList == null) {
-                addRedirectAlertMessage(new SimpleMessage("Pincode Region zone does not exist for Pincode"));
-            }
-        }
+    public Resolution directToPincodeRegionZone(){
         return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
 
@@ -210,6 +159,7 @@ public class MasterPincodeAction extends BaseAction {
         pincodeList = pincodeService.getPincodeNotInPincodeRegionZone();
         return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
+
 
     public String getPincodeString() {
         return pincodeString;
@@ -263,19 +213,20 @@ public class MasterPincodeAction extends BaseAction {
         return pincodeList;
     }
 
-  public List<PincodeCourierMapping> getPincodeCourierMappings() {
-    return pincodeCourierMappings;
-  }
+    public List<PincodeCourierMapping> getPincodeCourierMappings() {
+        return pincodeCourierMappings;
+    }
 
-  public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
-    this.pincodeCourierMappings = pincodeCourierMappings;
-  }
+    public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
+        this.pincodeCourierMappings = pincodeCourierMappings;
+    }
 
-  public Map<String, Boolean> getApplicableShipmentServices() {
-    return applicableShipmentServices;
-  }
+    public Map<String, Boolean> getApplicableShipmentServices() {
+        return applicableShipmentServices;
+    }
 
-  public void setApplicableShipmentServices(Map<String, Boolean> applicableShipmentServices) {
-    this.applicableShipmentServices = applicableShipmentServices;
-  }
+    public void setApplicableShipmentServices(Map<String, Boolean> applicableShipmentServices) {
+        this.applicableShipmentServices = applicableShipmentServices;
+    }
+
 }

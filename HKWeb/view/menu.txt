@@ -272,6 +272,7 @@
 --/sports/footwear/cricket-shoes
 --/sports/footwear/jogging-shoes
 --/sports/footwear/table-tennis-shoes
+--/sports/footwear/slippers
 --/sports/footwear/kids-shoes
 --/sports/footwear/other-shoes
 --/sports/footwear/accessories
