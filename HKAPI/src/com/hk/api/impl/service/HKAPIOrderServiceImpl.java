@@ -96,6 +96,8 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     public static final Long INDIA_COUNTRY_ID=80L;
 
     public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO hkapiOrderDTO) {
+      logger.info("Inside Create Order in HK");
+
         HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
         if(hkapiOrderDTO==null){
            hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);

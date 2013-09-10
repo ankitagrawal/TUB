@@ -1118,8 +1118,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         String tempBarcode = bookedSkuItemFordifferentOrder.getBarcode();
         bookedSkuItemFordifferentOrder.setBarcode(existingSkuItem.getBarcode());
         existingSkuItem.setBarcode(null);
-        getBaseDao().save(existingSkuItem);
-        getBaseDao().save(bookedSkuItemFordifferentOrder);
+        existingSkuItem = (SkuItem)  getBaseDao().save(existingSkuItem);
+        bookedSkuItemFordifferentOrder = (SkuItem) getBaseDao().save(bookedSkuItemFordifferentOrder);
         existingSkuItem.setBarcode(tempBarcode);
         existingSkuItem.setSkuGroup(skuGroup);
 
