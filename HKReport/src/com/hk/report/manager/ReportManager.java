@@ -642,16 +642,16 @@ public class ReportManager {
             Double breadth;
             Double height;
 
-            String lengthBreadthHeightString = EnumBoxSize.getLengthBreadthHeight(boxWeight);
-            if (lengthBreadthHeightString == null) {
+
+            EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
+            if (enumBoxSize == null) {
                 length = 0D;
                 breadth = 0D;
                 height = 0D;
             } else {
-                String[] dimensions = lengthBreadthHeightString.split("-");
-                length = Double.parseDouble(dimensions[0]);
-                breadth = Double.parseDouble(dimensions[1]);
-                height = Double.parseDouble(dimensions[2]);
+                length = enumBoxSize.getLength();
+                breadth = enumBoxSize.getBreadth();
+                height = enumBoxSize.getHeight();
             }
 
             setCellValue(row, 22, length);

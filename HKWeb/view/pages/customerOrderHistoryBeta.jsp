@@ -9,7 +9,7 @@
 
   <s:layout-component name="rhsContent">
 
-    <div class="main-inn-right">
+    <div class="main-inn-right mrgn-l-40 my-acnt-ht">
 
       <div class="round-cont">
         <c:choose>

@@ -62,9 +62,9 @@
           <img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/>&nbsp;&nbsp;
           <img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/>
       </div>
-
+      <s:link href="/" title='go to healthkart home'>
       <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart" style="position:absolute;top:-2px;"/><br>
-
+      </s:link>
     <div class='topBarContent' style="position: absolute;right:0px;">
 
       <!--div class="message">
