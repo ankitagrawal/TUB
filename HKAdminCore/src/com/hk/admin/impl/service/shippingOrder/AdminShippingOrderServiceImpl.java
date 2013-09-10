@@ -486,6 +486,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 			//		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
 
 			//Validate SO for SkuItem booking
+      // todo : validate method need to be change for AB : ERP44
 			shippingOrderService.validateShippingOrder(shippingOrder);
 
 			return shippingOrder;

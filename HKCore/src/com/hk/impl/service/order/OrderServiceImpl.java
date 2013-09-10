@@ -730,7 +730,8 @@ public class OrderServiceImpl implements OrderService {
           for (LineItem lineItem : shippingOrder.getLineItems()){
             //lineItemDao.refresh(lineItem);
             CartLineItem cartLineItem = lineItem.getCartLineItem();
-            if(bookedOnBright(cartLineItem)){
+            // manual split
+            if(bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null  || lineItem.getSkuItemLineItems().size() < 1)){
               logger.debug("Update booking on Bright");
               List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem);
               List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
