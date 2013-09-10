@@ -97,7 +97,6 @@ public class FormatUtils {
     return dateFormatForUserEnd.format(date);
   }
 
-
   public static void main(String[] args) {
     System.out.println(currencyFormat.format(30.0));
   }
