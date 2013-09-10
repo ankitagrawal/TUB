@@ -12,6 +12,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.domain.user.User;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
@@ -208,6 +209,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
             // It cannot be = as for last order/unit unbooked will
             // always be ZERO
+
             if (!shippingOrder.isDropShipping()) {
               if (!(bookedQty >= orderedQty)) {
                 if (availableNetPhysicalInventory < 0 || availableUnbookedInv < 0) {
