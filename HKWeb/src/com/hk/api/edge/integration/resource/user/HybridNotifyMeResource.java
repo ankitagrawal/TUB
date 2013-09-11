@@ -64,7 +64,7 @@ public class HybridNotifyMeResource {
     User user = getUserService().findByLogin(updateNotifyMeDetails.getEmail());
     if (user != null) {
       if (!(user.isSubscribedForNotify())) {
-        return new JSONResponseBuilder().addField("exception",true).addField("msgs","You have unsubscribed for all emails, Please go to 'My Account' to Subscribe again").build();
+        return new JSONResponseBuilder().addField("exception",true).addField("msgs","You have unsubscribed for all emails, Please go to 'My Account' to Subscribe again").addField("accntLnk","http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=").build();
       }
     } else {
       EmailRecepient emailRecepient = getEmailRecepientDao().findByRecepient(updateNotifyMeDetails.getEmail());
@@ -79,7 +79,7 @@ public class HybridNotifyMeResource {
     if(productVariant!=null){
       List<NotifyMe> notifyMeList = getNotifyMeDao().getPendingNotifyMeList(updateNotifyMeDetails.getEmail(), productVariant);
       if (notifyMeList != null && notifyMeList.size() > 0) {
-        return new JSONResponseBuilder().addField("exception",true).addField("msgs","We have received your request for this variant. We will get back to you very soon. Thanks for your visit.").build();
+        return new JSONResponseBuilder().addField("exception",false).addField("msgs","We have received your request for this variant. We will get back to you very soon. Thanks for your visit.").build();
       }
     }else{
        return new JSONResponseBuilder().addField("exception",true).addField("msgs", "Something went wrong").build();
