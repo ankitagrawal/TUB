@@ -80,7 +80,8 @@ public class ShipmentPricingEngine {
         return -1.0D;
       }
     } else {
-      CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+      CourierPricingEngine courierPricingInfo =
+          courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse, shipment.getShipDate());
       if (courierPricingInfo != null) {
         return calculateShipmentCost(courierPricingInfo, weight);
       } else {
@@ -142,7 +143,8 @@ public class ShipmentPricingEngine {
             if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
                 return 0D;
             } else {
-                CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+                CourierPricingEngine courierPricingInfo =
+                    courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse,shipment.getShipDate());
                 if (courierPricingInfo == null) {
                     return null;
                 }

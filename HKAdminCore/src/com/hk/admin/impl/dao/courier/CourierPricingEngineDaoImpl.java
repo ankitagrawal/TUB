@@ -32,11 +32,12 @@ import java.util.List;
 @Repository
 public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierPricingEngineDao {
 
-  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse){
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse,
+                                                    Date shipmentDate){
     DetachedCriteria criteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     criteria.add(Restrictions.eq("courier", courier));
     criteria.add(Restrictions.eq("regionType", regionType));
-    criteria = this.addValidityCriteria(criteria);
+    criteria = this.addValidityCriteria(criteria, shipmentDate);
     List<CourierPricingEngine> engineList = this.findByCriteria(criteria);
     if (engineList != null && !engineList.isEmpty()) return engineList.get(0);
 
@@ -87,8 +88,11 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     return findByCriteria(courierPricingEngineCriteria);
   }
 
-  private DetachedCriteria addValidityCriteria(DetachedCriteria criteria) {
+  private DetachedCriteria addValidityCriteria(DetachedCriteria criteria, Date shipmentDate) {
     Calendar cal = Calendar.getInstance();
+    if (shipmentDate!= null ) {
+      cal.setTime(shipmentDate);
+    }
     cal.add(Calendar.DAY_OF_YEAR,-1);
     criteria.add(Restrictions.gt("validUpto", cal.getTime()));
     criteria.addOrder(Order.asc("validUpto"));

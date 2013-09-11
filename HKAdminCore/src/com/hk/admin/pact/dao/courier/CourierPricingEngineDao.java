@@ -21,7 +21,8 @@ import java.util.List;
  */
 public interface CourierPricingEngineDao extends BaseDao {
 
-  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse,
+                                                    Date shipmentDate);
 
   public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub, Date validFrom);
 
