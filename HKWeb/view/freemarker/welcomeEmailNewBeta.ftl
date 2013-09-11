@@ -9,7 +9,7 @@ Hi ${user.name}, welcome to HealthKart.com
 <table width="530" border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
     <td align="center" valign="top">
-      <table width="500" border="0" cellspacing="0" cellpadding="5" align="center"
+      <table width="500" border="0" cellspacing="0" cellpadding="0" align="center"
              style="font-size:13px; line-height:1.75em;">
 
 
@@ -20,7 +20,7 @@ Hi ${user.name}, welcome to HealthKart.com
 
         <tr>
           <td>
-            <table style="border-bottom: 1px solid #0000ff;padding-bottom: 3px;" width="500" border="0" cellpadding="0" cellspacing="0">
+            <table style="border-bottom: 1px solid #0000ff;padding-bottom: 3px;" width="500" border="0" cellpadding="5" cellspacing="0">
               <tr>
                 <td colspan="10"><a href="http://www.healthkart.com"><img
                         src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com Logo" width="207"
