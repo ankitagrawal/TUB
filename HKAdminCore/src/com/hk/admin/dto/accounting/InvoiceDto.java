@@ -148,7 +148,7 @@ public class InvoiceDto {
 			//changes done for B2B Tax Invoice
 			InvoiceLineItemDto invoiceLineItemdto = null;
 			if (invoiceType.equalsIgnoreCase("T")) {				
-				invoiceLineItemdto = new B2BInvoiceLineItemDto(productLineItem,state, cFormaAvailable);
+				invoiceLineItemdto = new B2BInvoiceLineItemDto(productLineItem,sameState, cFormaAvailable);
 			} else {
 				invoiceLineItemdto = new InvoiceLineItemDto(productLineItem);
 			}
