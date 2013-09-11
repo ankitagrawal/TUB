@@ -14122,9 +14122,15 @@
     </changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1378726821885-1">
         <addColumn tableName="hk_reach_pricing_engine">
-            <column name="valid_from" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
+            <column name="valid_from" type="TIMESTAMP" />
         </addColumn>
+    </changeSet>
+    <changeSet author="Vidur Malhotra" id="11-09-2013(1)">
+        <sql>
+            insert into role values ('OPS_MANAGER_COURIER_PRICING_UPDATE');
+            insert into role values ('OPS_MANAGER_COURIER_PRICING_VIEW');
+            insert into role_has_permission values('OPS_MANAGER_COURIER_PRICING_VIEW','OPS_MANAGER_COURIER_PRICING_VIEW');
+            insert into role_has_permission values('OPS_MANAGER_COURIER_PRICING_UPDATE','OPS_MANAGER_COURIER_PRICING_UPDATE');
+        </sql>
     </changeSet>
 </databaseChangeLog>

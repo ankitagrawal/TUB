@@ -3,13 +3,16 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.HKCollectionUtils;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,6 +58,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
     return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE}, authActionBean = AdminPermissionAction.class)
   public Resolution save() {
     HKReachPricingEngine duplicateEngine =
           (HKReachPricingEngine) HKCollectionUtils.findDuplicate(hkReachEngines,null,"warehouse","hub","validFrom");
@@ -76,6 +80,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
         .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE}, authActionBean = AdminPermissionAction.class)
   public Resolution add() {
     List<HKReachPricingEngine> localEngines= courierService.searchHKReachPricing(hkReachPricingEngine.getWarehouse(),
             hkReachPricingEngine.getHub());
@@ -102,6 +107,7 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
         .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW}, authActionBean = AdminPermissionAction.class)
   public Resolution search() {
     hkReachEngines = courierService.searchHKReachPricing(warehouseParam, hubParam);
     if (hkReachEngines == null || hkReachEngines.isEmpty()) {

@@ -2,13 +2,16 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
 import com.hk.util.HKCollectionUtils;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,6 +45,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     regionTypeList = courierService.getRegionTypeList();
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW}, authActionBean = AdminPermissionAction.class)
   public Resolution search() {
     if(courier == null) {
       addRedirectAlertMessage(new SimpleMessage("Please select the Courier"));
@@ -55,6 +59,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE}, authActionBean = AdminPermissionAction.class)
   public Resolution save() {
     CourierPricingEngine duplicatePricingEngine = (CourierPricingEngine)HKCollectionUtils.findDuplicate(courierPricingEngineList,
                 null, "courier", "regionType", "validUpto");
