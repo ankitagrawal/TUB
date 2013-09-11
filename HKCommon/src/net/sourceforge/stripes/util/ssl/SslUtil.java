@@ -9,8 +9,8 @@ import net.sourceforge.stripes.action.Ssl;
 import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.util.HttpUrlInfo;
 import net.sourceforge.stripes.util.UrlParser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ import java.util.Properties;
  */
 public class SslUtil {
 
-  private static final Log log = LogFactory.getLog(SslUtil.class);
+	private static Logger log = LoggerFactory.getLogger(SslUtil.class);
 
 	private static final String ENVIRONMENT_PROPERTIES = "/environment.properties";
 
@@ -217,7 +217,7 @@ public class SslUtil {
             log.debug("default values: protocol:host:projectEnv: " + protocol + ":" + host + ":" + projectEnv);
 
 	          //If the env is not prod or admin the url will be formed via the request's servername and port.
-	          if(projectEnv.equals("prod") || projectEnv.equals("admin")) {
+	          if(("prod").equals(projectEnv) || ("admin").equals(projectEnv)) {
 		          if (targetSecure && isSslEnabled()) {
 			          log.debug("Rewriting url from http to https");
 			          protocol = "https://";
