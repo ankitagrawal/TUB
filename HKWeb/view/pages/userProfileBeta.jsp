@@ -12,34 +12,17 @@
 <s:layout-render name="/layouts/defaultBeta.jsp">
 <s:layout-component name="heading">My Account</s:layout-component>
 <s:layout-component name="centralContent">
+
     <%--breadcrumbs begins--%>
     <div class="hk-breadcrumb-cntnr mrgn-bt-10">
-  <span>
-    <s:link beanclass="com.hk.web.action.HomeAction">
-        Home
-    </s:link>
-  </span>
+            <span>
+               <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
+            </span>
         <span>&raquo;</span>
-        <c:choose>
-            <c:when test="${tabId == accountTab}">
-      <span>
-          <span class="txt-blue fnt-bold">
-          Account
-          </span>
-        </span>
-            </c:when>
-            <c:otherwise>
-      <span>
-            <s:link beanclass="com.hk.web.action.core.user.MyAccountAction">
-                Account
-            </s:link>
-          </span>
-                <span>&raquo;</span>
-            </c:otherwise>
-        </c:choose>
+        <span class="txt-blue fnt-bold">Account</span>
     </div>
-
     <%--breadcrumbs ends--%>
+
     <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
         <div class="err-cntnr">
             <span class="icn-warning-small"></span>
@@ -87,6 +70,7 @@
   <%
   UserProfileService userProfileService = ServiceLocatorFactory.getService(UserProfileService.class);
   %>
+
   <c:set var="productVariants" value="<%=userProfileService.getRecentlyOrderedProductVariantsForUser(maa.getUser())%>"/>
   <c:set var="recentOrders" value="<%=userProfileService.getOrdersForUserSortedByDate(maa.getUser())%>"/>
   <c:set var="addresses" value="${maa.addresses}"/>
@@ -98,7 +82,8 @@
         <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
           <fieldset>
             <c:forEach items="${productVariants}" var="variant" varStatus="ctr">
-              <div class="cont footer_color" width="100%" style="font-size: smaller;">
+                <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(variant.id)}"/>
+                <div class="cont footer_color" width="100%" style="font-size: smaller;">
                 <div style="border-bottom: 1px solid #f0f0f0;">
                   <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
                   <s:checkbox name="productVariantList[${ctr.index}].selected" class="lineItemCheckBox"/>
@@ -106,7 +91,8 @@
                   <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link">
                     <s:param name="productId" value="${variant.product.id}"/>
                     <s:param name="productSlug" value="${variant.product.slug}"/>
-                    ${variant.product.name}
+                    <%--${variant.product.name}--%>
+                    ${storeVariantBasic.name}
                   </s:link>
                 </div>
               </div>
