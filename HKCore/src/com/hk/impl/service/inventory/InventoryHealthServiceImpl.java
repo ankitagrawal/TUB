@@ -733,7 +733,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     List<ShippingOrder> lifeCycleActivityLoggedForSO = new ArrayList<ShippingOrder>();
     for (CartLineItem cartLineItem : cartLineItems) {
-      if (lineItemDao.getLineItem(cartLineItem) != null) {
+//      if (lineItemDao.getLineItem(cartLineItem) != null) {
 
         ProductVariant productVariant = cartLineItem.getProductVariant();
         // picking the  sku for current MRP available at max qty on product variant
@@ -771,7 +771,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           maxQty = maxQty - qtyToBeSet;
         }
       }
-    }
+
     return maxQty;
   }
 
