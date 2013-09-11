@@ -31,16 +31,16 @@ Hi ${user.name}, welcome to HealthKart.com
               </tr>
 
              <tr>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/sports-nutrition" style="color:#333; text-decoration:none;">SPORTS NUTRITION</a> </td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/health-nutrition" style="color:#333; text-decoration:none;">HEALTH NUTRITION</a> </td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/sports" style="color:#333; text-decoration:none;">SPORTS AND FITNESS</a></td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/diabetes" style="color:#333; text-decoration:none;">DIABETES</a></td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/health-devices" style="color:#333; text-decoration:none;">HEALTH DEVICES</a></td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/home-living" style="color:#333; text-decoration:none;">HOME AND LIVING</a></td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/eye" style="color:#333; text-decoration:none;">VISION</a></td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/personal-care" style="color:#333; text-decoration:none;">PERSONAL CARE</a></td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/beauty" style="color:#333; text-decoration:none;">BEAUTY</a></td>
-                 <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/parenting" style="color:#333; text-decoration:none;">PARENTING</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/sports-nutrition" style="color:#333; text-decoration:none;">SPORTS NUTRITION</a> </td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/health-nutrition" style="color:#333; text-decoration:none;">HEALTH NUTRITION</a> </td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/sports" style="color:#333; text-decoration:none;">SPORTS AND FITNESS</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/diabetes" style="color:#333; text-decoration:none;">DIABETES</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/health-devices" style="color:#333; text-decoration:none;">HEALTH DEVICES</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/home-living" style="color:#333; text-decoration:none;">HOME AND LIVING</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/eye" style="color:#333; text-decoration:none;">VISION</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/personal-care" style="color:#333; text-decoration:none;">PERSONAL CARE</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/beauty" style="color:#333; text-decoration:none;">BEAUTY</a></td>
+                 <td style="font-size:0.7em; white-space:nowrap;"><a href="http://www.healthkart.com/parenting" style="color:#333; text-decoration:none;">PARENTING</a></td>
 
              </tr>
 
