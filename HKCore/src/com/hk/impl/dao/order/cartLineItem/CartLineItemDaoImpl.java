@@ -77,8 +77,8 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
     statuses.addAll(EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
     statuses.add(EnumShippingOrderStatus.SO_ReadyForDropShipping.getId());
 
-    String query = " select c from CartLineItem c inner join c.order as o inner join o.shippingOrders as so  inner join so.lineItems as li where  c.productVariant = :productVariant and c.markedPrice = :mrp and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.sku.id = :skuId and o.payment.paymentStatus.id in (:paymentStatusIds)  "
-        + " and c.skuItemCLIs.size <= 0  order by so.targetDispatchDate, o.order.payment.paymentDate  asc ";
+    String query = " select c from CartLineItem c inner join c.order as o inner join o.shippingOrders as so  inner join so.lineItems as li inner join o.payment as p inner join p.paymentStatus as ps where  c.productVariant = :productVariant and c.markedPrice = :mrp and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.sku.id = :skuId and ps.id in (:paymentStatusIds)  "
+        + " and c.skuItemCLIs.size <= 0  order by so.targetDispatchDate, p.paymentDate  asc ";
     return (List<CartLineItem>) getSession().createQuery(query).setParameterList("shippingOrderStatusIds", statuses).setParameter("productVariant", productVariant).setParameter("mrp", mrp).setParameter("skuId", skuId).setParameterList("paymentStatusIds",EnumPaymentStatus.getEscalablePaymentStatusIds()).list();
 
   }
