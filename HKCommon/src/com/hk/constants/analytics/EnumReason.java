@@ -70,8 +70,8 @@ public enum EnumReason {
     INV_FOUND_DIFF_WAREHOUSE(1200L,EnumClassification.INV_PRESENT_DIFF_WAREHOUSE, EnumReasonType.SO_NOT_CANCELLED),
     JIT_ITEMS_IN_SO(1210L,EnumClassification.JIT_IN_SO,EnumReasonType.SO_NOT_CANCELLED),
     NoActionTakenAtReconciliation(1450L, "No Action Taken", EnumReasonType.Reconciliation),
-    REFUND_REPLACEMENT_ORDER(1460L,"Refund for replacement order", EnumReasonType.Reconciliation),
-    REFUND_REVERSE_PICKUP(1470L,"Refund for reverse pickup ", EnumReasonType.Reconciliation),
+    REFUND_REPLACEMENT_ORDER(1460L,EnumClassification.REFUND_REPLACEMENT, EnumReasonType.Reconciliation),
+    REFUND_REVERSE_PICKUP(1470L,EnumClassification.REFUND_REVERSE_PICK, EnumReasonType.Reconciliation),
     ;
 
     Long id;
