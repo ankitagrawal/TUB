@@ -71,7 +71,8 @@ public class ShipmentPricingEngine {
     Warehouse srcWarehouse = shippingOrder.getWarehouse();
     if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
       if (pincodeObj.getNearestHub() != null) {
-        HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub());
+        HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse,
+                                                                    pincodeObj.getNearestHub(), shipment.getShipDate());
         if(hkReachPricingEngine != null){
           return calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
         }

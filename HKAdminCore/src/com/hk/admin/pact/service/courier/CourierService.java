@@ -40,7 +40,7 @@ public interface CourierService {
 
   public List<HKReachPricingEngine> searchHKReachPricing(Warehouse warehouse, Hub hub);
 
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub);
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Date shipDate);
 
   public HKReachPricingEngine saveHKReachPricingEngine(HKReachPricingEngine hkReachPricingEngine);
 

@@ -94,7 +94,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
           if (pincodeObj.getNearestHub() != null) {
             HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse,
-                pincodeObj.getNearestHub());
+                pincodeObj.getNearestHub(), null);
             if(hkReachPricingEngine != null){
               totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
             }
