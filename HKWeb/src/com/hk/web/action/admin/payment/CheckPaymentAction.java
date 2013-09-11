@@ -4,11 +4,14 @@ import java.util.*;
 
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.analytics.EnumReasonType;
 import com.hk.constants.payment.*;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pojo.HkPaymentResponse;
+import com.hk.taglibs.Functions;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
@@ -93,7 +96,7 @@ public class CheckPaymentAction extends BaseAction {
 
     List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
 
-    private EnumReason refundReason;
+    private Reason refundReason;
 
     @DefaultHandler
     public Resolution show() {
@@ -191,7 +194,7 @@ public class CheckPaymentAction extends BaseAction {
                   payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
                   adminOrderService.logOrderActivity(basePayment.getOrder(), getUserService().getLoggedInUser(),
                       EnumOrderLifecycleActivity.REFUND_RO.asOrderLifecycleActivity(),
-                      refundReason.asReason().getClassification().getPrimary());
+                      refundReason.getClassification().getPrimary());
                 } else {
                   addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
                 }
@@ -625,15 +628,15 @@ public class CheckPaymentAction extends BaseAction {
         this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
     }
 
-  public Set<EnumReason> getRefundReasons() {
-    return  EnumReason.getAcceptableReasonRefund();
+  public List<Reason> getRefundReasons() {
+    return  Functions.getReasonsByType(EnumReasonType.REFUND.getName());
   }
 
-  public EnumReason getRefundReason() {
+  public Reason getRefundReason() {
     return refundReason;
   }
 
-  public void setRefundReason(EnumReason refundReason) {
+  public void setRefundReason(Reason refundReason) {
     this.refundReason = refundReason;
   }
 }
