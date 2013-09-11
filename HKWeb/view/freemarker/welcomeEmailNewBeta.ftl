@@ -20,22 +20,16 @@ Hi ${user.name}, welcome to HealthKart.com
 
         <tr>
           <td>
-            <table width="500" border="0" cellpadding="0" cellspacing="0">
+            <table style="border-bottom: 1px solid #0000ff;padding-bottom: 3px;" width="500" border="0" cellpadding="0" cellspacing="0">
               <tr>
-                <td width="222"><a href="http://www.healthkart.com"><img
+                <td colspan="10"><a href="http://www.healthkart.com"><img
                         src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com Logo" width="207"
                         height="30" border="0"/></a></td>
-                <#--<td width="15" style="border-left: solid 1px #999999"></td>-->
-                <#--<td width="18">&nbsp;</td>-->
               </tr>
-              <#--<tr>-->
-                <#--<td colspan="5" height="10"></td>-->
-              <#--</tr>-->
-              <#--<tr>-->
-                <#--<td colspan="5"><a href="http://www.healthkart.com"><img-->
-                        <#--src="http://img.healthkart.com/email/welcome_emailer_new/images/main_banner.jpg" width="500"-->
-                        <#--height="148" alt="Welcome to HealthKart!" border="0"/></a></td>-->
-              <#--</tr>-->
+              <tr>
+                <td colspan="5" height="10"></td>
+              </tr>
+
              <tr>
                  <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/sports-nutrition" style="color:#333; text-decoration:none;">SPORTS NUTRITION</a> </td>
                  <td style="font-size:0.6em; white-space:nowrap;"><a href="http://www.healthkart.com/health-nutrition" style="color:#333; text-decoration:none;">HEALTH NUTRITION</a> </td>
