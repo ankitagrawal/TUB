@@ -50,6 +50,7 @@ public class HybridNotifyMeResource {
         notifyUserDetails.setSubscribedForNotify(user.isSubscribedForNotify());
         if(!user.isSubscribedForNotify()){
           notifyUserDetails.setException(true);
+          notifyUserDetails.setAccountLink("http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=");
           notifyUserDetails.addMessage("You Have Unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
         }
       }else{
