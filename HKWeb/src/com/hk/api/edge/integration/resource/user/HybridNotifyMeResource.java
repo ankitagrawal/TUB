@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -61,16 +62,19 @@ public class HybridNotifyMeResource {
   @Path("/update")
   @Produces("application/json")
   public String updateNotifyForVariant(UpdateNotifyMeDetails updateNotifyMeDetails){
+    List<String> messages = new ArrayList<String>();
     User user = getUserService().findByLogin(updateNotifyMeDetails.getEmail());
     if (user != null) {
       if (!(user.isSubscribedForNotify())) {
-        return new JSONResponseBuilder().addField("exception",true).addField("msgs","You have unsubscribed for all emails, Please go to 'My Account' to Subscribe again").addField("accntLnk","http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=").build();
+        messages.add("You have unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
+        return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).addField("accntLnk","http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=").build();
       }
     } else {
       EmailRecepient emailRecepient = getEmailRecepientDao().findByRecepient(updateNotifyMeDetails.getEmail());
       if (emailRecepient != null) {
         if (!(emailRecepient.isSubscribed())) {
-          return new JSONResponseBuilder().addField("exception",true).addField("msgs","You Have Unsubscribed for all emails , Contact Customer Care") .build();
+          messages.add("You Have Unsubscribed for all emails , Contact Customer Care");
+          return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
         }
       }
     }
@@ -79,10 +83,12 @@ public class HybridNotifyMeResource {
     if(productVariant!=null){
       List<NotifyMe> notifyMeList = getNotifyMeDao().getPendingNotifyMeList(updateNotifyMeDetails.getEmail(), productVariant);
       if (notifyMeList != null && notifyMeList.size() > 0) {
-        return new JSONResponseBuilder().addField("exception",false).addField("msgs","We have received your request for this variant. We will get back to you very soon. Thanks for your visit.").build();
+        messages.add("We have received your request for this variant. We will get back to you very soon. Thanks for your visit.");
+        return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).build();
       }
     }else{
-       return new JSONResponseBuilder().addField("exception",true).addField("msgs", "Something went wrong").build();
+      messages.add("Something went wrong");
+       return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
     }
     try{
       NotifyMe notifyMe = new NotifyMe();
@@ -92,9 +98,11 @@ public class HybridNotifyMeResource {
       notifyMe.setPhone(updateNotifyMeDetails.getContactNumber());
       getNotifyMeDao().save(notifyMe);
     } catch (Exception e){
-      return new JSONResponseBuilder().addField("exception",true).addField("msgs","There came an Error, please try again").build();
+      messages.add("There came an Error, please try again");
+      return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
     }
-    return new JSONResponseBuilder().addField("exception",false).addField("msgs","Your request for this variant has already been received. We will get back to you very soon. Thanks for your visit.").build();
+    messages.add("Your request for this variant has already been received. We will get back to you very soon. Thanks for your visit.");
+    return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).build();
   }
 
   public UserService getUserService() {
