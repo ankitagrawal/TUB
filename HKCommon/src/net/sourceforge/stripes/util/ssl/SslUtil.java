@@ -214,7 +214,7 @@ public class SslUtil {
               host += ":" + request.getServerPort();
             }
 
-            log.debug("default values: " + protocol + host);
+            log.debug("default values: protocol:host:projectEnv: " + protocol + ":" + host + ":" + projectEnv);
 
 	          //If the env is not prod or admin the url will be formed via the request's servername and port.
 	          if(projectEnv.equals("prod") || projectEnv.equals("admin")) {
@@ -224,7 +224,6 @@ public class SslUtil {
 			          String sslHost = StripesFilter.getConfiguration().getSslConfiguration().getSecureHost();
 			          if (sslHost != null) {
 				          host = sslHost;
-				          host = "rahul" + projectEnv;
 			          }
 		          } else {
 			          log.debug("Rewriting url from https to http");
@@ -232,7 +231,6 @@ public class SslUtil {
 			          String unsecureHost = StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost();
 			          if (unsecureHost != null) {
 				          host = unsecureHost;
-				          host = "rahul" + projectEnv;
 			          }
 		          }
 	          }
