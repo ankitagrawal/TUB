@@ -6357,6 +6357,66 @@ label{
     margin-bottom: 5px;
 }
 
+
+/*padding variation utils *start**/
+.pad0 {
+    padding: 0;
+}
+
+.pad-b-10 {
+    padding-bottom: 10px;
+}
+
+.pad-b-20 {
+    padding-bottom: 20px;
+}
+
+.pad-t-10 {
+    padding-top: 10px;
+}
+
+.pad-t-20 {
+    padding-top: 20px;
+}
+
+.pad-t-30 {
+    padding-top: 30px;
+}
+
+.pad-tb-20 {
+    padding: 20px 0;
+}
+
+.pad-tb-10 {
+    padding: 10px 0;
+}
+
+.pad-lr-20 {
+    padding: 0 20px;
+}
+
+.pad-l-10 {
+    padding: 0 0 0 10px;
+}
+
+.pad-tb-30 {
+    padding: 30px 0;
+}
+
+.pad-r-10 {
+    padding-right: 10px;
+}
+
+.pad-r-40 {
+    padding: 0 40px 0 0;
+}
+
+.pad-l-40 {
+    padding: 0 0 0 40px;
+}
+
+/*padding variation utils *ends**/
+
 /**margin variation utils *starts**/
 .mrgn-hdr {
     margin: 50px 0 20px 0;

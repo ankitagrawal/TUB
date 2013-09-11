@@ -12,6 +12,34 @@
 <s:layout-render name="/layouts/defaultBeta.jsp">
 <s:layout-component name="heading">My Account</s:layout-component>
 <s:layout-component name="centralContent">
+    <%--breadcrumbs begins--%>
+    <div class="hk-breadcrumb-cntnr mrgn-bt-10">
+  <span>
+    <s:link beanclass="com.hk.web.action.HomeAction">
+        Home
+    </s:link>
+  </span>
+        <span>&raquo;</span>
+        <c:choose>
+            <c:when test="${tabId == accountTab}">
+      <span>
+          <span class="txt-blue fnt-bold">
+          Account
+          </span>
+        </span>
+            </c:when>
+            <c:otherwise>
+      <span>
+            <s:link beanclass="com.hk.web.action.core.user.MyAccountAction">
+                Account
+            </s:link>
+          </span>
+                <span>&raquo;</span>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+    <%--breadcrumbs ends--%>
     <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
         <div class="err-cntnr">
             <span class="icn-warning-small"></span>
@@ -459,23 +487,4 @@
     margin-bottom: 2px;
   }
 
-  /*table {*/
-    /*width: 100%;*/
-    /*margin-bottom: 10px;*/
-    /*margin-top: 5px;*/
-    /*border: 1px solid;*/
-    /*border-collapse: separate;*/
-  /*}*/
-
-  /*table th {*/
-    /*background: #f0f0f0;*/
-    /*padding: 5px;*/
-    /*text-align: left;*/
-  /*}*/
-
-  /*table td {*/
-    /*padding: 5px;*/
-    /*text-align: left;*/
-    /*font-size: small;*/
-  /*}*/
 </style>
