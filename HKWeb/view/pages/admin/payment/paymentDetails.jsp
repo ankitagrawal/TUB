@@ -42,7 +42,6 @@
                         <s:option value="${lifecycleActivity.id}"> ${lifecycleActivity.name} </s:option>
                     </c:forEach>
                 </s:select>
-                <s:text name="amount" id = "amount" style="width:180px;height:25px;"/>
                 <br>
                 <s:submit name="seekPayment" value="Seek" id="save"/>
                 <s:submit name="searchTransactionByDate" value="Historical List" id="searchTransactionByDate"/>
