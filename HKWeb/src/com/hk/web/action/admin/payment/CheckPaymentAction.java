@@ -1,14 +1,13 @@
 package com.hk.web.action.admin.payment;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.payment.*;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
-import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pojo.HkPaymentResponse;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.PaymentFinder;
@@ -94,7 +93,7 @@ public class CheckPaymentAction extends BaseAction {
 
     List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
 
-    private EnumOrderLifecycleActivity refundReasonActivity;
+    private EnumReason refundReason;
 
     @DefaultHandler
     public Resolution show() {
@@ -182,7 +181,7 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
       if (gatewayOrderId != null) {
-        if (amount != null && refundReasonActivity !=null) {
+        if (amount != null && refundReason !=null) {
           Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
           Gateway gateway = basePayment.getGateway();
           if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
@@ -191,7 +190,8 @@ public class CheckPaymentAction extends BaseAction {
                 if (isSuccessFullPayment(gatewayOrderId)) {
                   payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
                   adminOrderService.logOrderActivity(basePayment.getOrder(), getUserService().getLoggedInUser(),
-                      refundReasonActivity.asOrderLifecycleActivity(), payment.getPaymentStatus().getName());
+                      EnumOrderLifecycleActivity.REFUND_RO.asOrderLifecycleActivity(),
+                      refundReason.asReason().getClassification().getPrimary());
                 } else {
                   addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
                 }
@@ -625,15 +625,15 @@ public class CheckPaymentAction extends BaseAction {
         this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
     }
 
-  public Set<EnumOrderLifecycleActivity> getOrderLifecycleActivities() {
-    return  EnumOrderLifecycleActivity.getAcceptableLifecycleActivityRefund();
+  public Set<EnumReason> getRefundReasons() {
+    return  EnumReason.getAcceptableReasonRefund();
   }
 
-  public EnumOrderLifecycleActivity getRefundReasonActivity() {
-    return refundReasonActivity;
+  public EnumReason getRefundReason() {
+    return refundReason;
   }
 
-  public void setRefundReasonActivity(EnumOrderLifecycleActivity refundReasonActivity) {
-    this.refundReasonActivity = refundReasonActivity;
+  public void setRefundReason(EnumReason refundReason) {
+    this.refundReason = refundReason;
   }
 }

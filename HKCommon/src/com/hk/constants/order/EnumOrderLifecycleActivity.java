@@ -34,7 +34,7 @@ public enum EnumOrderLifecycleActivity {
   OrderShippedEmailFired(95L, "Order Shipped Email Fired"),
   OrderDelivered(100L, "Order Delivered"),
   OrderDeliveredUpdated(105L, "Order Delivered Updated"),
-  OrderInstalled(108L, "Order Installed"),  
+  OrderInstalled(108L, "Order Installed"),
   OrderReturned(110L, "Order Returned"),
   OrderPartiallyReturned(111L, "Partial Order Returned"),
   ReCheckedInItem(113L, "Re-CheckedIn Item"),
@@ -62,8 +62,7 @@ public enum EnumOrderLifecycleActivity {
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
   RefundMailToAdmin(900L, "Manual refund task mail sent to admin"),
   NoActionAtReconciliation(1050L, "No action taken at reconciliation(refund/reward)"),
-  REFUND_REPLACEMENT_ORDER(1060L,"Refund for replacement order"),
-  REFUND_REVERSE_PICKUP(1070L,"Refund for reverse pickup "),
+  REFUND_RO(1060L, "Refund in replacement order or reverse pickup")
   ;
 
   private String name;
@@ -89,12 +88,6 @@ public enum EnumOrderLifecycleActivity {
     return orderLifecycleActivity;
   }
 
-  public static Set<EnumOrderLifecycleActivity> getAcceptableLifecycleActivityRefund() {
-    Set<EnumOrderLifecycleActivity> acceptableLifecycleActivity = new HashSet<EnumOrderLifecycleActivity>();
-    acceptableLifecycleActivity.add(EnumOrderLifecycleActivity.REFUND_REPLACEMENT_ORDER);
-    acceptableLifecycleActivity.add(EnumOrderLifecycleActivity.REFUND_REVERSE_PICKUP);
-    return acceptableLifecycleActivity;
-  }
   /*
   public static List<Long> getLifecycleActivityIDs(List<EnumOrderLifecycleActivity> enumOrderLifeCycleActivities) {
     List<Long> lifeCycleActivityIds = new ArrayList<Long>();

@@ -43,10 +43,10 @@
                     </tr>
                     <tr>
                         <td><label>Enter Reason for Refund</label></td>
-                        <td><s:select name="refundReasonActivity" style="width:185px;height:28px;">
+                        <td><s:select name="refundReason" style="width:185px;height:28px;">
                             <s:option value="">-- Select --</s:option>
-                            <c:forEach items="${cpa.orderLifecycleActivities}" var="lifecycleActivity">
-                                <s:option value="${lifecycleActivity.id}"> ${lifecycleActivity.name} </s:option>
+                            <c:forEach items="${cpa.refundReasons}" var="reason">
+                                <s:option value="${reason.id}"> ${reason.classification.primary}- ${reason.classification.secondary} </s:option>
                             </c:forEach>
                         </s:select>
                         </td>

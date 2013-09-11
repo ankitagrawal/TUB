@@ -637,7 +637,7 @@ public class PaymentServiceImpl implements PaymentService {
         refundPayment.setParent(basePayment);
         refundPayment.setAmount(amount);
         refundPayment.setTransactionType(EnumPaymentTransactionType.REFUND.getName());
-
+        refundPayment.setPaymentDate(new Date());
         refundPayment = paymentDao.save(refundPayment);
 
         return refundPayment;
