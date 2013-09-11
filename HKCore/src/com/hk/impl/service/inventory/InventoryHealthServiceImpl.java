@@ -703,35 +703,31 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       productVariant.setWarehouse(sku.getWarehouse());
       getBaseDao().save(productVariant);
 
-      List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
-      logger.debug("List of cartLineItems in action awaiting for product variant " + productVariant.getId() +" sicli which not created is " + cartLineItems.size());
-      Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
-      if (clis.size() > 0) {
-        logger.debug("going to book inventory for Variant :" + productVariant.getId() + " and in action queue " + cartLineItems.size());
-        remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty(), false);
-        logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in action queue" + remainingQty);
-      }
-      //
-
-//       considering scenario of orders in  processing queue
-      if (remainingQty > 0) {
-        List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
+      List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
+      Set<CartLineItem> clisInProcessing = new HashSet<CartLineItem>(cartLineItemsInProcessing);
+      if (cartLineItemsInProcessing.size() > 0){
         logger.debug("List of cartLineItems in processing queue for  product variant " +productVariant.getId() + " sicli which not created is " + cartLineItemsInProcessing.size());
-        Set<CartLineItem> clisInProcessing = new HashSet<CartLineItem>(cartLineItemsInProcessing);
-        if (clisInProcessing.size() > 0) {
-          logger.debug("going to book inventory for Variant :" + productVariant.getId() + " and in processing queue " + clisInProcessing.size());
-          remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, remainingQty, true);
-          logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in processing queue" + remainingQty);
+        remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, newSkuInfo.getQty(), true);
+        logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in processing queue" + remainingQty);
+      }
+
+      if (remainingQty > 0){
+        List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
+        logger.debug("List of cartLineItems in action awaiting for product variant " + productVariant.getId() +" sicli which not created is " + cartLineItems.size());
+        Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
+        if (clis.size() > 0) {
+          logger.debug("going to book inventory for Variant :" + productVariant.getId() + " and in action queue " + cartLineItems.size());
+          remainingQty = tempBookSkuLineItemForPendingOrder(clis,remainingQty , false);
+          logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in action queue" + remainingQty);
         }
       }
-//   end scenario
+
       newSkuInfo.setQty(remainingQty);
       Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
       newBatchSkuInfo.add(newSkuInfo);
       updateVariantInfo(productVariant, newBatchSkuInfo);
     }
   }
-
 
   public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
     InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
