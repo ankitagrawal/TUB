@@ -60,4 +60,6 @@ public interface AdminShippingOrderService {
 
   public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder order1, ShippingOrder order2);
 
+  public Boolean updateSOForB2BOrders(ShippingOrder shippingOrder);
+
 }
