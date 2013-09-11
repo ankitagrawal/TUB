@@ -3,6 +3,7 @@ package com.hk.web.action.admin.payment;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.payment.*;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
@@ -77,6 +78,9 @@ public class CheckPaymentAction extends BaseAction {
     @Autowired
     private PaymentManager paymentManager;
 
+    @Autowired
+    AdminOrderService adminOrderService;
+
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
     //@Validate (required = true, on = {"refundPayment","updatePayment"})
     private String gatewayOrderId;
@@ -90,7 +94,7 @@ public class CheckPaymentAction extends BaseAction {
 
     List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
 
-
+    private EnumOrderLifecycleActivity refundReasonActivity;
 
     @DefaultHandler
     public Resolution show() {
@@ -177,40 +181,42 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
-        if (gatewayOrderId != null) {
-            if (amount != null) {
-                Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
-                Gateway gateway = basePayment.getGateway();
-                if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
-                    if (isRefundAmountValid(gatewayOrderId, amount)) {
-                        try {
-                            if (isSuccessFullPayment(gatewayOrderId)) {
-                                payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
-                            } else {
-                                addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
-                            }
-
-
-                        } catch (HealthkartPaymentGatewayException e) {
-                            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
-                        }
-                    } else {
-                        addRedirectAlertMessage(new SimpleMessage("Amount cannot exceed total remaining amount"));
-                    }
-
+      if (gatewayOrderId != null) {
+        if (amount != null && refundReasonActivity !=null) {
+          Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+          Gateway gateway = basePayment.getGateway();
+          if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
+            if (isRefundAmountValid(gatewayOrderId, amount)) {
+              try {
+                if (isSuccessFullPayment(gatewayOrderId)) {
+                  payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
+                  adminOrderService.logOrderActivity(basePayment.getOrder(), getUserService().getLoggedInUser(),
+                      refundReasonActivity.asOrderLifecycleActivity(), payment.getPaymentStatus().getName());
                 } else {
-                    addRedirectAlertMessage(new SimpleMessage("Refund feature only works for citrus/icici/ebs"));
+                  addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
                 }
+
+
+              } catch (HealthkartPaymentGatewayException e) {
+                logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+              }
             } else {
-                addRedirectAlertMessage(new SimpleMessage("Please enter amount"));
+              addRedirectAlertMessage(new SimpleMessage("Amount cannot exceed total remaining amount"));
             }
 
+          } else {
+            addRedirectAlertMessage(new SimpleMessage("Refund feature only works for citrus/icici/ebs"));
+          }
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Please enter gateway order id"));
+          addRedirectAlertMessage(new SimpleMessage("Please enter amount as well as reason for the refund."));
         }
 
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("Please enter gateway order id"));
+      }
 
-        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+
+      return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
     private boolean isSuccessFullPayment(String gatewayOrderId) {
@@ -619,4 +625,15 @@ public class CheckPaymentAction extends BaseAction {
         this.bulkHkPaymentResponseList = bulkHkPaymentResponseList;
     }
 
+  public Set<EnumOrderLifecycleActivity> getOrderLifecycleActivities() {
+    return  EnumOrderLifecycleActivity.getAcceptableLifecycleActivityRefund();
+  }
+
+  public EnumOrderLifecycleActivity getRefundReasonActivity() {
+    return refundReasonActivity;
+  }
+
+  public void setRefundReasonActivity(EnumOrderLifecycleActivity refundReasonActivity) {
+    this.refundReasonActivity = refundReasonActivity;
+  }
 }

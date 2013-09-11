@@ -1,3 +1,5 @@
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -32,6 +34,14 @@
                 <label>Enter Payment Id (EBS)</label>
                 <s:text name="paymentId" id = "paymentId" style="width:180px;height:25px;"/>
                 <label>Enter Amount</label>
+                <s:text name="amount" id = "amount" style="width:180px;height:25px;"/>
+                <label>Enter Reason for Refund</label>
+                <s:select name="refundReasonActivity">
+                    <s:option value="">-- Select --</s:option>
+                    <c:forEach items="${cpa.orderLifecycleActivities}" var="lifecycleActivity">
+                        <s:option value="${lifecycleActivity.id}"> ${lifecycleActivity.name} </s:option>
+                    </c:forEach>
+                </s:select>
                 <s:text name="amount" id = "amount" style="width:180px;height:25px;"/>
                 <br>
                 <s:submit name="seekPayment" value="Seek" id="save"/>
