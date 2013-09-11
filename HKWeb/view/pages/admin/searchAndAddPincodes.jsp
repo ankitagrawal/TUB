@@ -23,6 +23,8 @@
                    var city      = $('#city').val();
                    var state     = $('#state').val();
                    var zone      = $('#zone').val();
+                   var hub       = $('#nearestHub').val();
+                   var lastMCost = $('#lastMileCost').val();
                     if(pincode == null || pincode == "" || isNaN(pincode) || pincode.length!=6){
                         alert("pincode can't be empty or must contain numbers only and length must be 6!!");
                         $('#pincode').val("");
@@ -32,9 +34,14 @@
                         alert("Value can't be left empty!!");
                         return false;
                     }
-                    if(city == null || city == "" || state == null || state == "" || zone == null || zone == ""){
-                       alert("City, State and Zone must be selected !!");
+                    if(city == null || city == "" || state == null || state == "" || zone == null || zone == ""
+                            || hub == null || hub == ""){
+                       alert("City, State, Nearest Hub and Zone must be selected !!");
                        return false;
+                    }
+                    if (isNan(lastMCost)) {
+                        alert("Last mile Cost has to be a number.")
+                        return false;
                     }
                     $('#savePincodeString').attr('val',pincode);
                 });
@@ -151,6 +158,39 @@
                         </c:choose>
                         </td>
 					</tr>
+                    <tr>
+                        <td>Nearest Hub:</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
+                                    ${mpaBean.pincode.nearestHub.name}
+                                </c:when>
+                                <c:otherwise>
+                                    <s:select name="pincode.nearestHub" id="nearestHub">
+                                        <s:option value="">--Select--</s:option>
+                                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="hubList"
+                                                                   value="id" label="name"/>
+                                    </s:select>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Last Mile Cost:</label>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${mpaBean.pincode!=null}">
+                                    ${mpaBean.pincode.lastMileCost}
+                                </c:when>
+                                <c:otherwise>
+                                    <s:text name="pincode.lastMileCost" id="lastMileCost"></s:text>
+                                </c:otherwise>
+                            </c:choose>
+
+                        </td>
+                    </tr>
 					<tr>
                         <c:if test="${mpaBean.pincode==null}">
 						<td><s:submit name="save" value="Save" id="save"/></td>
@@ -187,7 +227,8 @@
 
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
-             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 5 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION &nbsp;LOCALITY &nbsp;ZONE)</li>
+             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 7 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION
+                        &nbsp;LOCALITY &nbsp;ZONE &nbsp;NEAREST_HUB &nbsp;CONVEYANCE_COST)</li>
                     <br>
                     <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 					</s:form>
