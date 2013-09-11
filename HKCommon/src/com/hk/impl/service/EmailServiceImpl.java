@@ -72,6 +72,7 @@ public class EmailServiceImpl implements EmailService {
       boolean sent = false;
       try {
         sent = sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
+
       } catch (Exception e) {
         logger.error("Exception while sending Email", e.getStackTrace());
       }
@@ -143,6 +144,7 @@ public class EmailServiceImpl implements EmailService {
             HtmlEmail htmlEmail = mapEntry.getValue();
             // send this email asynchrounously, we do not want to wait for this process
             sendEmail(htmlEmail);
+            logger.debug("-----ftl entry-------"+htmlEmail);
         }
         return true;
     }

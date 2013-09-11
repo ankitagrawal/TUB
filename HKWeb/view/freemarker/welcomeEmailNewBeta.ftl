@@ -22,15 +22,15 @@ Hi ${user.name}, welcome to HealthKart.com
           <td>
             <table width="500" border="0" cellpadding="0" cellspacing="0">
               <tr>
-                <td align="center" width="222"><a href="http://www.healthkart.com"><img
+                <td width="222"><a href="http://www.healthkart.com"><img
                         src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com Logo" width="207"
                         height="30" border="0"/></a></td>
-                <td width="15" style="border-left: solid 1px #999999"></td>
-                <td width="18">&nbsp;</td>
+                <#--<td width="15" style="border-left: solid 1px #999999"></td>-->
+                <#--<td width="18">&nbsp;</td>-->
               </tr>
-              <tr>
-                <td colspan="5" height="10"></td>
-              </tr>
+              <#--<tr>-->
+                <#--<td colspan="5" height="10"></td>-->
+              <#--</tr>-->
               <#--<tr>-->
                 <#--<td colspan="5"><a href="http://www.healthkart.com"><img-->
                         <#--src="http://img.healthkart.com/email/welcome_emailer_new/images/main_banner.jpg" width="500"-->
