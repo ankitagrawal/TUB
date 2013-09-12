@@ -218,23 +218,24 @@
 
                 </div>
                 <ul class="hdr-drop-down gl pad hide ">
-                    <li>
-                        <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" event="pre">
+                    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" event="pre">
+                        <li>
                             Profile
                             <s:param name="tabId" value="1"/>
-                        </s:link>
-                    </li>
-                    <li>
-                        <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction">
+                        </li>
+                    </s:link>
+                    <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction">
+                        <li>
                             Addresses
                             <s:param name="manageAddresses" value=""/>
-                        </s:link>
-                    </li>
+
+                        </li>
+                    </s:link>
 
                     <!--li>Orders</li>
                     <li>Rewards</li-->
                     <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
-                        <li class="brdr-t"><s:link beanclass="com.hk.web.action.core.auth.LogoutAction">LOG OUT</s:link></li>
+                        <s:link beanclass="com.hk.web.action.core.auth.LogoutAction"><li class="brdr-t">LOG OUT</li></s:link>
                     </c:if>
                 </ul>
 

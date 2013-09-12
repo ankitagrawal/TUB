@@ -3821,6 +3821,10 @@ box-shadow: -4px 1px 4px #ccc;
     width: 730px;
 }
 
+.fullContent {
+    width: 100%;
+}
+
 /*.centralContent {
     width: 700px;
     margin-left: 120px;
@@ -7523,3 +7527,68 @@ input[type="text"]:focus, input[type="password"]:focus{
 }
 
 /* Order table utils ends*/
+
+
+
+/*border variation utils *start**/
+.brdr {
+    border: 1px solid #ccc;
+}
+
+.brdr-l {
+    border-left: 1px solid #646464;
+}
+
+.brdr-r {
+    border-right: 1px solid #ccc;
+}
+
+.brdr-lr {
+    border-left: 1px solid #646464;
+    border-right: 1px solid #646464;
+}
+
+.brdr-b {
+    border-bottom: 1px dashed #646464;
+}
+
+.brdr-b-sd {
+    border-bottom: 1px solid #ccc;
+}
+
+.brdr-t {
+    border-top: 1px solid #646464;
+}
+
+.brdr-t-sd {
+    border-top: 1px solid #ccc;
+}
+
+.brdr-tb {
+    border-top: 1px dashed #646464;
+    border-bottom: 1px dashed #646464;
+}
+
+.brdr-t-blu-strip {
+    border-top: 5px solid blue;
+    position: absolute;
+    width: 100%;
+    z-index: 26;
+}
+
+.brdr-b-blu-strip {
+    border-bottom: 5px solid #1B75BB;
+}
+
+.no-brdr {
+    overflow: visible;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: 0px !important;
+}
+
+/**border variation utils *ends**/

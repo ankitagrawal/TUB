@@ -71,7 +71,7 @@ public class TrackCourierAction extends BaseAction {
         Resolution resolution = null;
         EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
 	    if(enumCourier == null){
-		 return new RedirectResolution("/pages/trackShipment.jsp");  
+		 return new RedirectResolution("/pages/trackShipment.jsp");
 	    }
         switch (enumCourier) {
             case Aramex:
@@ -180,7 +180,10 @@ public class TrackCourierAction extends BaseAction {
 			        consignment = consignmentService.getConsignmentByAwbNumber(trackingId);
 			        if (consignment != null) {
 				        consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
-				        resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
+                        if(isHybridRelease())
+                            resolution = new ForwardResolution("/pages/hkDeliveryTrackingBeta.jsp");
+                        else
+				            resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
 			        } else {
 				        resolution = new RedirectResolution("/pages/trackShipment.jsp");
 			        }
