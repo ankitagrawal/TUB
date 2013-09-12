@@ -115,29 +115,7 @@ Hi ${user.name}, welcome to HealthKart.com
     <tr>
         <td style="border-top: solid #0000ff 1px">
             <table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
-            <#--<tr>-->
-            <#--<td height="70" colspan="3" align="left" valign="middle"><a href="http://www.healthkart.com/"><img-->
-            <#--src="http://img.healthkart.com/email/logos/hk_logo_bw.jpg" alt="HealthKart.com logo" width="178"-->
-            <#--height="28" border="0"/></a></td>-->
-            <#--<td width="312" align="right" valign="middle" style="color:#606060; font-weight:bold; font-size:13px;"><a-->
-            <#--href="http://www.healthkart.com/" style="color:#606060; text-decoration:none;">www.healthkart.com</a>-->
-            <#--</td>-->
-            <#--</tr>-->
-            <#--<tr>-->
-            <#--<td width="106" height="60" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">Spread the-->
-            <#--word:-->
-            <#--</td>-->
-            <#--<td width="39" align="left" valign="middle" style="border-top: solid #929292 1px"><a-->
-            <#--href="http://www.facebook.com/healthkart"><img-->
-            <#--src="http://img.healthkart.com/email/logos/facebook.png" alt="facebook" width="32" height="32"-->
-            <#--border="0"/></a></td>-->
-            <#--<td width="43" align="left" valign="middle" style="border-top: solid #929292 1px"><a-->
-            <#--href="http://twitter.com/healthkart"><img src="http://img.healthkart.com/email/logos/twitter.png"-->
-            <#--alt="twitter" width="32" height="32" border="0"/></a></td>-->
-            <#--<td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a-->
-            <#--href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: 0124-4616444-->
-            <#--</td>-->
-            <#--</tr>-->
+
                 <tr>
 
 
@@ -164,10 +142,11 @@ Hi ${user.name}, welcome to HealthKart.com
                             Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA. © 2013
                 </tr>
                 <tr>
-                    <td align="center" style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; padding-top:10px;color:#646464;">
-                        <a style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.</div>
+                    <td align="center"
+                        style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; padding-top:10px;color:#646464;">
+                        <a style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.
                     </td>
-                    </td>
+
                 </tr>
 
                 <tr>
