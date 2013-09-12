@@ -46,7 +46,7 @@
                         <td><s:select name="refundReason" style="width:185px;height:28px;">
                             <s:option value="">-- Select --</s:option>
                             <c:forEach items="${cpa.refundReasons}" var="reason">
-                                <s:option value="${reason.id}"> ${reason.classification.primary} </s:option>
+                                <s:option value="${reason.id}"> ${reason.classification.primary} - ${reason.classification.secondary}</s:option>
                             </c:forEach>
                         </s:select>
                         </td>
