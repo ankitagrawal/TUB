@@ -11,7 +11,7 @@ public class NotifyUserDetails extends AbstractResponseFromHKR{
   private boolean isSubscribedForNotify;
 
   private String contactNumber;
-
+  private String accountLink;
 
   public String getName() {
     return name;
@@ -45,6 +45,14 @@ public class NotifyUserDetails extends AbstractResponseFromHKR{
     this.contactNumber = contactNumber;
   }
 
+  public String getAccountLink() {
+    return accountLink;
+  }
+
+  public void setAccountLink(String accountLink) {
+    this.accountLink = accountLink;
+  }
+
   @Override
   protected String[] getKeys() {
     return new String[]{
@@ -54,7 +62,8 @@ public class NotifyUserDetails extends AbstractResponseFromHKR{
         "isSubscribedForNotify",
         DtoJsonConstants.MESSAGES,
         DtoJsonConstants.EXCEPTION,
-        DtoJsonConstants.STORE_ID
+        DtoJsonConstants.STORE_ID,
+        "accntLnk"
     };
   }
 
@@ -67,7 +76,8 @@ public class NotifyUserDetails extends AbstractResponseFromHKR{
       this.isSubscribedForNotify,
       this.getMsgs(),
       this.isException(),
-      this.getStoreId()
+      this.getStoreId(),
+      this.accountLink
     };
   }
 }

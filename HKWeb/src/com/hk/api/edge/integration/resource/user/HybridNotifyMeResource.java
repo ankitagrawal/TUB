@@ -50,6 +50,7 @@ public class HybridNotifyMeResource {
         notifyUserDetails.setSubscribedForNotify(user.isSubscribedForNotify());
         if(!user.isSubscribedForNotify()){
           notifyUserDetails.setException(true);
+          notifyUserDetails.setAccountLink("http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=");
           notifyUserDetails.addMessage("You Have Unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
         }
       }else{
@@ -81,10 +82,15 @@ public class HybridNotifyMeResource {
 
     ProductVariant productVariant = getProductVariantService().getVariantById(updateNotifyMeDetails.getVariantId());
     if(productVariant!=null){
-      List<NotifyMe> notifyMeList = getNotifyMeDao().getPendingNotifyMeList(updateNotifyMeDetails.getEmail(), productVariant);
-      if (notifyMeList != null && notifyMeList.size() > 0) {
-        messages.add("We have received your request for this variant. We will get back to you very soon. Thanks for your visit.");
-        return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).build();
+      if(!productVariant.isOutOfStock()){
+        messages.add("This Product is In Stock, please refresh the page");
+        return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
+      } else{
+        List<NotifyMe> notifyMeList = getNotifyMeDao().getPendingNotifyMeList(updateNotifyMeDetails.getEmail(), productVariant);
+        if (notifyMeList != null && notifyMeList.size() > 0) {
+          messages.add("We have already received your request for this variant. We will get back to you very soon. Thanks for your visit.");
+          return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).build();
+        }
       }
     }else{
       messages.add("Something went wrong");
