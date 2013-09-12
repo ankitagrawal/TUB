@@ -76,8 +76,13 @@ public class CartLineItemUpdateAction extends BaseAction {
                 li = cartLineItemDao.save(li);
               }
             } else {
-              cartLineItemDao.refresh(cartLineItem);
-              HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", cartLineItem.getQty());
+              Long liQty = cartLineItem.getQty();
+              for (CartLineItem li : comboInstanceDao.getSiblingLineItems(cartLineItem)) {
+                Long comboPVQty = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant()).getQty();
+                liQty = liQty / comboPVQty;
+                break;
+              }
+              HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", liQty);
               return new JsonResolution(healthkartResponse);
             }
           } else {

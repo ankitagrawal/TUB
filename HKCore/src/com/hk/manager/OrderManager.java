@@ -619,8 +619,16 @@ public class OrderManager {
         }
 
         if (!(product.isJit() || product.isService() || product.isDropShipping() || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
+          Long liQty = lineItem.getQty();
           Long allowedQty = this.inventoryService.getAllowedStepUpInventory(lineItem);
-          if (allowedQty != null && allowedQty < lineItem.getQty()) {
+          if(lineItem.getComboInstance() != null){
+            for (CartLineItem li : comboInstanceDao.getSiblingLineItems(lineItem)) {
+              Long comboPVQty = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant()).getQty();
+              liQty = liQty / comboPVQty;
+              break;
+            }
+          }
+          if (allowedQty != null && allowedQty < liQty) {
             // Check in case of negative unbooked inventory
             if (comboInstance != null) {
               toBeRemovedComboInstanceSet.add(comboInstance);
