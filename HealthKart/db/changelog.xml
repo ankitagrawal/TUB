@@ -14125,4 +14125,7 @@
             <column name="valid_from" type="TIMESTAMP" />
         </addColumn>
     </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-2">
+        <sql>update hk_reach_pricing_engine set valid_from = '2013-09-01 00:00:00'</sql>
+    </changeSet>
 </databaseChangeLog>
