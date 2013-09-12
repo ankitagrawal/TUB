@@ -142,7 +142,9 @@ Hi ${user.name}, welcome to HealthKart.com
 
 
                     <td colspan="3" align="center" valign="top"
-                        style="font-family:Georgia ,'Times New Roman',Times,serif; font-size:12px; line-height:18px; color:#646464;">
+                        style="padding-top:10px;font-family:Georgia ,'Times New Roman',Times,serif; font-size:11px; line-height:18px; color:#646464;">
+
+
                         <a href="https://mail.google.com/mail/mailto:info@healthkart.com"
                            style="color:#646464; text-decoration: none;">info@healthkart.com</a>
                         | +91 124 4616444 |&nbsp;
@@ -154,22 +156,18 @@ Hi ${user.name}, welcome to HealthKart.com
 
                 </tr>
 
-                <tr>
-                    <td height="12" valign="top"></td>
-                </tr>
+
                 <tr>
                     <td colspan="3" align="center" valign="top"
-                        style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:12px; line-height:18px; color:#646464;">
+                        style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; color:#646464;">
                         <div style="margin-top: 10px;">
                         Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA. © 2013 <a
                             style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.</div>
                     </td>
                 </tr>
+
                 <tr>
-                    <td height="12" valign="top"></td>
-                </tr>
-                <tr>
-                    <td valign="top" align="center"><img src="images/all-heart.jpg" border="0"
+                    <td valign="top" align="center" style="padding-top: 10px;"><img src="images/all-heart.jpg" border="0"
                                                          alt="ESTD 2011 ALL HEART"></td>
                 </tr>
                 <tr>
