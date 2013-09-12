@@ -164,7 +164,7 @@ Hi ${user.name}, welcome to HealthKart.com
                             Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA. © 2013
                 </tr>
                 <tr>
-                    <td style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; padding-top:10px;color:#646464;">
+                    <td align="center" style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; padding-top:10px;color:#646464;">
                         <a style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.</div>
                     </td>
                     </td>
@@ -175,12 +175,7 @@ Hi ${user.name}, welcome to HealthKart.com
                                                                                     border="0"
                                                                                     alt="ESTD 2011 ALL HEART"></td>
                 </tr>
-                <tr>
-                    <td align="center"
-                        style="color:#AAAAAA; font-size:8px; padding-top:30px; font-family:Arial, Helvetica, sans-serif">
-                        (•_•) | ( •_•)&gt;¬¦-¦ | (¬¦_¦)
-                    </td>
-                </tr>
+
             </table>
         </td>
     </tr>
