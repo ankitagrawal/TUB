@@ -14122,7 +14122,7 @@
     </changeSet>
     <changeSet author="Rajesh" id="20130913-01">
         <sql>
-          insert into reconciliation_status values (210,"Vendor Replacement"),(220,"Vendor Rejected");
+          insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
       </changeSet>
 </databaseChangeLog>
