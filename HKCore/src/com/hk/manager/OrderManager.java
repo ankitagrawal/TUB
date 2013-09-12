@@ -694,7 +694,7 @@ public class OrderManager {
           stepUpQty = Math.abs(allowedQty / comboVariant.getQty());
         }
       }
-      if (stepUpQty < qty) {
+      if (stepUpQty.intValue() < qty.intValue()) {
         return false;
       }
     return true;

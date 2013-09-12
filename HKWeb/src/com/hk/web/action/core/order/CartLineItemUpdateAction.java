@@ -68,7 +68,7 @@ public class CartLineItemUpdateAction extends BaseAction {
           if (cartLineItem.getComboInstance() != null) {
             if (orderManager.isStepUpAllowedForCombo(cartLineItem, comboInstance.getQty())) {
               Long stepUpQty = inventoryService.getAllowedStepUpInventory(cartLineItem);
-              if(stepUpQty < comboInstance.getQty()){
+              if(stepUpQty.intValue() > comboInstance.getQty().intValue()){
                 stepUpQty = comboInstance.getQty();
               }
               for (CartLineItem li : comboInstanceDao.getSiblingLineItems(cartLineItem)) {

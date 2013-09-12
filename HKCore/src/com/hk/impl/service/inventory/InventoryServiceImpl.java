@@ -191,7 +191,7 @@ public class InventoryServiceImpl implements InventoryService {
         count++;
         ComboInstanceHasProductVariant comboVariant = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant());
         ProductVariant productVariant = comboVariant.getProductVariant();
-        Long allowedQty = this.getAggregateCutoffInventory(productVariant);
+        Long allowedQty = this.getAllowedStepUpInventory(productVariant);
         if (count > 1) {
           stepUpQty = Math.min(stepUpQty, Math.abs(allowedQty / comboVariant.getQty()));
         } else {
