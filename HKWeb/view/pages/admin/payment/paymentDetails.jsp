@@ -53,7 +53,7 @@
                     </tr>
                     <tr>
                         <td>Comments </td>
-                        <td><s:textarea name="reasonComments" cols="5" rows="2" id="reasonCom"/> </td>
+                        <td><s:textarea name="reasonComments" cols="5" rows="2" id="reasonCom" style="width:320px;height:80px;"/> </td>
                     </tr>
                 </table>
                 <br>
