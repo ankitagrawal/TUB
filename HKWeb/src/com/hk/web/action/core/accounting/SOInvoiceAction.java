@@ -168,12 +168,12 @@ public class SOInvoiceAction extends BaseAction {
 			freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
 
 			printZone = printZoneOnSOInvoice(awb);
-
+            //This is to resolve the issue of zone mismatching on Invoice and print invoice option
             if((shippingOrder.getBaseOrder().getAddress().getPincode().getZone()!= shipment.getZone()) && (shippingOrder.getOrderStatus().getId() <  EnumShippingOrderStatus.SO_Shipped.getId())){
                 shipment.setZone(shippingOrder.getBaseOrder().getAddress().getPincode().getZone());
                 shipment=shipmentService.save(shipment);
             }
-
+             //till here
 			if(printZone){
 				zone = shippingOrder.getShipment().getZone().getName();
 			}
