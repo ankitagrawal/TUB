@@ -197,21 +197,22 @@ public class CheckPaymentAction extends BaseAction {
                   String loggingComment = refundReason.getClassification().getPrimary() + "- " + reasonComments;
                   if (payment != null) {
                     if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId())) {
-                      adminOrderService.logOrderActivity(order, loggedOnUser,
+                      adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                           EnumOrderLifecycleActivity.AmountRefundedOrderCancel.asOrderLifecycleActivity(),
                           loggingComment);
 
                     } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
-                      adminOrderService.logOrderActivity(order, loggedOnUser,
+                      adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                           EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
                     } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())){
-                      adminOrderService.logOrderActivity(order, loggedOnUser,
+                      adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                           EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
                     }
                   } else {
-                    logger.debug("Redund object is null");
-                    adminOrderService.logOrderActivity(order, loggedOnUser,
+                    logger.debug("Refund object is null");
+                    adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                         EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
+                    addRedirectAlertMessage(new SimpleMessage("Refund failed."));
                   }
 /*                  adminOrderService.logOrderActivity(basePayment.getOrder(), getUserService().getLoggedInUser(),
                       EnumOrderLifecycleActivity.REFUND_RO.asOrderLifecycleActivity(),
