@@ -702,22 +702,26 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       Sku sku = getBaseDao().get(Sku.class, skuId);
       productVariant.setWarehouse(sku.getWarehouse());
       getBaseDao().save(productVariant);
-      List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
-      Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
-      if (clis.size() > 0) {
-        remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty(), false);
-      }
-      //
 
-//       considering scenario of orders in  processing queue
-      if (remainingQty > 0) {
-        List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
-        Set<CartLineItem> clisInProcessing = new HashSet<CartLineItem>(cartLineItemsInProcessing);
-        if (clisInProcessing.size() > 0) {
-          remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, remainingQty, true);
+      List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
+      Set<CartLineItem> clisInProcessing = new LinkedHashSet<CartLineItem>(cartLineItemsInProcessing);
+      if (clisInProcessing.size() > 0){
+        logger.debug("List of cartLineItems in processing queue for  product variant " +productVariant.getId() + " sicli which not created is " + cartLineItemsInProcessing.size());
+        remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, newSkuInfo.getQty(), true);
+        logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in processing queue" + remainingQty);
+      }
+
+      if (remainingQty > 0){
+        List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
+        logger.debug("List of cartLineItems in action awaiting for product variant " + productVariant.getId() +" sicli which not created is " + cartLineItems.size());
+        Set<CartLineItem> clis = new LinkedHashSet<CartLineItem>(cartLineItems);
+        if (clis.size() > 0) {
+          logger.debug("going to book inventory for Variant :" + productVariant.getId() + " and in action queue " + cartLineItems.size());
+          remainingQty = tempBookSkuLineItemForPendingOrder(clis,remainingQty , false);
+          logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in action queue" + remainingQty);
         }
       }
-//   end scenario
+
       newSkuInfo.setQty(remainingQty);
       Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
       newBatchSkuInfo.add(newSkuInfo);
@@ -725,12 +729,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
   }
 
-
   public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
     InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     List<ShippingOrder> lifeCycleActivityLoggedForSO = new ArrayList<ShippingOrder>();
     for (CartLineItem cartLineItem : cartLineItems) {
-      if (lineItemDao.getLineItem(cartLineItem) != null) {
+//      if (lineItemDao.getLineItem(cartLineItem) != null) {
 
         ProductVariant productVariant = cartLineItem.getProductVariant();
         // picking the  sku for current MRP available at max qty on product variant
@@ -768,7 +771,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           maxQty = maxQty - qtyToBeSet;
         }
       }
-    }
+
     return maxQty;
   }
 
