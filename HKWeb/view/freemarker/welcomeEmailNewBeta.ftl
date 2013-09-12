@@ -145,7 +145,7 @@ Hi ${user.name}, welcome to HealthKart.com
                         style="font-family:Georgia ,'Times New Roman',Times,serif; font-size:12px; line-height:18px; color:#646464;">
                         <a href="https://mail.google.com/mail/mailto:info@healthkart.com"
                            style="color:#646464; text-decoration: none;">info@healthkart.com</a>
-                        | +91 124 4616444&nbsp |&nbsp;
+                        | +91 124 4616444 |&nbsp;
                         <a href="http://www.facebook.com/healthkart" style="color:#646464; text-decoration:none">Like us
                             on facebook</a>
                         |&nbsp;<a href="http://twitter.com/healthkart" style="color:#646464; text-decoration:none">Tweet
