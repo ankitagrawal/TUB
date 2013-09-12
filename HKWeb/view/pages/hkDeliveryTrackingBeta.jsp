@@ -15,23 +15,23 @@
 
         <div class="hkDeliveryWorksheetBox">
                 <fieldset class="right_label">
-                   <h2 class='prod_title' itemprop="name">Order Details:</h2>
+                   <h2 class='prod_title' itemprop="name">Order Details</h2>
                     <table class="orderdetailBlock mrgn-t-20">
 	                    <tr>
-		                    <td class = "fnt-bold">Order Id<span class="cont-rht">:</span></td>
-		                    <td class = "pad-l-10">${hkdBean.consignment.cnnNumber}</td>
+		                    <td class = "fnt-bold label">Order Id<span class="cont-rht">:</span></td>
+		                    <td class = "pad-l-10 label-data">${hkdBean.consignment.cnnNumber}</td>
 	                    </tr>
 	                    <tr>
-		                    <td class = "fnt-bold">Order Amount<span class="cont-rht">:</span></td>
-		                    <td class = "pad-l-10">${hkdBean.consignment.amount} </td>
+		                    <td class = "fnt-bold label">Order Amount<span class="cont-rht">:</span></td>
+		                    <td class = "pad-l-10 label-data">${hkdBean.consignment.amount} </td>
 	                    </tr>
 	                    <tr>
-		                    <td class = "fnt-bold">Payment type<span class="cont-rht">:</span></td>
-		                    <td class = "pad-l-10">${hkdBean.consignment.paymentMode}</td>
+		                    <td class = "fnt-bold label">Payment type<span class="cont-rht">:</span></td>
+		                    <td class = "pad-l-10 label-data">${hkdBean.consignment.paymentMode}</td>
 	                    </tr>
 	                    <tr>
-		                    <td class = "fnt-bold">Shipping Address<span class="cont-rht">:</span></td>
-		                    <td class = "pad-l-10">${hkdBean.consignment.address}</td>
+		                    <td class = "fnt-bold label">Shipping Address<span class="cont-rht">:</span></td>
+		                    <td class = "pad-l-10 label-data">${hkdBean.consignment.address}</td>
 	                    </tr>
                     </table>
                 </fieldset>
@@ -94,10 +94,15 @@
 	    /*font-size:15px;*/
     /*}*/
     .orderdetailBlock{
-        width:450px;
+        width:100%;
         float:left;
     }
-
+    .orderdetailBlock .label{
+        width: 15%;
+    }
+    .orderdetailBlock .label-data{
+        width: 85%;
+    }
     /*.valueLabel {*/
         /*margin-left: 10px;*/
         /*width: 300px;*/
