@@ -10,6 +10,7 @@
 
    <s:layout-component name="heading">Order Shipped through HKDelivery Courier Services</s:layout-component>
     <s:layout-component name="fullContent">
+      <div class="track-order-box">
 	    <c:set var="customer" value="<%=HKDeliveryConstants.DELIVERY_HUB%>" />
 	    <c:set var="warehouse" value="<%=HKDeliveryConstants.HEALTHKART_HUB%>" />
 
@@ -84,7 +85,7 @@
         </table>
         </div>
         </c:if>
-	    <br /><br />
+      </div>
     </s:layout-component>
 </s:layout-render>
 <style type="text/css">
@@ -93,9 +94,15 @@
 	    /*font-weight: bold;*/
 	    /*font-size:15px;*/
     /*}*/
+    .track-order-box{
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
     .orderdetailBlock{
         width:100%;
         float:left;
+        margin-bottom: 15px;
     }
     .orderdetailBlock .label{
         width: 15%;

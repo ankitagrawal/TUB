@@ -79,8 +79,6 @@
       </div>
       <div class="fullContent cont-lft">
             <s:layout-component name="fullContent"/>
-
-            <div class="floatfix"></div>
       </div>
       <div class="floatfix"></div>
     </div>
