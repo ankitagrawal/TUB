@@ -687,7 +687,7 @@ public class OrderManager {
         count++;
         ComboInstanceHasProductVariant comboVariant = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant());
         ProductVariant productVariant = comboVariant.getProductVariant();
-        Long allowedQty = inventoryService.getAggregateCutoffInventory(productVariant);
+        Long allowedQty = inventoryService.getAllowedStepUpInventory(productVariant);
         if (count > 1) {
           stepUpQty = Math.min(stepUpQty, Math.abs(allowedQty / comboVariant.getQty()));
         } else {
