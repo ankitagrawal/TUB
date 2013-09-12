@@ -362,7 +362,14 @@
       }
     });
 
-    $(".message .close").click(function() {
+      $('.remove-error').click(function () {
+          $(this).parent('.err-cntnr').remove();
+      });
+      $('.remove-success').click(function () {
+          $(this).parent('.alert-cntnr').remove();
+      });
+
+      $(".message .close").click(function() {
       hide_message();
       location.reload(true);
     });

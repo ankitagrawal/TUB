@@ -101,7 +101,7 @@ public class UserManageAddressAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
                                                     "<span class=\"icn-success mrgn-r-10\"></span>" +
                                                         "Your changes have been saved." +
-                                                    "<span class=\"icn icn-close2 remove-error\"></span>" +
+                                                    "<span class=\"icn icn-close2 remove-success\"></span>" +
                                                   "</div>"));
         return showAddressBook();
     }
@@ -145,7 +145,7 @@ public class UserManageAddressAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
                                                             "<span class=\"icn-success mrgn-r-10\"></span>" +
                                                                 "Address has been successfully deleted" +
-                                                            "<span class=\"icn icn-close2 remove-error\"></span>" +
+                                                            "<span class=\"icn icn-close2 remove-success\"></span>" +
                                                         "</div>"));
         return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
     }

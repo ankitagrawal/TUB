@@ -17,8 +17,8 @@
         }
         pageContext.setAttribute("tempUser", RoleConstants.TEMP_USER);
     %>
-    <div id = "footer">
-        <div class="container clearfix">
+    <div id="footer">
+         <div class="container clearfix">
             <div class="ftr-main-txt">
                 <span class="fnt-bold"> authentic products</span>
                 <span class="mrgn-lr-10">|</span>
@@ -94,26 +94,34 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="go-to-top-cntnr">
-        <a href="javascript:void(0)" title="Back to Top" class="go-to-top cont-rht hide"></a>
+
+        <div class="go-to-top-cntnr">
+            <a href="javascript:void(0)" title="Back to Top" class="go-to-top cont-rht"></a>
+        </div>
     </div>
     <s:layout-component name="scriptComponent">
         <script type="text/javascript">
-            function goToTop() {
-                $(window).scroll(function (e) {
-                    if ($(window).scrollTop() > 100) {
-                        $('.go-to-top-cntnr').css({
-                            position: 'fixed',
-                            top: '85%',
-                            right: '1%'
-                        }).fadeIn(500);
-                    } else {
-                        $('.go-to-top-cntnr').fadeOut(500);
-                    }
-                });
-            }
-            goToTop();
+            $(document).ready(function(){
+
+                function goToTop() {
+                    $(window).scroll(function (e) {
+                        if ($(window).scrollTop() > 100) {
+                            $('.go-to-top-cntnr').css({
+                                position: 'fixed',
+                                top: '85%',
+                                right: '1%'
+                            }).fadeIn(500);
+                        } else {
+                            $('.go-to-top-cntnr').fadeOut(500);
+                        }
+                    });
+                }
+                goToTop();
+            });
+            $('.go-to-top').click(function(e){
+                e.preventDefault();
+                $('html,body').animate({scrollTop: 0}, 300);
+            })
         </script>
     </s:layout-component>
 </s:layout-definition>

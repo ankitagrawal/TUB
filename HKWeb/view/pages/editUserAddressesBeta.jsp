@@ -30,4 +30,13 @@
     window.onload = function() {
         $('#myAddressesLink').addClass('selected');
     };
+
+    $(document).ready(function(){
+        $('.remove-error').click(function () {
+            $(this).parent('.err-cntnr').remove();
+        });
+        $('.remove-success').click(function () {
+            $(this).parent('.alert-cntnr').remove();
+        });
+    });
 </script>
