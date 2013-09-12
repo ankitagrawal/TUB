@@ -18,7 +18,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
 
-  public Page searchDebitNote(GoodsReceivedNote grn,DebitNote debitNote,String debitNoteNo, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse,String supplierInvoice, int pageNo, int perPage) {
+  public Page searchDebitNote(GoodsReceivedNote grn,DebitNote debitNote,String debitNoteNo,PurchaseInvoice purchaseInvoice, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse,String supplierInvoice, int pageNo, int perPage) {
 
     DetachedCriteria debitNoteCriteria = DetachedCriteria.forClass(DebitNote.class);
     if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName) || StringUtils.isNotBlank(supplierInvoice) || StringUtils.isNotBlank(debitNoteNo) ) {
@@ -46,6 +46,9 @@ public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
     if (debitNote != null) {
          debitNoteCriteria.add(Restrictions.eq("id",debitNote.getId()));
        }
+    if(purchaseInvoice!=null){
+      debitNoteCriteria.add(Restrictions.eq("purchaseInvoice",purchaseInvoice));
+    }
     debitNoteCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
     return list(debitNoteCriteria, pageNo, perPage);
 

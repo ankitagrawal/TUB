@@ -21,6 +21,7 @@
         <%--<label>GRN ID:</label><s:text name="grn"/>--%>
           <label>DN ID:</label><s:text name="debitNote"/>
           <label>Debit Note Number:</label><s:text name="debitNoteNo"/>
+          <label>Purchase Invoice Number:</label><s:text name="purchaseInvoice"/>
         <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Supplier Name:</label><s:text name="supplierName"/>
         <label>Status:</label><s:select name="debitNoteStatus">
@@ -47,7 +48,7 @@
       <thead>
       <tr>
         <th>DN ID</th>
-          <th>DebitNote no</th>
+          <th>DebitNote No</th>
           <%--<th>GRN ID</th>--%>
         <th>Create Date</th>
         <th>Supplier</th>

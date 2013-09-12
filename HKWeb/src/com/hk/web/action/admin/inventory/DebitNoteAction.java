@@ -106,7 +106,7 @@ public class DebitNoteAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        debitNotePage = debitNoteDao.searchDebitNote(grn,debitNote,debitNoteNo,debitNoteStatus, tinNumber, supplierName, warehouse,supplierInvoice, getPageNo(), getPerPage());
+        debitNotePage = debitNoteDao.searchDebitNote(grn,debitNote,debitNoteNo,purchaseInvoice,debitNoteStatus, tinNumber, supplierName, warehouse,supplierInvoice, getPageNo(), getPerPage());
         debitNoteList = debitNotePage.getList();
         return new ForwardResolution("/pages/admin/debitNoteList.jsp");
     }

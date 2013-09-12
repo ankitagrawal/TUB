@@ -11,7 +11,7 @@ import com.hk.pact.dao.BaseDao;
 
 public interface DebitNoteDao extends BaseDao {
 
-    public Page searchDebitNote(GoodsReceivedNote grn, DebitNote debitNote,String debitNoteNo, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse,String supplierInvoice, int pageNo, int perPage);
+    public Page searchDebitNote(GoodsReceivedNote grn, DebitNote debitNote,String debitNoteNo,PurchaseInvoice purchaseInvoice, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse,String supplierInvoice, int pageNo, int perPage);
 
     public ReconciliationVoucher getRvForDebitNote(DebitNote debitNote);
 }

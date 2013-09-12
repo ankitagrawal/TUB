@@ -174,8 +174,8 @@ $(document).ready(function() {
       </td>
           <td>
           <c:choose>
-              <c:when test="${debitNoteSummary.debitNote.purchaseInvoice!=null}">PI-${debitNoteSummary.debitNote.purchaseInvoice}</c:when>
-              <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">RV-${debitNoteSummary.debitNote.reconciliationVoucher}</c:when>
+              <c:when test="${debitNoteSummary.debitNote.reconciliationVoucher!=null}">RV</c:when>
+              <c:when test="${debitNoteSummary.debitNote.purchaseInvoice!=null}">RTV</c:when>
               <c:otherwise>
                   <td></td>
               </c:otherwise>
@@ -189,8 +189,14 @@ $(document).ready(function() {
       </c:when>
       <c:otherwise>
       <td>N/A</td>
-      <td>N/A</td>
-      <td>${debitNoteDto.debitNoteLineItem.productName}</td>
+          <td><c:if test="${not empty debitNoteSummary.debitNote.purchaseInvoice.eiLineItems}">
+              <c:forEach var="debitNoteEi" items="${debitNoteSummary.debitNote.purchaseInvoice.eiLineItems}"
+                         varStatus="ctr">
+                  ${debitNoteEi.extraInventoryLineItemType.name}
+              </c:forEach>
+          </c:if></td>
+          <td>N/A</td>
+          <td>${debitNoteDto.debitNoteLineItem.productName}</td>
       </c:otherwise>
       </c:choose>
       <td>${debitNoteDto.debitNoteLineItem.qty}
