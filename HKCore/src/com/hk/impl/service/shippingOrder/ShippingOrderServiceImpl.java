@@ -391,22 +391,18 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
   public void validateShippingOrderAB(ShippingOrder shippingOrder) {
     Set<LineItem> lineItems = shippingOrder.getLineItems();
     for (LineItem item : lineItems) {
-      List<Sku> skuList = new ArrayList<Sku>();
-      List<Long> skuStatusIdList = new ArrayList<Long>();
-      List<Long> skuItemOwnerList = new ArrayList<Long>();
-      skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
-      skuList.add(item.getSku());
-      skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
+
+      List<Sku> skuList = Arrays.asList(item.getSku());
+      List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
+      List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
 
       // When CLI and LI are empty
-      if (item.getCartLineItem().getSkuItemCLIs() == null
-          || (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() == 0)) {
+      if (item.getCartLineItem().getSkuItemCLIs() == null || (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() == 0)) {
         Long qty = item.getQty();
         List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
         List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
         List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
-        logger.debug("Available Unbooked Inventory For Sku - " + item.getSku() + " at MRP - " + item.getMarkedPrice() + " is "
-            + checkAvailableUnbookedSkuItems.size());
+        logger.debug("Available Unbooked Inventory For Sku - " + item.getSku() + " at MRP - " + item.getMarkedPrice() + " is "  + checkAvailableUnbookedSkuItems.size());
         if (checkAvailableUnbookedSkuItems.size() >= qty) {
           int i = 1;
           while (i <= qty) {
@@ -509,6 +505,23 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
   }
 
+
+  public void inventoryValidate (LineItem lineItem){
+    List<Sku> skuList = Arrays.asList(lineItem.getSku());
+    List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
+    List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
+
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+    Long countOfAvailableUnBookedSkuItemsInBright = 0L;
+    Long countOfAvailableUnBookedSkuItemsInAqua = Long.valueOf(checkAvailableUnbookedSkuItemsInAqua.size());
+    Long countOfAvailableUnBookedSkuItemsInAB = countOfAvailableUnBookedSkuItemsInBright + countOfAvailableUnBookedSkuItemsInAqua;
+     if (countOfAvailableUnBookedSkuItemsInAqua != null && countOfAvailableUnBookedSkuItemsInAqua  >= lineItem.getQty()){
+       // need to  allocate inventory from aqua only
+     }else if (countOfAvailableUnBookedSkuItemsInAqua) {
+
+     }
+
+  }
 
 
   public UserService getUserService() {
