@@ -62,7 +62,8 @@ public enum EnumOrderLifecycleActivity {
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
   RefundMailToAdmin(900L, "Manual refund task mail sent to admin"),
   NoActionAtReconciliation(1050L, "No action taken at reconciliation(refund/reward)"),
-  REFUND_RO(1060L, "Refund in replacement order or reverse pickup")
+  /*REFUND_RO(1060L, "Refund in replacement order or reverse pickup")
+  */
   ;
 
   private String name;

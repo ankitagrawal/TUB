@@ -193,9 +193,29 @@ public class CheckPaymentAction extends BaseAction {
               try {
                 if (isSuccessFullPayment(gatewayOrderId)) {
                   payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
-                  adminOrderService.logOrderActivity(basePayment.getOrder(), getUserService().getLoggedInUser(),
+                  User loggedOnUser = getUserService().getLoggedInUser();
+                  String loggingComment = refundReason.getClassification().getPrimary() + "- " + reasonComments;
+                  if (payment != null) {
+                    if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId())) {
+                      adminOrderService.logOrderActivity(order, loggedOnUser,
+                          EnumOrderLifecycleActivity.AmountRefundedOrderCancel.asOrderLifecycleActivity(),
+                          loggingComment);
+
+                    } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
+                      adminOrderService.logOrderActivity(order, loggedOnUser,
+                          EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
+                    } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())){
+                      adminOrderService.logOrderActivity(order, loggedOnUser,
+                          EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
+                    }
+                  } else {
+                    logger.debug("Redund object is null");
+                    adminOrderService.logOrderActivity(order, loggedOnUser,
+                        EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
+                  }
+/*                  adminOrderService.logOrderActivity(basePayment.getOrder(), getUserService().getLoggedInUser(),
                       EnumOrderLifecycleActivity.REFUND_RO.asOrderLifecycleActivity(),
-                      (refundReason.getClassification().getPrimary() + "- " + reasonComments));
+                      (refundReason.getClassification().getPrimary() + "- " + reasonComments));*/
                 } else {
                   addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
                 }
