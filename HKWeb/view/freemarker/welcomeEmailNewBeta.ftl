@@ -24,7 +24,7 @@ Hi ${user.name}, welcome to HealthKart.com
                             <tr>
                                 <td width="222"><a href="http://www.healthkart.com"><img
                                         src="${hkLogo}" alt="HealthKart.com Logo" width="207"
-                                        height="40" border="0"/></a></td>
+                                        height="60" border="0"/></a></td>
                                 <td width="15" style="border-left: solid 1px #999999"></td>
                                 <td width="245" align="left" style="font-size:13px; font-weight:bold; color:#666666"><a
                                         href="http://www.healthkart.com" style="color:#666666; text-decoration:none">India&#39;s
