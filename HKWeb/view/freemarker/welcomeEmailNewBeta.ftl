@@ -159,9 +159,10 @@ Hi ${user.name}, welcome to HealthKart.com
                 </tr>
                 <tr>
                     <td colspan="3" align="center" valign="top"
-                        style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; color:#646464;">
+                        style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:12px; line-height:18px; color:#646464;">
+                        <div style="margin-top: 10px;">
                         Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA. © 2013 <a
-                            style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.
+                            style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.</div>
                     </td>
                 </tr>
                 <tr>
