@@ -35,6 +35,7 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
+import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -128,6 +129,8 @@ public class OrderManager {
 
   @Autowired
   private LoyaltyProgramService loyaltyProgramService;
+  @Autowired
+  private ComboInstanceDao comboInstanceDao;
 
   @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
   private Double codCharges;
@@ -616,17 +619,17 @@ public class OrderManager {
         }
 
         if (!(product.isJit() || product.isService() || product.isDropShipping() || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
-          Long unbookedInventory = this.inventoryService.getAllowedStepUpInventory(productVariant);
-          if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+          Long allowedQty = this.inventoryService.getAllowedStepUpInventory(lineItem);
+          if (allowedQty != null && allowedQty < lineItem.getQty()) {
             // Check in case of negative unbooked inventory
             if (comboInstance != null) {
               toBeRemovedComboInstanceSet.add(comboInstance);
               continue;
             }
-            if (unbookedInventory <= 0) {
-              unbookedInventory = 0L;
+            if (allowedQty <= 0) {
+              allowedQty = 0L;
             }
-            lineItem.setQty(unbookedInventory);
+            lineItem.setQty(allowedQty);
           }
         }
       }
@@ -674,6 +677,26 @@ public class OrderManager {
         return false;
       }
     }
+    return true;
+  }
+
+    public boolean isStepUpAllowedForCombo(CartLineItem cartLineItem, Long qty) {
+      Long stepUpQty = 0L;
+      int count = 0;
+      for (CartLineItem li : comboInstanceDao.getSiblingLineItems(cartLineItem)) {
+        count++;
+        ComboInstanceHasProductVariant comboVariant = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant());
+        ProductVariant productVariant = comboVariant.getProductVariant();
+        Long allowedQty = inventoryService.getAggregateCutoffInventory(productVariant);
+        if (count > 1) {
+          stepUpQty = Math.min(stepUpQty, Math.abs(allowedQty / comboVariant.getQty()));
+        } else {
+          stepUpQty = Math.abs(allowedQty / comboVariant.getQty());
+        }
+      }
+      if (stepUpQty < qty) {
+        return false;
+      }
     return true;
   }
 

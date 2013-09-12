@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.catalog.product.combo.ComboInstance;
+import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
@@ -26,6 +28,7 @@ import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pact.service.order.CartLineItemService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
 import com.hk.web.HealthkartResponse;
@@ -54,35 +57,46 @@ public class CartLineItemUpdateAction extends BaseAction {
     CartFreebieService                cartFreebieService;
     @Autowired
     CartLineItemDao cartLineItemDao;
+    @Autowired
+    InventoryService inventoryService;
 
     @JsonHandler
     public Resolution pre() {
 
       if(cartLineItem!=null && cartLineItem.getOrder()!=null && cartLineItem.getOrder().getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())){
         if (cartLineItem != null && cartLineItem.getHkPrice() != null && cartLineItem.getHkPrice() != 0D) {
-            if (cartLineItem.getComboInstance() != null) {
-                List<CartLineItem> siblingLineItems = comboInstanceDao.getSiblingLineItems(cartLineItem);
-                for (CartLineItem cartLi : siblingLineItems) {
-                    cartLi.setQty(cartLi.getComboInstance().getComboInstanceProductVariant(cartLi.getProductVariant()).getQty() * comboInstance.getQty());
-                    cartLi = cartLineItemService.save(cartLi);
-                }
+          if (cartLineItem.getComboInstance() != null) {
+            if (orderManager.isStepUpAllowedForCombo(cartLineItem, comboInstance.getQty())) {
+              Long stepUpQty = inventoryService.getAllowedStepUpInventory(cartLineItem);
+              if(stepUpQty < comboInstance.getQty()){
+                stepUpQty = comboInstance.getQty();
+              }
+              for (CartLineItem li : comboInstanceDao.getSiblingLineItems(cartLineItem)) {
+                li.setQty(li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant()).getQty() * stepUpQty);
+                li = cartLineItemDao.save(li);
+              }
             } else {
-                if (cartLineItem.getQty() == null) {
-                    cartLineItem.setQty(1L);
-                }
-                if (cartLineItem.getDiscountOnHkPrice() == null) {
-                    cartLineItem.setDiscountOnHkPrice(0D);
-                }
-                if (orderManager.isStepUpAllowed(cartLineItem)) {
-                  cartLineItem = cartLineItemService.save(cartLineItem);
-
-                }else{
-                  cartLineItemDao.refresh(cartLineItem);
-                  HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", cartLineItem.getQty());
-                  return new JsonResolution(healthkartResponse);
-                }
+              cartLineItemDao.refresh(cartLineItem);
+              HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", cartLineItem.getQty());
+              return new JsonResolution(healthkartResponse);
             }
-            orderManager.trimEmptyLineItems(cartLineItem.getOrder());
+          } else {
+            if (cartLineItem.getQty() == null) {
+              cartLineItem.setQty(1L);
+            }
+            if (cartLineItem.getDiscountOnHkPrice() == null) {
+              cartLineItem.setDiscountOnHkPrice(0D);
+            }
+            if (orderManager.isStepUpAllowed(cartLineItem)) {
+              cartLineItem = cartLineItemService.save(cartLineItem);
+
+            } else {
+              cartLineItemDao.refresh(cartLineItem);
+              HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", cartLineItem.getQty());
+              return new JsonResolution(healthkartResponse);
+            }
+          }
+          orderManager.trimEmptyLineItems(cartLineItem.getOrder());
         }
 
         noCache();
