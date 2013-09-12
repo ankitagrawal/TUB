@@ -97,6 +97,7 @@ public class CheckPaymentAction extends BaseAction {
     List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
 
     private Reason refundReason;
+    private String reasonComments;
 
     @DefaultHandler
     public Resolution show() {
@@ -184,7 +185,7 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
       if (gatewayOrderId != null) {
-        if (amount != null && refundReason !=null) {
+        if (amount != null && refundReason !=null && reasonComments!= null && !reasonComments.isEmpty()) {
           Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
           Gateway gateway = basePayment.getGateway();
           if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
@@ -194,7 +195,7 @@ public class CheckPaymentAction extends BaseAction {
                   payment = paymentService.refundPayment(gatewayOrderId, NumberUtils.toDouble(amount));
                   adminOrderService.logOrderActivity(basePayment.getOrder(), getUserService().getLoggedInUser(),
                       EnumOrderLifecycleActivity.REFUND_RO.asOrderLifecycleActivity(),
-                      refundReason.getClassification().getPrimary());
+                      (refundReason.getClassification().getPrimary() + "- " + reasonComments));
                 } else {
                   addRedirectAlertMessage(new SimpleMessage("Refund can only be initiated on successful payment"));
                 }
@@ -211,7 +212,7 @@ public class CheckPaymentAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Refund feature only works for citrus/icici/ebs"));
           }
         } else {
-          addRedirectAlertMessage(new SimpleMessage("Please enter amount as well as reason for the refund."));
+          addRedirectAlertMessage(new SimpleMessage("Please enter amount as well as reason and related comments for the refund."));
         }
 
       } else {
@@ -638,5 +639,13 @@ public class CheckPaymentAction extends BaseAction {
 
   public void setRefundReason(Reason refundReason) {
     this.refundReason = refundReason;
+  }
+
+  public String getReasonComments() {
+    return reasonComments;
+  }
+
+  public void setReasonComments(String reasonComments) {
+    this.reasonComments = reasonComments;
   }
 }

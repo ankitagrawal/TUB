@@ -51,6 +51,10 @@
                         </s:select>
                         </td>
                     </tr>
+                    <tr>
+                        <td>Comments </td>
+                        <td><s:textarea name="reasonComments" cols="5" rows="2" id="reasonCom"/> </td>
+                    </tr>
                 </table>
                 <br>
                 <s:submit name="seekPayment" value="Seek" id="save"/>
