@@ -169,7 +169,7 @@ public class SOInvoiceAction extends BaseAction {
 
 			printZone = printZoneOnSOInvoice(awb);
             //This is to resolve the issue of zone mismatching on Invoice and print invoice option
-            if((shippingOrder.getBaseOrder().getAddress().getPincode().getZone()!= shipment.getZone()) && (shippingOrder.getOrderStatus().getId() <  EnumShippingOrderStatus.SO_Shipped.getId())){
+            if( (shipment != null) && (shippingOrder.getBaseOrder().getAddress().getPincode().getZone()!= shipment.getZone()) && (shippingOrder.getOrderStatus().getId() <  EnumShippingOrderStatus.SO_Shipped.getId())){
                 shipment.setZone(shippingOrder.getBaseOrder().getAddress().getPincode().getZone());
                 shipment=shipmentService.save(shipment);
             }

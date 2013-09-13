@@ -31,7 +31,9 @@ public enum EnumReconciliationType {
   AddBatchMismatch(170L, "Batch Mismatch-Add"),
   AddFreeVariant(180L, "Free Variant-Add"),
   RVForDebitNote(190L, "RV For Debit Note"),
-  DamagedLogistics(200L, "Damaged Logistics-Subtract"),;
+  DamagedLogistics(200L, "Damaged Logistics-Subtract"),
+  VendorReplacement(210L,"Vendor Replacement"),
+  VendorRejected(220L,"Vendor Rejected");
 
 
   private java.lang.String name;
@@ -78,7 +80,7 @@ public enum EnumReconciliationType {
 
   public static List<ReconciliationType> getAddReconciliationType() {
     return Arrays.asList(AddDamage.asReconciliationType(), AddExpired.asReconciliationType(), AddBatchMismatch.asReconciliationType(), CustomerReturn.asReconciliationType(),
-        AddFreeVariant.asReconciliationType(), AddIncorrectCounting.asReconciliationType());
+        AddFreeVariant.asReconciliationType(), AddIncorrectCounting.asReconciliationType(),VendorReplacement.asReconciliationType(),VendorRejected.asReconciliationType());
   }
 
   public static ReconciliationType getSubtractReconciliationTypeByName(String reconReason) {
