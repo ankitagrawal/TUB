@@ -506,7 +506,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
   }
 
 
-  public void inventoryValidate (LineItem lineItem){
+  public boolean inventoryValidate (LineItem lineItem){
     List<Sku> skuList = Arrays.asList(lineItem.getSku());
     List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
     List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
@@ -517,10 +517,16 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     Long countOfAvailableUnBookedSkuItemsInAB = countOfAvailableUnBookedSkuItemsInBright + countOfAvailableUnBookedSkuItemsInAqua;
      if (countOfAvailableUnBookedSkuItemsInAqua != null && countOfAvailableUnBookedSkuItemsInAqua  >= lineItem.getQty()){
        // need to  allocate inventory from aqua only
-     }else if (countOfAvailableUnBookedSkuItemsInAqua) {
+     }else if (countOfAvailableUnBookedSkuItemsInAB >= lineItem.getQty() ) {
+       // Bright inventory boooking required
 
+
+
+     }else {
+       logger.debug("Net Aqua + Bright inventory is not sufficient" + countOfAvailableUnBookedSkuItemsInAB );
+       return  false;
      }
-
+    return true;
   }
 
 

@@ -59,4 +59,12 @@ public interface SkuItemLineItemService {
 
    public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId);
 
+  public List<HKAPIForeignBookingResponseInfo> freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem);
+
+  public boolean deleteSicliAndSili (CartLineItem cartLineItem);
+
+  public Boolean freeBookingItem(Long itemId);
+
+  public boolean freeBookingInventoryAtAqua(CartLineItem cartLineItem);
+
 }

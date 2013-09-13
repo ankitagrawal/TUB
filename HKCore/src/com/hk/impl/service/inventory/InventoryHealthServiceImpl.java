@@ -24,6 +24,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
@@ -598,59 +599,30 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
         if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
           ProductVariant productVariant = cartLineItem.getProductVariant();
-         productVariant =(ProductVariant) productVariantService.getVariantById(productVariant.getId());
+          productVariant = (ProductVariant) productVariantService.getVariantById(productVariant.getId());
           List<Warehouse> servicableWarehouse = warehouseService.getServiceableWarehouses();
           List<Long> whIds = new ArrayList<Long>();
           for (Warehouse warehouse : servicableWarehouse) {
             whIds.add(warehouse.getId());
           }
-          Long warehouseIdAtPV =productVariant.getWarehouse().getId();
-          //HardCoding
+          Long warehouseIdAtPV = productVariant.getWarehouse().getId();
+          productVariant =(ProductVariant) productVariantService.getVariantById(productVariant.getId());
+          logger.debug("Temp Booking On Aqua Side");
+          Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+
           if (whIds.contains(warehouseIdAtPV)) {
-            logger.debug("Temp Booking On Aqua Side");
-            // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
-            List<Sku> skus = new ArrayList<Sku>();
-            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-            skus.add(sku);
-            Long availableUnBookedInventory = skuItemDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
-
-            if (availableUnBookedInventory > 0) {
-              // picking the  sku for current MRP available at max qty on product variant
-              long qtyToBeSet = cartLineItem.getQty();
-              if (availableUnBookedInventory >= qtyToBeSet) {
-                Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-
-                for (int i = 0; i < qtyToBeSet; i++) {
-                  List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
-
-                  if (skuItemList != null && skuItemList.size() > 0) {
-                    SkuItem skuItem = skuItemList.get(0);
-                    skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                    skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                    skuItem = (SkuItem) getBaseDao().save(skuItem);
-                    // inventoryHealthCheck call
-                    inventoryHealthCheck(productVariant);
-
-                    skuItemsToBeBooked.add(skuItem);
-                  }
-                }
-                // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-                List<SkuItemCLI> skuItemCLIList = inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-                cartLineItem.setSkuItemCLIs(skuItemCLIList);
-              }
-            }
+            cartLineItem = tempBookAquaInventory(cartLineItem,Arrays.asList(sku));
           } else {
             //book inventory on Bright
-           if( isBookingRequireAtBright(cartLineItem) ){
-            cartLineItem = tempBookBrightInventory(cartLineItem);
-//            cartLineItem =  createSkuGroupAndItem(cartLineItem) ;
-            populateSICLI(cartLineItem);
-           }
+            if (isBookingRequireAtBright(cartLineItem)) {
+              cartLineItem = tempBookBrightInventory(cartLineItem,Arrays.asList(sku));
+              populateSICLI(cartLineItem);
+            }
           }
         }
       }
     }
-   order =  (Order) baseDao.save(order);
+    order = (Order) baseDao.save(order);
     Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     // calling health check
     for (CartLineItem cartLineItem : productCartLineItems) {
@@ -717,17 +689,18 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   }
 
-  private CartLineItem tempBookBrightInventory(CartLineItem cartLineItem) {
+  private CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, List<Sku> skus) {
     logger.debug("Going to book inv on Bright Side");
     ProductVariant productVariant = cartLineItem.getProductVariant();
     productVariant = productVariantService.getVariantById(productVariant.getId());
-    Long warehouseIdAtOrderPlacement = productVariant.getWarehouse().getId();
+//    Long warehouseIdAtOrderPlacement = productVariant.getWarehouse().getId();
+     Long warehouseIdAtOrderPlacement = skus.get(0).getWarehouse().getId();
     // now make a API call to booked inventory at Bright
     List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
     List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
     for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLis) {
       HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-      hkapiBookingInfo.setWhId(foreignSkuItemCLI.getProductVariant().getWarehouse().getId());
+      hkapiBookingInfo.setWhId(warehouseIdAtOrderPlacement);
       hkapiBookingInfo.setUnitNum(foreignSkuItemCLI.getUnitNum());
       hkapiBookingInfo.setBoDate(cartLineItem.getOrder().getPayment().getPaymentDate().toString());
       hkapiBookingInfo.setPvId(foreignSkuItemCLI.getProductVariant().getId());
@@ -772,6 +745,47 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
+ public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, List<Sku> skus){
+   InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
+    if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
+      ProductVariant productVariant = cartLineItem.getProductVariant();
+        logger.debug("Temp Booking On Aqua Side");
+
+        Long availableUnBookedInventory = skuItemDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
+
+        if (availableUnBookedInventory > 0) {
+          // picking the  sku for current MRP available at max qty on product variant
+          long qtyToBeSet = cartLineItem.getQty();
+          if (availableUnBookedInventory >= qtyToBeSet) {
+            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+
+            for (int i = 0; i < qtyToBeSet; i++) {
+              List<SkuItem> skuItemList = skuItemDao.getSkuItems(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+
+              if (skuItemList != null && skuItemList.size() > 0) {
+                SkuItem skuItem = skuItemList.get(0);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                skuItem = (SkuItem) getBaseDao().save(skuItem);
+                // inventoryHealthCheck call
+                inventoryHealthCheck(productVariant);
+                skuItemsToBeBooked.add(skuItem);
+              }
+            }
+            // Call method to make new entries in SKUItemCLI  only those for which inventory availa
+            List<SkuItemCLI> skuItemCLIList = inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+            cartLineItem.setSkuItemCLIs(skuItemCLIList);
+          }
+        }
+      }
+
+   return cartLineItem;
+  }
+
+
+
+
+
   private void populateForeignSICLITable(CartLineItem cartLineItem, HashMap<Long, Long> siLiMap) {
     if (siLiMap != null && siLiMap.size() > 0) {
       Set<Entry<Long, Long>> entrySet = siLiMap.entrySet();
@@ -792,7 +806,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   private List<ForeignSkuItemCLI> populateForeignSICLITable(CartLineItem cartLineItem) {
     List<ForeignSkuItemCLI> foreignSkuItemCLIs = new ArrayList<ForeignSkuItemCLI>();
     for (int i = 1; i <= cartLineItem.getQty(); i++) {
-
       ForeignSkuItemCLI foreignSkuItemCLI = new ForeignSkuItemCLI();
       foreignSkuItemCLI.setAquaMrp(cartLineItem.getMarkedPrice());
       foreignSkuItemCLI.setCartLineItem(cartLineItem);
@@ -805,9 +818,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
       foreignSkuItemCLIs.add(foreignSkuItemCLI);
 
-
     }
-
     return foreignSkuItemCLIs;
   }
 
@@ -1140,6 +1151,29 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
        return false;
      }
     return true;
+  }
+
+
+  public void bookInventory(CartLineItem cartLineItem){
+    LineItem lineItem =  lineItemDao.getLineItem(cartLineItem);
+    List<Sku> skuList = Arrays.asList(lineItem.getSku());
+    List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
+    List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
+
+
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+    Long countOfAvailableUnBookedSkuItemsInBright = 0L;
+    Long countOfAvailableUnBookedSkuItemsInAqua = Long.valueOf(checkAvailableUnbookedSkuItemsInAqua.size());
+    if (countOfAvailableUnBookedSkuItemsInAqua != null && countOfAvailableUnBookedSkuItemsInAqua  >= lineItem.getQty()){
+      // need to  allocate inventory from aqua only
+      cartLineItem =  tempBookAquaInventory(cartLineItem, skuList);
+    }else if (countOfAvailableUnBookedSkuItemsInBright >= lineItem.getQty() ) {
+      // Bright inventory boooking required
+         cartLineItem = tempBookBrightInventory(cartLineItem,skuList);
+    }else{
+
+    }
+
   }
 
 }

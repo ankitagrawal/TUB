@@ -20,6 +20,7 @@ import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 
+
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
@@ -52,6 +53,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   SkuService skuService;
   @Autowired
   BaseDao baseDao;
+
+
   private Logger logger = LoggerFactory.getLogger(SkuItemLineItemServiceImpl.class);
 
   @Value("#{hkEnvProps['" + Keys.Env.brightlifecareRestUrl + "']}")
@@ -443,6 +446,141 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
 
+  public Boolean freeBookingItem(Long itemId) {
+    CartLineItem cartLineItem = null;
+    Boolean bookingRemoved = false;
+
+    if (itemId != null) {
+      cartLineItem = baseDao.get(CartLineItem.class, itemId);
+      if (cartLineItem == null) {
+        LineItem lineItem = baseDao.get(LineItem.class, itemId);
+        cartLineItem = lineItem.getCartLineItem();
+      }
+      if (cartLineItem != null) {
+        if (cartLineItem.getForeignSkuItemCLIs() == null) {
+          bookingRemoved = freeBookingInventoryAtAqua(cartLineItem);
+        } else {
+          if (bookedOnBright(cartLineItem)) {
+            bookingRemoved = freeBookingInventoryAtBright(cartLineItem);
+          }
+
+        }
+      }
+    }
+    return bookingRemoved;
+  }
+
+
+  public boolean freeBookingInventoryAtAqua(CartLineItem cartLineItem) {
+    List<SkuItemCLI> siclis = cartLineItem.getSkuItemCLIs();
+
+    for (SkuItemCLI sicli : siclis) {
+      SkuItem skuItem = sicli.getSkuItem();
+      if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())
+          || skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+
+        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItem = (SkuItem) getSkuItemDao().save(skuItem);
+        cartLineItem.setSkuItemCLIs(null);
+        LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
+        lineItem.setSkuItemLineItems(null);
+        List<SkuItemLineItem> silis = sicli.getSkuItemLineItems();
+        for (SkuItemLineItem skuItemLineItem : silis) {
+          skuItemLineItem.setSkuItem(null);
+          skuItemLineItem.setSkuItemCLI(null);
+          baseDao.delete(skuItemLineItem);
+        }
+        sicli.setSkuItem(null);
+        sicli.setSkuItemLineItems(null);
+        baseDao.delete(sicli);
+      }
+
+    }
+    return true;
+  }
+
+  public boolean freeBookingInventoryAtBright(CartLineItem cartLineItem) {
+    List<SkuItemCLI> siclis = cartLineItem.getSkuItemCLIs();
+    for (SkuItemCLI sicli : siclis) {
+      SkuItem skuItem = sicli.getSkuItem();
+      if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())
+          || skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.TEMP_BOOKED.getId())) {
+        List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstBOCancellation(cartLineItem);
+        List<SkuItem> skuItemToBeDeleted = freeFsiclis(infos);
+        deleteSicliAndSili(cartLineItem);
+        baseDao.deleteAll(skuItemToBeDeleted);
+      }
+
+    }
+    return true;
+  }
+
+  public List<SkuItem> freeFsiclis(List<HKAPIForeignBookingResponseInfo> infos) {
+    List<SkuItem> skuItems = new ArrayList<SkuItem>();
+    for (HKAPIForeignBookingResponseInfo info : infos) {
+      ForeignSkuItemCLI foreignSkuItemCLI = getForeignSkuItemCLI(info.getFsiCLIId());
+      foreignSkuItemCLI.setProcessedStatus(info.getProcessed());
+      foreignSkuItemCLI = (ForeignSkuItemCLI) baseDao.save(foreignSkuItemCLI);
+      SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
+      skuItem.setForeignSkuItemCLI(null);
+      skuItems.add(skuItem);
+      baseDao.delete(foreignSkuItemCLI);
+    }
+    return skuItems;
+  }
+
+
+  public boolean deleteSicliAndSili(CartLineItem cartLineItem) {
+    List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+    if (skuItemCLIs != null && skuItemCLIs.size() > 0) {
+      List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+      List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+      List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+      for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()) {
+        SkuItem skuItem = skuItemCLI.getSkuItem();
+        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        skuItemsToBeFreed.add(skuItem);
+        if (skuItemCLI.getSkuItemLineItems() != null) {
+          skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
+        }
+      }
+      skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());
+      lineItemDao.saveOrUpdate(skuItemsToBeFreed);
+      cartLineItem.setSkuItemCLIs(null);
+      cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
+      lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
+      lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
+    }
+
+    return true;
+
+  }
+
+
+  public boolean inventoryValidate (LineItem lineItem){
+    List<Sku> skuList = Arrays.asList(lineItem.getSku());
+    List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
+    List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
+
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+    Long countOfAvailableUnBookedSkuItemsInBright = 0L;
+    Long countOfAvailableUnBookedSkuItemsInAqua = Long.valueOf(checkAvailableUnbookedSkuItemsInAqua.size());
+    Long countOfAvailableUnBookedSkuItemsInAB = countOfAvailableUnBookedSkuItemsInBright + countOfAvailableUnBookedSkuItemsInAqua;
+    if (countOfAvailableUnBookedSkuItemsInAqua != null && countOfAvailableUnBookedSkuItemsInAqua  >= lineItem.getQty()){
+      // need to  allocate inventory from aqua only
+    }else if (countOfAvailableUnBookedSkuItemsInAB >= lineItem.getQty() ) {
+      // Bright inventory boooking required
+
+
+
+    }else {
+      logger.debug("Net Aqua + Bright inventory is not sufficient" + countOfAvailableUnBookedSkuItemsInAB );
+      return  false;
+    }
+    return true;
+  }
+
+
   @Override
   public boolean sicliAlreadyExists(CartLineItem cartLineItem) {
     return getSkuItemLineItemDao().sicliAlreadyExists(cartLineItem);
@@ -512,8 +650,43 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return skuItems;
   }
 
-  public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId){
+  public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId) {
     return getSkuItemLineItemDao().getFSICI(foreignSkuItemId);
+  }
+
+
+  public List<HKAPIForeignBookingResponseInfo> freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem) {
+    List<HKAPIForeignBookingResponseInfo> infos = null;
+    try {
+
+      List<ForeignSkuItemCLI> foreignSkuItemCLIs = cartLineItem.getForeignSkuItemCLIs();
+      List<Long> fsicliIds = new ArrayList<Long>();
+
+      for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+        fsicliIds.add(foreignSkuItemCLI.getId());
+      }
+      Gson gson = new Gson();
+      String json = gson.toJson(fsicliIds);
+
+      String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForSOCancellation/";
+      ClientRequest request = new ClientRequest(url);
+      request.body("application/json", json);
+      ClientResponse response = request.post();
+      int status = response.getStatus();
+      if (status == 200) {
+        String data = (String) response.getEntity(String.class);
+        Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
+        }.getType();
+        infos = new Gson().fromJson(data, listType);
+        logger.debug("Successfully freed Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation");
+        return infos;
+      }
+      logger.debug("Could not free Bright Inventory against BO# " + cartLineItem.getOrder().getId() + " cancellation");
+      return infos;
+    } catch (Exception e) {
+      logger.error("Exception while freeing bright inventory against cancelling SO# " + cartLineItem.getOrder().getId(), e.getMessage());
+      return infos;
+    }
   }
 
 
