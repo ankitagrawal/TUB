@@ -546,9 +546,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       product.setOutOfStock(true);
     } else {
       product.setOutOfStock(false);
-      if (productVariantService.isFreeVariant(productVariant)) {
-        product.setJit(false);
-      }
     }
 
     boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
@@ -621,48 +618,40 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
       List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
       if (!skus.isEmpty()) {
-        Long unbookedInventory = inventoryManageService.getAvailableUnbookedInventory(skus, false);
-        Long countOfJustCheckedInBatch = inventoryManageService.getLatestcheckedInBatchInventoryCount(productVariant);
-        unbookedInventory = unbookedInventory - countOfJustCheckedInBatch;
-        // it means we had booked some orders on zero inventory and now i need to create sicli for that
-        if (unbookedInventory < 0) {
-          pendingOrdersInventoryHealthCheck(productVariant);
-        } else {
-          Set<SkuInfo> availableUnBookedInvnList = new HashSet<SkuInfo>();
-          Set<SkuInfo> differentMrpCheckedinBatch = new HashSet<SkuInfo>();
-          Iterator it = availableCheckedInInvnList.iterator();
-          SkuInfo sk = (SkuInfo) it.next();
-          availableUnBookedInvnList.add(sk);
-          for (SkuInfo skuInfo : availableCheckedInInvnList) {
-            if (sk.getMrp() == skuInfo.getMrp() && sk.getSkuId() != skuInfo.getSkuId()) {
-              availableUnBookedInvnList.add(skuInfo);
-            } else {
-              differentMrpCheckedinBatch.add(skuInfo);
-            }
+        Set<SkuInfo> availableUnBookedInvnList = new HashSet<SkuInfo>();
+        Set<SkuInfo> differentMrpCheckedinBatch = new HashSet<SkuInfo>();
+        Iterator it = availableCheckedInInvnList.iterator();
+        SkuInfo sk = (SkuInfo) it.next();
+        availableUnBookedInvnList.add(sk);
+        for (SkuInfo skuInfo : availableCheckedInInvnList) {
+          if (sk.getMrp() == skuInfo.getMrp() && sk.getSkuId() != skuInfo.getSkuId()) {
+            availableUnBookedInvnList.add(skuInfo);
+          } else {
+            differentMrpCheckedinBatch.add(skuInfo);
           }
+        }
 
-          differentMrpCheckedinBatch.remove(sk);
-          Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
-          Iterator itetaror = differentMrpCheckedinBatch.iterator();
-          if (differentMrpCheckedinBatch.size() > 1) {
-            SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
+        differentMrpCheckedinBatch.remove(sk);
+        Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
+        Iterator itetaror = differentMrpCheckedinBatch.iterator();
+        if (differentMrpCheckedinBatch.size() > 1) {
+          SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
 
-            if (differentCheckedInBatchFirstElement != null) {
-              for (SkuInfo info : availableUnBookedInvnList) {
-                if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
-                  availableUnBookedInvnListToUpdate.add(info);
-                }
+          if (differentCheckedInBatchFirstElement != null) {
+            for (SkuInfo info : availableUnBookedInvnList) {
+              if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
+                availableUnBookedInvnListToUpdate.add(info);
               }
-            } else {
-              availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
             }
           } else {
             availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
           }
+        } else {
+          availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
+        }
 
-          if (availableUnBookedInvnListToUpdate.size() > 0) {
-            updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
-          }
+        if (availableUnBookedInvnListToUpdate.size() > 0) {
+          updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
         }
       }
     } else {
@@ -670,10 +659,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
       if (!updateStockStatus) {
         productVariant.setOutOfStock(false);
-      } else if (productVariantService.isFreeVariant(productVariant)){
-        product.setJit(true);
-        getBaseDao().save(product);
-      } else {
+      }
+      else {
         productVariant.setOutOfStock(true);
         productVariant.setNetQty(0L);
         productVariant.setMrpQty(0L);
@@ -707,35 +694,38 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       Sku sku = getBaseDao().get(Sku.class, skuId);
       productVariant.setWarehouse(sku.getWarehouse());
       getBaseDao().save(productVariant);
-      List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
-      Set<CartLineItem> clis = new HashSet<CartLineItem>(cartLineItems);
-      if (clis.size() > 0) {
-        remainingQty = tempBookSkuLineItemForPendingOrder(clis, newSkuInfo.getQty(), false);
-      }
-      //
 
-//       considering scenario of orders in  processing queue
-      if (remainingQty > 0) {
-        List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
-        Set<CartLineItem> clisInProcessing = new HashSet<CartLineItem>(cartLineItemsInProcessing);
-        if (clisInProcessing.size() > 0) {
-          remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, remainingQty, true);
+      List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
+      Set<CartLineItem> clisInProcessing = new LinkedHashSet<CartLineItem>(cartLineItemsInProcessing);
+      if (clisInProcessing.size() > 0){
+        logger.debug("List of cartLineItems in processing queue for  product variant " +productVariant.getId() + " sicli which not created is " + cartLineItemsInProcessing.size());
+        remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, newSkuInfo.getQty(), true);
+        logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in processing queue" + remainingQty);
+      }
+
+      if (remainingQty > 0){
+        List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
+        logger.debug("List of cartLineItems in action awaiting for product variant " + productVariant.getId() +" sicli which not created is " + cartLineItems.size());
+        Set<CartLineItem> clis = new LinkedHashSet<CartLineItem>(cartLineItems);
+        if (clis.size() > 0) {
+          logger.debug("going to book inventory for Variant :" + productVariant.getId() + " and in action queue " + cartLineItems.size());
+          remainingQty = tempBookSkuLineItemForPendingOrder(clis,remainingQty , false);
+          logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in action queue" + remainingQty);
         }
       }
-//   end scenario
-      newSkuInfo.setQty(remainingQty);
+
+      /*newSkuInfo.setQty(remainingQty);
       Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
       newBatchSkuInfo.add(newSkuInfo);
-      updateVariantInfo(productVariant, newBatchSkuInfo);
+      updateVariantInfo(productVariant, newBatchSkuInfo);*/
     }
   }
-
 
   public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
     InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     List<ShippingOrder> lifeCycleActivityLoggedForSO = new ArrayList<ShippingOrder>();
     for (CartLineItem cartLineItem : cartLineItems) {
-      if (lineItemDao.getLineItem(cartLineItem) != null) {
+//      if (lineItemDao.getLineItem(cartLineItem) != null) {
 
         ProductVariant productVariant = cartLineItem.getProductVariant();
         // picking the  sku for current MRP available at max qty on product variant
@@ -773,7 +763,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           maxQty = maxQty - qtyToBeSet;
         }
       }
-    }
+
     return maxQty;
   }
 

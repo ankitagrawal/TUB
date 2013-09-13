@@ -125,7 +125,9 @@ public enum EnumPermission {
   EDIT_REVERSE_PICKUP                            (PermissionConstants.EDIT_REVERSE_PICKUP),
   APPROVE_REVERSE_PICKUP                         (PermissionConstants.APPROVE_REVERSE_PICKUP),
   AUTO_UPDATE_PAYMENT                            (PermissionConstants.AUTO_UPDATE_PAYMENT),
-  MANUAL_UPDATE_PAYMENT                          (PermissionConstants.MANUAL_UPDATE_PAYMENT)
+  MANUAL_UPDATE_PAYMENT                          (PermissionConstants.MANUAL_UPDATE_PAYMENT),
+  OPS_MANAGER_COURIER_PRICING_UPDATE             (PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE),
+  OPS_MANAGER_COURIER_PRICING_VIEW               (PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW)
   ;
 
   String permissionName;
