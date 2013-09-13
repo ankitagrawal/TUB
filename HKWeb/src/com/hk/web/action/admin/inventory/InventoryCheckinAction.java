@@ -405,6 +405,10 @@ public class InventoryCheckinAction extends BaseAction {
 		SkuItem skuItem = skuGroupService.getSkuItemByBarcode(invBarcode);
 		if (skuItem != null) {
 			Sku sku = skuItem.getSkuGroup().getSku();
+			if(!skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
+				addRedirectAlertMessage(new SimpleMessage("Seems Like the SkuItem has already been checked in. Try another one"));
+				return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+			}
 			ProductVariant productVariant = sku.getProductVariant();
 			GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
 			if(grnLineItem!=null){
