@@ -14133,9 +14133,4 @@
             insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
     </changeSet>
-    <changeSet author="Rajesh" id="20130913-02">
-           <sql>
-               insert into inv_txn_type values (290,"RV Add Vendor Replacement"),(300,"RV Add Vendor Rejected");
-           </sql>
-       </changeSet>
 </databaseChangeLog>
