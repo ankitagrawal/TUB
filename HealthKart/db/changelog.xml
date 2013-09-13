@@ -14120,9 +14120,17 @@
             <column name="line_item_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-1">
+        <addColumn tableName="hk_reach_pricing_engine">
+            <column name="valid_from" type="TIMESTAMP" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-2">
+        <sql>update hk_reach_pricing_engine set valid_from = '2013-09-01 00:00:00'</sql>
+    </changeSet>
     <changeSet author="Rajesh" id="20130913-01">
         <sql>
-          insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
+            insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
-      </changeSet>
+    </changeSet>
 </databaseChangeLog>

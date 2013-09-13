@@ -141,6 +141,8 @@ public class PermissionConstants {
     public static final String OPS_MANAGER_SRS_CHANGE_SOSTATUS = "OPS_MANAGER_SRS_CHANGE_SOSTATUS";
     public static final String NOTIFY_ME_BULK_EMAIL = "NOTIFY_ME_BULK_EMAIL";
     public static final String STORE_MANAGER = "STORE_MANAGER";
+    public static final String OPS_MANAGER_COURIER_PRICING_UPDATE = "OPS_MANAGER_COURIER_PRICING_UPDATE";
+    public static final String OPS_MANAGER_COURIER_PRICING_VIEW = "OPS_MANAGER_COURIER_PRICING_VIEW";
 
     public static final String CREATE_REVERSE_PICKUP_ORDER = "CREATE_REVERSE_PICKUP_ORDER";
     public static final String SCHEDULE_COURIER_FOR_PICKUP = "SCHEDULE_COURIER_FOR_PICKUP";

@@ -38,6 +38,11 @@ public class HKReachPricingEngine {
   @Column(name = "update_time")
   private Date updateTime;
 
+  @Column(name = "valid_from", nullable = false)
+  private Date validFrom;
+  @Transient
+  private boolean isSelected;
+
   public Long getId() {
     return id;
   }
@@ -85,4 +90,21 @@ public class HKReachPricingEngine {
   public void setUpdateTime(Date updateTime) {
     this.updateTime = updateTime;
   }
+
+  public Date getValidFrom() {
+    return validFrom;
+  }
+
+  public void setValidFrom(Date validFrom) {
+    this.validFrom = validFrom;
+  }
+
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean selected) {
+    isSelected = selected;
+  }
+
 }
