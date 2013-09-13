@@ -1,21 +1,9 @@
 package com.hk.impl.dao;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.akube.framework.dao.Page;
+import com.hk.pact.dao.BaseDao;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -31,8 +19,9 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.akube.framework.dao.Page;
-import com.hk.pact.dao.BaseDao;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * @author vaibhav.adlakha
@@ -264,9 +253,15 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     @SuppressWarnings("unchecked")
     public void saveOrUpdate(Collection entities) throws DataAccessException {
-        prepareHibernateForWrite();
-        getHibernateTemplate().saveOrUpdateAll(entities);
-        resetHibernateAfterWrite();
+	    prepareHibernateForWrite();
+	    try {
+		    getHibernateTemplate().saveOrUpdateAll(entities);
+	    } catch (DataAccessException e) {
+		    //
+	    } finally {
+		    resetHibernateAfterWrite();
+	    }
+
     }
 
     public void update(Object entity) {

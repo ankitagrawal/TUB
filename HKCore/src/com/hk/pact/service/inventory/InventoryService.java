@@ -34,6 +34,8 @@ public interface InventoryService {
 
   public Long getAllowedStepUpInventory(ProductVariant productVariant);
 
+  public Long getAllowedStepUpInventory(CartLineItem cartLineItem);
+
   public boolean allInventoryCheckedIn(GoodsReceivedNote grn);
 
   //Migrated from Inventory Manage Service
