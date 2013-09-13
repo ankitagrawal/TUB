@@ -832,7 +832,7 @@ public class InventoryCheckinAction extends BaseAction {
 
 	}
 	
-	public Resolution freezeCheckin() {
+	/*public Resolution freezeCheckin() {
 		Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
 		if(shippingOrders!=null&&shippingOrders.size()>0){
 			String escalated = "";
@@ -843,7 +843,7 @@ public class InventoryCheckinAction extends BaseAction {
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Shipping Orders were escalated"));
     return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-	}
+	}*/
 
 	public String getUpc() {
 		return upc;
