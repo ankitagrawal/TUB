@@ -195,9 +195,11 @@ public class InventoryCheckinAction extends BaseAction {
 	@DontValidate
 	public Resolution pre() {
 		Supplier supplier = grn.getPurchaseOrder().getSupplier();
-  	Warehouse warehouse = warehouseDao.findWarehouseByTin(supplier.getTinNumber());
+  	List<Warehouse> warehouse = warehouseDao.findWarehouseByTin(supplier.getTinNumber());
   	//TODO: Warehouse is Bright
-  	isBrightSupplier = Boolean.TRUE;
+  	if(warehouse!=null && warehouse.size()>0){
+  		isBrightSupplier = Boolean.TRUE;
+  	}
 		return new ForwardResolution("/pages/admin/inventoryCheckin.jsp");
 	}
 

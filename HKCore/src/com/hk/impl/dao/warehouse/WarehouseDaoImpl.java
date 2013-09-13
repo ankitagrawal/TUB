@@ -78,9 +78,9 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
     return null;
   }
   
-  public Warehouse findWarehouseByTin(String tin){
+  public List<Warehouse> findWarehouseByTin(String tin){
   	String sql = "from Warehouse w where w.tin = :tin";
-  	return (Warehouse)getSession().createQuery(sql).setParameter("tin", tin).uniqueResult();
+  	return (List<Warehouse>)getSession().createQuery(sql).setParameter("tin", tin).list();
   }
 
 }
