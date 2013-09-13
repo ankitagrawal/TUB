@@ -1,22 +1,42 @@
-</div>
-<table cellpadding="0" cellspacing="0" border="0" style="width:600px; font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:11px;" class="bottom_links">
-    <#--<tr>-->
-        <#--<td style="padding:3px 0px; width:100px;">-->
-            <#--<a href="http://www.healthkart.com" style="color:#333; text-decoration:none; font-size:10px;"><img src="http://www.itasveer.com/common/images/itasveer_email_logo.gif" width="75" height="26" border="0"/><br/>www.itasveer.com</a>-->
-        <#--</td>-->
-        <#--<td colspan="2" align="center" style="line-height:20px;">-->
-            <#--<span style="color:#ccc; font-size:13px; font-weight:bold;">&gt; unlimited photo fun &lt;</span><br/>-->
-            <#--Photo Prints | Photos Books and Calendars | Customised Photo Gifts and More-->
-        <#--</td>-->
+<table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
 
-    <#--</tr>-->
-    <#--<tr>-->
-        <#--<td colspan="3" style="padding:3px 3px; border-top:1px solid #45332f; text-align:center; font-size:10px;">-->
-            <#--<a href="http://www.twitter.com/healthkart" style="color:#333; text-decoration:none;">Follow us on-->
-                <#--<img src="http://www.itasveer.com/common/images/twitter_email_logo.gif" width="63" height="18" border="0" style="vertical-align:middle;"/></a>|-->
-            <#--<a href="http://www.facebook.com/healthkart" style="color:#333;text-decoration:none;">Become a Fan on-->
-                <#--<img src="http://www.itasveer.com/common/images/fb_email_logo.gif" width="57" height="18" border="0" style="vertical-align:middle;"/></a>-->
-        <#--</td>-->
-    <#--</tr>-->
-    <!--space for unsubscribe link (a tr tag) -->
+    <tr>
+
+
+        <td colspan="3" align="center" valign="top"
+            style="padding-top:10px;font-family:Georgia ,'Times New Roman',Times,serif; font-size:11px; line-height:18px; color:#646464;">
+
+
+            <a href="https://mail.google.com/mail/mailto:info@healthkart.com"
+               style="color:#646464; text-decoration: none;">info@healthkart.com</a>
+            | +91 124 4616444 |&nbsp;
+            <a href="http://www.facebook.com/healthkart" style="color:#646464; text-decoration:none">Like us
+                on facebook</a>
+            |&nbsp;<a href="http://twitter.com/healthkart" style="color:#646464; text-decoration:none">Tweet
+            about us</a>
+        </td>
+
+    </tr>
+
+
+    <tr>
+        <td colspan="3" align="center" valign="top"
+            style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; color:#646464;">
+            <div style="margin-top: 10px;">
+                Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA. © 2013
+    </tr>
+    <tr>
+        <td align="center"
+            style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; padding-top:10px;color:#646464;">
+            <a style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.
+        </td>
+
+    </tr>
+
+    <tr>
+        <td valign="top" align="center" style="padding-top: 10px;"><img src="http://catalog.healthkart.com:8080/beta/assets/images/all-heart.jpg"
+                                                                        border="0"
+                                                                        alt="ESTD 2011 ALL HEART"></td>
+    </tr>
+
 </table>

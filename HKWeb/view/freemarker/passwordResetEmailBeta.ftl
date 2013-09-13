@@ -24,6 +24,6 @@ Reset Password Instructions - HealthKart.com
 <p>Happy Shopping!</p>
 
 <p><strong>HealthKart.com</strong></p>
-<#include "footerBeta.ftl">
+<#include "footer.ftl">
 </body>
 </html>
