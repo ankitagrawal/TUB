@@ -8,7 +8,7 @@ public class EmailTemplateConstants {
 	public static final String welcomeEmail = "/welcomeEmailNewBeta.ftl";
 	public static final String welcomeEmailOld = "/welcomeEmail.ftl";
 	public static final String accountActivationEmail = "/accountActivationEmail.ftl";
-	public static final String passwordResetEmail = "/passwordResetEmail.ftl";
+	public static final String passwordResetEmail = "/passwordResetEmailBeta.ftl";
 	public static final String discountCouponEmail = "/discountCouponEmail.ftl";
 	public static final String contactUsEmail = "/contactUsEmail.ftl";
 	public static final String orderShippedEmail = "/orderShippedEmailNew.ftl";
