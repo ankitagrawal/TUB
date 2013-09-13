@@ -57,15 +57,15 @@
                     </tr>
                 </table>
                 <br>
-                <s:submit name="seekPayment" value="Seek" id="save"/>
+<%--                <s:submit name="seekPayment" value="Seek" id="save"/>
                 <s:submit name="refundPayment" value="Refund " id="refund"/>
-                <%--<s:submit name="searchTransactionByDate" value="Historical List" id="searchTransactionByDate"/>
+                <s:submit name="searchTransactionByDate" value="Historical List" id="searchTransactionByDate"/>
                 <s:submit name="capturePayment" value="Capture  (EBS)" id="capture"/>
                 <s:submit name="cancelPayment" value="Cancel (EBS)" id="cancel"/>
                 &lt;%&ndash;<shiro:hasRole name="<%=RoleConstants.GOD%>">&ndash;%&gt;
                 <s:submit name="bulkSeekPayment" value="Bulk Seek" id="bulkSeek"/>
-                &lt;%&ndash;</shiro:hasRole>&ndash;%&gt;
-                <s:submit name="updatePayment"  value="Update" id="update"/>--%>
+                &lt;%&ndash;</shiro:hasRole>&ndash;%&gt;--%>
+                <s:submit name="updatePayment"  value="Update" id="update"/>
             </fieldset>
         </s:form>
 
