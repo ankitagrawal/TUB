@@ -9,6 +9,7 @@ import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
+import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderStatus;
@@ -16,6 +17,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
@@ -81,6 +83,10 @@ public interface OrderService {
   public Order findCart(User user, Store store);
 
   public boolean isBOCancelable(Long orderId);
+
+  public  boolean bookedOnBright(CartLineItem cartLineItem);
+
+  public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem);
 
 }
 

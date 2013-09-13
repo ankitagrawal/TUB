@@ -41,6 +41,7 @@ import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
@@ -92,6 +93,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   SkuItemLineItemDao skuItemLineItemDao;
   @Autowired
   SkuGroupDao skuGroupDao;
+  @Autowired
+  private OrderService orderService;
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
@@ -1154,7 +1157,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  public void bookInventory(CartLineItem cartLineItem){
+  public Boolean bookInventory(CartLineItem cartLineItem){
     LineItem lineItem =  lineItemDao.getLineItem(cartLineItem);
     List<Sku> skuList = Arrays.asList(lineItem.getSku());
     List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
@@ -1166,14 +1169,22 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     Long countOfAvailableUnBookedSkuItemsInAqua = Long.valueOf(checkAvailableUnbookedSkuItemsInAqua.size());
     if (countOfAvailableUnBookedSkuItemsInAqua != null && countOfAvailableUnBookedSkuItemsInAqua  >= lineItem.getQty()){
       // need to  allocate inventory from aqua only
-      cartLineItem =  tempBookAquaInventory(cartLineItem, skuList);
+        cartLineItem =  tempBookAquaInventory(cartLineItem, skuList);
     }else if (countOfAvailableUnBookedSkuItemsInBright >= lineItem.getQty() ) {
       // Bright inventory boooking required
          cartLineItem = tempBookBrightInventory(cartLineItem,skuList);
-    }else{
 
+      if(orderService.bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null  || lineItem.getSkuItemLineItems().size() < 1)){
+        logger.debug("Update booking on Bright");
+        List<HKAPIForeignBookingResponseInfo>  infos =  orderService.updateBookedInventoryOnBright(lineItem);
+        List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
+        skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
+
+      }
     }
-
+      return false;
   }
+
+
 
 }

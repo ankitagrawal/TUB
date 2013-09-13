@@ -523,6 +523,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       foreignSkuItemCLI = (ForeignSkuItemCLI) baseDao.save(foreignSkuItemCLI);
       SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
       skuItem.setForeignSkuItemCLI(null);
+      skuItem = (SkuItem) baseDao.save(skuItem);
       skuItems.add(skuItem);
       baseDao.delete(foreignSkuItemCLI);
     }

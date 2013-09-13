@@ -763,7 +763,7 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderAlreadyExists;
     }
 
-	private boolean bookedOnBright(CartLineItem cartLineItem) {
+	public  boolean bookedOnBright(CartLineItem cartLineItem) {
 		try {
 
 			String url = brightlifecareRestUrl + "product/variant/getBookingForCartLineItemId/" + cartLineItem.getId();
@@ -781,7 +781,7 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 	}
 
-	private List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem) {
+	public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem) {
     List<HKAPIForeignBookingResponseInfo> infos = null;
     List<HKAPIForeignBookingResponseInfo> infos1 = new ArrayList<HKAPIForeignBookingResponseInfo>();
     try {
