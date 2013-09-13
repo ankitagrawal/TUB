@@ -2,6 +2,7 @@ package com.hk.impl.dao.order.cartLineItem;
 
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
@@ -66,9 +67,9 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
 
   public List<CartLineItem> getClisForInPlacedOrder(ProductVariant productVariant, Double mrp) {
 
-    String query = "from CartLineItem c  where  c.productVariant = :productVariant and c.markedPrice = :mrp and c.order.orderStatus.id in (:orderStatusIds)"
-        + " and c.skuItemCLIs.size <= 0  order by c.order.createDate  asc ";
-    return (List<CartLineItem>) getSession().createQuery(query).setParameterList("orderStatusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId())).setParameter("productVariant", productVariant).setParameter("mrp", mrp).list();
+    String query = "from CartLineItem c  where  c.productVariant = :productVariant and c.markedPrice = :mrp and c.order.orderStatus.id in (:orderStatusIds) and c.order.payment.paymentStatus.id in (:paymentStatusIds)"
+        + " and c.skuItemCLIs.size <= 0  order by c.order.payment.paymentDate  asc ";
+    return (List<CartLineItem>) getSession().createQuery(query).setParameterList("orderStatusIds", Arrays.asList(EnumOrderStatus.Placed.getId(), EnumOrderStatus.OnHold.getId())).setParameter("productVariant", productVariant).setParameter("mrp", mrp).setParameterList("paymentStatusIds",EnumPaymentStatus.getEscalablePaymentStatusIds()).list();
   }
 
   public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp) {
@@ -76,9 +77,9 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
     statuses.addAll(EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
     statuses.add(EnumShippingOrderStatus.SO_ReadyForDropShipping.getId());
 
-    String query = " select c from CartLineItem c inner join c.order as o inner join o.shippingOrders as so  inner join so.lineItems as li where  c.productVariant = :productVariant and c.markedPrice = :mrp and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.sku.id = :skuId  "
-        + " and c.skuItemCLIs.size <= 0  order by so.targetDispatchDate,so.createDate  asc ";
-    return (List<CartLineItem>) getSession().createQuery(query).setParameterList("shippingOrderStatusIds", statuses).setParameter("productVariant", productVariant).setParameter("mrp", mrp).setParameter("skuId", skuId).list();
+    String query = " select c from CartLineItem c inner join c.order as o inner join o.shippingOrders as so  inner join so.lineItems as li inner join o.payment as p inner join p.paymentStatus as ps where  c.productVariant = :productVariant and c.markedPrice = :mrp and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.sku.id = :skuId and ps.id in (:paymentStatusIds)  "
+        + " and c.skuItemCLIs.size <= 0  order by so.targetDispatchDate, p.paymentDate  asc ";
+    return (List<CartLineItem>) getSession().createQuery(query).setParameterList("shippingOrderStatusIds", statuses).setParameter("productVariant", productVariant).setParameter("mrp", mrp).setParameter("skuId", skuId).setParameterList("paymentStatusIds",EnumPaymentStatus.getEscalablePaymentStatusIds()).list();
 
   }
 
