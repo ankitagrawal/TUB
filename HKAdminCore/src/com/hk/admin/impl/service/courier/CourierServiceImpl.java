@@ -92,12 +92,15 @@ public class CourierServiceImpl implements CourierService {
   }
 
   public List<HKReachPricingEngine> searchHKReachPricing(Warehouse warehouse, Hub hub) {
-    return courierPricingEngineDao.getHkReachPricingEngineList(warehouse, hub);
+    return courierPricingEngineDao.getHkReachPricingEngineList(warehouse, hub, null);
   }
 
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub) {
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Date shipDate) {
+    if (shipDate == null) {
+        shipDate = Calendar.getInstance().getTime();
+    }
     if (warehouse != null && hub != null) {
-      return  courierPricingEngineDao.getHkReachPricingEngine(warehouse, hub);
+      return  courierPricingEngineDao.getHkReachPricingEngine(warehouse, hub, shipDate);
     } else {
       return null;
     }
