@@ -1,5 +1,6 @@
 package com.hk.admin.pact.service.courier;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -23,8 +24,10 @@ public interface CourierCostCalculator {
 
     public Map.Entry<Courier, Long> getCheapestCourierEntry(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground);
 
-    public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground);
+    public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse,
+                                                       Double amount, Double weight, boolean ground, Date shipmentDate);
 
-    public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse);
+    public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse,
+                                                      Date shipmentDate);
 
 }

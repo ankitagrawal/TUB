@@ -48,7 +48,7 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
     private QtyExp qtyExp;
 	
 
-	public B2BInvoiceLineItemDto(LineItem productLineItem, String state, boolean cFormAvailable) {
+	public B2BInvoiceLineItemDto(LineItem productLineItem, Boolean sameState, boolean cFormAvailable) {
 		super();
 		productCategories = productLineItem.getSku().getProductVariant().getProduct().getCategories();
 		productName = productLineItem.getSku().getProductVariant().getProduct().getName();
@@ -104,11 +104,42 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 		rate = hkPrice - totalDiscountOnLineItem / qty;
 		taxRate = Double.parseDouble(new DecimalFormat("#.##").format(taxValue * 100)) + "%";
 
-		if (productLineItem.getSku().getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)) {
-			if (state.equalsIgnoreCase("Haryana")) {
+
+    Double surchargeRate= 0.0;
+    if (productLineItem.getSku().getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)){
+      surchargeRate = TaxConstants.SURCHARGE;
+    }
+    else {
+      surchargeRate = 0.0;
+    }
+
+    if (sameState) {
+      taxable = (lineItemTotal - totalDiscountOnLineItem);
+      tax = lineItemTotal * taxValue;
+      surcharge = taxable * (taxValue * surchargeRate);
+    } else {
+      if(cFormAvailable){
+        taxable = (lineItemTotal - totalDiscountOnLineItem);
+        taxValue = 0.02;
+        taxRate = Double.parseDouble(new DecimalFormat("#.##").format(taxValue * 100)) + "%";
+        surcharge = 0.0;
+        tax = lineItemTotal * taxValue;
+      }
+      else{
+        taxable = (lineItemTotal - totalDiscountOnLineItem);
+        tax = lineItemTotal * taxValue;
+        surcharge = taxable * (taxValue * surchargeRate);  //Sale from haryana to other state without C form
+        //	surcharge = 0.0;
+      }
+    }
+
+/*
+
+      if (productLineItem.getSku().getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)) {
+			if (sameState) {
 				taxable = (lineItemTotal - totalDiscountOnLineItem);
 				tax = lineItemTotal * taxValue;
-				surcharge = taxable * (taxValue * TaxConstants.SURCHARGE);
+				surcharge = taxable * (taxValue * surchargeRate);
 			} else {
 				if(cFormAvailable){
 				taxable = (lineItemTotal - totalDiscountOnLineItem);
@@ -120,7 +151,8 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 				else{
 					taxable = (lineItemTotal - totalDiscountOnLineItem);
 					tax = lineItemTotal * taxValue;
-					surcharge = 0.0;
+          surcharge = taxable * (taxValue * surchargeRate);  //Sale from haryana to other state without C form
+				//	surcharge = 0.0;
 				}
 			}
 
@@ -147,6 +179,7 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 
 		}
 
+*/
 	}
 
     public String getVariantId() {
