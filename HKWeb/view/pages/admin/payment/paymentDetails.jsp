@@ -65,6 +65,8 @@
                 &lt;%&ndash;<shiro:hasRole name="<%=RoleConstants.GOD%>">&ndash;%&gt;
                 <s:submit name="bulkSeekPayment" value="Bulk Seek" id="bulkSeek"/>
                 &lt;%&ndash;</shiro:hasRole>&ndash;%&gt;--%>
+                <s:submit name="seekPayment" value="Seek" id="save"/>
+                <s:submit name="refundPayment" value="Refund " id="refund"/>
                 <s:submit name="updatePayment"  value="Update" id="update"/>
             </fieldset>
         </s:form>
