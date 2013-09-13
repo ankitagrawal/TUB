@@ -618,48 +618,40 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
       List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
       if (!skus.isEmpty()) {
-        Long unbookedInventory = inventoryManageService.getAvailableUnbookedInventory(skus, false);
-        Long countOfJustCheckedInBatch = inventoryManageService.getLatestcheckedInBatchInventoryCount(productVariant);
-        unbookedInventory = unbookedInventory - countOfJustCheckedInBatch;
-        // it means we had booked some orders on zero inventory and now i need to create sicli for that
-        if (unbookedInventory < 0) {
-          pendingOrdersInventoryHealthCheck(productVariant);
-        } else {
-          Set<SkuInfo> availableUnBookedInvnList = new HashSet<SkuInfo>();
-          Set<SkuInfo> differentMrpCheckedinBatch = new HashSet<SkuInfo>();
-          Iterator it = availableCheckedInInvnList.iterator();
-          SkuInfo sk = (SkuInfo) it.next();
-          availableUnBookedInvnList.add(sk);
-          for (SkuInfo skuInfo : availableCheckedInInvnList) {
-            if (sk.getMrp() == skuInfo.getMrp() && sk.getSkuId() != skuInfo.getSkuId()) {
-              availableUnBookedInvnList.add(skuInfo);
-            } else {
-              differentMrpCheckedinBatch.add(skuInfo);
-            }
+        Set<SkuInfo> availableUnBookedInvnList = new HashSet<SkuInfo>();
+        Set<SkuInfo> differentMrpCheckedinBatch = new HashSet<SkuInfo>();
+        Iterator it = availableCheckedInInvnList.iterator();
+        SkuInfo sk = (SkuInfo) it.next();
+        availableUnBookedInvnList.add(sk);
+        for (SkuInfo skuInfo : availableCheckedInInvnList) {
+          if (sk.getMrp() == skuInfo.getMrp() && sk.getSkuId() != skuInfo.getSkuId()) {
+            availableUnBookedInvnList.add(skuInfo);
+          } else {
+            differentMrpCheckedinBatch.add(skuInfo);
           }
+        }
 
-          differentMrpCheckedinBatch.remove(sk);
-          Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
-          Iterator itetaror = differentMrpCheckedinBatch.iterator();
-          if (differentMrpCheckedinBatch.size() > 1) {
-            SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
+        differentMrpCheckedinBatch.remove(sk);
+        Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
+        Iterator itetaror = differentMrpCheckedinBatch.iterator();
+        if (differentMrpCheckedinBatch.size() > 1) {
+          SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
 
-            if (differentCheckedInBatchFirstElement != null) {
-              for (SkuInfo info : availableUnBookedInvnList) {
-                if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
-                  availableUnBookedInvnListToUpdate.add(info);
-                }
+          if (differentCheckedInBatchFirstElement != null) {
+            for (SkuInfo info : availableUnBookedInvnList) {
+              if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
+                availableUnBookedInvnListToUpdate.add(info);
               }
-            } else {
-              availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
             }
           } else {
             availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
           }
+        } else {
+          availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
+        }
 
-          if (availableUnBookedInvnListToUpdate.size() > 0) {
-            updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
-          }
+        if (availableUnBookedInvnListToUpdate.size() > 0) {
+          updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
         }
       }
     } else {
@@ -722,10 +714,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
       }
 
-      newSkuInfo.setQty(remainingQty);
+      /*newSkuInfo.setQty(remainingQty);
       Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
       newBatchSkuInfo.add(newSkuInfo);
-      updateVariantInfo(productVariant, newBatchSkuInfo);
+      updateVariantInfo(productVariant, newBatchSkuInfo);*/
     }
   }
 
