@@ -29,7 +29,7 @@ Reset Password Instructions - HealthKart.com
                 </tr>
                 <tr>
 
-                    <td style="padding-bottom:1em">Can't remember your password?</td>
+                    <td style="padding-bottom:1em; padding-top: 10px">Can't remember your password?</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 10px">
