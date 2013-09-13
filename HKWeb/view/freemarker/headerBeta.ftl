@@ -13,12 +13,5 @@
     <tr>
         <td colspan="5" height="10"></td>
     </tr>
-    <tr>
-        <td colspan="5"><a href="http://www.healthkart.com"><img
-                src="http://img.healthkart.com/email/welcome_emailer_new/images/main_banner.jpg"
-                width="500"
-                height="148" alt="Welcome to HealthKart!" border="0"/></a></td>
-    </tr>
-
 
 </table>

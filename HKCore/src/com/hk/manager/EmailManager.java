@@ -465,6 +465,7 @@ public class EmailManager {
         valuesMap.put("user", user);
         valuesMap.put("link", passwordResetLink);
         valuesMap.put("hkLogo",hkLogo);
+
         Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.passwordResetEmail);
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
     }

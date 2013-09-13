@@ -24,7 +24,7 @@ Reset Password Instructions - HealthKart.com
 
                 <tr>
                     <td>
-                        Hi ${user.name},
+                        Hi <b>${user.name}</b>,
                     </td>
                 </tr>
                 <tr>
@@ -71,7 +71,8 @@ Reset Password Instructions - HealthKart.com
             </table>
         </td>
     <tr>
-    <#include "footerBeta.ftl">
+        <td style="border-top: solid #0000ff 1px">
+        <#include "footerBeta.ftl">
     </tr>
 </table>
 

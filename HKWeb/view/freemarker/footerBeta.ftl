@@ -1,4 +1,4 @@
-<table width="500" style="border-top: " border="0" align="center" cellpadding="0" cellspacing="0">
+<table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
 
     <tr>
 
