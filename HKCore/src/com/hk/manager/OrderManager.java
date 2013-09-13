@@ -421,13 +421,17 @@ public class OrderManager {
         }
       }
 
-//       Check Inventory health of order lineItems
-        for (CartLineItem cartLineItem : order.getCartLineItems()) {
-            if (cartLineItem.isType(EnumCartLineItemType.Product)) {
-                logger.info("Inventory Health being called for " + cartLineItem.getProductVariant().getId());
-                this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-            }
+      //Check Inventory health of order lineItems
+      for (CartLineItem cartLineItem : order.getCartLineItems()) {
+        if (cartLineItem.isType(EnumCartLineItemType.Product)) {
+          try {
+            logger.info("Inventory Health being called for " + cartLineItem.getProductVariant().getId());
+            this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+          } catch (Exception e) {
+            logger.error("Exception while Inventory Health for order#" + order.getId() + "; PV#" + cartLineItem.getProductVariant().getId() + " - " + e.getMessage());
+          }
         }
+      }
 
       this.getUserService().updateIsProductBought(order);
 
