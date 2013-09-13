@@ -8,7 +8,7 @@ Reset Password Instructions - HealthKart.com
     <tr>
         <td align="center" valign="top">
             <table width="500" border="0" cellspacing="0" cellpadding="0" align="center"
-                   style="font-size:13px; line-height:1.75em;">
+                   style="font-size:13px; padding-bottom: 10px; line-height:1.75em;">
 
 
                 <tr>
@@ -29,49 +29,49 @@ Reset Password Instructions - HealthKart.com
                 </tr>
                 <tr>
 
-                    <td style="margin-bottom:1em">Can't remember your password?</td>
+                    <td style="padding-bottom:1em">Can't remember your password?</td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="padding-top: 10px">
                         It happens to many of us :)
                     </td>
                 </tr>
                 <tr>
 
-                    <td>
+                    <td style="padding-top: 10px">
                         Your Username (Same as your Email Id): <a href="#">${user.email}</a></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="padding-top: 10px">
                         Please click the below link to set a new password:
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="${link}" target="_blank">${link}</a></td>
+                    <td style="padding-top: 10px"><a href="${link}" target="_blank">${link}</a></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="padding-top: 10px">
                         This will ask for new password which you can then use to login.
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="padding-top: 10px">
                         Note: If you are not able to click on the link, you can paste the above address into your
                         browser.
                     </td>
                 </tr>
                 <tr>
-                    <td>Happy Shopping!</td>
+                    <td style="padding-top: 10px">Happy Shopping!</td>
                 </tr>
 
                 <tr>
-                    <td>
+                    <td style="padding-top: 10px">
                         <strong>HealthKart.com</strong></td>
                 </tr>
             </table>
         </td>
     <tr>
-        <td style="border-top: solid #0000ff 1px">
+        <td style="border-top: solid #0000ff 1px;padding-top: 10px">
         <#include "footerBeta.ftl">
     </tr>
 </table>
