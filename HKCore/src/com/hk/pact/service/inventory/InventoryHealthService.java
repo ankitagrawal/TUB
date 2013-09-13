@@ -25,6 +25,8 @@ public interface InventoryHealthService {
 
   public void inventoryHealthCheck(ProductVariant productVariant);
 
+  public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant);
+
   public void tempBookSkuLineItemForOrder(Order order);
 
 
