@@ -69,7 +69,7 @@ public enum EnumReason {
     ManualRefundInitiated(1150L, "Manual refund task mail sent to admin", EnumReasonType.Reconciliation),
     INV_FOUND_DIFF_WAREHOUSE(1200L,EnumClassification.INV_PRESENT_DIFF_WAREHOUSE, EnumReasonType.SO_NOT_CANCELLED),
     JIT_ITEMS_IN_SO(1210L,EnumClassification.JIT_IN_SO,EnumReasonType.SO_NOT_CANCELLED),
-    NoActionTakenAtReconciliation(1450L, "No Action Taken", EnumReasonType.Reconciliation)
+    NoActionTakenAtReconciliation(1450L, "No Action Taken", EnumReasonType.Reconciliation),
     ;
 
     Long id;
@@ -133,4 +133,5 @@ public enum EnumReason {
 
         return  acceptableReasons;
     }
+
 }

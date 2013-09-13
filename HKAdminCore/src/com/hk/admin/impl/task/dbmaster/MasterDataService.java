@@ -36,8 +36,8 @@ public class MasterDataService {
 	private static Logger logger = LoggerFactory.getLogger(MasterDataService.class);
 	//    @Autowired
 //    RoleSeedData                           roleSeedData;
-//    @Autowired
-//    PermissionSeedData                     permissionSeedData;
+    @Autowired
+    PermissionSeedData                     permissionSeedData;
 //    @Autowired
 //    RoleHasPermissionSeedData              roleHasPermissionSeedData;
 //    @Autowired
@@ -159,8 +159,8 @@ public class MasterDataService {
 //        logger.debug("inserting roles");
 //        roleSeedData.invokeInsert();
 //
-//        logger.debug("inserting permissions");
-//        permissionSeedData.invokeInsert();
+        logger.debug("inserting permissions");
+        permissionSeedData.invokeInsert();
 
 //        logger.debug("inserting role has permissions");
 //        roleHasPermissionSeedData.invokeInsert();

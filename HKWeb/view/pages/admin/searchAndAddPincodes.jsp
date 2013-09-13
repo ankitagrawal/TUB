@@ -23,7 +23,6 @@
                    var city      = $('#city').val();
                    var state     = $('#state').val();
                    var zone      = $('#zone').val();
-                   var hub       = $('#nearestHub').val();
                    var lastMCost = $('#lastMileCost').val();
                     if(pincode == null || pincode == "" || isNaN(pincode) || pincode.length!=6){
                         alert("pincode can't be empty or must contain numbers only and length must be 6!!");
@@ -31,12 +30,11 @@
                         return false;
                     }
                     if(region == null || region == "" || locality == null || locality == ""){
-                        alert("Value can't be left empty!!");
+                        alert("Region and Locality can't be left empty!!");
                         return false;
                     }
-                    if(city == null || city == "" || state == null || state == "" || zone == null || zone == ""
-                            || hub == null || hub == ""){
-                       alert("City, State, Nearest Hub and Zone must be selected !!");
+                    if(city == null || city == "" || state == null || state == "" || zone == null || zone == ""){
+                       alert("City, State and Zone must be selected !!");
                        return false;
                     }
                     if (isNan(lastMCost)) {
@@ -44,6 +42,13 @@
                         return false;
                     }
                     $('#savePincodeString').attr('val',pincode);
+                });
+                $('#update').click(function() {
+                    var locality = $('#locality').val();
+                    if(locality == null || locality == "") {
+                        alert("Locality can't be left empty");
+                        return false;
+                    }
                 });
             });
         </script>
@@ -60,7 +65,6 @@
 			 </s:form>
         </fieldset>
         <div style="display:inline-block;">
-            <h2 style="color:red;">Pincode once saved can't be edit</h2>
        <fieldset style="float:left;">
          <legend>Add Pincode Or Edit Pincode Details</legend>
 			<table>
@@ -72,6 +76,7 @@
                         <c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
 						${mpaBean.pincode.pincode}
+                            <s:hidden name="pincode.pincode" value="${mpaBean.pincode.pincode}" />
                         </c:when>
                          <c:otherwise>
                              <s:text name="pincode.pincode" id="pincode" maxlength="6"/>
@@ -85,6 +90,7 @@
 						<c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
 						${mpaBean.pincode.region}
+                            <s:hidden name="pincode.region" value="${mpaBean.pincode.region}" />
                         </c:when>
                          <c:otherwise>
                              <s:text name="pincode.region" id="region"/>
@@ -95,14 +101,7 @@
 					<tr>
 						<td>Locality:</td>
                         <td>
-						<c:choose>
-                        <c:when test="${mpaBean.pincode!=null}">
-						${mpaBean.pincode.locality}
-                        </c:when>
-                         <c:otherwise>
-                             <s:text name="pincode.locality" id="locality"/>
-                         </c:otherwise>
-                        </c:choose>
+                             <s:text name="pincode.locality" value="${mpaBean.pincode.locality}" id="locality"/>
                         </td>
 					</tr>
 					<tr>
@@ -111,6 +110,7 @@
                        <c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
 						${mpaBean.pincode.city.name}
+                            <s:hidden name="pincode.city" value="${mpaBean.pincode.city.id}" />
                         </c:when>
                          <c:otherwise>
                              <s:select name="pincode.city" id="city">
@@ -128,6 +128,7 @@
                        <c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
 						${mpaBean.pincode.state.name}
+                            <s:hidden name="pincode.state" value="${mpaBean.pincode.state.id}" />
                         </c:when>
                          <c:otherwise>
                              <s:select name="pincode.state" id="state">
@@ -146,7 +147,11 @@
 						 <td>
                        <c:choose>
                         <c:when test="${mpaBean.pincode!=null}">
-						${mpaBean.pincode.zone.name}
+
+                        <s:select name="pincode.zone">
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+                                                           value="id" label="name"/>
+                            </s:select>
                         </c:when>
                          <c:otherwise>
                              <s:select name="pincode.zone" id="zone">
@@ -161,12 +166,18 @@
                     <tr>
                         <td>Nearest Hub:</td>
                         <td>
+
                             <c:choose>
-                                <c:when test="${mpaBean.pincode!=null && mpaBean.pincode.nearestHub!=null}">
-                                    ${mpaBean.pincode.nearestHub.name}
+                                <c:when test="${mpaBean.pincode!=null}">
+
+                                    <s:select name="pincode.nearestHub">
+                                        <s:option value="">--Select--</s:option>
+                                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="hubList"
+                                                                   value="id" label="name"/>
+                                    </s:select>
                                 </c:when>
                                 <c:otherwise>
-                                    <s:select name="pincode.nearestHub" id="nearestHub">
+                                    <s:select name="pincode.nearestHub">
                                         <s:option value="">--Select--</s:option>
                                         <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="hubList"
                                                                    value="id" label="name"/>
@@ -180,21 +191,20 @@
                             <label>Last Mile Cost:</label>
                         </td>
                         <td>
-                            <c:choose>
-                                <c:when test="${mpaBean.pincode!=null}">
-                                    ${mpaBean.pincode.lastMileCost}
-                                </c:when>
-                                <c:otherwise>
-                                    <s:text name="pincode.lastMileCost" id="lastMileCost"></s:text>
-                                </c:otherwise>
-                            </c:choose>
-
+                            <s:text name="pincode.lastMileCost" id="lastMileCost"></s:text>
                         </td>
                     </tr>
 					<tr>
-                        <c:if test="${mpaBean.pincode==null}">
-						<td><s:submit name="save" value="Save" id="save"/></td>
-                        </c:if>
+						<td>
+                            <c:choose>
+                                <c:when test="${mpaBean.pincode!=null}">
+                                    <s:submit name="update" value="Update" id="update" />
+                                </c:when>
+                                <c:otherwise>
+                                    <s:submit name="save" value="Save" id="save" />
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
 					</tr>
 				</s:form>
 			</table>

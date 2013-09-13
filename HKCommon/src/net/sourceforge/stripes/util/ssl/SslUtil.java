@@ -1,17 +1,21 @@
 package net.sourceforge.stripes.util.ssl;
 
+import com.akube.framework.util.BaseUtils;
+import com.hk.constants.core.Keys;
+import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.Ssl;
 import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.util.HttpUrlInfo;
 import net.sourceforge.stripes.util.UrlParser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
+import java.util.Properties;
 
 /**
  * SslUtil
@@ -20,7 +24,9 @@ import java.net.MalformedURLException;
  */
 public class SslUtil {
 
-  private static final Log log = LogFactory.getLog(SslUtil.class);
+	private static Logger log = LoggerFactory.getLogger(SslUtil.class);
+
+	private static final String ENVIRONMENT_PROPERTIES = "/environment.properties";
 
   /**
    * Encodes the given URL by adding the session ID in case url rewriting of the session is needed. Since this task is
@@ -159,6 +165,11 @@ public class SslUtil {
    * @see javax.servlet.http.HttpServletResponse
    */
   public static String encodeUrlFullForced(HttpServletRequest request, HttpServletResponse response, String url, String contextPath) {
+
+	  String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + ENVIRONMENT_PROPERTIES;
+		Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
+	  String projectEnv = (String)properties.get(Keys.Env.projectEnv) ;
+
     contextPath = request != null ? request.getContextPath() : contextPath;
 
     if (url.startsWith("/")) {
@@ -203,23 +214,26 @@ public class SslUtil {
               host += ":" + request.getServerPort();
             }
 
-            log.debug("default values: " + protocol + host);
+            log.debug("default values: protocol:host:projectEnv: " + protocol + ":" + host + ":" + projectEnv);
 
-            if (targetSecure && isSslEnabled()) {
-              log.debug("Rewriting url from http to https");
-              protocol = "https://";
-              String sslHost = StripesFilter.getConfiguration().getSslConfiguration().getSecureHost();
-              if (sslHost != null) {
-                host = sslHost;
-              }
-            } else {
-              log.debug("Rewriting url from https to http");
-              protocol = "http://";
-              String unsecureHost = StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost();
-              if (unsecureHost != null) {
-                host = unsecureHost;
-              }
-            }
+	          //If the env is not prod or admin the url will be formed via the request's servername and port.
+	          if(("prod").equals(projectEnv) || ("admin").equals(projectEnv)) {
+		          if (targetSecure && isSslEnabled()) {
+			          log.debug("Rewriting url from http to https");
+			          protocol = "https://";
+			          String sslHost = StripesFilter.getConfiguration().getSslConfiguration().getSecureHost();
+			          if (sslHost != null) {
+				          host = sslHost;
+			          }
+		          } else {
+			          log.debug("Rewriting url from https to http");
+			          protocol = "http://";
+			          String unsecureHost = StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost();
+			          if (unsecureHost != null) {
+				          host = unsecureHost;
+			          }
+		          }
+	          }
             urlBuffer.append(protocol);
             urlBuffer.append(host);
         } else {
