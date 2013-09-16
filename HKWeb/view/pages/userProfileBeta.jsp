@@ -294,8 +294,8 @@
                         <s:param name="order" value="${order}"/>
                         (View Order)
                       </s:link>
-                    </td class="border-td">
-                    <td>
+                    </td>
+                    <td class="border-td">
                       <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
                     </td>
                     <td class="border-td">
@@ -358,7 +358,9 @@
       }
       else {
         show_message();
-        e.stopPropagation();
+        //e.stopPropagation();
+          $('.cart-pop-container').show();
+          $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
       }
     });
 
@@ -383,6 +385,7 @@
     $('.addToCartButton').click(function() {
       $(this).parents('td').find('.progressLoader').show();
       $('#cartWindow').jqm();
+
     });
 
     $(".top_link, .go_to_top").click(function(event) {

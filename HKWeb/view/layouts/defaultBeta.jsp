@@ -24,7 +24,8 @@
     </s:layout-component>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
-    <s:layout-component name="htmlHead"/>
+
+      <s:layout-component name="htmlHead"/>
     <style type="text/css">
       h3 {
         line-height: 27px;
