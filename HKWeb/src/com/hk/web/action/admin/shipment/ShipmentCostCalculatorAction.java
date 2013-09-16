@@ -133,7 +133,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
   public Resolution calculateViaPincode() {
     //todo courier set as false by default, take input from screen
-    courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, false);
+    courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, false,null);
     return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
   }
 
@@ -152,9 +152,15 @@ public class ShipmentCostCalculatorAction extends BaseAction {
           }
         }
         ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+        Date shippingdate;
+        if (shippingOrder.getShipment() != null) {
+          shippingdate = shippingOrder.getShipment().getShipDate();
+        } else {
+          shippingdate = Calendar.getInstance().getTime();
+        }
         courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(),
             (ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(),
-            weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
+            weight, (ShipmentServiceMapper.isGround(shipmentServiceType)),shippingdate);
       }
     } else {
       addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));

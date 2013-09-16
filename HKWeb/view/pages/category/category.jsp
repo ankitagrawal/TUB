@@ -197,8 +197,8 @@
                                     <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
                                          alt="DIET_PLAN" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Nature%27s+Herbs">
-                    <img src="${pageContext.request.contextPath}/images/banners/nature's-herb-static-banner.jpg"
+                <a href="${pageContext.request.contextPath}/pages/offers/top-nutrition-brands/top-nut-brands.jsp">
+                    <img src="${pageContext.request.contextPath}/images/banners/finalHNbanner.jpg"
                          alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
@@ -220,9 +220,9 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/personal-care/misc/mosquito-repellents">
-                <img src="<hk:vhostImage/>/images/banners/mosquito-repellents.jpg" alt="14 Days Return Policy"
-                     class="small_banner"/>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
                     <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"

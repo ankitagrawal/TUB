@@ -3,6 +3,7 @@ package com.hk.impl.service.inventory;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
@@ -14,6 +15,7 @@ import com.hk.domain.sku.SkuItemCLI;
 import com.hk.manager.EmailManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
 import com.hk.pact.dao.inventory.LowInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
@@ -66,6 +68,8 @@ public class InventoryServiceImpl implements InventoryService {
   SkuGroupService skuGroupService;
   @Autowired
   UserService userService;
+  @Autowired
+  ComboInstanceDao comboInstanceDao;
 
   @Autowired
   InventoryHealthService inventoryHealthService;
@@ -177,6 +181,27 @@ public class InventoryServiceImpl implements InventoryService {
       }
     }
     return allowedQty;
+  }
+
+  public Long getAllowedStepUpInventory(CartLineItem cartLineItem) {
+    Long stepUpQty = 0L;
+    if (cartLineItem.getComboInstance() != null) {
+      int count = 0;
+      for (CartLineItem li : comboInstanceDao.getSiblingLineItems(cartLineItem)) {
+        count++;
+        ComboInstanceHasProductVariant comboVariant = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant());
+        ProductVariant productVariant = comboVariant.getProductVariant();
+        Long allowedQty = this.getAllowedStepUpInventory(productVariant);
+        if (count > 1) {
+          stepUpQty = Math.min(stepUpQty, Math.abs(allowedQty / comboVariant.getQty()));
+        } else {
+          stepUpQty = Math.abs(allowedQty / comboVariant.getQty());
+        }
+      }
+    } else {
+      stepUpQty = this.getAllowedStepUpInventory(cartLineItem.getProductVariant());
+    }
+    return stepUpQty;
   }
 
   public boolean allInventoryCheckedIn(GoodsReceivedNote grn) {

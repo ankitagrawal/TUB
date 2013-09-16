@@ -56,6 +56,12 @@ public class SearchHKBatchAction extends BaseAction {
         logger.debug("upc: " + hkBarcode);
         List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
         List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+        if(userService.getWarehouseForLoggedInUser() == null || userService.getWarehouseForLoggedInUser().equals(""))
+        {
+            addRedirectAlertMessage(new SimpleMessage("Kindly select a WareHouse."));
+            return new RedirectResolution(SearchHKBatchAction.class);
+        }
+        else {
         if (StringUtils.isNotBlank(hkBarcode)) {
             skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwners);
             if (skuItemBarcode != null) {
@@ -68,6 +74,7 @@ public class SearchHKBatchAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Invalid HK Barcode."));
             return new RedirectResolution(SearchHKBatchAction.class);
         }
+    }
     }
 
     public String getHkBarcode() {
