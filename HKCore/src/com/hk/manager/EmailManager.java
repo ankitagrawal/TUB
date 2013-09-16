@@ -149,9 +149,7 @@ public class EmailManager {
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
-	  private String              logisticsOpsEmails;
-    @Value("#{hkEnvProps['" + Keys.Env.HK_LOGO_PATH + "']}")
-    private String              hkLogo;
+    private String              logisticsOpsEmails;
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
      */
@@ -445,9 +443,8 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("user", user);
         valuesMap.put("activationLink", activationLink);
-        valuesMap.put("hkLogo",hkLogo);
 
-        Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.welcomeEmailBeta);
+        Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.welcomeEmail);
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
     }
 
@@ -464,7 +461,6 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("user", user);
         valuesMap.put("link", passwordResetLink);
-        valuesMap.put("hkLogo",hkLogo);
 
         Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.passwordResetEmail);
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
