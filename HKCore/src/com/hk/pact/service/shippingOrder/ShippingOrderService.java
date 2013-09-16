@@ -65,4 +65,8 @@ public interface ShippingOrderService {
 
     public void validateShippingOrder(ShippingOrder shippingOrder);
 
+  public void validateShippingOrderAB(ShippingOrder shippingOrder);
+
+  public void  bookSo(ShippingOrder shippingOrder);
+
 }

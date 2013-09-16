@@ -31,6 +31,18 @@ public interface InventoryHealthService {
 
   public boolean isBookingRequireAtBright (CartLineItem cartLineItem);
 
+  public Boolean bookInventory(CartLineItem cartLineItem);
+
+  public Map<String,Long> getInventoryCountOfAB (CartLineItem cartLineItem);
+
+  public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem,Long warehouseId);
+
+  public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId);
+
+  public void populateSICLI(CartLineItem cartLineItem);
+
+  public void createSicliAndSiliAndTempBookingForBright(CartLineItem cartLineItem, Long warehouseIdForBright);
+
 
   public static class InventoryInfo {
     private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

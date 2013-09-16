@@ -391,104 +391,16 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
   public void validateShippingOrderAB(ShippingOrder shippingOrder) {
     Set<LineItem> lineItems = shippingOrder.getLineItems();
     for (LineItem item : lineItems) {
-
-      List<Sku> skuList = Arrays.asList(item.getSku());
-      List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
-      List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
-
+      CartLineItem cartLineItem = item.getCartLineItem();
       // When CLI and LI are empty
-      if (item.getCartLineItem().getSkuItemCLIs() == null || (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() == 0)) {
-        Long qty = item.getQty();
-        List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
-        List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
-        List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
-        logger.debug("Available Unbooked Inventory For Sku - " + item.getSku() + " at MRP - " + item.getMarkedPrice() + " is "  + checkAvailableUnbookedSkuItems.size());
-        if (checkAvailableUnbookedSkuItems.size() >= qty) {
-          int i = 1;
-          while (i <= qty) {
-            SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
-            SkuItemCLI skuItemCLI = new SkuItemCLI();
-            // get available skuitems warehouse at given mrp
-            List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
-            if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
-              SkuItem skuItem = availableUnbookedSkuItems.get(0);
-              // Book the sku item first
-              skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-              skuItem = (SkuItem) baseDao.save(skuItem);
-              // create skuItemCLI entry
-              skuItemCLI.setSkuItem(skuItem);
-              skuItemCLI.setCartLineItem(item.getCartLineItem());
-              skuItemCLI.setUnitNum((long) i);
-              skuItemCLI.setCreateDate(new Date());
-              skuItemCLI.setProductVariant(item.getSku().getProductVariant());
-              // create skuItemLineItem entry
-              skuItemLineItem.setSkuItem(skuItem);
-              skuItemLineItem.setLineItem(item);
-              skuItemLineItem.setUnitNum((long) i);
-              skuItemLineItem.setSkuItemCLI(skuItemCLI);
-              skuItemLineItem.setCreateDate(new Date());
-              skuItemLineItem.setProductVariant(item.getSku().getProductVariant());
-              skuItemLineItems.add(skuItemLineItem);
-              skuItemCLIs.add(skuItemCLI);
-            }
-            ++i;
-          }
-          baseDao.saveOrUpdate(skuItemCLIs);
-          baseDao.saveOrUpdate(skuItemLineItems);
-          item.getCartLineItem().setSkuItemCLIs(skuItemCLIs);
-          baseDao.save(item.getCartLineItem());
-          item.setSkuItemLineItems(skuItemLineItems);
-          item = (LineItem) baseDao.save(item);
-          inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
-          logger.debug("Populated Table SkuItemLineItem for Line Item - " + item.getId() + " for Cart Line Item - " + item.getCartLineItem().getId()
-              + " of Shipping Order - " + item.getShippingOrder().getId());
-          logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
-              "Inventory booked for variant:- " + item.getSku().getProductVariant());
-          inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
-        } else {
-          logger.debug("Could Not Populate Tables for Line Item - " + item.getId() + " for Cart Line Item - " + item.getCartLineItem().getId()
-              + " of Shipping Order - " + item.getShippingOrder().getId());
-          logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
-              "Inventory could not be booked for variant:- " + item.getSku().getProductVariant());
-        }
+      if (cartLineItem.getSkuItemCLIs() == null || (cartLineItem.getSkuItemCLIs() != null && cartLineItem.getSkuItemCLIs().size() == 0)) {
+        inventoryService.bookInventory(cartLineItem);
       }
       // When there are entries in SILI and SICLI; but MRP related fixes
-      // are needed
-      else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
-          && item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() > 0) {
-        int entries = item.getSkuItemLineItems().size();
-        int j = 1;
-        while (j <= entries) {
-          SkuItemLineItem skuItemLineItem = item.getSkuItemLineItems().get(j - 1);
-          List<SkuItemStatus> skuItemStatus = new ArrayList<SkuItemStatus>();
-          skuItemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-          skuItemStatus.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+      else if (cartLineItem.getSkuItemCLIs() != null && cartLineItem.getSkuItemCLIs().size() > 0 && item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() > 0) {
+        //  validate booking on Mrp
+        skuItemLineItemService.validateBooking(cartLineItem);
 
-          if (!skuItemLineItem.getSkuItem().getSkuGroup().getMrp().equals(item.getMarkedPrice())
-              || !skuItemStatus.contains(skuItemLineItem.getSkuItem().getSkuItemStatus())) {
-            // get sku items of the given warehouse at mrp
-            List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
-            if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
-              SkuItem skuItem = skuItemLineItem.getSkuItem();
-              skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-              skuItem = (SkuItem) baseDao.save(skuItem);
-
-              SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
-              skuItemToBeSet.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-              skuItemToBeSet = (SkuItem) baseDao.save(skuItemToBeSet);
-
-              skuItemLineItem.getSkuItemCLI().setSkuItem(skuItemToBeSet);
-              baseDao.save(skuItemLineItem.getSkuItemCLI());
-              skuItemLineItem.setSkuItem(skuItemToBeSet);
-              skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
-              logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
-                  "Handled SkuItem mismatch and booked the correct inventory here For Variant:- " + item.getSku().getProductVariant()
-                      + " of this Shipping Order." + " The new SkuItem is - " + skuItemToBeSet.getId());
-            }
-          }
-          ++j;
-        }
-        inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
       } else if (item.getCartLineItem().getSkuItemCLIs() != null && item.getCartLineItem().getSkuItemCLIs().size() > 0
           && (item.getSkuItemLineItems() == null || (item.getSkuItemLineItems() != null && item.getSkuItemLineItems().size() == 0))) {
         Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(item);
@@ -529,6 +441,13 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     return true;
   }
 
+
+  public void  bookSo(ShippingOrder shippingOrder){
+    for (LineItem  lineItem : shippingOrder.getLineItems()){
+     inventoryService.bookInventory(lineItem.getCartLineItem());
+
+    }
+  }
 
   public UserService getUserService() {
         return userService;

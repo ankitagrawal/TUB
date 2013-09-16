@@ -65,7 +65,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
     for (ShippingOrder shippingOrder : sortedShippingOrdersSet) {
       logger.debug("Validating Shipping Order -" + shippingOrder.getId());
       try {
-        shippingOrderService.validateShippingOrder(shippingOrder);
+        shippingOrderService.validateShippingOrderAB(shippingOrder);
       }
       catch (Exception e) {
         logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
@@ -81,7 +81,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
     if (shippingOrder != null) {
       logger.debug("Validating Shipping Order -" + shippingOrder.getId());
       try {
-        shippingOrderService.validateShippingOrder(shippingOrder);
+         shippingOrderService.validateShippingOrderAB(shippingOrder);
       }
       catch (Exception e) {
         logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
@@ -133,6 +133,21 @@ public class ShippingOrderValidatorAction extends BaseAction {
 
     addRedirectAlertMessage(new SimpleMessage("Duplicate SI fixed on SILI. Total fixed SILIs = " + count));
     return new RedirectResolution(ActionAwaitingQueueAction.class);
+  }
+
+  public Resolution bookSo() {
+    if (shippingOrder != null) {
+      logger.debug("Validating Shipping Order -" + shippingOrder.getId());
+      try {
+        shippingOrderService.bookSo(shippingOrder);
+      }
+      catch (Exception e) {
+        logger.debug("Exception while booking  the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
+        e.printStackTrace();
+      }
+      addRedirectAlertMessage(new SimpleMessage("Tried to Book Shipping Order :"+shippingOrder.getId()+" <br/>Please refer to SO LifeCycleActivity for more info."));
+    }
+    return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuItemLineItems").addParameter("shippingOrderId", shippingOrder.getId());
   }
 
   public ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {

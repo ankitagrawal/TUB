@@ -45,6 +45,8 @@ public interface InventoryService {
 
   public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
-  public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);  
+  public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp);
+
+  public void bookInventory(CartLineItem cartLineItem);
 
 }

@@ -67,4 +67,8 @@ public interface SkuItemLineItemService {
 
   public boolean freeBookingInventoryAtAqua(CartLineItem cartLineItem);
 
+  public Boolean validateBooking(CartLineItem cartLineItem);
+
+
+
 }

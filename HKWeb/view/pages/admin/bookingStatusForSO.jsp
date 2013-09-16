@@ -39,6 +39,7 @@
 					<th>SkuItemCartLineItem Id</th>
 					<th>Create Date</th>
 					<th>Update Date</th>
+                    <th> Action </th>
 				</tr>
 				<c:forEach var="skuItemLineItem" items="${adminBookingBean.skuLiList}" varStatus="ctr">
 					<tr>
@@ -51,6 +52,10 @@
 						<td>${skuItemLineItem.skuItemCLI.id}</td>
 						<td>${skuItemLineItem.createDate}</td>
 						<td>${skuItemLineItem.updateDate}</td>
+                        <td> <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
+                            <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
+                            Free Booking
+                        </s:link></td>
 					</tr>
 				</c:forEach>
 			</table>
@@ -76,6 +81,7 @@
 					<th>Unit Number Booked</th>
 					<th>Create Date</th>
 					<th>Update Date</th>
+                    <th> Action</th>
 				</tr>
 				<c:forEach var="skuCartItemLineItem" items="${adminBookingBean.skuCLIList}" varStatus="ctr">
 					<tr>
@@ -87,6 +93,10 @@
 						<td>${skuCartItemLineItem.unitNum}</td>
 						<td>${skuCartItemLineItem.createDate}</td>
 						<td>${skuCartItemLineItem.updateDate}</td>
+                       <td> <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
+                            <s:param name="cartLineItemId" value="${skuCartItemLineItem.cartLineItem.id}"/>
+                            Free Booking
+                        </s:link></td>
 					</tr>
 				</c:forEach>
 			</table>
@@ -111,6 +121,7 @@
 					<th>SkuItemCartLineItem Id</th>
 					<th>Create Date</th>
 					<th>Update Date</th>
+                    <th> Action </th>
 				</tr>
 				<c:forEach var="skuItemLineItem" items="${soSiLiMap.value}" varStatus="ctr">
 					<tr>
@@ -123,6 +134,10 @@
 						<td>${skuItemLineItem.skuItemCLI.id}</td>
 						<td>${skuItemLineItem.createDate}</td>
 						<td>${skuItemLineItem.updateDate}</td>
+                        <td> <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
+                            <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
+                            Free Booking
+                        </s:link></td>
 					</tr>
 				</c:forEach>
 			</table>

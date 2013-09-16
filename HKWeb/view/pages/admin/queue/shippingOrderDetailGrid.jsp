@@ -787,6 +787,13 @@
         [Validate SO]
       </s:link>
 </shiro:hasAnyRoles>
+
+    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+        <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" target="_blank" event="bookSo">
+            <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+            [Book SO]
+        </s:link>
+    </shiro:hasAnyRoles>
 </td>
 <c:if test="${isServiceQueue== true}">
     <td>

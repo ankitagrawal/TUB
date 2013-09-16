@@ -40,6 +40,7 @@ public class AdminBookingAction extends BaseAction {
 
 	private Long shippingOrderId;
 	private Long baseOrderId;
+  private Long cartLineItemId;
 
 	private List<SkuItemCLI> skuCLIList;
 	private List<SkuItemLineItem> skuLiList;
@@ -104,6 +105,19 @@ public class AdminBookingAction extends BaseAction {
 		return null;
 	}
 
+
+  @Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
+  public Resolution freeBookingLineItem() {
+   boolean invFreed =  skuItemLineItemService.freeBookingItem(cartLineItemId);
+   if (!invFreed) {
+     addRedirectAlertMessage(new SimpleMessage(" Failed to Free Booking  For item  " +  cartLineItemId));
+   }else{
+    addRedirectAlertMessage(new SimpleMessage("  Successfully  Freed Booking  For item  " +  cartLineItemId));
+   }
+    return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuCartItemLineItems").addParameter("baseOrderId", baseOrderId);
+  }
+
+
 	public Resolution closeWindow() {
 		return new ForwardResolution("/pages/close.jsp");
 	}
@@ -156,4 +170,11 @@ public class AdminBookingAction extends BaseAction {
 		this.soSiLiMap = soSiLiMap;
 	}
 
+  public Long getCartLineItemId() {
+    return cartLineItemId;
+  }
+
+  public void setCartLineItemId(Long cartLineItemId) {
+    this.cartLineItemId = cartLineItemId;
+  }
 }

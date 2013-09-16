@@ -235,6 +235,12 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
 
+  public void bookInventory(CartLineItem cartLineItem) {
+    inventoryHealthService.bookInventory(cartLineItem);
+
+  }
+
+
   public List<CartLineItem> getClisForOrderInProcessingState(ProductVariant productVariant, Long skuId, Double mrp) {
     return cartLineItemDao.getClisForOrderInProcessingState(productVariant, skuId, mrp);
   }
