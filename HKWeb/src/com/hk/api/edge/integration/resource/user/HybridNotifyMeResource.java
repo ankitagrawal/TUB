@@ -67,15 +67,15 @@ public class HybridNotifyMeResource {
     User user = getUserService().findByLogin(updateNotifyMeDetails.getEmail());
     if (user != null) {
       if (!(user.isSubscribedForNotify())) {
-        messages.add("You have unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
-        return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).addField("accntLnk","http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=").build();
+        messages.add("You have Unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
+        return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).addField("success",false).addField("accntLnk","http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=").build();
       }
     } else {
       EmailRecepient emailRecepient = getEmailRecepientDao().findByRecepient(updateNotifyMeDetails.getEmail());
       if (emailRecepient != null) {
         if (!(emailRecepient.isSubscribed())) {
-          messages.add("You Have Unsubscribed for all emails , Contact Customer Care");
-          return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
+          messages.add("You Have Unsubscribed for all Emails , Contact Customer Care");
+          return new JSONResponseBuilder().addField("exception",false).addField("success",false).addField("msgs",messages).build();
         }
       }
     }
@@ -84,17 +84,17 @@ public class HybridNotifyMeResource {
     if(productVariant!=null){
       if(!productVariant.isOutOfStock()){
         messages.add("This Product is In Stock, please refresh the page");
-        return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
+        return new JSONResponseBuilder().addField("exception",false).addField("success",false).addField("msgs",messages).build();
       } else{
         List<NotifyMe> notifyMeList = getNotifyMeDao().getPendingNotifyMeList(updateNotifyMeDetails.getEmail(), productVariant);
         if (notifyMeList != null && notifyMeList.size() > 0) {
           messages.add("We have already received your request for this variant. We will get back to you very soon. Thanks for your visit.");
-          return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).build();
+          return new JSONResponseBuilder().addField("exception",false).addField("success",false).addField("msgs",messages).build();
         }
       }
     }else{
       messages.add("Something went wrong");
-       return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
+       return new JSONResponseBuilder().addField("exception",false).addField("success",false).addField("msgs",messages).build();
     }
     try{
       NotifyMe notifyMe = new NotifyMe();
@@ -108,7 +108,7 @@ public class HybridNotifyMeResource {
       return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
     }
     messages.add("Your request for this variant has already been received. We will get back to you very soon. Thanks for your visit.");
-    return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).build();
+    return new JSONResponseBuilder().addField("exception",false).addField("success",true).addField("msgs",messages).build();
   }
 
   public UserService getUserService() {
