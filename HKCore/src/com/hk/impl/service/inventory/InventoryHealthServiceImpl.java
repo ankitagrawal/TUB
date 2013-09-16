@@ -617,8 +617,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           } else {
             //book inventory on Bright
             if (isBookingRequireAtBright(cartLineItem)) {
+              if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
               cartLineItem = tempBookBrightInventory(cartLineItem,warehouseIdAtPV);
               populateSICLI(cartLineItem);
+              }
             }
           }
         }
@@ -678,17 +680,17 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
   public void populateSICLI(CartLineItem cartLineItem) {
-
-    for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs()) {
-      SkuItemCLI skuItemCLI = new SkuItemCLI();
-      skuItemCLI.setCartLineItem(cartLineItem);
-      skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
-      skuItemCLI.setCreateDate(new Date());
-      skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-      skuItemCLI.setSkuItem(skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId()));
-      skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+    if (cartLineItem != null) {
+      for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs()) {
+        SkuItemCLI skuItemCLI = new SkuItemCLI();
+        skuItemCLI.setCartLineItem(cartLineItem);
+        skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
+        skuItemCLI.setCreateDate(new Date());
+        skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+        skuItemCLI.setSkuItem(skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId()));
+        skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+      }
     }
-
   }
 
   public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, Long warehouseId) {
@@ -1257,11 +1259,21 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  public Map<String,Long> getInventoryCountOfAB (CartLineItem cartLineItem){
+  public Map<String,Long> getInventoryCountOfAB (CartLineItem cartLineItem , Warehouse targetWarehouse){
 
     LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
-    String  tinPrefix = lineItem.getSku().getWarehouse().getTinPrefix();
-    List<Sku> skuList = Arrays.asList(lineItem.getSku());
+    List<Sku> skuList = new ArrayList<Sku>();
+
+    String  tinPrefix = null;
+    if (targetWarehouse == null) {
+        tinPrefix = lineItem.getSku().getWarehouse().getTinPrefix();
+        skuList.add(lineItem.getSku());
+    } else {
+        tinPrefix = targetWarehouse.getTinPrefix();
+       Sku sku =  skuService.getSKU(cartLineItem.getProductVariant(),targetWarehouse);
+       skuList.add(sku)  ;
+    }
+
     List<Long> skuStatusIdList =Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
     List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
     Map<String, Long> invMap = new HashMap <String, Long> ();
@@ -1281,19 +1293,21 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
 
 
-   public void createSicliAndSiliAndTempBookingForBright(CartLineItem cartLineItem, Long warehouseIdForBright){
+   public void createSicliAndSiliAndTempBookingForBright(CartLineItem cartLineItem, Long warehouseIdForBright) {
      OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
-     if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size()  < 1){
-       cartLineItem = tempBookBrightInventory(cartLineItem, warehouseIdForBright);
-       populateSICLI(cartLineItem);
-     }
-     LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
-     if (orderService.bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1)) {
-       logger.debug("Update booking on Bright");
-       List<HKAPIForeignBookingResponseInfo> infos = orderService.updateBookedInventoryOnBright(lineItem);
-       List<ForeignSkuItemCLI> ForeignSkuItemCLIs = skuItemLineItemService.updateSkuItemForABJit(infos);
-       skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem);
+     if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
+       if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
+         cartLineItem = tempBookBrightInventory(cartLineItem, warehouseIdForBright);
+         populateSICLI(cartLineItem);
+       }
+       LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
+       if (orderService.bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1)) {
+         logger.debug("Update booking on Bright");
+         List<HKAPIForeignBookingResponseInfo> infos = orderService.updateBookedInventoryOnBright(lineItem);
+         List<ForeignSkuItemCLI> ForeignSkuItemCLIs = skuItemLineItemService.updateSkuItemForABJit(infos);
+         skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem);
 
+       }
      }
    }
 

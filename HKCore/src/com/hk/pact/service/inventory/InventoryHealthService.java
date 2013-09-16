@@ -33,7 +33,7 @@ public interface InventoryHealthService {
 
   public Boolean bookInventory(CartLineItem cartLineItem);
 
-  public Map<String,Long> getInventoryCountOfAB (CartLineItem cartLineItem);
+  public Map<String,Long> getInventoryCountOfAB (CartLineItem cartLineItem, Warehouse targetWarehouse);
 
   public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem,Long warehouseId);
 

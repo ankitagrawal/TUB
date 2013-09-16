@@ -237,7 +237,6 @@ public class InventoryServiceImpl implements InventoryService {
 
   public void bookInventory(CartLineItem cartLineItem) {
     inventoryHealthService.bookInventory(cartLineItem);
-
   }
 
 

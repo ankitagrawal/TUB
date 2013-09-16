@@ -409,7 +409,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
 
-	public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
+	public boolean updateWarehouseForShippingOrderAB(ShippingOrder shippingOrder, Warehouse warehouse) {
 		Set<LineItem> lineItems = shippingOrder.getLineItems();
 		boolean shouldUpdate = true;
 
@@ -446,8 +446,39 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		return shouldUpdate;
 	}
 
+  public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
+    Set<LineItem> lineItems = shippingOrder.getLineItems();
+    boolean shouldUpdate = true;
+    try {
+      for (LineItem lineItem : lineItems) {
+        Map<String,Long>  invMap = inventoryHealthService.getInventoryCountOfAB(lineItem.getCartLineItem(),warehouse);
+        if(!(invMap.get("aquaInventory") >= lineItem.getQty() || invMap.get("brtInventory") >= lineItem.getQty())){
+          return  false;
+        }
+      }
+      shouldUpdate = skuItemLineItemService.isWarehouseBeFlippable(shippingOrder, warehouse);
+      logger.debug("isWarehouseBeFlippable = " + shouldUpdate);
+      if (shouldUpdate) {
+        shippingOrder.setWarehouse(warehouse);
+        shipmentService.recreateShipment(shippingOrder);
+        shippingOrder = getShippingOrderService().save(shippingOrder);
+        if (shippingOrder.getShippingOrderStatus().equals(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()) && shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
+          adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_WAREHOUSE_FLIPPED);
+        }
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+          inventoryHealthService.inventoryHealthCheck(lineItem.getSku().getProductVariant());
+        }
+      }
 
-	public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse) {
+    } catch (NoSkuException noSku) {
+      shouldUpdate = false;
+    }
+    return shouldUpdate;
+  }
+
+
+  public ShippingOrder createSOforManualSplit(Set<CartLineItem> cartLineItems, Warehouse warehouse) {
 
 		if (cartLineItems != null && !cartLineItems.isEmpty() && warehouse != null) {
 			Order baseOrder = cartLineItems.iterator().next().getOrder();
@@ -487,7 +518,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
 			//Validate SO for SkuItem booking
       // todo : validate method need to be change for AB : ERP44
-			shippingOrderService.validateShippingOrder(shippingOrder);
+      for(LineItem lineItem : shippingOrder.getLineItems()) {
+        skuItemLineItemService.freeBookingItem( lineItem.getCartLineItem().getId());
+      }
+			shippingOrderService.validateShippingOrderAB(shippingOrder);
 
 			return shippingOrder;
 		}

@@ -8,6 +8,7 @@ import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
@@ -219,7 +220,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
   @Override
-  public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
+  public boolean isWarehouseBeFlippableAB(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
     boolean itemsWasBookedAtAqua = true;
     for (LineItem lineItem : shippingOrder.getLineItems()) {
       Sku sku = getSkuService().getSKU(lineItem.getSku().getProductVariant(), targetWarehouse);
@@ -249,6 +250,36 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
       }
     }
+    return true;
+  }
+
+  @Override
+  public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
+    SkuItemLineItemService skuItemLineItemService = ServiceLocatorFactory.getService(SkuItemLineItemService.class);
+
+    List<Warehouse> warehouses = warehouseService.findWarehouses(targetWarehouse.getTinPrefix());
+    warehouses.remove(targetWarehouse);
+    Long warehouseIdForBright = warehouses.get(0).getId();
+    for (LineItem lineItem : shippingOrder.getLineItems()) {
+
+      CartLineItem cartLineItem = lineItem.getCartLineItem();
+      Product product = cartLineItem.getProductVariant().getProduct();
+
+      boolean productType = (product.isJit() || product.isDropShipping() || product.isService());
+      skuItemLineItemService.freeBookingItem(cartLineItem.getId());
+      Map<String, Long> invMap = inventoryHealthService.getInventoryCountOfAB(lineItem.getCartLineItem(), targetWarehouse);
+      if (invMap.get("aquaInventory") >= lineItem.getQty()) {
+        inventoryHealthService.tempBookAquaInventory(cartLineItem, targetWarehouse.getId());
+        createNewSkuItemLineItem(lineItem);
+
+      } else if (invMap.get("brtInventory") >= lineItem.getQty()) {
+        inventoryHealthService.createSicliAndSiliAndTempBookingForBright(lineItem.getCartLineItem(), warehouseIdForBright);
+
+      } else if (!productType) {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -537,7 +568,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     warehouses.remove(aquaWarehouse);
     Long wareHouseIdForBright = warehouses.get(0).getId();
 
-    Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(cartLineItem);
+    Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(cartLineItem, null);
     Long aquaInventoryCount = invMap.get("aquaInventory");
     Long brtInventoryCount = invMap.get("brtInventory");
 
@@ -612,7 +643,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     skuItemStatus.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
     skuItemStatus.add(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus());
 
-    Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(cartLineItem);
+    Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(cartLineItem,null);
     Long aquaInventoryCount = invMap.get("aquaInventory");
     if (aquaInventoryCount >= cartLineItem.getQty()) {
       logger.debug("Aqua inventory count in swapping For Bright Booking for cartlineItem Id  : " + cartLineItem.getId() + " for variant :" + cartLineItem.getProductVariant().getId() + " is " + aquaInventoryCount + "for Marked price : " + item.getMarkedPrice());
