@@ -45,7 +45,7 @@ public class FreeMarkerService {
    */
   public Template getCampaignTemplate(String templatePath) {
     if(isHybridRelease()){
-        String ftlName = templatePath.split(".")[0];
+        String ftlName = templatePath.split("\\.")[0];
         templatePath = ftlName + "Beta" + ".ftl";
     }
     Template template = null;
