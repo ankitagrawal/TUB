@@ -5,7 +5,8 @@ public class EmailTemplateConstants {
 	public static final String orderConfirmUserEmail = "/orderConfirmUserEmailNew.ftl";
 	public static final String orderConfirmUserEmailOld = "/orderConfirmUserEmail.ftl";
 	public static final String orderPlacedPaymentPendingEmail = "/orderPlacedPaymentPendingEmail.ftl";
-	public static final String welcomeEmail = "/welcomeEmailNewBetaNew.ftl";
+	public static final String welcomeEmail = "/welcomeEmailNew.ftl";
+	public static final String welcomeEmailBeta = "/welcomeEmailNewBetaNew.ftl";
 	public static final String welcomeEmailOld = "/welcomeEmail.ftl";
 	public static final String accountActivationEmail = "/accountActivationEmail.ftl";
 	public static final String passwordResetEmail = "/passwordResetEmailBeta.ftl";

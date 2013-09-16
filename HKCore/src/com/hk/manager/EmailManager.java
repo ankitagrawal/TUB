@@ -447,7 +447,7 @@ public class EmailManager {
         valuesMap.put("activationLink", activationLink);
         valuesMap.put("hkLogo",hkLogo);
 
-        Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.welcomeEmail);
+        Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.welcomeEmailBeta);
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
     }
 
