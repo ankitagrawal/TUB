@@ -49,9 +49,10 @@ public class HybridNotifyMeResource {
         }
         notifyUserDetails.setSubscribedForNotify(user.isSubscribedForNotify());
         if(!user.isSubscribedForNotify()){
-          notifyUserDetails.setException(true);
+          notifyUserDetails.setException(false);
           notifyUserDetails.setAccountLink("http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=");
-          notifyUserDetails.addMessage("You Have Unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
+          notifyUserDetails.addMessage("You Have Unsubscribed for all emails");
+          notifyUserDetails.setSubscribedForNotify(false);
         }
       }else{
         notifyUserDetails.addMessage("User Doesn't Exist");
@@ -67,7 +68,7 @@ public class HybridNotifyMeResource {
     User user = getUserService().findByLogin(updateNotifyMeDetails.getEmail());
     if (user != null) {
       if (!(user.isSubscribedForNotify())) {
-        messages.add("You have Unsubscribed for all emails, Please go to 'My Account' to Subscribe again");
+        messages.add("You have Unsubscribed for all emails");
         return new JSONResponseBuilder().addField("exception",false).addField("msgs",messages).addField("success",false).addField("accntLnk","http://healthkart.com/core/user/MyAccount.action?subscribeForEmails=").build();
       }
     } else {
