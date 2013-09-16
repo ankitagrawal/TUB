@@ -346,6 +346,13 @@
   $(document).ready(function() {
 
     $('.addToCartButton').click(function(e) {
+
+        $.ajax({
+            dataType: "json",
+            url: "/core/cart/AddToCart.action",
+            data: data,
+            success: success
+        });
       var check = 0;
       $('.lineItemCheckBox').each(function() {
         if ($(this).attr("checked") == "checked") {
@@ -359,8 +366,8 @@
       else {
         show_message();
         //e.stopPropagation();
-          $('.cart-pop-container').show();
-          $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
+//          $('.cart-pop-container').show();
+//          $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
       }
     });
 
@@ -415,9 +422,20 @@
             this.disabled = true;
           }
         });
-        $('.message .line1').html("<strong>" + res.data.addedProducts + "</strong> has been added to your shopping cart");
-        $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
-        //        $('.progressLoader').hide();
+
+        var ele = $('#cartPop');
+        var txt = ele.find('.body .msg');
+        txt.html('');
+        txt.append('<div class="fnt-bold">Recent</div>');
+        txt.append('<div class="brdr-b-sd pad-b-5"><strong>' + res.data.addedProducts + '</strong> has been added to your shopping cart </div>');
+        txt.append('<div class="fnt-bold mrgn-t-5">Cart Summary</div>');
+        txt.append('<div>' + res.data.itemsInCart + ' item(s) </div>');
+        txt.append('<a href="/core/cart/Cart.action" class="btn btn-blue mrgn-bt-10" style="display:inline-block">Proceed to Cart</a>');
+        $('[data-role=cart-counter]').text(res.data.itemsInCart);
+        $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
+        $('html,body').animate({scrollTop: 0}, 300);
+
+          //        $('.progressLoader').hide();
       } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
         $('#cart_error1').html(getErrorHtmlFromJsonResponse(res))
             .slowFade(3000, 2000);

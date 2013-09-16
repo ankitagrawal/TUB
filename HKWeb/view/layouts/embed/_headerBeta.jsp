@@ -131,6 +131,7 @@
                        padding: 8px;
                        text-align: center
                    }
+
                    .popUp .bdySctn {
                        background-color: #FFF;
                        min-height: 50px;
@@ -253,7 +254,6 @@
                                <div class=msg>
                                    <div class="fnt-bold mrgn-t-5">Cart Summary</div>
                                    <div>${cartAction.itemsInCart} item</div>
-
                                    <s:link beanclass="com.hk.web.action.core.cart.CartAction" class="btn btn-blue mrgn-bt-10" style="display:inline-block">PROCEED TO CART</s:link>
                                </div>
                            </div>
