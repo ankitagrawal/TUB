@@ -253,7 +253,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     if (grnLineItem != null && qty > 0) {
       grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
       getBaseDao().save(grnLineItem);
-    } else if (qty > 0) {
+    } 
+    if (qty > 0) {
       InventoryHealthService inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
       inventoryHealthService.pendingOrdersInventoryHealthCheck(sku.getProductVariant());
     }
