@@ -281,7 +281,7 @@
 --/sports/fab-corner/league-of-innovations
 --/sports/fab-corner/new-arrivals
 --/sports/fab-corner/footwear-clearance
---/sports/fab-corner/flat-50-off : Flat-50-off
+--/sports/fab-corner/flat-50-off
 
 /diabetes
 -/diabetes/devices : Monitoring Devices
