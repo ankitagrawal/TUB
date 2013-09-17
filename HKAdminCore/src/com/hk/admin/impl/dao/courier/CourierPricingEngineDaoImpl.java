@@ -32,11 +32,12 @@ import java.util.List;
 @Repository
 public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierPricingEngineDao {
 
-  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse){
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse,
+                                                    Date shipmentDate){
     DetachedCriteria criteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     criteria.add(Restrictions.eq("courier", courier));
     criteria.add(Restrictions.eq("regionType", regionType));
-    criteria = this.addValidityCriteria(criteria);
+    criteria = this.addValidityCriteria(criteria, shipmentDate);
     List<CourierPricingEngine> engineList = this.findByCriteria(criteria);
     if (engineList != null && !engineList.isEmpty()) return engineList.get(0);
 
@@ -52,7 +53,7 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     return null;
   }
 
-  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub) {
+  public List<HKReachPricingEngine> getHkReachPricingEngineList(Warehouse warehouse, Hub hub, Date validFromDate) {
     DetachedCriteria criteria = DetachedCriteria.forClass(HKReachPricingEngine.class);
     if (warehouse != null) {
       criteria.add(Restrictions.eq("warehouse", warehouse));
@@ -60,6 +61,11 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
     if (hub != null) {
       criteria.add(Restrictions.eq("hub", hub));
     }
+    if (validFromDate!=null) {
+      criteria.add(Restrictions.le("validFrom",validFromDate));
+    }
+    criteria.addOrder(Order.desc("validFrom"));
+
     List<HKReachPricingEngine> result = this.findByCriteria(criteria);
     if (result!=null && !result.isEmpty()) {
       return result;
@@ -69,8 +75,8 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
   }
 
   @Override
-  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub) {
-    List<HKReachPricingEngine> hkReachPricingEngines = getHkReachPricingEngineList(warehouse, hub);
+  public HKReachPricingEngine getHkReachPricingEngine(Warehouse warehouse, Hub hub, Date validFrom) {
+    List<HKReachPricingEngine> hkReachPricingEngines = getHkReachPricingEngineList(warehouse, hub, validFrom);
     return hkReachPricingEngines != null && !hkReachPricingEngines.isEmpty() ? hkReachPricingEngines.get(0) : null;
   }
 
@@ -78,11 +84,15 @@ public class CourierPricingEngineDaoImpl extends BaseDaoImpl implements CourierP
   public List<CourierPricingEngine> getCourierPricingInfoByCourier(Courier courier) {
     DetachedCriteria courierPricingEngineCriteria = DetachedCriteria.forClass(CourierPricingEngine.class);
     courierPricingEngineCriteria.add(Restrictions.eq("courier", courier));
+    courierPricingEngineCriteria.addOrder(Order.desc("validUpto"));
     return findByCriteria(courierPricingEngineCriteria);
   }
 
-  private DetachedCriteria addValidityCriteria(DetachedCriteria criteria) {
+  private DetachedCriteria addValidityCriteria(DetachedCriteria criteria, Date shipmentDate) {
     Calendar cal = Calendar.getInstance();
+    if (shipmentDate!= null ) {
+      cal.setTime(shipmentDate);
+    }
     cal.add(Calendar.DAY_OF_YEAR,-1);
     criteria.add(Restrictions.gt("validUpto", cal.getTime()));
     criteria.addOrder(Order.asc("validUpto"));

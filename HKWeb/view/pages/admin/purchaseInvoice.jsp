@@ -545,7 +545,7 @@ width: 80px;
 		<td>Tax:</td>
 		<td>
 			<c:choose>
-				<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+				<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 					<label class="state"><strong>NON-CST</strong></label>
 				</c:when>
 				<c:otherwise>
@@ -858,7 +858,7 @@ width: 80px;
 		<th>UPC</th>
 		<th>Details</th>
 		<c:choose>
-			<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+			<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 				<th>Tax<br/>Category</th>
 			</c:when>
 			<c:otherwise>

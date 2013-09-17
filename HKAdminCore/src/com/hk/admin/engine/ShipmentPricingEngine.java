@@ -59,8 +59,7 @@ public class ShipmentPricingEngine {
     Double weight = shipment.getBoxWeight() * 1000;
     EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
     // weight remains as physical weight if HK delivery or courier with physical weight restriction
-    if(!EnumCourier.HK_Delivery.getId().equals(courier.getId())
-        || !(courier.getOperationsBitset() % EnumCourierOperations.PHYSICAL_WT_PREFERRED.getId() == 0)){
+    if(courier.getOperationsBitset() % EnumCourierOperations.PHYSICAL_WT_PREFERRED.getId() != 0){
       if (enumBoxSize != null) {
         if (enumBoxSize.getVolumetricWeight() > weight) {
           weight = enumBoxSize.getVolumetricWeight();
@@ -72,13 +71,17 @@ public class ShipmentPricingEngine {
     Warehouse srcWarehouse = shippingOrder.getWarehouse();
     if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
       if (pincodeObj.getNearestHub() != null) {
-        HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse, pincodeObj.getNearestHub());
+        HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse,
+                                                                    pincodeObj.getNearestHub(), shipment.getShipDate());
         if(hkReachPricingEngine != null){
           return calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
         }
+      } else {
+        return -1.0D;
       }
     } else {
-      CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+      CourierPricingEngine courierPricingInfo =
+          courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse, shipment.getShipDate());
       if (courierPricingInfo != null) {
         return calculateShipmentCost(courierPricingInfo, weight);
       } else {
@@ -140,7 +143,8 @@ public class ShipmentPricingEngine {
             if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
                 return 0D;
             } else {
-                CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse);
+                CourierPricingEngine courierPricingInfo =
+                    courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, srcWarehouse,shipment.getShipDate());
                 if (courierPricingInfo == null) {
                     return null;
                 }
