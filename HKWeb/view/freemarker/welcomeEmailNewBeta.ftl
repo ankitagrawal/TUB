@@ -39,7 +39,7 @@ Hi ${user.name}, welcome to HealthKart.com
     </tr>
 
     <tr>
-        <td style="padding-top:15px;" align="left" width="579" valign="top"><a href="${activationLink}"><img
+        <td style="padding-top:15px;" align="left" colspan="2" valign="top"><a href="${activationLink}"><img
                 src="http://img.healthkart.com/email/welcome_emailer_new/images/activate_btn.jpg"
                 alt="Activate Account" title="Activate Account" width="139" height="26" border="0"/></td>
     </tr>
