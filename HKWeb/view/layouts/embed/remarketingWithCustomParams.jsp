@@ -79,6 +79,7 @@
 
   <c:if test="${hk:equalsIgnoreCase(primaryCategory, 'sports-nutrition') || hk:equalsIgnoreCase(primaryCategory, 'health-nutrition')}">
     <%-- Nutrition account new remarketing tag --%>
+    <span>kanikani</span>
     <s:layout-render name="/layouts/embed/_remarketingCodeAdwords.jsp" id="980691662"/>
   </c:if>
 
@@ -116,27 +117,27 @@
   <%-- DYPLA / dynamic remarketing account new remarketing tag --%>
   <s:layout-render name="/layouts/embed/_remarketingCodeAdwords.jsp" id="988370835"/>
   <%-- Brand account new remarketing tag --%>
-  <s:layout-render name="/layouts/embed/_remarketingCodeAdwords.jsp" id="1018305592"/>
+  <%--<s:layout-render name="/layouts/embed/_remarketingCodeAdwords.jsp" id="1018305592"/>--%>
   <%-- aqua bright hk common new remarketing tag --%>
   <s:layout-render name="/layouts/embed/_remarketingCodeAdwords.jsp" id="981492453"/>
 
   <%-- Script for Facebook Retargeting --%>
-	<script type="text/javascript">
-	adroll_adv_id = "SKDGP6YYENHVJCJDIKHUF7";
-	adroll_pix_id = "JLZMDLGRYBFDFHEIKFE456";
-	(function () {
-	var oldonload = window.onload;
-	window.onload = function(){
-	   __adroll_loaded=true;
-	   var scr = document.createElement("script");
-	   var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
-	   scr.setAttribute('async', 'true');
-	   scr.type = "text/javascript";
-	   scr.src = host + "/j/roundtrip.js";
-	   ((document.getElementsByTagName('head') || [null])[0] ||
-	    document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
-	   if(oldonload){oldonload()}};
-	}());
-	</script>
+	<%--<script type="text/javascript">--%>
+	<%--adroll_adv_id = "SKDGP6YYENHVJCJDIKHUF7";--%>
+	<%--adroll_pix_id = "JLZMDLGRYBFDFHEIKFE456";--%>
+	<%--(function () {--%>
+	<%--var oldonload = window.onload;--%>
+	<%--window.onload = function(){--%>
+	   <%--__adroll_loaded=true;--%>
+	   <%--var scr = document.createElement("script");--%>
+	   <%--var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");--%>
+	   <%--scr.setAttribute('async', 'true');--%>
+	   <%--scr.type = "text/javascript";--%>
+	   <%--scr.src = host + "/j/roundtrip.js";--%>
+	   <%--((document.getElementsByTagName('head') || [null])[0] ||--%>
+	    <%--document.getElementsByTagName('script')[0].parentNode).appendChild(scr);--%>
+	   <%--if(oldonload){oldonload()}};--%>
+	<%--}());--%>
+	<%--</script>--%>
 
 </s:layout-definition>
