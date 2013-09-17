@@ -11,6 +11,23 @@
 <c:set var="shippingOrderStatus_cancelled" value="<%=EnumShippingOrderStatus.SO_Cancelled.getId()%>"/>
 
 <s:layout-render name="/layouts/defaultBeta.jsp">
+
+    <s:layout-component name="centralContent">
+        <%--breadcrumbs begins--%>
+        <div class="hk-breadcrumb-cntnr mrgn-bt-10">
+                <span>
+                   <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
+                </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">
+                <s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">Orders</s:link>
+            </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">Order Details</span>
+        </div>
+        <%--breadcrumbs ends--%>
+    </s:layout-component>
+
   <s:layout-component name="heading">Order Details</s:layout-component>
   <s:layout-component name="left_col">
     <div id="error"></div>

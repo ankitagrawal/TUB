@@ -5,6 +5,22 @@
 <s:layout-render name="/layouts/defaultBeta.jsp">
   <s:layout-component name="heading">My Account</s:layout-component>
 
+    <s:layout-component name="centralContent">
+        <%--breadcrumbs begins--%>
+        <div class="hk-breadcrumb-cntnr mrgn-bt-10">
+                <span>
+                   <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
+                </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">
+                <s:link beanclass="com.hk.web.action.core.user.MyAccountAction">Account</s:link>
+            </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">Edit Password</span>
+        </div>
+        <%--breadcrumbs ends--%>
+    </s:layout-component>
+
   <s:layout-component name="lhsContent">
     <jsp:include page="myaccount-navBeta.jsp"/>
   </s:layout-component>

@@ -100,6 +100,14 @@
         return false;
       }
     });
+
+      $('.remove-error').click(function () {
+          $(this).parent('.err-cntnr').remove();
+      });
+      $('.remove-success').click(function () {
+          $(this).parent('.alert-cntnr').remove();
+      });
+
   });
 </script>
 <style type="text/css">

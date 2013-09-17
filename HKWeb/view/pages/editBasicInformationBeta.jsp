@@ -11,6 +11,23 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
   </s:layout-component>
+
+    <s:layout-component name="centralContent">
+        <%--breadcrumbs begins--%>
+        <div class="hk-breadcrumb-cntnr mrgn-bt-10">
+                <span>
+                   <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
+                </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">
+                <s:link beanclass="com.hk.web.action.core.user.MyAccountAction">Account</s:link>
+            </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">Edit Basic Information</span>
+        </div>
+        <%--breadcrumbs ends--%>
+    </s:layout-component>
+
   <s:layout-component name="lhsContent">
     <jsp:include page="myaccount-navBeta.jsp"/>
   </s:layout-component>
