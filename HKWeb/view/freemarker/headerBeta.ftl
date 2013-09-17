@@ -11,4 +11,4 @@
         e-health store!</a></th>
 
 </tr>
-<tr>
+</thead>
