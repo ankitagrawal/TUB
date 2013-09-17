@@ -240,9 +240,17 @@
             this.disabled = true;
           }
         });
-        $('.message .line1').html("<strong>" + res.data.addedProducts + "</strong> has been added to your shopping cart");
-        $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
-        $('.progressLoader').hide();
+
+          var ele = $('#cartPop');
+          var txt = ele.find('.body .msg');
+          txt.html('');
+          txt.append('<div class="fnt-bold mrgn-t-5">Cart Summary</div>');
+          txt.append('<div>' + res.data.itemsInCart + ' item </div>');
+          txt.append('<a href="/core/cart/Cart.action" class="btn btn-blue mrgn-bt-10" style="display:inline-block">Proceed to Cart</a>');
+          $('[data-role=cart-counter]').text(res.data.itemsInCart);
+          $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
+          $('html,body').animate({scrollTop: 0}, 300);
+
       } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
         alert(res.data);
       }

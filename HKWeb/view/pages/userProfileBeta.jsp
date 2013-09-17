@@ -290,7 +290,7 @@
                     </c:if>
                     <td>
                         ${order.gatewayOrderId}
-                      <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
+                      <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank" class="txt-blue">
                         <s:param name="order" value="${order}"/>
                         (View Order)
                       </s:link>
@@ -313,7 +313,7 @@
                         </c:when>
                         <c:otherwise>
                           <%--<p>--%>
-                          <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
+                          <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank" class="txt-blue">
                             <s:param name="order" value="${order.id}"/>
                             R-${order.id}
                           </s:link>
@@ -323,7 +323,7 @@
                     </td>
                     <td>
                         ${order.orderStatus.name}
-                      <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" target="_blank">
+                      <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" target="_blank" class="txt-blue">
                         <s:param name="order" value="${order.id}"/>
                         (View Order Details)
                       </s:link>
@@ -346,13 +346,6 @@
   $(document).ready(function() {
 
     $('.addToCartButton').click(function(e) {
-
-        $.ajax({
-            dataType: "json",
-            url: "/core/cart/AddToCart.action",
-            data: data,
-            success: success
-        });
       var check = 0;
       $('.lineItemCheckBox').each(function() {
         if ($(this).attr("checked") == "checked") {
@@ -365,7 +358,7 @@
       }
       else {
         show_message();
-        //e.stopPropagation();
+        e.stopPropagation();
 //          $('.cart-pop-container').show();
 //          $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
       }
@@ -426,10 +419,8 @@
         var ele = $('#cartPop');
         var txt = ele.find('.body .msg');
         txt.html('');
-        txt.append('<div class="fnt-bold">Recent</div>');
-        txt.append('<div class="brdr-b-sd pad-b-5"><strong>' + res.data.addedProducts + '</strong> has been added to your shopping cart </div>');
         txt.append('<div class="fnt-bold mrgn-t-5">Cart Summary</div>');
-        txt.append('<div>' + res.data.itemsInCart + ' item(s) </div>');
+        txt.append('<div>' + res.data.itemsInCart + ' item </div>');
         txt.append('<a href="/core/cart/Cart.action" class="btn btn-blue mrgn-bt-10" style="display:inline-block">Proceed to Cart</a>');
         $('[data-role=cart-counter]').text(res.data.itemsInCart);
         $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();

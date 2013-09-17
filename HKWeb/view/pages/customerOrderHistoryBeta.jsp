@@ -51,7 +51,7 @@
                         </c:if>
                                 <td>
                                     <c:if test="${!empty (order.gatewayOrderId)}">
-                                        <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
+                                        <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank" class="txt-blue">
                                             <s:param name="order" value="${order}"/>
                                             ${order.gatewayOrderId}
                                         </s:link>
@@ -65,14 +65,14 @@
                                     <c:choose>
                                         <c:when test="${!empty shippingOrders}">
                                             <c:forEach items="${shippingOrders}" var="shippingOrder">
-                                                <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank">
+                                                <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank" class="txt-blue">
                                                     <s:param name="shippingOrder" value="${shippingOrder.id}"/>
                                                     R-${shippingOrder.id}
                                                 </s:link>
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
-                                            <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
+                                            <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank" class="txt-blue">
                                                 <s:param name="order" value="${order.id}"/>
                                                 R-${order.id}
                                             </s:link>
@@ -81,7 +81,7 @@
                                 </td>
                                 <td>
                                         ${order.orderStatus.name}
-                                    <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" target="_blank">
+                                    <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" target="_blank" class="txt-blue">
                                         <s:param name="order" value="${order}"/>
                                         (View Details)
                                     </s:link>

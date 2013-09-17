@@ -194,7 +194,11 @@
     <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="productLineItem">
         <tr>
             <td>
-                <p>${productLineItem.productVariant.product.name}</p>
+                <p>
+                    <c:if test="${empty productLineItem.productVariant.variantName}">
+                        ${productLineItem.productVariant.product.name}
+                    </c:if>
+                </p>
 
                 <p>${productLineItem.productVariant.variantName}</p>
                 <em>

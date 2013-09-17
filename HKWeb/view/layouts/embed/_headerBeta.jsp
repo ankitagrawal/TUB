@@ -285,6 +285,7 @@
 
       $(document).click(function(){
         $('.cart-pop-container').removeClass('cart-pop-container-hover');
+        $('#cartPop').hide();
       });
   </script>
 </s:layout-definition>
