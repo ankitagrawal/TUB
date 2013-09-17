@@ -28,11 +28,11 @@ Activate your HealthKart.com account
     <tr>
         <td colspan="2" style="margin-bottom:1em">${activationLink}</td>
     </tr>
-
+    <br>
     <tr>
         <td colspan="2" style="margin-bottom:1em">Happy Shopping!</td>
     </tr>
-    <br>
+
     <tr>
         <td colspan="2" style="padding-bottom:10px; margin-bottom:1em"><strong>HealthKart.com</strong></td>
     </tr>
