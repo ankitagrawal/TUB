@@ -5,11 +5,13 @@ import com.hk.admin.dto.inventory.DebitNoteLineItemDto;
 import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.admin.pact.service.accounting.DebitNoteService;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
+import com.hk.admin.pact.service.accounting.SupplierTransactionService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.core.TaxConstants;
 import com.hk.constants.inventory.EnumDebitNoteStatus;
 import com.hk.constants.inventory.EnumDebitNoteType;
+import com.hk.constants.inventory.EnumSupplierTransactionType;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -35,6 +37,9 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 
 	@Autowired
 	SeekInvoiceNumService seekInvoiceNumService;
+
+    @Autowired
+    SupplierTransactionService supplierTransactionService;
 
 	public DebitNoteDto generateDebitNoteDto(DebitNote debitNote) {
 		DebitNoteDto debitNoteDto = new DebitNoteDto();
@@ -191,16 +196,18 @@ public class DebitNoteServiceImpl implements DebitNoteService {
 
 	}
 
-	@Override
-	public DebitNote save(DebitNote debitNote) {
-		String invoiceNumType = InvoiceNumHelper.PREFIX_FOR_DEBIT_NOTE;
-		if (debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId()) && debitNote.getDebitNoteNumber() == null) {
-			debitNote.setDebitNoteNumber(seekInvoiceNumService.getInvoiceNum(invoiceNumType, debitNote.getWarehouse()));
-		}
-		return (DebitNote) getDebitNoteDao().save(debitNote);
-	}
+    @Override
+    public DebitNote save(DebitNote debitNote) {
+        String invoiceNumType = InvoiceNumHelper.PREFIX_FOR_DEBIT_NOTE;
+        if (debitNote.getDebitNoteStatus().getId().equals(EnumDebitNoteStatus.CLosed.getId()) && debitNote.getDebitNoteNumber() == null) {
+            debitNote.setDebitNoteNumber(seekInvoiceNumService.getInvoiceNum(invoiceNumType, debitNote.getWarehouse()));
+            supplierTransactionService.createSupplierTransaction(debitNote.getSupplier(), EnumSupplierTransactionType.PurchaseReturn.asSupplierTransactionType(),
+                    debitNote.getFinalDebitAmount(), debitNote.getCloseDate(), debitNote);
+        }
+        return (DebitNote)getDebitNoteDao().save(debitNote);
+    }
 
-	@Override
+ 	@Override
 	public DebitNote save(DebitNote debitNote, List<DebitNoteLineItem> debitNoteLineItems) {
 		for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
 			if (debitNoteLineItem.getDebitNote() == null) {

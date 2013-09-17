@@ -409,6 +409,17 @@
 				Recommended Products &darr;
 			</a>
 		</c:if>
+
+        <c:set var="freebie" value="${hk:showFreebie(product)}"/>
+        <c:if test="${freebie != null}">
+            <div class="freebie-cntnr">
+
+                <h6 >Offer Available</h6>
+                <div>
+                        ${freebie.name} FREE with selected variants of this product. Offer valid till stocks last.
+                </div>
+            </div>
+        </c:if>
 <%--
         <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
             <div id="tryOnLink" class="content">

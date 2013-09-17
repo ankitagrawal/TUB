@@ -272,6 +272,7 @@
 --/sports/footwear/cricket-shoes
 --/sports/footwear/jogging-shoes
 --/sports/footwear/table-tennis-shoes
+--/sports/footwear/slippers
 --/sports/footwear/kids-shoes
 --/sports/footwear/other-shoes
 --/sports/footwear/accessories
@@ -279,6 +280,9 @@
 --/sports/fab-corner/win-win-deals
 --/sports/fab-corner/league-of-innovations
 --/sports/fab-corner/new-arrivals
+--/sports/fab-corner/footwear-clearance
+--/sports/fab-corner/flat-50%-off
+
 /diabetes
 -/diabetes/devices : Monitoring Devices
 --/diabetes/devices/meters : Glucose Meters

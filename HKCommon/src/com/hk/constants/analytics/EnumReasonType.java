@@ -14,8 +14,10 @@ public enum  EnumReasonType {
     AwbChange(60L, "Awb Change Reason"),
     So_Cancelled(410L,"SO  Cancelled"),
     Reverse_Pickup_Customer(420L,"Customer Reason For Reverse Pickup"),
-    Reverse_Pickup_Warehouse(420L,"Warehouse QA For Reverse pickup"),
     Reconciliation(430L,"Reconciliation"),
+    Reverse_Pickup_Warehouse(440L,"Warehouse QA For Reverse pickup"),
+    SO_NOT_CANCELLED(450L,"SO Could not be cancelled automatically."),
+    REFUND(460L,"Refund initiated manually")
     ;
 
     private String name;

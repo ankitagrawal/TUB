@@ -12,14 +12,20 @@
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="java.util.List" %>
+<%@ page import="org.joda.time.DateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="java.util.Date" %>
 <%@ include file="/layouts/_userData.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CategoryAction" var="categoryBean" event="pre"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
-
+<%
+    DateTime dateTime = new DateTime();
+    Date startOfOfferDate = new Date(new DateTime(2013, 9, 9, 00, 00, 00, 00).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 9, 14, 23, 59, 59, 00).getMillis());
+%>
 <c:if test="${categoryBean.category.name == 'services'}">
     <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
     <%
@@ -191,34 +197,32 @@
                                     <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
                                          alt="DIET_PLAN" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/health-nutrition/Nature%27s+Herbs">
-                    <img src="${pageContext.request.contextPath}/images/banners/nature's-herb-static-banner.jpg"
+                <a href="${pageContext.request.contextPath}/pages/offers/top-nutrition-brands/top-nut-brands.jsp">
+                    <img src="${pageContext.request.contextPath}/images/banners/finalHNbanner.jpg"
                          alt="Vitamin Shoppe"
                          class="small_banner"/>
                 </a>
                 <script type="text/javascript">
-                                 $(".dietPlan").live('click', function () {
-                                     $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
-                                     $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
-                                     $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
-                                 });
-                             </script>
+                    $(".dietPlan").live('click', function () {
+                        $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+                        $('#bulkOrderModal').jqm({trigger: '.dietPlan'});
+                        $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/forms/d/1phY4o8X4jlgx3Td5ijRgV5CYhcMFdqJqaoMdndVrCZ4/viewform#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+                    });
+                </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq homeLiving}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/home-living?camp=jan">
-                    <img src="<hk:vhostImage/>/images/banners/static-banner-HL-(janmashathmi).jpg"
-                         alt="Brand of the Week"
-                         class="small_banner"/>
-                </a>
-            </c:when>
-            <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/personal-care/misc/mosquito-repellents">
-                <img src="<hk:vhostImage/>/images/banners/mosquito-repellents.jpg" alt="14 Days Return Policy"
+                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
                      class="small_banner"/>
+            </c:when>
+
+            <c:when test="${categoryBean.category.name eq personalCare}">
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
                     <img src="<hk:vhostImage/>/images/banners/Self-Defense1.jpg" alt="Sexual-wellness`"
@@ -226,8 +230,8 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthDevices}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="self-defence"
+                <a href="${pageContext.request.contextPath}/brand/health-devices/Ginni?camp=ginni">
+                    <img src="<hk:vhostImage/>/images/banners/ginni-banner.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
@@ -235,15 +239,16 @@
                          class="small_banner"/>
                 </a>
             </c:when>
+
             <c:when test="${categoryBean.category.name eq eye}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-
-                    <img src="<hk:vhostImage/>/images/banners/static-banner.jpg" alt="eye"
+                <a href="${pageContext.request.contextPath}/brand/eye/Scott">
+                    <img src="<hk:vhostImage/>/images/banners/scott.jpg" alt="eye"
                          class="small_banner"/>
-
+                </a>
             </c:when>
 
             <c:when test="${categoryBean.category.name eq parenting}">
@@ -251,33 +256,46 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/parenting/Farlin">
-                    <img src="<hk:vhostImage/>/images/banners/farlin.jpg" alt="eye"
-                         class="small_banner"/>
-                </a>
-            </c:when>
-            <c:when test="${categoryBean.category.name eq beauty}">
-                    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                        <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
-                             class="small_banner"/>
-                    </a>
-                <a href="${pageContext.request.contextPath}/brand/beauty/NYX">
-                    <img src="<hk:vhostImage/>/images/banners/brand-of-the-week-beauty.jpg" alt="beauty"
-                         class="small_banner"/>
-                </a>
+                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+                                     class="small_banner"/>
             </c:when>
 
+            <c:when test="${categoryBean.category.name eq beauty}">
+                <%
+                    if (dateTime.isAfter(startOfOfferDate.getTime()) && dateTime.isBefore(endOfOfferDate.getTime())) {
+                %>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <a href="${pageContext.request.contextPath}/brand/beauty/Rare+T">
+                    <img src="<hk:vhostImage/>/images/banners/Rare%20T-%20Main%20Banner.jpg" alt="beauty"
+                         class="small_banner"/>
+                </a>
+                <%
+                } else { %>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <a href="${pageContext.request.contextPath}/brand/beauty/Nurture">
+                    <img src="<hk:vhostImage/>/images/banners/Nurture--whole-range.jpg" alt="beauty"
+                         class="small_banner"/>
+                </a>
+                <%
+                    }
+                %>
+            </c:when>
             <c:when test="${categoryBean.category.name eq diabetes}">
                 <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
                     <img src="<hk:vhostImage/>/images/banners/Contour-super-saver-pack.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/diabetes/Accu-Chek">
-                    <img src="<hk:vhostImage/>/images/banners/Accu-chek1.jpg" alt="diabetes"
+                <a href="${pageContext.request.contextPath}/product/quanto-diab/HNUT46?camp=qunat">
+                    <img src="<hk:vhostImage/>/images/banners/quanto-diab.jpg" alt="diabetes"
                          class="small_banner"/>
                 </a>
             </c:when>
-
             <c:otherwise>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"

@@ -39,7 +39,12 @@ public enum EnumInvTxnType {
     RV_ADD_FREE_VARIANT_RECONCILE(240L, "Inventory Checkin for Free Variant-RV Add"),
     RV_ADD_BATCH_MISMATCH(250L, "Inventory Checkin for Batch Mismatch-RV Add"),
     RV_ADD_EXPIRED_AUTOMATIC_DELETION(260L, "RV Add automatic deletion for Expired"),
-    REVERSE_PICKUP_INVENTORY_CHECKIN(270L, "Reverse Pickup Inventory CheckIn");
+    REVERSE_PICKUP_INVENTORY_CHECKIN(270L, "Reverse Pickup Inventory CheckIn"),
+    RV_SUBTRACT_DAMAGE_LOGISTICS(280L, "RV Subtract Damage Logistics"),
+    RV_ADD_VENDOR_REPLACEMENT(290L,"RV Add Vendor Replacement"),
+    RV_ADD_VENDOR_REJECTED(300L,"RV Add Vendor Rejected")
+
+  ;
 
 
     private String name;

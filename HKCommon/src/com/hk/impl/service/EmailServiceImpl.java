@@ -69,7 +69,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public boolean sendHtmlEmail(Template template, Object templateValues, String toEmail, String toName) {
-        return sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
+      boolean sent = false;
+      try {
+        sent = sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
+      } catch (Exception e) {
+        logger.error("Exception while sending Email", e.getStackTrace());
+      }
+      return sent;
     }
 
     public boolean sendHtmlEmail(Template template, Object templateValues, String toEmail, String toName, String replyToEmail) {

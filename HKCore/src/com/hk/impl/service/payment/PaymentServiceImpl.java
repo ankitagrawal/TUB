@@ -13,6 +13,8 @@ import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.store.EnumStore;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
@@ -486,8 +488,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public boolean isValidReconciliation(Payment payment) {
-        return EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId());
+    public boolean isValidReconciliation(Payment payment, Store store) {
+        return (EnumPaymentMode.getReconciliationModeIds().contains(payment.getPaymentMode().getId())
+                && EnumPaymentStatus.SUCCESS.getId().equals(payment.getPaymentStatus().getId())
+                && EnumStore.getReconciliationEnabledStores().contains(store.getId())) ;
 
     }
 
@@ -633,7 +637,7 @@ public class PaymentServiceImpl implements PaymentService {
         refundPayment.setParent(basePayment);
         refundPayment.setAmount(amount);
         refundPayment.setTransactionType(EnumPaymentTransactionType.REFUND.getName());
-
+        refundPayment.setPaymentDate(new Date());
         refundPayment = paymentDao.save(refundPayment);
 
         return refundPayment;

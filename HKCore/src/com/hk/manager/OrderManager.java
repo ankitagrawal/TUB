@@ -35,6 +35,7 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
+import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -128,6 +129,8 @@ public class OrderManager {
 
   @Autowired
   private LoyaltyProgramService loyaltyProgramService;
+  @Autowired
+  private ComboInstanceDao comboInstanceDao;
 
   @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
   private Double codCharges;
@@ -407,33 +410,31 @@ public class OrderManager {
       }
 
       order = this.getOrderService().save(order);
+      orderDao.refresh(order);
 
       // Order lifecycle activity logging - Order Placed
       this.getOrderLoggingService().logOrderActivity(order, order.getUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
-      Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
       // calling health check
       if (!order.isSubscriptionOrder()) {
-        inventoryHealthService.tempBookSkuLineItemForOrder(order);
-      }
-
-//       Check Inventory health of order lineItems
-      for (CartLineItem cartLineItem : productCartLineItems) {
-        this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-      }
-
-        if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
-            //for some orders userCodCall object is not created, a  check to create one
-            try{
-                if (order.getUserCodCall() == null) {
-                    UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
-                    orderService.saveUserCodCall(userCodCall);
-                }
-            } catch (Exception e){
-                logger.info("User Cod Call already exists for " + order.getId());
-            }
+        try {
+          inventoryHealthService.tempBookSkuLineItemForOrder(order);
+        } catch (Exception e) {
+          logger.error("Exception while TEMP booking for order#"+order.getId() +" - "+ e.getMessage());
         }
+      }
 
+      //Check Inventory health of order lineItems
+      for (CartLineItem cartLineItem : order.getCartLineItems()) {
+        if (cartLineItem.isType(EnumCartLineItemType.Product)) {
+          try {
+            logger.info("Inventory Health being called for " + cartLineItem.getProductVariant().getId());
+            this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+          } catch (Exception e) {
+            logger.error("Exception while Inventory Health for order#" + order.getId() + "; PV#" + cartLineItem.getProductVariant().getId() + " - " + e.getMessage());
+          }
+        }
+      }
 
       this.getUserService().updateIsProductBought(order);
 
@@ -528,20 +529,20 @@ public class OrderManager {
   public CartLineItem createFreeLineItem(CartLineItem cartLineItem, ProductVariant freeVariant) throws OutOfStockException {
     Order order = cartLineItem.getOrder();
     freeVariant.setQty(cartLineItem.getQty());
-    //as on 04-02-13, free variants which are out of stock, will be added to an order, but they wont be processed
-//        if (!freeVariant.isOutOfStock()) {
-    CartLineItem existingCartLineItem = this.getCartLineItemDao().getLineItem(freeVariant, order);
-    if (existingCartLineItem == null) { // The variant is not added in user account already
-      CartLineItem freeCartLineItem = this.cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
-      freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice() * freeVariant.getQty());
-      return this.cartLineItemService.save(freeCartLineItem);
-    } else {
-      existingCartLineItem.setQty(existingCartLineItem.getQty() + freeVariant.getQty());
-      existingCartLineItem.setDiscountOnHkPrice(existingCartLineItem.getDiscountOnHkPrice() + (freeVariant.getHkPrice() * freeVariant.getQty()));
-      return this.cartLineItemService.save(existingCartLineItem);
-    }
-//        }
-//        return null;
+    //as on 28-08-13, free variants which are out of stock, will not be added to an order
+      if (!(freeVariant.isOutOfStock() || freeVariant.isDeleted() || freeVariant.getProduct().isDeleted())) {
+          CartLineItem existingCartLineItem = this.getCartLineItemDao().getLineItem(freeVariant, order);
+          if (existingCartLineItem == null) { // The variant is not added in user account already
+              CartLineItem freeCartLineItem = this.cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
+              freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice() * freeVariant.getQty());
+              return this.cartLineItemService.save(freeCartLineItem);
+          } else {
+              existingCartLineItem.setQty(existingCartLineItem.getQty() + freeVariant.getQty());
+              existingCartLineItem.setDiscountOnHkPrice(existingCartLineItem.getDiscountOnHkPrice() + (freeVariant.getHkPrice() * freeVariant.getQty()));
+              return this.cartLineItemService.save(existingCartLineItem);
+          }
+      }
+      return null;
   }
 
   @Transactional
@@ -622,17 +623,25 @@ public class OrderManager {
         }
 
         if (!(product.isJit() || product.isService() || product.isDropShipping() || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
-          Long unbookedInventory = this.inventoryService.getAllowedStepUpInventory(productVariant);
-          if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+          Long liQty = lineItem.getQty();
+          Long allowedQty = this.inventoryService.getAllowedStepUpInventory(lineItem);
+          if(lineItem.getComboInstance() != null){
+            for (CartLineItem li : comboInstanceDao.getSiblingLineItems(lineItem)) {
+              Long comboPVQty = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant()).getQty();
+              liQty = liQty / comboPVQty;
+              break;
+            }
+          }
+          if (allowedQty != null && allowedQty < liQty) {
             // Check in case of negative unbooked inventory
             if (comboInstance != null) {
               toBeRemovedComboInstanceSet.add(comboInstance);
               continue;
             }
-            if (unbookedInventory <= 0) {
-              unbookedInventory = 0L;
+            if (allowedQty <= 0) {
+              allowedQty = 0L;
             }
-            lineItem.setQty(unbookedInventory);
+            lineItem.setQty(allowedQty);
           }
         }
       }
@@ -680,6 +689,26 @@ public class OrderManager {
         return false;
       }
     }
+    return true;
+  }
+
+    public boolean isStepUpAllowedForCombo(CartLineItem cartLineItem, Long qty) {
+      Long stepUpQty = 0L;
+      int count = 0;
+      for (CartLineItem li : comboInstanceDao.getSiblingLineItems(cartLineItem)) {
+        count++;
+        ComboInstanceHasProductVariant comboVariant = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant());
+        ProductVariant productVariant = comboVariant.getProductVariant();
+        Long allowedQty = inventoryService.getAllowedStepUpInventory(productVariant);
+        if (count > 1) {
+          stepUpQty = Math.min(stepUpQty, Math.abs(allowedQty / comboVariant.getQty()));
+        } else {
+          stepUpQty = Math.abs(allowedQty / comboVariant.getQty());
+        }
+      }
+      if (stepUpQty.intValue() < qty.intValue()) {
+        return false;
+      }
     return true;
   }
 

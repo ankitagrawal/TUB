@@ -13964,6 +13964,28 @@
             (1150,'Reconciliation',1550);
         </sql>
     </changeSet>
+    <changeSet author="Ankit Chhabra" id="1375435318078-1">
+        <insert tableName="shipping_order_lifecycle_activity">
+            <column name="id" value="1020" type="INT"></column>
+            <column name="name" value="SO  Cancelled due to inventory mismatch" type="VARCHAR(100)"></column>
+        </insert>
+    </changeSet>
+    <changeSet author="Ankit Chhabra" id="1375435318078-2">
+        <sql>
+            insert into classification(`id` ,`primary`,`secondary`) values
+            (1560,'SO Not cancelled automatically','Inventory found in other warehouse'),
+            (1570,'SO Not cancelled automatically','No inventory only for JIT items');
+
+            insert into reason (`id`,`type`,`classification_id`) values
+            (1200,'SO Not cancelled automatically',1560),
+            (1210,'SO Not cancelled automatically',1570);
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-08-20-01">
+        <addColumn tableName="shipping_order">
+            <column name="promise_dispatch_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Shakti Singh (generated)" id="20130826-01">
         <sql>
             insert into classification(`id` ,`primary`,`secondary`) values
@@ -13971,6 +13993,144 @@
 
             insert into reason (`id`,`type`,`classification_id`) values
             (1450,'Reconciliation',1750);
+        </sql>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-1">
+        <createTable tableName="busy_api_call_log">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="create_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ip" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_url" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_data" type="TEXT"/>
+            <column name="request_header" type="TEXT"/>
+            <column name="api_key" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-2">
+        <createTable tableName="supplier_transaction_type">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-3">
+        <createTable tableName="supplier_transactions">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="supplier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_transaction_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_invoice_id" type="INT"/>
+            <column name="debit_note_id" type="INT"/>
+            <column name="credit_note_id" type="INT"/>
+            <column name="busy_payment_id" type="VARCHAR(45)"/>
+            <column name="busy_supplier_balance" type="DOUBLE"/>
+            <column name="current_balance" type="DOUBLE"/>
+            <column name="narration" type="TEXT"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="create_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-4">
+        <addForeignKeyConstraint baseColumnNames="credit_note_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_credit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-5">
+        <addForeignKeyConstraint baseColumnNames="debit_note_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_debit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="debit_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-6">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-7">
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (generated)" id="1372941433730-8">
+        <addForeignKeyConstraint baseColumnNames="supplier_transaction_type_id" baseTableName="supplier_transactions" constraintName="fk_supplier_transactions_supplier_transaction_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier_transaction_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="tarun (Written)" id="1372941433730-9">
+        <sql>
+            INSERT INTO `supplier_transaction_type` (`id`, `name`) VALUES (NULL, 'CREATE'), (NULL, 'PURC'), (NULL, 'BP'), (NULL, 'PRT');
+        </sql>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377614620135-1">
+        <createTable tableName="hk_reach_pricing_engine">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="inter_city_cost" type="DECIMAL(8,2)"/>
+            <column name="fixed_cost" type="DECIMAL(8,2)"/>
+            <column name="update_time" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377614620135-2">
+        <addColumn tableName="pincode">
+            <column name="last_mile_cost" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377614620135-3">
+        <addColumn tableName="pincode">
+            <column name="nearest_hub_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377797848313-1">
+        <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_hub_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chabra (generated)" id="1377797848313-2">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_warehouse_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377797848313-3">
+        <addForeignKeyConstraint baseColumnNames="nearest_hub_id" baseTableName="pincode" constraintName="fk_nearest_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378101837752-1">
+        <addColumn tableName="courier_pricing_engine">
+            <column name="valid_upto" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Vidur (generated)" id="06-09-2013(1)">
+        <createIndex indexName="line_item_UNIQUE" tableName="wh_report_line_item" unique="true">
+            <column name="line_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-1">
+        <addColumn tableName="hk_reach_pricing_engine">
+            <column name="valid_from" type="TIMESTAMP" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-2">
+        <sql>update hk_reach_pricing_engine set valid_from = '2013-09-01 00:00:00'</sql>
+    </changeSet>
+    <changeSet author="Rajesh" id="20130913-01">
+        <sql>
+            insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
     </changeSet>
 </databaseChangeLog>

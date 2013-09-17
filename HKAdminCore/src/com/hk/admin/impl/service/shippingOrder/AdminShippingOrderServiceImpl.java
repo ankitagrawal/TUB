@@ -11,6 +11,7 @@ import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.EnumJitShippingOrderMailToCategoryReason;
 import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.core.EnumTax;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
@@ -27,6 +28,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -48,6 +50,7 @@ import com.hk.helper.ShippingOrderHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.TaxDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.reward.RewardPointTxnDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -60,12 +63,14 @@ import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.B2BOrderService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.service.ServiceLocatorFactory;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -127,19 +132,29 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	@Autowired
 	private LoyaltyProgramService loyaltyProgramService;
 
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private RewardPointTxnDao rewardPointTxnDao;
-    @Autowired
-    RewardPointService rewardPointService;
-    @Autowired
-    private UserAccountInfoDao userAccountInfoDao;
-    @Autowired
-    private RewardPointDao rewardPointDao;
+  @Autowired
+  private PaymentService paymentService;
+  @Autowired
+  private RewardPointTxnDao rewardPointTxnDao;
+  @Autowired
+  RewardPointService rewardPointService;
+  @Autowired
+  private UserAccountInfoDao userAccountInfoDao;
+  @Autowired
+  private RewardPointDao rewardPointDao;
+
+  @Autowired
+  ShippingOrderProcessor shippingOrderProcessor;
+
+  @Autowired
+  B2BOrderService b2BOrderService;
+
+  @Autowired
+  TaxDao taxDao;
 
 
-	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType ,boolean reconcileAll) {
+	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType,
+                                  boolean reconcileAll) {
 		// Check if Order is in Action Queue before cancelling it.
 		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 			logger.warn("Cancelling Shipping order gateway id:::" + shippingOrder.getGatewayOrderId());
@@ -147,12 +162,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 			skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
 			//shippingOrder = getShippingOrderService().save(shippingOrder);
 //            getAdminInventoryService().reCheckInInventory(shippingOrder);
-			getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, 1L);
+			getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF,
+          EnumInvTxnType.CANCEL_CHECKIN, 1L);
 			// TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
 			// inventory, reward points, shipment, discount
-			getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled, shippingOrder.getReason(), cancellationRemark);
+			getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled,
+          shippingOrder.getReason(), cancellationRemark);
 
-			orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
+			orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(),
+          EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
 			if (shippingOrder.getShipment() != null) {
 				Awb awbToRemove = shippingOrder.getShipment().getAwb();
 				awbService.preserveAwb(awbToRemove);
@@ -180,7 +198,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
 			shippingOrder = getShippingOrderService().save(shippingOrder);
 			if (shippingOrder.getPurchaseOrders() != null && shippingOrder.getPurchaseOrders().size() > 0) {
-				adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null, EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
+				adminEmailManager.sendJitShippingCancellationMail(shippingOrder, null,
+            EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
 			}
 			getBucketService().popFromActionQueue(shippingOrder);
 		}
@@ -381,7 +400,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                         EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.ManualRefundInitiated.asReason(),comment);
 
-            } else {
+            } else if (EnumGateway.getHKServiceEnabledGateways().contains(shippingOrder.getBaseOrder().getPayment().getGateway().getId())) {
 
                 try {
                     Payment payment = paymentService.refundPayment(shippingOrder.getBaseOrder().getPayment().getGatewayOrderId(), shippingOrder.getAmount());
@@ -597,6 +616,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
 		getBucketService().popFromActionQueue(shippingOrder);
 		getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
+    if(shippingOrder.getBaseOrder().getB2bOrder() != null && shippingOrder.getBaseOrder().getB2bOrder()){
+      updateSOForB2BOrders(shippingOrder);
+    }
 		return shippingOrder;
 	}
 
@@ -636,6 +658,33 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 		getBucketService().escalateBackToActionQueue(shippingOrder);
 		return shippingOrder;
 	}
+
+  /**
+   * This overloaded method is used for auto processing at escalate back and is created to support legacy code.
+   */
+  @Transactional
+  public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder, Boolean autoProcess) {
+    Long qty = 0L;
+    if (shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()) {
+      qty = 1L;
+    }
+    if (autoProcess) {
+      shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
+    } else {
+      shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+    }
+
+    getAdminInventoryService().reCheckInInventory(shippingOrder,
+        EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF, EnumInvTxnType.CANCEL_CHECKIN, qty);
+    shippingOrder = getShippingOrderService().save(shippingOrder);
+    getShippingOrderService().logShippingOrderActivity(shippingOrder,
+        EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
+
+    getBucketService().escalateBackToActionQueue(shippingOrder);
+    // after escalate back auto escalate the SO
+    shippingOrderProcessor.manualEscalateShippingOrder(shippingOrder);
+    return shippingOrder;
+  }
 
 	@Transactional
 	public ShippingOrder moveShippingOrderBackToPackingQueue(ShippingOrder shippingOrder) {
@@ -734,7 +783,26 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
 	}
 
-	public ShippingOrderService getShippingOrderService() {
+  @Override
+  public Boolean updateSOForB2BOrders(ShippingOrder shippingOrder) {
+    Order baseOrder = shippingOrder.getBaseOrder();
+    if(!baseOrder.getB2bOrder()){
+      return false;
+    }
+    else{
+      if(b2BOrderService.checkCForm(baseOrder)){
+        Tax cstTax = taxDao.findById(EnumTax.CST.getId());
+        for(LineItem lineItem : shippingOrder.getLineItems()){
+          lineItem.setTax(cstTax);
+          getAdminShippingOrderDao().save(lineItem);
+        }
+ //       getAdminShippingOrderDao().save(shippingOrder.getLineItems());
+      }
+      return true;
+    }
+  }
+
+  public ShippingOrderService getShippingOrderService() {
 		return shippingOrderService;
 	}
 

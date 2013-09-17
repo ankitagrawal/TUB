@@ -318,7 +318,7 @@ public class Payment implements java.io.Serializable {
 
 	@Transient
 	public boolean isCODPayment() {
-		return getPaymentMode().getId().equals(EnumPaymentMode.COD.getId());
+		return EnumPaymentMode.COD.getId().equals(getPaymentMode().getId());
 	}
 
 	@Override
