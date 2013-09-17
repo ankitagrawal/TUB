@@ -17,7 +17,7 @@ Activate your HealthKart.com account
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em"><a href="${activationLink}">Activate account &rarr;</a></td>
+        <td colspan="2" style="margin-bottom:1em; font-size: 1.5em"><a href="${activationLink}">Activate account &rarr;</a></td>
     </tr>
     <br>
     <tr>
