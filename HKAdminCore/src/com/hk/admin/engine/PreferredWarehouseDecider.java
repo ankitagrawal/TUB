@@ -103,7 +103,7 @@ public class PreferredWarehouseDecider {
         for (Courier courier : couriers) {
           //todo courier, hk reach pricing
           CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier,
-              pincodeRegionZone.getRegionType(), warehouse);
+              pincodeRegionZone.getRegionType(), warehouse,shippingOrder.getShipment().getShipDate());
           totalCost = taxIncurred + shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, weight)
                             + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo, amount, isCod);
           courierCostingMap.put(courier, totalCost);
@@ -159,7 +159,8 @@ public class PreferredWarehouseDecider {
       }
 
       //todo courier please recheck logic
-      Map<Courier, Long> courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, isCod, warehouse, amount, weight, ground);
+      Map<Courier, Long> courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, isCod, warehouse,
+                                                                                            amount, weight, ground,null);
 
       for (Map.Entry<Courier, Long> courierCostEntry : courierCostingMap.entrySet()) {
         courierCostEntry.setValue(courierCostEntry.getValue() + taxIncurred.longValue());

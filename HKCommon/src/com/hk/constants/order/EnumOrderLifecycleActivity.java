@@ -2,6 +2,9 @@ package com.hk.constants.order;
 
 import com.hk.domain.core.OrderLifecycleActivity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 public enum EnumOrderLifecycleActivity {
   OrderPlaced(10L, "Order Placed"),
@@ -31,7 +34,7 @@ public enum EnumOrderLifecycleActivity {
   OrderShippedEmailFired(95L, "Order Shipped Email Fired"),
   OrderDelivered(100L, "Order Delivered"),
   OrderDeliveredUpdated(105L, "Order Delivered Updated"),
-  OrderInstalled(108L, "Order Installed"),  
+  OrderInstalled(108L, "Order Installed"),
   OrderReturned(110L, "Order Returned"),
   OrderPartiallyReturned(111L, "Partial Order Returned"),
   ReCheckedInItem(113L, "Re-CheckedIn Item"),
@@ -59,6 +62,8 @@ public enum EnumOrderLifecycleActivity {
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
   RefundMailToAdmin(900L, "Manual refund task mail sent to admin"),
   NoActionAtReconciliation(1050L, "No action taken at reconciliation(refund/reward)"),
+  /*REFUND_RO(1060L, "Refund in replacement order or reverse pickup")
+  */
   ;
 
   private String name;
