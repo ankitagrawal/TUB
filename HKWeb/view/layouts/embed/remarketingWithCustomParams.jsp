@@ -65,8 +65,8 @@
       sCat: '${fn:replace(secondaryCategory, searchString, replaceString)}',
       tCat: '${fn:replace(tertiaryCategory, searchString, replaceString)}',
       allCats: '${fn:replace(allCategories, searchString, replaceString)}',
-      brand: ${fn:replace(brand, searchString, replaceString)},
-      pName: ${fn:replace(product.name, searchString, replaceString)},
+      brand: '${fn:replace(brand, searchString, replaceString)}',
+      pName: '${fn:replace(product.name, searchString, replaceString)}',
       hkp: '',
       mrp: '',
       stock: ''
