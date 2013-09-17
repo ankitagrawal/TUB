@@ -195,9 +195,11 @@ public class InventoryCheckinAction extends BaseAction {
 	@DontValidate
 	public Resolution pre() {
 		Supplier supplier = grn.getPurchaseOrder().getSupplier();
-  	Warehouse warehouse = warehouseDao.findWarehouseByTin(supplier.getTinNumber());
+  	List<Warehouse> warehouse = warehouseDao.findWarehouseByTin(supplier.getTinNumber());
   	//TODO: Warehouse is Bright
-  	isBrightSupplier = Boolean.TRUE;
+  	if(warehouse!=null && warehouse.size()>0){
+  		isBrightSupplier = Boolean.TRUE;
+  	}
 		return new ForwardResolution("/pages/admin/inventoryCheckin.jsp");
 	}
 
@@ -403,6 +405,10 @@ public class InventoryCheckinAction extends BaseAction {
 		SkuItem skuItem = skuGroupService.getSkuItemByBarcode(invBarcode);
 		if (skuItem != null) {
 			Sku sku = skuItem.getSkuGroup().getSku();
+			if(!skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
+				addRedirectAlertMessage(new SimpleMessage("Seems Like the SkuItem has already been checked in. Try another one"));
+				return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+			}
 			ProductVariant productVariant = sku.getProductVariant();
 			GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
 			if(grnLineItem!=null){
@@ -830,7 +836,7 @@ public class InventoryCheckinAction extends BaseAction {
 
 	}
 	
-	public Resolution freezeCheckin() {
+	/*public Resolution freezeCheckin() {
 		Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
 		if(shippingOrders!=null&&shippingOrders.size()>0){
 			String escalated = "";
@@ -841,7 +847,7 @@ public class InventoryCheckinAction extends BaseAction {
 		}
 		addRedirectAlertMessage(new SimpleMessage("No Shipping Orders were escalated"));
     return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-	}
+	}*/
 
 	public String getUpc() {
 		return upc;

@@ -158,12 +158,12 @@
 
     </div>
     
-    <c:if test="${ica.isBrightSupplier}">
+    <%-- <c:if test="${ica.isBrightSupplier}">
     <div id = "freezeDiv">
     <s:link class=" button_green" style="width: 150px; height: 16px;" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="freezeCheckin"> Freeze Checkin
                   <s:param name="grn" value="${ica.grn.id}"/>
             </s:link>
-    </div></c:if>
+    </div></c:if> --%>
     <script type="text/javascript">
 	    $(document).ready(function() {
 		    $('.chkInInfo').each(function(){
