@@ -51,7 +51,7 @@ Reset Password Instructions - HealthKart.com
     </tr>
 
     <tr>
-        <td colspan="2" style="padding-top: 10px">
+        <td colspan="2" style="padding-bottom:10px; padding-top: 10px">
             <strong>HealthKart.com</strong></td>
     </tr>
 

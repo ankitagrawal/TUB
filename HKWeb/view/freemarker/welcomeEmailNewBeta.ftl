@@ -110,7 +110,7 @@ Hi ${user.name}, welcome to HealthKart.com
     </tr>
     <tr>
         <td colspan="2" align="center"
-            style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; padding-top:10px;color:#646464;">
+            style="padding-bottom:10px; font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px; line-height:18px; padding-top:10px;color:#646464;">
             <a style="color:#646464; text-decoration:none;">HealthKart.com</a>. All Rights Reserved.
         </td>
 
