@@ -8,31 +8,31 @@ Activate your HealthKart.com account
 <#include "headerBeta.ftl">
     <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
-        <td style="margin-top: 1em">Hi ${user.name},</td>
+        <td colspan="2" style="margin-top: 1em">Hi ${user.name},</td>
     </tr>
 
     <tr>
-        <td style="margin-top: 1em"> Please click on the following link to to verify your
+        <td colspan="2" style="margin-top: 1em"> Please click on the following link to to verify your
             email and activate your account.
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em"><a href="${activationLink}">Activate account &rarr;</a></td>
+        <td colspan="2" style="margin-bottom:1em"><a href="${activationLink}">Activate account &rarr;</a></td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">If clicking on the link does not work, cut and paste the following URL in your
+        <td colspan="2" style="margin-bottom:1em">If clicking on the link does not work, cut and paste the following URL in your
             browser:
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">${activationLink}</td>
+        <td colspan="2" style="margin-bottom:1em">${activationLink}</td>
     </tr>
 
     <tr>
-        <td style="margin-bottom:1em">Happy Shopping!</td>
+        <td colspan="2" style="margin-bottom:1em">Happy Shopping!</td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em"><strong>HealthKart.com</strong></td>
+        <td colspan="2" style="padding-bottom:10px; margin-bottom:1em"><strong>HealthKart.com</strong></td>
     </tr>
     </tbody>
 <#include "footerBeta.ftl">
