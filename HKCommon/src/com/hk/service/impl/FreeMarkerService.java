@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import com.hk.constants.core.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.util.BaseUtils;
@@ -21,6 +23,9 @@ import freemarker.template.TemplateException;
 public class FreeMarkerService {
 
   private static Logger logger = LoggerFactory.getLogger(FreeMarkerService.class);
+
+    @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
+    private boolean           hybridRelease;
 
   /*private Configuration cfg = null;*/
 
@@ -39,6 +44,10 @@ public class FreeMarkerService {
    * @return
    */
   public Template getCampaignTemplate(String templatePath) {
+    if(isHybridRelease()){
+        String ftlName = templatePath.split("\\.")[0];
+        templatePath = ftlName + "Beta" + ".ftl";
+    }
     Template template = null;
     try {
       //File freemarkerDir = new File(AppConstants.appBasePath + "/freemarker");
@@ -155,4 +164,7 @@ public class FreeMarkerService {
     }
   }
 
+    public boolean isHybridRelease() {
+        return hybridRelease;
+    }
 }

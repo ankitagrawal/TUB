@@ -433,9 +433,9 @@
 
     <div style="clear:both;"></div>
 
-    <div class='orderSummaryHeading' style="margin-bottom: 50px;margin-top: 50px;">
+    <div class='orderSummaryHeading' style="margin-bottom: 50px;margin-top: 50px;padding: 10px;">
         <div class="deliveryDetails" style="padding-left: 7px;font-weight: 600"> DELIVERY DETAILS</div>
-        <ol style="padding-left:25px;">
+        <ol style="padding-left:25px;font-size: 12px;">
             <li>
                The time taken for delivery after dispatch from our warehouse varies with location.
             </li>

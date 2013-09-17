@@ -509,7 +509,11 @@ public enum EnumRoleHasPermission {
 
     STORE_MANAGER(EnumRole.STORE_MANAGER, Arrays.asList(EnumPermission.STORE_MANAGER)),
 
-    HR(EnumRole.HR, Arrays.asList(EnumPermission.HK_EMPLOYEE));
+    HR(EnumRole.HR, Arrays.asList(EnumPermission.HK_EMPLOYEE)),
+
+    OPS_MANAGER_COURIER_PRICING_UPDATE(EnumRole.OPS_MANAGER_COURIER_PRICING_UPDATE, Arrays.asList(EnumPermission.OPS_MANAGER_COURIER_PRICING_UPDATE)),
+
+    OPS_MANAGER_COURIER_PRICING_VIEW(EnumRole.OPS_MANAGER_COURIER_PRICING_VIEW, Arrays.asList(EnumPermission.OPS_MANAGER_COURIER_PRICING_VIEW));
 
     EnumRole enumRole;
     List<EnumPermission> enumPermissions;
