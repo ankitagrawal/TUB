@@ -389,9 +389,26 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
 
   public void validateShippingOrderAB(ShippingOrder shippingOrder) {
+
     Set<LineItem> lineItems = shippingOrder.getLineItems();
     for (LineItem item : lineItems) {
       CartLineItem cartLineItem = item.getCartLineItem();
+      List<ForeignSkuItemCLI> ficlis = cartLineItem.getForeignSkuItemCLIs();
+      if (ficlis != null && ficlis.size() > 0) {
+        boolean invalidEntry = false ;
+        for (ForeignSkuItemCLI foreignSkuItemCLI : ficlis) {
+          if (foreignSkuItemCLI.getSkuItemId() == null || ficlis.size() != cartLineItem.getQty() ) {
+            invalidEntry = true;
+             break;
+
+          }
+        }
+         if (invalidEntry) {
+           skuItemLineItemService.freeBookingItem(cartLineItem.getId());
+           inventoryService.bookInventory(cartLineItem);
+         }
+      }
+
       // When CLI and LI are empty
       if (cartLineItem.getSkuItemCLIs() == null || (cartLineItem.getSkuItemCLIs() != null && cartLineItem.getSkuItemCLIs().size() == 0)) {
         inventoryService.bookInventory(cartLineItem);

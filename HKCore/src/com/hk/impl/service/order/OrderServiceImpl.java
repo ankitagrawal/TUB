@@ -728,7 +728,7 @@ public class OrderServiceImpl implements OrderService {
             continue;
           }
           for (LineItem lineItem : shippingOrder.getLineItems()){
-            //lineItemDao.refresh(lineItem);
+              lineItemDao.refresh(lineItem);
             CartLineItem cartLineItem = lineItem.getCartLineItem();
             // manual split
             if(bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null  || lineItem.getSkuItemLineItems().size() < 1)){

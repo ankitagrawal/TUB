@@ -267,13 +267,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
       boolean productType = (product.isJit() || product.isDropShipping() || product.isService());
       skuItemLineItemService.freeBookingItem(cartLineItem.getId());
-      Map<String, Long> invMap = inventoryHealthService.getInventoryCountOfAB(lineItem.getCartLineItem(), targetWarehouse);
+      Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(lineItem.getCartLineItem(), targetWarehouse);
       if (invMap.get("aquaInventory") >= lineItem.getQty()) {
-        inventoryHealthService.tempBookAquaInventory(cartLineItem, targetWarehouse.getId());
+        getInventoryHealthService().tempBookAquaInventory(cartLineItem, targetWarehouse.getId());
         createNewSkuItemLineItem(lineItem);
 
       } else if (invMap.get("brtInventory") >= lineItem.getQty()) {
-        inventoryHealthService.createSicliAndSiliAndTempBookingForBright(lineItem.getCartLineItem(), warehouseIdForBright);
+        getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(lineItem.getCartLineItem(), warehouseIdForBright);
 
       } else if (!productType) {
         return false;
@@ -805,7 +805,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
 
   public void populateSILIForABJit(List<ForeignSkuItemCLI> foreignSkuItemCLIs, LineItem lineItem) {
-
+   List <SkuItemLineItem> silis = new ArrayList<SkuItemLineItem>();
     for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
       SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
       skuItemLineItem.setProductVariant(foreignSkuItemCLI.getProductVariant());
@@ -816,8 +816,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       SkuItemCLI skuItemCli = skuItemLineItemDao.getSkuItemCLI(foreignSkuItemCLI.getCartLineItem(), foreignSkuItemCLI.getUnitNum());
       skuItemLineItem.setSkuItemCLI(skuItemCli);
       skuItemLineItem.setCreateDate(new Date());
-      baseDao.save(skuItemLineItem);
+      skuItemLineItem =(SkuItemLineItem) baseDao.save(skuItemLineItem);
+      silis.add(skuItemLineItem);
     }
+     lineItem.setSkuItemLineItems(silis);
+     baseDao.save(lineItem);
   }
 
 

@@ -43,6 +43,8 @@ public interface InventoryHealthService {
 
   public void createSicliAndSiliAndTempBookingForBright(CartLineItem cartLineItem, Long warehouseIdForBright);
 
+  public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant);
+
 
   public static class InventoryInfo {
     private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();

@@ -30,10 +30,7 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuGroupService;
-import com.hk.pact.service.inventory.SkuItemLineItemService;
-import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.*;
 import com.hk.pact.service.splitter.ShippingOrderProcessor;
 import com.hk.service.ServiceLocatorFactory;
 
@@ -229,6 +226,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
   public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
                                        StockTransferLineItem stockTransferLineItem, EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner, InvTxnType invTxnType, Long qty, User txnBy) {
 
+    InventoryHealthService inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
     ProductVariantInventory pvi = new ProductVariantInventory();
     // pvi.setProductVariant(sku.getProductVariant());
     pvi.setSku(sku);
@@ -254,6 +252,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     if (grnLineItem != null && qty > 0) {
       grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
       getBaseDao().save(grnLineItem);
+    }
+
+    if (qty > 0) {
+      inventoryHealthService.pendingOrdersInventoryHealthCheck(sku.getProductVariant());
     }
 
   }
