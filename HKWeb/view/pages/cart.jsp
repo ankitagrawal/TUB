@@ -6,6 +6,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -604,10 +605,8 @@
   </div>
 </c:forEach>
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
-<!--google remarketing-->
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
-<!--BLADe marketing-->
-<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="cart"/>
+<%--<!--BLADe marketing-->--%>
+<%--<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="cart"/>--%>
 
 <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
@@ -802,8 +801,14 @@
     </ul>
 </div>
 
-<s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
-<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+<%--<s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>--%>
+<%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>--%>
+<%--<!--google remarketing-->--%>
+<s:layout-render
+    name="/layouts/embed/remarketingWithCustomParams.jsp"
+    pageType="<%=HealthkartConstants.Remarketing.PageType.cart%>"
+    order="${cartAction.order}"
+    />
 
 			<c:if test="${not isSecure }">
 				<iframe src="" id="vizuryTargeting" scrolling="no" width="1"
