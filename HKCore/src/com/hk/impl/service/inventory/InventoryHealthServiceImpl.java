@@ -638,7 +638,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   @Transactional
   public CartLineItem createSkuGroupAndItem(CartLineItem cartLineItem, Long warehouseId) {
 
-    if (cartLineItem.getForeignSkuItemCLIs() != null && cartLineItem.getForeignSkuItemCLIs().size() > 0) {
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
       ProductVariant productVariant = cartLineItem.getProductVariant();
       Warehouse warehouse = getBaseDao().get(Warehouse.class, warehouseId);
@@ -673,7 +672,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           skuItems.add(skuItem);
         }
       }
-    }
 
     return cartLineItem;
   }
@@ -826,7 +824,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       foreignSkuItemCLIs.add(foreignSkuItemCLI);
 
     }
-    return foreignSkuItemCLIs;
+     cartLineItem.setForeignSkuItemCLIs(foreignSkuItemCLIs);
+     getBaseDao().save(cartLineItem);
+     return foreignSkuItemCLIs;
   }
 
 
@@ -839,6 +839,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         foreignSkuItemCLI.setForeignSkuGroupId(info.getFsgId());
         foreignSkuItemCLI.setFsgCostPrice(info.getCp());
         foreignSkuItemCLI.setSkuItemId(info.getFsiId());
+
         if (info.getExpdt() != null) {
           foreignSkuItemCLI.setFsgExpiryDate(getFormattedDate(info.getExpdt()));
         } else {
@@ -1303,7 +1304,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
        LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
        if (orderService.bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1)) {
          logger.debug("Update booking on Bright");
-         List<HKAPIForeignBookingResponseInfo> infos = orderService.updateBookedInventoryOnBright(lineItem);
+         List<HKAPIForeignBookingResponseInfo> infos = orderService.updateBookedInventoryOnBright(lineItem, warehouseIdForBright);
          List<ForeignSkuItemCLI> ForeignSkuItemCLIs = skuItemLineItemService.updateSkuItemForABJit(infos);
          skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem);
 

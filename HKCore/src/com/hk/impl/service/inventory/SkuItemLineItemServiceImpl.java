@@ -219,7 +219,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return true;
   }
 
-  @Override
+
   public boolean isWarehouseBeFlippableAB(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
     boolean itemsWasBookedAtAqua = true;
     for (LineItem lineItem : shippingOrder.getLineItems()) {

@@ -733,7 +733,13 @@ public class OrderServiceImpl implements OrderService {
             // manual split
             if(bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null  || lineItem.getSkuItemLineItems().size() < 1)){
               logger.debug("Update booking on Bright");
-              List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem);
+              Long   warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
+              Warehouse warehouse = warehouseService.getWarehouseById(warehousIdForAqua);
+              List<Warehouse> warehouses = warehouseService.findWarehouses(warehouse.getTinPrefix());
+              warehouses.remove(lineItem.getSku().getWarehouse());
+              Long  warehouseIdForBright = warehouses.get(0).getId();
+
+              List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem,warehouseIdForBright);
               List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
               skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
 
@@ -781,7 +787,7 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 	}
 
-	public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem) {
+	public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, Long warehouseId) {
     List<HKAPIForeignBookingResponseInfo> infos = null;
     List<HKAPIForeignBookingResponseInfo> infos1 = new ArrayList<HKAPIForeignBookingResponseInfo>();
     try {
@@ -790,7 +796,7 @@ public class OrderServiceImpl implements OrderService {
         HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
         hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
         hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
-        hkapiBookingInfo.setWhId(lineItem.getSku().getWarehouse().getId());
+        hkapiBookingInfo.setWhId(warehouseId);
         hkapiBookingInfo.setSoId(lineItem.getShippingOrder().getId());
         hkapiBookingInfo.setBoId(lineItem.getCartLineItem().getId());
         hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());

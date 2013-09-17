@@ -65,7 +65,7 @@ public class ShippingOrderValidatorAction extends BaseAction {
     for (ShippingOrder shippingOrder : sortedShippingOrdersSet) {
       logger.debug("Validating Shipping Order -" + shippingOrder.getId());
       try {
-        shippingOrderService.validateShippingOrderAB(shippingOrder);
+//        shippingOrderService.validateShippingOrderAB(shippingOrder);
       }
       catch (Exception e) {
         logger.debug("Exception while validating the Shipping Order" + shippingOrder.getId() + " " + e.getMessage());
