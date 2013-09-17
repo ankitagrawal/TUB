@@ -9,49 +9,49 @@ Reset Password Instructions - HealthKart.com
     <tbody style="font-size:13px; line-height:1.75em;">
 
     <tr>
-        <td>
+        <td colspan="2">
             Hi <b>${user.name}</b>,
         </td>
     </tr>
     <tr>
 
-        <td style="padding-bottom:1em; padding-top: 10px">Can't remember your password?</td>
+        <td colspan="2" style="padding-bottom:1em; padding-top: 10px">Can't remember your password?</td>
     </tr>
     <tr>
-        <td style="padding-top: 10px">
+        <td colspan="2" style="padding-top: 10px">
             It happens to many of us :)
         </td>
     </tr>
     <tr>
 
-        <td style="padding-top: 10px">
+        <td colspan="2" style="padding-top: 10px">
             Your Username (Same as your Email Id): <a href="#">${user.email}</a></td>
     </tr>
     <tr>
-        <td style="padding-top: 10px">
+        <td colspan="2" style="padding-top: 10px">
             Please click the below link to set a new password:
         </td>
     </tr>
     <tr>
-        <td style="padding-top: 10px"><a href="${link}" target="_blank">${link}</a></td>
+        <td colspan="2" style="padding-top: 10px"><a href="${link}" target="_blank">${link}</a></td>
     </tr>
     <tr>
-        <td style="padding-top: 10px">
+        <td colspan="2" style="padding-top: 10px">
             This will ask for new password which you can then use to login.
         </td>
     </tr>
     <tr>
-        <td style="padding-top: 10px">
+        <td colspan="2" style="padding-top: 10px">
             Note: If you are not able to click on the link, you can paste the above address into your
             browser.
         </td>
     </tr>
     <tr>
-        <td style="padding-top: 10px">Happy Shopping!</td>
+        <td colspan="2" style="padding-top: 10px">Happy Shopping!</td>
     </tr>
 
     <tr>
-        <td style="padding-top: 10px">
+        <td colspan="2" style="padding-top: 10px">
             <strong>HealthKart.com</strong></td>
     </tr>
 
