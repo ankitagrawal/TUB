@@ -184,30 +184,13 @@
 <%--</c:if>--%>
 
 <%-- EYE --%>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'sunglasses') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="qNxXCMnP7AIQn_iQ4gM" id="1011104799"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'lenses') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="qNYjCNHO7AIQn_iQ4gM" id="1011104799"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'eyeglasses') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="LdQvCJHi8gIQn_iQ4gM" id="1011104799"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'eye') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="WHHFCKGB7QIQn_iQ4gM" id="1011104799"/>
     <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
-<c:if test="${hk:equalsIgnoreCase('v+rod', brandLabel)}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="7S0iCLn-ggQQn_iQ4gM" id="1011104799"/>
-</c:if>
-<c:if test="${hk:equalsIgnoreCase('black+hammer', brandLabel)}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="U5aTCLH_ggQQn_iQ4gM" id="1011104799"/>
-</c:if>
-<c:if test="${hk:equalsIgnoreCase('teenager', brandLabel)}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="HnKzCKmAgwQQn_iQ4gM" id="1011104799"/>
 </c:if>
 
 <%-- HOME DEVICES --%>
@@ -256,12 +239,6 @@
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
 
-<%-- BABY --%>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'baby') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="BH1LCIKP8QIQztXQ0wM" id="980691662"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
-
 <%-- PARENTING --%>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'am-i-pregnant') && !codeSet}">
     <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="BgNSCLyJxgMQpIrJ3QM" id="1001538852"/>
@@ -287,26 +264,6 @@
     <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="hTFCCMSIxgMQpIrJ3QM" id="1001538852"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
-
-
-<%-- SERVICES --%>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'health-checkups') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="zKMICKPeuQIQ9aL74AM" id="1008652661"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'hair-spa-beauty') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="JSwZCJvfuQIQ9aL74AM" id="1008652661"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'gyms-health-centres') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="g05-CMPDugIQ9aL74AM" id="1008652661"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
-<c:if test="${hk:collectionContains(remarketingLabelList, 'services') && !codeSet}">
-    <s:layout-render name="/layouts/embed/_remarketingCodeAdwordsOld.jsp" label="r8tKCKvduQIQ9aL74AM" id="1008652661"/>
-    <c:set var="codeSet" value="<%=true%>"/>
-</c:if>
-
 
 
 <%-- BRANDS --%>
