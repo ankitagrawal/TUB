@@ -69,6 +69,7 @@ public class POSReportServiceImpl implements POSReportService {
     Long itemsSold = 0L;
     Long itemReturned = 0L;
     Long noOfBills = 0L;
+    Double rewardPointsRedeemed = 0.0;
     for (Order order : saleList) {
       if (order.getShippingOrders() != null) {
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
@@ -86,6 +87,9 @@ public class POSReportServiceImpl implements POSReportService {
           creditCardAmtCollected = creditCardAmtCollected + payment.getAmount();
         }
       }
+      if(order.getRewardPointsUsed() != null && order.getRewardPointsUsed().doubleValue() != 0.0){
+        rewardPointsRedeemed += order.getRewardPointsUsed();
+      }
     }
     for (ReverseOrder reverseOrder : returnList) {
       if (reverseOrder.getAmount() != null) {
@@ -101,7 +105,8 @@ public class POSReportServiceImpl implements POSReportService {
       avgAmtPerInvoice = totalAmountCollected / saleList.size();
       noOfBills = Long.valueOf(saleList.size());
     }
-    return (new POSSummaryDto(cashAmtCollected, cashAmtRefunded, creditCardAmtCollected, creditCardAmtRefunded, itemsSold, itemReturned, totalAmountCollected, avgAmtPerInvoice, noOfBills));
+    return (new POSSummaryDto(cashAmtCollected, cashAmtRefunded, creditCardAmtCollected, creditCardAmtRefunded,
+        itemsSold, itemReturned, totalAmountCollected, avgAmtPerInvoice, noOfBills, rewardPointsRedeemed));
   }
 
   public List<ReverseOrder> storeReturnReport(Long storeId, Date startDate, Date endDate) {
