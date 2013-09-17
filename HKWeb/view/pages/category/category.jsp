@@ -50,14 +50,9 @@
 </c:if>
 
 <s:layout-component name="htmlHead">
-    <!--google remarketing page type-->
-    <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category"
-                     topLevelCategory="${categoryBean.category.name}"/>
-    <!-- YAHOO marketing -->
-    <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category"
-                     topLevelCategory="${categoryBean.category.name}"/>
-    <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category"
-                     topLevelCategory="${categoryBean.category.name}"/>
+    <%--<!-- YAHOO marketing -->--%>
+    <%--<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>--%>
+    <%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>--%>
     <c:if test="${categoryBean.category.name == 'services'}">
         <script type="text/javascript">
             $(document).ready(function () {
@@ -423,6 +418,13 @@
                 ${categoryBean.seoData.description}
         </div>
     </c:if>
+
+    <%--<!--google remarketing page type-->--%>
+    <s:layout-render
+        name="/layouts/embed/remarketingWithCustomParams.jsp"
+        pageType="<%=HealthkartConstants.Remarketing.PageType.category%>"
+        primaryCategory="${categoryBean.category.name}"
+        />
 
     <c:choose>
         <c:when test="${not isSecure}">
