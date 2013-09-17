@@ -23,8 +23,8 @@
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
 <%
     DateTime dateTime = new DateTime();
-    Date startOfOfferDate = new Date(new DateTime(2013, 9, 9, 00, 00, 00, 00).getMillis());
-    Date endOfOfferDate = new Date(new DateTime(2013, 9, 14, 23, 59, 59, 00).getMillis());
+    Date startOfOfferDate = new Date(new DateTime(2013, 9, 17, 00, 00, 00, 00).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 9, 24, 23, 59, 59, 00).getMillis());
 %>
 <c:if test="${categoryBean.category.name == 'services'}">
     <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
@@ -241,16 +241,31 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq eye}">
+                <%
+                    if (dateTime.isAfter(startOfOfferDate.getTime()) && dateTime.isBefore(endOfOfferDate.getTime())) {
+                %>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/eye/Scott">
-                    <img src="<hk:vhostImage/>/images/banners/scott.jpg" alt="eye"
+
+                <a href="${pageContext.request.contextPath}/eye/eyeglasses?filterOptions[0]=13619&minPrice=153&maxPrice=2146 ">
+                    <img src="<hk:vhostImage/>/images/banners/SunGlassbanner.jpg" alt="eye"
                          class="small_banner"/>
                 </a>
-            </c:when>
+                <%
+                } else { %>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+                     class="small_banner"/>
+                <%
+                    }
+                %>
 
+            </c:when>
             <c:when test="${categoryBean.category.name eq parenting}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
@@ -261,19 +276,6 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq beauty}">
-                <%
-                    if (dateTime.isAfter(startOfOfferDate.getTime()) && dateTime.isBefore(endOfOfferDate.getTime())) {
-                %>
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
-                         class="small_banner"/>
-                </a>
-                <a href="${pageContext.request.contextPath}/brand/beauty/Rare+T">
-                    <img src="<hk:vhostImage/>/images/banners/Rare%20T-%20Main%20Banner.jpg" alt="beauty"
-                         class="small_banner"/>
-                </a>
-                <%
-                } else { %>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
@@ -282,9 +284,7 @@
                     <img src="<hk:vhostImage/>/images/banners/Nurture--whole-range.jpg" alt="beauty"
                          class="small_banner"/>
                 </a>
-                <%
-                    }
-                %>
+
             </c:when>
             <c:when test="${categoryBean.category.name eq diabetes}">
                 <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
