@@ -19,6 +19,12 @@
                 $('.trackingnum').attr('value', x);
 
             });
+            $('.addbookingRefNumber').click(function () {
+                var x = prompt("Enter Booking Reference Number");
+                if (!x) return false;
+                $('.bookingnum').attr('value', x);
+
+            });
         });
     </script>
 
@@ -320,6 +326,23 @@
                                         <s:submit value="Edit AWB" name="editTrackingNumber"
                                                   style="font:10px;padding:0em;background-color: #ffffff;color:#0000ff;font-weight :bolder;"
                                                   class="addawb"/><br>
+                                    </c:otherwise>
+                                </c:choose>
+                                <%-- Add and Edit Booking Reference Number until RP order at any time --%>
+                                <c:choose>
+                                    <c:when test="${reversePickup.bookingReferenceNumber == null}">
+                                        <s:hidden name="bookingReferenceNumber" class="bookingnum"/>
+                                        <s:submit value="Booking Ref Number" name="editBookingReferenceNumber"
+                                                  style="font:13px;padding:0em;background-color: #ffffff;color:#0000ff;font-weight :bolder;"
+                                                  class="addbookingRefNumber"/>
+                                        <br><br>
+                                    </c:when>
+                                    <c:otherwise>
+                                        Booking Ref No : <span> ${reversePickup.bookingReferenceNumber}</span><br>
+                                        <s:hidden name="bookingReferenceNumber" class="bookingnum"/>
+                                        <s:submit value="Edit Booking Ref Number" name="editBookingReferenceNumber"
+                                                  style="font:10px;padding:0em;background-color: #ffffff;color:#0000ff;font-weight :bolder;"
+                                                  class="addbookingRefNumber"/><br>
                                     </c:otherwise>
                                 </c:choose>
                                 Pickup Time :<span> <fmt:formatDate

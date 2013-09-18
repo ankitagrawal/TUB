@@ -46,6 +46,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
     private String errorMessage = "";
     private ReversePickupStatus reversePickupStatus;
     private String reversePickupId;
+    private String bookingReferenceNumber;
 
 
     @Autowired
@@ -72,6 +73,19 @@ public class ReversePickupListAction extends BasePaginatedAction {
                 errorMessage = "Edit RP to add Courier Name and Pick time";
             } else {
                 reversePickupOrder.setTrackingNumber(trackingNumber.trim());
+                reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+            }
+        }
+        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+                .addParameter("errorMessage", errorMessage);
+    }
+
+    public Resolution editBookingReferenceNumber() {
+        if (bookingReferenceNumber != null) {
+            if (reversePickupOrder.getCourierName() == null || reversePickupOrder.getPickupTime() == null) {
+                errorMessage = "Edit RP to add Courier Name and Pick time";
+            } else {
+                reversePickupOrder.setBookingReferenceNumber(bookingReferenceNumber.trim());
                 reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
             }
         }
@@ -226,5 +240,13 @@ public class ReversePickupListAction extends BasePaginatedAction {
 
     public void setReversePickupId(String reversePickupId) {
         this.reversePickupId = reversePickupId;
+    }
+
+    public String getBookingReferenceNumber() {
+        return bookingReferenceNumber;
+    }
+
+    public void setBookingReferenceNumber(String bookingReferenceNumber) {
+        this.bookingReferenceNumber = bookingReferenceNumber;
     }
 }
