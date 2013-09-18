@@ -48,7 +48,7 @@
                         <%--<li><a href="">Shipping Rates & Policies</a></li>--%>
                         <li><a href="/beta/hk/FAQ.action#delivery">Delivery Policies</a></li>
                         <li><a href="/beta/hk/FAQ.action#return">Returns Policy</a></li>
-                        <li><s:link beanclass="com.hk.web.action.beta.hk.FAQAction">FAQs and Help</s:link></li>
+                        <li><a href="/beta/hk/FAQ.action">FAQs and Help</a></li>
                         <li><a href="/beta/hk/ContactUs.action">Contact Us</a></li>
                     </ul>
                 </div>
