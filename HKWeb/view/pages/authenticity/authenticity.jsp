@@ -91,7 +91,7 @@
       <div class="cont03-right-txt">
         <p>Spurious ingredients mixed with steroids make for cheap supplements. The supplement is made to look like the real thing and the results are directly because of the supplements.</p>
         <p>
-          You get <span>cancer</span> and <span>severe impotence</span> without smoking like a chimney, <span>skin diseases</span> and rashes without being infected, <span>kidney and liver damage</span> without alcohol, <span>hormonal imbalance</span> without the stress, <span>mood swings</span>, <span>hair loss</span> and <span>permanent organ damage</span> without ever asking for it. That’s what anabolic steroids do in a nutshell
+          You get <span>cancer</span> and <span>severe impotence</span> without smoking like a chimney, <span>skin diseases</span> and rashes without being infected, <span>kidney and liver damage</span> without alcohol, <span>hormonal imbalance</span> without the stress, <span>mood swings</span>, <span>hair loss</span> and <span>permanent organ damage</span> without ever asking for it. That&#39;s what anabolic steroids do in a nutshell
         </p></div>
     </div>
 
@@ -164,19 +164,19 @@
     <div class="cl"></div>
 
     <ul>
-      <li><img src="images/allmax.jpg"><a class="certificate" href="images/allmax-certificate.jpg" title="Allmax Certificate">Certificate »</a></li>
-      <li><img src="images/gaspari.jpg"><a class="certificate" href="images/gaspari-certificate.jpg" title="Gaspari Certificate">Certificate »</a></li>
-      <li><img src="images/six-star.jpg"><a class="certificate" href="images/six-star-certificate.jpg" title="Six Star Certificate">Certificate »</a></li>
-      <li><img src="images/universal.jpg"><a class="certificate" href="images/universal-certificate.jpg" title="Universal Certificate">Certificate »</a></li>
-      <li><img src="images/stacker-bottle.jpg"><a class="certificate" href="images/stacker-bottle-certifiacate.jpg" title="Stacke Bottle Certificate">Certificate »</a></li>
-      <li><img src="images/vpx.jpg"><a class="certificate" href="images/vpx-certificate.jpg" title="VPX Certificate">Certificate »</a></li>
+      <li><img src="images/allmax.jpg"><a class="certificate" href="images/allmax-certificate.jpg" title="Allmax Certificate">Certificate &raquo;</a></li>
+      <li><img src="images/gaspari.jpg"><a class="certificate" href="images/gaspari-certificate.jpg" title="Gaspari Certificate">Certificate &raquo;</a></li>
+      <li><img src="images/six-star.jpg"><a class="certificate" href="images/six-star-certificate.jpg" title="Six Star Certificate">Certificate &raquo;</a></li>
+      <li><img src="images/universal.jpg"><a class="certificate" href="images/universal-certificate.jpg" title="Universal Certificate">Certificate &raquo;</a></li>
+      <li><img src="images/stacker-bottle.jpg"><a class="certificate" href="images/stacker-bottle-certifiacate.jpg" title="Stacke Bottle Certificate">Certificate &raquo;</a></li>
+      <li><img src="images/vpx.jpg"><a class="certificate" href="images/vpx-certificate.jpg" title="VPX Certificate">Certificate &raquo;</a></li>
     </ul>
     <div class="cl"></div>
     <ul>
-      <li><img src="images/muscletech.jpg"><a href="http://international.muscletech.com/global/distributorsintl.shtml#i">Website »</a></li>
-      <li><img src="images/qnt.jpg"><a href="http://qntsport.com/in/index.php?page=partners&hl=en_US">Website »</a></li>
-      <li><img src="images/twinlab.jpg"><a href="http://www.twinlabfuel.com/content/international-contacts">Website »</a></li>
-      <li><img src="images/dymatize.jpg"><a href="http://www.dymatize.com/index.php?submenu=Distributors&src=directory&view=retailers&srctype=distributors_listing">Website »</a></li>
+      <li><img src="images/muscletech.jpg"><a href="http://international.muscletech.com/global/distributorsintl.shtml#i">Website &raquo;</a></li>
+      <li><img src="images/qnt.jpg"><a href="http://qntsport.com/in/index.php?page=partners&hl=en_US">Website &raquo;</a></li>
+      <li><img src="images/twinlab.jpg"><a href="http://www.twinlabfuel.com/content/international-contacts">Website &raquo;</a></li>
+      <li><img src="images/dymatize.jpg"><a href="http://www.dymatize.com/index.php?submenu=Distributors&src=directory&view=retailers&srctype=distributors_listing">Website &raquo;</a></li>
     </ul>
     <div class="cl"></div>
 
