@@ -14,6 +14,8 @@ public class HkrUpdateSpeakToUserDetails {
   private String contactNumber;
   @JsonProperty(DtoJsonConstants.SUBSCRIBE)
   private boolean subscribe;
+  @JsonProperty(DtoJsonConstants.CATEGORY_NAME)
+  private String categoryName;
 
   public String getName() {
     return name;
@@ -45,5 +47,13 @@ public class HkrUpdateSpeakToUserDetails {
 
   public void setSubscribe(boolean subscribe) {
     this.subscribe = subscribe;
+  }
+
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
   }
 }

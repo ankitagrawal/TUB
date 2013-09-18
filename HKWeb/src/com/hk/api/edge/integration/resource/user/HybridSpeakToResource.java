@@ -34,6 +34,7 @@ public class HybridSpeakToResource {
       dcml.setMobile(hkrUpdateSpeakToUserDetails.getContactNumber());
       dcml.setEmail(hkrUpdateSpeakToUserDetails.getEmail());
       dcml.setCouponCode(couponCode);
+      dcml.setCategory(hkrUpdateSpeakToUserDetails.getCategoryName());
       dcml.setSubscribeEmail(hkrUpdateSpeakToUserDetails.isSubscribe());
       dcml.setSubscribeMobile(hkrUpdateSpeakToUserDetails.isSubscribe());
       dcml.setRequestDate(new Date());

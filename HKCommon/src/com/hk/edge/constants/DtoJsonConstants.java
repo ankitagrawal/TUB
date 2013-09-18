@@ -294,4 +294,5 @@ public class DtoJsonConstants {
 
     public static final String VALID = "valid";
     public static final String  SUBSCRIBE = "subscribe";
+    public static final String  CATEGORY_NAME = "catName";
 }
