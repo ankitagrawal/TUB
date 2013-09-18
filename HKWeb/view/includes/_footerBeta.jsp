@@ -7,7 +7,7 @@
 <%@ page import="java.util.Arrays" %>
 
 <s:layout-definition>
-    <s:useActionBean beanclass="com.hk.web.action.beta.menu.StoreMenuAction" var="menuAction" event="pre"/>
+    <s:useActionBean beanclass="com.hk.web.action.nwb.NwbMenuAction" var="menuAction" event="pre"/>
 
     <%
         UserService userService = ServiceLocatorFactory.getService(UserService.class);
