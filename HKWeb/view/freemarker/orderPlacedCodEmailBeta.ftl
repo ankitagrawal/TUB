@@ -5,7 +5,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 </head>
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
 <#--<#include "header.ftl">-->
-<table width="530" border="0" align="center" cellpadding="0" cellspacing="0">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 <#include "headerBeta.ftl">
     <tbody>
     <tr>
