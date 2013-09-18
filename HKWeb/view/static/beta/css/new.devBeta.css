@@ -3451,10 +3451,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 #footer .ftr-link-cntnr h4 {
-    margin-bottom: 2px;
+    margin-bottom: 5px;
     color: #0091d7;
     text-transform: capitalize;
-    font-size: 0.9em;
+    font-size: 1.1em;
     font-weight: 600;
 }
 

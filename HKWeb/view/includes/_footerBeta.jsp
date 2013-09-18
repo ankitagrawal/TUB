@@ -7,6 +7,7 @@
 <%@ page import="java.util.Arrays" %>
 
 <s:layout-definition>
+    <s:useActionBean beanclass="com.hk.web.action.beta.menu.StoreMenuAction" var="menuAction" event="pre"/>
 
     <%
         UserService userService = ServiceLocatorFactory.getService(UserService.class);
@@ -45,9 +46,31 @@
                     <ul>
                         <li><a href="/beta/account/MyAccount.action">Your Account</a></li>
                         <%--<li><a href="">Shipping Rates & Policies</a></li>--%>
-                        <li><a href="/beta/hk/FAQ.action">FAQs</a></li>
+                        <li><a href="/beta/hk/FAQ.action#delivery">Delivery Policies</a></li>
                         <li><a href="/beta/hk/FAQ.action#return">Returns Policy</a></li>
+                        <li><s:link beanclass="com.hk.web.action.beta.hk.FAQAction">FAQs and Help</s:link></li>
                         <li><a href="/beta/hk/ContactUs.action">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-menu">
+                    <h4>Categories</h4>
+                    <ul>
+                        <c:forEach items="${menuAction.menuNodes}" var="menuNode">
+                            <li><a href="${menuNode.url}">${menuNode.name}</a></li>
+                        </c:forEach>
+                    </ul>
+                </div>
+                <div class="footer-menu">
+                    <h4>Brands</h4>
+                    <ul>
+                        <li><a href="/brand/muscleblaze?navKey=BR-539">MuscleBlaze</a></li>
+                        <li><a href="/brand/healthviva?navKey=BR-427">HealthViva</a></li>
+                        <li><a href="/brand/optium?navKey=BR-203">Optimum Nutrition</a></li>
+                        <li><a href="/brand/dymatize?navKey=BR-497">Dymatize</a></li>
+                        <li><a href="/brand/gaspari-nutrition?navKey=BR-498">Gaspari</a></li>
+                        <li><a href="/brand/accu-chek?navKey=BR-165">Accu-Chek</a></li>
+                        <li><a href="/brand/loreal-paris?navKey=BR-107">L'Oreal Paris</a></li>
+                        <li><a href="/brand/muscletech?navKey=BR-502">Muscletech</a></li>
                     </ul>
                 </div>
                 <%--<div class="footer-menu">--%>
@@ -61,7 +84,7 @@
                         <%--<li><a href="">Gift Cards</a></li>--%>
                     <%--</ul>--%>
                 <%--</div>--%>
-                <div class="span5 offset3 subscibe-mail-cntnr">
+                <div class="subscibe-mail-cntnr">
                     <p class="label-txt">Sign Up for emails and latest offers</p>
                     <input type="text" name="subscriptionEmail" id="subscriptionEmail" placeholder="Email address"
                            value=""/>
