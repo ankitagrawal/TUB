@@ -545,7 +545,7 @@ width: 80px;
 		<td>Tax:</td>
 		<td>
 			<c:choose>
-				<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+				<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 					<label class="state"><strong>NON-CST</strong></label>
 				</c:when>
 				<c:otherwise>
@@ -656,7 +656,7 @@ width: 80px;
 		<th>UPC</th>
 		<th>Details</th>
 		<c:choose>
-			<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+			<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 				<th>Tax<br/>Category</th>
 			</c:when>
 			<c:otherwise>
@@ -726,7 +726,7 @@ width: 80px;
 					<input type="hidden" value="finance"
 					       class="taxIdentifier"/>
 					<c:choose>
-						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+						<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 							<s:select name="purchaseInvoiceLineItems[${ctr.index}].tax"
 							          value="${purchaseInvoiceLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
@@ -858,7 +858,7 @@ width: 80px;
 		<th>UPC</th>
 		<th>Details</th>
 		<c:choose>
-			<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+			<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 				<th>Tax<br/>Category</th>
 			</c:when>
 			<c:otherwise>
@@ -941,7 +941,7 @@ width: 80px;
 					<input type="hidden" value="finance"
 					       class="taxIdentifier"/>
 					<c:choose>
-						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+						<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 							<s:select name="extraInventoryShortLineItems[${ctr.index}].tax" 
 							          value="${extraInventoryShortLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
@@ -1055,7 +1055,7 @@ width: 80px;
 		<th>UPC</th>
 		<th>Details</th>
 		<c:choose>
-			<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+			<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 				<th>Tax<br/>Category</th>
 			</c:when>
 			<c:otherwise>
@@ -1140,7 +1140,7 @@ width: 80px;
 					<input type="hidden" value="finance"
 					       class="taxIdentifier"/>
 					<c:choose>
-						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+						<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax" 
 							          value="${extraInventoryLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"

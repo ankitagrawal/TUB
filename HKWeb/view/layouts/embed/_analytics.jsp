@@ -28,6 +28,8 @@ Label: [brand:Vitamin Shoppe BodyTech]
 
     if (AnalyticsConstants.analytics) {
   %>
+  <c:set var="searchString" value="'" />
+  <c:set var="replaceString" value="\\'" />
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', '<%=AnalyticsConstants.gaCode%>']);
@@ -37,6 +39,7 @@ Label: [brand:Vitamin Shoppe BodyTech]
     if ((orderCountSet == null || !orderCountSet) && (orderCount != null)) {
       session.setAttribute(HealthkartConstants.Session.orderCountSetBoolean, true);
   %>
+    window.orderCount = '<%=orderCount%>';
     _gaq.push(['_setCustomVar',
       <%=AnalyticsConstants.CustomVarSlot.sessionOrderCount.getSlot()%>,
       "<%=AnalyticsConstants.CustomVarSlot.sessionOrderCount.getName()%>",
@@ -60,18 +63,21 @@ Label: [brand:Vitamin Shoppe BodyTech]
         // the landing page URL gives us info on the context of this page
         // or we can also use the variables passed in
   %>
+    window.lpBrand = '${fn:replace(brand, searchString, replaceString)}';
     _gaq.push(['_setCustomVar',
       <%=AnalyticsConstants.CustomVarSlot.lpBrand.getSlot()%>,
       "<%=AnalyticsConstants.CustomVarSlot.lpBrand.getName()%>",
-      "${brand}",
+      '${fn:replace(brand, searchString, replaceString)}',
       <%=AnalyticsConstants.CustomVarSlot.lpBrand.getScope().getLevel()%>
     ]);
+    window.lpPrimCat = "${fn:replace(topCategory, searchString, replaceString)}";
     _gaq.push(['_setCustomVar',
       <%=AnalyticsConstants.CustomVarSlot.lpPrimCat.getSlot()%>,
       "<%=AnalyticsConstants.CustomVarSlot.lpPrimCat.getName()%>",
       "${topCategory}",
       <%=AnalyticsConstants.CustomVarSlot.lpPrimCat.getScope().getLevel()%>
     ]);
+    window.lpCatTree = "${hk:isNotBlank(urlFragment) ? urlFragment : originalUrlHeader}";
     _gaq.push(['_setCustomVar',
       <%=AnalyticsConstants.CustomVarSlot.lpCatTree.getSlot()%>,
       "<%=AnalyticsConstants.CustomVarSlot.lpCatTree.getName()%>",
@@ -105,23 +111,23 @@ Label: [brand:Vitamin Shoppe BodyTech]
 
   </script>
 
-  <!--Begin: Tracking code for MicroAd Blade-->
-  <script type="text/javascript">
-  	var blade_co_account_id='4184';
-  	var blade_group_id='';
-  	(function() {
-  	var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
-  	var path = '/js/bl_track_others.js';
+  <%--<!--Begin: Tracking code for MicroAd Blade-->--%>
+  <%--<script type="text/javascript">--%>
+  	<%--var blade_co_account_id='4184';--%>
+  	<%--var blade_group_id='';--%>
+  	<%--(function() {--%>
+  	<%--var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';--%>
+  	<%--var path = '/js/bl_track_others.js';--%>
 
-  	var bs = document.createElement('script');
-  	bs.type = 'text/javascript'; bs.async = true;
-  	bs.charset = 'utf-8'; bs.src = host + path;
+  	<%--var bs = document.createElement('script');--%>
+  	<%--bs.type = 'text/javascript'; bs.async = true;--%>
+  	<%--bs.charset = 'utf-8'; bs.src = host + path;--%>
 
-  	var s = document.getElementsByTagName('script')[0];
-  	s.parentNode.insertBefore(bs, s);
-  	})();
-  </script>
-  <!--End: Tracking code for MicroAd Blade-->
+  	<%--var s = document.getElementsByTagName('script')[0];--%>
+  	<%--s.parentNode.insertBefore(bs, s);--%>
+  	<%--})();--%>
+  <%--</script>--%>
+  <%--<!--End: Tracking code for MicroAd Blade-->--%>
   <%
     }
   %>

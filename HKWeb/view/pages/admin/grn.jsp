@@ -338,7 +338,7 @@ $(document).ready(function() {
         <td>Tax</td>
         <td>
             <c:choose>
-                <c:when test="${pa.grn.purchaseOrder.supplier.state == pa.grn.warehouse.state}">
+                <c:when test="${hk:equalsIgnoreCase(pa.grn.purchaseOrder.supplier.state, pa.grn.warehouse.state)}">
                     <label class="state">NON-CST</label>
                 </c:when>
                 <c:otherwise>

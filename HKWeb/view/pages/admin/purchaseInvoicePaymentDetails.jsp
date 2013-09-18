@@ -75,7 +75,7 @@
 		<td>Tax</td>
 		<td>
 			<c:choose>
-				<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
+				<c:when test="${hk:equalsIgnoreCase(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)}">
 					<label class="state">NON-CST</label>
 				</c:when>
 				<c:otherwise>
