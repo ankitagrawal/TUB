@@ -107,7 +107,7 @@ public class HybridNotifyMeResource {
       messages.add("There came an Error, please try again");
       return new JSONResponseBuilder().addField("exception",true).addField("msgs",messages).build();
     }
-    messages.add("Your request for this variant has already been received. We will get back to you very soon. Thanks for your visit.");
+    messages.add("Your request for this variant has been received. We will get back to you very soon. Thanks for your visit.");
     return new JSONResponseBuilder().addField("exception",false).addField("success",true).addField("msgs",messages).build();
   }
 
