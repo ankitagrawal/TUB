@@ -70,6 +70,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
   public List<SkuGroup> getAllInStockSkuGroups(Sku sku) {
     return skuGroupDao.getAllInStockSkuGroups(sku);
   }
+  
+  public List<SkuGroup> getAllCheckedInBatchesWithBarcode(ProductVariant productVariant){
+  	return skuGroupDao.getAllCheckedInBatchesWithBarcode(productVariant);
+  }
 
 
   /**
