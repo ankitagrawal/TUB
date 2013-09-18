@@ -64,13 +64,32 @@
                     <td class="border-td">
                       <c:choose>
                         <c:when test="${variant.deleted || variant.product.deleted}">
-                          <strong>${variant.product.name}</strong><span class="gry" id="message">&nbsp;&nbsp;(Product not available)</span>
+                          <strong>
+                              <c:choose>
+                                  <c:when test="${empty variant.variantName}">
+                                      ${variant.product.name}
+                                  </c:when>
+                                  <c:otherwise>
+                                      ${variant.variantName}
+                                  </c:otherwise>
+                              </c:choose>
+                          </strong>
+                          <span class="gry" id="message">&nbsp;&nbsp;(Product not available)</span>
                         </c:when>
                         <c:otherwise>
                           <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" id="productLink">
                             <s:param name="productId" value="${variant.product.id}"/>
                             <s:param name="productSlug" value="${variant.product.slug}"/>
-                            <strong>${variant.product.name}</strong>
+                            <strong>
+                              <c:choose>
+                                <c:when test="${empty variant.variantName}">
+                                  ${variant.product.name}
+                                </c:when>
+                                <c:otherwise>
+                                  ${variant.variantName}
+                                </c:otherwise>
+                              </c:choose>
+                            </strong>
                           </s:link>
                           <c:if test="${variant.outOfStock}">
                             <span class="gry" id="message">&nbsp;&nbsp;(Product out of stock)</span>
@@ -145,16 +164,43 @@
                       <c:choose>
                         <c:when
                             test="${cartLineItem.productVariant.deleted || cartLineItem.productVariant.product.deleted}">
-                          <strong>${cartLineItem.productVariant.product.name}</strong><span class="gry" id="message">&nbsp;&nbsp;(Product not available)</span>
+                          <strong>
+                              <c:choose>
+                                  <c:when test="${empty cartLineItem.productVariant.variantName}">
+                                      ${cartLineItem.productVariant.product.name}
+                                  </c:when>
+                                  <c:otherwise>
+                                      ${cartLineItem.productVariant.variantName}
+                                  </c:otherwise>
+                              </c:choose>
+                          </strong><span class="gry" id="message">&nbsp;&nbsp;(Product not available)</span>
                         </c:when>
                         <c:when test="${cartLineItem.productVariant.outOfStock}">
-                          <strong>${cartLineItem.productVariant.product.name}</strong><span class="gry" id="message">&nbsp;&nbsp;(Product out of stock)</span>
+                          <strong>
+                              <c:choose>
+                                  <c:when test="${empty cartLineItem.productVariant.variantName}">
+                                      ${cartLineItem.productVariant.product.name}
+                                  </c:when>
+                                  <c:otherwise>
+                                      ${cartLineItem.productVariant.variantName}
+                                  </c:otherwise>
+                              </c:choose>
+                          </strong><span class="gry" id="message">&nbsp;&nbsp;(Product out of stock)</span>
                         </c:when>
                         <c:otherwise>
                           <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" id="productLink">
                             <s:param name="productId" value="${variant.product.id}"/>
                             <s:param name="productSlug" value="${variant.product.slug}"/>
-                            <strong>${cartLineItem.productVariant.product.name}</strong>
+                            <strong>
+                                <c:choose>
+                                    <c:when test="${empty cartLineItem.productVariant.variantName}">
+                                        ${cartLineItem.productVariant.product.name}
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${cartLineItem.productVariant.variantName}
+                                    </c:otherwise>
+                                </c:choose>
+                            </strong>
                           </s:link>
                         </c:otherwise>
                       </c:choose>

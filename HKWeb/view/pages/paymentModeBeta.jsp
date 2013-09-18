@@ -625,7 +625,14 @@
                                                      </c:if>
                                                   </c:when>
                                                   <c:otherwise>
-                                                       ${cartLineItem.productVariant.product.name}
+                                                      <c:choose>
+                                                          <c:when test="${empty cartLineItem.productVariant.variantName}">
+                                                              ${cartLineItem.productVariant.product.name}
+                                                          </c:when>
+                                                          <c:otherwise>
+                                                              ${cartLineItem.productVariant.variantName}
+                                                          </c:otherwise>
+                                                      </c:choose>
                                                   </c:otherwise>
                                                </c:choose>
                                        </td>
