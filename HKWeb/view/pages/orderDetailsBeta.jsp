@@ -92,7 +92,16 @@
                             </strong>
                           </s:link>
                           <c:if test="${variant.outOfStock}">
-                            <span class="gry" id="message">&nbsp;&nbsp;(Product out of stock)</span>
+                            <span class="gry" id="message">&nbsp;&nbsp;
+                                <c:choose>
+                                    <c:when test="${empty variant.variantName}">
+                                        (Product out of stock)
+                                    </c:when>
+                                    <c:otherwise>
+                                        (Variant out of stock)
+                                    </c:otherwise>
+                                </c:choose>
+                            </span>
                           </c:if>
                         </c:otherwise>
                       </c:choose>

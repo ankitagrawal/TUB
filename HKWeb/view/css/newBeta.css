@@ -7033,6 +7033,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     font-weight: 700;
 }
 
+.fnt-ttl {
+    text-transform: capitalize;
+}
+
 .fnt-caps {
     text-transform: uppercase;
     /*font-family: "OpenSansSB" !important;*/
