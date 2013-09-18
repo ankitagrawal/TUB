@@ -573,8 +573,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       Sku sku = getBaseDao().get(Sku.class, skuId);
       productVariant.setWarehouse(sku.getWarehouse());
     }
-    getBaseDao().save(productVariant);
+    productVariant =(ProductVariant) getBaseDao().save(productVariant);
+    getBaseDao().refresh(productVariant);
     Product product = productVariant.getProduct();
+
     List<ProductVariant> inStockVariants = product.getInStockVariants();
     if (inStockVariants != null && inStockVariants.isEmpty()) {
       product.setOutOfStock(true);
