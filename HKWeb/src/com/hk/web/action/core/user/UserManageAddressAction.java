@@ -65,7 +65,7 @@ public class UserManageAddressAction extends BaseAction {
         affiliate = affiliateDao.getAffilateByUser(user);
 
         if (isHybridRelease()) {
-            return new ForwardResolution("/pages/manageUserAddresses.jsp");
+            return new ForwardResolution("/pages/manageUserAddressesBeta.jsp");
         }
         return new ForwardResolution("/pages/manageUserAddresses.jsp");
     }
@@ -98,7 +98,11 @@ public class UserManageAddressAction extends BaseAction {
             address.setCountry(country);
             address = addressDao.save(address);
         }
-        addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
+        addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                    "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                        "Your changes have been saved." +
+                                                    "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                                  "</div>"));
         return showAddressBook();
     }
 
@@ -138,7 +142,11 @@ public class UserManageAddressAction extends BaseAction {
         }
         address.setDeleted(true);
         addressDao.save(address);
-        addRedirectAlertMessage(new LocalizableMessage("/SelectAddress.action.address.deleted"));
+        addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                            "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                                "Address has been successfully deleted" +
+                                                            "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                                        "</div>"));
         return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
     }
 

@@ -11,6 +11,23 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
   </s:layout-component>
+
+    <s:layout-component name="centralContent">
+        <%--breadcrumbs begins--%>
+        <div class="hk-breadcrumb-cntnr mrgn-bt-10">
+                <span>
+                   <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
+                </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">
+                <s:link beanclass="com.hk.web.action.core.user.MyAccountAction">Account</s:link>
+            </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">Edit Basic Information</span>
+        </div>
+        <%--breadcrumbs ends--%>
+    </s:layout-component>
+
   <s:layout-component name="lhsContent">
     <jsp:include page="myaccount-navBeta.jsp"/>
   </s:layout-component>
@@ -27,7 +44,7 @@
           <div class="row">
             <s:label class="rowLabel" name="Name"/>
             <s:text name="user.name" value="${maa.user.name}" class="rowText" id="userName"/>
-            <s:label name="Name cannot be greater than 80 characters!" class="error"/>
+            <s:label name="Please enter your Name" class="errorEnterName hide"/>
           </div>
 
           <div class="clear"></div>
@@ -35,7 +52,9 @@
 
           <div class="row">
             <s:label class="rowLabel" name="Email"/>
-            <s:text name="user.email" value="${maa.user.email}" class="rowText"/>
+            <s:text name="user.email" value="${maa.user.email}" class="rowText" id="userEmail"/>
+            <s:label name="Please enter Email address" class="errorEnterEmail hide"/>
+              <s:label name="Email address is not valid" class="errorInvalidEmail hide"/>
           </div>
 
           <div class="clear"></div>
@@ -90,7 +109,7 @@
         <div style="margin-top: 10px"></div>
 
         <div style="float: left; width: 210px;text-align: right;">
-          <s:submit name="saveBasicInformation" value="Update" style="display:inline-block;" class="btn btn-blue"/>
+          <s:submit name="saveBasicInformation" value="Update" style="display:inline-block;" class="btn btn-blue" id ="submitButton"/>
         </div>
 
       </div>
@@ -100,36 +119,109 @@
 </s:layout-render>
 
 <script type="text/javascript">
-  window.onload = function() {
-    $('#myAccountLink').addClass('selected');
-    document.getElementById('birthDate').labelify({labelledClass: 'input_tip'});
-  };
 
-  $(document).ready(function() {
-    $('.error').hide();
-    $('#userName').change(_validateUserName);
+    window.onload = function() {$('#myAccountLink').addClass('selected');};
 
-    $(document).click(function() {
-      $('.error').fadeOut();
-    });
+    $(document).ready(function() {
 
-    function _validateUserName() {
-      if ($('#userName').val().length > 80) {
-        $('.error').fadeIn();
-        //        var position = $('#userName').position();
-        //        var width = $('#userName').innerWidth();
-        //        var height = $('#userName').innerHeight();
-        //        $('.errorMessage .line1').html("Name cannot be greater than 80 characters!");
-        //        $('.errorMessage').css("top", position.top);
-        //        $('.errorMessage').css("height",height);
-        //        $('.errorMessage').css("left", position.left + width);
-        //        $('.errorMessage').css("left", position.left + width);
-        //        $('.errorMessage').animate({
-        //          opacity: 1
-        //        }, 500);
+
+//      $('#userName').change(_validateIsNullName);
+//      $('#userEmail').change(_validateIsNullEmail);
+
+      $('#submitButton').click(function(event) {
+          var errorCount = false;
+          $('.errorEnterName').hide();
+          $('.errorEnterEmail').hide();
+          $('.errorInvalidEmail').hide();
+          if(_validateIsNullName())
+             errorCount = true;
+          if(_validateIsNullEmail())
+              errorCount = true;
+          if(errorCount == true)
+             event.preventDefault();
+          return !errorCount;
+      });
+
+      $(document).click(function() {
+          $('.errorEnterName').fadeOut();
+          $('.errorEnterEmail').fadeOut();
+          $('.errorInvalidEmail').fadeOut(); 
+      });
+
+      function _validateIsNullName() {
+          if (!($('#userName').val().length)) {
+              $('.errorEnterName').fadeIn();
+              return true;
+          }
+          return false;
       }
-    }
+
+      function _validateIsNullEmail() {
+          if (!($('#userEmail').val().length)) {
+              $('.errorEnterEmail').fadeIn();
+              return true;
+          }
+         else
+             return _validateIsInvalidEmail();
+      }
+
+      function _validateIsInvalidEmail() {
+            regexEMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+            if (! regexEMAIL.test($('#userEmail').val())) {
+                $('.errorInvalidEmail').fadeIn();
+                return true;
+          }
+            return false;
+        }
+
+//      $('#saveBasicInformation').click(function(event){
+//         var doSubmit = true;
+//          hideErrMsg('#userName');
+//          hideErrMsg('#userEmail');
+//         if(validateIsNull('#userName') || validateIsNull('#userEmail') ){
+//          if(validateIsNull('#userName'))
+//             showErrMsg('#userName', 'Please Enter Your Name');
+//          if(validateIsNull('#userEmail'))
+//             showErrMsg('#userEmail', 'Please Enter Your Email ID');
+//          doSubmit = false;
+//         }
+//        else {
+//          doSubmit = true;
+//        }
+//        if (doSubmit != true) {
+//          event.preventDefault();
+//        }
+//      });
+//
+//    validateIsNull = function(ele){
+//       if(ele.val().length <= 0)
+//        return true
+//       else
+//        return false
+//    }
+//
+//    showErrMsg = function(ele,msg){
+//     var errorIcn = $("<span class='icn-warning-small err-icn' ></span>");
+//     var errTxtMsg = $("<p class='err-txt'>" + msg + "</p>");
+//     if (!$(ele).hasClass('err-brdr')) {
+//        $(ele).addClass('err-brdr');
+//        $(ele).after(errorIcn);
+//        $(ele).after(errTxtMsg);
+//        return true
+//     }
+//     return false
+//    }
+//
+//    hideErrMsg = function (ele) {
+//     ele = this.prep(ele);
+//     $(ele).removeClass('err-brdr');
+//     $(ele).next('.err-txt').remove();
+//     $(ele).next('.icn-warning-small').remove();
+//    }
   });
+
+
+
 </script>
 <style type="text/css">
   .row {
@@ -176,4 +268,14 @@
   .row a{
         float: right;
     }
+
+  .errorEnterName,  .errorEnterEmail,  .errorInvalidEmail {
+      color: red;
+      float: right;
+      bottom: 15px;
+      position: relative;
+      width: 315px;
+      margin: 0;
+      clear: both;
+  }
 </style>

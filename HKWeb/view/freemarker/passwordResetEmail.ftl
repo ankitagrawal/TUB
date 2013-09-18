@@ -5,6 +5,7 @@ Reset Password Instructions - HealthKart.com
 </head>
 <body>
 <#include "header.ftl">
+<table>
 <p>Hi ${user.name},</p>
 
 <p style="margin-bottom:1em">Can't remember your password?</p>
@@ -24,6 +25,7 @@ Reset Password Instructions - HealthKart.com
 <p>Happy Shopping!</p>
 
 <p><strong>HealthKart.com</strong></p>
+</table>
 <#include "footer.ftl">
 </body>
 </html>

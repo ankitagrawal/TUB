@@ -12,6 +12,17 @@
 <s:layout-render name="/layouts/defaultBeta.jsp">
 <s:layout-component name="heading">My Account</s:layout-component>
 <s:layout-component name="centralContent">
+
+    <%--breadcrumbs begins--%>
+    <div class="hk-breadcrumb-cntnr mrgn-bt-10">
+            <span>
+               <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
+            </span>
+        <span>&raquo;</span>
+        <span class="txt-blue fnt-bold">Account</span>
+    </div>
+    <%--breadcrumbs ends--%>
+
     <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
         <div class="err-cntnr">
             <span class="icn-warning-small"></span>
@@ -59,6 +70,7 @@
   <%
   UserProfileService userProfileService = ServiceLocatorFactory.getService(UserProfileService.class);
   %>
+
   <c:set var="productVariants" value="<%=userProfileService.getRecentlyOrderedProductVariantsForUser(maa.getUser())%>"/>
   <c:set var="recentOrders" value="<%=userProfileService.getOrdersForUserSortedByDate(maa.getUser())%>"/>
   <c:set var="addresses" value="${maa.addresses}"/>
@@ -70,7 +82,8 @@
         <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
           <fieldset>
             <c:forEach items="${productVariants}" var="variant" varStatus="ctr">
-              <div class="cont footer_color" width="100%" style="font-size: smaller;">
+                <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(variant.id)}"/>
+                <div class="cont footer_color" width="100%" style="font-size: smaller;">
                 <div style="border-bottom: 1px solid #f0f0f0;">
                   <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
                   <s:checkbox name="productVariantList[${ctr.index}].selected" class="lineItemCheckBox"/>
@@ -78,7 +91,8 @@
                   <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link">
                     <s:param name="productId" value="${variant.product.id}"/>
                     <s:param name="productSlug" value="${variant.product.slug}"/>
-                    ${variant.product.name}
+                    <%--${variant.product.name}--%>
+                    ${storeVariantBasic.name}
                   </s:link>
                 </div>
               </div>
@@ -256,56 +270,67 @@
   <c:if test="${!empty recentOrders}">
     <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
       <h2 class="strikeline"> Recent Orders</h2>
-      <table class="cont footer_color">
-        <th>Order Id</th>
-        <th>Order Date</th>
-        <th>Invoices</th>
-        <th>Order Status</th>
-
-        <c:forEach items="${recentOrders}" end="2" var="order">
-          <tr>
-            <td>
-                ${order.gatewayOrderId}
-              <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
-                <s:param name="order" value="${order}"/>
-                (View Order)
-              </s:link>
-            </td>
-            <td>
-              <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
-            </td>
-            <td>
-              <c:set var="shippingOrders" value="${order.shippingOrders}"/>
-              <c:choose>
-                <c:when test="${!empty shippingOrders}">
-                  <c:forEach items="${shippingOrders}" var="shippingOrder">
-                    <%--<p>--%>
-                    <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank">
-                      <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-                      R-${shippingOrder.id}
-                    </s:link>
-                    <%--</p>--%>
-                  </c:forEach>
-                </c:when>
-                <c:otherwise>
-                  <%--<p>--%>
-                  <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
-                    <s:param name="order" value="${order.id}"/>
-                    R-${order.id}
-                  </s:link>
-                  <%--</p>--%>
-                </c:otherwise>
-              </c:choose>
-            </td>
-            <td>
-                ${order.orderStatus.name}
-              <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" target="_blank">
-                <s:param name="order" value="${order.id}"/>
-                (View Order Details)
-              </s:link>
-            </td>
-          </tr>
-        </c:forEach>
+        <table class="order-tbl">
+            <tr class="order-specs-hdr btm-brdr">
+                <th class="fnt-bold">Order Id</th>
+                <th class="fnt-bold">Order Date</th>
+                <th class="fnt-bold">Invoices</th>
+                <th class="fnt-bold">Order Status</th>
+            </tr>
+            <tbody>
+                <c:forEach items="${recentOrders}" end="2" var="order" varStatus="ctr">
+                <c:if test="${ctr.first}">
+                <tr class="order-tr top-brdr">
+                    </c:if>
+                    <c:if test="${ctr.last}">
+                <tr class="${ctr.index%2==0? 'order-tr btm-brdr':'order-tr btm-brdr bg-gray'}">
+                    </c:if>
+                    <c:if test="${!(ctr.first || ctr.last)}">
+                <tr class="${ctr.index%2==0? 'order-tr':'order-tr bg-gray'}">
+                    </c:if>
+                    <td>
+                        ${order.gatewayOrderId}
+                      <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank" class="txt-blue">
+                        <s:param name="order" value="${order}"/>
+                        (View Order)
+                      </s:link>
+                    </td>
+                    <td class="border-td">
+                      <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
+                    </td>
+                    <td class="border-td">
+                      <c:set var="shippingOrders" value="${order.shippingOrders}"/>
+                      <c:choose>
+                        <c:when test="${!empty shippingOrders}">
+                          <c:forEach items="${shippingOrders}" var="shippingOrder">
+                            <%--<p>--%>
+                            <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank">
+                              <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                              R-${shippingOrder.id}
+                            </s:link>
+                            <%--</p>--%>
+                          </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                          <%--<p>--%>
+                          <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank" class="txt-blue">
+                            <s:param name="order" value="${order.id}"/>
+                            R-${order.id}
+                          </s:link>
+                          <%--</p>--%>
+                        </c:otherwise>
+                      </c:choose>
+                    </td>
+                    <td>
+                        ${order.orderStatus.name}
+                      <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" target="_blank" class="txt-blue">
+                        <s:param name="order" value="${order.id}"/>
+                        (View Order Details)
+                      </s:link>
+                    </td>
+                </tr>
+                </c:forEach>
+            <tbody>
       </table>
     </s:form>
   </c:if>
@@ -334,10 +359,19 @@
       else {
         show_message();
         e.stopPropagation();
+//          $('.cart-pop-container').show();
+//          $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
       }
     });
 
-    $(".message .close").click(function() {
+      $('.remove-error').click(function () {
+          $(this).parent('.err-cntnr').remove();
+      });
+      $('.remove-success').click(function () {
+          $(this).parent('.alert-cntnr').remove();
+      });
+
+      $(".message .close").click(function() {
       hide_message();
       location.reload(true);
     });
@@ -351,6 +385,7 @@
     $('.addToCartButton').click(function() {
       $(this).parents('td').find('.progressLoader').show();
       $('#cartWindow').jqm();
+
     });
 
     $(".top_link, .go_to_top").click(function(event) {
@@ -380,9 +415,18 @@
             this.disabled = true;
           }
         });
-        $('.message .line1').html("<strong>" + res.data.addedProducts + "</strong> has been added to your shopping cart");
-        $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
-        //        $('.progressLoader').hide();
+
+        var ele = $('#cartPop');
+        var txt = ele.find('.body .msg');
+        txt.html('');
+        txt.append('<div class="fnt-bold mrgn-t-5">Cart Summary</div>');
+        txt.append('<div>' + res.data.itemsInCart + ' item </div>');
+        txt.append('<a href="/core/cart/Cart.action" class="btn btn-blue mrgn-bt-10" style="display:inline-block">Proceed to Cart</a>');
+        $('[data-role=cart-counter]').text(res.data.itemsInCart);
+        $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
+        $('html,body').animate({scrollTop: 0}, 300);
+
+          //        $('.progressLoader').hide();
       } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
         $('#cart_error1').html(getErrorHtmlFromJsonResponse(res))
             .slowFade(3000, 2000);
@@ -448,23 +492,4 @@
     margin-bottom: 2px;
   }
 
-  table {
-    width: 100%;
-    margin-bottom: 10px;
-    margin-top: 5px;
-    border: 1px solid;
-    border-collapse: separate;
-  }
-
-  table th {
-    background: #f0f0f0;
-    padding: 5px;
-    text-align: left;
-  }
-
-  table td {
-    padding: 5px;
-    text-align: left;
-    font-size: small;
-  }
 </style>

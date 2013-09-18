@@ -143,6 +143,7 @@ public class Keys {
         public static final String hybridRelease                   = "hybridRelease";
 
         public static final String fedExAccountNoMUM               = "fedExAccountNoMUM";
+        public static final String HK_LOGO_PATH                    = "hkLogoPath";
 
     }
 

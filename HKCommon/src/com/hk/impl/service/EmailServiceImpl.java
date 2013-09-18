@@ -37,18 +37,20 @@ public class EmailServiceImpl implements EmailService {
     private static Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     // private final int EMAIL_THREAD_POOL_COUNT = 3;
-
     @Autowired
-    FreeMarkerService     freeMarkerService;
+    FreeMarkerService freeMarkerService;
     @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
-    private String        noReplyEmail;
+    private String noReplyEmail;
     @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
-    private String        noReplyName;
+    private String noReplyName;
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
-    private String        contactEmail;
+    private String contactEmail;
     @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}")
-    private String        contactName;
-
+    private String contactName;
+    @Value("#{hkEnvProps['" + Keys.Env.HK_LOGO_PATH + "']}")
+    private String hkLogo;
+    @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
+    private boolean hybridRelease;
     /* private ExecutorService emailExecutorService = Executors.newFixedThreadPool(EMAIL_THREAD_POOL_COUNT); */
 
     /*
@@ -69,13 +71,14 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public boolean sendHtmlEmail(Template template, Object templateValues, String toEmail, String toName) {
-      boolean sent = false;
-      try {
-        sent = sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
-      } catch (Exception e) {
-        logger.error("Exception while sending Email", e.getStackTrace());
-      }
-      return sent;
+        boolean sent = false;
+        try {
+            sent = sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
+
+        } catch (Exception e) {
+            logger.error("Exception while sending Email", e.getStackTrace());
+        }
+        return sent;
     }
 
     public boolean sendHtmlEmail(Template template, Object templateValues, String toEmail, String toName, String replyToEmail) {
@@ -91,7 +94,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public Map<String, HtmlEmail> createHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, Map<String, String> headerMap) {
+                                                  String replyToName, Map<String, String> headerMap) {
         Map<String, HtmlEmail> returnMap = new HashMap<String, HtmlEmail>();
         FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templateValues);
         HtmlEmail htmlEmail = null;
@@ -114,7 +117,7 @@ public class EmailServiceImpl implements EmailService {
             logger.debug("Body:");
             logger.debug(renderOutput.getMessage());
         } catch (EmailException ex) {
-            logger.error("EmailException in sendHtmlEmail for template "+ ex.getCause() + " message : " + ex.getMessage());
+            logger.error("EmailException in sendHtmlEmail for template " + ex.getCause() + " message : " + ex.getMessage());
             return null;
         }
         return returnMap;
@@ -123,17 +126,22 @@ public class EmailServiceImpl implements EmailService {
     /**
      * This method builds the html email using the template and object values passed. It then calls
      * {@link #sendEmail(org.apache.commons.mail.Email)} to actually send the email
-     * 
-     * @param template The path of the freemarker template, relative to the template directory configured
+     *
+     * @param template       The path of the freemarker template, relative to the template directory configured
      * @param templateValues Usually a HashMap of values to be passed to the template. Can also be any arbitrary object
      * @param toEmail
      * @param toName
      * @return false means email sending failed
      */
+    @SuppressWarnings("unchecked")
     private boolean sendHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, Map<String, String> headerMap) {
+                                  String replyToName, Map<String, String> headerMap) {
         // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
-
+        if (isHybridRelease()) {
+            Map values = (HashMap) templateValues;
+            values.put("hkLogo", hkLogo);
+            templateValues = values;
+        }
         Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
         if (htmlEmailMap == null) {
             return false;
@@ -143,6 +151,7 @@ public class EmailServiceImpl implements EmailService {
             HtmlEmail htmlEmail = mapEntry.getValue();
             // send this email asynchrounously, we do not want to wait for this process
             sendEmail(htmlEmail);
+            logger.debug("-----ftl entry-------" + htmlEmail);
         }
         return true;
     }
@@ -179,12 +188,123 @@ public class EmailServiceImpl implements EmailService {
 
     /**
      * This method sends an email asynchrounously
-     * 
+     *
      * @param email
      */
     protected void sendEmail(Email email) {
         SendEmailAsyncThread emailAsyncThread = new SendEmailAsyncThread(email);
         emailAsyncThread.start();
+    }
+
+    private void sendBulkEmails(List<Map<String, HtmlEmail>> emails) {
+        try {
+            for (Map<String, HtmlEmail> emailMap : emails) {
+                for (String emailId : emailMap.keySet()) {
+                    try {
+                        Email email = emailMap.get(emailId);
+                        logger.debug("sending mail : " + emailId);
+                        email.send();
+                    } catch (Exception e) {
+                        String errorMsg = "Unable to send email to user";
+                        if (StringUtils.isNotBlank(emailId)) {
+                            errorMsg = errorMsg + " " + emailId;
+                        }
+                        logger.error(errorMsg, e);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            logger.error("Error while sending bulk emails", ex);
+        }
+    }
+
+    public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+                             String replyToName, Set<String> emailSet, Map<String, String> headerMap, String attachPdf, String attachXl) {
+        // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
+        boolean isSent = true;
+        Map<String, MultiPartEmail> htmlEmailMap = createMultiPartHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
+        if (htmlEmailMap == null) {
+            return false;
+        }
+
+        for (Map.Entry<String, MultiPartEmail> mapEntry : htmlEmailMap.entrySet()) {
+            MultiPartEmail htmlEmail = mapEntry.getValue();
+            try {
+                if (emailSet != null && emailSet.size() > 0) {
+                    for (String email : emailSet) {
+                        htmlEmail.addCc(email);
+                    }
+                }
+
+                if (StringUtils.isNotBlank(attachPdf)) {
+                    EmailAttachment attachment1 = new EmailAttachment();
+                    attachment1.setPath(attachPdf);
+                    attachment1.setDisposition(EmailAttachment.ATTACHMENT);
+                    htmlEmail.attach(attachment1);
+                }
+
+                if (StringUtils.isNotBlank(attachXl)) {
+                    EmailAttachment attachment2 = new EmailAttachment();
+                    attachment2.setPath(attachXl);
+                    attachment2.setDisposition(EmailAttachment.ATTACHMENT);
+                    htmlEmail.attach(attachment2);
+                }
+
+            } catch (EmailException e) {
+                logger.error("EmailException in adding CC/attachments ");
+                isSent = false;
+            }
+
+            sendEmail(htmlEmail);
+        }
+        return isSent;
+    }
+
+    public Map<String, MultiPartEmail> createMultiPartHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+                                                                String replyToName, Map<String, String> headerMap) {
+        Map<String, MultiPartEmail> returnMap = new HashMap<String, MultiPartEmail>();
+        FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templateValues);
+        MultiPartEmail htmlEmail = null;
+        try {
+            if (renderOutput == null) {
+                logger.error("Error while rendering freemarker template in sendHtmlEmail");
+                return null;
+            }
+            htmlEmail = new MultiPartEmail();
+            htmlEmail.addTo(toEmail, toName).setFrom(fromEmail, fromName).setSubject(renderOutput.getSubject()).setHostName("localhost");
+            if (headerMap != null && !headerMap.isEmpty())
+                htmlEmail.setHeaders(headerMap);
+            if (!StringUtils.isBlank(replyToEmail))
+                htmlEmail.addReplyTo(replyToEmail, replyToName);
+
+            final MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(renderOutput.getMessage(), "text/html");
+            // Create the Multipart.  Add BodyParts to it.
+            final Multipart mp = new MimeMultipart("alternative");
+            mp.addBodyPart(htmlPart);
+            // Set Multipart as the message's content
+            final MimeMultipart mmp = new MimeMultipart();
+            mmp.addBodyPart(htmlPart);
+
+            htmlEmail.addPart(mmp);
+            returnMap.put(toEmail, htmlEmail);
+
+            logger.debug("Trying to send email with Subject: ");
+            logger.debug(renderOutput.getSubject());
+            logger.debug("Body:");
+            logger.debug(renderOutput.getMessage());
+        } catch (EmailException ex) {
+            logger.error("EmailException in sendHtmlEmail for template " + ex.getCause() + " message : " + ex.getMessage());
+            return null;
+        } catch (MessagingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return returnMap;
+    }
+
+    public boolean isHybridRelease() {
+        return hybridRelease;
     }
 
     /**
@@ -210,7 +330,7 @@ public class EmailServiceImpl implements EmailService {
     private class SendBulkEmailAsyncThread implements Runnable {
         private final List<Map<String, HtmlEmail>> emails;
         @SuppressWarnings("unused")
-        private final EmailCampaign                emailCampaign;
+        private final EmailCampaign emailCampaign;
 
         SendBulkEmailAsyncThread(List<Map<String, HtmlEmail>> email, EmailCampaign emailCampaign) {
             this.emails = email;
@@ -220,112 +340,5 @@ public class EmailServiceImpl implements EmailService {
         public void run() {
             sendBulkEmails(emails);
         }
-    }
-
-    private void sendBulkEmails(List<Map<String, HtmlEmail>> emails) {
-        try {
-            for (Map<String, HtmlEmail> emailMap : emails) {
-                for (String emailId : emailMap.keySet()) {
-                    try {
-                        Email email = emailMap.get(emailId);
-                        logger.debug("sending mail : " + emailId);
-                        email.send();
-                    } catch (Exception e) {
-                        String errorMsg = "Unable to send email to user";
-                        if (StringUtils.isNotBlank(emailId)) {
-                            errorMsg = errorMsg + " " + emailId;
-                        }
-                        logger.error(errorMsg, e);
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            logger.error("Error while sending bulk emails", ex);
-        }
-    }
-    
-    public boolean sendEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, Set<String> emailSet, Map<String, String> headerMap, String attachPdf, String attachXl){
-        // Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
-    	boolean isSent = true;
-        Map<String, MultiPartEmail> htmlEmailMap = createMultiPartHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
-        if (htmlEmailMap == null) {
-            return false;
-        }
-
-        for (Map.Entry<String, MultiPartEmail> mapEntry : htmlEmailMap.entrySet()) {
-        	MultiPartEmail htmlEmail = mapEntry.getValue();
-            try {
-            	if(emailSet!=null && emailSet.size()>0){
-	            	for(String email:emailSet){
-	            		htmlEmail.addCc(email);
-	            	}
-            	}
-				
-				if (StringUtils.isNotBlank(attachPdf)) {
-	                EmailAttachment attachment1 = new EmailAttachment();
-	                attachment1.setPath(attachPdf);
-	                attachment1.setDisposition(EmailAttachment.ATTACHMENT);
-	                htmlEmail.attach(attachment1);
-	            }
-				
-				if (StringUtils.isNotBlank(attachXl)) {
-	                EmailAttachment attachment2 = new EmailAttachment();
-	                attachment2.setPath(attachXl);
-	                attachment2.setDisposition(EmailAttachment.ATTACHMENT);
-	                htmlEmail.attach(attachment2);
-	            }
-				
-			} catch (EmailException e) {
-				logger.error("EmailException in adding CC/attachments ");
-	            isSent = false;
-			}
-            
-            sendEmail(htmlEmail);
-        }
-        return isSent;
-    }
-    
-    public Map<String, MultiPartEmail> createMultiPartHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, Map<String, String> headerMap) {
-        Map<String, MultiPartEmail> returnMap = new HashMap<String, MultiPartEmail>();
-        FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templateValues);
-        MultiPartEmail htmlEmail = null;
-        try {
-            if (renderOutput == null) {
-                logger.error("Error while rendering freemarker template in sendHtmlEmail");
-                return null;
-            }
-            htmlEmail = new MultiPartEmail();
-            htmlEmail.addTo(toEmail, toName).setFrom(fromEmail, fromName).setSubject(renderOutput.getSubject()).setHostName("localhost");
-            if (headerMap != null && !headerMap.isEmpty())
-                htmlEmail.setHeaders(headerMap);
-            if (!StringUtils.isBlank(replyToEmail))
-                htmlEmail.addReplyTo(replyToEmail, replyToName);
-            
-            final MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(renderOutput.getMessage(), "text/html");
-            // Create the Multipart.  Add BodyParts to it.
-            final Multipart mp = new MimeMultipart("alternative");
-            mp.addBodyPart(htmlPart);
-            // Set Multipart as the message's content
-            final MimeMultipart mmp = new MimeMultipart();
-            mmp.addBodyPart(htmlPart);
-            
-            htmlEmail.addPart(mmp);
-            returnMap.put(toEmail, htmlEmail);
-
-            logger.debug("Trying to send email with Subject: ");
-            logger.debug(renderOutput.getSubject());
-            logger.debug("Body:");
-            logger.debug(renderOutput.getMessage());
-        } catch (EmailException ex) {
-            logger.error("EmailException in sendHtmlEmail for template "+ ex.getCause() + " message : " + ex.getMessage());
-            return null;
-        } catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return returnMap;
     }
 }

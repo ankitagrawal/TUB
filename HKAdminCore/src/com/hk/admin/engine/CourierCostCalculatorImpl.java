@@ -68,13 +68,13 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
   }
 
   public Map.Entry<Courier, Long> getCheapestCourierEntry(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight, boolean ground) {
-    TreeMap<Courier, Long> courierCostingMap = getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, ground);
+    TreeMap<Courier, Long> courierCostingMap = getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, ground,null);
     return courierCostingMap.lastEntry();
   }
 
   @SuppressWarnings("unchecked")
   public TreeMap<Courier, Long> getCourierCostingMap(String pincode, boolean cod, Warehouse srcWarehouse, Double amount,
-                                                     Double weight, boolean ground) {
+                                                     Double weight, boolean ground, Date shipmentDate) {
     Pincode pincodeObj = pincodeDao.getByPincode(pincode);
     List<Courier> applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
     Double totalCost = 0D;
@@ -94,16 +94,16 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         if (EnumCourier.HK_Delivery.getId().equals(courier.getId())) {
           if (pincodeObj.getNearestHub() != null) {
             HKReachPricingEngine hkReachPricingEngine = courierService.getHkReachPricingEngine(srcWarehouse,
-                pincodeObj.getNearestHub());
+                pincodeObj.getNearestHub(), shipmentDate);
             if(hkReachPricingEngine != null){
               totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
             }
           } else {
-            totalCost = 0d;
+            totalCost = -1d;
           }
         } else {
           CourierPricingEngine courierPricingInfo = courierPricingEngineDao.getCourierPricingInfo(courier,
-              pincodeRegionZone.getRegionType(), srcWarehouse);
+              pincodeRegionZone.getRegionType(), srcWarehouse, shipmentDate);
           if (courierPricingInfo == null) {
             continue;
           }
@@ -121,7 +121,8 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
       return sortedCourierCostingTreeMap;
   }
 
-  public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse) {
+  public CourierPricingEngine getCourierPricingInfo(Courier courier, Pincode pincodeObj, Warehouse srcWarehouse,
+                                                    Date shipmentDate) {
     CourierGroup courierGroup = courierGroupService.getCourierGroup(courier);
     PincodeRegionZone pincodeRegionZone = pincodeRegionZoneService.getPincodeRegionZone(courierGroup, pincodeObj,
         srcWarehouse);
@@ -133,7 +134,8 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
       logger.info("prz null for " + pincodeObj.getPincode() + courierGroup.getName() + srcWarehouse.getCity());
       return null;
     }
-    return courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(), srcWarehouse);
+    return courierPricingEngineDao.getCourierPricingInfo(courier, pincodeRegionZone.getRegionType(),
+                                                                                          srcWarehouse, shipmentDate);
   }
 }
 

@@ -141,7 +141,11 @@ public class MyAccountAction extends BaseAction {
       b2bUserDetailsDao.save(b2bUserDetails);
     }
 
-    addRedirectAlertMessage(new SimpleMessage("Your basic information has been updated"));
+    addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                  "Your basic information has been updated" +
+                                                "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                              "</div>"));
     return new RedirectResolution(MyAccountAction.class);
   }
 
@@ -175,7 +179,11 @@ public class MyAccountAction extends BaseAction {
       user.setPassword(newPassword);
       user.setPasswordChecksum(BaseUtils.passwordEncrypt(newPassword));
       userDao.save(user);
-      addRedirectAlertMessage(new SimpleMessage("Password has been updated successfully."));
+      addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                  "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                    "Password has been updated successfully" +
+                                                  "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                                "</div>"));
       return new RedirectResolution(MyAccountAction.class);
     } else
       addValidationError("Error message", new SimpleError("Invalid old password"));

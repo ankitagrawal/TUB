@@ -44,8 +44,6 @@
         <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='${product.productId}'/>
       </c:forEach>
 
-          <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT922'/>
-          <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT3175'/>
           <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1208'/>
           <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1838'/>
           <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT910'/>

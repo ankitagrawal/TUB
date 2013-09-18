@@ -24,7 +24,8 @@
     </s:layout-component>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
-    <s:layout-component name="htmlHead"/>
+
+      <s:layout-component name="htmlHead"/>
     <style type="text/css">
       h3 {
         line-height: 27px;
@@ -47,7 +48,6 @@
       </s:layout-component>
     <div class="main_container">
         <s:layout-component name="steps"/>
-        <div class="alert messages"><s:messages key="generalMessages"/></div>
             <%-- central content should be used only when you don't use lhscontent and rhscontent--%>
         <div class="centralContent">
             <s:layout-component name="centralContent"/>
@@ -62,7 +62,11 @@
             <span class="icn icn-sqre"></span>
         </div>
 
-      <div class="lhsContent cont-lft">
+        <%--Error Messages Containers--%>
+        <div class="alert messages"><s:messages key="generalMessages"/></div>
+
+
+        <div class="lhsContent cont-lft">
         <s:layout-component name="lhsContent"/>
 
         <div class="floatfix"></div>
@@ -73,6 +77,9 @@
         <s:layout-component name="rhsContent"/>
 
         <div class="floatfix"></div>
+      </div>
+      <div class="fullContent cont-lft">
+            <s:layout-component name="fullContent"/>
       </div>
       <div class="floatfix"></div>
     </div>

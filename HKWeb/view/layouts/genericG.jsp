@@ -28,7 +28,8 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
     <jsp:include page="/includes/_static_css.jsp"/>
     <jsp:include page="/includes/_static_js.jsp"/>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
-    <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+
+      <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
 
     <s:layout-component name="analytics">
       <s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="${topCategory}" allCategories="${topCategory}" brand="" isProd="<%=false%>"/>
@@ -72,6 +73,7 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
       </s:layout-component>
       <div class="floatfix"></div>
     </div>
+
     <c:choose>
        <c:when test="${hybridRelease eq true}">
            <s:layout-render name="/includes/_footerBeta.jsp"/>
@@ -80,6 +82,7 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
            <s:layout-render name="/includes/_footer.jsp"/>
        </c:otherwise>
     </c:choose>
+
   </div>
   </body>
   </html>
