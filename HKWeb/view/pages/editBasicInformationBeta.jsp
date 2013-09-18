@@ -6,9 +6,9 @@
 <s:layout-render name="/layouts/defaultBeta.jsp">
   <s:layout-component name="heading">Your Account</s:layout-component>
   <s:layout-component name="htmlHead">
-    <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+    <link href="<hk:vhostCss/>/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.dynDateTime.pack.js"></script>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
   </s:layout-component>
 

@@ -37,7 +37,7 @@
                         <%--<li><a href="">Press Releases</a></li>--%>
                         <li><a href="/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
                         <%--<li><a href="">Privacy Notice</a></li>--%>
-                        <%--<li><a href="">Blog</a></li>--%>
+                        <li><a href="http://www.healthkart.com/resources">Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-menu">
