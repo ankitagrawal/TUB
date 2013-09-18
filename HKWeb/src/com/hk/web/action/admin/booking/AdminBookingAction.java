@@ -1,9 +1,6 @@
 package com.hk.web.action.admin.booking;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -86,20 +83,34 @@ public class AdminBookingAction extends BaseAction {
 
 	@Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
 	public Resolution freeBookingTable() {
+    Set <ShippingOrder> problamaticShippingOrders = new HashSet<ShippingOrder>();
 		if (shippingOrderId != null) {
 			ShippingOrder so = shippingOrderService.find(shippingOrderId);
-			skuItemLineItemService.freeBookingTable(so);
-			addRedirectAlertMessage(new SimpleMessage("Freed Booking Table For Shipping Order: " + so.getId()));
+//			skuItemLineItemService.freeBookingTable(so);
+      List <LineItem> problamaticItems = skuItemLineItemService.freeBooking(so);
+      if (problamaticItems != null && problamaticItems.size() > 0){
+        addRedirectAlertMessage(new SimpleMessage(" Failed to Freed Booking Table For Shipping Order: " + so.getId()));
+      }else {
+        addRedirectAlertMessage(new SimpleMessage("Freed Booking Table For Shipping Order: " + so.getId()));
+      }
 			return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuItemLineItems").addParameter("shippingOrderId", shippingOrderId);
 		} else if (baseOrderId != null) {
 			Order bo = orderService.find(baseOrderId);
 			Set<ShippingOrder> soSet = bo.getShippingOrders();
 			if (soSet != null && soSet.size() > 0) {
 				for (ShippingOrder so : soSet) {
-					skuItemLineItemService.freeBookingTable(so);
+          List <LineItem> problamaticItems = skuItemLineItemService.freeBooking(so);
+          if (problamaticItems!= null && problamaticItems.size() > 0){
+            problamaticShippingOrders.add(so);
+          }
 				}
 			}
-			addRedirectAlertMessage(new SimpleMessage("Freed Booking Table For Base Order: " + bo.getId()));
+
+      if (problamaticShippingOrders != null && problamaticShippingOrders.size() > 0){
+        addRedirectAlertMessage(new SimpleMessage("Failed to Freed Booking Table For Base Order: " + bo.getId()));
+      }else {
+        addRedirectAlertMessage(new SimpleMessage("Freed Booking Table For Base Order: " + bo.getId()));
+      }
 			return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuCartItemLineItems").addParameter("baseOrderId", baseOrderId);
 		}
 		return null;

@@ -641,7 +641,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
       ProductVariant productVariant = cartLineItem.getProductVariant();
       Warehouse warehouse = getBaseDao().get(Warehouse.class, warehouseId);
-      List<Warehouse> whs = warehouseService.findWarehouses(warehouse.getTinPrefix());
+      List<Warehouse> whs = warehouseService.findWarehousesByPrefix(warehouse.getTinPrefix());
       whs.remove(warehouse);
       // now whs contain aqua warehouse
       Sku sku = skuService.getSKU(productVariant, whs.get(0));
@@ -1192,7 +1192,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     List<Sku> skuList = new ArrayList<Sku>();
     if (isLineItemCreated) {
       warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
-      List<Warehouse> warehouses = warehouseService.findWarehouses(tinPrefix);
+      List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
       warehouses.remove(lineItem.getSku().getWarehouse());
       warehouseIdForBright = warehouses.get(0).getId();
 
@@ -1201,7 +1201,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       List<Warehouse> aquaWareHouses = warehouseService.getServiceableWarehouses();
 
       tinPrefix = productVariant.getWarehouse().getTinPrefix();
-      List<Warehouse> warehouses = warehouseService.findWarehouses(tinPrefix);
+      List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
 
       if (aquaWareHouses.contains(productVariant.getWarehouse())) {
         warehousIdForAqua = productVariant.getWarehouse().getId();

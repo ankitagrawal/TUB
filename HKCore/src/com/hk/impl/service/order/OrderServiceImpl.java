@@ -735,7 +735,7 @@ public class OrderServiceImpl implements OrderService {
               logger.debug("Update booking on Bright");
               Long   warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
               Warehouse warehouse = warehouseService.getWarehouseById(warehousIdForAqua);
-              List<Warehouse> warehouses = warehouseService.findWarehouses(warehouse.getTinPrefix());
+              List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(warehouse.getTinPrefix());
               warehouses.remove(lineItem.getSku().getWarehouse());
               Long  warehouseIdForBright = warehouses.get(0).getId();
 

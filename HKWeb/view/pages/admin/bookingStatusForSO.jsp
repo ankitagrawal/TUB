@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.akube.framework.util.FormatUtils"%>
 <%@ page import="com.hk.constants.order.EnumCartLineItemType"%>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode"%>
@@ -13,7 +14,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.booking.AdminBookingAction" var="adminBookingBean" />
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Order Booking Status">
-
+<c:set var="cartIds" value="" />
 	<s:layout-component name="htmlHead">
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -52,13 +53,28 @@
 						<td>${skuItemLineItem.skuItemCLI.id}</td>
 						<td>${skuItemLineItem.createDate}</td>
 						<td>${skuItemLineItem.updateDate}</td>
-                        <td> <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
-                            <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
-                            Free Booking
-                        </s:link></td>
+
+                        <td>
+                            <c:set var="cartId" value="[${skuItemLineItem.lineItem.cartLineItem.id}]" />
+                                <c:if test="${!fn:contains(cartIds,cartId)}">
+                                    <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
+                                    <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
+                                    Free Booking
+                                    </s:link>
+                                    <c:choose>
+                                        <c:when test="${cartIds eq ''}">
+                                            <c:set var="cartIds" value="${cartId}" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="cartIds" value="${cartIds},${cartId}" />
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
+                        </td>
 					</tr>
 				</c:forEach>
 			</table>
+
 	</c:when>
 	<c:otherwise>
 	<br>
@@ -70,7 +86,8 @@
 	
 		<c:if test="${adminBookingBean.baseOrderId!=null}">
 		<c:if test="${fn:length(adminBookingBean.skuCLIList)>0 }">
-		<div align="center"><label><u><strong>SkuItemCLI entries for Base Order : ${adminBookingBean.baseOrderId }</strong></u></label></div>
+            <c:set var="cartIds" value="" />
+            <div align="center"><label><u><strong>SkuItemCLI entries for Base Order : ${adminBookingBean.baseOrderId }</strong></u></label></div>
 			<table class="t1" id="skuCartItemLineItemTable" border="1">
 				<tr>
 					<th>SkuItemCLI ID</th>
@@ -93,20 +110,35 @@
 						<td>${skuCartItemLineItem.unitNum}</td>
 						<td>${skuCartItemLineItem.createDate}</td>
 						<td>${skuCartItemLineItem.updateDate}</td>
-                       <td> <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
-                            <s:param name="cartLineItemId" value="${skuCartItemLineItem.cartLineItem.id}"/>
-                            Free Booking
-                        </s:link></td>
+                        <td>
+                            <c:set var="cartId" value="[${skuItemLineItem.lineItem.cartLineItem.id}]" />
+                            <c:if test="${!fn:contains(cartIds,cartId)}">
+                                <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
+                                    <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
+                                    Free Booking
+                                </s:link>
+                                <c:choose>
+                                    <c:when test="${cartIds eq ''}">
+                                        <c:set var="cartIds" value="${cartId}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="cartIds" value="${cartIds},${cartId}" />
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:if>
+                        </td>
 					</tr>
 				</c:forEach>
 			</table>
-			</c:if>
+
+        </c:if>
 			
 			<br>
 			<br>
 			
 			<c:if test="${adminBookingBean.soSiLiMap!=null && fn:length(adminBookingBean.soSiLiMap)>0}">
-			<div align="center"><label><u><strong>SkuItemLineItem Entries For Shipping Orders:</strong></u></label></div><br><br>
+                <c:set var="cartIds" value="" />
+                <div align="center"><label><u><strong>SkuItemLineItem Entries For Shipping Orders:</strong></u></label></div><br><br>
 			<c:forEach var="soSiLiMap" items="${adminBookingBean.soSiLiMap}" varStatus="ctr">
 			<c:if test="${ fn:length(soSiLiMap.value)>0}">
 			Shipping Orders: ${soSiLiMap.key.id}
@@ -134,14 +166,28 @@
 						<td>${skuItemLineItem.skuItemCLI.id}</td>
 						<td>${skuItemLineItem.createDate}</td>
 						<td>${skuItemLineItem.updateDate}</td>
-                        <td> <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
-                            <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
-                            Free Booking
-                        </s:link></td>
+                        <td>
+                            <c:set var="cartId" value="[${skuItemLineItem.lineItem.cartLineItem.id}]" />
+                            <c:if test="${!fn:contains(cartIds,cartId)}">
+                                <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
+                                    <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
+                                    Free Booking
+                                </s:link>
+                                <c:choose>
+                                    <c:when test="${cartIds eq ''}">
+                                        <c:set var="cartIds" value="${cartId}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="cartIds" value="${cartIds},${cartId}" />
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:if>
+                        </td>
 					</tr>
 				</c:forEach>
 			</table>
-			</c:if>
+
+            </c:if>
 			</c:forEach>
 		</c:if>
 		</c:if>

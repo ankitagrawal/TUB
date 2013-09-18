@@ -77,6 +77,16 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
     }
     return null;
   }
+
+  @Override
+  public List<Warehouse> findWarehousesByPrefix(String tinPrefix){
+    DetachedCriteria criteria = DetachedCriteria.forClass(Warehouse.class);
+    if (StringUtils.isNotBlank(tinPrefix) && tinPrefix.length() == 2) {
+      criteria.add(Restrictions.like("tin", tinPrefix + "%"));
+      return findByCriteria(criteria);
+    }
+    return null;
+  }
   
   public List<Warehouse> findWarehouseByTin(String tin){
   	String sql = "from Warehouse w where w.tin = :tin";

@@ -64,6 +64,8 @@ public interface WarehouseService {
 
   public List<Warehouse> findWarehouses(String tinPrefix);
 
+  public List<Warehouse> findWarehousesByPrefix(String tinPrefix);
+
   public Warehouse getAquaDefaultWarehouse();
 
 }

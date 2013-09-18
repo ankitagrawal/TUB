@@ -144,7 +144,7 @@ public class ProductVariantResource {
             return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
         }
 
-        List<Warehouse> whList = getWarehouseService().findWarehouses(tinPrefix);
+        List<Warehouse> whList = getWarehouseService().findWarehousesByPrefix(tinPrefix);
         Sku aquaSku = getSkuService().getSKU(productVariant,whList.get(0)) ;
 
         return new JSONResponseBuilder().addField("variantId", variantId).addField("warehouseId", aquaSku.getId()).build();

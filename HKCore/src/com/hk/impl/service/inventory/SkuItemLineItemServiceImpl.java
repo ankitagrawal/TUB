@@ -257,7 +257,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
     SkuItemLineItemService skuItemLineItemService = ServiceLocatorFactory.getService(SkuItemLineItemService.class);
 
-    List<Warehouse> warehouses = warehouseService.findWarehouses(targetWarehouse.getTinPrefix());
+    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(targetWarehouse.getTinPrefix());
     warehouses.remove(targetWarehouse);
     Long warehouseIdForBright = warehouses.get(0).getId();
     for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -564,7 +564,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
     Warehouse aquaWarehouse = item.getSku().getWarehouse();
     String tinPrefix = aquaWarehouse.getTinPrefix();
-    List<Warehouse> warehouses = warehouseService.findWarehouses(tinPrefix);
+    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
     warehouses.remove(aquaWarehouse);
     Long wareHouseIdForBright = warehouses.get(0).getId();
 
@@ -631,7 +631,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     List<Sku> skuList = Arrays.asList(item.getSku());
     Warehouse aquaWarehouse = item.getSku().getWarehouse();
     String tinPrefix = aquaWarehouse.getTinPrefix();
-    List<Warehouse> warehouses = warehouseService.findWarehouses(tinPrefix);
+    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
     warehouses.remove(aquaWarehouse);
     Long warehousIdForAqua = aquaWarehouse.getId();
     Long wareHouseIdForBright = warehouses.get(0).getId();
@@ -874,6 +874,20 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       logger.error("Exception while freeing bright inventory against cancelling SO# " + cartLineItem.getOrder().getId(), e.getMessage());
       return infos;
     }
+  }
+
+
+  public List<LineItem> freeBooking(ShippingOrder shippingOrder){
+
+    List<LineItem> failedBookingItems = new ArrayList<LineItem>();
+    for (LineItem lineItem : shippingOrder.getLineItems()){
+     boolean lineItemFreed =   freeBookingItem(lineItem.getCartLineItem().getId());
+      if (!lineItemFreed){
+        failedBookingItems.add(lineItem);
+      }
+
+    }
+   return  failedBookingItems;
   }
 
 

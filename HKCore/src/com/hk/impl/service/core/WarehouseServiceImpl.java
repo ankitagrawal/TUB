@@ -131,6 +131,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     return getWarehouseDao().findWarehouses(tinPrefix);
   }
 
+  public List<Warehouse> findWarehousesByPrefix(String tinPrefix){
+    return getWarehouseDao().findWarehousesByPrefix(tinPrefix);
+  }
+
   public Warehouse getAquaDefaultWarehouse() {
     return getWarehouseDao().getWarehouseById(GGN_AQUA_WH_ID);
   }

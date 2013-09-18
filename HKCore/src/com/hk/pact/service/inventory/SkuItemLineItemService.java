@@ -69,6 +69,10 @@ public interface SkuItemLineItemService {
 
   public Boolean validateBooking(CartLineItem cartLineItem);
 
+  public List<LineItem> freeBooking(ShippingOrder shippingOrder);
+
+
+
 
 
 }
