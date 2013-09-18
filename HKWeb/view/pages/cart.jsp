@@ -74,11 +74,18 @@
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
         var comboQty = $(this).val();
+        var elm = $(this);
         $.getJSON(
             $('#lineItemUpdateLink').attr('href'), {cartLineItem: lineItemId, "comboInstance.qty": comboQty},
             function(responseData) {
+              if(responseData.code == '<%=HealthkartResponse.STATUS_OK%>'){
               _updateTotals(responseData);
               _updateLineItem(responseData, lineItemRow);
+              //document.getElementById("freebieBanner").src = responseData.message;
+              //$(".freebieBanner").attr("src", responseData.message);
+              }else{
+                elm.val(responseData.data);
+              }
             }
             );
       });

@@ -2927,7 +2927,7 @@ i{
     height: auto;
 }
 /* Home page Top content */
-#home_header02 {width:960px; margin:0 auto; height:405px; font-family:Arial, Helvetica, sans-serif; }
+#home_header02 {width:960px; margin:0 auto; height:285px; font-family:Arial, Helvetica, sans-serif; }
 #home_header02 h1{color:#adadad; padding:15px 0; text-align:center;}
 .banner01 {width:303px; float:left; margin-right:25px;}
 .strip_banner01 {padding:15px 0; float:right;}

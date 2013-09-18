@@ -61,10 +61,10 @@
   </li>
   </c:forEach>
   <li class="gm-mc brdr-t">
-      <a href="javascript:void(0)" class="gm-mc-nm">Packs</a>
-      <span style="">&raquo;</span>
-  </li>
-  <li class="gm-mc">
+      <%--<a href="javascript:void(0)" class="gm-mc-nm">Packs</a>--%>
+      <%--<span style="">&raquo;</span>--%>
+  <%--</li>--%>
+  <%--<li class="gm-mc">--%>
       <a href="javascript:void(0)" class="gm-mc-nm">Brands</a>
       <span style="">&raquo;</span>
   </li>

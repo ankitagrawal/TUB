@@ -108,10 +108,6 @@
         $(".slides").responsiveSlides({speed: 6000});
       });
     </script>
-
-
-    <img class="strip_banner01" src="<hk:vhostImage/>/images/banners/home/main_strip01.png" border="0"/>
-    <jsp:include page="/includes/_testimonials.jsp"/>
   </div>
 </s:layout-component>
 

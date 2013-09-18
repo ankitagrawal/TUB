@@ -30,10 +30,8 @@ import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuGroupService;
-import com.hk.pact.service.inventory.SkuItemLineItemService;
-import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.*;
+import com.hk.service.ServiceLocatorFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,6 +253,10 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     if (grnLineItem != null && qty > 0) {
       grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
       getBaseDao().save(grnLineItem);
+    } 
+    if (qty > 0) {
+      InventoryHealthService inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
+      inventoryHealthService.pendingOrdersInventoryHealthCheck(sku.getProductVariant());
     }
 
   }

@@ -3,15 +3,20 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.hkDelivery.HKReachPricingEngine;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
+import com.hk.util.HKCollectionUtils;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,30 +48,66 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   private List<HKReachPricingEngine> hkReachEngines;
 
+  Warehouse warehouse;
+
+  Hub hub;
+
   @DefaultHandler
   public Resolution pre() {
     this.prepareEngineData();
     return new ForwardResolution("/pages/admin/createUpdateHKReachEngine.jsp");
   }
 
-  public Resolution saveOrUpdate() {
-    if (hkReachPricingEngine.getId() == null) {
-      HKReachPricingEngine localEngine = courierService.getHkReachPricingEngine(hkReachPricingEngine.getWarehouse(),
-              hkReachPricingEngine.getHub());
-      if (localEngine != null) {
-        addRedirectAlertMessage(new SimpleError("Duplicate data supplied, entry already exists."));
-        return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
-          .addParameter("warehouse",hkReachPricingEngine.getWarehouse()).addParameter("hub", hkReachPricingEngine.getHub());
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE}, authActionBean = AdminPermissionAction.class)
+  public Resolution save() {
+    HKReachPricingEngine duplicateEngine =
+          (HKReachPricingEngine) HKCollectionUtils.findDuplicate(hkReachEngines,null,"warehouse","hub","validFrom");
+    if (duplicateEngine != null ) {
+      addRedirectAlertMessage(new SimpleMessage("You provided duplicate values for " + duplicateEngine.getWarehouse().getIdentifier() +
+          " corresponding to " + duplicateEngine.getHub().getName() + " and valid from " +
+          new SimpleDateFormat("yyyy-MM-dd").format(duplicateEngine.getValidFrom())));
+    } else {
+      for(HKReachPricingEngine hkReachPricingEngine : hkReachEngines) {
+        if (hkReachPricingEngine.isSelected()) {
+          hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
+          courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+        }
       }
+      addRedirectAlertMessage(new SimpleMessage("Pricing info updated"));
     }
-
-    hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
-    courierService.saveHKReachPricingEngine(hkReachPricingEngine);
-    addRedirectAlertMessage(new SimpleMessage("HK Reach courier info saved"));
-    this.prepareEngineData();
-    return new ForwardResolution(CreateUpdateHKReachPricingEngineAction.class, "search");
+    prepareEngineData();
+    return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
+        .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE}, authActionBean = AdminPermissionAction.class)
+  public Resolution add() {
+    List<HKReachPricingEngine> localEngines= courierService.searchHKReachPricing(hkReachPricingEngine.getWarehouse(),
+            hkReachPricingEngine.getHub());
+    localEngines.add(hkReachPricingEngine);
+    HKReachPricingEngine duplicateEngine =
+        (HKReachPricingEngine) HKCollectionUtils.findDuplicate(localEngines,null,"warehouse","hub","validFrom");
+
+    if(duplicateEngine != null) {
+      addRedirectAlertMessage(new SimpleMessage("Entry already exists for " + duplicateEngine.getWarehouse().getIdentifier() +
+          " corresponding to " + duplicateEngine.getHub().getName() + " and valid from " +
+          new SimpleDateFormat("yyyy-MM-dd").format(duplicateEngine.getValidFrom())));
+    } else {
+      if(hkReachPricingEngine.getValidFrom() == null) {
+        addRedirectAlertMessage(new SimpleMessage("Entry could not be saved. Please select a valid from date"));
+      } else {
+        hkReachPricingEngine.setUpdateTime(Calendar.getInstance().getTime());
+        courierService.saveHKReachPricingEngine(hkReachPricingEngine);
+        addRedirectAlertMessage(new SimpleMessage("Successfully added entry for " + hkReachPricingEngine.getWarehouse().getIdentifier() +
+            " corresponding to " + hkReachPricingEngine.getHub().getName()));
+      }
+    }
+    prepareEngineData();
+    return new RedirectResolution(CreateUpdateHKReachPricingEngineAction.class, "search")
+        .addParameter("warehouseParam", warehouseParam).addParameter("hubParam", hubParam);
+  }
+
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW}, authActionBean = AdminPermissionAction.class)
   public Resolution search() {
     hkReachEngines = courierService.searchHKReachPricing(warehouseParam, hubParam);
     if (hkReachEngines == null || hkReachEngines.isEmpty()) {
@@ -128,5 +169,21 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
 
   public void setHkReachEngines(List<HKReachPricingEngine> hkReachEngines) {
     this.hkReachEngines = hkReachEngines;
+  }
+
+  public Hub getHub() {
+    return hub;
+  }
+
+  public void setHub(Hub hub) {
+    this.hub = hub;
+  }
+
+  public Warehouse getWarehouse() {
+    return warehouse;
+  }
+
+  public void setWarehouse(Warehouse warehouse) {
+    this.warehouse = warehouse;
   }
 }

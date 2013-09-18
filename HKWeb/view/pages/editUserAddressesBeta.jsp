@@ -3,6 +3,23 @@
 <s:useActionBean beanclass="com.hk.web.action.core.user.UserManageAddressAction" var="umaa"/>
 <s:layout-render name="/layouts/defaultBeta.jsp">
 <s:layout-component name="heading">Addresses</s:layout-component>
+
+    <s:layout-component name="centralContent">
+        <%--breadcrumbs begins--%>
+        <div class="hk-breadcrumb-cntnr mrgn-bt-10">
+                <span>
+                   <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
+                </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">
+                <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction">Addresses</s:link>
+            </span>
+            <span>&raquo;</span>
+            <span class="txt-blue fnt-bold">Edit Address</span>
+        </div>
+        <%--breadcrumbs ends--%>
+    </s:layout-component>
+
 <s:layout-component name="lhsContent">
   <jsp:include page="myaccount-navBeta.jsp"/>
 </s:layout-component>
@@ -30,4 +47,13 @@
     window.onload = function() {
         $('#myAddressesLink').addClass('selected');
     };
+
+    $(document).ready(function(){
+        $('.remove-error').click(function () {
+            $(this).parent('.err-cntnr').remove();
+        });
+        $('.remove-success').click(function () {
+            $(this).parent('.alert-cntnr').remove();
+        });
+    });
 </script>
