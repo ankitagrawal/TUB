@@ -9,10 +9,10 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 <#include "headerBeta.ftl">
     <tbody>
     <tr>
-        <td style="margin-bottom:1em">Hi ${order.user.name}!,</td>
+        <td colspan="2" style="margin-bottom:1em">Hi ${order.user.name}!,</td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">
+        <td colspan="2" style="margin-bottom:1em">
             Thanks for placing an order with us. We have received the order and will give you a call shortly to confirm
             it.
             Please note that COD orders will not be confirmed and shipped from our end until we manually confirm the
@@ -23,7 +23,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">Here are your order details for the order
+        <td colspan="2" style="margin-bottom:1em">Here are your order details for the order
             <strong> ${order.gatewayOrderId}</strong>
             placed
             on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></td>
@@ -144,7 +144,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
     <h3>Shipping Address & Customer details</h3>
     <tr>
-        <td style="margin-bottom:1em">
+        <td colspan="2" style="margin-bottom:1em">
         ${order.address.name}<br/>
         ${order.address.line1}<br/>
         <#if order.address.line2??>
@@ -156,12 +156,12 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</td>
+        <td colspan="2" style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</td>
     </tr>
 
     <#--<#include "orderNote.ftl">-->
     <tr>
-        <td style="margin-bottom:1em"><strong>HealthKart.com</strong></td>
+        <td style="padding-bottom:10px; margin-bottom:1em"><strong>HealthKart.com</strong></td>
     </tr>
     </tbody>
 <#include "footerBeta.ftl">
