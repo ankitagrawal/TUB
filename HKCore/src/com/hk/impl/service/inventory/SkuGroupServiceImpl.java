@@ -71,11 +71,6 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     return skuGroupDao.getAllInStockSkuGroups(sku);
   }
   
-  public List<SkuGroup> getAllCheckedInBatchesWithBarcode(ProductVariant productVariant){
-  	return skuGroupDao.getAllCheckedInBatchesWithBarcode(productVariant);
-  }
-
-
   /**
    * SkuItemDao Methods *
    */

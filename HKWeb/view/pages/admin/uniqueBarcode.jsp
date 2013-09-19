@@ -35,7 +35,7 @@
 							value="Search Batches" />
 					</c:when>
 					<c:otherwise>
-						<strong>For Product Variant: ${uba.productVariantId }</strong>
+						<strong><u>For Product Variant: ${uba.productVariantId }</u></strong>
 						</c:otherwise>
 				</c:choose>
 
@@ -68,7 +68,7 @@
 								<td>${skuGroup.createDate}</td>
 								<td>${skuGroup.mfgDate}</td>
 								<td>${skuGroup.expiryDate}</td>
-								<td> <s:link beanclass ="com.hk.web.action.admin.inventory.UniqueBarcodeAction" event="downloadBarcode"> Download
+								<td> <s:link beanclass ="com.hk.web.action.admin.inventory.UniqueBarcodeAction" event="downloadBarcode"> Download Barcode
                 				<s:param name="skuGroupId" value="${skuGroup.id}"/>
                 				<s:param name="productVariantId" value="${uba.productVariantId }" />
 								<s:param name="userWarehouse" value="${uba.userWarehouse.id }" />
@@ -113,7 +113,7 @@
 								<td>${skuGroup.createDate}</td>
 								<td>${skuGroup.mfgDate}</td>
 								<td>${skuGroup.expiryDate}</td>
-								<td> <s:link beanclass ="com.hk.web.action.admin.inventory.UniqueBarcodeAction" event="downloadBarcode"> Download
+								<td> <s:link beanclass ="com.hk.web.action.admin.inventory.UniqueBarcodeAction" event="downloadBarcode"> Download Barcode
                 				<s:param name="skuGroupId" value="${skuGroup.id}"/>
                 				<s:param name="productVariantId" value="${uba.productVariantId }" />
 								<s:param name="userWarehouse" value="${uba.userWarehouse.id }" />
@@ -123,6 +123,15 @@
 					</table>
 				</c:if>
 				
+				
+				<c:if test="${uba.skuGroups != null && !(fn:length(uba.skuGroupQty)>0) && !(fn:length(uba.uniquelyBarcodedskuGroupQty)>0)}">
+				<div align="center"><strong>Nothing to display</strong></div><br>
+				</c:if>
+				
+				<c:if test="${fn:length(uba.skuGroups)>0}">
+				<div align="center">
+				<s:submit id="backButton" class="button_green addToCartButton" name="back"
+					value="Go Back" /></div></c:if> 
 			</s:form>
 		</div>
 

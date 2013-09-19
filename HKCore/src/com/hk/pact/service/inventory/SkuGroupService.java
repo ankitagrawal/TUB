@@ -39,8 +39,6 @@ public interface SkuGroupService {
 
   public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
 
-  public List<SkuGroup> getAllCheckedInBatchesWithBarcode(ProductVariant productVariant);
-
   /**
    * SkuItemDao Methods *
    */

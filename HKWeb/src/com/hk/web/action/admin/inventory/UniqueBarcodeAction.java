@@ -130,6 +130,8 @@ public class UniqueBarcodeAction extends BaseAction {
 		List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 		List<SkuItemStatus> skuItemStatuses = new ArrayList<SkuItemStatus>();
 		skuItemStatuses.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		skuItemStatuses.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+		skuItemStatuses.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
 		skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
 		skuGroups = skuGroupDao.getAllCheckedInBatchesWithBarcode(sku);
@@ -158,6 +160,8 @@ public class UniqueBarcodeAction extends BaseAction {
 				List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 				List<SkuItemStatus> skuItemStatuses = new ArrayList<SkuItemStatus>();
 				skuItemStatuses.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+				skuItemStatuses.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+				skuItemStatuses.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
 				skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
 				skuItems = skuItemDao.getInStockSkuItems(skuGroup, skuItemStatuses, skuItemOwnerList);
@@ -184,6 +188,8 @@ public class UniqueBarcodeAction extends BaseAction {
 		List<SkuItemOwner> skuItemOwnerList = new ArrayList<SkuItemOwner>();
 		List<SkuItemStatus> skuItemStatuses = new ArrayList<SkuItemStatus>();
 		skuItemStatuses.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		skuItemStatuses.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+		skuItemStatuses.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
 		skuItemOwnerList.add(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 
 		skuItems = skuItemDao.getInStockSkuItems(skuGroup, skuItemStatuses, skuItemOwnerList);
@@ -239,6 +245,10 @@ public class UniqueBarcodeAction extends BaseAction {
 			out.close();
 		}
 
+	}
+	
+	public Resolution back(){
+		return new RedirectResolution(UniqueBarcodeAction.class);
 	}
 
 	public String getProductVariantId() {
