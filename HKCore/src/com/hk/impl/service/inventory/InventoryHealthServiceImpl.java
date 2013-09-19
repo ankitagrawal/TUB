@@ -981,10 +981,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
       }
 //   end scenario
-      newSkuInfo.setQty(remainingQty);
-      Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
-      newBatchSkuInfo.add(newSkuInfo);
-      updateVariantInfo(productVariant, newBatchSkuInfo);
+//      newSkuInfo.setQty(remainingQty);
+//      Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
+//      newBatchSkuInfo.add(newSkuInfo);
+//      updateVariantInfo(productVariant, newBatchSkuInfo);
     }
   }
 
