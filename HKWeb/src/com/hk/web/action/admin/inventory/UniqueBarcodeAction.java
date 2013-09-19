@@ -115,6 +115,10 @@ public class UniqueBarcodeAction extends BaseAction {
 	}
 
 	public Resolution searchBatchesForPV() {
+		if(productVariantId==null){
+			addRedirectAlertMessage(new SimpleMessage("Please enter a valid variant id"));
+			return new RedirectResolution(UniqueBarcodeAction.class);
+		}
 		ProductVariant productVariant = productVariantService.getVariantById(productVariantId);
 		if(productVariant==null){
 			addRedirectAlertMessage(new SimpleMessage("Please enter a valid variant id"));
