@@ -115,7 +115,6 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
                 </tr>
             </table>
         </td>
-        <
     </tr>
 
     <tr>

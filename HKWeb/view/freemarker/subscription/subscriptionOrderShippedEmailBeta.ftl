@@ -8,146 +8,72 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
 
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
 <table width="530" border="0" align="center" cellpadding="0" cellspacing="0">
+<#include "/freemarker/headerBeta.ftl">
+    <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
-        <td align="center" valign="top">
-            <table width="500" border="0" cellspacing="0" cellpadding="0" align="center"
-                   style="font-size:13px; line-height:1.75em;">
+        <td style="padding-top: 15px" colspan="2"><a href="http://www.healthkart.com"><img
+                src="http://img.healthkart.com/email/order_shipped_email_new/main_banner.jpg" width="500"
+                height="148" alt="Just waiting eagerly to come home..." border="0"/></a></td>
+    </tr>
 
 
+    <tr>
+        <td style="padding-top: 35px;padding-bottom: 10px" colspan="2">Hi ${order.baseOrder.address.name}!<br/>
+
+            your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id} has been dispatched.
+        <#if ((subscription.qtyDelivered/subscription.qtyPerDelivery)  > 0)>
+            Till now ${subscription.qtyDelivered/subscription.qtyPerDelivery} shipments were delivered for your
+            subscription.
+        <#else>
+            This is your first shipment in this subscription.
+        </#if>
+
+            Here are the details for the present shipment:<br/>
+            <br/>
+            <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
                 <tr>
-                    <td height="20"></td>
+                    <td><strong>Item</strong></td>
+                    <td><strong>Quantity</strong></td>
+                    <td><strong>TrackingId</strong></td>
+                    <td><strong>Courier</strong></td>
                 </tr>
-
-
+            <#list order.lineItems as lineItem>
                 <tr>
-                    <td>
-                        <table width="500" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td width="222"><a href="http://www.healthkart.com"><img
-                                        src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com Logo" width="207"
-                                        height="30" border="0"/></a></td>
-                                <td width="15" style="border-left: solid 1px #999999"></td>
-                                <td width="245" align="left" style="font-size:13px; font-weight:bold; color:#666666"><a
-                                        href="http://www.healthkart.com" style="color:#666666; text-decoration:none">India&#39;s premier
-                                    e-health store!</a></td>
-                                <td width="18">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td colspan="5" height="10"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="5"><a href="http://www.healthkart.com"><img
-                                        src="http://img.healthkart.com/email/order_shipped_email_new/main_banner.jpg" width="500"
-                                        height="148" alt="Just waiting eagerly to come home..." border="0"/></a></td>
-                            </tr>
-
-
-                        </table>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td align="left" height="15"></td>
-                </tr>
-                <tr>
-                    <td width="579" valign="top">Hi ${order.baseOrder.address.name}!<br/>
-
-                        your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id} has been dispatched.
-                        <#if ((subscription.qtyDelivered/subscription.qtyPerDelivery)  > 0)>
-                            Till now ${subscription.qtyDelivered/subscription.qtyPerDelivery} shipments were delivered for your subscription.
-                        <#else>
-                            This is your first shipment in this subscription.
-                        </#if>
-
-                        Here are the details for the present shipment:<br/>
-                        <br/>
-                        <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
-                            <tr>
-                                <td><strong>Item</strong></td>
-                                <td><strong>Quantity</strong></td>
-                                <td><strong>TrackingId</strong></td>
-                                <td><strong>Courier</strong></td>
-                            </tr>
-                        <#list order.lineItems as lineItem>
-                            <tr>
-                                <td>${lineItem.sku.productVariant.product.name}<br/>
-                                    <#list lineItem.sku.productVariant.productOptions as
-                                    productOption>
-                                        <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-                                    </#list>
-                                </td>
-                                <td>
-                                ${lineItem.qty}
-                                </td>
-                                <td>
-                                ${order.shipment.awb.awbNumber}
-                                    <#if order.shipment.trackLink??>
-                                        <h5><a href="${order.shipment.trackLink}" target="_blank"> Track This </a></h5>
-                                    </#if>
-                                </td>
-                                <td>
-                                ${order.shipment.awb.courier.name}
-                                </td>
-                            </tr>
+                    <td>${lineItem.sku.productVariant.product.name}<br/>
+                        <#list lineItem.sku.productVariant.productOptions as
+                        productOption>
+                            <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
                         </#list>
-                        </table>
-
-                        <br/>
-                        <br/>
-
-                        In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4616444. <br/>
-                        <br/>
-
-                        Healthy Shopping!<br/>
-                        HealthKart.com <br/>
-                        (India&#39;s Premier eHealth Store)
+                    </td>
+                    <td>
+                    ${lineItem.qty}
+                    </td>
+                    <td>
+                    ${order.shipment.awb.awbNumber}
+                        <#if order.shipment.trackLink??>
+                            <h5><a href="${order.shipment.trackLink}" target="_blank"> Track This </a></h5>
+                        </#if>
+                    </td>
+                    <td>
+                    ${order.shipment.awb.courier.name}
                     </td>
                 </tr>
-                <tr>
-                    <td height="15"></td>
-                </tr>
+            </#list>
             </table>
-        </td>
-    </tr>
-    <tr>
-        <td bgcolor="#b8b8b8" style="border-top: solid #606060 2px">
-            <table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td height="70" colspan="3" align="left" valign="middle"><a href="http://www.healthkart.com/"><img
-                            src="http://img.healthkart.com/email/logos/hk_logo_bw.jpg" alt="HealthKart.com logo" width="178"
-                            height="28" border="0"/></a></td>
-                    <td width="312" align="right" valign="middle" style="color:#606060; font-weight:bold; font-size:13px;"><a
-                            href="http://www.healthkart.com/" style="color:#606060; text-decoration:none;">www.healthkart.com</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="106" height="60" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">Spread the
-                        word:
-                    </td>
-                    <td width="39" align="left" valign="middle" style="border-top: solid #929292 1px"><a
-                            href="http://www.facebook.com/healthkart"><img
-                            src="http://img.healthkart.com/email/logos/facebook.png" alt="facebook" width="32" height="32"
-                            border="0"/></a></td>
-                    <td width="43" align="left" valign="middle" style="border-top: solid #929292 1px"><a
-                            href="http://twitter.com/healthkart"><img src="http://img.healthkart.com/email/logos/twitter.png"
-                                                                      alt="twitter" width="32" height="32" border="0"/></a></td>
-                    <td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
-                            href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: +91
-                        124-4616444
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td align="center" valign="middle"
-            style="border-top: solid #FFFFFF 2px; font-size:11px; text-align:center; color:#929292; padding:10px">
 
-            Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br/>
-            &copy; 2013 HealthKart.com. All Rights Reserved.
+            <br/>
+            <br/>
+
+            In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4616444. <br/>
+            <br/>
+
+            Healthy Shopping!<br/>
+            HealthKart.com <br/>
         </td>
     </tr>
+    </tbody>
+<#include "/freemarker/footerBeta.ftl">
+
 </table>
 </body>
 </html>
