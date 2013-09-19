@@ -20,8 +20,8 @@
       <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
         <%--<label>GRN ID:</label><s:text name="grn"/>--%>
           <label>DN ID:</label><s:text name="debitNote"/>
-          <label>Debit Note Number:</label><s:text name="debitNoteNo"/>
-          <label>Purchase Invoice Number:</label><s:text name="purchaseInvoice"/>
+          <label>DN NO:</label><s:text name="debitNoteNo"/>
+          <label>PI NO:</label><s:text name="purchaseInvoice"/>
         <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Supplier Name:</label><s:text name="supplierName"/>
         <label>Status:</label><s:select name="debitNoteStatus">
@@ -57,7 +57,7 @@
         <th>Status</th>
         <!-- <th>Reconciled</th> -->
         <th>Actions</th>
-          <th>VendorInvoice</th>
+          <th>Supplier Invoice</th>
       </tr>
       </thead>
       <c:forEach items="${poa.debitNoteList}" var="debitNote" varStatus="ctr">
