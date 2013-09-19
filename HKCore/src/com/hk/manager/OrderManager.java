@@ -35,6 +35,7 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
+import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -128,6 +129,8 @@ public class OrderManager {
 
   @Autowired
   private LoyaltyProgramService loyaltyProgramService;
+  @Autowired
+  private ComboInstanceDao comboInstanceDao;
 
   @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
   private Double codCharges;
@@ -421,13 +424,17 @@ public class OrderManager {
         }
       }
 
-//       Check Inventory health of order lineItems
-        for (CartLineItem cartLineItem : order.getCartLineItems()) {
-            if (cartLineItem.isType(EnumCartLineItemType.Product)) {
-                logger.info("Inventory Health being called for " + cartLineItem.getProductVariant().getId());
-                this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-            }
+      //Check Inventory health of order lineItems
+      for (CartLineItem cartLineItem : order.getCartLineItems()) {
+        if (cartLineItem.isType(EnumCartLineItemType.Product)) {
+          try {
+            logger.info("Inventory Health being called for " + cartLineItem.getProductVariant().getId());
+            this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+          } catch (Exception e) {
+            logger.error("Exception while Inventory Health for order#" + order.getId() + "; PV#" + cartLineItem.getProductVariant().getId() + " - " + e.getMessage());
+          }
         }
+      }
 
       this.getUserService().updateIsProductBought(order);
 
@@ -616,17 +623,25 @@ public class OrderManager {
         }
 
         if (!(product.isJit() || product.isService() || product.isDropShipping() || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
-          Long unbookedInventory = this.inventoryService.getAllowedStepUpInventory(productVariant);
-          if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+          Long liQty = lineItem.getQty();
+          Long allowedQty = this.inventoryService.getAllowedStepUpInventory(lineItem);
+          if(lineItem.getComboInstance() != null){
+            for (CartLineItem li : comboInstanceDao.getSiblingLineItems(lineItem)) {
+              Long comboPVQty = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant()).getQty();
+              liQty = liQty / comboPVQty;
+              break;
+            }
+          }
+          if (allowedQty != null && allowedQty < liQty) {
             // Check in case of negative unbooked inventory
             if (comboInstance != null) {
               toBeRemovedComboInstanceSet.add(comboInstance);
               continue;
             }
-            if (unbookedInventory <= 0) {
-              unbookedInventory = 0L;
+            if (allowedQty <= 0) {
+              allowedQty = 0L;
             }
-            lineItem.setQty(unbookedInventory);
+            lineItem.setQty(allowedQty);
           }
         }
       }
@@ -674,6 +689,26 @@ public class OrderManager {
         return false;
       }
     }
+    return true;
+  }
+
+    public boolean isStepUpAllowedForCombo(CartLineItem cartLineItem, Long qty) {
+      Long stepUpQty = 0L;
+      int count = 0;
+      for (CartLineItem li : comboInstanceDao.getSiblingLineItems(cartLineItem)) {
+        count++;
+        ComboInstanceHasProductVariant comboVariant = li.getComboInstance().getComboInstanceProductVariant(li.getProductVariant());
+        ProductVariant productVariant = comboVariant.getProductVariant();
+        Long allowedQty = inventoryService.getAllowedStepUpInventory(productVariant);
+        if (count > 1) {
+          stepUpQty = Math.min(stepUpQty, Math.abs(allowedQty / comboVariant.getQty()));
+        } else {
+          stepUpQty = Math.abs(allowedQty / comboVariant.getQty());
+        }
+      }
+      if (stepUpQty.intValue() < qty.intValue()) {
+        return false;
+      }
     return true;
   }
 

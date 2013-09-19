@@ -1,3 +1,4 @@
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <?xml version="1.0" encoding="UTF-8"?>
 <% response.setContentType("text/xml"); %>
 <%@ page import="com.hk.util.HKImageUtils" %>
@@ -13,6 +14,22 @@
 	      <fmt:setLocale value="en_US"/>
         <c:set var="excludeCategories" value=""/>
         <c:forEach items="${googleBean.products}" var="product">
+            <c:choose>
+                <c:when test="${hk:isNotBlank(product.maxDays)}">
+                    <c:set var="dispatchDays" value="${product.maxDays}" />
+                </c:when>
+                <c:otherwise>
+                    <c:choose>
+                        <c:when test="${pa.topCategoryUrlSlug == 'beauty'}">
+                            <c:set var="dispatchDays" value="7" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="dispatchDays" value="3" />
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
+
             <c:choose>
                 <c:when test = "${hk:hasProductAnyCategory(product, excludeCategories)}">
 
@@ -37,7 +54,14 @@
                             <g:availability>
                                 <c:choose>
                                     <c:when test="${product.outOfStock}">out of stock</c:when>
-                                    <c:otherwise>in stock</c:otherwise>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${dispatchDays <= 3}">in stock</c:when>
+                                            <c:otherwise>
+                                            available for order
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:otherwise>
                                 </c:choose>
                             </g:availability>
                             <g:image_link>

@@ -105,7 +105,8 @@ public class OrderSplitterHelper {
 
     public TreeMap<Courier, Long> getAllShipmentPlusReconciliationCost(DummySO dummySO) {
         DummyOrder dummyOrder = dummySO.getDummyOrder();
-        return courierCostCalculator.getCourierCostingMap(dummyOrder.getPincode().getPincode(), dummyOrder.isCod(), dummyOrder.getWarehouse(), dummyOrder.getAmount(), dummyOrder.getWeight(), dummyOrder.isGround());
+        return courierCostCalculator.getCourierCostingMap(dummyOrder.getPincode().getPincode(), dummyOrder.isCod(),
+            dummyOrder.getWarehouse(), dummyOrder.getAmount(), dummyOrder.getWeight(), dummyOrder.isGround(),null);
     }
 
 
