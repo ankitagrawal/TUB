@@ -22,7 +22,7 @@ public enum EnumReversePickupStatus {
     Return_Initiated(50L, "Return Initiated"),
     Return_Received(60L, "Return Received"),
     Return_QC_Checkin(70L, "Return QC checkin"),
-
+    RPU_BOOKED(80L, "RPU Booked"),
     RPU_CANCEL(90L, "RPU Cancel"),
     RPU_CLOSED(100L, "RPU Closed");
 

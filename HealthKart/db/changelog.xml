@@ -14138,6 +14138,7 @@
             alter table rp_line_item MODIFY customer_comment VARCHAR(1000);
             alter table rp_line_item MODIFY warehouse_remark VARCHAR(1000);
             alter table reverse_pickup_order  add column booking_reference_no VARCHAR(70);
+            insert into reverse_pickup_status values(80,'RPU Booked');
         </sql>
     </changeSet>
 </databaseChangeLog>

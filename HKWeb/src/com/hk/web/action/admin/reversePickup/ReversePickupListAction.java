@@ -86,6 +86,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
                 errorMessage = "Edit RP to add Courier Name and Pick time";
             } else {
                 reversePickupOrder.setBookingReferenceNumber(bookingReferenceNumber.trim());
+                reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_BOOKED.asReversePickupStatus());
                 reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
             }
         }
