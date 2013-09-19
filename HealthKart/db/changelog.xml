@@ -14141,4 +14141,9 @@
             insert into reverse_pickup_status values(80,'RPU Booked');
         </sql>
     </changeSet>
+    <changeSet author="RD" id="20130919-01">
+        <sql>
+            insert into reverse_pickup_status values(80,'RPU Booked');
+        </sql>
+    </changeSet>
 </databaseChangeLog>
