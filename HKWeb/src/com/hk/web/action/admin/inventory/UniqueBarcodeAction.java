@@ -56,7 +56,6 @@ import com.hk.web.action.admin.inventory.InventoryCheckinAction.HTTPResponseReso
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Component
-@Secure(hasAnyRoles = { RoleConstants.WH_MANAGER_L1 }, authActionBean = AdminPermissionAction.class)
 public class UniqueBarcodeAction extends BaseAction {
 
 	private static Logger logger = LoggerFactory.getLogger(UniqueBarcodeAction.class);
