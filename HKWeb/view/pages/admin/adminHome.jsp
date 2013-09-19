@@ -178,6 +178,9 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction"
             event="searchReplacementOrders">Search Replacement Order</s:link></h3>
+            
+     <h3><s:link
+            beanclass="com.hk.web.action.admin.inventory.UniqueBarcodeAction">Make Unique Barcodes</s:link></h3>
 </div>
 
 <div class="cl"></div>
