@@ -111,10 +111,10 @@
 						<td>${skuCartItemLineItem.createDate}</td>
 						<td>${skuCartItemLineItem.updateDate}</td>
                         <td>
-                            <c:set var="cartId" value="[${skuItemLineItem.lineItem.cartLineItem.id}]" />
+                            <c:set var="cartId" value="[${skuCartItemLineItem.cartLineItem.id}]" />
                             <c:if test="${!fn:contains(cartIds,cartId)}">
                                 <s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="freeBookingLineItem">
-                                    <s:param name="cartLineItemId" value="${skuItemLineItem.lineItem.cartLineItem.id}"/>
+                                    <s:param name="cartLineItemId" value="${skuCartItemLineItem.cartLineItem.id}"/>
                                     Free Booking
                                 </s:link>
                                 <c:choose>

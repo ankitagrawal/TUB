@@ -693,6 +693,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
   }
 
+  @Transactional
   public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, Long warehouseId) {
     logger.debug("Going to book inv on Bright Side");
     ProductVariant productVariant = cartLineItem.getProductVariant();
@@ -744,11 +745,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     }
     cartLineItem = (CartLineItem) getBaseDao().save(cartLineItem);
-    createSkuGroupAndItem(cartLineItem, warehouseIdAtOrderPlacement);
+    cartLineItem  = (CartLineItem) createSkuGroupAndItem(cartLineItem, warehouseIdAtOrderPlacement);
     return cartLineItem;
   }
 
-
+@Transactional
  public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId){
    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
