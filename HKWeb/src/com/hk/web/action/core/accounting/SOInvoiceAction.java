@@ -182,7 +182,7 @@ public class SOInvoiceAction extends BaseAction {
             else
 			    return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
 		} else {
-			addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
+			addRedirectAlertMessage(new SimpleMessage("Given shipping order does not exist"));
 			return new ForwardResolution("pages/admin/adminHome.jsp");
 		}
 	}

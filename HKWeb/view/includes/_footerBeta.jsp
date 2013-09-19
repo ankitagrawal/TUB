@@ -33,7 +33,7 @@
                     <h4>Get to Know Us</h4>
                     <ul>
                         <li><a href="/beta/hk/AboutUs.action">About Us</a> </li>
-                        <%--<li><a href="">Careers</a></li>--%>
+                        <li><a href="/beta/hk/Careers.action">Careers</a></li>
                         <%--<li><a href="">Investor Relations</a></li>--%>
                         <%--<li><a href="">Press Releases</a></li>--%>
                         <li><a href="/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
