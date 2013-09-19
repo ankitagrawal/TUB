@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Healthkart - Splenda Home</title>
+<title>Splenda - Hundred Percent Taste</title>
 <link href="stylesheet/style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -44,23 +44,23 @@
                     	<h1>The taste you'll love</h1>
                     </div>
                     <div class="row">
-                    	<p><strong>SPLENDA® contains the unique sweetening ingredient sucralose which is</strong></p>
+                    	<p><strong>SPLENDA&reg; contains the unique sweetening ingredient sucralose which is</strong></p>
                         <ul>
                         	<li>Made from sugar.</li>
                             <li>Tastes just, like sugar, without a bitter aftertaste.</li>
                             <li>Extremely stable even when heated.</li>
                         </ul>
-                    	<p class="greyTxt1">SPLENDA® – No compromise on sweetness anytime, anywhere!</p>
+                    	<p class="greyTxt1">SPLENDA&reg; - No compromise on sweetness anytime, anywhere!</p>
                     </div>
                     <div class="deviderLine2">&nbsp;</div>
                     <div class="row tastePgHeadingBar">
-                    	<h1>SPLENDA® – Safe substitute for sugar</h1>
+                    	<h1>SPLENDA&reg; - Safe substitute for sugar</h1>
                     </div>
                     <div class="row">
-                    	<p><strong>Sucralose is tested and approved by the US FDA as a safe low calorie sweetener. Make it a part of your family’s daily diet to enjoy the sweetness of sugar with<br />
+                    	<p><strong>Sucralose is tested and approved by the US FDA as a safe low calorie sweetener. Make it a part of your family's daily diet to enjoy the sweetness of sugar with<br />
                    	      any of its flipsides.</strong></p>
                         <p>&nbsp;</p>
-                        <p>SPLENDA® is safe to use even for:</p>
+                        <p>SPLENDA&reg; is safe to use even for:</p>
                         <ul>
                         	<li>Elderly</li>
                             <li>People with diabetes</li>
@@ -68,7 +68,7 @@
                         </ul>
                         <p class="greyTxt1">**As advised by your doctor</p>
                         <p>&nbsp;</p>
-                        <h1 class="blueHeading">Add sweetness to your family times with SPLENDA®</h1>
+                        <h1 class="blueHeading">Add sweetness to your family times with SPLENDA&reg;</h1>
                     	<p class="greyTxt1">*Based on normal daily intake of sugar</p>
                   </div>                    
                     <div class="row">&nbsp;</div>                   

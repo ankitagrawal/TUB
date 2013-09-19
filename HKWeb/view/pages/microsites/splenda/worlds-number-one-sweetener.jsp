@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Healthkart - Splenda Home</title>
+<title>Splenda - World's Number 1 Sweetener</title>
 <link href="stylesheet/style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,16 +38,16 @@
 	<div class="containerWhite">
         <div class="containerInr">
         	<div class="row bannerShadow"><img src="images/banner-worlds-number-one-sweetener.png" alt="World's No.1 Sweetener"/></div>
-            <div class="row"><p>SPLENDA® is made through a patented process that starts with sugar and converted to a no-calorie, non-carbohydrate sweetener.
+            <div class="row"><p>SPLENDA&reg; is made through a patented process that starts with sugar and converted to a no-calorie, non-carbohydrate sweetener.
               <br />
-          The result is a very stable sweetener that tastes like sugar -without its calories. When ingested, SPLENDA® is not broken down for energy, <br />
+          The result is a very stable sweetener that tastes like sugar -without its calories. When ingested, SPLENDA&reg; is not broken down for energy, <br />
           so the body does not recognize it as a carbohydrate.</p>
           <p>&nbsp;</p>
-          <p>SPLENDA® is found in more than 4000 products as a part of healthy diets worldwide.</p>
+          <p>SPLENDA&reg; is found in more than 4000 products as a part of healthy diets worldwide.</p>
           <p>&nbsp;</p>
-          <h1 class="blueHeading">Why choose SPLENDA®?</h1>
-          <p>SPLENDA® has the sweet taste you’ll love, minus all of the calories and carbohydrates of sugar. What’s more, people with diabetes can use<br />
-SPLENDA® to sweeten foods and beverages for sweet options that are lower in carbs, without affecting blood glucose levels.</p>
+          <h1 class="blueHeading">Why choose SPLENDA&reg;?</h1>
+          <p>SPLENDA&reg; has the sweet taste you'll love, minus all of the calories and carbohydrates of sugar. What's more, people with diabetes can use<br />
+SPLENDA&reg; to sweeten foods and beverages for sweet options that are lower in carbs, without affecting blood glucose levels.</p>
           </div>
           <div class="row">&nbsp;</div>
           <div class="row">
@@ -112,25 +112,25 @@ ketonuria (PKU)</td>
           </div>
           <div class="row">&nbsp;</div>
           <div class="row">
-          	<h1 class="blueHeading">Sugar SPLENDA® conversion chart </h1>
+          	<h1 class="blueHeading">Sugar SPLENDA&reg; conversion chart </h1>
           </div>
           <div class="row">
           	<table width="780" align="center" border="0" cellspacing="0" cellpadding="0" class="tblOuterBrdr">
               <tr>
                 <td valign="middle" width="200" class="tblHeads">Sugar</td>
-                <td valign="middle" width="260" class="tblHeads">SPLENDA®</td>
+                <td valign="middle" width="260" class="tblHeads">SPLENDA&reg;</td>
                 <td valign="middle" width="320" class="tblHeadsNoBrdr">Explanation</td>
               </tr>
               <tr>
                 <td valign="top" class="tblCell2">2 tsp</td>
                 <td valign="middle" class="tblCell2">1g sachet</td>
-                <td valign="middle" class="tblCell3NoBrdr">Each sachet of SPLENDA®<br />
+                <td valign="middle" class="tblCell3NoBrdr">Each sachet of SPLENDA&reg;<br />
 1g sweetens like 2 tsp of sugar</td>
               </tr>
               <tr>
                 <td valign="top" class="tblCell2">1 tsp</td>
-                <td valign="middle" class="tblCell2">1 SPLENDA® mini tablet</td>
-                <td valign="middle" class="tblCell3NoBrdr">1 SPLENDA® Mini is equal<br />
+                <td valign="middle" class="tblCell2">1 SPLENDA&reg; mini tablet</td>
+                <td valign="middle" class="tblCell3NoBrdr">1 SPLENDA&reg; Mini is equal<br />
                 to 1tsp of sugar</td>
               </tr>
             </table>          

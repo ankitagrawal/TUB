@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Healthkart - Splenda Home</title>
+<title>Splenda - Home</title>
 <link href="stylesheet/style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -43,17 +43,17 @@
         	<div class="homePgBx1">
             	<div class="homepgBxsHeadings">100% Taste</div>
                 <div class="homePgBxsData">
-                	SPLENDA® No calorie<br />sweetener* is an excellent<br />option for you to drop those<br />empty calories of sugar<br />without compromising taste</div>
+                	SPLENDA&reg; No calorie<br />sweetener* is an excellent<br />option for you to drop those<br />empty calories of sugar<br />without compromising taste</div>
                 <div class="homePgBxsBtns"><a href="hundred-percent-taste.jsp"><img src="images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
               </div>
             <div class="homePgBx2">
             	<div class="homepgBxsHeadings">0% Compromise</div>
-                <div class="homePgBxsData">Substitute SPLENDA® for sugar<br />to knock off calories and add<br />health to your life!</div>
+                <div class="homePgBxsData">Substitute SPLENDA&reg; for sugar<br />to knock off calories and add<br />health to your life!</div>
                 <div class="homePgBxsBtns"><a href="zero-percent-compromise.jsp"><img src="images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
             </div>
             <div class="homePgBx3">
             	<div class="homepgBxsHeadings">World's No. 1 Sweetener</div>
-                <div class="homePgBxsData">SPLENDA® - <br />World’s number 1<br /> low calorie sweetener<br /> is now in India!</div>
+                <div class="homePgBxsData">SPLENDA&reg; - <br />World's number 1<br /> low calorie sweetener<br /> is now in India!</div>
                 <div class="homePgBxsBtns"><a href="worlds-number-one-sweetener.jsp"><img src="images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
             </div>
         </div>

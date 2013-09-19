@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Healthkart - Splenda Home</title>
+<title>Splenda - Zero Percent Compromise</title>
 <link href="stylesheet/style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -41,18 +41,18 @@
             <div class="row">
             	<div class="leftBarTastePage">
                 <div class="row">
-                  	<h1 class="blueHeading">SPLENDA® is calorie-free*, good for dental health and<br />
+                  	<h1 class="blueHeading">SPLENDA&reg; is calorie-free*, good for dental health and<br />
 has no effect on blood glucose or insulin levels.</h1>
-					<p>Switch to SPLENDA® for a healthy lifestyle as it:</p>
+					<p>Switch to SPLENDA&reg; for a healthy lifestyle as it:</p>
 </div>
                 	<div class="row compromisePgHeadingBar">
                     	<h1>Aids weight loss</h1>
                     </div>
                     <div class="compromisePgLeftBxsBg">
                         <ul>
-                        	<li>While SPLENDA® adds sweet taste to food, it is not used by the body for energy.</li>
-                            <li>SPLENDA® provides you with “zero” calories* to help you deal with your weighty issues and achieve weight loss goals.</li>
-                            <li>Boost your health quotient with SPLENDA®! Replace sugar with SPLENDA® in your tea, coffee and juices to cut down on caloric intake.</li>
+                        	<li>While SPLENDA&reg; adds sweet taste to food, it is not used by the body for energy.</li>
+                            <li>SPLENDA&reg; provides you with "zero" calories* to help you deal with your weighty issues and achieve weight loss goals.</li>
+                            <li>Boost your health quotient with SPLENDA&reg;! Replace sugar with SPLENDA&reg; in your tea, coffee and juices to cut down on caloric intake.</li>
                         </ul>
                     </div>
                     <div class="row compromisePgHeadingBar">
@@ -60,7 +60,7 @@ has no effect on blood glucose or insulin levels.</h1>
                     </div>
                     <div class="compromisePgLeftBxsBg">
                         <ul>
-                        	<li>With over 20 years of research and more than 100 studies, SPLENDA® (Sucralose)- No calorie sweetener* is proven to be a safe for people with diabetes. SPLENDA® does not affect blood glucose levels or HbA1c readings.</li>
+                        	<li>With over 20 years of research and more than 100 studies, SPLENDA&reg; (Sucralose)- No calorie sweetener* is proven to be a safe for people with diabetes. SPLENDA&reg; does not affect blood glucose levels or HbA1c readings.</li>
                         </ul>
                   </div>                    
                     <div class="row">&nbsp;</div>                 
@@ -71,7 +71,7 @@ has no effect on blood glucose or insulin levels.</h1>
               </div> 
             </div>
             <div class="row">
-                    	<h1 class="blueHeading">Buy SPLENDA® today and add a fresh dash of sweetness to your life!</h1>
+                    	<h1 class="blueHeading">Buy SPLENDA&reg; today and add a fresh dash of sweetness to your life!</h1>
                    	  	<p class="greyTxt1">*Based on normal daily intake of sugar</p>
 			</div>
             <div class="row">&nbsp;</div>
