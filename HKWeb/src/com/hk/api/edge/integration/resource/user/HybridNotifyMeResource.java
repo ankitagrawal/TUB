@@ -80,7 +80,7 @@ public class HybridNotifyMeResource {
         }
       }
     }
-
+   try{
     ProductVariant productVariant = getProductVariantService().getVariantById(updateNotifyMeDetails.getVariantId());
     if(productVariant!=null){
       if(!productVariant.isOutOfStock()){
@@ -97,7 +97,6 @@ public class HybridNotifyMeResource {
       messages.add("Something went wrong");
        return new JSONResponseBuilder().addField("exception",false).addField("success",false).addField("msgs",messages).build();
     }
-    try{
       NotifyMe notifyMe = new NotifyMe();
       notifyMe.setProductVariant(productVariant);
       notifyMe.setEmail(updateNotifyMeDetails.getEmail());
