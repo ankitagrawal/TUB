@@ -140,7 +140,43 @@
                     });
                 }
                 goToTop();
+
+                var doSubmit = true;
+                $('[name=submitSubscription]').click(function (event) {
+                    $('[name=subscriptionEmail]').removeClass('err-brdr');
+                    $('.subscibe-mail-cntnr').children('.err-txt5').remove();
+                    $('.subscibe-mail-cntnr').children('.err-txt6').remove();
+                    $('.subscibe-mail-cntnr').children('.icn-warning-small').remove();
+                    if (! ($('[name=subscriptionEmail]').val().length > 0)) {
+                        if(! $('[name=subscriptionEmail]').hasClass('err-brdr')){
+                            $('[name=subscriptionEmail]').addClass('err-brdr');
+                            $('.subscibe-mail-cntnr').append($("<p class='err-txt5'>Please enter Email address</p>"));
+                            $('.subscibe-mail-cntnr').append($("<span class='icn-warning-small err-icn2' ></div>"));
+                        }
+                        doSubmit = false;
+                    }
+                    else {
+
+                        regexEMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                        if (! regexEMAIL.test($('[name=subscriptionEmail]').val())) {
+                            if(! $('[name=subscriptionEmail]').hasClass('err-brdr')){
+                                $('[name=subscriptionEmail]').addClass('err-brdr');
+                                $('.subscibe-mail-cntnr').append($("<p class='err-txt6'>Email address is not valid</p>"));
+                                $('.subscibe-mail-cntnr').append($("<span class='icn-warning-small err-icn2' ></div>"));
+                            }
+                            doSubmit = false;
+                        }
+                        else{
+                            doSubmit = true;
+                        }
+                    }
+                    if (doSubmit != true) {
+                        event.preventDefault();
+                    }
+                });
             });
+
+
             $('.go-to-top').click(function(e){
                 e.preventDefault();
                 $('html,body').animate({scrollTop: 0}, 300);
