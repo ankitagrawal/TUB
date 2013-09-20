@@ -111,6 +111,8 @@
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
                 beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction"> Add/Assign Roles and Permissions </s:link></h3>
+        <h3><s:link
+                beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
     </shiro:hasRole>
 <%--
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
@@ -231,8 +233,7 @@
         </h3>
 
         <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
-            <h3><s:link
-                beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
+
 
             <h3><s:link
                     beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction">RPWarehouse Checkin</s:link></h3>

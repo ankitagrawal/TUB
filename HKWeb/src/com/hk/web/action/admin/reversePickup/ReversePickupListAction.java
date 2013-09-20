@@ -86,7 +86,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
                 errorMessage = "Edit RP to add Courier Name and Pick time";
             } else {
                 reversePickupOrder.setBookingReferenceNumber(bookingReferenceNumber.trim());
-                reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_BOOKED.asReversePickupStatus());
+                reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_Scheduled.asReversePickupStatus());
                 reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
             }
         }
@@ -96,9 +96,20 @@ public class ReversePickupListAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.APPROVE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution approveCSAction() {
         if (rpLineitem != null) {
-            rpLineitem.setCustomerActionStatus(EnumReverseAction.Approved.getId());
-            /*call automatic  refund services here*/
+             rpLineitem.setCustomerActionStatus(EnumReverseAction.Approved.getId());
+              /*call automatic  refund services here*/
             reversePickupService.saveRpLineItem(rpLineitem);
+            ReversePickupOrder localRPOrder = rpLineitem.getReversePickupOrder();
+             int counter = localRPOrder.getRpLineItems().size();
+               for(RpLineItem rpLineItem : localRPOrder.getRpLineItems()){
+                   if( (rpLineItem.getCustomerActionStatus() != null) && (rpLineItem.getCustomerActionStatus().equals(EnumReverseAction.Approved.getId()))){
+                       counter--;
+                   }
+               }
+               if(counter == 0){
+                   reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus());
+                   reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+               }
         } else {
             errorMessage = "Error in Approving";
         }
@@ -119,6 +130,34 @@ public class ReversePickupListAction extends BasePaginatedAction {
                 .addParameter("errorMessage", errorMessage);
     }
 
+    public Resolution rpNotAvailable() {
+
+        reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_NOTAVAILABLE.asReversePickupStatus());
+        reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+                .addParameter("errorMessage", errorMessage);
+    }
+
+    public Resolution rpCancel() {
+        reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_CANCEL.asReversePickupStatus());
+        reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+                .addParameter("errorMessage", errorMessage);
+    }
+
+    public Resolution rpClose() {
+        reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_CLOSED.asReversePickupStatus());
+        reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+                .addParameter("errorMessage", errorMessage);
+    }
+
+    public Resolution rpReconcile() {
+        reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus());
+        reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+                .addParameter("errorMessage", errorMessage);
+    }
 
     public int getPerPageDefault() {
         return defaultPerPage;

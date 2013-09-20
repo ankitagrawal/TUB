@@ -118,6 +118,11 @@
         font-weight: bolder;
         color: #ff8213;
     }
+    .RPStatus {
+        font-size: 11px;
+        font-weight: bolder;
+        color: #ff8213;
+    }
 
     .design {
         padding: 0;
@@ -212,12 +217,41 @@
             <c:set value="${fn:length(reversePickup.rpLineItems)}" var="length"/>
             <c:set value="0" var="prevLineId"/>
             <c:set value="1" var="unitNo"/>
+            <c:set value="<%=EnumReversePickupStatus.RPU_Initiated.getId()%>" var="rpuInitiatedId"/>
+            <c:set value="<%=EnumReversePickupStatus.RPU_APPROVED.getId()%>" var="rpuApprovedId"/>
+            <c:set value="<%=EnumReversePickupStatus.RPU_RECONCILATION.getId()%>" var="rpuReconcilationId"/>
             <c:forEach items="${reversePickup.rpLineItems}" var="rpLineitem" varStatus="ctr">
                 <c:set value="${rpLineitem.lineItem.id}" var="currentLineId"/>
                 <tr class="${ctr.last ? 'rp-bottom-border-solid':'rline-bottom-border-dashed'}">
                     <c:if test="${ctr.first}">
                         <td rowspan="${length}">${revCount.index + 1}</td>
-                        <td rowspan="${length}">${reversePickup.reversePickupId}</td>
+                        <td rowspan="${length}">
+                        ${reversePickup.reversePickupId}  </br>
+                            <c:if test="${reversePickup.reversePickupStatus.id == rpuInitiatedId}">
+                                <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                        event="rpNotAvailable"><span class="RPStatus">(Not Available)</span>
+                                    <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                                </s:link>
+                           </c:if>
+                            <%--<c:if test="${reversePickup.reversePickupStatus.id == EnumReversePickupStatus.RPU_Initiated.id}">--%>
+                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                    event="rpCancel"><span class="RPStatus">(Cancel)</span>
+                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                            </s:link>
+                                <%--</c:if>--%>
+                            <c:if test="${reversePickup.reversePickupStatus.id == rpuReconcilationId}">
+                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                    event="rpClose"><span class="RPStatus">(Close)</span>
+                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                            </s:link>
+                                </c:if>
+                            <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
+                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                    event="rpReconcile"><span class="RPStatus">(Reconcile)</span>
+                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                            </s:link>
+                                </c:if>
+                        </td>
                         <td rowspan="${length}">${reversePickup.shippingOrder.id}</td>
                     </c:if>
                     <td>
@@ -332,7 +366,7 @@
                                 <c:choose>
                                     <c:when test="${reversePickup.bookingReferenceNumber == null}">
                                         <s:hidden name="bookingReferenceNumber" class="bookingnum"/>
-                                        <s:submit value="Booking Ref Number" name="editBookingReferenceNumber"
+                                        <s:submit value="Booking Number" name="editBookingReferenceNumber"
                                                   style="font:13px;padding:0em;background-color: #ffffff;color:#0000ff;font-weight :bolder;"
                                                   class="addbookingRefNumber"/>
                                         <br><br>
@@ -340,7 +374,7 @@
                                     <c:otherwise>
                                         Booking Ref No : <span> ${reversePickup.bookingReferenceNumber}</span><br>
                                         <s:hidden name="bookingReferenceNumber" class="bookingnum"/>
-                                        <s:submit value="Edit Booking Ref Number" name="editBookingReferenceNumber"
+                                        <s:submit value="Edit Booking Number" name="editBookingReferenceNumber"
                                                   style="font:10px;padding:0em;background-color: #ffffff;color:#0000ff;font-weight :bolder;"
                                                   class="addbookingRefNumber"/><br>
                                     </c:otherwise>

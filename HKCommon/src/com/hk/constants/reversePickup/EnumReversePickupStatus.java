@@ -22,10 +22,12 @@ public enum EnumReversePickupStatus {
     Return_Initiated(50L, "Return Initiated"),
     Return_Received(60L, "Return Received"),
     Return_QC_Checkin(70L, "Return QC checkin"),
-    RPU_BOOKED(80L, "RPU Booked"),
+    RPU_Scheduled(80L, "RPU_Scheduled"),
     RPU_CANCEL(90L, "RPU Cancel"),
-    RPU_CLOSED(100L, "RPU Closed");
-
+    RPU_CLOSED(100L, "RPU Closed"),
+    RPU_RECONCILATION(110L,"RPU Reconcilation"),
+    RPU_NOTAVAILABLE(120L, "RPU Not Available "),
+    RPU_APPROVED(130L,"RPU Approved");
     private Long id;
     private String status;
 
