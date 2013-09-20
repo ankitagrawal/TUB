@@ -42,30 +42,24 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
                 </tr>
 
             <#list pricingDto.productLineItems as productLineItem>
-                <tr>
-                    <td style="margin-bottom: 1em">
-                    ${productLineItem.productVariant.product.name}
-                        <#if productLineItem.productVariant.variantName??>
-                        ${productLineItem.productVariant.variantName}
-                        </#if>
-                        <br/>
-                        <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
-                    ${productOption.name} ${productOption.value}
-                    </#list></em>
-                    </td>
-                    <td>
-                    <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
+            <tr>
+            <td style="margin-bottom: 1em">
+            ${productLineItem.productVariant.name}
+                    </#list>
+            </td>
+                <td>
+                <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
                 ${productLineItem.qty}
-                    </td>
-                    <td>
-                        <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
-                            <span
-                                    style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
-                        </#if>
-                    ${productLineItem.hkPrice}
-                    </td>
-                    <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
-                </tr>
+                </td>
+                <td>
+                <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
+                    <span
+                            style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
+                </#if>
+                ${productLineItem.hkPrice}
+                </td>
+                <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
+            </tr>
             </#list>
             </table>
         </td>
