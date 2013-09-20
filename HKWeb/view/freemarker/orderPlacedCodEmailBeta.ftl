@@ -9,7 +9,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 <#include "headerBeta.ftl">
     <tbody>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">Hi ${order.user.name}!,</td>
+        <td colspan="2" style="margin-bottom:1em; padding-top: 15px">Hi ${order.user.name}!,</td>
     </tr>
     <tr>
         <td colspan="2" style="margin-bottom:1em">
@@ -23,7 +23,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">Here are your order details for the order
+        <td colspan="2" style="margin-bottom:1em; padding-bottom: 10px">Here are your order details for the order
             <strong> ${order.gatewayOrderId}</strong>
             placed
             on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></td>
@@ -43,7 +43,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td colspan="2" style="margin-bottom: 1em">
+                    <td style="margin-bottom: 1em">
                     ${productLineItem.productVariant.product.name}
                         <#if productLineItem.productVariant.variantName??>
                         ${productLineItem.productVariant.variantName}
@@ -73,7 +73,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
 
     <tr>
-        <td colspan="2" style="margin-bottom: 1em">
+        <td colspan="2" style="padding-top:15px;margin-bottom: 1em">
             <h3>Order Summary</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -119,7 +119,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     </tr>
 
     <tr>
-        <td colspan="2" style="margin-bottom: 1em">
+        <td colspan="2" style="padding-top:15px; margin-bottom: 1em">
             <h3>Other Details</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -148,7 +148,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom: 1em">
+        <td colspan="2" style="padding-top:15px;margin-bottom: 1em">
             <h3>Shipping Address & Customer details</h3></td>
     </tr>
     <tr>
@@ -169,7 +169,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
     <#--<#include "orderNote.ftl">-->
     <tr>
-        <td style="padding-bottom:10px; margin-bottom:1em"><strong>HealthKart.com</strong></td>
+        <td style="padding-bottom:10px;padding-top: 10px; margin-bottom:1em"><strong>HealthKart.com</strong></td>
     </tr>
     </tbody>
 <#include "footerBeta.ftl">
