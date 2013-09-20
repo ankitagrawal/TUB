@@ -55,8 +55,8 @@ Reset Password Instructions - HealthKart.com
             <strong>HealthKart.com</strong></td>
     </tr>
 
-
-    <#include "footerBeta.ftl">
+    </tbody>
+<#include "footerBeta.ftl">
 </table>
 
 </body>

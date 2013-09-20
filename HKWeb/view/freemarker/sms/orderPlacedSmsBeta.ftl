@@ -1,0 +1,1 @@
+Your Order No.${order.gatewayOrderId} for the amount ${order.amount} is placed and is under process. Check your email or call 0124-4616444 for further details. Thank you!
