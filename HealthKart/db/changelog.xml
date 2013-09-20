@@ -14144,4 +14144,9 @@
             update reverse_pickup_status set status = 'RPU_Scheduled' where id=80;
         </sql>
     </changeSet>
+    <changeSet author="RD" id="20130920-01">
+        <sql>
+            insert into reverse_pickup_status values(80,'RPU_Scheduled');
+        </sql>
+    </changeSet>
 </databaseChangeLog>
