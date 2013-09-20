@@ -9,7 +9,7 @@
 %>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
     <%--<img src="${pageContext.request.contextPath}/images/banners/top/beauty-promotional-strip-banner.jpg" alt="Beauty Discount">--%>
-     <img src="${pageContext.request.contextPath}/images/banners/stripbeautyBanner.jpg"
+     <img src="${pageContext.request.contextPath}/images/banners/stripbannerBeauty.jpg"
             alt="Beauty Offers">
 </div>
 <%

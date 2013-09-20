@@ -19,7 +19,7 @@
   if (dateTime.isBefore(endOfOfferDate.getTime())) {
 %>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-     <img src="${pageContext.request.contextPath}/images/banners/stripbeautyBanner.jpg"
+     <img src="${pageContext.request.contextPath}/images/banners/stripbannerBeauty.jpg"
             alt="Beauty Offers">
 </div>
 <%
