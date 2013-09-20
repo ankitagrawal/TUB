@@ -44,6 +44,7 @@ public interface SkuItemLineItemService {
 
   public ForeignSkuItemCLI getForeignSkuItemCLI(Long id);
 
+
   
   //==========Methods For Foreign Table=============
   
@@ -70,6 +71,8 @@ public interface SkuItemLineItemService {
   public Boolean validateBooking(CartLineItem cartLineItem);
 
   public List<LineItem> freeBooking(ShippingOrder shippingOrder);
+
+  public void removeRefusedFsicli (List <HKAPIForeignBookingResponseInfo> infos );
 
 
 

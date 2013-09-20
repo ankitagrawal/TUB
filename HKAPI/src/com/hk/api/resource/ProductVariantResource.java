@@ -4,14 +4,18 @@ package com.hk.api.resource;
 import com.google.gson.Gson;
 import com.hk.api.pact.service.HKAPIProductService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumUnitProcessedStatus;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.store.StoreProduct;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.core.WarehouseService ;
@@ -25,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +49,7 @@ public class ProductVariantResource {
     private StoreService storeService;
     private WarehouseService warehouseService;
     private InventoryHealthService inventoryHealthService;
+    private SkuItemLineItemService skuItemLineItemService;
 
     @Autowired
     private HKAPIProductService hkapiProductService;
@@ -159,11 +165,13 @@ public class ProductVariantResource {
     Boolean inventoryUpdated = Boolean.FALSE;
     Gson gson = new Gson();
     Long baseOrderId = null;
+
     if (hKAPIForeignBookingResponseInfos != null && hKAPIForeignBookingResponseInfos.size() > 0) {
       baseOrderId = hKAPIForeignBookingResponseInfos.get(0).getFboId();
       for (HKAPIForeignBookingResponseInfo info : hKAPIForeignBookingResponseInfos) {
         getInventoryHealthService().freezeInventoryForAB(info);
       }
+      getSkuItemLineItemService().removeRefusedFsicli(hKAPIForeignBookingResponseInfos);
       inventoryUpdated = Boolean.TRUE;
     }
     String returnVal = gson.toJson(inventoryUpdated);
@@ -213,5 +221,12 @@ public class ProductVariantResource {
       inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
     }
     return inventoryHealthService;
+  }
+
+  public SkuItemLineItemService getSkuItemLineItemService() {
+    if (skuItemLineItemService == null) {
+      skuItemLineItemService = ServiceLocatorFactory.getService(SkuItemLineItemService.class);
+    }
+    return skuItemLineItemService;
   }
 }

@@ -56,6 +56,7 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 	@JoinColumn(name = "foreign_si_cli_id")
 	private ForeignSkuItemCLI foreignSkuItemCLI;
 
+
 	public Long getId() {
 		return this.id;
 	}

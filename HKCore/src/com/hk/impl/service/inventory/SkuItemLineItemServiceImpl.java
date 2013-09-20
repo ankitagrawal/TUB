@@ -3,6 +3,7 @@ package com.hk.impl.service.inventory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumUnitProcessedStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
@@ -890,6 +891,32 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
    return  failedBookingItems;
   }
 
+
+
+  public void removeRefusedFsicli (List<HKAPIForeignBookingResponseInfo> infos ){
+
+
+    for (HKAPIForeignBookingResponseInfo info : infos ){
+      if (info.getProcessed().equals(EnumUnitProcessedStatus.REFUSED.getId())){
+        long fsiliId = info.getFsiCLIId();
+        ForeignSkuItemCLI foreignSkuItemCLI = getForeignSkuItemCLI(fsiliId);
+        SkuItem skuItem = getSkuItem(fsiliId);
+        SkuItemLineItem skuItemLineItem =  skuItemLineItemDao.getSkuItemLineItem(skuItem);
+        SkuItemCLI skuItemCLI =   skuItemLineItemDao.getSkuItemCLI(skuItem);
+        skuItemLineItem.setSkuItemCLI(null);
+        skuItemLineItem.setSkuItem(null);
+       skuItemCLI.setSkuItem(null);
+        baseDao.delete(skuItemLineItem);
+        baseDao.delete(skuItemCLI);
+        baseDao.delete(skuItem);
+        foreignSkuItemCLI.setSkuItemId(null);
+        baseDao.save(foreignSkuItemCLI);
+
+
+      }
+    }
+
+  }
 
   public SkuItemLineItem getBySkuItemId(Long skuItemId) {
     return getSkuItemDao().get(SkuItemLineItem.class, skuItemId);

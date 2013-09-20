@@ -41,6 +41,7 @@ public interface SkuItemLineItemDao extends BaseDao {
 
   public ForeignSkuItemCLI getForeignSkuItemCLI(Long id);
 
+
   public List<ForeignSkuItemCLI> getForeignSkuItemCli(CartLineItem cartLineItem);
 
   public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId);

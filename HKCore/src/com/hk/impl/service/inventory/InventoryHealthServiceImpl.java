@@ -619,6 +619,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           } else {
             //book inventory on Bright
             if (isBookingRequireAtBright(cartLineItem)) {
+              getBaseDao().refresh(cartLineItem);
               if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
               cartLineItem = tempBookBrightInventory(cartLineItem,warehouseIdAtPV);
               populateSICLI(cartLineItem);
@@ -856,6 +857,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         foreignSkuItemCLI.setFsgMrp(info.getMrp());
         foreignSkuItemCLI.setFsgBatchNumber(info.getBatch());
         foreignSkuItemCLI.setProcessedStatus(info.getProcessed());
+
+
         if(info.getFboId() != null){
           foreignSkuItemCLI.setForeignOrderId(info.getFboId());
         }
@@ -867,7 +870,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
   }
 
-
+ @Transactional
   public void inventoryHealthCheck(ProductVariant productVariant) {
     InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
@@ -935,12 +938,15 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         productVariant.setNetQty(0L);
         productVariant.setMrpQty(0L);
       }
+
+      productVariant =(ProductVariant) getBaseDao().save(productVariant);
+      getBaseDao().refresh(productVariant);
       Product product = productVariant.getProduct();
+
       boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
       if (!updateStockStatus) {
         productVariant.setOutOfStock(false);
       }
-      getBaseDao().save(productVariant);
 
       List<ProductVariant> inStockVariants = product.getInStockVariants();
       if (inStockVariants != null && inStockVariants.isEmpty()) {
@@ -1169,6 +1175,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     getBaseDao().save(existingSkuItem);
     updateForeignSICLITable(Arrays.asList(info));
+
   }
 
 
