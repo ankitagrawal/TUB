@@ -11,9 +11,9 @@
 
 <body>
 <div class="header">
-  <h1>About half the supplements<br />
+  <h1>Half the supplements<br />
     sold in India are fake</h1>
-  <h4>And you cannot spot the fakes from the real</h4>
+  <h4>and you cannot spot the fakes from the real.</h4>
 
   <div class="scroll">
     <span>scroll to learn more</span>
@@ -35,11 +35,11 @@
 <div class="cont02" >
   <div class="container-width">
     <div class="cont02-left">
-      <span class="cont02-heading">Fake Supplement</span>
-      <h2>The difference<br />
-        is hard to spot but <br />
+      <span class="cont02-heading">Fake Supplements</span>
+      <h2>The differences<br />
+        are hard to spot but <br />
         the effects are <br />
-        all too real</h2>
+        all too real.</h2>
     </div>
     <div class="cont02-right">
 
@@ -64,7 +64,7 @@
           <li  data-role="held" data-hinder="bgposition" data-hinder-position="left top 9px" data-identifier="1" data-target="2" data-delay="500">Loaded with dangerous
             anabolic steroids</li>
           <li data-role="held" data-hinder="bgposition" data-hinder-position="left top 9px" data-identifier="2" data-target="3" data-delay="500">Carcinogenic flavouring agents</li>
-          <li data-role="held" data-hinder="bgposition" data-hinder-position="left top 9px" data-identifier="3" data-target="4" data-delay="500">With high percentage of glucose
+          <li data-role="held" data-hinder="bgposition" data-hinder-position="left top 9px" data-identifier="3" data-target="4" data-delay="500">High percentage of glucose
             and industrial starch</li>
           <li data-role="held" data-hinder="bgposition" data-hinder-position="left top 9px" data-identifier="4" data-delay="500">Packed under unhygienic
             conditions</li>
@@ -86,12 +86,11 @@
     </div><!--cont03-left close-->
 
     <div class="cont03-right">
-      <span class="cont03-heading"> The damage done </span>
-      <h2>A short term boost and permanent damage</h2>
+      <span class="cont03-heading"> The Damage Done </span>
+      <h2>A short-term boost but permanent damage</h2>
       <div class="cont03-right-txt">
-        <p>Spurious ingredients mixed with steroids make for cheap supplements. The supplement is made to look like the real thing and the results are directly because of the supplements.</p>
-        <p>
-          You get <span>cancer</span> and <span>severe impotence</span> without smoking like a chimney, <span>skin diseases</span> and rashes without being infected, <span>kidney and liver damage</span> without alcohol, <span>hormonal imbalance</span> without the stress, <span>mood swings</span>, <span>hair loss</span> and <span>permanent organ damage</span> without ever asking for it. That&#39;s what anabolic steroids do in a nutshell
+        <p>Spurious ingredients mixed with steroids make for cheap supplements. The supplement is made to look like the real thing in colour and texture but the pump in muscle and the mass gain is directly because of the steroids in the fake supplements.</p>
+        <p>As for the permanent damage, you get <span>cancer</span> and <span>severe impotence</span> without smoking like a chimney, <span>skin diseases</span> and <span>rashes</span> without being infected, <span>kidney and liver damage</span> without alcohol, <span>hormonal imbalance</span> without the stress, <span>mood swings</span>, <span>hair loss</span> and <span>permanent organ damage</span> without ever asking for it. That&#39;s what anabolic steroids do in a nutshell.
         </p></div>
     </div>
 
@@ -100,7 +99,7 @@
 
 <div class="cont04">
   <div class="container-width">
-    <span class="cont04-heading">Incident abound</span>
+    <span class="cont04-heading">Incidents Abound</span>
     <h2>People have been<br>
       hurt and lives ended</h2>
 
@@ -109,9 +108,9 @@
     <div class="cont04-img2"><img src="images/vishal.jpg" width="320" height="320"></div>
     <div class="cont04-img3"><img src="images/rijo.jpg" width="320" height="320"></div>
 
-    <div class="cont04-txt1"><a href="http://www.mid-day.com/news/2013/jun/130613-mystery-bodybuilding-pills-claim-26-year-olds-life.htm">Rajesh, 26, from Mumbai lost his life after suffering from complete renal failure</a></div>
-    <div class="cont04-txt2"><a href="http://www.mumbaimirror.com/mumbai/cover-story/Just-six-months-of-steroids-and-his-hip-bones-collapsed/articleshow/21284594.cms">Vishal Waghmare, Mumbai, suffered a hip collapse after steroid intake</a></div>
-    <div class="cont04-txt3"><a href="http://indiatoday.intoday.in/video/fakemedicines-racket-exposed/1/158527.html">Rijo, 29, from Kochi died tragically for the same reason (CNN-IBN report)</a></div>
+    <div class="cont04-txt1"><a href="http://www.mid-day.com/news/2013/jun/130613-mystery-bodybuilding-pills-claim-26-year-olds-life.htm" target="_blank">Rajesh, 26, from Mumbai lost his life after suffering from complete renal failure after taking fake supplements. (Mid Day)</a></div>
+    <div class="cont04-txt2"><a href="http://www.mumbaimirror.com/mumbai/cover-story/Just-six-months-of-steroids-and-his-hip-bones-collapsed/articleshow/21284594.cms" target="_blank">Vishal Waghmare, Mumbai, suffered a hip collapse. (Mumbai Mirror)</a></div>
+    <div class="cont04-txt3"><a href="http://www.youtube.com/watch?v=iqqlNKXw3NI" target="_blank">This is how cheap it is to make fake supplements. It is worse than you imagine.</a></div>
 
 
   </div><!--container-width close-->
@@ -126,7 +125,7 @@
     <div class="cont05-right">
       <span class="cont05-heading">Real Nutrition</span>
       <h2>Why we fight?</h2>
-      <p>While many marketplaces, deal sites and local shops may claim authenticity of what they sell, we are among the very few who can prove it. Why? because we are not in the business of selling supplements, we are in the business of you. If it is not good for you, we will go to great lengths and stand up to the biggest of brands, just to ensure that we do what is right by you.
+      <p>While many marketplaces, deal sites and local shops may claim that they sell authentic supplements, we are among the very few who can prove it. Why? Because we want to own authenticity when it comes to health related   products, so that consumers like yourself get just what they are looking   for. If it is not good for you, we will go to any lengths and stand up to the biggest of brands, just to ensure that we do what is right by you.
       </p>
     </div>
 
@@ -141,7 +140,9 @@
       <span class="cont06-heading">Authenticity Guaranteed!</span>
       <h2>We own the supply chain</h2>
     </div>
-    <div class="cont06-right">When we say that we sell authentic supplements, we will invest an enormous amount of time, effort and money on a supply chain ensures it. We are in for the long term and we want you with us in this journey.</div>
+    <div class="cont06-right">We invest an enormous amount of time, effort and money on a supply chain that ensures authenticity.<br>
+      This is how we do it.
+    </div>
     <img src="images/supply-chain.png">
 
   </div><!--container-width close-->
@@ -154,35 +155,33 @@
       <img src="images/authenticity.png" width="470" height="470">
     </div>
     <div class="cont07-right">
-      <span class="cont07-heading">Good health at your doorstep</span>
+      <span class="cont07-heading">Good Health at Your Doorstep</span>
       <h2>Authenticity, delivered.</h2>
-      <p>You no longer have to search a hundred nutrition shops to find your brand of products. We have over 200 of the best brands in the world with us. You will see in most of their websites that we are their authorized resellers in India, or we are directly in touch with their distributors.</p>
+      <p>You no longer have to search a hundred nutrition shops to find your brand of products. We have over 200 of the best brands in the world with us. Either we are listed on the brand websites as their authorised dealers or we buy directly from the brand's listed distributors.</p>
       <p>
-        You will be spoilt for choice. All you have to do is log on th HealthKart. You can select what is best for you and have it delivered to your doorstep, right fron the comfort of your home.
-      </p>
+        All you have to do is log on to <a href="http://www.healthkart.com/" target="new">HealthKart.com</a>. You can choose the supplement that best suits your goals and have it delivered at your doorstep, right from the comfort of your home. </p>
     </div>
     <div class="cl"></div>
 
     <ul>
-      <li><img src="images/allmax.jpg"><a class="certificate" href="images/allmax-certificate.jpg" title="Allmax Certificate">Certificate &raquo;</a></li>
-      <li><img src="images/gaspari.jpg"><a class="certificate" href="images/gaspari-certificate.jpg" title="Gaspari Certificate">Certificate &raquo;</a></li>
-      <li><img src="images/six-star.jpg"><a class="certificate" href="images/six-star-certificate.jpg" title="Six Star Certificate">Certificate &raquo;</a></li>
-      <li><img src="images/universal.jpg"><a class="certificate" href="images/universal-certificate.jpg" title="Universal Certificate">Certificate &raquo;</a></li>
-      <li><img src="images/stacker-bottle.jpg"><a class="certificate" href="images/stacker-bottle-certifiacate.jpg" title="Stacke Bottle Certificate">Certificate &raquo;</a></li>
-      <li><img src="images/vpx.jpg"><a class="certificate" href="images/vpx-certificate.jpg" title="VPX Certificate">Certificate &raquo;</a></li>
+      <li><img src="images/allmax.jpg"><a href="images/allmax-certificate.jpg" title="Allmax Certificate" target="_blank" class="certificate">Certificate &raquo;</a></li>
+      <li><img src="images/gaspari.jpg"><a href="images/gaspari-certificate.jpg" title="Gaspari Certificate" target="_blank" class="certificate">Certificate &raquo;</a></li>
+      <li><img src="images/six-star.jpg"><a href="images/six-star-certificate.jpg" title="Six Star Certificate" target="_blank" class="certificate">Certificate &raquo;</a></li>
+      <li><img src="images/universal.jpg"><a href="images/universal-certificate.jpg" title="Universal Certificate" target="_blank" class="certificate">Certificate &raquo;</a></li>
+      <li><img src="images/stacker-bottle.jpg"><a href="images/stacker-bottle-certifiacate.jpg" title="Stacke Bottle Certificate" target="_blank" class="certificate">Certificate &raquo;</a></li>
+      <li><img src="images/vpx.jpg"><a href="images/vpx-certificate.jpg" title="VPX Certificate" target="_blank" class="certificate">Certificate &raquo;</a></li>
     </ul>
     <div class="cl"></div>
-    <ul>
-      <li><img src="images/muscletech.jpg"><a href="http://international.muscletech.com/global/distributorsintl.shtml#i">Website &raquo;</a></li>
-      <li><img src="images/qnt.jpg"><a href="http://qntsport.com/in/index.php?page=partners&hl=en_US">Website &raquo;</a></li>
-      <li><img src="images/twinlab.jpg"><a href="http://www.twinlabfuel.com/content/international-contacts">Website &raquo;</a></li>
-      <li><img src="images/dymatize.jpg"><a href="http://www.dymatize.com/index.php?submenu=Distributors&src=directory&view=retailers&srctype=distributors_listing">Website &raquo;</a></li>
+    <ul class="margin-l166">
+      <li><img src="images/qnt.jpg"><a href="http://qntsport.com/in/index.php?page=partners&hl=en_US" target="_blank">Website &raquo;</a></li>
+      <li><img src="images/twinlab.jpg"><a href="http://www.twinlabfuel.com/content/international-contacts" target="_blank">Website &raquo;</a></li>
+      <li><img src="images/dymatize.jpg"><a href="http://www.dymatize.com/index.php?submenu=Distributors&src=directory&view=retailers&srctype=distributors_listing" target="_blank">Website &raquo;</a></li>
+      <li><img src="images/muscletech.jpg"><a href="http://international.muscletech.com/global/distributorsintl.shtml#i" target="_blank">Website &raquo;</a></li>
     </ul>
     <div class="cl"></div>
 
     <div class="shop">
       <span>So what are you waiting for?</span>
-      <div class="shop-img"><img src="images/dibba-blue.png" width="100" height="147"></div>
       <div class="shop-btn"><a href="http://www.healthkart.com/">SHOP<br>
         NOW</a></div>
     </div>
@@ -417,7 +416,7 @@ function scrollItem(elm){
 
 };
 
-//handling scroll event for top boxes	
+//handling scroll event for top boxes
 function scrollBoxes(){
   var subCont1 = $('.sub-cont01');
   var initialTop = Number(subCont1.data('top').replace('px',''));
