@@ -9,21 +9,21 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 <#include "headerBeta.ftl">
     <tbody>
     <tr>
-        <td colspan="2" style="margin-bottom:1em; padding-top: 15px">Hi ${order.user.name}!,</td>
+        <td colspan="2" style="margin-bottom:1em; padding-top: 15px; padding-bottom: 15px">Hi ${order.user.name}!,</td>
     </tr>
     <tr>
         <td colspan="2" style="margin-bottom:1em">
             Thanks for placing an order with us. We have received the order and will give you a call shortly to confirm
             it.
-            Please note that COD orders will not be confirmed and shipped from our end until we manually confirm the
+            Please note that COD <br/>orders will not be confirmed and shipped from our end until we manually confirm the
             order
             on
             the phone number provided.
-            Thanks for your patience.
+            Thanks<br/> for your patience.
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em; padding-bottom: 10px">Here are your order details for the order
+        <td colspan="2" style="padding-top:10px;margin-bottom:1em; padding-bottom: 10px">Here are your order details for the order
             <strong> ${order.gatewayOrderId}</strong>
             placed
             on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></td>
