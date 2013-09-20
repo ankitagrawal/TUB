@@ -30,7 +30,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     </tr>
 
     <tr>
-        <td>
+        <td colspan="2" style="margin-bottom: 1em">
             <h3>Order Details</h3>
         <#--<h5>No of shipping addresses - ${pricingDto.shippingLineCount}</h5>-->
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
@@ -43,7 +43,8 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.product.name}
+                    <td colspan="2" style="margin-bottom: 1em">
+                    ${productLineItem.productVariant.product.name}
                         <#if productLineItem.productVariant.variantName??>
                         ${productLineItem.productVariant.variantName}
                         </#if>
@@ -72,7 +73,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
 
     <tr>
-        <td>
+        <td colspan="2" style="margin-bottom: 1em">
             <h3>Order Summary</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -118,7 +119,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     </tr>
 
     <tr>
-        <td>
+        <td colspan="2" style="margin-bottom: 1em">
             <h3>Other Details</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -146,8 +147,10 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
             </table>
         </td>
     </tr>
-
-    <h3>Shipping Address & Customer details</h3>
+    <tr>
+        <td colspan="2" style="margin-bottom: 1em">
+            <h3>Shipping Address & Customer details</h3></td>
+    </tr>
     <tr>
         <td colspan="2" style="margin-bottom:1em">
         ${order.address.name}<br/>
