@@ -13,13 +13,13 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     </tr>
     <tr>
         <td colspan="2" style="margin-bottom:1em">
-            Thanks for placing an order with us. We have received the order and will give you a call shortly to confirm
+           <p style="padding-top: 10px"> Thanks for placing an order with us. We have received the order and will give you a call shortly to confirm
             it.
-            Please note that COD <br/>orders will not be confirmed and shipped from our end until we manually confirm the
+            Please note that COD</p><p style="padding-top: 10px"> orders will not be confirmed and shipped from our end until we manually confirm the
             order
             on
             the phone number provided.
-            Thanks<br/> for your patience.
+            Thanks</p><p style="padding-top: 10px"> for your patience.</p>
         </td>
     </tr>
     <tr>
