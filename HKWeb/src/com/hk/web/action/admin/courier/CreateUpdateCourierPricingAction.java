@@ -2,12 +2,16 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
+import com.hk.util.HKCollectionUtils;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -41,6 +45,7 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     regionTypeList = courierService.getRegionTypeList();
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW}, authActionBean = AdminPermissionAction.class)
   public Resolution search() {
     if(courier == null) {
       addRedirectAlertMessage(new SimpleMessage("Please select the Courier"));
@@ -54,38 +59,21 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE}, authActionBean = AdminPermissionAction.class)
   public Resolution save() {
-    CourierPricingEngine duplicatePricingEngine = findDuplicateCourierPricingEngine(courierPricingEngineList);
+    CourierPricingEngine duplicatePricingEngine = (CourierPricingEngine)HKCollectionUtils.findDuplicate(courierPricingEngineList,
+                null, "courier", "regionType", "validUpto");
     if (duplicatePricingEngine == null) {
       courierService.saveUpdateCourierPricingInfo(courierPricingEngineList);
       addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
     } else {
       addRedirectAlertMessage(new SimpleError("You are trying to save duplicate entry for courier "
           + duplicatePricingEngine.getCourier().getName() + " and region "
-          + duplicatePricingEngine.getRegionType().getName() + "and date " +
+          + duplicatePricingEngine.getRegionType().getName() + " and date " +
           new SimpleDateFormat("yyyy-MM-dd").format(duplicatePricingEngine.getValidUpto())));
     }
     initialize();
     return new RedirectResolution(CreateUpdateCourierPricingAction.class, "search").addParameter("courier", courier);
-  }
-
-  private CourierPricingEngine findDuplicateCourierPricingEngine(List<CourierPricingEngine> courierPricingEngineList) {
-    Map<String, CourierPricingEngine> cpeMap = new HashMap<String, CourierPricingEngine>();
-    StringBuilder key;
-    String keySeparator = "#";
-    for (CourierPricingEngine currentEngine: courierPricingEngineList) {
-      key = new StringBuilder();
-      key.append(currentEngine.getCourier().getName()).append(keySeparator);
-      key.append(currentEngine.getRegionType().getName()).append(keySeparator);
-      key.append(currentEngine.getValidUpto().toString());
-
-      if (!cpeMap.containsKey(key.toString())) {
-        cpeMap.put(key.toString(),currentEngine);
-      } else {
-        return currentEngine;
-      }
-    }
-    return null;
   }
 
   public RegionType getRegionType() {

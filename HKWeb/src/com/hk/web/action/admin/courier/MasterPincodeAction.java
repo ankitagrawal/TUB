@@ -87,14 +87,21 @@ public class MasterPincodeAction extends BaseAction {
     public Resolution save() {
         Pincode dbPincode = pincodeService.getByPincode(pincode.getPincode());
         if (dbPincode != null) {
-            addRedirectAlertMessage(new SimpleMessage("Pincode already exist in the Database!!!"));
+            addRedirectAlertMessage(new SimpleMessage("Pincode already exist in the database!!!"));
             return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
         } else {
             pincode = pincodeService.save(pincode);
             pincodeRegionZoneService.assignPincodeRegionZoneToPincode(pincode);
-            addRedirectAlertMessage(new SimpleMessage("Pincode changes saved Successfully"));
+            addRedirectAlertMessage(new SimpleMessage("Pincode " + pincode.getPincode() + " added"));
             return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
         }
+    }
+
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
+    public Resolution update() {
+        pincode = pincodeService.save(pincode);
+        addRedirectAlertMessage(new SimpleMessage("Pincode " + pincode.getPincode() + " changes saved successfully"));
+        return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_DOWNLOAD}, authActionBean = AdminPermissionAction.class)

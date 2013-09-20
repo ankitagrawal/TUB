@@ -35,5 +35,16 @@ public class HealthkartConstants {
     public static final String productReferrerId = "productReferrerId";
     public static final String productPosition = "productPosition";
   }
+
+  public static class Remarketing {
+    public static class PageType {
+      public static final String cart = "cart";
+      public static final String home = "home";
+      public static final String product = "product";
+      public static final String category = "category";
+      public static final String catalog = "catalog";
+      public static final String paymentSuccess = "paymentSuccess";
+    }
+  }
   
 }

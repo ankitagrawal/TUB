@@ -54,9 +54,9 @@ h2					{
 					}
 					
 .whyObstacleRace	{ 
-					width:380px; 
+					width:420px; 
 					float:left;
-					padding-left:50px;
+					padding-left:70px;
 					}
 					
 .leftBar			{ 
@@ -75,19 +75,24 @@ h2					{
 					}
 					
 .powerUpBg			{ 
-					background:url(images/barbed-wire-bg-power-up.jpg) 100% 20% no-repeat;
+					background:url(images/barbed-wire-bg-power-up.jpg) 100% 25% no-repeat;
 					}
 					
-.whitBrdr1			{ 
-					border-top:1px solid #fff; 
-					margin-top:80px; 
+.ht1				{  
+					margin-top:30px; 
 					padding-top:20px;
+					}					
+					
+.muscleBlaze 		{ 
+					border-bottom:3px dashed #fff;
+					padding:0px 0px 30px 10px;
 					}
 					
-.yellowHeading 		{ 
-					border-bottom:1px solid #fff; 
-					padding:0px 0px 35px 10px;
-					}
+.yellowHeading		{ 
+					border-bottom:3px dashed #fff;
+					padding:30px 0px 30px 0px;
+					}					
+					
 					
 .yellowHeading h1	{ 
 					padding:15px 0px 0px 0px; 

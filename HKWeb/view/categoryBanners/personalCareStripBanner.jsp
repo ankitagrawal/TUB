@@ -13,6 +13,18 @@
         border-bottom: 0;
     }
 </style>
+<%
+  DateTime dateTime = new DateTime();
+  Date endOfOfferDate = new Date(new DateTime(2013, 9, 21, 11, 59, 59, 59).getMillis());
+  if (dateTime.isBefore(endOfOfferDate.getTime())) {
+%>
+<div style="margin-left: auto; margin-right: auto; width:960px;">
+     <img src="${pageContext.request.contextPath}/images/banners/stripbeautyBanner.jpg"
+            alt="Beauty Offers">
+</div>
+<%
+  } else {
+%>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
     <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">--%>
     <a href='${pageContext.request.contextPath}/pages/offers/personal-care-page/personal-care.jsp'>
@@ -30,3 +42,6 @@
 
     </script>
 </div>
+<%
+  }
+%>
