@@ -108,8 +108,8 @@
     <div class="cont04-img2"><img src="images/vishal.jpg" width="320" height="320"></div>
     <div class="cont04-img3"><img src="images/rijo.jpg" width="320" height="320"></div>
 
-    <div class="cont04-txt1"><a href="http://www.mid-day.com/news/2013/jun/130613-mystery-bodybuilding-pills-claim-26-year-olds-life.htm" target="_blank">Rajesh, 26, from Mumbai lost his life after suffering from complete renal failure after taking fake supplements</a>.</div>
-    <div class="cont04-txt2"><a href="http://www.mumbaimirror.com/mumbai/cover-story/Just-six-months-of-steroids-and-his-hip-bones-collapsed/articleshow/21284594.cms" target="_blank">Vishal Waghmare, Mumbai, suffered a hip collapse</a>.</div>
+    <div class="cont04-txt1"><a href="http://www.mid-day.com/news/2013/jun/130613-mystery-bodybuilding-pills-claim-26-year-olds-life.htm" target="_blank">Rajesh, 26, from Mumbai lost his life after suffering from complete renal failure after taking fake supplements. (Mid Day)</a></div>
+    <div class="cont04-txt2"><a href="http://www.mumbaimirror.com/mumbai/cover-story/Just-six-months-of-steroids-and-his-hip-bones-collapsed/articleshow/21284594.cms" target="_blank">Vishal Waghmare, Mumbai, suffered a hip collapse. (Mumbai Mirror)</a></div>
     <div class="cont04-txt3"><a href="http://www.youtube.com/watch?v=iqqlNKXw3NI" target="_blank">This is how cheap it is to make fake supplements. It is worse than you imagine.</a></div>
 
 
@@ -125,7 +125,7 @@
     <div class="cont05-right">
       <span class="cont05-heading">Real Nutrition</span>
       <h2>Why we fight?</h2>
-      <p>While many marketplaces, deal sites and local shops may claim that they sell authentic supplements, we are among the very few who can prove it. Why? Because we are not in the business of selling supplements, we are in the business of you. If it is not good for you, we will go to any lengths and stand up to the biggest of brands, just to ensure that we do what is right by you.
+      <p>While many marketplaces, deal sites and local shops may claim that they sell authentic supplements, we are among the very few who can prove it. Why? Because we want to own authenticity when it comes to health related   products, so that consumers like yourself get just what they are looking   for. If it is not good for you, we will go to any lengths and stand up to the biggest of brands, just to ensure that we do what is right by you.
       </p>
     </div>
 
