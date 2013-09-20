@@ -12,10 +12,10 @@ Hi ${user.name}, welcome to HealthKart.com
     <tbody style="font-size:13px; line-height:1.75em;">
 
     <tr>
-        <th colspan="2" style=" padding-top:15px;"><a href="http://www.healthkart.com"><img
+        <td colspan="2" style=" padding-top:15px;"><a href="http://www.healthkart.com"><img
                 src="http://img.healthkart.com/email/welcome_emailer_new/images/main_banner.jpg"
                 width="500"
-                height="148" alt="Welcome to HealthKart!" border="0"/></a></th>
+                height="148" alt="Welcome to HealthKart!" border="0"/></a></td>
     </tr>
     <tr>
         <td style="padding-top:35px;" colspan="2">
