@@ -750,7 +750,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
         getBaseDao().delete(foreignSkuItemCLI);
       }
-      if (infos != null && infos.size() > 0) {
+      if (infos == null || infos.size() <= 0){
+        ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+        getBaseDao().delete(foreignSkuItemCLI);
+      } else if (infos != null && infos.size() > 0) {
         updateForeignSICLITable(infos);
       }
 
@@ -1047,7 +1050,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  public Boolean bookInventoryForReplacementOrder(CartLineItem cartLineItem){
+  public Boolean bookInventoryForReplacementOrder(LineItem lineItem){
+    String tinPrefix = lineItem.getSku().getWarehouse().getTinPrefix();
+    Long warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
+    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
+    warehouses.remove(lineItem.getSku().getWarehouse());
+    Long warehouseIdForBright = warehouses.get(0).getId();
 
 
     return true;

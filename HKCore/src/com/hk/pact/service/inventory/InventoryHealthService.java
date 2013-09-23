@@ -4,6 +4,7 @@ import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 
@@ -45,7 +46,7 @@ public interface InventoryHealthService {
 
   public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant);
 
-  public Boolean bookInventoryForReplacementOrder(CartLineItem cartLineItem);
+  public Boolean bookInventoryForReplacementOrder(LineItem lineItem);
 
 
   public static class InventoryInfo {
