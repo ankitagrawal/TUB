@@ -65,7 +65,7 @@ $(document).ready(function () {
 			 $("#firstLocation").val('');
         	 $("#barcode").val('');
         	 $("#finalLocation").val('');
-        	 $("#firstLocation").focus();
+        	 window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
 		}
 		
 	});
