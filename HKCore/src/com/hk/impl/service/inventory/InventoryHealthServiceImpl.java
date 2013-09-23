@@ -682,16 +682,19 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   public void populateSICLI(CartLineItem cartLineItem) {
     if (cartLineItem != null) {
-      for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs()) {
-       SkuItem skuItem =  skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId());
-        if (skuItem != null) {
-          SkuItemCLI skuItemCLI = new SkuItemCLI();
-          skuItemCLI.setCartLineItem(cartLineItem);
-          skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
-          skuItemCLI.setCreateDate(new Date());
-          skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-          skuItemCLI.setSkuItem(skuItem);
-          skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+      getBaseDao().refresh(cartLineItem);
+      if (cartLineItem.getForeignSkuItemCLIs() != null) {
+        for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs()) {
+          SkuItem skuItem = skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId());
+          if (skuItem != null) {
+            SkuItemCLI skuItemCLI = new SkuItemCLI();
+            skuItemCLI.setCartLineItem(cartLineItem);
+            skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
+            skuItemCLI.setCreateDate(new Date());
+            skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+            skuItemCLI.setSkuItem(skuItem);
+            skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+          }
         }
       }
     }
