@@ -9,7 +9,7 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
 <#include "headerBeta.ftl">
     <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
-        <td style="margin-bottom:1em" colspan="2">Hi ${order.user.name}!,</td>
+        <td style="margin-bottom:1em; padding-top:15px;padding-bottom: 10px;" colspan="2">Hi ${order.user.name}!,</td>
     </tr>
     <tr>
         <td style="margin-bottom:1em" colspan="2">
@@ -30,7 +30,7 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom: 1em" colspan="2">
+        <td style="margin-bottom: 1em; padding-bottom: 10px;padding-top: 10px" colspan="2">
             Our bank account details are as follows :<br/>
             Account name : Aquamarine HealthCare Pvt. Ltd.<br/>
             Branch : ICICI Bank, Dwarka Sector-5 Branch, New Delhi<br/>
@@ -47,7 +47,7 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
     </tr>
 
     <tr>
-        <td style="margin-bottom: 1em" colspan="2">
+        <td style="padding-top:15px;margin-bottom: 1em" colspan="2">
             <h3>Order Details</h3>
             <h5>No of shipping addresses - ${pricingDto.shippingLineCount}</h5>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
@@ -82,7 +82,7 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom: 1em" colspan="2">
+        <td style="padding-top:15px;margin-bottom: 1em" colspan="2">
             <h3>Order Summary</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -113,7 +113,7 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom: 1em" colspan="2">
+        <td style="padding-top:15px;margin-bottom: 1em" colspan="2">
             <h3>Other Details</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -142,7 +142,7 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom: 1em" colspan="2">
+        <td style="padding-top:15px;margin-bottom: 1em" colspan="2">
             <h3>Shipping Address & Customer details</h3></td>
     </tr>
     <tr>
@@ -158,10 +158,10 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</td>
+        <td colspan="2" style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em" colspan="2"><strong>HealthKart.com</strong></td>
+        <td style="padding-bottom:10px;margin-bottom:1em" colspan="2"><strong>HealthKart.com</strong></td>
     </tr>
     </tbody>
 <#include "footerBeta.ftl">

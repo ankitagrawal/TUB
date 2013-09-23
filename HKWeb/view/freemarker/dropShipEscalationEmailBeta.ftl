@@ -9,10 +9,10 @@ Shipping Order -: ${shippingOrder.id?c} has been escalated to DropShip Queue
 
     <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
-        <td style="margin-bottom:1.2em">Attention!!</td>
+        <td colspan="2" style="padding-top:15px;margin-bottom:1.2em">Attention!!</td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">
+        <td colspan="2" style="margin-bottom:1em">
             Please note that Shipping Order : ${shippingOrder.id?c} has been escalated to DropShip Queue.
 
         </td>
@@ -20,8 +20,11 @@ Shipping Order -: ${shippingOrder.id?c} has been escalated to DropShip Queue
 
 
     <tr>
-        <td style="margin-bottom:1em"><strong>HealthKart Team</strong></td>
+        <td colspan="2" style="padding-top:10px;padding-bottom:10px;margin-bottom:1em"><strong>HealthKart Team</strong>
+        </td>
     </tr>
-    <#include "footerBeta.ftl">
+    </tbody>
+<#include "footerBeta.ftl">
+</table>
 </body>
 </html>
