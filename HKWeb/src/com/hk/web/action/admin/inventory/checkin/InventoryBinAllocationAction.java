@@ -121,7 +121,7 @@ public class InventoryBinAllocationAction extends BaseAction {
 	
 	public Resolution parseBinAllocationFile(){
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String binAllocationTextPath = adminUploadsPath + "/binAllocation/"+ warehouse.getIdentifier() + simpleDateFormat.format(new Date()) + ".txt";
+		String binAllocationTextPath = adminUploadsPath + "/binAllocation/"+ warehouse.getIdentifier() + "-" +simpleDateFormat.format(new Date()) + ".txt";
 		File binAllocationText = new File(binAllocationTextPath);
 		binAllocationText.getParentFile().mkdirs();
 		try {
