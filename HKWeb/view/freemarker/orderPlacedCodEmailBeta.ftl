@@ -13,17 +13,24 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     </tr>
     <tr>
         <td colspan="2" style="margin-bottom:1em">
-           <p style="padding-top: 10px"> Thanks for placing an order with us. We have received the order and will give you a call shortly to confirm
-            it.
-            Please note that COD</p><p style="padding-top: 10px"> orders will not be confirmed and shipped from our end until we manually confirm the
-            order
-            on
-            the phone number provided.
-            Thanks</p><p style="padding-top: 10px"> for your patience.</p>
+            <p style="padding-top: 10px"> Thanks for placing an order with us. We have received the order and will give
+                you a call shortly to confirm
+                it.
+                Please note that COD</p>
+
+            <p style="padding-top: 10px"> orders will not be confirmed and shipped from our end until we manually
+                confirm the
+                order
+                on
+                the phone number provided.
+                Thanks</p>
+
+            <p style="padding-top: 10px"> for your patience.</p>
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="padding-top:10px;margin-bottom:1em; padding-bottom: 10px">Here are your order details for the order
+        <td colspan="2" style="padding-top:10px;margin-bottom:1em; padding-bottom: 10px">Here are your order details for
+            the order
             <strong> ${order.gatewayOrderId}</strong>
             placed
             on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></td>
@@ -42,24 +49,23 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
                 </tr>
 
             <#list pricingDto.productLineItems as productLineItem>
-            <tr>
-            <td style="margin-bottom: 1em">
-            ${productLineItem.productVariant.name}
-                    </#list>
-            </td>
-                <td>
-                <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
+                <tr>
+                    <td style="margin-bottom: 1em">
+                    ${productLineItem.productVariant.name}
+                    </td>
+                    <td>
+                    <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
                 ${productLineItem.qty}
-                </td>
-                <td>
-                <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
-                    <span
-                            style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
-                </#if>
-                ${productLineItem.hkPrice}
-                </td>
-                <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
-            </tr>
+                    </td>
+                    <td>
+                        <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
+                            <span
+                                    style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
+                        </#if>
+                    ${productLineItem.hkPrice}
+                    </td>
+                    <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
+                </tr>
             </#list>
             </table>
         </td>
