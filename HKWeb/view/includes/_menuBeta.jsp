@@ -65,7 +65,7 @@
       <%--<span style="">&raquo;</span>--%>
   <%--</li>--%>
   <%--<li class="gm-mc">--%>
-      <a href="javascript:void(0)" class="gm-mc-nm">Brands</a>
+      <a href="${pageContext.request.contextPath}/beta/brand/BrandListing.action" class="gm-mc-nm">Brands</a>
       <span style="">&raquo;</span>
   </li>
   </ul>
