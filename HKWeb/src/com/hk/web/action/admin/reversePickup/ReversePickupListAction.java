@@ -141,8 +141,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
     public Resolution rpCancel() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_CANCEL.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
-        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
-                .addParameter("errorMessage", errorMessage);
+        return new RedirectResolution(ReversePickupListAction.class);
     }
 
     public Resolution rpClose() {
