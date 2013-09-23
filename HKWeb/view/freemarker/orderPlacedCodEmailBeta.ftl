@@ -7,7 +7,8 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 <#--<#include "header.ftl">-->
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 <#include "headerBeta.ftl">
-    <tbody>
+    <tbody style="font-size:13px; line-height:1.75em;">
+
     <tr>
         <td colspan="2" style="margin-bottom:1em; padding-top: 15px; padding-bottom: 15px">Hi ${order.user.name}!,</td>
     </tr>
