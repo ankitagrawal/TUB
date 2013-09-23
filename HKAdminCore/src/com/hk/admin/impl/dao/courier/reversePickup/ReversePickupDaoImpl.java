@@ -2,6 +2,7 @@ package com.hk.admin.impl.dao.courier.reversePickup;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.reversePickup.ReversePickupDao;
+import com.hk.constants.reversePickup.EnumReversePickupStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
@@ -41,7 +42,7 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         if (courierName != null && !StringUtils.isEmpty(courierName)) {
             reversePickupDetachedCriteria.add(Restrictions.eq("courierName", courierName));
         }
-        if (reversePickupStatus != null) {
+        if (reversePickupStatus != null && reversePickupStatus.getStatus() !=null && reversePickupStatus.getStatus() !="" && !reversePickupStatus.getStatus().equals(EnumReversePickupStatus.RPU_CANCEL)) {
             reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupStatus.id", reversePickupStatus.getId()));
         }
         if (reversePickupId != null) {
