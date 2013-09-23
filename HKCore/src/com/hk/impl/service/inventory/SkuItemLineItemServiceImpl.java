@@ -537,7 +537,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     cartLineItem = baseDao.get(CartLineItem.class, itemId);
 
     if (cartLineItem != null) {
-      if (cartLineItem.getForeignSkuItemCLIs() != null && cartLineItem.getForeignSkuItemCLIs().size() <= 0) {
+      if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() <= 0) {
         bookingRemoved = freeBookingInventoryAtAqua(cartLineItem);
       } else {
         if (bookedOnBright(cartLineItem)) {
