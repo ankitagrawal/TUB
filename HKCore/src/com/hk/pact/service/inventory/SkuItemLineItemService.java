@@ -64,7 +64,7 @@ public interface SkuItemLineItemService {
 
   public boolean deleteSicliAndSili (CartLineItem cartLineItem);
 
-  public Boolean freeBookingItem(Long itemId);
+  public Boolean freeBookingItem(Long cartLineItemId);
 
   public boolean freeBookingInventoryAtAqua(CartLineItem cartLineItem);
 

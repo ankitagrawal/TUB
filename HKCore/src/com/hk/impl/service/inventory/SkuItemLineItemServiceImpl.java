@@ -79,6 +79,33 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return getSkuItemDao().get(SkuItemLineItem.class, skuItemLineItemId);
   }
 
+
+  public Boolean createNewSkuItemLineItemForFlipping(CartLineItem cartLineItem){
+   LineItem lineItem =  lineItemDao.getLineItem(cartLineItem);
+    List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+    for (SkuItemCLI skuItemCLI : skuItemCLIs){
+      SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+      SkuItem skuItem = skuItemCLI.getSkuItem();
+      if(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
+        skuItem.setSkuItemStatus(skuItem.getSkuItemStatus());
+      }else{
+        skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+      }
+      baseDao.save(skuItem);
+      skuItemLineItem.setSkuItem(skuItemCLI.getSkuItem());
+      skuItemLineItem.setLineItem(lineItem);
+      skuItemLineItem.setProductVariant(skuItemCLI.getProductVariant());
+      skuItemLineItem.setUnitNum(skuItemCLI.getUnitNum());
+      skuItemLineItem.setCreateDate(new Date());
+      skuItemLineItem.setSkuItemCLI(skuItemCLI);
+      baseDao.save(skuItemLineItem);
+
+    }
+
+    return true;
+  }
+
+
   @Override
   public Boolean createNewSkuItemLineItem(LineItem lineItem) {
     logger.debug("entering createNewSkuItemLineItem");
@@ -90,6 +117,18 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     }
 
     if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
+      freeBookingItem(cartLineItem.getId());
+
+       String tinPrefix = lineItem.getSku().getWarehouse().getTinPrefix();
+       Long warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
+      List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
+      warehouses.remove(lineItem.getSku().getWarehouse());
+      Long  warehouseIdForBright = warehouses.get(0).getId();
+
+
+      inventoryHealthService.bookInventory(cartLineItem);
+
+      /*
       boolean createSkuCLIFlag = false;
       logger.debug("instance of ro true");
       List<Sku> skuList = new ArrayList<Sku>();
@@ -146,6 +185,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
       }
       return true;
+      */
     } else {
       logger.debug("entering normal enter -> ");
       List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
@@ -162,8 +202,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
           skuItemLineItem.setSkuItemCLI(skuItemCLI);
           skuItemLineItem.setProductVariant(skuItemCLI.getSkuItem().getSkuGroup().getSku().getProductVariant());
 
+          if(skuItemCLI.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())) {
+            skuItemLineItem.getSkuItem().setSkuItemStatus(skuItemCLI.getSkuItem().getSkuItemStatus());
+          }else {
+            skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+          }
           //Book the sku item
-          skuItemLineItem.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+
 
           getSkuItemDao().save(skuItemLineItem.getSkuItem());
 
@@ -270,9 +315,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       skuItemLineItemService.freeBookingItem(cartLineItem.getId());
       Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(lineItem.getCartLineItem(), targetWarehouse);
       if (invMap.get("aquaInventory") >= lineItem.getQty()) {
-        getInventoryHealthService().tempBookAquaInventory(cartLineItem, targetWarehouse.getId());
-        createNewSkuItemLineItem(lineItem);
-
+        cartLineItem = (CartLineItem)getInventoryHealthService().tempBookAquaInventory(cartLineItem, targetWarehouse.getId());
+//        createNewSkuItemLineItem(lineItem);
+         createNewSkuItemLineItemForFlipping(cartLineItem);
       } else if (invMap.get("brtInventory") >= lineItem.getQty()) {
         getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(lineItem.getCartLineItem(), warehouseIdForBright);
 
@@ -895,7 +940,6 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
   public void removeRefusedFsicli (List<HKAPIForeignBookingResponseInfo> infos ){
 
-
     for (HKAPIForeignBookingResponseInfo info : infos ){
       if (info.getProcessed().equals(EnumUnitProcessedStatus.REFUSED.getId())){
         long fsiliId = info.getFsiCLIId();
@@ -905,7 +949,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         SkuItemCLI skuItemCLI =   skuItemLineItemDao.getSkuItemCLI(skuItem);
         skuItemLineItem.setSkuItemCLI(null);
         skuItemLineItem.setSkuItem(null);
-       skuItemCLI.setSkuItem(null);
+        skuItemCLI.setSkuItem(null);
         baseDao.delete(skuItemLineItem);
         baseDao.delete(skuItemCLI);
         baseDao.delete(skuItem);
