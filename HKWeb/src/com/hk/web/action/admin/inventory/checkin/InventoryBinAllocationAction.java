@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -119,7 +120,8 @@ public class InventoryBinAllocationAction extends BaseAction {
 	}
 	
 	public Resolution parseBinAllocationFile(){
-		String binAllocationTextPath = adminUploadsPath + "/binAllocation/"+ warehouse.getIdentifier() + ".txt";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String binAllocationTextPath = adminUploadsPath + "/binAllocation/"+ warehouse.getIdentifier() + simpleDateFormat.format(new Date()) + ".txt";
 		File binAllocationText = new File(binAllocationTextPath);
 		binAllocationText.getParentFile().mkdirs();
 		try {
