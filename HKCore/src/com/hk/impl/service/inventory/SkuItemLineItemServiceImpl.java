@@ -118,6 +118,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
     if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
 
+      freeBookingItem(lineItem.getCartLineItem().getId());
+      inventoryHealthService.bookInventory(cartLineItem);
+
+      /*
       boolean createSkuCLIFlag = false;
       logger.debug("instance of ro true");
       List<Sku> skuList = new ArrayList<Sku>();
@@ -174,6 +178,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
       }
       return true;
+      */
 
     } else {
       logger.debug("entering normal enter -> ");
@@ -530,11 +535,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
 
-  public Boolean freeBookingItem(Long itemId) {
+  public Boolean freeBookingItem(Long cartlineItemId) {
     CartLineItem cartLineItem = null;
     Boolean bookingRemoved = false;
 
-    cartLineItem = baseDao.get(CartLineItem.class, itemId);
+    cartLineItem = baseDao.get(CartLineItem.class, cartlineItemId);
 
     if (cartLineItem != null) {
       if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() <= 0) {

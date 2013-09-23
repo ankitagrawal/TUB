@@ -704,6 +704,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     productVariant = productVariantService.getVariantById(productVariant.getId());
      Long warehouseIdAtOrderPlacement = warehouseId;
     // now make a API call to booked inventory at Bright
+    Long fsicliId = null;
 
     List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
     List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
@@ -720,6 +721,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       hkapiBookingInfo.setSoId(null);
       hkapiBookingInfo.setMrp(foreignSkuItemCLI.getAquaMrp());
       hkapiBookingInfos.add(hkapiBookingInfo);
+      fsicliId = foreignSkuItemCLI.getId();
 
     }
     List<HKAPIForeignBookingResponseInfo> infos = null;
@@ -739,9 +741,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
           }.getType();
           infos = new Gson().fromJson(data, listType);
+        }else {
+          ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+          getBaseDao().delete(foreignSkuItemCLI);
         }
       } catch (Exception e) {
-        logger.error("Exception while booking Bright Inventory against BO# " + cartLineItem.getOrder().getId() + e.getMessage());
+        logger.error("Exception while booking Bright Inventory against BO# so removing the entry from fsicli id " + cartLineItem.getOrder().getId() + e.getMessage());
+        ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+        getBaseDao().delete(foreignSkuItemCLI);
       }
       if (infos != null && infos.size() > 0) {
         updateForeignSICLITable(infos);
@@ -843,7 +850,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     for (HKAPIForeignBookingResponseInfo info : infos) {
       long fsiliId = info.getFsiCLIId();
       ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemService.getForeignSkuItemCLI(fsiliId);
-      if (foreignSkuItemCLI != null) {
+      if (foreignSkuItemCLI != null && foreignSkuItemCLI.getSkuItemId() == null){
+        getBaseDao().delete(foreignSkuItemCLI);
+      }else  if (foreignSkuItemCLI != null && foreignSkuItemCLI.getSkuItemId() != null) {
         foreignSkuItemCLI.setForeignBarcode(info.getBarcode());
         foreignSkuItemCLI.setForeignSkuGroupId(info.getFsgId());
         foreignSkuItemCLI.setFsgCostPrice(info.getCp());
@@ -1037,6 +1046,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     return maxQty;
   }
 
+
+  public Boolean bookInventoryForReplacementOrder(CartLineItem cartLineItem){
+
+
+    return true;
+  }
 
   public BaseDao getBaseDao() {
     return baseDao;

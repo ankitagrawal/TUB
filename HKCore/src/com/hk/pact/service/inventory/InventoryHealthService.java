@@ -45,6 +45,8 @@ public interface InventoryHealthService {
 
   public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant);
 
+  public Boolean bookInventoryForReplacementOrder(CartLineItem cartLineItem);
+
 
   public static class InventoryInfo {
     private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
