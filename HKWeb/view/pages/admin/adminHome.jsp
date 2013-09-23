@@ -133,7 +133,6 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction" event="uploadBinAllocationFile">Upload Bin Allocation File</s:link></h3>
 
-        <%--<h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>--%>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
@@ -319,8 +318,6 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
-
-    <h3><s:link beanclass="com.hk.web.action.report.BinAllocationReport">Generate Bin Allocation Report</s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.hkbridge.UserCallResponseSummaryAction"
                 event="pre">COD/Payment Failure Order Summary</s:link></h3>

@@ -1,7 +1,6 @@
 package com.hk.web.action.admin.inventory.checkin;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.constants.core.Keys;
 import com.hk.domain.inventory.Bin;
@@ -35,9 +34,6 @@ public class InventoryBinAllocationAction extends BaseAction {
 	private static Logger logger = Logger.getLogger(InventoryCheckinAction.class);
 	@Autowired
 	SkuGroupService skuGroupService;
-
-	@Autowired
-	BinManager binManager;
 	@Autowired
 	BinDao binDao;
 	@Autowired

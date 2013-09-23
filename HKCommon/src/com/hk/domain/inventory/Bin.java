@@ -65,9 +65,6 @@ public class Bin implements java.io.Serializable {
   @JoinColumn(name = "warehouse_id", nullable = false)
   private Warehouse warehouse;
 
-  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "bins")
-  private List<SkuItem> skuItems = new ArrayList<SkuItem>(0);
-
   public Long getId() {
     return this.id;
   }
@@ -130,14 +127,6 @@ public class Bin implements java.io.Serializable {
 
   public void setBuilding(String building) {
     this.building = building;
-  }
-
-  public List<SkuItem> getSkuItems() {
-    return skuItems;
-  }
-
-  public void setSkuItems(List<SkuItem> skuItems) {
-    this.skuItems = skuItems;
   }
 
   public String getBin() {
