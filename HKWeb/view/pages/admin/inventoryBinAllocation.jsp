@@ -49,6 +49,7 @@ $(document).ready(function () {
 		            	window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
 		            }else {
 		            	$("#responseLabel").html('<h4>' + res.message + '</h4>'+". Reloading in 3 seconds");
+		            	$("#responseLabel").css("background-color", "#FF0000");
 		            	 $("#firstLocation").val('');
 		            	 $("#barcode").val('');
 		            	 $("#finalLocation").val('');
