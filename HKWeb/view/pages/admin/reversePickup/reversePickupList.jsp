@@ -234,10 +234,10 @@
                                 </s:link>
                            </c:if>
                             <%--<c:if test="${reversePickup.reversePickupStatus.id == EnumReversePickupStatus.RPU_Initiated.id}">--%>
-                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
-                                    event="rpCancel"><span class="RPStatus">(Cancel)</span>
-                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                            </s:link>
+                            <%--<s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"--%>
+                                    <%--event="rpCancel"><span class="RPStatus">(Cancel)</span>--%>
+                                <%--<s:param name="reversePickupOrder" value="${reversePickup.id}"/>--%>
+                            <%--</s:link>--%>
                                 <%--</c:if>--%>
                             <c:if test="${reversePickup.reversePickupStatus.id == rpuReconcilationId}">
                             <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
