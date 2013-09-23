@@ -128,7 +128,10 @@
     <h2>Warehouse</h2>
     <c:if test="${whAction.setWarehouse != null}">
     <h3><s:link
-            beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation</s:link></h3>
+            beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation(Per Sku Item)</s:link></h3>
+            
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction" event="uploadBinAllocationFile">Upload Bin Allocation File</s:link></h3>
 
         <%--<h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>--%>
 

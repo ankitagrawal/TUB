@@ -14133,4 +14133,12 @@
             insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1379656965839-4">
+        <addColumn tableName="sku_item">
+            <column name="bin_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1379656965839-29">
+        <addForeignKeyConstraint baseColumnNames="bin_id" baseTableName="sku_item" constraintName="fk_sku_item_bin1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bin" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

@@ -1,6 +1,6 @@
 package com.hk.domain.sku;
-// Generated Oct 4, 2011 9:25:12 PM by Hibernate Tools 3.2.4.CR1
 
+// Generated Oct 4, 2011 9:25:12 PM by Hibernate Tools 3.2.4.CR1
 
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.inventory.Bin;
@@ -15,8 +15,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "sku_item")
-/*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
-public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
+/* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
+public class SkuItem implements java.io.Serializable, Comparable<SkuItem> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,12 +45,12 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 
 	@JsonSkip
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(
-			name = "bin_has_sku_item",
-			joinColumns = {@JoinColumn(name = "sku_item_id", nullable = false, updatable = false)},
-			inverseJoinColumns = {@JoinColumn(name = "bin_id", nullable = false, updatable = false)}
-	)
+	@JoinTable(name = "bin_has_sku_item", joinColumns = { @JoinColumn(name = "sku_item_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "bin_id", nullable = false, updatable = false) })
 	private List<Bin> bins = new ArrayList<Bin>(0);
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bin_id")
+	private Bin bin;
 
 	public Long getId() {
 		return this.id;
@@ -108,28 +108,38 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 		this.skuItemOwner = skuItemOwner;
 	}
 
-
 	public int compareTo(SkuItem skuItem) {
-		if (this.getId() < skuItem.getId()) return -1;
-		if (this.getId() > skuItem.getId()) return 1;
+		if (this.getId() < skuItem.getId())
+			return -1;
+		if (this.getId() > skuItem.getId())
+			return 1;
 		return 0;
 	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SkuItem)) {
-            return false;
-        }
-        SkuItem skuItem = (SkuItem) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof SkuItem)) {
+			return false;
+		}
+		SkuItem skuItem = (SkuItem) o;
 
-        if (this.id != null && skuItem.getId() != null) {
-            return this.id.equals(skuItem.getId());
-        }
-        return false;
-    }
+		if (this.id != null && skuItem.getId() != null) {
+			return this.id.equals(skuItem.getId());
+		}
+		return false;
+	}
 
+	public Bin getBin() {
+		return bin;
+	}
+
+	public void setBin(Bin bin) {
+		this.bin = bin;
+	}
+	
+	
 
 }
