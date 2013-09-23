@@ -31,7 +31,9 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         return list(reversePickupCriteria, true, pageNo, perPage);
     }
 
-    private DetachedCriteria getReversePickupOrderDetachedCriteria(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, ReversePickupStatus reversePickupStatus, String courierName) {
+    private DetachedCriteria getReversePickupOrderDetachedCriteria(ShippingOrder shippingOrder, String reversePickupId,
+                                 Date startDate, Date endDate, Long customerActionStatus,
+                                 ReversePickupStatus reversePickupStatus, String courierName) {
         DetachedCriteria reversePickupDetachedCriteria = DetachedCriteria.forClass(ReversePickupOrder.class);
         if (shippingOrder != null) {
             reversePickupDetachedCriteria.add(Restrictions.eq("shippingOrder.id", shippingOrder.getId()));
@@ -42,9 +44,7 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         if (courierName != null && !StringUtils.isEmpty(courierName)) {
             reversePickupDetachedCriteria.add(Restrictions.eq("courierName", courierName));
         }
-        if (reversePickupStatus != null && reversePickupStatus.getStatus() !=null && reversePickupStatus.getStatus() !="" && !reversePickupStatus.getStatus().equals(EnumReversePickupStatus.RPU_CANCEL)) {
-            reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupStatus.id", reversePickupStatus.getId()));
-        }
+        reversePickupDetachedCriteria.add(Restrictions.ne("reversePickupStatus.id", EnumReversePickupStatus.RPU_CANCEL.getId()));
         if (reversePickupId != null) {
             reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupId", reversePickupId.trim()));
         }
