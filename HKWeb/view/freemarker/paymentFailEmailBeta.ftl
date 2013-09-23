@@ -9,11 +9,11 @@ Unsuccessful Order!
     <tbody style="font-size:13px; line-height:1.75em;">
 
     <tr>
-        <td style="margin-bottom:1em; padding-top: " colspan="2">Hi ${user.name},</td>
+        <td style="margin-bottom:1em; padding-top: 15px" colspan="2">Hi ${user.name},</td>
     </tr>
 
     <tr>
-        <td style="margin-bottom:1em" colspan="2">
+        <td style="padding-top:10px; margin-bottom:1em" colspan="2">
             We saw that you tried to place an order, order id being ${gatewayOrderId} on our website but did not
             complete
             the process...
@@ -37,10 +37,10 @@ Unsuccessful Order!
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em" colspan="2">Happy Shopping!</td>
+        <td style="margin-bottom:1em; padding-top: 15px" colspan="2">Happy Shopping!</td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em" colspan="2"><strong>HealthKart.com</strong></td>
+        <td style="padding-bottom:10px;margin-bottom:1em" colspan="2"><strong>HealthKart.com</strong></td>
     </tr>
     </tbody>
 <#include "footerBeta.ftl">
