@@ -315,6 +315,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
       CartLineItem cartLineItem = lineItem.getCartLineItem();
       Product product = cartLineItem.getProductVariant().getProduct();
+      Sku sku = skuService.getSKU(cartLineItem.getProductVariant(),targetWarehouse);
+      lineItem.setSku(sku);
+      lineItem = (LineItem)baseDao.save(lineItem);
 
       boolean productType = (product.isJit() || product.isDropShipping() || product.isService());
       skuItemLineItemService.freeBookingItem(cartLineItem.getId());
