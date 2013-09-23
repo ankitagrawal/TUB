@@ -44,7 +44,13 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         if (courierName != null && !StringUtils.isEmpty(courierName)) {
             reversePickupDetachedCriteria.add(Restrictions.eq("courierName", courierName));
         }
-        reversePickupDetachedCriteria.add(Restrictions.ne("reversePickupStatus.id", EnumReversePickupStatus.RPU_CANCEL.getId()));
+        if(reversePickupStatus != null){
+            reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupStatus.id",reversePickupStatus.getId()));
+        }
+        else{
+            reversePickupDetachedCriteria.add(Restrictions.ne("reversePickupStatus.id", EnumReversePickupStatus.RPU_CANCEL.getId()));
+        }
+
         if (reversePickupId != null) {
             reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupId", reversePickupId.trim()));
         }
