@@ -117,18 +117,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     }
 
     if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
-      freeBookingItem(cartLineItem.getId());
 
-       String tinPrefix = lineItem.getSku().getWarehouse().getTinPrefix();
-       Long warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
-      List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
-      warehouses.remove(lineItem.getSku().getWarehouse());
-      Long  warehouseIdForBright = warehouses.get(0).getId();
-
-
-      inventoryHealthService.bookInventory(cartLineItem);
-
-      /*
       boolean createSkuCLIFlag = false;
       logger.debug("instance of ro true");
       List<Sku> skuList = new ArrayList<Sku>();
@@ -185,7 +174,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
       }
       return true;
-      */
+
     } else {
       logger.debug("entering normal enter -> ");
       List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
@@ -231,12 +220,21 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
           //Free existing skuitem on skuItemCLI
           SkuItem oldItem = skuItemCLI.getSkuItem();
+          boolean foreignBooking = false;
+          if(skuItemCLI.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())) {
+            foreignBooking = true;
+          }
           oldItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
           getSkuItemDao().save(oldItem);
 
           SkuItem skuItem = availableUnbookedSkuItems.get(0);
           //Book the sku item first
-          skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+          if (foreignBooking) {
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus());
+          } else {
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+          }
+
           logger.debug("savingg skuItem for normal orders ");
           skuItem = (SkuItem) getSkuItemDao().save(skuItem);
           //create skuItemLineItem entry
@@ -266,6 +264,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
 
+
+// This method not in use for now ,, will delete once testing done
   public boolean isWarehouseBeFlippableAB(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
     boolean itemsWasBookedAtAqua = true;
     for (LineItem lineItem : shippingOrder.getLineItems()) {

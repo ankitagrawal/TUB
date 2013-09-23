@@ -683,13 +683,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   public void populateSICLI(CartLineItem cartLineItem) {
     if (cartLineItem != null) {
       for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs()) {
-        SkuItemCLI skuItemCLI = new SkuItemCLI();
-        skuItemCLI.setCartLineItem(cartLineItem);
-        skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
-        skuItemCLI.setCreateDate(new Date());
-        skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-        skuItemCLI.setSkuItem(skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId()));
-        skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+       SkuItem skuItem =  skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId());
+        if (skuItem != null) {
+          SkuItemCLI skuItemCLI = new SkuItemCLI();
+          skuItemCLI.setCartLineItem(cartLineItem);
+          skuItemCLI.setUnitNum(foreignSkuItemCLI.getUnitNum());
+          skuItemCLI.setCreateDate(new Date());
+          skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+          skuItemCLI.setSkuItem(skuItem);
+          skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+        }
       }
     }
   }
@@ -719,9 +722,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       hkapiBookingInfos.add(hkapiBookingInfo);
 
     }
-
+    List<HKAPIForeignBookingResponseInfo> infos = null;
     for (HKAPIBookingInfo hkapiBookingInfo : hkapiBookingInfos) {
-      List<HKAPIForeignBookingResponseInfo> infos = null;
+
       try {
         Gson gson = new Gson();
         String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
@@ -746,7 +749,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     }
     cartLineItem = (CartLineItem) getBaseDao().save(cartLineItem);
-    cartLineItem  = (CartLineItem) createSkuGroupAndItem(cartLineItem, warehouseIdAtOrderPlacement);
+    if (infos != null && infos.size() > 0) {
+      cartLineItem = (CartLineItem) createSkuGroupAndItem(cartLineItem, warehouseIdAtOrderPlacement);
+    }
     return cartLineItem;
   }
 
