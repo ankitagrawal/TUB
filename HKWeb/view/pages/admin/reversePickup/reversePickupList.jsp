@@ -436,6 +436,8 @@
                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                            </s:link>
                                </shiro:hasPermission>
+                                </c:otherwise>
+                            </c:choose>
                                <br>
                                     <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
                                         <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
@@ -445,8 +447,6 @@
                                         </s:link>
                                     </c:if><br>
                            </span> <br>
-                                </c:otherwise>
-                            </c:choose>
                         </td>
                     </c:if>
                 </tr>
