@@ -764,7 +764,6 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       }
       if (infos == null || infos.size() <= 0){
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-        foreignSkuItemCLI.setCartLineItem(null);
         cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
         if (cartLineItem != null) {
           cartLineItem.setForeignSkuItemCLIs(null);
