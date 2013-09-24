@@ -81,7 +81,12 @@ a:hover {
     text-decoration: none;
     color: #1b75bb;
 }
-
+a.send-lnk{
+    font-size: 0.9em;
+    font-weight: 600;
+    text-decoration: underline;
+    text-transform: capitalize;
+}
 a:focus {
     outline: 1px dotted invert
 }

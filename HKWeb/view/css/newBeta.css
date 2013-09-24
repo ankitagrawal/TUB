@@ -86,6 +86,13 @@ a:focus {
     outline: 1px dotted invert
 }
 
+a.send-lnk{
+    font-size: 0.9em;
+    font-weight: 600;
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+
 hr {
     border: 0 #ccc solid;
     border-top-width: 1px;

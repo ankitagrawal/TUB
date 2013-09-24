@@ -189,7 +189,7 @@
                   HK.element.loader.remove(currEle, true);
                   var errorMsg = responseData.msgs;
                   var cntnt =HK.utils.generateHTMLForException(errorMsg);
-                  cntnt.find('li:last').append('<span>. Please <a href="/core/user/Signup.action">Click here</a> to create an account with us.</span>');
+                  cntnt.find('li:last').append('<span>. Please <a class="send-lnk" href="/core/user/Signup.action">Click here</a> to create an account with us.</span>');
                   HK.alert({title: 'Alert!', content: cntnt, theme: HK.POPUP.THEME.ALERT});
 
                 }
