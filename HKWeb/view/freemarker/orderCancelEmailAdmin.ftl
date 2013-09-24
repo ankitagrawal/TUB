@@ -31,7 +31,9 @@ Order cancellation for  ${order.gatewayOrderId} [${order.payment.paymentMode.nam
           </#list></em>
         </td>
         <td>
+          <#if pricingDto.shippingLineCount &gt; 0>
           ${productLineItem.qty/pricingDto.shippingLineCount}
+          </#if>
         </td>
         <td><span style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${productLineItem.hkPrice} </td>
         <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
