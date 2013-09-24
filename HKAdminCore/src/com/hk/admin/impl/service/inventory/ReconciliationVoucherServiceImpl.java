@@ -157,6 +157,12 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
           case AddIncorrectCounting:
             invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_INCORRECT_COUNTING);
             break;
+          case VendorReplacement:
+            invTxnType=inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_VENDOR_REPLACEMENT);
+            break;
+          case VendorRejected:
+            invTxnType=inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_VENDOR_REJECTED);
+            break;
         }
 
         rvLineItem.setSku(sku);

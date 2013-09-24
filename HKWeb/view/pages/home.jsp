@@ -6,6 +6,7 @@
 <%@ page import="com.hk.domain.user.User" %>
 <%@ page import="com.hk.pact.service.UserService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -108,10 +109,6 @@
         $(".slides").responsiveSlides({speed: 6000});
       });
     </script>
-
-
-    <img class="strip_banner01" src="<hk:vhostImage/>/images/banners/home/main_strip01.png" border="0"/>
-    <jsp:include page="/includes/_testimonials.jsp"/>
   </div>
 </s:layout-component>
 
@@ -232,7 +229,9 @@
 
 
   <div class="clear"></div>
-		
+	<%--<!--google remarketing code-->--%>
+	<s:layout-render name="/layouts/embed/remarketingWithCustomParams.jsp" pageType="<%=HealthkartConstants.Remarketing.PageType.home%>"/>
+
 		<c:if test="${not isSecure }">
 			<iframe
 				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1&uid=${user_hash}"
@@ -242,9 +241,6 @@
 
 	</s:layout-component>
 </s:layout-render>
-
-<!--google remarketing code-->
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="home"/>
 
 <script type="text/javascript">
   $(document).ready(function() {

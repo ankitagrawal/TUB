@@ -253,7 +253,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     if (grnLineItem != null && qty > 0) {
       grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
       getBaseDao().save(grnLineItem);
-    } else if (qty > 0) {
+    } 
+    if (qty > 0) {
       InventoryHealthService inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
       inventoryHealthService.pendingOrdersInventoryHealthCheck(sku.getProductVariant());
     }
@@ -378,7 +379,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
       if (checkedInSkuItem.getSkuGroup().getBarcode() == null && checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX)) {
         data = checkedInSkuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
             + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
-      } else {
+      }
+      else 
+      	if (checkedInSkuItem.getSkuGroup().getBarcode() != null && checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX)) {
+          data = checkedInSkuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+              + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
+        }
+      else {
         data = checkedInSkuItem.getSkuGroup().getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
             + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
       }
