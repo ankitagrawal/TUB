@@ -335,9 +335,6 @@
                                     </c:otherwise>
                                 </c:choose>
                             </p>
-                            <c:if test="${invoiceLineItem.variantName != null}">
-                                <p>${invoiceLineItem.variantName}</p>
-                            </c:if>
                             <em>
                                 <p>
                                     <c:forEach items="${invoiceLineItem.productOptions}"

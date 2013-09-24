@@ -21,13 +21,13 @@
           <ul class="gm gl">
               <c:forEach items="${menuAction.menuNodes}" var="menuNode">
                   <li class="gm-mc">
-                      <a href="${pageContext.request.contextPath}/${menuNode.url}" class="gm-mc-nm">${menuNode.name}</a>
+                      <a href="${menuNode.url}" class="gm-mc-nm">${menuNode.name}</a>
                       <span style="">&raquo;</span>
 
                       <div class="hide gm-sc-cntnr">
                           <div class="brdr-t-blu-strip" style="position: relative;"></div>
                           <h3>
-                              <a href="${pageContext.request.contextPath}/${menuNode.url}" class="gm-mc-nm">${menuNode.name}</a>
+                              <a href="${menuNode.url}" class="gm-mc-nm">${menuNode.name}</a>
                               <hr class="mrgn-b-25">
                           </h3>
 
@@ -40,7 +40,7 @@
                               <div class="grid_4">
                                   </c:if>
 
-                                  <a href="${pageContext.request.contextPath}/${l1child.url}" class="gm-sc-nm">${l1child.name}</a>
+                                  <a href="${l1child.url}" class="gm-sc-nm">${l1child.name}</a>
                                   <span style="display:inline-block">&raquo;</span>
                                   <c:set var="leafElms"
                                          value="${fn:length(l1child.childNodes)>maxLeafElms?maxLeafElms:fn:length(l1child.childNodes)}"/>
@@ -48,7 +48,7 @@
                                   <div class="gl gm-tc-list">
 
                                       <c:forEach items="${l1child.childNodes}" var="l2child" end="${leafElms}" varStatus="counter">
-                                          <a href="${pageContext.request.contextPath}/${l2child.url}" class="gm-tc-nm">${l2child.name}</a>
+                                          <a href="${l2child.url}" class="gm-tc-nm">${l2child.name}</a>
                                           <%--c:if test="${counter.last && seeMore}">
                                           <a href="#" class="seeMore">See All in ${l1child.name}</a>
                                           </c:if--%>
@@ -65,7 +65,7 @@
       <%--<span style="">&raquo;</span>--%>
   <%--</li>--%>
   <%--<li class="gm-mc">--%>
-      <a href="javascript:void(0)" class="gm-mc-nm">Brands</a>
+      <a href="${pageContext.request.contextPath}/beta/brand/BrandListing.action" class="gm-mc-nm">Brands</a>
       <span style="">&raquo;</span>
   </li>
   </ul>
@@ -332,7 +332,7 @@
         // Show the submenu
         $submenu.css({
           display: "block",
-          top: -5,
+          top: 0,
           left: width - 3
 
         });
