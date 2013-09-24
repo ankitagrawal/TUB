@@ -955,16 +955,15 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         SkuItem skuItem = getSkuItem(fsiliId);
         SkuItemLineItem skuItemLineItem =  skuItemLineItemDao.getSkuItemLineItem(skuItem);
         SkuItemCLI skuItemCLI =   skuItemLineItemDao.getSkuItemCLI(skuItem);
+        skuItemLineItem.setLineItem(null);
         skuItemLineItem.setSkuItemCLI(null);
-        skuItemLineItem.setSkuItem(null);
-        skuItemCLI.setSkuItem(null);
+        skuItem.setForeignSkuItemCLI(null);
+        skuItemCLI.setCartLineItem(null);
         baseDao.delete(skuItemLineItem);
         baseDao.delete(skuItemCLI);
         baseDao.delete(skuItem);
         foreignSkuItemCLI.setSkuItemId(null);
-        baseDao.save(foreignSkuItemCLI);
-
-
+        baseDao.delete(foreignSkuItemCLI);
       }
     }
 

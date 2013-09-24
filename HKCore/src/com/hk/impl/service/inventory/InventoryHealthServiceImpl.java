@@ -746,10 +746,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           infos = new Gson().fromJson(data, listType);
         }else {
           ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-          cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-          if (cartLineItem != null) {
-            cartLineItem.setForeignSkuItemCLIs(null);
-          }
+          foreignSkuItemCLI.setCartLineItem(null);
+//          cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
+//
+//          if (cartLineItem != null) {
+//            cartLineItem.setForeignSkuItemCLIs(null);
+//          }
           getBaseDao().delete(foreignSkuItemCLI);
 
         }
@@ -765,10 +767,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       }
       if (infos == null || infos.size() <= 0){
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-        if (cartLineItem != null) {
-          cartLineItem.setForeignSkuItemCLIs(null);
-        }
+        cartLineItem.setForeignSkuItemCLIs(null);
+//        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
+//        if (cartLineItem != null) {
+//          cartLineItem.setForeignSkuItemCLIs(null);
+//        }
         getBaseDao().delete(foreignSkuItemCLI);
       } else if (infos != null && infos.size() > 0) {
         updateForeignSICLITable(infos);
@@ -870,9 +873,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     for (HKAPIForeignBookingResponseInfo info : infos) {
       long fsiliId = info.getFsiCLIId();
       ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemService.getForeignSkuItemCLI(fsiliId);
-      if (foreignSkuItemCLI != null && foreignSkuItemCLI.getSkuItemId() == null){
-        getBaseDao().delete(foreignSkuItemCLI);
-      }else  if (foreignSkuItemCLI != null && foreignSkuItemCLI.getSkuItemId() != null) {
+      if (foreignSkuItemCLI != null && foreignSkuItemCLI.getSkuItemId() != null) {
         foreignSkuItemCLI.setForeignBarcode(info.getBarcode());
         foreignSkuItemCLI.setForeignSkuGroupId(info.getFsgId());
         foreignSkuItemCLI.setFsgCostPrice(info.getCp());
