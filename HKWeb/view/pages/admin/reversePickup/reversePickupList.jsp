@@ -1,6 +1,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.reversePickup.*" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction" var="revList"/>
@@ -404,13 +405,6 @@
                                         Edit RPU
                                         <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                                     </s:link> <br>
-                                    <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
-                                    <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
-                                            event="editRPToReconcile"><span class="RPStatus">
-                                        Reconciled RPU</span>
-                                        <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                                    </s:link>
-                                    </c:if><br>
                                 </c:when>
                                 <c:otherwise>
                           <span>   <s:link class="link-button-edit"
@@ -420,17 +414,24 @@
                               <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                           </s:link>
                           </span> <br>
-                           <span> <s:link class="link-button-cancel"
+                           <span>
+                               <shiro:hasPermission name="<%=PermissionConstants.DELETE_REVERSE_PICKUP%>">
+
+                               <s:link class="link-button-cancel"
                                           beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                           event="deleteReversePickUp">
                                Delete RPU
                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                           </s:link>  <br>
-                                  <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
-                                          event="editRPToReconcile"><span class="RPStatus">
-                                      Reconciled RPU</span>
-                                      <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                                  </s:link><br>
+                           </s:link>
+                               </shiro:hasPermission>
+                               <br>
+                                    <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
+                                        <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                                event="editRPToReconcile"><span class="RPStatus">
+                                        Reconciled RPU</span>
+                                            <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                                        </s:link>
+                                    </c:if><br>
                            </span> <br>
                                 </c:otherwise>
                             </c:choose>

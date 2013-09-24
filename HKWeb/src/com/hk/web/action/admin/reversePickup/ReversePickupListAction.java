@@ -37,7 +37,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
     private List<ReversePickupOrder> reversePickupOrderList;
     private ReversePickupOrder reversePickupOrder;
     private Page reversePickupPage;
-    private Integer defaultPerPage = 20;
+    private Integer defaultPerPage = 30;
     private Date startDate;
     private Date endDate;
     private ShippingOrder shippingOrder;
