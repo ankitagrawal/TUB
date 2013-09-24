@@ -78,7 +78,7 @@
                 <div class="span4">
                   <input type="text" name="subscriptionEmail" id="subscriptionEmail" placeholder="Email address" value=""/>
                 </div>
-                <div class="mrgn-l-30">
+                <div class="mrgn-l-30 clr-cont">
                   <input type="submit" id="submitSubscription"  name="submitSubscription" value="submit"
                          class="btn btn-gray"/>
                 </div>

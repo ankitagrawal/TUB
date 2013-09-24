@@ -7791,3 +7791,8 @@ input[type="text"]:focus, input[type="password"]:focus{
 
 /* payment status utils ends */
 
+
+.clr-cont {
+    position: relative;
+    clear: both;
+}
