@@ -190,4 +190,5 @@ public class PermissionConstants {
     public static final String MANUAL_UPDATE_PAYMENT = "MANUAL_UPDATE_PAYMENT";
 
     public static final String SCHEDULE_REVERSE_PICKUP = "SCHEDULE_REVERSE_PICKUP";
+    public static final java.lang.String NEW_REVERSE_PICKUP = "NEW_REVERSE_PICKUP";
 }
