@@ -3,6 +3,7 @@ package com.hk.web.action.admin.inventory.checkin;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.inventory.Bin;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
@@ -13,11 +14,14 @@ import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.admin.inventory.InventoryCheckinAction;
+import com.hk.web.action.error.AdminPermissionAction;
+
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,8 +35,9 @@ import java.util.Map.Entry;
  * Created by IntelliJ IDEA. User: Seema Date: May 18, 2012 Time: 9:40:09 AM To
  * change this template use File | Settings | File Templates.
  */
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKIN}, authActionBean = AdminPermissionAction.class)
 public class InventoryBinAllocationAction extends BaseAction {
-	private static Logger logger = Logger.getLogger(InventoryCheckinAction.class);
+	private static Logger logger = Logger.getLogger(InventoryBinAllocationAction.class);
 	@Autowired
 	SkuGroupService skuGroupService;
 	@Autowired
@@ -168,19 +173,19 @@ public class InventoryBinAllocationAction extends BaseAction {
 		return stringList;
 	}
 	
-	private Map<String, Set<String>> processStringList(List<String> stringsToProcess){
+	private Map<String, Set<String>> processStringList(List<String> stringsToProcess) {
 		Map<String, Set<String>> binSkuItemBarcodeMap = new HashMap<String, Set<String>>();
 		if (stringsToProcess != null && stringsToProcess.size() > 0) {
 			Set<String> skuItemBarcodes = null;
 			String currBin = "";
 			String newBin = "";
-			int i = stringsToProcess.size()-1;
+			int i = stringsToProcess.size() - 1;
 			int j = 0;
 			try {
 				if (!stringsToProcess.get(0).startsWith("A")) {
 					throw new invalidInputException();
 				}
-				while(j<=i){
+				while (j <= i) {
 					String string = stringsToProcess.get(j);
 					if (string.startsWith("A")) {
 						currBin = newBin;
@@ -189,19 +194,25 @@ public class InventoryBinAllocationAction extends BaseAction {
 							throw new invalidInputException();
 						}
 						if (currBin.equals(newBin)) {
-							if(skuItemBarcodes!=null && skuItemBarcodes.size()>0){
-							binSkuItemBarcodeMap.put(currBin, skuItemBarcodes);
-							newBin = "";
+							if (skuItemBarcodes != null && skuItemBarcodes.size() > 0) {
+								if (binSkuItemBarcodeMap.get(currBin) != null) {
+									throw new invalidInputException();
+								} else {
+									binSkuItemBarcodeMap.put(currBin, skuItemBarcodes);
+									newBin = "";
+								}
 							}
 						} else {
 							skuItemBarcodes = new HashSet<String>();
 						}
 					}
-					if (!string.startsWith("A")) {
+					if (string.startsWith("IV")) {
 						skuItemBarcodes.add(string);
+					} else if (!string.startsWith("IV") && !string.startsWith("A")) {
+						throw new invalidInputException();
 					}
-					if(i==j){
-						if(!string.startsWith("A") || !(currBin.equals(string)&&newBin.isEmpty())){
+					if (i == j) {
+						if (!string.startsWith("A") || !(currBin.equals(string) && newBin.isEmpty())) {
 							throw new invalidInputException();
 						}
 					}

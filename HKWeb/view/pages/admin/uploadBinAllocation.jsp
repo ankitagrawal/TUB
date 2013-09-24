@@ -24,12 +24,23 @@
 		</script>
 	</s:layout-component>
 	<s:layout-component name="content">
+	<br>
+	<div align="center"><label><font size="6px">Upload Bin Allocation Notepad</font></label></div><br><br><br>
+	<div style="margin-top: 20px" height="500px" align="center">
+	<strong><u>Instructions For Uploading</u></strong>
+	<br>
+	<p>The text file should start with bin barcode followed by Sku Item barcode and then closed by the same bin barcode.</p>
+	<p> For example: <br><label>bin1<br>barcode1<br>barcode2<br>...<br>bin1<br>bin2<br>barcode10<br>...<br>bin2</label></p>
+	<p>Any file uploaded in a format other than this will be an invalid one.</p>
+	<p></p>
+	</div>
 
+		<hr width="500px" align="center">
+		
 		<div class="left">
 			<div style="margin-top: 20px" height="500px" align="center">
 				<s:form beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction" autocomplete="off">
 					<s:hidden name="warehouse" value="${ibaa.warehouse.id }" />
-					<div align="center"><label><font size="6px">Upload Bin Allocation Notepad</font></label></div><br><br><br>
 					<p>
 						<label><strong>Browse to Upload: </strong></label>
 						<s:file id="filebean" name="fileBean" size="30" />
