@@ -175,7 +175,9 @@ public class ReversePickupListAction extends BasePaginatedAction {
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
         String comments = " RPU Status Changed to Cancel for RPU Id " + reversePickupOrder.getId();
         shippingOrderService.logShippingOrderActivity(reversePickupOrder.getShippingOrder(), EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
-        return new RedirectResolution(ReversePickupListAction.class);
+        return new RedirectResolution(ReversePickupListAction.class).
+                addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+                .addParameter("errorMessage", errorMessage);
     }
     @Secure(hasAnyPermissions = {PermissionConstants.CLOSE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution rpClose() {
