@@ -404,6 +404,11 @@
                                         Edit RPU
                                         <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                                     </s:link> <br>
+                                    <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                            event="editRPToReconcile"><span class="RPStatus">
+                                        Reconciled RPU</span>
+                                        <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                                    </s:link><br>
                                 </c:when>
                                 <c:otherwise>
                           <span>   <s:link class="link-button-edit"
@@ -418,7 +423,12 @@
                                           event="deleteReversePickUp">
                                Delete RPU
                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                           </s:link>
+                           </s:link>  <br>
+                                  <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                          event="editRPToReconcile"><span class="RPStatus">
+                                      Reconciled RPU</span>
+                                      <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                                  </s:link><br>
                            </span> <br>
                                 </c:otherwise>
                             </c:choose>

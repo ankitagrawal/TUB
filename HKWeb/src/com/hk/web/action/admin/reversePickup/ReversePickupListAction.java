@@ -8,11 +8,13 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.reversePickup.EnumReversePickupStatus;
 
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,9 @@ public class ReversePickupListAction extends BasePaginatedAction {
     @Autowired
     ReversePickupService reversePickupService;
 
+    @Autowired
+    ShippingOrderService shippingOrderService;
+
     @DefaultHandler
     public Resolution pre() {
         reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatus, courierName, getPageNo(), getPerPage());
@@ -62,6 +67,8 @@ public class ReversePickupListAction extends BasePaginatedAction {
     public Resolution deleteReversePickUp() {
         if (reversePickupOrder != null) {
             reversePickupService.deleteReversePickupOrder(reversePickupOrder);
+            String comments = "RPU Id: " + reversePickupOrder.getId() + "was successfully deleted";
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
         }
         return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
     }
@@ -74,6 +81,9 @@ public class ReversePickupListAction extends BasePaginatedAction {
             } else {
                 reversePickupOrder.setTrackingNumber(trackingNumber.trim());
                 reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+                String comments = "Tracking Number Edited, RPU Status Changed for RPU Id " + reversePickupOrder.getId() + "Courier/Tracking Number " + trackingNumber + reversePickupOrder.getCourierName();
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
+
             }
         }
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
@@ -88,6 +98,8 @@ public class ReversePickupListAction extends BasePaginatedAction {
                 reversePickupOrder.setBookingReferenceNumber(bookingReferenceNumber.trim());
                 reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_Scheduled.asReversePickupStatus());
                 reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+                String comments = "Booking Reference Number Edited, RPU Status Changed for RPU Id " + reversePickupOrder.getId() + "Booking Reference Number " + bookingReferenceNumber;
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
             }
         }
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
@@ -107,8 +119,10 @@ public class ReversePickupListAction extends BasePaginatedAction {
                    }
                }
                if(counter == 0){
-                   reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus());
+                   reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_APPROVED.asReversePickupStatus());
                    reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+                   String comments = "All line item in reverse pickup order approved successfully, RPU Status Changed to Approved for RPU Id " + reversePickupOrder.getId();
+                   shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
                }
         } else {
             errorMessage = "Error in Approving";
@@ -124,6 +138,8 @@ public class ReversePickupListAction extends BasePaginatedAction {
             } else {
                 reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_Picked.asReversePickupStatus());
                 reversePickupService.saveReversePickupOrder(reversePickupOrder);
+                String comments = " RPU Status Changed to Marked Picked for RPU Id " + reversePickupOrder.getId();
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
             }
         }
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
@@ -134,6 +150,17 @@ public class ReversePickupListAction extends BasePaginatedAction {
 
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_NOTAVAILABLE.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        String comments = " RPU Status Changed to RPU Not Available for RPU Id " + reversePickupOrder.getId();
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
+        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+                .addParameter("errorMessage", errorMessage);
+    }
+    public Resolution editRPToReconcile() {
+
+        reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus());
+        reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        String comments = " RPU Status Changed to RPU Reconcile for RPU Id " + reversePickupOrder.getId();
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
@@ -141,12 +168,16 @@ public class ReversePickupListAction extends BasePaginatedAction {
     public Resolution rpCancel() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_CANCEL.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        String comments = " RPU Status Changed to Cancel for RPU Id " + reversePickupOrder.getId();
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
         return new RedirectResolution(ReversePickupListAction.class);
     }
 
     public Resolution rpClose() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_CLOSED.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        String comments = " RPU Status Changed to Close for RPU Id " + reversePickupOrder.getId();
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
@@ -154,6 +185,8 @@ public class ReversePickupListAction extends BasePaginatedAction {
     public Resolution rpReconcile() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
+        String comments = " RPU Status Changed to Reconciled for RPU Id " + reversePickupOrder.getId();
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
