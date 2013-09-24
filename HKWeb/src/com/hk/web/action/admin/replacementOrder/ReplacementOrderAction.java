@@ -87,6 +87,7 @@ public class ReplacementOrderAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre() {
+    replacementFlag = true;
     return  new ForwardResolution(MasterResolutionAction.class);
 		//return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
 	}
@@ -199,6 +200,7 @@ public class ReplacementOrderAction extends BaseAction {
 	}
 
 	public Resolution searchReplacementOrders() {
+    replacementFlag = true;
 		if (shippingOrderId != null) {
 			shippingOrder = shippingOrderService.find(shippingOrderId);
 		} else if (gatewayOrderId != null) {
@@ -213,7 +215,7 @@ public class ReplacementOrderAction extends BaseAction {
 		if (replacementOrderList.isEmpty()) {
 			addRedirectAlertMessage(new SimpleMessage("No Replacement order for given shipping order"));
 		}
-		return new ForwardResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
+		return new ForwardResolution(MasterResolutionAction.class);
 	}
 
 	public Long getShippingOrderId() {

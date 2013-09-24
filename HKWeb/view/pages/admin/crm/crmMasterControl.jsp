@@ -40,10 +40,13 @@
 
         if (viewRefund) {
             $('#refundDiv').show();
+            $('#refund').attr('selected','selected');
         } else if (viewReward) {
             $('#rewardDiv').show();
+            $('#addRewardPoints').attr('selected','selected');
         } else if (viewReplacement) {
             $('#replacementDiv').show();
+            $('#replacementOrder').attr('selected','selected');
         }
 
         $('#actionType').change(function(e){
@@ -119,24 +122,24 @@
 </script>
 
 <div>
-<fieldset style="width: 25%;">
-    <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
-        <table>
-            <tr>
-                <td>Choose action:</td>
-                <td><s:select name="actionType" id="actionType" >
-                    <s:option value="none">-- Select --</s:option>
-                    <s:option value="addRewardPoints">Add Reward Points</s:option>
-                    <s:option value="refund">Refund</s:option>
-                    <s:option value="replacementOrder">Create Replacement Order</s:option>
-                </s:select>
-                </td>
-            </tr>
+    <fieldset style="width: 25%;">
+        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
+            <table>
+                <tr>
+                    <td>Choose action:</td>
+                    <td><s:select name="actionType" id="actionType" >
+                        <s:option value="none">-- Select --</s:option>
+                        <s:option id="addRewardPoints" value="addRewardPoints">Add Reward Points</s:option>
+                        <s:option id="refund" value="refund">Refund</s:option>
+                        <s:option id="replacementOrder" value="replacementOrder">Create Replacement Order</s:option>
+                    </s:select>
+                    </td>
+                </tr>
 
-        </table>
-    </s:form>
-</fieldset>
-
+            </table>
+        </s:form>
+    </fieldset>
+</div>
 <div id="rewardDiv">
     <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
         <fieldset style="width:60%">
