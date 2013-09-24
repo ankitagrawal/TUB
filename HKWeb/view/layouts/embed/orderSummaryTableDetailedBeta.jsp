@@ -56,9 +56,14 @@ Pass an attribute called pricingDto to render a table with pricing details
         <table width="100%">
           <tr>
             <td>
-                ${invoiceLineItem.productVariant.product.name} <br/>
-
-                ${invoiceLineItem.productVariant.variantName}
+                <c:choose>
+                    <c:when test="${ empty invoiceLineItem.productVariant.variantName}">
+                        ${invoiceLineItem.productVariant.product.name}
+                    </c:when>
+                    <c:otherwise>
+                        ${invoiceLineItem.productVariant.variantName}
+                    </c:otherwise>
+                </c:choose>
             </td>
             <td align="left" style="text-align:right">${invoiceLineItem.qty}</td>
               <c:set var="TH" value="TH"/>
@@ -67,7 +72,16 @@ Pass an attribute called pricingDto to render a table with pricing details
               <c:set var="COBF" value="COBF"/>
             <c:if test="${not empty invoiceLineItem.cartLineItemConfig.cartLineItemConfigValues}">
           <tr>
-            <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${invoiceLineItem.productVariant.product.name}</td>
+            <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">
+                <c:choose>
+                    <c:when test="${ empty invoiceLineItem.productVariant.variantName}">
+                        ${invoiceLineItem.productVariant.product.name}
+                    </c:when>
+                    <c:otherwise>
+                        ${invoiceLineItem.productVariant.variantName}
+                    </c:otherwise>
+                </c:choose>
+            </td>
             <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
               Rs. ${invoiceLineItem.productVariant.hkPrice}</td>
           </tr>
@@ -156,7 +170,14 @@ Pass an attribute called pricingDto to render a table with pricing details
                       ${comboVariant.qty} x
                       </span>
                       <span style="font-size:10px;">
-                      ${comboVariant.productVariant.product.name} - ${comboVariant.productVariant.optionsCommaSeparated}
+                      <c:choose>
+                          <c:when test="${ empty comboVariant.productVariant.variantName}">
+                              ${comboVariant.productVariant.product.name}
+                          </c:when>
+                          <c:otherwise>
+                              ${comboVariant.productVariant.variantName}
+                          </c:otherwise>
+                      </c:choose> - ${comboVariant.productVariant.optionsCommaSeparated}
                       </span>
                   <br/>
                 </c:forEach>

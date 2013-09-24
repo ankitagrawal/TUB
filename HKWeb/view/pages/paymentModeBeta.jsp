@@ -50,13 +50,20 @@
         page="/includes/checkoutNotice.jsp"/>
 
 <c:if test="${paymentModeBean.showFailureMessage}">
-        <div class="paymentFailureMessageTop">
-            <h4> We are extremely sorry but your payment could not be processed.</h4>
-            <p> The reason for this might be a network error or a communication error between the bank and the payment gateway.</p>
-            <p> The transaction id ${paymentModeBean.paymentFailureGatewayOrderId}. In case, any money has been deducted from your account please contact our customer care on 0124-4616444 or write to us at <a href="mailto:info@healthkart.com">info@healthkart.com</a></p>
-            <p> We request you to please try the payment again with a different payment mode or a different card. Sometimes,
-                trying with the same card might also work as you may have entered some details incorrectly.</p>
+    <div class="pmt-status-cntnr">
+        <div class="icn-holder">
+            <span class="icn-warning-large"></span>
         </div>
+        <div class="warning-txt-cntnr">
+            <h2>YOUR PAYMENT WAS NOT SUCESSFUL</h2>
+
+            <p>The reason for this might be a network error or a communication error between the bank and the payment
+                gateway. There also might be a good possibility that you entered incorrect information with your present
+                card.
+            <p> The transaction id ${paymentModeBean.paymentFailureGatewayOrderId}. In case, any money has been deducted from your account please contact our customer care on 0124-4616444 or write to us at <a href="mailto:info@healthkart.com">info@healthkart.com</a></p>
+            <p>Please try the payment again with a different payment mode or a different card.</p>
+        </div>
+    </div>
  </c:if>
 
 <div class='pre'>
@@ -625,7 +632,14 @@
                                                      </c:if>
                                                   </c:when>
                                                   <c:otherwise>
-                                                       ${cartLineItem.productVariant.product.name}
+                                                      <c:choose>
+                                                          <c:when test="${empty cartLineItem.productVariant.variantName}">
+                                                              ${cartLineItem.productVariant.product.name}
+                                                          </c:when>
+                                                          <c:otherwise>
+                                                              ${cartLineItem.productVariant.variantName}
+                                                          </c:otherwise>
+                                                      </c:choose>
                                                   </c:otherwise>
                                                </c:choose>
                                        </td>

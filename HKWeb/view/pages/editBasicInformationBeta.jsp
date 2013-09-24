@@ -6,9 +6,9 @@
 <s:layout-render name="/layouts/defaultBeta.jsp">
   <s:layout-component name="heading">Your Account</s:layout-component>
   <s:layout-component name="htmlHead">
-    <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+    <link href="<hk:vhostCss/>/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.dynDateTime.pack.js"></script>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
   </s:layout-component>
 
@@ -44,7 +44,6 @@
           <div class="row">
             <s:label class="rowLabel" name="Name"/>
             <s:text name="user.name" value="${maa.user.name}" class="rowText" id="userName"/>
-            <s:label name="Please enter your Name" class="errorEnterName hide"/>
           </div>
 
           <div class="clear"></div>
@@ -53,8 +52,6 @@
           <div class="row">
             <s:label class="rowLabel" name="Email"/>
             <s:text name="user.email" value="${maa.user.email}" class="rowText" id="userEmail"/>
-            <s:label name="Please enter Email address" class="errorEnterEmail hide"/>
-              <s:label name="Email address is not valid" class="errorInvalidEmail hide"/>
           </div>
 
           <div class="clear"></div>
@@ -130,9 +127,11 @@
 
       $('#submitButton').click(function(event) {
           var errorCount = false;
-          $('.errorEnterName').hide();
-          $('.errorEnterEmail').hide();
-          $('.errorInvalidEmail').hide();
+          $('#userName').siblings('.err-txt4').remove();
+          $('#userName').siblings('.err-icn3').remove();
+          $('#userEmail').siblings('.err-txt4').remove();
+          $('#userEmail').siblings('.err-icn3').remove();
+//          $('#userName').sibling('.icn-warning-small').remove();
           if(_validateIsNullName())
              errorCount = true;
           if(_validateIsNullEmail())
@@ -143,14 +142,17 @@
       });
 
       $(document).click(function() {
-          $('.errorEnterName').fadeOut();
-          $('.errorEnterEmail').fadeOut();
-          $('.errorInvalidEmail').fadeOut(); 
+          $('#userName').siblings('.err-txt4').fadeOut();
+          $('#userName').siblings('.err-icn3').fadeOut();
+          $('#userEmail').siblings('.err-txt4').fadeOut();
+          $('#userEmail').siblings('.err-icn3').fadeOut();
+
       });
 
       function _validateIsNullName() {
           if (!($('#userName').val().length)) {
-              $('.errorEnterName').fadeIn();
+              $('#userName').after($('<span class="icn-warning-small err-icn3"></span>'));
+              $('#userName').after($('<p class="err-txt4">Please enter your Name</p>'));
               return true;
           }
           return false;
@@ -158,7 +160,8 @@
 
       function _validateIsNullEmail() {
           if (!($('#userEmail').val().length)) {
-              $('.errorEnterEmail').fadeIn();
+              $('#userEmail').after($('<span class="icn-warning-small err-icn3"></span>'));
+              $('#userEmail').after($('<p class="err-txt4">Please enter Email address</p>'));
               return true;
           }
          else
@@ -168,56 +171,13 @@
       function _validateIsInvalidEmail() {
             regexEMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
             if (! regexEMAIL.test($('#userEmail').val())) {
-                $('.errorInvalidEmail').fadeIn();
+                $('#userEmail').after($('<span class="icn-warning-small err-icn3"></span>'));
+                $('#userEmail').after($('<p class="err-txt4">Email address is not valid</p>'));
                 return true;
-          }
+            }
             return false;
         }
 
-//      $('#saveBasicInformation').click(function(event){
-//         var doSubmit = true;
-//          hideErrMsg('#userName');
-//          hideErrMsg('#userEmail');
-//         if(validateIsNull('#userName') || validateIsNull('#userEmail') ){
-//          if(validateIsNull('#userName'))
-//             showErrMsg('#userName', 'Please Enter Your Name');
-//          if(validateIsNull('#userEmail'))
-//             showErrMsg('#userEmail', 'Please Enter Your Email ID');
-//          doSubmit = false;
-//         }
-//        else {
-//          doSubmit = true;
-//        }
-//        if (doSubmit != true) {
-//          event.preventDefault();
-//        }
-//      });
-//
-//    validateIsNull = function(ele){
-//       if(ele.val().length <= 0)
-//        return true
-//       else
-//        return false
-//    }
-//
-//    showErrMsg = function(ele,msg){
-//     var errorIcn = $("<span class='icn-warning-small err-icn' ></span>");
-//     var errTxtMsg = $("<p class='err-txt'>" + msg + "</p>");
-//     if (!$(ele).hasClass('err-brdr')) {
-//        $(ele).addClass('err-brdr');
-//        $(ele).after(errorIcn);
-//        $(ele).after(errTxtMsg);
-//        return true
-//     }
-//     return false
-//    }
-//
-//    hideErrMsg = function (ele) {
-//     ele = this.prep(ele);
-//     $(ele).removeClass('err-brdr');
-//     $(ele).next('.err-txt').remove();
-//     $(ele).next('.icn-warning-small').remove();
-//    }
   });
 
 
@@ -229,6 +189,7 @@
     float: left;
     margin-left: 0;
     padding-top: 2px;
+    max-height: 60px;
   }
 
   .rowLabel {

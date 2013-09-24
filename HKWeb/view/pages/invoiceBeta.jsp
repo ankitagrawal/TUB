@@ -195,12 +195,17 @@
         <tr>
             <td>
                 <p>
-                    <c:if test="${empty productLineItem.productVariant.variantName}">
-                        ${productLineItem.productVariant.product.name}
-                    </c:if>
+                    <c:choose>
+                        <c:when test="${empty productLineItem.productVariant.variantName}">
+                            ${productLineItem.productVariant.product.name}
+                        </c:when>
+                        <c:otherwise>
+                            ${productLineItem.productVariant.variantName}
+                        </c:otherwise>
+                    </c:choose>
                 </p>
 
-                <p>${productLineItem.productVariant.variantName}</p>
+                <p></p>
                 <em>
                     <p>
                         <c:forEach items="${productLineItem.productVariant.productOptions}" var="productOption">
