@@ -128,7 +128,6 @@ public enum EnumPermission {
   MANUAL_UPDATE_PAYMENT                          (PermissionConstants.MANUAL_UPDATE_PAYMENT),
   OPS_MANAGER_COURIER_PRICING_UPDATE             (PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE),
   OPS_MANAGER_COURIER_PRICING_VIEW               (PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW),
-  NEW_REVERSE_PICKUP                             (PermissionConstants.NEW_REVERSE_PICKUP),
   DELETE_REVERSE_PICKUP                          (PermissionConstants.DELETE_REVERSE_PICKUP),
   AVAILABLE_REVERSE_PICKUP                       (PermissionConstants.AVAILABLE_REVERSE_PICKUP),
   EDIT_RECONCILE_REVERSE_PICKUP                  (PermissionConstants.EDIT_RECONCILE_REVERSE_PICKUP),
