@@ -115,6 +115,7 @@
         </div>
     </div>
     <s:layout-component name="scriptComponent">
+       <script type="text/javascript" src="<hk:vhostJs/>/static/beta/js/newCat.js"></script>
         <script type="text/javascript">
           $(document).ready(function () {
 
@@ -180,14 +181,16 @@
               var onSuccess = function (responseData) {
                 if (responseData.success) {
                   HK.element.loader.remove(currEle, true);
-                  var suucessMsg = responseData.messages;
-                  HK.alert({title: 'Thank You !', content: suucessMsg, theme: HK.POPUP.THEME.ALERT});
+                  var sucMsg = responseData.msgs;
+                  HK.alert({title: 'Thank You !', content: HK.utils.generateHTMLForException(sucMsg), theme: HK.POPUP.THEME.ALERT});
 
                 }
                 else  {
                   HK.element.loader.remove(currEle, true);
                   var errorMsg = responseData.msgs;
-                  HK.alert({title: 'Alert!', content: errorMsg + '.  Please <a href="/core/user/Signup.action">Click here</a> to create an account with us.', theme: HK.POPUP.THEME.ALERT});
+                  var cntnt =HK.utils.generateHTMLForException(errorMsg);
+                  cntnt.find('li:last').append('<span>. Please <a href="/core/user/Signup.action">Click here</a> to create an account with us.</span>');
+                  HK.alert({title: 'Alert!', content: cntnt, theme: HK.POPUP.THEME.ALERT});
 
                 }
               };
