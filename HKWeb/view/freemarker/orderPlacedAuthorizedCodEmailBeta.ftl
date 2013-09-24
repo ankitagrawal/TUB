@@ -39,7 +39,7 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
             <tr>
             <td>${productLineItem.productVariant.name}
 
-                    </#list>
+
             </td>
                 <td>
                 <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
