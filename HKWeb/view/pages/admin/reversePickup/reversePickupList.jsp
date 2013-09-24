@@ -228,24 +228,30 @@
                         <td rowspan="${length}">${revCount.index + 1}</td>
                         <td rowspan="${length}">
                         ${reversePickup.reversePickupId}  </br>
+                            <shiro:hasPermission name="<%=PermissionConstants.AVAILABLE_REVERSE_PICKUP%>">
                             <c:if test="${reversePickup.reversePickupStatus.id == rpuInitiatedId}">
                                 <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                         event="rpNotAvailable"><span class="RPStatus">(Not Available)</span>
                                     <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                                 </s:link>
                            </c:if>
+                            </shiro:hasPermission>
                             <%--<c:if test="${reversePickup.reversePickupStatus.id == EnumReversePickupStatus.RPU_Initiated.id}">--%>
+                            <shiro:hasPermission name="<%=PermissionConstants.CANCEL_REVERSE_PICKUP%>">
                             <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                     event="rpCancel"><span class="RPStatus">(Cancel)</span>
                                 <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                             </s:link>
+                            </shiro:hasPermission>
                                 <%--</c:if>--%>
+                            <shiro:hasPermission name="<%=PermissionConstants.CLOSE_REVERSE_PICKUP%>">
                             <c:if test="${reversePickup.reversePickupStatus.id == rpuReconcilationId}">
                             <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                     event="rpClose"><span class="RPStatus">(Close)</span>
                                 <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                             </s:link>
                                 </c:if>
+                            </shiro:hasPermission>
                             <%--<c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">--%>
                             <%--<s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"--%>
                                     <%--event="rpReconcile"><span class="RPStatus">(Reconcile)</span>--%>
@@ -439,13 +445,16 @@
                                 </c:otherwise>
                             </c:choose>
                                <br>
+                               <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
                                     <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
                                         <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                                 event="editRPToReconcile"><span class="RPStatus">
                                         Reconciled RPU</span>
                                             <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                                         </s:link>
-                                    </c:if><br>
+                                    </c:if>
+                               </shiro:hasPermission>
+                               <br>
                            </span> <br>
                         </td>
                     </c:if>
