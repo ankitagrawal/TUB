@@ -192,4 +192,10 @@ public class PermissionConstants {
     public static final String SCHEDULE_REVERSE_PICKUP = "SCHEDULE_REVERSE_PICKUP";
     public static final String DELETE_REVERSE_PICKUP = "DELETE_REVERSE_PICKUP";
     public static final String NEW_REVERSE_PICKUP = "NEW_REVERSE_PICKUP";
+    public static final String AVAILABLE_REVERSE_PICKUP = "AVAILABLE_REVERSE_PICKUP";
+    public static final String EDIT_RECONCILE_REVERSE_PICKUP = "EDIT_RECONCILE_REVERSE_PICKUP";
+    public static final String CANCEL_REVERSE_PICKUP = "CANCEL_REVERSE_PICKUP";
+    public static final String CLOSE_REVERSE_PICKUP = "CLOSE_REVERSE_PICKUP";
+    public static final String RECONCILE_REVERSE_PICKUP = "RECONCILE_REVERSE_PICKUP";
+
 }

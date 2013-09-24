@@ -146,6 +146,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
                 .addParameter("errorMessage", errorMessage);
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.AVAILABLE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution rpNotAvailable() {
 
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_NOTAVAILABLE.asReversePickupStatus());
@@ -155,8 +156,9 @@ public class ReversePickupListAction extends BasePaginatedAction {
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
-    public Resolution editRPToReconcile() {
 
+    @Secure(hasAnyPermissions = {PermissionConstants.EDIT_RECONCILE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
+    public Resolution editRPToReconcile() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
         String comments = " RPU Status Changed to RPU Reconcile for RPU Id " + reversePickupOrder.getId();
@@ -164,7 +166,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
-
+    @Secure(hasAnyPermissions = {PermissionConstants.CANCEL_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution rpCancel() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_CANCEL.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
@@ -172,7 +174,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         shippingOrderService.logShippingOrderActivity(reversePickupOrder.getShippingOrder(), EnumShippingOrderLifecycleActivity.RPU_STATUS_CHANGED, null, comments);
         return new RedirectResolution(ReversePickupListAction.class);
     }
-
+    @Secure(hasAnyPermissions = {PermissionConstants.CLOSE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution rpClose() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_CLOSED.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
@@ -181,7 +183,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
-
+    @Secure(hasAnyPermissions = {PermissionConstants.RECONCILE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution rpReconcile() {
         reversePickupOrder.setReversePickupStatus(EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus());
         reversePickupOrder = reversePickupService.saveReversePickupOrder(reversePickupOrder);
