@@ -253,7 +253,19 @@
                             <%--</s:link>--%>
                                 <%--</c:if>--%>
                         </td>
-                        <td rowspan="${length}">${reversePickup.shippingOrder.id}</td>
+                        <td rowspan="${length}">
+                            (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction"
+                                     event="searchShippingOrder"
+                                     target="_blank">
+                            <s:param name="shippingOrderGatewayId"
+                                     value="${reversePickup.shippingOrder.gatewayOrderId}"/> Search SO
+                        </s:link>)
+                            (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction"
+                                     event="pre" target="_blank">
+                            SO Lifecycle
+                            <s:param name="shippingOrder" value="${reversePickup.shippingOrder.id}"/>
+                        </s:link>)
+                        </td>
                     </c:if>
                     <td>
                         <c:set value="flase" var="valueSet"/>
