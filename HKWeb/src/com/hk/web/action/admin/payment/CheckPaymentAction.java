@@ -14,6 +14,7 @@ import com.hk.pojo.HkPaymentResponse;
 import com.hk.taglibs.Functions;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.PaymentFinder;
+import com.hk.web.action.admin.crm.MasterResolutionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
@@ -98,6 +99,7 @@ public class CheckPaymentAction extends BaseAction {
 
     private Reason refundReason;
     private String reasonComments;
+    private Boolean refundFlag;
 
     @DefaultHandler
     public Resolution show() {
@@ -116,24 +118,25 @@ public class CheckPaymentAction extends BaseAction {
 
     @DontValidate
     public Resolution seekPayment() {
-
-        try {
-            if (gatewayOrderId != null) {
-                Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
-                Gateway gateway = basePayment.getGateway();
-                if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
-                    hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage("Seek feature only works for citrus/icici/ebs"));
-                }
-            }
-
-
-        } catch (HealthkartPaymentGatewayException e) {
-            logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+      refundFlag = true;
+      try {
+        if (gatewayOrderId != null) {
+          Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+          Gateway gateway = basePayment.getGateway();
+          if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
+            hkPaymentResponseList = paymentService.seekPayment(gatewayOrderId);
+          } else {
+            addRedirectAlertMessage(new SimpleMessage("Seek feature only works for citrus/icici/ebs"));
+          }
         }
 
-        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+
+      } catch (HealthkartPaymentGatewayException e) {
+        logger.debug("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+      }
+
+      // return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+      return new ForwardResolution(MasterResolutionAction.class);
     }
 
     @DontValidate
@@ -184,6 +187,7 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
+      refundFlag = true;
       if (gatewayOrderId != null) {
         if (amount != null && refundReason !=null && reasonComments!= null && !reasonComments.isEmpty()) {
           Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
@@ -240,8 +244,9 @@ public class CheckPaymentAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("Please enter gateway order id"));
       }
 
+      return new ForwardResolution(MasterResolutionAction.class);
 
-      return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+//      return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
     private boolean isSuccessFullPayment(String gatewayOrderId) {
@@ -257,6 +262,7 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updatePayment() {
+      refundFlag = true;
         if (gatewayOrderId != null) {
             Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
             Gateway gateway = basePayment.getGateway();
@@ -274,7 +280,8 @@ public class CheckPaymentAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Please enter gateway order id"));
         }
 
-        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+      return  new ForwardResolution(MasterResolutionAction.class);
+        //return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
 
@@ -668,5 +675,13 @@ public class CheckPaymentAction extends BaseAction {
 
   public void setReasonComments(String reasonComments) {
     this.reasonComments = reasonComments;
+  }
+
+  public Boolean getRefundFlag() {
+    return refundFlag;
+  }
+
+  public void setRefundFlag(Boolean refundFlag) {
+    this.refundFlag = refundFlag;
   }
 }

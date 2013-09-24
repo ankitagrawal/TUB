@@ -9,7 +9,7 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="CRM Master Screen">
 <s:useActionBean beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" var="maBean"/>
-<s:useActionBean beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" var="rpBean"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" var="cpa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" var="replacementOrderBean"/>
 <s:layout-component name="htmlHead">
@@ -30,29 +30,41 @@
 
 <script>
     $(document).ready(function(){
-        $('rewardDiv').hide();
-        $('refundDiv').hide();
-        $('replacementDiv').hide();
+        var viewRefund = ${cpa.refundFlag};
+        var viewReward = ${rpBean.rewardFlag};
+        var viewReplacement = ${replacementOrderBean.replacementFlag};
 
-        $('actionType').change(function(e){
+        $('#rewardDiv').hide();
+        $('#refundDiv').hide();
+        $('#replacementDiv').hide();
+
+        if (viewRefund) {
+            $('#refundDiv').show();
+        } else if (viewReward) {
+            $('#rewardDiv').show();
+        } else if (viewReplacement) {
+            $('#replacementDiv').show();
+        }
+
+        $('#actionType').change(function(e){
             e.preventDefault();
-            var selectedOption = $(this).selectedIndex;
+            var selectedOption = $(this).selected();
             if(selectedOption.val() == "addRewardPoints") {
-                $('rewardDiv').show();
-                $('refundDiv').hide();
-                $('replacementDiv').hide();
+                $('#rewardDiv').show();
+                $('#refundDiv').hide();
+                $('#replacementDiv').hide();
             } else if (selectedOption.val() == "refund") {
-                $('rewardDiv').hide();
-                $('refundDiv').show();
-                $('replacementDiv').hide();
+                $('#rewardDiv').hide();
+                $('#refundDiv').show();
+                $('#replacementDiv').hide();
             } else if (selectedOption.val() == "replacementOrder") {
-                $('rewardDiv').hide();
-                $('refundDiv').hide();
-                $('replacementDiv').show();
+                $('#rewardDiv').hide();
+                $('#refundDiv').hide();
+                $('#replacementDiv').show();
             } else {
-                $('rewardDiv').hide();
-                $('refundDiv').hide();
-                $('replacementDiv').hide();
+                $('#rewardDiv').hide();
+                $('#refundDiv').hide();
+                $('#replacementDiv').hide();
                 alert("No Action Chosen");
             }
         });
@@ -107,9 +119,8 @@
 </script>
 
 <div>
-<fieldset>
-    <label>Master </label>
-   <%-- <s:form beanclass="com.hk.web.action.admin.crm">--%>
+<fieldset style="width: 25%;">
+    <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
         <table>
 <%--
             <tr>
@@ -132,6 +143,7 @@
             </tr>
 
         </table>
+    </s:form>
 <%--
         <s:submit name="search" value="Search"></s:submit>
 --%>

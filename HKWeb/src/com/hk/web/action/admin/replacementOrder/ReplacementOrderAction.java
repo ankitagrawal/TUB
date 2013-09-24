@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.web.action.admin.crm.MasterResolutionAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,8 +73,9 @@ public class ReplacementOrderAction extends BaseAction {
 	@Autowired
 	private ReverseOrderService reverseOrderService;
 
-
 	private ReplacementOrder replacementOrder;
+
+  private Boolean replacementFlag;
 
 
 	@ValidationMethod(on = "searchShippingOrder")
@@ -85,10 +87,12 @@ public class ReplacementOrderAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+    return  new ForwardResolution(MasterResolutionAction.class);
+		//return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
 	}
 
 	public Resolution searchShippingOrder() {
+    replacementFlag = true;
 		if (shippingOrderId != null) {
 			shippingOrder = shippingOrderService.find(shippingOrderId);
 		} else if (gatewayOrderId != null) {
@@ -96,7 +100,8 @@ public class ReplacementOrderAction extends BaseAction {
 		}
 		if (shippingOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
-			return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+      return  new ForwardResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
+			//return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
 			lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
@@ -112,10 +117,13 @@ public class ReplacementOrderAction extends BaseAction {
 				lineItems.add(replacementLineItem);
 			}
 		}
-		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
+    return  new ForwardResolution(MasterResolutionAction.class).addParameter("shippingOrderId",shippingOrderId)
+        .addParameter("replacementFlag", replacementFlag);
+		//return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public Resolution createReplacementOrder() {
+    replacementFlag = true;
 		if ((!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId()))
 				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_RTO.getId()))
 				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()))
@@ -129,12 +137,14 @@ public class ReplacementOrderAction extends BaseAction {
 
 
 			);
-			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+      return  new ForwardResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
+			//return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
 		if (replacementOrderReason == null) {
 			addRedirectAlertMessage(new SimpleMessage("Please select a reason for creating a replacement order."));
-			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+      return  new RedirectResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
+			//return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
 		int valid_item_flag = 0;
@@ -144,29 +154,31 @@ public class ReplacementOrderAction extends BaseAction {
 			}
 			if (lineItem.getQty() != 0 && lineItem.getQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
 				addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " out of stock."));
-				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+        return new RedirectResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
 			}
 			if (lineItem.getQty() < 0) {
 				addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be less than zero."));
-				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+        return new RedirectResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
 			}
 			if (lineItem.getQty() > getLineItemDao().getMatchingLineItemForDuplicateShippingOrder(lineItem, shippingOrder).getQty()) {
 				addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be more than original quantity."));
-				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+        return new RedirectResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
+				//return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}
 		}
 		if (valid_item_flag == 0) {
 			addRedirectAlertMessage(new SimpleMessage("The quantity of at least one item should be greater than 0"));
-			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+			//return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+      return new RedirectResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
 		}
 
 		replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto, replacementOrderReason, roComment);
 		if (replacementOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
-			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+			return new RedirectResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
 		}
 		addRedirectAlertMessage(new SimpleMessage("The Replacement order created. New gateway order id: " + replacementOrder.getGatewayOrderId()));
-		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+		return new ForwardResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -194,13 +206,14 @@ public class ReplacementOrderAction extends BaseAction {
 		}
 		if (shippingOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
-			return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
+      return  new ForwardResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
+			//return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
 		}
 		replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(shippingOrder.getId());
 		if (replacementOrderList.isEmpty()) {
 			addRedirectAlertMessage(new SimpleMessage("No Replacement order for given shipping order"));
 		}
-		return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
+		return new ForwardResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
 	}
 
 	public Long getShippingOrderId() {
@@ -294,4 +307,12 @@ public class ReplacementOrderAction extends BaseAction {
 	public void setReverseLineItems(List<ReverseLineItem> reverseLineItems) {
 		this.reverseLineItems = reverseLineItems;
 	}
+
+  public Boolean getReplacementFlag() {
+    return replacementFlag;
+  }
+
+  public void setReplacementFlag(Boolean replacementFlag) {
+    this.replacementFlag = replacementFlag;
+  }
 }

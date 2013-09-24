@@ -6,6 +6,7 @@ import java.util.Date;
 import com.hk.constants.discount.RewardPointConstants;
 import com.hk.domain.order.Order;
 import com.hk.pact.service.order.OrderService;
+import com.hk.web.action.admin.crm.MasterResolutionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -66,12 +67,16 @@ public class AddRewardPointAction extends BaseAction {
     @Validate(required = true, on = "add")
     private Long orderId;
 
+    private Boolean rewardFlag;
+
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/addRewardPoint.jsp");
+//      return new ForwardResolution("/pages/admin/addRewardPoint.jsp");
+      return new ForwardResolution(MasterResolutionAction.class);
     }
 
     public Resolution add() {
+        rewardFlag = true;
         User referredUser = getUserService().getUserById(getPrincipal().getId());
         // referredUser stores the id of the user who added reward points
         // this logs the user who has added reward points
@@ -152,4 +157,12 @@ public class AddRewardPointAction extends BaseAction {
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
+
+  public Boolean getRewardFlag() {
+    return rewardFlag;
+  }
+
+  public void setRewardFlag(Boolean rewardFlag) {
+    this.rewardFlag = rewardFlag;
+  }
 }
