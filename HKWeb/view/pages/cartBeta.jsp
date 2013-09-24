@@ -260,7 +260,7 @@ function _updateTotals(responseData) {
 }
 
 </script>
-<script type="text/javascript" src="<hk:vhostJs/>/js/otherScripts/jquery.glow.js"></script>
+<script type="text/javascript" src="<hk:vhostJs/>/otherScripts/jquery.glow.js"></script>
 </s:layout-component>
 
 <s:layout-component name="modal">
