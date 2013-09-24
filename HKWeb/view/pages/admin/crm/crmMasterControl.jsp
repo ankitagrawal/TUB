@@ -122,19 +122,10 @@
 <fieldset style="width: 25%;">
     <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
         <table>
-<%--
-            <tr>
-                <td>Enter SO ID</td>
-                <td><s:text name="shippingOrderId" maxlength="15"/></td>
-            </tr>
---%>
             <tr>
                 <td>Choose action:</td>
                 <td><s:select name="actionType" id="actionType" >
                     <s:option value="none">-- Select --</s:option>
-                    <<%--c:forEach items="${maBean.actionSet}" var="action">
-                            <s:option value="${action}">${action}</s:option>
-                        </c:forEach>--%>
                     <s:option value="addRewardPoints">Add Reward Points</s:option>
                     <s:option value="refund">Refund</s:option>
                     <s:option value="replacementOrder">Create Replacement Order</s:option>
@@ -144,30 +135,33 @@
 
         </table>
     </s:form>
-<%--
-        <s:submit name="search" value="Search"></s:submit>
---%>
 </fieldset>
 
 <div id="rewardDiv">
     <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
-        <fieldset>
+        <fieldset class="left_label">
             <label style="color: #ff0000; font-weight: bold; font-size: 25px;">Reward Points given due
                 to cancellations will not be given from this screen. They will be given automatically</label>
-        </fieldset>
-        <fieldset class="left_label">
-            <ul>
+            <table>
                 <s:hidden name="user" value="${rpBean.user.id}"/>
-                <li><label>Value</label><s:text name="value"/></li>
-                <li><label>Order Id</label><s:text name="orderId"/></li>
-                <li><label>Mode</label>
-                    <s:select name="rewardPointMode"><hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
-                    </s:select></li>
-                <li><label>Expiry
-                    Date</label><s:text name="expiryDate" class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
-                </li>
-                <li><label>Comment</label><s:textarea name="comment"/></li>
-            </ul>
+                <tr>
+                    <td>Value</td>
+                    <td><s:text name="value"/></td>
+                    <td>Order Id</td><td><s:text name="orderId"/></td>
+                </tr>
+                <tr>
+                    <td>Mode</td>
+                    <td>
+                        <s:select name="rewardPointMode"><hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
+                        </s:select>
+                    </td>Expiry Date<td></td>
+                    <td><s:text name="expiryDate" class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/></td>
+                </tr>
+                <tr>
+                    <td>Comment</td>
+                    <td><s:textarea name="comment"/></td>
+                </tr>
+            </table>
         </fieldset>
         <s:submit name="add" value="Add"/>
     </s:form>
