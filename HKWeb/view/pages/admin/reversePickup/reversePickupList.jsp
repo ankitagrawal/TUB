@@ -182,7 +182,7 @@
             </div>
         </div>
         <div style="text-align: center ;margin-top: 1em;">
-            <s:submit name="pre" value="Search"/>
+            <s:submit name="search" value="Search"/>
         </div>
     </s:form>
 </div>
