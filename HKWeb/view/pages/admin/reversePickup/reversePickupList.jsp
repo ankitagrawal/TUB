@@ -245,12 +245,12 @@
                                 <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                             </s:link>
                                 </c:if>
-                            <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
-                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
-                                    event="rpReconcile"><span class="RPStatus">(Reconcile)</span>
-                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                            </s:link>
-                                </c:if>
+                            <%--<c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">--%>
+                            <%--<s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"--%>
+                                    <%--event="rpReconcile"><span class="RPStatus">(Reconcile)</span>--%>
+                                <%--<s:param name="reversePickupOrder" value="${reversePickup.id}"/>--%>
+                            <%--</s:link>--%>
+                                <%--</c:if>--%>
                         </td>
                         <td rowspan="${length}">${reversePickup.shippingOrder.id}</td>
                     </c:if>
@@ -404,11 +404,13 @@
                                         Edit RPU
                                         <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
                                     </s:link> <br>
+                                    <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
                                     <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                             event="editRPToReconcile"><span class="RPStatus">
                                         Reconciled RPU</span>
                                         <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                                    </s:link><br>
+                                    </s:link>
+                                    </c:if><br>
                                 </c:when>
                                 <c:otherwise>
                           <span>   <s:link class="link-button-edit"
