@@ -765,9 +765,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       if (infos == null || infos.size() <= 0){
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
         cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-        if (cartLineItem != null) {
-          cartLineItem.setForeignSkuItemCLIs(null);
-        }
+//        if (cartLineItem != null) {
+//          cartLineItem.setForeignSkuItemCLIs(null);
+//        }
+         cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+        getBaseDao().save(cartLineItem);
         getBaseDao().delete(foreignSkuItemCLI);
       } else if (infos != null && infos.size() > 0) {
         updateForeignSICLITable(infos);
@@ -869,7 +871,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     for (HKAPIForeignBookingResponseInfo info : infos) {
       long fsiliId = info.getFsiCLIId();
       ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemService.getForeignSkuItemCLI(fsiliId);
-      if (foreignSkuItemCLI != null && foreignSkuItemCLI.getSkuItemId() != null) {
+      if (foreignSkuItemCLI != null && info.getFsiId() != null) {
         foreignSkuItemCLI.setForeignBarcode(info.getBarcode());
         foreignSkuItemCLI.setForeignSkuGroupId(info.getFsgId());
         foreignSkuItemCLI.setFsgCostPrice(info.getCp());
