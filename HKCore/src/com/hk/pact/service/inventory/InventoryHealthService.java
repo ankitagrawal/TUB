@@ -46,7 +46,7 @@ public interface InventoryHealthService {
 
   public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant);
 
-//  public Boolean bookInventoryForReplacementOrder(LineItem lineItem);
+ public Boolean bookInventoryForReplacementOrder(LineItem lineItem);
 
 
   public static class InventoryInfo {

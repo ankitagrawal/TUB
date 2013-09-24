@@ -1063,7 +1063,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     return maxQty;
   }
 
-/*
+
   public Boolean bookInventoryForReplacementOrder(LineItem lineItem){
     String tinPrefix = lineItem.getSku().getWarehouse().getTinPrefix();
     Long warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
@@ -1098,25 +1098,38 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
       }
       if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1){
-
+        Boolean status =   skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+        return  status;
       }
     } else {
       // Bright call
-      if (isLineItemCreated) {
         countOfAvailableUnBookedSkuItemsInBright = getUnbookedInventoryOfBrightForMrp(cartLineItem.getProductVariant(), tinPrefix, cartLineItem.getMarkedPrice());
-      } else {
-        countOfAvailableUnBookedSkuItemsInBright = getUnbookedInventoryOfBright(cartLineItem.getProductVariant());
-      }
       if (countOfAvailableUnBookedSkuItemsInBright >= cartLineItem.getQty()) {
-        // Bright inventory booking required
-        createSicliAndSiliAndTempBookingForBright(cartLineItem,warehouseIdForBright);
+              // Bright inventory booking required
+        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+       // createSicliAndSiliAndTempBookingForBright(cartLineItem,warehouseIdForBright);
+        if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
+          if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
+            cartLineItem = tempBookBrightInventory(cartLineItem, warehouseIdForBright);
+            populateSICLI(cartLineItem);
+          }
+
+          if (orderService.bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1)) {
+            logger.debug("Update booking on Bright for Replacement order");
+            List<HKAPIForeignBookingResponseInfo> infos = orderService.updateBookedInventoryOnBright(lineItem, warehouseIdForBright);
+            List<ForeignSkuItemCLI> ForeignSkuItemCLIs = skuItemLineItemService.updateSkuItemForABJit(infos);
+            skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem);
+
+          }
+        }
+
       }
     }
 
     return true;
   }
 
-*/
+
 
   public BaseDao getBaseDao() {
     return baseDao;
