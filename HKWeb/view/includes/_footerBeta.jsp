@@ -34,10 +34,7 @@
                     <ul>
                         <li><a href="/beta/hk/AboutUs.action">About Us</a> </li>
                         <li><a href="/beta/hk/Careers.action">Careers</a></li>
-                        <%--<li><a href="">Investor Relations</a></li>--%>
-                        <%--<li><a href="">Press Releases</a></li>--%>
                         <li><a href="/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
-                        <%--<li><a href="">Privacy Notice</a></li>--%>
                         <li><a href="http://www.healthkart.com/resources">Blog</a></li>
                     </ul>
                 </div>
@@ -73,24 +70,19 @@
                         <li><a href="/brand/muscletech?navKey=BR-502">Muscletech</a></li>
                     </ul>
                 </div>
-                <%--<div class="footer-menu">--%>
-                    <%--<h4>Whats new</h4>--%>
-                    <%--<ul>--%>
-                        <%--<li><a href="">New At HK</a></li>--%>
-                        <%--<li><a href="">Shop By Occassion</a></li>--%>
-                        <%--<li><a href="">Shop By Brands</a></li>--%>
-                        <%--<li><a href="">Looks & Trends</a></li>--%>
-                        <%--<li><a href="">48hr Sale</a></li>--%>
-                        <%--<li><a href="">Gift Cards</a></li>--%>
-                    <%--</ul>--%>
-                <%--</div>--%>
-                <div class="subscibe-mail-cntnr">
-                    <p class="label-txt">Sign Up for emails and latest offers</p>
-                    <input type="text" name="subscriptionEmail" id="subscriptionEmail" placeholder="Email address"
-                           value=""/>
-                    <input type="submit" name="submitSubscription" value="submit"
-                           class="btn btn-gray"/>
+
+
+              <div class="subscibe-mail-cntnr">
+                <p class="label-txt">Sign Up for emails and latest offers</p>
+
+                <div class="span4">
+                  <input type="text" name="subscriptionEmail" id="subscriptionEmail" placeholder="Email address" value=""/>
                 </div>
+                <div class="mrgn-l-30">
+                  <input type="submit" id="submitSubscription"  name="submitSubscription" value="submit"
+                         class="btn btn-gray"/>
+                </div>
+              </div>
             </div>
             <div class="clearfix about-hk">
                 HealthKart.com is India's largest online health & fitness store for men, women, and kids. Shop online from
@@ -140,18 +132,29 @@
                     });
                 }
                 goToTop();
+              function showErrMsg(ele, msg) {
+                var errorIcn = $("<span class='icn-warning-small err-icn' ></span>");
+                var errTxtMsg = $("<p class='err-txt'>" + msg + "</p>");
+                if (!$(ele).hasClass('err-brdr')) {
+                  $(ele).addClass('err-brdr');
+                  $(ele).after(errorIcn);
+                  $(ele).after(errTxtMsg);
+                  return true
+                }
+              }
+              function hideErrMsg(ele){
+                $(ele).removeClass('err-brdr');
+                $(ele).next('.err-txt').remove();
+                $(ele).next('.icn-warning-small').remove();
 
-                var doSubmit = true;
+              }
                 $('[name=submitSubscription]').click(function (event) {
-                    $('[name=subscriptionEmail]').removeClass('err-brdr');
-                    $('.subscibe-mail-cntnr').children('.err-txt5').remove();
-                    $('.subscibe-mail-cntnr').children('.err-txt6').remove();
-                    $('.subscibe-mail-cntnr').children('.icn-warning-small').remove();
+                  var doSubmit = true;
                     if (! ($('[name=subscriptionEmail]').val().length > 0)) {
                         if(! $('[name=subscriptionEmail]').hasClass('err-brdr')){
                             $('[name=subscriptionEmail]').addClass('err-brdr');
-                            $('.subscibe-mail-cntnr').append($("<p class='err-txt5'>Please enter Email address</p>"));
-                            $('.subscibe-mail-cntnr').append($("<span class='icn-warning-small err-icn2' ></div>"));
+                            $('#subscriptionEmail').after($("<p class='err-txt'>Please enter Email address</p>"));
+                            $('#subscriptionEmail').after($("<span class='icn-warning-small err-icn2' ></div>"));
                         }
                         doSubmit = false;
                     }
@@ -161,8 +164,8 @@
                         if (! regexEMAIL.test($('[name=subscriptionEmail]').val())) {
                             if(! $('[name=subscriptionEmail]').hasClass('err-brdr')){
                                 $('[name=subscriptionEmail]').addClass('err-brdr');
-                                $('.subscibe-mail-cntnr').append($("<p class='err-txt6'>Email address is not valid</p>"));
-                                $('.subscibe-mail-cntnr').append($("<span class='icn-warning-small err-icn2' ></div>"));
+                                $('subscriptionEmail').after($("<p class='err-txt'>Email address is not valid</p>"));
+                                $('#subscriptionEmail').after($("<span class='icn-warning-small err-icn2' ></div>"));
                             }
                             doSubmit = false;
                         }
