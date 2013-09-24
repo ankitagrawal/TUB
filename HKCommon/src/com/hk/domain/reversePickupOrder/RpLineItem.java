@@ -1,6 +1,7 @@
 package com.hk.domain.reversePickupOrder;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.queue.Classification;
 import com.hk.domain.shippingOrder.LineItem;
 import com.itextpdf.text.pdf.LongHashtable;
 
@@ -41,7 +42,7 @@ public class RpLineItem implements Serializable{
     private String customerComment;
 
     @Column(name = "action_taken_id")
-    private Long actionTaken;
+    private Classification actionTaken;
 
     @Column(name = "action_on_status_id")
     private Long actionTakenOnStatus;
@@ -54,7 +55,7 @@ public class RpLineItem implements Serializable{
     private Reason warehouseReceivedCondition;
 
     @Column(name = "customer_action_status")
-    private Long customerActionStatus;
+    private Classification customerActionStatus;
 
     @Column(name = "warehouse_comment")
     private Long warehouseComment;
@@ -103,11 +104,11 @@ public class RpLineItem implements Serializable{
         this.customerComment = customerComment;
     }
 
-    public Long getActionTaken() {
+    public Classification getActionTaken() {
         return actionTaken;
     }
 
-    public void setActionTaken(Long actionTaken) {
+    public void setActionTaken(Classification actionTaken) {
         this.actionTaken = actionTaken;
     }
 
@@ -135,11 +136,11 @@ public class RpLineItem implements Serializable{
         this.warehouseReceivedCondition = warehouseReceivedCondition;
     }
 
-    public Long getCustomerActionStatus() {
+    public Classification getCustomerActionStatus() {
         return customerActionStatus;
     }
 
-    public void setCustomerActionStatus(Long customerActionStatus) {
+    public void setCustomerActionStatus(Classification customerActionStatus) {
         this.customerActionStatus = customerActionStatus;
     }
 

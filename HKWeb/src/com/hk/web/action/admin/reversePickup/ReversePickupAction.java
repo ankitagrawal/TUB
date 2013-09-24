@@ -133,7 +133,7 @@ public class ReversePickupAction extends BaseAction {
             List<RpLineItem> modifiedPendingRpLineItems = new ArrayList<RpLineItem>();
             for (RpLineItem rpLineItem : rpLineItems) {
                 if (rpLineItem != null) {
-                    Long statusId = rpLineItem.getCustomerActionStatus();
+                    Long statusId = rpLineItem.getCustomerActionStatus().getId();
                     if (statusId == null || statusId.equals(EnumReverseAction.Pending_Approval.getId())) {
                         modifiedPendingRpLineItems.add(rpLineItem);
                     }

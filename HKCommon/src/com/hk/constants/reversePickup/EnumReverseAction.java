@@ -1,5 +1,8 @@
 package com.hk.constants.reversePickup;
 
+import com.hk.constants.queue.EnumClassification;
+import com.hk.domain.queue.Classification;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,24 +15,22 @@ import java.util.List;
  */
 public enum EnumReverseAction {
 
-    Refund_In_Cash(10L, "Refund In Cash"),
-    Refund_Reward_Points(20L, "Refund Reward Points "),
-    Replacement_Order(30L, "Replacement Order"),
-    Return_Initiated(40L, "Return Initiated "),
-    Return_Received(50L, "Return Received "),
-    Return_QC_Checkin(60L, "Return QC Checkin "),
-    Decide_Later(70L, "Decide Later "),
+    Refund_In_Cash(10L, EnumClassification.Refund_In_Cash),
+    Refund_Reward_Points(20L, EnumClassification.Refund_Reward_Points),
+    Replacement_Order(30L, EnumClassification.Replacement_Order),
+    Decide_Later(70L, EnumClassification.Decide_Later),
     /* CS Action Status */
-    Pending_Approval(80L, "Pending Approval"),
-    Approved(90L, "Approved"),
-    Force_Approval(100L, "Force_Approval");
+
+    Pending_Approval(80L, EnumClassification.Pending_Approval),
+    Approved(90L, EnumClassification.Approved),
+    Force_Approval(100L, EnumClassification.Force_Approval);
 
     private Long id;
-    private String name;
+    private Classification classification;
 
-    EnumReverseAction(Long id, String actionTaken) {
+    EnumReverseAction(Long id, EnumClassification enumClassification) {
         this.id = id;
-        name = actionTaken;
+        classification = enumClassification.asClassification();
     }
 
     public static List<EnumReverseAction> getAllReversePickAction() {
@@ -54,15 +55,12 @@ public enum EnumReverseAction {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Classification getClassification() {
+        return classification;
     }
 
     public String getName() {
-        return name;
+        return this.getClassification().getPrimary();
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

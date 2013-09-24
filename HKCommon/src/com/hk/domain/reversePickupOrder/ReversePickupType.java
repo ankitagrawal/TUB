@@ -19,8 +19,8 @@ public class ReversePickupType  implements Serializable {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "status", nullable = false, unique = true)
-    private String status;
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 
     public Long getId() {
         return id;
@@ -30,12 +30,12 @@ public class ReversePickupType  implements Serializable {
         this.id = id;
     }
 
-    public String getStatus() {
-        return status;
+    public String getName() {
+        return name;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

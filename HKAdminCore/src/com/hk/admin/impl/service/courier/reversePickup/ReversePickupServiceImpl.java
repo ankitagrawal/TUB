@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.courier.reversePickup.ReversePickupService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.queue.EnumClassification;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuItemOwner;
@@ -84,10 +85,10 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                 if (reversePickupOrder != null) {
                     rpLineItem.setReversePickupOrder(reversePickupOrder);
                 }
-                if (rpLineItem.getActionTaken() == null || rpLineItem.getActionTaken().equals(EnumReverseAction.Decide_Later.getId())) {
+                if (rpLineItem.getActionTaken() == null || rpLineItem.getActionTaken().getId().equals(EnumClassification.Decide_Later.getId())) {
                     rpLineItem.setCustomerActionStatus(null);
                 } else {
-                    rpLineItem.setCustomerActionStatus(EnumReverseAction.Pending_Approval.getId());
+                    rpLineItem.setCustomerActionStatus(EnumClassification.Decide_Later.asClassification());
                 }
                 saveRpLineItem(rpLineItem);
             }

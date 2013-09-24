@@ -292,12 +292,7 @@
                             ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}   </td>
                     <td>${rpLineitem.customerReasonForReturn.classification.primary}</td>
                     <td>
-                        <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
-                                   var="actionTaken">
-                            <c:if test="${rpLineitem.actionTaken == actionTaken.id}">
-                                ${actionTaken.name}
-                            </c:if>
-                        </c:forEach>
+                                ${rpLineitem.actionTaken.primary}
                     </td>
                     <%--<td>--%>
                         <%--<c:forEach--%>
@@ -313,12 +308,7 @@
                             ${rpLineitem.customerComment}
                     </td>
                     <td>
-                        <c:forEach
-                                items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
-                                var="actionStatus">
-                            <c:if test="${rpLineitem.customerActionStatus == actionStatus.id}">
-                                ${actionStatus.name}
-                            </c:if>
+                                ${rpLineitem.customerActionStatus.primary}
                         </c:forEach>
                         <c:set value="<%=EnumReverseAction.Pending_Approval.getId()%>" var="pending"/>
                         <c:if test="${rpLineitem.customerActionStatus == pending}">

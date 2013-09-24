@@ -226,12 +226,7 @@
                                 <%--</s:select>--%>
                             <%--</td>--%>
                             <td>
-                                <c:forEach items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
-                                           var="customerActionStatusenum">
-                                    <c:if test="${savedRpLineItem.customerActionStatus == customerActionStatusenum.id}">
-                                        ${customerActionStatusenum.name}
-                                    </c:if>
-                                </c:forEach>
+                                ${savedRpLineItem.customerActionStatus.primary}
                             </td>
                             <td>
                                 <s:textarea style="width: 300px; height: 60px;"

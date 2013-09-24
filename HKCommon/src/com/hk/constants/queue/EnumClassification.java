@@ -49,7 +49,16 @@ public enum EnumClassification {
     MRP_MISMATCH_DEARER(680L, "Mrp Mismatch", "Invoice MRP < 50% Product MRP && Diff > 1000"),
     DISPATCH_ISSUE_COURIER_CHANGE(690L, "Dispatch Issue", "Courier service changed"),
     INV_PRESENT_DIFF_WAREHOUSE(1560L, "SO Not cancelled automatically", "Inventory found in other warehouse"),
-    JIT_IN_SO(1570L, "SO Not cancelled automatically", "No inventory only for JIT items")
+    JIT_IN_SO(1570L, "SO Not cancelled automatically", "No inventory only for JIT items"),
+
+    Refund_In_Cash(2010l,"Refund in Cash", "Reconcile"),
+    Refund_Reward_Points(2020l,"Refund Reward Points", "Reconcile"),
+    Replacement_Order(2030l,"Replacement Order", "Reconcile"),
+    Decide_Later(2040l,"Decide Later", "Reconcile"),
+    Pending_Approval(2110l,"Pending Approval", "Approval"),
+    Approved(2120l,"Approved", "Approval"),
+    Force_Approval(2130l,"Force Approval", "Approval"),
+
     ;
 
 

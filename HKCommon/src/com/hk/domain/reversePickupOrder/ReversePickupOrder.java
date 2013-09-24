@@ -63,7 +63,6 @@ public class ReversePickupOrder {
     @Column(name = "courier_managed_by")
     private Long courierManagedBy;
 
-
     @Column(name = "courier_name")
     private String courierName;
 
