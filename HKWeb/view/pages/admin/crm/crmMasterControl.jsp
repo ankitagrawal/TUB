@@ -126,12 +126,12 @@
         <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
             <table>
                 <tr>
-                    <td>Choose action:</td>
+                    <td>Choose action on:</td>
                     <td><s:select name="actionType" id="actionType" >
                         <s:option value="none">-- Select --</s:option>
-                        <s:option id="addRewardPoints" value="addRewardPoints">Add Reward Points</s:option>
+                        <s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
                         <s:option id="refund" value="refund">Refund</s:option>
-                        <s:option id="replacementOrder" value="replacementOrder">Create Replacement Order</s:option>
+                        <s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
                     </s:select>
                     </td>
                 </tr>
