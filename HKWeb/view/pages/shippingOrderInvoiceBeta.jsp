@@ -456,7 +456,14 @@
         </tr>
         <tr>
             <td>Discount ${baseOrder.offerInstance.coupon.code}</td>
-            <td>
+            <c:choose>
+                <c:when test="${orderSummary.invoiceDto.totalDiscount > 0}">
+                    <td class="fnt-bold">
+                </c:when>
+                <c:otherwise>
+                    <td>
+                </c:otherwise>
+            </c:choose>
                 <fmt:formatNumber
                         value="${orderSummary.invoiceDto.totalDiscount}"
                         type="currency" currencySymbol="Rs. "/>
