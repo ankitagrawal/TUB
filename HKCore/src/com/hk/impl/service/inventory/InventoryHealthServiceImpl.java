@@ -746,32 +746,29 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           infos = new Gson().fromJson(data, listType);
         }else {
           ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-          foreignSkuItemCLI.setCartLineItem(null);
-//          cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-//
-//          if (cartLineItem != null) {
-//            cartLineItem.setForeignSkuItemCLIs(null);
-//          }
+          cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
+          if (cartLineItem != null) {
+            cartLineItem.setForeignSkuItemCLIs(null);
+          }
           getBaseDao().delete(foreignSkuItemCLI);
 
         }
       } catch (Exception e) {
         logger.error("Exception while booking Bright Inventory against BO# so removing the entry from fsicli id " + cartLineItem.getOrder().getId() + e.getMessage());
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-        foreignSkuItemCLI.setCartLineItem(null);
-//        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-//        if (cartLineItem != null) {
-//          cartLineItem.setForeignSkuItemCLIs(null);
-//        }
+        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
+        if (cartLineItem != null) {
+          cartLineItem.setForeignSkuItemCLIs(null);
+        }
         getBaseDao().delete(foreignSkuItemCLI);
       }
       if (infos == null || infos.size() <= 0){
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
         foreignSkuItemCLI.setCartLineItem(null);
-//        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-//        if (cartLineItem != null) {
-//          cartLineItem.setForeignSkuItemCLIs(null);
-//        }
+        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
+        if (cartLineItem != null) {
+          cartLineItem.setForeignSkuItemCLIs(null);
+        }
         getBaseDao().delete(foreignSkuItemCLI);
       } else if (infos != null && infos.size() > 0) {
         updateForeignSICLITable(infos);
@@ -1102,7 +1099,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
       }
       if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1){
-//        skuItemLineItemService.
+
       }
     } else {
       // Bright call
@@ -1119,7 +1116,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     return true;
   }
+
 */
+
   public BaseDao getBaseDao() {
     return baseDao;
   }
