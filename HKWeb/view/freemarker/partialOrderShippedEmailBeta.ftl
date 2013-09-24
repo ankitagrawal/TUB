@@ -38,16 +38,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
             <#list order.lineItems as lineItem>
                 <tr>
 
-                    <td>${lineItem.sku.productVariant.product.name}
-                        <#if lineItem.sku.productVariant.variantName??>
-                        ${lineItem.sku.productVariant.variantName}
-                        </#if>
-                        <br/>
+                    <td>${lineItem.sku.productVariant.name}
 
-                        <#list lineItem.sku.productVariant.productOptions as
-                        productOption>
-                            <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-                        </#list>
                     </td>
                     <td>
                     ${lineItem.qty}
@@ -89,16 +81,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                     <#list shippingOrder.lineItems as lineItem>
                         <tr>
-                            <td>${lineItem.sku.productVariant.product.name}
-                                <#if lineItem.sku.productVariant.variantName??>
-                                ${lineItem.sku.productVariant.variantName}
-                                </#if>
-                                <br/>
+                            <td>${lineItem.sku.productVariant.name}
 
-                                <#list lineItem.sku.productVariant.productOptions as
-                                productOption>
-                                    <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-                                </#list>
                             </td>
                             <td>
                             ${lineItem.qty}
@@ -133,16 +117,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                 <#list shippingOrder.lineItems as lineItem>
                     <tr>
-                        <td>${lineItem.sku.productVariant.product.name}
-                            <#if lineItem.sku.productVariant.variantName??>
-                            ${lineItem.sku.productVariant.variantName}
-                            </#if>
-                            <br/>
+                        <td>${lineItem.sku.productVariant.name}
 
-                            <#list lineItem.sku.productVariant.productOptions as
-                            productOption>
-                                <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-                            </#list>
                         </td>
                         <td>
                         ${lineItem.qty}
@@ -157,7 +133,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
     </#list>
 
     <tr>
-        <td colspan="2">
+        <td colspan="2" style="padding-bottom: 10px">
             <br/>
             <br/>
 

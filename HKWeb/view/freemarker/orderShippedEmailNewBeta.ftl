@@ -11,7 +11,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 <#include "headerBeta.ftl">
     <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
-        <td colspan="2"><a href="http://www.healthkart.com"><img
+        <td style="padding-top:15px" colspan="2"><a href="http://www.healthkart.com"><img
                 src="http://img.healthkart.com/email/order_shipped_email_new/main_banner.jpg"
                 width="500"
                 height="148" alt="Just waiting eagerly to come home..." border="0"/></a>
@@ -19,7 +19,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
     </tr>
 
     <tr>
-        <td colspan="2">
+        <td colspan="2" style="padding-top: 10px">
 
             Following items of your order ${order.baseOrder.gatewayOrderId}, placed
             on ${order.baseOrder.payment.paymentDate} have been dispatched.
@@ -30,7 +30,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
     </tr>
 
     <tr>
-        <td style="padding-top: 35px;padding-bottom: 10px">Hi ${order.baseOrder.address.name}!<br/>
+        <td colspan="2" style="padding-top: 35px;padding-bottom: 10px">Hi ${order.baseOrder.address.name}!<br/>
 
             <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
                 <tr>
@@ -43,16 +43,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
             <#list order.lineItems as lineItem>
                 <tr>
 
-                    <td>${lineItem.sku.productVariant.product.name}
-                        <#if lineItem.sku.productVariant.variantName??>
-                        ${lineItem.sku.productVariant.variantName}
-                        </#if>
-                        <br/>
+                    <td>${lineItem.sku.productVariant.name}
 
-                        <#list lineItem.sku.productVariant.productOptions as
-                        productOption>
-                            <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-                        </#list>
                     </td>
                     <td>
                     ${lineItem.qty}
@@ -79,17 +71,17 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
     <#if shippingOrderAlreadySentList??>
         <#list shippingOrderAlreadySentList as shippingOrder>
         <tr>
-    <td colspan="2">
-        <br>
-        <#if shippingOrder.shipment.shipDate??>
-            Following items were dispatched earlier on ${shippingOrder.shipment.shipDate?date} via a different
-            shipment <br><br>
-        <#else >
-            Following items were dispatched earlier via a different shipment <br><br>
-        </#if>
+            <td colspan="2">
+                <br>
+                <#if shippingOrder.shipment.shipDate??>
+                    Following items were dispatched earlier on ${shippingOrder.shipment.shipDate?date} via a different
+                    shipment <br><br>
+                <#else >
+                    Following items were dispatched earlier via a different shipment <br><br>
+                </#if>
 
-    </td>
-</tr>
+            </td>
+        </tr>
 
         <tr>
 
@@ -103,16 +95,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                     <#list shippingOrder.lineItems as lineItem>
                         <tr>
-                            <td>${lineItem.sku.productVariant.product.name}
-                                <#if lineItem.sku.productVariant.variantName??>
-                                ${lineItem.sku.productVariant.variantName}
-                                </#if>
-                                <br/>
+                            <td>${lineItem.sku.productVariant.name}
 
-                                <#list lineItem.sku.productVariant.productOptions as
-                                productOption>
-                                    <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-                                </#list>
                             </td>
                             <td>
                             ${lineItem.qty}
@@ -128,7 +112,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
         </#list>
     </#if>
     <tr>
-        <td colspan="2" valign="top">
+        <td style="padding-bottom:15px" colspan="2" valign="top">
             <br/>
             <br/>
 

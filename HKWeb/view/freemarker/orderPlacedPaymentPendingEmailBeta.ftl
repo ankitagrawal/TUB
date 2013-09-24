@@ -8,10 +8,10 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
 <#include "headerBeta.ftl">
     <tbody>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">Hi ${order.user.name}!,</td>
+        <td colspan="2" style="margin-bottom:1em;padding-bottom: 15px;padding-top: 15px">Hi ${order.user.name}!,</td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">
+        <td colspan="2" style="padding-top:15px;margin-bottom:1em">
             Thanks for placing an order with us. We have received the order but the payment authorization is currently
             pending
             from the payment gateway.
@@ -23,14 +23,14 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
         </td>
     </tr>
     <tr>
-        <td style="margin-bottom:1em">Here are your order details for the order
+        <td colspan="2" style="margin-bottom:1em; padding-top: 15px">Here are your order details for the order
             <strong> ${order.gatewayOrderId}</strong>
             placed
             on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></td>
     </tr>
 
     <tr>
-        <td>
+        <td colspan="2" style="padding-top: 15px;padding-bottom: 15px">
             <h3>Order Details</h3>
         <#--<h5>No of shipping addresses - ${pricingDto.shippingLineCount}</h5>-->
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
@@ -43,14 +43,9 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.product.name}
-                        <#if productLineItem.productVariant.variantName??>
-                        ${productLineItem.productVariant.variantName}
-                        </#if>
-                        <br/>
-                        <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
-                    ${productOption.name} ${productOption.value}
-                    </#list></em>
+                    <td>${productLineItem.productVariant.name}
+
+
                     </td>
                     <td>
                     <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
@@ -101,7 +96,7 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
         </td>
     </tr>
     <tr>
-        <td>
+        <td style="padding-bottom: 15px;padding-top: 15px;margin-bottom: 1em">
             <h3>Order Summary</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -138,7 +133,7 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
         </td>
     </tr>
     <tr>
-        <td>
+        <td colspan="2" style="padding-bottom: 15px;padding-top: 15px">
             <h3>Other Details</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -169,7 +164,7 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
 
     <h3>Shipping Address & Customer details</h3>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">
+        <td colspan="2" style="margin-bottom:1em;padding-bottom: 15px;padding-top: 15px">
         ${order.address.name}<br/>
         ${order.address.line1}<br/>
         <#if order.address.line2??>
@@ -184,7 +179,7 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
         <td colspan="2" style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</td>
     </tr>
 
-    <#--<#include "orderNote.ftl">-->
+
     <tr>
         <td colspan="2" style="padding-bottom:10px; margin-bottom:1em"><strong>HealthKart.com</strong></td>
     </tr>
