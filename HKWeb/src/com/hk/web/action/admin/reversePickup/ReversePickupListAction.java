@@ -20,10 +20,7 @@ import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,6 +57,12 @@ public class ReversePickupListAction extends BasePaginatedAction {
     @DefaultHandler
     public Resolution pre() {
         reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, EnumReversePickupStatus.getHealthKartManagedRPStatus(), courierName, getPageNo(), getPerPage());
+        reversePickupOrderList = reversePickupPage.getList();
+        return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
+    }
+
+    public Resolution search() {
+        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, Arrays.asList(reversePickupStatus), courierName, getPageNo(), getPerPage());
         reversePickupOrderList = reversePickupPage.getList();
         return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
     }
