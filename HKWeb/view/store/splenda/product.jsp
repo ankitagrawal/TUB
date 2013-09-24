@@ -9,16 +9,16 @@
 <body>
 <div class="row header">
 	<div class="headerInr">
-    	<div class="splendaLogo"><a href="index.jsputm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/splenda.png" alt="Splenda" /></a></div>
+    	<div class="splendaLogo"><a href="index.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/splenda.png" alt="Splenda" /></a></div>
       <div class="headerRightBar">
        	  	<div class="socialIconsHeader">
-           	 	<a href="https://www.facebook.com/DiabetesSweetAndSimple/app_326983627416726utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-facebook.jpg" alt="Facebook" /></a>
-                <a href="https://twitter.com/Splendaindiautm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-twitter.jpg" alt="Twitter" /></a>
+           	 	<a href="https://www.facebook.com/DiabetesSweetAndSimple/app_326983627416726?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-facebook.jpg" alt="Facebook" /></a>
+                <a href="https://twitter.com/Splendaindia?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-twitter.jpg" alt="Twitter" /></a>
                 <a href="#"><img src="images/icon-pinterest.jpg" alt="Pinterest" /></a>
                 <a href="#"><img src="images/icon-blog.jpg" alt="Blog" /></a>
             </div>
             <div class="clr"></div>
-            <div class="healthkartLogo"><a href="http://www.healthkart.comutm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/healthkart-dot-com.png" alt="HealthKart.com" /></a></div>
+            <div class="healthkartLogo"><a href="http://www.healthkart.com?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/healthkart-dot-com.png" alt="HealthKart.com" /></a></div>
         </div>
         <div class="clr"></div>
     </div>
@@ -26,11 +26,11 @@
 <div class="bgNav">
 	<div class="nav">
     	<ul>
-        	<li><a href="index.jsputm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">Home</a></li>
-            <li><a href="product.jsputm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" class="selected">Product</a></li>
-            <li><a href="hundred-percent-taste.jsputm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">100% Taste</a></li>
-            <li><a href="zero-percent-compromise.jsputm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">0% Compromise</a></li>
-            <li class="lastLi"><a href="worlds-number-one-sweetener.jsputm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">World's No. 1 Sweetener</a></li>
+        	<li><a href="index.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">Home</a></li>
+            <li><a href="product.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" class="selected">Product</a></li>
+            <li><a href="hundred-percent-taste.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">100% Taste</a></li>
+            <li><a href="zero-percent-compromise.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">0% Compromise</a></li>
+            <li class="lastLi"><a href="worlds-number-one-sweetener.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">World's No. 1 Sweetener</a></li>
         </ul>
     </div>
 </div>
@@ -42,7 +42,7 @@
             <div class="row proLRBoxesGap">
             	<div class="productLeftBar">
                 	<div class="row"><img src="images/splenda-sachet.jpg" alt="splenda Sachet" /></div>
-                    <div class="row buyNowBtns"><a href="http://www.healthkart.com/product/splenda-sachets/NUT104utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/buy-now-btn1.jpg" alt="Buy Now" /></a></div>
+                    <div class="row buyNowBtns"><a href="http://www.healthkart.com/product/splenda-sachets/NUT104?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/buy-now-btn1.jpg" alt="Buy Now" /></a></div>
                 </div>
                 <div class="productRightBar">
                 	<div class="row">
@@ -68,7 +68,7 @@
             <div class="row proLRBoxesGap">
             	<div class="productLeftBar">
                 	<div class="row"><img src="images/sweet-minis.jpg" alt="Sweet Minis" /></div>
-                    <div class="row buyNowBtns"><a href="http://www.healthkart.com/product/splenda-tablets/NUT103utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/buy-now-btn1.jpg" alt="Buy Now" /></a></div>
+                    <div class="row buyNowBtns"><a href="http://www.healthkart.com/product/splenda-tablets/NUT103?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/buy-now-btn1.jpg" alt="Buy Now" /></a></div>
                 </div>
               <div class="productRightBar">
               			<div class="productSmallPic"><img src="images/minis-cubes.jpg" /></div>
@@ -96,7 +96,7 @@
 </div>
 
 <div class="footer">	
-	<div class="footerData"><a href="http://www.healthkart.com/pages/termsAndConditions.jsputm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank">Terms & Conditions</a></div>
+	<div class="footerData"><a href="http://www.healthkart.com/pages/termsAndConditions.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank">Terms & Conditions</a></div>
 
 </div>
 
