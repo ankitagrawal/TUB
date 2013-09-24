@@ -161,7 +161,7 @@ public class UserOrderResource {
         return response;
     }
 
-    @POST
+    /*@POST
     @Path("/order/source/{source}/order/{orderId}/action/{action}")
     @Produces("application/json")
     @Encoded
@@ -235,7 +235,83 @@ public class UserOrderResource {
             bucketService.updateCODBucket(userCodCall.getBaseOrder());
         }
         return response;
+    }*/
+
+
+    @POST
+    @Path("/order/source/{source}/order/{orderId}/action/{action}")
+    @Produces("application/json")
+    @Encoded
+    public Response changeOrderStatus(@PathParam("orderId") Long orderId,
+                                      @PathParam("source") String source,
+                                      @PathParam("action") String action,
+                                      @QueryParam("authToken") String authToken
+    ) {
+        String key = authToken;
+        Response response = null;
+        User loggedInUser = null;
+        loggedInUser = userService.getAdminUser();
+        Order order = orderService.find(orderId);
+        UserCodCall userCodCall = null;
+
+        String decryptKey = CryptoUtil.decrypt(key);
+        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        try {
+            userCodCall = order.getUserCodCall();
+            userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_DRISHTI.getId());
+            userCodCall.setRemark(source);
+
+            if (!(order.isCOD())) {
+                logger.debug("Order is not COD" + order.getId());
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            if (action.equalsIgnoreCase(HKAPIConstants.CANCELLED)) {
+                if (order.getOrderStatus().getId().equals(EnumOrderStatus.Cancelled.getId())) {
+                    logger.debug("Order Already Cancelled" + order.getId());
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                adminOrderService.cancelOrder(order, EnumCancellationType.Cod_Authorization_Failure.asCancellationType(), source, loggedInUser, null);
+                userCodCall.setRemark("Cancelled By " + source);
+                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+            } else if (action.equalsIgnoreCase(HKAPIConstants.CONFIRMED)) {
+                List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
+                if (order.getPayment() != null && (paymentStatusListForSuccessfulOrder.contains(order.getPayment().getPaymentStatus().getId()))) {
+                    logger.debug("Order Payment Already Confirmed" + order.getId());
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                adminOrderService.confirmCodOrder(order, source, null);
+                userCodCall.setRemark("Confirmed By " + source);
+                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+            } else if (action.equalsIgnoreCase(HKAPIConstants.HEALTHKART)) {
+                userCodCall.setRemark(source);
+                userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
+            }
+            userCodCall = orderService.saveUserCodCall(userCodCall);
+            return Response.status(Response.Status.OK).build();
+        } catch (DataIntegrityViolationException dataInt) {
+            logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status: " + dataInt.getMessage());
+        } catch (Exception ex) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Unable to change order status ", ex);
+            userCodCall.setRemark(action + " Request From Admin Failed..");
+            try {
+                orderService.saveUserCodCall(userCodCall);
+            } catch (DataIntegrityViolationException dataInt) {
+                logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status in try catch block: " + dataInt.getMessage());
+            } catch (Exception exp) {
+                logger.error("Unable to save user_cod record..", exp);
+            }
+        }
+        if (userCodCall != null) {
+            bucketService.updateCODBucket(userCodCall.getBaseOrder());
+        }
+        return response;
     }
+
+
 
     /**
      * internal class just for helping with JSON Marshalling

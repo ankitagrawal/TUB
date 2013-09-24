@@ -16,7 +16,9 @@ public enum EnumUserCodCalling {
     CANCELLED(40, "Cancelled"),
     PAYMENT_FAILED(50, "Payment Failed"),
     PENDING_WITH_EFFORT_BPO(60, "Pending With Effort Bpo"),
-    PENDING_WITH_HEALTHKART(70, "Pending With Healthkart");
+    PENDING_WITH_HEALTHKART(70, "Pending With Healthkart"),
+    PENDING_WITH_DRISHTI(80, "Pending with Drishti"),
+    ;
 
     private int id;
     private String name;
