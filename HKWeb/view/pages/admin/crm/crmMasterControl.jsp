@@ -23,16 +23,16 @@
 <c:set var="shippingOrderStatusRTO_instantiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
 <c:set var="shippingOrderStatusSO_returned" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <s:layout-component name="heading">
-    Master CRM fesolution Screen
+    Master CRM Resolution Screen
 </s:layout-component>
 
 <s:layout-component name="content">
 
 <script>
     $(document).ready(function(){
-        var viewRefund = ${cpa.refundFlag};
-        var viewReward = ${rpBean.rewardFlag};
-        var viewReplacement = ${replacementOrderBean.replacementFlag};
+        var viewRefund = "${cpa.refundFlag}";
+        var viewReward = "${rpBean.rewardFlag}";
+        var viewReplacement = "${replacementOrderBean.replacementFlag}";
 
         $('#rewardDiv').hide();
         $('#refundDiv').hide();
@@ -139,7 +139,7 @@
 
 <div id="rewardDiv">
     <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
-        <fieldset class="left_label">
+        <fieldset style="width:60%">
             <label style="color: #ff0000; font-weight: bold; font-size: 25px;">Reward Points given due
                 to cancellations will not be given from this screen. They will be given automatically</label>
             <table>
@@ -154,16 +154,19 @@
                     <td>
                         <s:select name="rewardPointMode"><hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
                         </s:select>
-                    </td>Expiry Date<td></td>
+                    </td>
+                    <td>Expiry Date</td>
                     <td><s:text name="expiryDate" class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/></td>
                 </tr>
                 <tr>
                     <td>Comment</td>
                     <td><s:textarea name="comment"/></td>
+                    <td></td>
+                    <td><s:submit name="add" value="Add"/></td>
                 </tr>
             </table>
         </fieldset>
-        <s:submit name="add" value="Add"/>
+
     </s:form>
 </div>
 <!-- Reward Points block ends -->
@@ -282,19 +285,28 @@
     <s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="checkReplacementOrderLink"
             event="checkExistingReplacementOrder"></s:link>
 </div>
-<fieldset class="right_label">
+<fieldset style="width: 60%;">
     <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
-        <label>Search Shipping Order</label>
-        <br/><br/>
-        <label>Shipping order id: </label>
-        <s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/>
-        <br/>
-        <br/>
-        <label>Gateway order id: </label>
-        <s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/>
-        <br/>
-        <br/>
-        <s:submit name="searchShippingOrder" value="Search"/>
+        <table>
+            <tr>
+                <td>
+                    <label>Search Shipping Order</label>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Shipping order ID:</td>
+                <td><s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
+            </tr>
+            <tr><td>Gateway order ID:</td>
+                <td><s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td> <s:submit name="searchShippingOrder" value="Search"/>
+                </td>
+            </tr>
+        </table>
     </s:form>
 </fieldset>
 
