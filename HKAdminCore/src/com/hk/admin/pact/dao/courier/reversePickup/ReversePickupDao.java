@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface ReversePickupDao extends BaseDao {
 
-    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, ReversePickupStatus reversePickupStatus, String courierName, int pageNo, int perPage);
+    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, int pageNo, int perPage);
 
     public List<ReversePickupOrder> getReversePickupsForSO(ShippingOrder shippingOrder);
 
