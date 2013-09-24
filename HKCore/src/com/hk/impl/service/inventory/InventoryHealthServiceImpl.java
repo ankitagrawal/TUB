@@ -747,9 +747,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }else {
           ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
           cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-          if (cartLineItem != null) {
-            cartLineItem.setForeignSkuItemCLIs(null);
-          }
+          cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+          getBaseDao().save(cartLineItem);
           getBaseDao().delete(foreignSkuItemCLI);
 
         }
@@ -757,9 +756,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         logger.error("Exception while booking Bright Inventory against BO# so removing the entry from fsicli id " + cartLineItem.getOrder().getId() + e.getMessage());
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
         cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-        if (cartLineItem != null) {
-          cartLineItem.setForeignSkuItemCLIs(null);
-        }
+        cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+        getBaseDao().save(cartLineItem);
         getBaseDao().delete(foreignSkuItemCLI);
       }
       if (infos == null || infos.size() <= 0){
@@ -768,7 +766,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 //        if (cartLineItem != null) {
 //          cartLineItem.setForeignSkuItemCLIs(null);
 //        }
-         cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+        cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
         getBaseDao().save(cartLineItem);
         getBaseDao().delete(foreignSkuItemCLI);
       } else if (infos != null && infos.size() > 0) {

@@ -770,14 +770,14 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       ForeignSkuItemCLI foreignSkuItemCLI = getForeignSkuItemCLI(info.getFsiCLIId());
       foreignSkuItemCLI.setProcessedStatus(info.getProcessed());
       SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
-      skuItem.setForeignSkuItemCLI(null);
-      skuItems.add(skuItem);
+      if (skuItem != null) {
+        skuItem.setForeignSkuItemCLI(null);
+        skuItems.add(skuItem);
+      }
       fsiclis.add(foreignSkuItemCLI);
       CartLineItem cartLineItem = foreignSkuItemCLI.getCartLineItem();
-      if (cartLineItem != null) {
-        cartLineItem.setForeignSkuItemCLIs(null);
-      }
-
+      cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+      baseDao.save(cartLineItem);
     }
 
     baseDao.deleteAll(skuItems);
@@ -955,10 +955,18 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         SkuItem skuItem = getSkuItem(fsiliId);
         SkuItemLineItem skuItemLineItem =  skuItemLineItemDao.getSkuItemLineItem(skuItem);
         SkuItemCLI skuItemCLI =   skuItemLineItemDao.getSkuItemCLI(skuItem);
-        skuItemLineItem.setLineItem(null);
+
+        LineItem lineItem = skuItemLineItem.getLineItem();
+        lineItem.getSkuItemLineItems().remove(skuItemLineItem);
+
+        CartLineItem cartLineItem = skuItemCLI.getCartLineItem();
+        cartLineItem.getSkuItemCLIs().remove(skuItemCLI);
+
         skuItemLineItem.setSkuItemCLI(null);
         skuItem.setForeignSkuItemCLI(null);
-        skuItemCLI.setCartLineItem(null);
+
+        cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+
         baseDao.delete(skuItemLineItem);
         baseDao.delete(skuItemCLI);
         baseDao.delete(skuItem);
