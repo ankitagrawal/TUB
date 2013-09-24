@@ -208,7 +208,7 @@ public class ReplacementOrderAction extends BaseAction {
 		}
 		if (shippingOrder == null) {
 			addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
-      return  new ForwardResolution(MasterResolutionAction.class).addParameter("replacementFlag",replacementFlag);
+      return  new ForwardResolution(MasterResolutionAction.class);
 			//return new ForwardResolution("/pages/admin/searchReplacementOrder.jsp");
 		}
 		replacementOrderList = replacementOrderService.getReplacementOrderForRefShippingOrder(shippingOrder.getId());

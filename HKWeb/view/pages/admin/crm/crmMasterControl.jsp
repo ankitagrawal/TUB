@@ -122,9 +122,27 @@
 </script>
 
 <div>
-    <fieldset style="width: 25%;">
-        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
+    <fieldset style="width: 60%;">
+        <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
             <table>
+                <tr>
+                    <td>
+                        <label>Search Shipping Order</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Shipping order ID:</td>
+                    <td><s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
+                </tr>
+                <tr><td>Gateway order ID:</td>
+                    <td><s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td> <s:submit name="searchShippingOrder" value="Search"/>
+                    </td>
+                </tr>
                 <tr>
                     <td>Choose action on:</td>
                     <td><s:select name="actionType" id="actionType" >
@@ -135,7 +153,6 @@
                     </s:select>
                     </td>
                 </tr>
-
             </table>
         </s:form>
     </fieldset>
@@ -183,7 +200,7 @@
             <br>
             <table>
                 <tr>
-                    <td><label>Enter Payment Gateway Order Id</label></td>
+                    <td><label>Enter Payment Gateway Id</label></td>
                     <td><s:text name="gatewayOrderId" id = "gatewayOrderId" style="width:180px;height:25px;"/></td>
                 </tr>
 
@@ -288,30 +305,6 @@
     <s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="checkReplacementOrderLink"
             event="checkExistingReplacementOrder"></s:link>
 </div>
-<fieldset style="width: 60%;">
-    <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
-        <table>
-            <tr>
-                <td>
-                    <label>Search Shipping Order</label>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Shipping order ID:</td>
-                <td><s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
-            </tr>
-            <tr><td>Gateway order ID:</td>
-                <td><s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td> <s:submit name="searchShippingOrder" value="Search"/>
-                </td>
-            </tr>
-        </table>
-    </s:form>
-</fieldset>
 
 <c:if test="${!empty replacementOrderBean.shippingOrder}">
     <fieldset style="float:left;">
