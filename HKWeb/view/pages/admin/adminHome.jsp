@@ -113,7 +113,7 @@
                 beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction"> Add/Assign Roles and Permissions </s:link></h3>
     </shiro:hasRole>
 
-    <shiro:hasPermission name="<%=PermissionConstants.NEW_REVERSE_PICKUP%>">
+    <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
     <h3><s:link
             beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
     </shiro:hasPermission>
