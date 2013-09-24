@@ -58,6 +58,19 @@ public enum EnumReversePickupStatus {
         return reversePickupStatus;
     }
 
+    public List<ReversePickupStatus> getPreRPStatusList(){
+        return Arrays.asList(
+                EnumReversePickupStatus.RPU_Initiated.asReversePickupStatus(),
+                EnumReversePickupStatus.RPU_Picked.asReversePickupStatus(),
+                EnumReversePickupStatus.RPU_Received.asReversePickupStatus(),
+                EnumReversePickupStatus.RPU_Scheduled.asReversePickupStatus(),
+//                EnumReversePickupStatus.Return_Initiated.asReversePickupStatus(),
+//                EnumReversePickupStatus.Return_Received.asReversePickupStatus(),
+                EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus(),
+                EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus(),
+                EnumReversePickupStatus.RPU_APPROVED.asReversePickupStatus());
+    }
+
     public Long getId() {
         return id;
     }

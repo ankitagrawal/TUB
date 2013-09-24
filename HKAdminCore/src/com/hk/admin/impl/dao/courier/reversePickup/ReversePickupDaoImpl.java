@@ -13,6 +13,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,15 +26,17 @@ import java.util.List;
  */
 @Repository
 public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDao {
-    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, ReversePickupStatus reversePickupStatus, String courierName, int pageNo, int perPage) {
-        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatus, courierName);
+
+    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, int pageNo, int perPage) {
+        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, reversePickupId,
+                startDate, endDate, customerActionStatus, reversePickupStatusList, courierName);
         reversePickupCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
         return list(reversePickupCriteria, true, pageNo, perPage);
     }
 
     private DetachedCriteria getReversePickupOrderDetachedCriteria(ShippingOrder shippingOrder, String reversePickupId,
                                  Date startDate, Date endDate, Long customerActionStatus,
-                                 ReversePickupStatus reversePickupStatus, String courierName) {
+                                 List<ReversePickupStatus> reversePickupStatusList, String courierName) {
         DetachedCriteria reversePickupDetachedCriteria = DetachedCriteria.forClass(ReversePickupOrder.class);
         if (shippingOrder != null) {
             reversePickupDetachedCriteria.add(Restrictions.eq("shippingOrder.id", shippingOrder.getId()));
@@ -44,11 +47,9 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         if (courierName != null && !StringUtils.isEmpty(courierName)) {
             reversePickupDetachedCriteria.add(Restrictions.eq("courierName", courierName));
         }
-        if(reversePickupStatus != null){
-            reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupStatus.id",reversePickupStatus.getId()));
-        }
-        else{
-            reversePickupDetachedCriteria.add(Restrictions.ne("reversePickupStatus.id", EnumReversePickupStatus.RPU_CANCEL.getId()));
+
+        if(reversePickupStatusList != null){
+            reversePickupDetachedCriteria.add(Restrictions.in("reversePickupStatus", reversePickupStatusList));
         }
 
         if (reversePickupId != null) {
