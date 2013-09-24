@@ -116,71 +116,91 @@
     </div>
     <s:layout-component name="scriptComponent">
         <script type="text/javascript">
-            $(document).ready(function(){
+          $(document).ready(function () {
 
-                function goToTop() {
-                    $(window).scroll(function (e) {
-                        if ($(window).scrollTop() > 100) {
-                            $('.go-to-top-cntnr').css({
-                                position: 'fixed',
-                                top: '85%',
-                                right: '1%'
-                            }).fadeIn(500);
-                        } else {
-                            $('.go-to-top-cntnr').fadeOut(500);
-                        }
-                    });
+            function goToTop() {
+              $(window).scroll(function (e) {
+                if ($(window).scrollTop() > 100) {
+                  $('.go-to-top-cntnr').css({
+                    position: 'fixed',
+                    top: '85%',
+                    right: '1%'
+                  }).fadeIn(500);
+                } else {
+                  $('.go-to-top-cntnr').fadeOut(500);
                 }
-                goToTop();
-              function showErrMsg(ele, msg) {
-                var errorIcn = $("<span class='icn-warning-small err-icn' ></span>");
-                var errTxtMsg = $("<p class='err-txt'>" + msg + "</p>");
-                if (!$(ele).hasClass('err-brdr')) {
-                  $(ele).addClass('err-brdr');
-                  $(ele).after(errorIcn);
-                  $(ele).after(errTxtMsg);
-                  return true
+              });
+            }
+
+            goToTop();
+
+            function showErrMsg(ele, msg) {
+              var errorIcn = $("<span class='icn-warning-small err-icn' ></span>");
+              var errTxtMsg = $("<p class='err-txt'>" + msg + "</p>");
+              if (!$(ele).hasClass('err-brdr')) {
+                $(ele).addClass('err-brdr');
+                $(ele).after(errorIcn);
+                $(ele).after(errTxtMsg);
+                return true
+              }
+            }
+
+            function hideErrMsg(ele) {
+              $(ele).removeClass('err-brdr');
+              $(ele).next('.err-txt').remove();
+              $(ele).next('.icn-warning-small').remove();
+
+            }
+
+            $('[name=submitSubscription]').click(function (event) {
+              var doSubmit = true;
+              var regexEMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+              if (!($('[name=subscriptionEmail]').val().length > 0)) {
+                hideErrMsg('[name=subscriptionEmail]');
+                showErrMsg('[name=subscriptionEmail]', 'Please enter email address');
+                doSubmit = false;
+              }
+              else if (!regexEMAIL.test($('[name=subscriptionEmail]').val())) {
+                hideErrMsg('[name=subscriptionEmail]');
+                showErrMsg('[name=subscriptionEmail]', 'Email address is not valid');
+                doSubmit = false;
+              }
+              else {
+                hideErrMsg('[name=subscriptionEmail]');
+              }
+              if (!doSubmit) {
+                return false;
+              }
+              var currEle = $('#submitSubscription');
+              var email = $('#subscriptionEmail').val();
+              HK.element.loader.add(currEle, true);
+              var url = "/rest/api/subscribe/" + email;
+              var map = null;
+              var onSuccess = function (responseData) {
+                if (responseData.success) {
+                  HK.element.loader.remove(currEle, true);
+                  var suucessMsg = responseData.messages;
+                  HK.alert({title: 'Thank You !', content: suucessMsg, theme: HK.POPUP.THEME.ALERT});
+
                 }
-              }
-              function hideErrMsg(ele){
-                $(ele).removeClass('err-brdr');
-                $(ele).next('.err-txt').remove();
-                $(ele).next('.icn-warning-small').remove();
+                else  {
+                  HK.element.loader.remove(currEle, true);
+                  var errorMsg = responseData.msgs;
+                  HK.alert({title: 'Alert!', content: errorMsg + '.  Please <a href="/core/user/Signup.action">Click here</a> to create an account with us.', theme: HK.POPUP.THEME.ALERT});
 
-              }
-                $('[name=submitSubscription]').click(function (event) {
-                  var doSubmit = true;
-                    if (! ($('[name=subscriptionEmail]').val().length > 0)) {
-                        if(! $('[name=subscriptionEmail]').hasClass('err-brdr')){
-                            $('[name=subscriptionEmail]').addClass('err-brdr');
-                            $('#subscriptionEmail').after($("<p class='err-txt'>Please enter Email address</p>"));
-                            $('#subscriptionEmail').after($("<span class='icn-warning-small err-icn2' ></div>"));
-                        }
-                        doSubmit = false;
-                    }
-                    else {
+                }
+              };
+              var onError = function (xhr, a_status) {
+                HK.element.loader.remove(currEle, true);
+              };
+              HK.Ajax.postJson(url, map, onSuccess, onError);
 
-                        regexEMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-                        if (! regexEMAIL.test($('[name=subscriptionEmail]').val())) {
-                            if(! $('[name=subscriptionEmail]').hasClass('err-brdr')){
-                                $('[name=subscriptionEmail]').addClass('err-brdr');
-                                $('subscriptionEmail').after($("<p class='err-txt'>Email address is not valid</p>"));
-                                $('#subscriptionEmail').after($("<span class='icn-warning-small err-icn2' ></div>"));
-                            }
-                            doSubmit = false;
-                        }
-                        else{
-                            doSubmit = true;
-                        }
-                    }
-                    if (doSubmit != true) {
-                        event.preventDefault();
-                    }
-                });
             });
+          });
 
 
-            $('.go-to-top').click(function(e){
+          $('.go-to-top').click(function(e){
                 e.preventDefault();
                 $('html,body').animate({scrollTop: 0}, 300);
             })
