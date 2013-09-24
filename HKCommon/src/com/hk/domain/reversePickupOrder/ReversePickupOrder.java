@@ -56,6 +56,10 @@ public class ReversePickupOrder {
     @JoinColumn(name = "reverse_pickup_status_id", nullable = false)
     private ReversePickupStatus reversePickupStatus;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reverse_pickup_type_id", nullable = false)
+    private ReversePickupType reversePickupType;
+
     @Column(name = "courier_managed_by")
     private Long courierManagedBy;
 
@@ -181,5 +185,13 @@ public class ReversePickupOrder {
 
     public void setReversePickupId(String reversePickupId) {
         this.reversePickupId = reversePickupId;
+    }
+
+    public ReversePickupType getReversePickupType() {
+        return reversePickupType;
+    }
+
+    public void setReversePickupType(ReversePickupType reversePickupType) {
+        this.reversePickupType = reversePickupType;
     }
 }
