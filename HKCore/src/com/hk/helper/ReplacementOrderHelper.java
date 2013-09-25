@@ -21,25 +21,26 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
 public class ReplacementOrderHelper {
 
-    public static LineItem getLineItemForReplacementOrder(LineItem lineItem) {
-        LineItem replacementOrderLineItem = new LineItem();
-        replacementOrderLineItem.setSku(lineItem.getSku());
-//        replacementOrderLineItem.setShippingOrder(lineItem.getShippingOrder());
-        replacementOrderLineItem.setCartLineItem(lineItem.getCartLineItem());
-//        replacementOrderLineItem.setQty(lineItem.getQty());
-        replacementOrderLineItem.setCostPrice(lineItem.getCartLineItem().getProductVariant().getCostPrice());
-        replacementOrderLineItem.setMarkedPrice(lineItem.getCartLineItem().getMarkedPrice());
-        replacementOrderLineItem.setHkPrice(lineItem.getCartLineItem().getHkPrice());
-        replacementOrderLineItem.setDiscountOnHkPrice(lineItem.getCartLineItem().getDiscountOnHkPrice());
-        replacementOrderLineItem.setTax(lineItem.getSku().getTax());
-        replacementOrderLineItem.setQty(lineItem.getQty());
+    public static LineItem getLineItemForReplacementOrder(LineItem lineItem, Long qty) {
+      LineItem replacementOrderLineItem = new LineItem();
+      replacementOrderLineItem.setSku(lineItem.getSku());
+  //        replacementOrderLineItem.setShippingOrder(lineItem.getShippingOrder());
+      replacementOrderLineItem.setCartLineItem(lineItem.getCartLineItem());
+  //        replacementOrderLineItem.setQty(lineItem.getQty());
+      replacementOrderLineItem.setCostPrice(lineItem.getCostPrice());
+      replacementOrderLineItem.setMarkedPrice(lineItem.getCartLineItem().getMarkedPrice());
+      replacementOrderLineItem.setHkPrice(lineItem.getHkPrice());
+      double factor = qty / lineItem.getQty();
+      replacementOrderLineItem.setDiscountOnHkPrice(lineItem.getDiscountOnHkPrice() * factor);
+      replacementOrderLineItem.setTax(lineItem.getTax());
+      replacementOrderLineItem.setQty(qty);
 
-	    replacementOrderLineItem.setRewardPoints(lineItem.getRewardPoints());
-	    replacementOrderLineItem.setOrderLevelDiscount(lineItem.getOrderLevelDiscount());
-	    replacementOrderLineItem.setCodCharges(lineItem.getCodCharges());
-	    replacementOrderLineItem.setShippingCharges(lineItem.getShippingCharges());
+      replacementOrderLineItem.setRewardPoints(lineItem.getRewardPoints());
+      replacementOrderLineItem.setOrderLevelDiscount(lineItem.getOrderLevelDiscount()* factor);
+      replacementOrderLineItem.setCodCharges(lineItem.getCodCharges()* factor);
+      replacementOrderLineItem.setShippingCharges(lineItem.getShippingCharges()* factor);
 
-        return replacementOrderLineItem;
+      return replacementOrderLineItem;
     }
 
     public static ReplacementOrder getReplacementOrderFromShippingOrder(ShippingOrder shippingOrder,ShippingOrderStatusService shippingOrderStatusService, ReconciliationStatusDao reconciliationStatusDao) {
