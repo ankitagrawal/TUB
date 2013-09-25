@@ -214,6 +214,7 @@
         </tr>
         </thead>
         <c:set value="1" var="unitNo"/>
+${fn:length(revList.reversePickupOrderList)}
         <c:forEach items="${revList.reversePickupOrderList}" var="reversePickup" varStatus="revCount">
             <c:set value="${fn:length(reversePickup.rpLineItems)}" var="length"/>
             <c:set value="0" var="prevLineId"/>
