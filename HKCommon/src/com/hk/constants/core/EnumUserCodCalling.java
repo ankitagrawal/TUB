@@ -18,6 +18,7 @@ public enum EnumUserCodCalling {
     PENDING_WITH_EFFORT_BPO(60, "Pending With Effort Bpo"),
     PENDING_WITH_HEALTHKART(70, "Pending With Healthkart"),
     PENDING_WITH_DRISHTI(80, "Pending with Drishti"),
+    PENDING_WITH_CUSTOMER(110,"Pending with customer"),
     ;
 
     private int id;

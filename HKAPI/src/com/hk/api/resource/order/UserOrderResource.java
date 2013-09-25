@@ -178,17 +178,16 @@ public class UserOrderResource {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        if (source.equalsIgnoreCase("knowlarity")) {
-            return knowlarityChangeOrderStatus(orderId, action, source);
-        } else if (source.equalsIgnoreCase("drishti")) {
-            return drishtiChangeOrderStatus(orderId, action, source);
+        if (source.equalsIgnoreCase("drishti")) {
+            return smsChangeOrderStatus(orderId, action, source);
+        } else {
+            return callChangeOrderStatus(orderId,action,source);
         }
 
-        return response;
     }
 
 
-    private Response knowlarityChangeOrderStatus(Long orderId, String action, String source) {
+    private Response callChangeOrderStatus(Long orderId, String action, String source) {
 
         Response response = null;
         User loggedInUser = null;
@@ -256,7 +255,7 @@ public class UserOrderResource {
     }
 
 
-    private Response drishtiChangeOrderStatus(Long orderId, String action, String source) {
+    private Response smsChangeOrderStatus(Long orderId, String action, String source) {
 
         Response response = null;
         User loggedInUser = null;
@@ -266,9 +265,6 @@ public class UserOrderResource {
 
         try {
             userCodCall = order.getUserCodCall();
-            userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_DRISHTI.getId());
-            userCodCall.setSource(source);
-            userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_DRISHTI.getName());
 
             if (!(order.isCOD())) {
                 logger.debug("Order is not COD" + order.getId());
@@ -281,8 +277,9 @@ public class UserOrderResource {
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
                 adminOrderService.cancelOrder(order, EnumCancellationType.Cod_Authorization_Failure.asCancellationType(), source, loggedInUser, null);
-                userCodCall.setRemark("Cancelled By " + source);
+                userCodCall.setRemark("Cancelled By Customer");
                 userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+                userCodCall.setSource("Healthkart");
             } else if (action.equalsIgnoreCase(HKAPIConstants.CONFIRMED)) {
                 List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
                 if (order.getPayment() != null && (paymentStatusListForSuccessfulOrder.contains(order.getPayment().getPaymentStatus().getId()))) {
@@ -290,11 +287,13 @@ public class UserOrderResource {
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
                 adminOrderService.confirmCodOrder(order, source, null);
-                userCodCall.setRemark("Confirmed By " + source);
+                userCodCall.setRemark("Confirmed By Customer");
                 userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+                userCodCall.setSource("Healthkart");
             } else if (action.equalsIgnoreCase(HKAPIConstants.HEALTHKART)) {
-                userCodCall.setRemark(source);
+                userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getName());
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
+                userCodCall.setSource("Healthkart");
             }
             userCodCall = orderService.saveUserCodCall(userCodCall);
             return Response.status(Response.Status.OK).build();
