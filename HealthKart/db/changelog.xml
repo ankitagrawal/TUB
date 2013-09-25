@@ -14133,4 +14133,9 @@
             insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130926-1">
+        <addColumn tableName="user_cod_call">
+            <column name="source" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
