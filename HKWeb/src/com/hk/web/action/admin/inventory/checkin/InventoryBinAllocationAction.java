@@ -103,12 +103,15 @@ public class InventoryBinAllocationAction extends BaseAction {
 			if(skuItem==null){
 				returnVal = false;
 			}
+			else if (skuItem!=null && !skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())){
+				returnVal = false;
+			}
+			Bin bin = binDao.findByBarCodeAndWarehouse(firstLocation, warehouse);
+			if(bin == null){
+				returnVal = false;
+			}
 		}
 		catch(Exception e){
-			returnVal = false;
-		}
-		Bin bin = binDao.findByBarCodeAndWarehouse(firstLocation, warehouse);
-		if(bin == null){
 			returnVal = false;
 		}
 		return returnVal;
@@ -238,8 +241,16 @@ public class InventoryBinAllocationAction extends BaseAction {
 					for(String skuItemBarcode : skuItemBarcodes){
 						Bin bin = binDao.findByBarCodeAndWarehouse(binBarcode, warehouse);
 						SkuItem skuItem = skuItemDao.getSkuItemByBarcode(skuItemBarcode);
+						if(skuItem!=null && bin!=null){
+						if(!skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())){
+							return false;
+						}
 						skuItem.setBin(bin);
 						skuItem = (SkuItem) baseDao.save(skuItem);
+						}
+						else{
+							return false;
+						}
 					}
 				}
 			}
