@@ -31,8 +31,8 @@ public enum EnumReversePickupType {
 
     public ReversePickupType asReversePickupType() {
         ReversePickupType reversePickupType = new ReversePickupType();
-        reversePickupType.setId(this.getId());
-        reversePickupType.setName(this.getName());
+        reversePickupType.setId(id);
+        reversePickupType.setName(name);
         return reversePickupType;
     }
 

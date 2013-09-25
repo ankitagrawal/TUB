@@ -315,12 +315,16 @@
 
 <div class="clear" style="margin: 1em auto"></div>
 
-<s:select name="reversePickupOrder.reversePickupType">
-    <s:option value="">--Select-- </s:option>
-    <c:forEach items="<%=EnumReversePickupType.getRPTypeList()%>" var="reversePickupType">
-        <s:option value="${reversePickupType.id}">${reversePickupType.name}</s:option>
-    </c:forEach>
-</s:select>
+<div class="font courier-detail">
+    <div style="float: left">
+        <s:select name="reversePickupOrder.reversePickupType">
+            <s:option value="">--Select-- </s:option>
+            <c:forEach items="<%=EnumReversePickupType.getRPTypeList()%>" var="reversePickupType">
+                <s:option value="${reversePickupType.id}">${reversePickupType.name}</s:option>
+            </c:forEach>
+        </s:select>
+    </div>
+</div>
 
 <shiro:hasPermission name="<%=PermissionConstants.SCHEDULE_REVERSE_PICKUP%>">
 
