@@ -146,7 +146,7 @@ public class InventoryBinAllocationAction extends BaseAction {
 			if(binSkuItemBarcodeMap!=null && binSkuItemBarcodeMap.size()>0){
 				boolean savedAllocation = saveAllBinSkuItemBarcodeMap(binSkuItemBarcodeMap);
 				if(!savedAllocation){
-				addRedirectAlertMessage(new SimpleMessage("Could not save the bin allocations!!"));
+				addRedirectAlertMessage(new SimpleMessage("Could not save the bin allocations! Invalid entries."));
 				return new RedirectResolution(InventoryBinAllocationAction.class).addParameter("uploadBinAllocationFile");
 				}
 				addRedirectAlertMessage(new SimpleMessage("Successfully saved all the Bin Allocations."));
@@ -232,6 +232,7 @@ public class InventoryBinAllocationAction extends BaseAction {
 	
 	private boolean saveAllBinSkuItemBarcodeMap(Map<String, Set<String>> binSkuItemBarcodeMap){
 		boolean retrunVal = true;
+		List<SkuItem> skuItems = new ArrayList<SkuItem>();
 		if(binSkuItemBarcodeMap!=null && binSkuItemBarcodeMap.size()>0){
 			Set<Entry<String, Set<String>>> entrySet = binSkuItemBarcodeMap.entrySet();
 			try{
@@ -246,13 +247,15 @@ public class InventoryBinAllocationAction extends BaseAction {
 							return false;
 						}
 						skuItem.setBin(bin);
-						skuItem = (SkuItem) baseDao.save(skuItem);
+						skuItems.add(skuItem);
+						//skuItem = (SkuItem) baseDao.save(skuItem);
 						}
 						else{
 							return false;
 						}
 					}
 				}
+				baseDao.saveOrUpdate(skuItems);
 			}
 			catch(Exception e){
 				retrunVal = false;
