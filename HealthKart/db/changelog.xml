@@ -14133,4 +14133,20 @@
             insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
     </changeSet>
+    <changeSet author="RD" id="20130918-01">
+        <sql>
+            alter table rp_line_item MODIFY customer_comment VARCHAR(1000);
+            alter table rp_line_item MODIFY warehouse_remark VARCHAR(1000);
+            alter table reverse_pickup_order  add column booking_reference_no VARCHAR(70);
+            insert into reverse_pickup_status values(110,'RPU Reconcile');
+            insert into reverse_pickup_status values(120,'RPU Not Available');
+            insert into reverse_pickup_status values(130,'RPU Approved');
+            update reverse_pickup_status set status = 'RPU_Scheduled' where id=80;
+        </sql>
+    </changeSet>
+    <changeSet author="RD" id="20130920-01">
+        <sql>
+            insert into reverse_pickup_status values(80,'RPU_Scheduled');
+        </sql>
+    </changeSet>
 </databaseChangeLog>

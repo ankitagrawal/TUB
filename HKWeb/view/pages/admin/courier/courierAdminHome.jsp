@@ -39,8 +39,11 @@
         Pincode Region Zone
     </s:link>
   </h3>
+    <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
 </div>
-
+ </shiro:hasPermission>
 <div class="cl"></div>
 
 <div class="left roundBox">
