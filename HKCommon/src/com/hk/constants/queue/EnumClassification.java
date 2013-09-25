@@ -51,13 +51,13 @@ public enum EnumClassification {
     INV_PRESENT_DIFF_WAREHOUSE(1560L, "SO Not cancelled automatically", "Inventory found in other warehouse"),
     JIT_IN_SO(1570L, "SO Not cancelled automatically", "No inventory only for JIT items"),
 
-    Refund_In_Cash(2010l,"Refund in Cash", "Reconcile"),
-    Refund_Reward_Points(2020l,"Refund Reward Points", "Reconcile"),
-    Replacement_Order(2030l,"Replacement Order", "Reconcile"),
-    Decide_Later(2040l,"Decide Later", "Reconcile"),
-    Pending_Approval(2110l,"Pending Approval", "Approval"),
-    Approved(2120l,"Approved", "Approval"),
-    Force_Approval(2130l,"Force Approval", "Approval"),
+    Refund_In_Cash(2110l,"Refund in Cash", "Reconcile"),
+    Refund_Reward_Points(2120l,"Refund Reward Points", "Reconcile"),
+    Replacement_Order(2130l,"Replacement Order", "Reconcile"),
+    Decide_Later(2140l,"Decide Later", "Reconcile"),
+    Pending_Approval(2010l,"Pending Approval", "Approval"),
+    Approved(2020l,"Approved", "Approval"),
+    Force_Approval(2030l,"Force Approval", "Approval"),
 
     ;
 
