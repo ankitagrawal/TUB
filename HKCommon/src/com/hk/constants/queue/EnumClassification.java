@@ -58,7 +58,7 @@ public enum EnumClassification {
     Pending_Approval(2010l,"Pending Approval", "Approval"),
     Approved(2020l,"Approved", "Approval"),
     Force_Approval(2030l,"Force Approval", "Approval"),
-    ReconciledGeneric(2150l,"Reconciled","Reconcile")
+    ReconciledGeneric(2040l,"Reconciled","Approval")
 
     ;
 

@@ -44,6 +44,14 @@
                 var courierName = $(this).val();
                 $('.courier-name').val(courierName);
             });
+            $('.mainForm').on('submit',function(){
+                if($('[name="reversePickupOrder.reversePickupType.id"]').val()==='-1'){
+                    alert('Please select Booking Type');
+                    $('[name="reversePickupOrder.reversePickupType.id"]').focus();
+                    return false;
+                };
+
+            });
         });
 
     </script>
@@ -319,7 +327,7 @@
     <div style="float: left">
         <label> Booking Type </label>
         <s:select name="reversePickupOrder.reversePickupType.id" value="${rev.reversePickupOrder.reversePickupType.id}">
-            <s:option value="">--Select-- </s:option>
+            <s:option value="-1">--Select-- </s:option>
             <c:forEach items="<%=EnumReversePickupType.getAllRPTypeList()%>" var="reversePickupType">
                 <s:option value="${reversePickupType.id}">${reversePickupType.name}</s:option>
             </c:forEach>
