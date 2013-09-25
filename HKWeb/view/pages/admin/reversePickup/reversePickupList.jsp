@@ -310,7 +310,7 @@
                     <td>
                                 ${rpLineitem.customerActionStatus.primary}
                         <c:set value="<%=EnumReverseAction.Pending_Approval.getId()%>" var="pending"/>
-                        <c:if test="${rpLineitem.customerActionStatus == pending}">
+                        <c:if test="${rpLineitem.customerActionStatus.id == pending}">
                             <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                     event="approveCSAction"><span class="approve">(Approve)</span>
                                 <s:param name="rpLineitem" value="${rpLineitem.id}"/>
@@ -400,7 +400,7 @@
                         <td rowspan="${length}" class="action-link">
                             <c:set value="false" var="isRpApproved"/>
                             <c:forEach items="${reversePickup.rpLineItems}" var="rplineitem">
-                                <c:if test="${rplineitem.customerActionStatus == approved}">
+                                <c:if test="${rplineitem.customerActionStatus.id == approved}">
                                     <c:set value="true" var="isRpApproved"/>
                                 </c:if>
                             </c:forEach>
