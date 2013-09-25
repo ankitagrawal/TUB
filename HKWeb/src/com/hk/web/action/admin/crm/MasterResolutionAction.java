@@ -409,6 +409,13 @@ public class MasterResolutionAction extends BaseAction {
         this.replacementComments = replacementComments;
     }
 
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
 
     /**
      * @return the replacementPossible
