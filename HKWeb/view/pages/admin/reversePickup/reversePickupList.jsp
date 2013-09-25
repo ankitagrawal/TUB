@@ -309,7 +309,6 @@
                     </td>
                     <td>
                                 ${rpLineitem.customerActionStatus.primary}
-                        </c:forEach>
                         <c:set value="<%=EnumReverseAction.Pending_Approval.getId()%>" var="pending"/>
                         <c:if test="${rpLineitem.customerActionStatus == pending}">
                             <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
@@ -449,6 +448,7 @@
                         </td>
                     </c:if>
                 </tr>
+            </c:forEach>
         </c:forEach>
     </table>
 
