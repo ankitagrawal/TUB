@@ -200,7 +200,8 @@ public class UserOrderResource {
 
             userCodCall = order.getUserCodCall();
             userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_KNOWLARITY.getId());
-            userCodCall.setRemark(source);
+            userCodCall.setSource(source);
+            userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_KNOWLARITY.getName());
 
             if (!(order.isCOD())) {
                 logger.debug("Order is not COD" + order.getId());
@@ -214,7 +215,7 @@ public class UserOrderResource {
                 }
                 adminOrderService.cancelOrder(order, EnumCancellationType.Cod_Authorization_Failure.asCancellationType(), source, loggedInUser, null);
                 userCodCall.setRemark("Cancelled By " + source);
-                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+                userCodCall.setCallStatus(EnumUserCodCalling.CANCELLED.getId());
             } else if (action.equalsIgnoreCase(HKAPIConstants.CONFIRMED)) {
                 List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
                 if (order.getPayment() != null && (paymentStatusListForSuccessfulOrder.contains(order.getPayment().getPaymentStatus().getId()))) {
@@ -223,7 +224,7 @@ public class UserOrderResource {
                 }
                 adminOrderService.confirmCodOrder(order, source, null);
                 userCodCall.setRemark("Confirmed By " + source);
-                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+                userCodCall.setCallStatus(EnumUserCodCalling.CONFIRMED.getId());
             } else if (action.equalsIgnoreCase(HKAPIConstants.NON_CONTACTABLE)) {
                 userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getName());
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getId());
@@ -266,7 +267,8 @@ public class UserOrderResource {
         try {
             userCodCall = order.getUserCodCall();
             userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_DRISHTI.getId());
-            userCodCall.setRemark(source);
+            userCodCall.setSource(source);
+            userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_DRISHTI.getName());
 
             if (!(order.isCOD())) {
                 logger.debug("Order is not COD" + order.getId());

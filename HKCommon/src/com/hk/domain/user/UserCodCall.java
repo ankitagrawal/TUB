@@ -39,6 +39,9 @@ public class UserCodCall {
     @Column(name = "create_date", length = 19)
     private Date createDate;
 
+    @Column(name = "source", length = 45)
+    private String source;
+
     public Order getBaseOrder() {
         return baseOrder;
     }
@@ -77,6 +80,14 @@ public class UserCodCall {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     @Override
