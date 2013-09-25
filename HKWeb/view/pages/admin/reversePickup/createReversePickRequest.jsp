@@ -191,7 +191,7 @@
                     </td>
                     <td>
                         <s:select name="rpLineItems[${index}].actionTaken"
-                                  value="${savedRpLineItem.actionTaken}">
+                                  value="${savedRpLineItem.actionTaken.id}">
                             <s:option value="">--Select-- </s:option>
                             <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
                                        var="actionTaken">
