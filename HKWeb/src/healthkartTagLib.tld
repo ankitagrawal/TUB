@@ -1361,8 +1361,7 @@
         </description>
         <name>getStoreVariantBasicDetails</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.edge.response.variant.StoreVariantBasicApiResponse
-            getStoreVariantBasicDetails(java.lang.String)
+        <function-signature>com.hk.edge.response.variant.StoreVariantBasicResponse getStoreVariantBasicDetails(java.lang.String)
         </function-signature>
         <example>
             ${hk:getStoreVariantBasicDetails(${productVariantId})}
