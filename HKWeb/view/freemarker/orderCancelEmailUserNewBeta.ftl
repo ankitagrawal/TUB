@@ -35,10 +35,8 @@ Order Cancellation for Order ID ${order.gatewayOrderId}
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.product.name}<br/>
-                        <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
-                    ${productOption.name} ${productOption.value}
-                    </#list></em>
+                    <td>${productLineItem.productVariant.name}<br/>
+
                     </td>
                     <td>
                     ${productLineItem.qty/pricingDto.shippingLineCount}

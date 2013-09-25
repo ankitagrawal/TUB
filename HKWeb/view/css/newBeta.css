@@ -86,6 +86,13 @@ a:focus {
     outline: 1px dotted invert
 }
 
+a.send-lnk{
+    font-size: 0.9em;
+    font-weight: 600;
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+
 hr {
     border: 0 #ccc solid;
     border-top-width: 1px;
@@ -6481,6 +6488,9 @@ label{
     margin-left: 20px;
 }
 
+.mrgn-l-30 {
+    margin-left: 30px;
+}
 .mrgn-l-40 {
     margin-left: 40px;
 }
@@ -7100,25 +7110,26 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 .subscibe-mail-cntnr {
-    text-align: right;
+    text-align: center;
     float: right;
-
 }
 
 .subscibe-mail-cntnr .label-txt {
-    text-align: left;
     font-size: 0.9em;
-    margin-top: 25px;
-    margin-bottom: 5px;
+    margin :25px 0 5px 20px;
 }
-
+.subscibe-mail-cntnr .span4{
+    max-height: 60px;
+    width:220px;
+    float: left;
+    margin-left: 23px;
+}
+.subscibe-mail-cntnr .span4 .err-txt{
+    text-align: left;
+    margin-left: 8px;
+}
 .subscibe-mail-cntnr input[type="text"] {
-    width: 150px;
-    margin: 0;
-}
-
-.subscibe-mail-cntnr input[type="submit"] {
-    display: inline-block;
+    width: 190px;
 }
 
 .about-hk {
@@ -7140,6 +7151,91 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 /**Container css *ends**/
+
+/* title utils start*/
+.ttl-cntnr {
+    text-align: center;
+    clear: both;
+    font-family: 'Open Sans' SC;
+}
+
+.ttl-cntnr.ttl-left {
+    text-align: left
+}
+
+.ttl-cntnr span.icn {
+    margin-right: 10px;
+    margin-left: 10px;
+    position: relative;
+    bottom: 3px;
+    background: #111;
+    width: 7px;
+    height: 7px;
+}
+
+/*css for blue circles*/
+.ttl-cntnr span.icn{
+    background: url(../images/blue-circle.png);
+    width:12px;
+    height: 12px;
+    bottom:1px
+}
+.ttl-cntnr h1, .ttl-cntnr h2, .ttl-cntnr h3, .ttl-cntnr h4, .ttl-cntnr h5, .ttl-cntnr h6 {
+    display: inline-block;
+    max-width: 90%;
+}
+
+.ttl-cntnr h1.hide {
+    display: none;
+}
+
+.ttl-cntnr h1 {
+    margin: 20px 0;
+    line-height: 1em;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.ttl-cntnr h1.chckout-hdr {
+    margin: 20px 0 10px 0;
+}
+
+.ttl-cntnr h2 {
+    margin: 15px 0 5px;
+    line-height: 1em;
+    font-weight: 700;
+}
+
+/* title utils end*/
+
+
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+    resize: none;
+    display: inline-block;
+    padding: 0 6px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555555;
+    vertical-align: middle;
+    border-radius: 0px !important;
+    box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    -webkit-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    -moz-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
+    margin-bottom: 10px;
+    background: none;
+    border: 1px solid rgb(214, 214, 214);
+    height: 30px !important;
+}
+input[type="text"]:focus, input[type="password"]:focus{
+    -moz-box-shadow: inset 0 -2px 2px #cccccc;
+    -webkit-box-shadow: inset 0 -2px 2px #cccccc;
+    -o-box-shadow: inset 0 -2px 2px #cccccc;
+    box-shadow: inset 0 -2px 2px #cccccc;
+}
+
+
+
 
 /*error-success msg css begins*/
 .err-cntnr {
@@ -7213,6 +7309,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     bottom: 10px;
     position: relative;
     font-size: 0.9em;
+
 }
 
 .err-txt2 {
@@ -7256,93 +7353,13 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .err-brdr {
     border: 2px solid #ff0000 !important;
-    border-radius: 0 !important;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    border-radius: 0;
 }
 
 /*error-success msg css ends*/
-
-/* title utils start*/
-.ttl-cntnr {
-    text-align: center;
-    clear: both;
-    font-family: 'Open Sans' SC;
-}
-
-.ttl-cntnr.ttl-left {
-    text-align: left
-}
-
-.ttl-cntnr span.icn {
-    margin-right: 10px;
-    margin-left: 10px;
-    position: relative;
-    bottom: 3px;
-    background: #111;
-    width: 7px;
-    height: 7px;
-}
-
-/*css for blue circles*/
-.ttl-cntnr span.icn{
-    background: url(../images/blue-circle.png);
-    width:12px;
-    height: 12px;
-    bottom:1px
-}
-.ttl-cntnr h1, .ttl-cntnr h2, .ttl-cntnr h3, .ttl-cntnr h4, .ttl-cntnr h5, .ttl-cntnr h6 {
-    display: inline-block;
-    max-width: 90%;
-}
-
-.ttl-cntnr h1.hide {
-    display: none;
-}
-
-.ttl-cntnr h1 {
-    margin: 20px 0;
-    line-height: 1em;
-    font-size: 1.5em;
-    font-weight: 600;
-}
-
-.ttl-cntnr h1.chckout-hdr {
-    margin: 20px 0 10px 0;
-}
-
-.ttl-cntnr h2 {
-    margin: 15px 0 5px;
-    line-height: 1em;
-    font-weight: 700;
-}
-
-/* title utils end*/
-
-
-
-textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
-    resize: none;
-    display: inline-block;
-    padding: 0 6px;
-    font-size: 14px;
-    line-height: 20px;
-    color: #555555;
-    vertical-align: middle;
-    border-radius: 0px !important;
-    box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
-    -webkit-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
-    -moz-box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
-    margin-bottom: 20px;
-    background: none;
-    border: 1px solid rgb(214, 214, 214) !important;
-    height: 30px !important;
-}
-input[type="text"]:focus, input[type="password"]:focus{
-    -moz-box-shadow: inset 0 -2px 2px #cccccc;
-    -webkit-box-shadow: inset 0 -2px 2px #cccccc;
-    -o-box-shadow: inset 0 -2px 2px #cccccc;
-    box-shadow: inset 0 -2px 2px #cccccc;
-}
-
 
 /*account page css begins*/
 .my-acnt-ht {
@@ -7657,6 +7674,99 @@ input[type="text"]:focus, input[type="password"]:focus{
 /**border variation utils *ends**/
 
 
+/* popup util *Start*/
+.popup-root {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0px;
+    z-index: 19;
+    width: 100%;
+}
+
+.popup-shadow {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 20;
+    filter: alpha(opacity=70);
+}
+
+.popup-content {
+    position: relative;
+    z-index: 21;
+    width: 300px;
+    height: 200px;
+    margin: 100px auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.popup-content.popup-theme-orange {
+}
+
+.popup-content .icon-close {
+    cursor: pointer;
+    background: url(../images/close1.png) no-repeat;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+
+}
+
+.popup-content [data-role=title] {
+    /*background-color: #5AA0EC;
+    color:white;*/
+    color: #1B3188;
+
+    font-size: 1.5em;
+    line-height: 1.8em;
+
+}
+
+.popup-content [data-role=title] .title-string {
+    width: 90%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.popup-content.popup-theme-orange [data-role=title] .title-string {
+    color: #F7AB1F
+}
+
+.popup-content [data-role=content] {
+    clear: both;
+}
+
+.popup-content [data-role=action] {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+.popup-content [data-role=action] .btn {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.popup-content.err {
+    border-color: red;
+}
+
+.popup-content.large {
+    min-width: 600px;
+    min-height: 500px;
+}
+
+/*Popup util *ends*/
 /* payment status utils begins */
 
 .pmt-status-cntnr {
@@ -7688,3 +7798,8 @@ input[type="text"]:focus, input[type="password"]:focus{
 
 /* payment status utils ends */
 
+
+.clr-cont {
+    position: relative;
+    clear: both;
+}
