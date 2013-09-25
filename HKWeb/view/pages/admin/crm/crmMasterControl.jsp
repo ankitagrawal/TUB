@@ -35,13 +35,13 @@
         $('#refundDiv').hide();
         $('#replacementDiv').hide();
 
-        if (viewRefund) {
+        if (viewRefund == true) {
             $('#refundDiv').show();
             $('#refund').attr('selected','selected');
-        } else if (viewReward) {
+        } else if (viewReward == true) {
             $('#rewardDiv').show();
             $('#addRewardPoints').attr('selected','selected');
-        } else if (viewReplacement) {
+        } else if (viewReplacement == true) {
             $('#replacementDiv').show();
             $('#replacementOrder').attr('selected','selected');
         }
@@ -120,7 +120,7 @@
 
 <div>
     <fieldset style="width: 60%;">
-        <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
             <table>
                 <tr>
                     <td>

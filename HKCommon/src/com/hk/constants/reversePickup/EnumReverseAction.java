@@ -23,7 +23,8 @@ public enum EnumReverseAction {
 
     Pending_Approval(80L, EnumClassification.Pending_Approval),
     Approved(90L, EnumClassification.Approved),
-    Force_Approval(100L, EnumClassification.Force_Approval);
+    Force_Approval(100L, EnumClassification.Force_Approval),
+    Reconciled(110L,EnumClassification.ReconciledGeneric );
 
     private Long id;
     private Classification classification;
