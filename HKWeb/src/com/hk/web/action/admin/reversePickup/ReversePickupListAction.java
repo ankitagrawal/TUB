@@ -111,7 +111,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.APPROVE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution approveCSAction() {
         if (rpLineitem != null) {
-             rpLineitem.setCustomerActionStatus(EnumReverseAction.Approved.getId());
+             rpLineitem.setCustomerActionStatus(EnumReverseAction.Approved.getClassification());
               /*call automatic  refund services here*/
             reversePickupService.saveRpLineItem(rpLineitem);
             ReversePickupOrder localRPOrder = rpLineitem.getReversePickupOrder();
