@@ -44,7 +44,7 @@
                 var courierName = $(this).val();
                 $('.courier-name').val(courierName);
             });
-            $('.mainForm').on('submit',function(){
+            $('.mainform').submit(function(){
                 if($('[name="reversePickupOrder.reversePickupType.id"]').val()==='-1'){
                     alert('Please select Booking Type');
                     $('[name="reversePickupOrder.reversePickupType.id"]').focus();
@@ -191,7 +191,7 @@
                     </td>
                     <td>
                         <s:select name="rpLineItems[${index}].actionTaken"
-                                  value="${savedRpLineItem.actionTaken}">
+                                  value="${savedRpLineItem.actionTaken.id}">
                             <s:option value="">--Select-- </s:option>
                             <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
                                        var="actionTaken">

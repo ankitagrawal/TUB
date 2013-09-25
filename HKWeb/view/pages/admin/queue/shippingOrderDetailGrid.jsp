@@ -365,61 +365,63 @@
         </script>
     </c:if>
     <c:if test="${isSearchShippingOrder}">
+        <%--deprecated, actually this permission will not be available to anyone--%>
+        <shiro:hasPermission name="<%=PermissionConstants.MARK_RP_APPEASEMENT%>">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered ||
                     shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
 
-                <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
-                    <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
-                        <s:hidden name="shippingOrder" value="${shippingOrder.id}"/>
-                        <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
-                            <b>Customer Satisfaction:</b>
-                            <s:select name="shippingOrder.orderStatus">
-                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>">
-                                    <%=EnumShippingOrderStatus.SO_Customer_Appeasement.getName()%>
-                                </s:option>
-                            </s:select>
-                            <br/><b>Customer Reason:</b>
-                            <s:select name="customerSatisfyReason" id="customer-reason">
-                                <s:option value="null">-Select Reason-</s:option>
-                                <s:option value="Damaged Product">Damaged Product</s:option>
-                                <s:option value="Expired Product">Expired Product</s:option>
-                                <s:option value="Wrong Product">Wrong Product</s:option>
-                                <s:option value="Not Interested">Not Interested</s:option>
-                            </s:select>
-                            <s:submit class="markOrderCustomerSatisfyButton" name="markOrderCustomerSatisfy" value="Save"
+                <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
+                    <s:hidden name="shippingOrder" value="${shippingOrder.id}"/>
+                    <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+                        <b>Customer Satisfaction:</b>
+                        <s:select name="shippingOrder.orderStatus">
+                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>">
+                                <%=EnumShippingOrderStatus.SO_Customer_Appeasement.getName()%>
+                            </s:option>
+                        </s:select>
+                        <br/><b>Customer Reason:</b>
+                        <s:select name="customerSatisfyReason" id="customer-reason">
+                            <s:option value="null">-Select Reason-</s:option>
+                            <s:option value="Damaged Product">Damaged Product</s:option>
+                            <s:option value="Expired Product">Expired Product</s:option>
+                            <s:option value="Wrong Product">Wrong Product</s:option>
+                            <s:option value="Not Interested">Not Interested</s:option>
+                        </s:select>
+                        <s:submit class="markOrderCustomerSatisfyButton" name="markOrderCustomerSatisfy" value="Save"
                                   style="padding:1px;"/>
-                        </c:if>
+                    </c:if>
 
-                        <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
-                            <b>Customer Return:</b>
-                            <s:select name="shippingOrder.orderStatus">
-                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>">
-                                    <%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
-                                </s:option>
-                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>">
-                                    <%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
-                                </s:option>
-                            </s:select>
-                            <s:submit name="markOrderCustomerReturn" value="Save"
+                    <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
+                        <b>Customer Return:</b>
+                        <s:select name="shippingOrder.orderStatus">
+                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>">
+                                <%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
+                            </s:option>
+                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>">
+                                <%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
+                            </s:option>
+                        </s:select>
+                        <s:submit name="markOrderCustomerReturn" value="Save"
                                   style="padding:1px;"/>
-                        </c:if>
-                    </s:form>
+                    </c:if>
+                </s:form>
 
-                    <script type="text/javascript">
-                        $('.markOrderCustomerSatisfyButton').click(function() {
-                            if ($('#customer-reason').val() == "null") {
-                                alert("Please select a reason for Customer Satisfaction !");
-                                return false;
-                            }
+                <script type="text/javascript">
+                    $('.markOrderCustomerSatisfyButton').click(function () {
+                        if ($('#customer-reason').val() == "null") {
+                            alert("Please select a reason for Customer Satisfaction !");
+                            return false;
+                        }
 
-                            var proceed = confirm('Are you sure?');
-                            if (!proceed) return false;
-                        });
+                        var proceed = confirm('Are you sure?');
+                        if (!proceed) return false;
+                    });
 
-                    </script>
-                </shiro:hasAnyRoles>
+                </script>
             </c:if>
-            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
+        </shiro:hasPermission>
+
+        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
                 <c:if
                         test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusLost}">
@@ -459,32 +461,32 @@
                 </c:if>
             </shiro:hasAnyRoles>
 
-    <shiro:hasPermission name="<%=PermissionConstants.MARK_RTO%>">
+    <%--<shiro:hasPermission name="<%=PermissionConstants.MARK_RTO%>">--%>
 
-                <c:if test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
-                    <br/>
-                    <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
-                        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-                        <div class="buttons">
-                            <s:submit name="markRTO" value="Mark RTO" class="markRTOButton"/>
-                        </div>
-                    </s:form>
-                    <script type="text/javascript">
-                        $('.markRTOButton').click(function() {
-                            var proceed = confirm('Are you sure?');
-                            if (!proceed) return false;
-                        });
+                <%--<c:if test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">--%>
+                    <%--<br/>--%>
+                    <%--<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">--%>
+                        <%--<s:param name="shippingOrder" value="${shippingOrder.id}"/>--%>
+                        <%--<div class="buttons">--%>
+                            <%--<s:submit name="markRTO" value="Mark RTO" class="markRTOButton"/>--%>
+                        <%--</div>--%>
+                    <%--</s:form>--%>
+                    <%--<script type="text/javascript">--%>
+                        <%--$('.markRTOButton').click(function() {--%>
+                            <%--var proceed = confirm('Are you sure?');--%>
+                            <%--if (!proceed) return false;--%>
+                        <%--});--%>
 
-                        $('.markRTOForm').ajaxForm({dataType: 'json', success: _markOrderRTO});
+                        <%--$('.markRTOForm').ajaxForm({dataType: 'json', success: _markOrderRTO});--%>
 
-                        function _markOrderRTO(res) {
-                            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                                alert("Order marked as RTO");
-                            }
-                        }
-                    </script>
-                </c:if>
-              </shiro:hasPermission>
+                        <%--function _markOrderRTO(res) {--%>
+                            <%--if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {--%>
+                                <%--alert("Order marked as RTO");--%>
+                            <%--}--%>
+                        <%--}--%>
+                    <%--</script>--%>
+                <%--</c:if>--%>
+              <%--</shiro:hasPermission>--%>
     </c:if>
     </div>
 </td>
@@ -722,7 +724,7 @@
             </c:if>
           </div>
             <div class="clear"></div>
-              <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+              <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered || shippingOrder.orderStatus.id == shippingOrderStatusLost || shippingOrder.orderStatus.id == shippingOrderStatusRTO || shippingOrder.orderStatus.id == shippingOrderStatusRTOInitiated}">
               <div class="floatleft">
                   <shiro:hasPermission name="<%=PermissionConstants.CREATE_REVERSE_PICKUP%>">
                   <div style="margin: 1em auto;">
