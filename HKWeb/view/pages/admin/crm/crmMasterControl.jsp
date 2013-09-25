@@ -144,6 +144,7 @@
                 to cancellations will not be given from this screen. They will be given automatically</label>
             <table>
                 <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
+                <s:hidden name="baseOrderId" value="${maBean.baseOrderId}"/>
                 <tr>
                     <td>Total Amount</td>
                     <td>${maBean.paymentAmount}</td>
