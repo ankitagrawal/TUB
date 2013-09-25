@@ -56,10 +56,13 @@ public class ReversePickupHelper {
         Double requestedAmount = 0d;
         if (selectedRpLineItemList != null) {
             for (RpLineItem rpLineItem : selectedRpLineItemList) {
-                requestedAmount += calculateRPLineItemAmount(rpLineItem);
+                Double rpLineItemAmount = calculateRPLineItemAmount(rpLineItem);
+                rpLineItem.setAmount(rpLineItemAmount);
+                requestedAmount += rpLineItemAmount;
 //                requestedAmount += calculateRPLineItemAmount(rpLineItem);
             }
         }
+
         return requestedAmount;
     }
 
@@ -70,7 +73,7 @@ public class ReversePickupHelper {
         double totalDiscountOnLineItem = lineItem.getDiscountOnHkPrice() + lineItem.getOrderLevelDiscount() + lineItem.getRewardPoints();
         double forwardingCharges = lineItem.getShippingCharges() + lineItem.getCodCharges(); // check this calculation
         //double forwardingCharges = 0.0;
-        requestedAmount += (lineItemAmount - totalDiscountOnLineItem + forwardingCharges);
+        requestedAmount += (lineItemAmount - totalDiscountOnLineItem/lineItem.getQty() + forwardingCharges);
         return requestedAmount;
     }
 

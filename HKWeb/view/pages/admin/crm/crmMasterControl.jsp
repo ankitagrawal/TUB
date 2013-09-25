@@ -35,13 +35,13 @@
         $('#refundDiv').hide();
         $('#replacementDiv').hide();
 
-        if (viewRefund) {
+        if (viewRefund == true) {
             $('#refundDiv').show();
             $('#refund').attr('selected','selected');
-        } else if (viewReward) {
+        } else if (viewReward == true) {
             $('#rewardDiv').show();
             $('#addRewardPoints').attr('selected','selected');
-        } else if (viewReplacement) {
+        } else if (viewReplacement == true) {
             $('#replacementDiv').show();
             $('#replacementOrder').attr('selected','selected');
         }
@@ -120,7 +120,7 @@
 
 <div>
     <fieldset style="width: 60%;">
-        <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
             <table>
                 <tr>
                     <td>
@@ -140,17 +140,19 @@
                     <td> <s:submit name="searchShippingOrder" value="Search"/>
                     </td>
                 </tr>
-                <c:if test="${maBean.actionFlag == true}"></c:if>
-                <tr>
-                    <td>Choose action on:</td>
-                    <td><s:select name="actionType" id="actionType" >
-                        <s:option value="none">-- Select --</s:option>
-                        <s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
-                        <s:option id="refund" value="refund">Refund</s:option>
-                        <s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
-                    </s:select>
-                    </td>
-                </tr>
+                <c:if test="${maBean.actionFlag == true}">
+                    <tr>
+                        <td>Choose action on:</td>
+                        <td><s:select name="actionType" id="actionType" >
+                            <s:option value="none">-- Select --</s:option>
+                            <s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
+                            <s:option id="refund" value="refund">Refund</s:option>
+                            <s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
+                        </s:select>
+                        </td>
+                    </tr>
+                </c:if>
+
             </table>
         </s:form>
     </fieldset>
@@ -369,7 +371,7 @@
 
     <fieldset style="display:none;" id="is-replacement">
         <h4>Replacement for Customer Return</h4>
-        <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRepForm">
+        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" id="createReplacementOrderForRepForm">
             <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
             <table border="1">
                 <thead>
