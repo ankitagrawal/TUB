@@ -146,4 +146,19 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
         this.currentStatus = currentStatus;
     }
 
+	/**
+	 * @return the statusDate
+	 */
+	public Date getStatusDate() {
+		return statusDate;
+	}
+
+	/**
+	 * @param statusDate the statusDate to set
+	 */
+	public void setStatusDate(Date statusDate) {
+		this.statusDate = statusDate;
+	}
+
+    
 }
