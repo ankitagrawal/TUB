@@ -101,7 +101,7 @@ public class ReversePickupServiceImpl implements ReversePickupService {
     }
 
     public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, int pageNo, int perPage, List<ReversePickupType> reversePickupTypeList) {
-        return reversePickupDao.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatusList, courierName, pageNo, perPage, null);
+        return reversePickupDao.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatusList, courierName, pageNo, perPage, reversePickupTypeList);
 
     }
 

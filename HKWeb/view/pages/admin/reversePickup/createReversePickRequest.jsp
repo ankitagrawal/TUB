@@ -317,7 +317,8 @@
 
 <div class="font courier-detail">
     <div style="float: left">
-        <s:select name="reversePickupOrder.reversePickupType">
+        <label> Booking Type </label>
+        <s:select name="reversePickupOrder.reversePickupType" value="${rev.reversePickupOrder.reversePickupType.name}">
             <s:option value="">--Select-- </s:option>
             <c:forEach items="<%=EnumReversePickupType.getAllRPTypeList()%>" var="reversePickupType">
                 <s:option value="${reversePickupType.id}">${reversePickupType.name}</s:option>
