@@ -22,6 +22,7 @@ public enum EnumPaymentStatus {
   REFUND_REQUEST_IN_PROCESS(8L,"Refund Request Initiated"),
   REFUNDED(9L,"Refunded"),
   REFUND_FAILURE(10L,"Refund failure"),
+  REWARD(11l,"Reward Points")
   ;
 
   private java.lang.String name;

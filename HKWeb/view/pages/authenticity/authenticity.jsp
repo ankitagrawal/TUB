@@ -1,3 +1,4 @@
+<%@include file="/includes/_taglibInclude.jsp" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -184,6 +185,8 @@
     </ul>
     <div class="cl"></div>
 
+    <div style="text-align: center"><h4>..and many more</h4></div>
+
     <div class="shop">
       <span>So what are you waiting for?</span>
       <div class="shop-btn"><a href="http://www.healthkart.com/">SHOP<br>
@@ -193,8 +196,7 @@
   </div><!--container-width close-->
 </div><!--cont07 close-->
 
-
-<script type="text/javascript">
+<s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="authenticity" allCategories="" brand=""/><script type="text/javascript">
 
 $.fn.shake = function(options){
   var settings = $.extend({},options);
