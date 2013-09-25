@@ -156,7 +156,8 @@ public class MasterResolutionAction extends BaseAction {
       baseOrderId = shippingOrder.getBaseOrder().getId();
       paymentAmount = shippingOrder.getAmount();
       shippingOrderId = shippingOrder.getId();
-      reversePickupOrders = shippingOrder.getReversePickupOrders();
+      lineItems = new ArrayList<LineItem>();
+      lineItems.addAll(shippingOrder.getLineItems());
     }
     return new ForwardResolution(MasterResolutionAction.class).addParameter("shippingOrderId", shippingOrderId);
   }

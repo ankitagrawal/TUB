@@ -371,7 +371,7 @@
 
     <fieldset style="display:none;" id="is-replacement">
         <h4>Replacement for Customer Return</h4>
-        <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRepForm">
+        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" id="createReplacementOrderForRepForm">
             <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
             <table border="1">
                 <thead>
