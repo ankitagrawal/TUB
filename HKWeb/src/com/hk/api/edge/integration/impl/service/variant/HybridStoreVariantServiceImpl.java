@@ -11,6 +11,7 @@ import com.hk.edge.pact.service.HybridStoreVariantService;
 import com.hk.edge.response.variant.StoreVariantBasicResponse;
 import com.hk.edge.response.variant.StoreVariantBasicResponseWrapper;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.taglibs.Functions;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,25 +48,18 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             throw new InvalidParameterException("PRODUCT_VARIANT_ID_CANNOT_BE_BLANK");
         }
 
-        //could not use showFreebieForProductVariant as such because it returns product and not variant
-
         ProductVariant productVariant = getProductVariantService().getVariantById(productVariantId);
+
         if (productVariant != null) {
-            Product product = productVariant.getProduct();
-            if (!(product.isHidden() || product.isDeleted() || product.isOutOfStock())) {
-                if (!(productVariant.isOutOfStock() || productVariant.isDeleted())) {
-                    ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
-                    if (freeProductVariant != null) {
-                        if (!(freeProductVariant.isOutOfStock())) {
-                            FreeVariantResponseFromHKR freeVariantResponseFromHKR = new FreeVariantResponseFromHKR();
+            Product freebie = Functions.showFreebieForVariant(productVariant);
+            if (freebie != null) {
+                FreeVariantResponseFromHKR freeVariantResponseFromHKR = new FreeVariantResponseFromHKR();
 
-                            freeVariantResponseFromHKR.setVariantId(productVariantId);
-                            freeVariantResponseFromHKR.setFreeVariantId(freeProductVariant.getId());
+                freeVariantResponseFromHKR.setVariantId(productVariantId);
+                freeVariantResponseFromHKR.setFreebieProductId(freebie.getId());
+                freeVariantResponseFromHKR.setFreebieName(freebie.getName());
 
-                            return freeVariantResponseFromHKR;
-                        }
-                    }
-                }
+                return freeVariantResponseFromHKR;
             }
         }
         return null;

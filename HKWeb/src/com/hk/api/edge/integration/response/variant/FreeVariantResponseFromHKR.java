@@ -8,7 +8,8 @@ import com.hk.api.edge.integration.response.AbstractResponseFromHKR;
 public class FreeVariantResponseFromHKR extends AbstractResponseFromHKR {
 
     private String variantId;
-    private String freeVariantId;
+    private String freebieProductId;
+    private String freebieName;
 
 
     public String getVariantId() {
@@ -19,22 +20,30 @@ public class FreeVariantResponseFromHKR extends AbstractResponseFromHKR {
         this.variantId = variantId;
     }
 
-    public String getFreeVariantId() {
-        return freeVariantId;
+    public String getFreebieProductId() {
+        return freebieProductId;
     }
 
-    public void setFreeVariantId(String freeVariantId) {
-        this.freeVariantId = freeVariantId;
+    public void setFreebieProductId(String freebieProductId) {
+        this.freebieProductId = freebieProductId;
     }
 
+    public String getFreebieName() {
+        return freebieName;
+    }
+
+    public void setFreebieName(String freebieName) {
+        this.freebieName = freebieName;
+    }
+    
 
     @Override
     protected String[] getKeys() {
-        return new String[]{"oldVarId", "freeVarOldVarId", "exception", "msgs"};
+        return new String[]{"oldVarId", "freebieOldProductId", "freebieNm", "exception", "msgs"};
     }
 
     @Override
     protected Object[] getValues() {
-        return new Object[]{this.variantId, this.freeVariantId, this.exception, this.msgs};
+        return new Object[]{this.variantId, this.freebieProductId, this.freebieName, this.exception, this.msgs};
     }
 }
