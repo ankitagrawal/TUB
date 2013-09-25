@@ -294,6 +294,10 @@ public class UserOrderResource {
                 userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getName());
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
                 userCodCall.setSource("Healthkart");
+            } else if (action.equalsIgnoreCase(HKAPIConstants.NON_CONTACTABLE)) {
+                userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getName());
+                userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getId());
+                userCodCall.setSource("EffortBPO");
             }
             userCodCall = orderService.saveUserCodCall(userCodCall);
             return Response.status(Response.Status.OK).build();
