@@ -1,5 +1,25 @@
 package com.hk.web.action.admin.crm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.reversePickup.ReversePickupService;
 import com.hk.admin.pact.service.order.AdminOrderService;
@@ -28,14 +48,12 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.reverseOrder.ReverseLineItem;
-import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.exception.InvalidRewardPointsException;
-import com.hk.helper.ReplacementOrderHelper;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.inventory.InventoryService;
@@ -46,14 +64,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.taglibs.Functions;
 import com.hk.web.action.admin.user.SearchUserAction;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -83,7 +93,6 @@ public class MasterResolutionAction extends BaseAction {
   private List<LineItem> lineItems = new ArrayList<LineItem>();
   private List<ReverseLineItem> reverseLineItems = new ArrayList<ReverseLineItem>();
   private ReplacementOrderReason replacementOrderReason;
-  private List<ReversePickupOrder> reversePickupOrders;
   private Double paymentAmount;
   private Reason refundReason;
   private String refundComments;
@@ -136,12 +145,6 @@ public class MasterResolutionAction extends BaseAction {
     return new ForwardResolution("/pages/admin/crm/crmMasterControl.jsp");
   }
 
-  @ValidationMethod(on = "searchShippingOrder")
-  public void validateSearch() {
-    if (shippingOrderId == null && gatewayOrderId == null) {
-      getContext().getValidationErrors().add("1", new SimpleError("Please Enter a Search Parameter"));
-    }
-  }
 
   public Resolution searchShippingOrder() {
     if (shippingOrderId != null) {
@@ -159,7 +162,7 @@ public class MasterResolutionAction extends BaseAction {
       lineItems = new ArrayList<LineItem>();
       lineItems.addAll(shippingOrder.getLineItems());
     }
-    return new ForwardResolution(MasterResolutionAction.class).addParameter("shippingOrderId", shippingOrderId);
+    return new ForwardResolution("/pages/admin/crm/crmMasterControl.jsp");
   }
 
   public Resolution addRewardPoints() {
@@ -172,7 +175,7 @@ public class MasterResolutionAction extends BaseAction {
     User user = shippingOrder.getBaseOrder().getUser();
     if (user.equals(referredUser)) {
       addRedirectAlertMessage(new SimpleMessage("A user cannot give reward points to himself"));
-      return new RedirectResolution(SearchUserAction.class, "search");
+      return new ForwardResolution(MasterResolutionAction.class, "pre");
     }
     RewardPoint rewardPoint = new RewardPoint();
     Order order = orderService.find(baseOrderId);
@@ -191,10 +194,10 @@ public class MasterResolutionAction extends BaseAction {
       paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REWARD.asPaymenStatus(), rewardAmount,
           EnumPaymentMode.REWARD_POINT_MODE.asPaymenMode(), EnumPaymentTransactionType.REWARD);
       addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
-      return new RedirectResolution(SearchUserAction.class, "search");
+      return new ForwardResolution(MasterResolutionAction.class, "pre");
     } else {
       addRedirectAlertMessage(new SimpleMessage("Reward Points cannot be more than " + RewardPointDao.MAX_REWARD_POINTS));
-      return new RedirectResolution(SearchUserAction.class, "search");
+      return new ForwardResolution(MasterResolutionAction.class, "pre");
     }
   }
 
@@ -213,7 +216,7 @@ public class MasterResolutionAction extends BaseAction {
       if (lineItem.getQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
         addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " +
             productName + " out of stock."));
-        return new ForwardResolution(MasterResolutionAction.class);
+        return new ForwardResolution(MasterResolutionAction.class, "pre");
       }
     }
 
@@ -226,7 +229,7 @@ public class MasterResolutionAction extends BaseAction {
     } else {
       addRedirectAlertMessage(new SimpleMessage("The Replacement order created. New gateway order id: " + replacementOrder.getGatewayOrderId()));
     }
-    return new ForwardResolution(MasterResolutionAction.class);
+    return new ForwardResolution(MasterResolutionAction.class, "pre");
   }
 
   @DontValidate
@@ -280,7 +283,7 @@ public class MasterResolutionAction extends BaseAction {
     } else {
       addRedirectAlertMessage(new SimpleMessage("Please enter amount as well as reason and related comments for the refund."));
     }
-    return new ForwardResolution(MasterResolutionAction.class);
+    return new ForwardResolution(MasterResolutionAction.class, "pre");
   }
 
   private boolean isRefundAmountValid(String gatewayOrderId, Double amount) {
