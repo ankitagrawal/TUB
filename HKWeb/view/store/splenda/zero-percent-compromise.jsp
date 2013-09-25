@@ -60,7 +60,8 @@ has no effect on blood glucose or insulin levels.</h1>
                     </div>
                     <div class="compromisePgLeftBxsBg">
                         <ul>
-                        	<li>With over 20 years of research and more than 100 studies, SPLENDA&reg; (Sucralose)- No calorie sweetener* is proven to be a safe for people with diabetes. SPLENDA&reg; does not affect blood glucose levels or HbA1c readings.</li>
+                        	<li>With over 20 years of research and more than 100 studies, SPLENDA&reg; (Sucralose)- No calorie sweetener* is proven to be a safe for people with diabetes.</li>
+                            <li>SPLENDA&reg; does not affect blood glucose levels or HbA1c readings.</li>
                         </ul>
                   </div>                    
                     <div class="row">&nbsp;</div>                 

@@ -46,9 +46,9 @@
                     <div class="row">
                     	<p><strong>SPLENDA&reg; contains the unique sweetening ingredient sucralose which is</strong></p>
                         <ul>
-                        	<li>Made from sugar.</li>
-                            <li>Tastes just, like sugar, without a bitter aftertaste.</li>
-                            <li>Extremely stable even when heated.</li>
+                        	<li>Made from sugar</li>
+                            <li>Tastes just, like sugar, without a bitter aftertaste</li>
+                            <li>Extremely stable even when heated</li>
                         </ul>
                     	<p class="greyTxt1">SPLENDA&reg; - No compromise on sweetness anytime, anywhere!</p>
                     </div>
@@ -64,7 +64,7 @@
                         <ul>
                         	<li>Elderly</li>
                             <li>People with diabetes</li>
-                            <li>Pregnant ** and breastfeeding women</li>
+                            <li>Pregnant** and breastfeeding women</li>
                         </ul>
                         <p class="greyTxt1">**As advised by your doctor</p>
                         <p>&nbsp;</p>

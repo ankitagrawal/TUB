@@ -43,7 +43,7 @@
         	<div class="homePgBx1">
             	<div class="homepgBxsHeadings">100% Taste</div>
                 <div class="homePgBxsData">
-                	SPLENDA&reg; No calorie<br />sweetener* is an excellent<br />option for you to drop those<br />empty calories of sugar<br />without compromising taste</div>
+                	SPLENDA&reg; No calorie<br />sweetener* is an excellent<br />option for you to drop those<br />empty calories of sugar<br />without compromising taste.</div>
                 <div class="homePgBxsBtns"><a href="hundred-percent-taste.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
               </div>
             <div class="homePgBx2">

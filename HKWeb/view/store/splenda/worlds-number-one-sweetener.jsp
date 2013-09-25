@@ -40,7 +40,7 @@
         	<div class="row bannerShadow"><img src="images/banner-worlds-number-one-sweetener.png" alt="World's No.1 Sweetener"/></div>
             <div class="row"><p>SPLENDA&reg; is made through a patented process that starts with sugar and converted to a no-calorie, non-carbohydrate sweetener.
               <br />
-          The result is a very stable sweetener that tastes like sugar -without its calories. When ingested, SPLENDA&reg; is not broken down for energy, <br />
+          The result is a very stable sweetener that tastes like sugar - without its calories. When ingested, SPLENDA&reg; is not broken down for energy, <br />
           so the body does not recognize it as a carbohydrate.</p>
           <p>&nbsp;</p>
           <p>SPLENDA&reg; is found in more than 4000 products as a part of healthy diets worldwide.</p>
@@ -112,7 +112,7 @@ ketonuria (PKU)</td>
           </div>
           <div class="row">&nbsp;</div>
           <div class="row">
-          	<h1 class="blueHeading">Sugar SPLENDA&reg; conversion chart </h1>
+          	<h1 class="blueHeading">Sugar SPLENDA&reg; Conversion Chart </h1>
           </div>
           <div class="row">
           	<table width="780" align="center" border="0" cellspacing="0" cellpadding="0" class="tblOuterBrdr">
