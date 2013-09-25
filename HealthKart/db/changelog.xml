@@ -14189,4 +14189,9 @@
             update reverse_pickup_order set reverse_pickup_type_id = 10;
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="20130926-02">
+        <sql>
+            ALTER TABLE rp_line_item ADD COLUMN amount DECIMAL(10,2);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

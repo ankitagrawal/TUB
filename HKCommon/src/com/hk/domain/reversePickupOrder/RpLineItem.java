@@ -33,6 +33,8 @@ public class RpLineItem implements Serializable{
     @JoinColumn(name = "line_item_id", nullable = false)
     private LineItem lineItem;
 
+    @Column(name = "amount")
+    private Double        amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_reason_for_return_id")
@@ -175,5 +177,13 @@ public class RpLineItem implements Serializable{
 
     public void setItemBarcode(String itemBarcode) {
         this.itemBarcode = itemBarcode;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

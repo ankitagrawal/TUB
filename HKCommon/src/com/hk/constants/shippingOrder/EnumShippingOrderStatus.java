@@ -211,4 +211,12 @@ public enum EnumShippingOrderStatus {
         EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId());
   }
 
+    public static List<Long> getReconcilableShippingOrderStatus() {
+        return Arrays.asList(
+                EnumShippingOrderStatus.RTO_Initiated.getId(),
+                EnumShippingOrderStatus.SO_RTO.getId(),
+                EnumShippingOrderStatus.SO_Lost.getId()
+                );
+    }
+
 }
