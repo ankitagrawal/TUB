@@ -14149,4 +14149,44 @@
             insert into reverse_pickup_status values(80,'RPU_Scheduled');
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="20130925-01">
+        <sql>
+            CREATE TABLE `reverse_pickup_type` (
+            `id` int(11) NOT NULL,
+            `name` varchar(100) NOT NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+            ALTER TABLE reverse_pickup_order ADD COLUMN reverse_pickup_type_id INT(11);
+
+            ALTER TABLE reverse_pickup_order ADD FOREIGN KEY fk_reverse_pickup_order_reverse_pickup_type_id1 (reverse_pickup_type_id) REFERENCES reverse_pickup_type(id) ON DELETE CASCADE;
+
+            ALTER TABLE rp_line_item ADD FOREIGN KEY fk_rp_line_item_action_taken_id_classification_id1 (action_taken_id) REFERENCES classification(id) ON DELETE CASCADE;
+
+            ALTER TABLE rp_line_item ADD FOREIGN KEY fk_rp_line_item_customer_action_status_id_classification_id2 (customer_action_status) REFERENCES classification(id) ON DELETE CASCADE;
+
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2110', 'Refund in Cash', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2120', 'Refund Reward Points', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2130', 'Replacement Order', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2140', 'Decide Later', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2010', 'Pending Approval', 'Approval');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2020', 'Approved', 'Approval');
+
+            update `rp_line_item` set action_taken_id = 2110 WHERE action_taken_id = 10;
+            update `rp_line_item` set action_taken_id = 2120 WHERE action_taken_id = 20;
+            update `rp_line_item` set action_taken_id = 2130 WHERE action_taken_id = 30;
+            update `rp_line_item` set action_taken_id = 2140 WHERE action_taken_id = 70;
+
+            update `rp_line_item` set customer_action_status = 2010 WHERE customer_action_status = 80;
+            update `rp_line_item` set customer_action_status = 2020 WHERE customer_action_status = 90;
+
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('10', 'REVERSE_PICKUP');
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('20', 'REPLACEMENT_ORDER');
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('30', 'LOST');
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('40', 'APPEASEMENT');
+
+            update reverse_pickup_order set reverse_pickup_type_id = 10;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
