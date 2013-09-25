@@ -749,19 +749,24 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
   public boolean freeBookingInventoryAtBright(CartLineItem cartLineItem) {
     // Assumption is deleting of all entries but  in future partial deletion
-
     List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstBOCancellation(cartLineItem);
     if (infos != null) {
       deleteSicliAndSili(cartLineItem);
-      freeFsiclis(infos);
+      Boolean status = isBrightItemCheckInAtAqua(cartLineItem);
+      if (status) {
+        freeFsiclis(infos, false);
+      } else {
+        freeFsiclis(infos, true);
+      }
       logger.debug("Inventory freed for  booking at Bright for cartLineItem" + cartLineItem.getId());
       return true;
     }
+
     logger.debug("Failed to -Inventory freed for booking at Bright for cartLineItem" + cartLineItem.getId());
     return false;
   }
 
-  public List<SkuItem> freeFsiclis(List<HKAPIForeignBookingResponseInfo> infos) {
+  public List<SkuItem> freeFsiclis(List<HKAPIForeignBookingResponseInfo> infos , Boolean isSkuItemsToBeDeleted) {
     List<SkuItem> skuItems = new ArrayList<SkuItem>();
     List<ForeignSkuItemCLI> fsiclis = new ArrayList<ForeignSkuItemCLI>();
 
@@ -779,8 +784,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
       baseDao.save(cartLineItem);
     }
-
-    baseDao.deleteAll(skuItems);
+    if (isSkuItemsToBeDeleted) {
+      baseDao.deleteAll(skuItems);
+    }
     baseDao.deleteAll(fsiclis);
     return skuItems;
   }
@@ -1004,4 +1010,18 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     }
     return inventoryHealthService;
   }
+
+
+  public Boolean isBrightItemCheckInAtAqua(CartLineItem cartLineItem  ) {
+    // need to check whether booked inventory has already been checked in at bright
+    List<ForeignSkuItemCLI> fsiclis = cartLineItem.getForeignSkuItemCLIs();
+    for (ForeignSkuItemCLI foreignSkuItemCLI  : fsiclis){
+      SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
+      if (skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.BOOKED.getId())){
+        return  true;
+      }
+    }
+    return  false;
+  }
+
 }
