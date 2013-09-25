@@ -11,7 +11,6 @@ public enum EnumPaymentTransactionType {
 
     SALE(0L, "Sale"),
     REFUND(1L,"Refund"),
-    REWARD(2L,"Reward")
     ;
 
     private String name;
