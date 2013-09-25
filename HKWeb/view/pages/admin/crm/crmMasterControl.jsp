@@ -334,6 +334,7 @@
 					</fieldset>
 
 				</c:if>
+			</c:if>
 		</div>
 	</s:layout-component>
 </s:layout-render>
