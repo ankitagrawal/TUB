@@ -18,7 +18,7 @@ public enum EnumReversePickupType {
 
     EnumReversePickupType(Long id, String name) {
         this.id = id;
-        name = name;
+        this.name = name;
     }
 
     public static ReversePickupType getReversePickupType(EnumReversePickupType enumReversePickupType) {
