@@ -67,50 +67,9 @@
 
         $('#shippingOrderId').focus();
 
-        $('#is-replacement-radio').click(function(event) {
-            event.preventDefault();
-            $('#is-rto').hide();
-            $('#is-replacement').slideDown();
-        });
-
-        $('#is-rto-radio').click(function(event) {
-            event.preventDefault();
-            $('#is-replacement').hide();
-            $('#is-rto').slideDown();
-        });
         $('.createReplacementOrderButton').click(function(event){
             $(this).hide();
-            var button = $(this);
-            event.preventDefault();
-            var shippingOrderId= $('#shippingOrderIdText').val();
-            var formName;
-            if($(this).hasClass('rto')){
-                formName =  $('#createReplacementOrderForRtoForm');
-            }
-            else{
-                formName = $('#createReplacementOrderForRepForm');
-            }
-            var formUrl = formName.attr('action');
-            $.getJSON(
-                    $('#checkReplacementOrderLink').attr('href'), {shippingOrderId:shippingOrderId},
-                    function(res) {
-                        if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                            var confirm_action = confirm("A replacement order exists for given shipping order, are you sure you want to create another replacement order?");
-                            if (confirm_action == false) {
-                                button.show();
-                                event.preventDefault();
-                            }
-                            else{
-                                formName.attr('action', formUrl+"?createReplacementOrder=");
-                                formName.submit();
-                            }
-                        }
-                        else{
-                            formName.attr('action', formUrl+"?createReplacementOrder=");
-                            formName.submit();
-                        }
-                    });
-        });
+	        });
     })
 </script>
 
