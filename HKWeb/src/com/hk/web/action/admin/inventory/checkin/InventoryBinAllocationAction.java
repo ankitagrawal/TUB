@@ -262,7 +262,7 @@ public class InventoryBinAllocationAction extends BaseAction {
 		else{
 			retrunVal = false;
 		}
-		return true;
+		return retrunVal;
 	}
 	
 	public String getBarcode() {
