@@ -194,7 +194,7 @@
                                 <s:select name="rpLineItems[${index}].customerReasonForReturn"
                                           value="${savedRpLineItem.customerReasonForReturn.id}"
                                           class="reason-entered-select"
-                                          disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}">
+                                          disabled="${savedRpLineItem.customerActionStatus.id == approvedId? 'disabled' : ''}">
                                     <s:option value="">--Select-- </s:option>
                                     <c:forEach items="${customerReasonList}" var="reason">
                                         <s:option value="${reason.id}">${reason.classification.primary}</s:option>
@@ -203,8 +203,8 @@
                             </td>
                             <td>
                                 <s:select name="rpLineItems[${index}].actionTaken"
-                                          value="${savedRpLineItem.actionTaken}"
-                                          disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}">
+                                          value="${savedRpLineItem.actionTaken.id}"
+                                          disabled="${savedRpLineItem.customerActionStatus.id == approvedId? 'disabled' : ''}">
                                     <s:option value="">--Select-- </s:option>
                                     <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
                                                var="actionTaken">
@@ -232,15 +232,15 @@
                                 <s:textarea style="width: 300px; height: 60px;"
                                             name="rpLineItems[${index}].customerComment"
                                             value="${savedRpLineItem.customerComment}" class="reason-entered-area"
-                                            disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}"/>
+                                            disabled="${savedRpLineItem.customerActionStatus.id == approvedId? 'disabled' : ''}"/>
                             </td>
                             <td>
-                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
+                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus.id == pendingId}">
                                     <a href="javascript:void(0)" class="save-link" style="color: green;" >
                                         <span class="link">(Save)</span> <br><br><br>
                                     </a>
                                 </c:if>
-                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
+                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus.id == pendingId}">
                                     <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction"
                                             style="color:red;"
                                             event="deleteRpLineItem"> <span class="link">(Delete)</span>
