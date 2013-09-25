@@ -9,9 +9,6 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="CRM Master Screen">
 <s:useActionBean beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" var="maBean"/>
-<s:useActionBean beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" var="rpBean"/>
-<s:useActionBean beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" var="cpa"/>
-<s:useActionBean beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" var="replacementOrderBean"/>
 <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -30,9 +27,9 @@
 
 <script>
     $(document).ready(function(){
-        var viewRefund = "${cpa.refundFlag}";
-        var viewReward = "${rpBean.rewardFlag}";
-        var viewReplacement = "${replacementOrderBean.replacementFlag}";
+        var viewRefund = "${maBean.refundFlag}";
+        var viewReward = "${maBean.rewardFlag}";
+        var viewReplacement = "${maBean.replacementFlag}";
 
         $('#rewardDiv').hide();
         $('#refundDiv').hide();
@@ -143,6 +140,7 @@
                     <td> <s:submit name="searchShippingOrder" value="Search"/>
                     </td>
                 </tr>
+                <c:if test="${maBean.actionFlag == true}"></c:if>
                 <tr>
                     <td>Choose action on:</td>
                     <td><s:select name="actionType" id="actionType" >
@@ -158,21 +156,23 @@
     </fieldset>
 </div>
 <div id="rewardDiv">
-    <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" method="post">
         <fieldset style="width:60%">
             <label style="color: #ff0000; font-weight: bold; font-size: 25px;">Reward Points given due
                 to cancellations will not be given from this screen. They will be given automatically</label>
             <table>
-                <s:hidden name="user" value="${rpBean.user.id}"/>
+                <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
                 <tr>
-                    <td>Value</td>
-                    <td><s:text name="value"/></td>
-                    <td>Order Id</td><td><s:text name="orderId"/></td>
+                    <td>Total Amount</td>
+                    <td>${maBean.paymentAmount}</td>
+                    <td>Base Order Id</td><td>${maBean.baseOrderId}</td>
                 </tr>
                 <tr>
                     <td>Mode</td>
                     <td>
-                        <s:select name="rewardPointMode"><hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
+                        <s:select name="rewardPointMode">
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                       serviceProperty="rewardPointModes" value="id" label="name"/>
                         </s:select>
                     </td>
                     <td>Expiry Date</td>
@@ -182,7 +182,7 @@
                     <td>Comment</td>
                     <td><s:textarea name="comment"/></td>
                     <td></td>
-                    <td><s:submit name="add" value="Add"/></td>
+                    <td><s:submit name="addRewardPoints" value="Add reward Points"/></td>
                 </tr>
             </table>
         </fieldset>
@@ -195,24 +195,20 @@
     <div>
         &nbsp;&nbsp;&nbsp;&nbsp;Payment Seeker (Currently works for ICICI/Citrus/EBS/Icici via Citrus (Credit debit cards only)
     </div>
-    <s:form beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
+    <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
         <fieldset style="width:45%;">
             <br>
             <table>
+                <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
                 <tr>
-                    <td><label>Enter Payment Gateway Id</label></td>
-                    <td><s:text name="gatewayOrderId" id = "gatewayOrderId" style="width:180px;height:25px;"/></td>
-                </tr>
-
-                <tr>
-                    <td><label>Enter Amount</label></td>
-                    <td><s:text name="amount" id = "amount" style="width:180px;height:25px;"/></td>
+                    <td><label>Total Amount</label></td>
+                    <td>${maBean.paymentAmount}</td>
                 </tr>
                 <tr>
                     <td><label>Enter Reason for Refund</label></td>
                     <td><s:select name="refundReason" style="width:185px;height:28px;">
                         <s:option value="">-- Select --</s:option>
-                        <c:forEach items="${cpa.refundReasons}" var="reason">
+                        <c:forEach items="${maBean.refundReasons}" var="reason">
                             <s:option value="${reason.id}"> ${reason.classification.primary} - ${reason.classification.secondary}</s:option>
                         </c:forEach>
                     </s:select>
@@ -220,53 +216,15 @@
                 </tr>
                 <tr>
                     <td>Comments </td>
-                    <td><s:textarea name="reasonComments" cols="5" rows="2" id="reasonCom" style="width:320px;height:80px;"/> </td>
+                    <td><s:textarea name="refundComments" cols="5" rows="2" id="reasonCom" style="width:320px;height:80px;"/> </td>
                 </tr>
             </table>
             <br>
-            <s:submit name="seekPayment" value="Seek" id="save"/>
             <s:submit name="refundPayment" value="Refund " id="refund"/>
-            <s:submit name="updatePayment"  value="Update" id="update"/>
         </fieldset>
     </s:form>
 
-    <c:if test="${not empty cpa.hkPaymentResponseList}">
-        <c:set var="count" value="1" />
-        <table>
-            <thead>
-            <th> S No. </th>
-            <th>Gateway Order Id </th>
-            <th>Transaction Type </th>
-            <th>Amount </th>
-            <th>Payment Status </th>
-            <th>Response Message </th>
-            <th>Root Reference No </th>
-            <th>Authentication Code </th>
-            <th>Gateway </th>
-            <th>Error Log </th>
-            </thead>
-            <tbody>
-            <c:forEach  items="${cpa.hkPaymentResponseList}" var="response">
-                <tr>
-                    <td>${count}</td>
-                    <td>${response.gatewayOrderId}</td>
-                    <td>${response.transactionType}</td>
-                    <td>${response.amount}</td>
-                    <td>${response.HKPaymentStatus.name}</td>
-                    <td>${response.responseMsg}</td>
-                    <td>${response.rrn}</td>
-                    <td>${response.authIdCode}</td>
-                    <td>${response.gateway.name}</td>
-                    <td>${response.errorLog}</td>
-                </tr>
-                <c:set var="count" value="${count+1}" />
-            </c:forEach>
-            </tbody>
-        </table>
-    </c:if>
-
-
-    <c:if test="${not empty cpa.payment}">
+    <c:if test="${not empty maBean.payment}">
         <c:set var="count" value="1" />
         <table>
             <thead>
@@ -301,31 +259,25 @@
 <!-- Refund block ends -->
 
 <div id="replacementDiv">
-<div style="display: none;">
-    <s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="checkReplacementOrderLink"
-            event="checkExistingReplacementOrder"></s:link>
-</div>
-
-<c:if test="${!empty replacementOrderBean.shippingOrder}">
+<c:if test="${!empty maBean.shippingOrder}">
     <fieldset style="float:left;">
         <table>
-                <%--          <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrderId}"/>--%>
             <tr>
                 <td><h5>CustomerName:</h5></td>
-                <td>${replacementOrderBean.shippingOrder.baseOrder.user.name}</td>
+                <td>${maBean.shippingOrder.baseOrder.user.name}</td>
                 <td><h5>SO date:</h5></td>
-                <td>${replacementOrderBean.shippingOrder.createDate}</td>
+                <td>${maBean.shippingOrder.createDate}</td>
             </tr>
             <tr>
                 <td><h5>Email:</h5></td>
-                <td>${replacementOrderBean.shippingOrder.baseOrder.user.email}
+                <td>${maBean.shippingOrder.baseOrder.user.email}
                 </td>
                 <td><h5>Address:</h5></td>
                 <td>
-                        ${replacementOrderBean.shippingOrder.baseOrder.address.city}<br/>
-                        ${replacementOrderBean.shippingOrder.baseOrder.address.state}-
-                    (${replacementOrderBean.shippingOrder.baseOrder.address.pincode.pincode})<br/>
-                    Ph: ${replacementOrderBean.shippingOrder.baseOrder.address.phone}
+                        ${maBean.shippingOrder.baseOrder.address.city}<br/>
+                        ${maBean.shippingOrder.baseOrder.address.state}-
+                        (${maBean.shippingOrder.baseOrder.address.pincode.pincode})<br/>
+                    Ph: ${maBean.shippingOrder.baseOrder.address.phone}
                 </td>
             </tr>
             <tr>
@@ -333,22 +285,22 @@
                     <h5>Status</h5>
                 </td>
                 <td>
-                        ${replacementOrderBean.shippingOrder.orderStatus.name}
+                        ${maBean.shippingOrder.orderStatus.name}
                 </td>
                 <td>
 
-                    <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerReturn}">
+                    <c:if test="${maBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerReturn}">
                         <a href="#" id="is-replacement-radio">
                             <h5>Create RO<br />for Customer Return</h5>
                         </a>
                         (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
-                        <s:param name="reverseOrder" value="${replacementOrderBean.reverseOrder}"/>
-                        <s:param name="shippingOrder" value="${replacementOrderBean.shippingOrder}"/>
+                        <s:param name="reverseOrder" value="${maBean.reverseOrder}"/>
+                        <s:param name="shippingOrder" value="${maBean.shippingOrder}"/>
                         View Reverse Order
                     </s:link>)
                     </c:if>
 
-                    <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerAppease}">
+                    <c:if test="${maBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerAppease}">
                         <a href="#" id="is-replacement-radio">
                             <h5>Create RO<br />for Customer Satisfaction</h5>
                         </a>
@@ -356,8 +308,8 @@
                 </td>
                 <td>
 
-                    <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusRTO_instantiated
-                            || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusSO_returned}">
+                    <c:if test="${maBean.shippingOrder.orderStatus.id == shippingOrderStatusRTO_instantiated
+                            || maBean.shippingOrder.orderStatus.id == shippingOrderStatusSO_returned}">
                         <a href="#" id="is-rto-radio">
                             <h5>Create RO<br />for RTO</h5>
                         </a>
@@ -369,17 +321,15 @@
 
     <fieldset style="display:none;" id="is-rto">
         <h4>Returned to origin</h4>
-        <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRtoForm">
-            <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
+        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" id="createReplacementOrderForRtoForm">
+            <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
             <table border="1">
                 <thead>
                 <th>S No.</th>
                 <th>Product</th>
                 <th>Original Qty</th>
-                <th>Replacement Qty</th>
                 </thead>
-                <s:hidden name="isRto" value="1"/>
-                <c:forEach items="${replacementOrderBean.lineItems}" var="lineItem" varStatus="lineItemCtr">
+                <c:forEach items="${maBean.lineItems}" var="lineItem" varStatus="lineItemCtr">
                     <s:hidden name="lineItems[${lineItemCtr.index}].sku" value="${lineItem.sku}"/>
                     <s:hidden name="lineItems[${lineItemCtr.index}].cartLineItem"
                               value="${lineItem.cartLineItem.id}"/>
@@ -401,10 +351,6 @@
                             Variant: ${lineItem.cartLineItem.productVariant.id}
                         </td>
                         <td>${lineItem.qty}</td>
-                        <td>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].qty" value="${lineItem.qty}"/>
-                                ${lineItem.qty}
-                        </td>
                     </tr>
                 </c:forEach>
             </table>
@@ -416,7 +362,7 @@
                                            label="name"/>
             </s:select>
             <br/><br/>
-            <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="roComment" style="height:50px;" />
+            <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="replacementComments" style="height:50px;" />
             <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
         </s:form>
     </fieldset>
@@ -424,13 +370,12 @@
     <fieldset style="display:none;" id="is-replacement">
         <h4>Replacement for Customer Return</h4>
         <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRepForm">
-            <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
+            <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
             <table border="1">
                 <thead>
                 <th>S No.</th>
                 <th>Product</th>
                 <th>Original Qty</th>
-                <th>Replacement Qty</th>
                 </thead>
                 <s:hidden name="isRto" value="0"/>
                     <%--<c:choose>--%>
@@ -464,11 +409,6 @@
                             Variant: ${lineItem.cartLineItem.productVariant.id}
                         </td>
                         <td>${lineItem.qty}</td>
-                        <td><s:text name="lineItems[${lineItemCtr.index}].qty" class="qty"/>
-                            <script type="text/javascript">
-                                $('.qty').val(0);
-                            </script>
-                        </td>
                     </tr>
                 </c:forEach>
                     <%--</c:when>--%>
@@ -485,7 +425,7 @@
                                            label="name"/>
             </s:select>
             <br/><br/>
-            <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="roComment" style="height:50px;" />
+            <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="replacementComments" style="height:50px;" />
             <br/>
             <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
         </s:form>
