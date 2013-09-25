@@ -215,7 +215,7 @@ public class MasterResolutionAction extends BaseAction {
 
     if (lineItems.isEmpty() || replacementOrderReason == null) {
       addRedirectAlertMessage(new SimpleMessage("No reason selected or no appropriate items found for creating replacement order."));
-      return new ForwardResolution(MasterResolutionAction.class);
+      return new ForwardResolution(MasterResolutionAction.class, "pre");
     }
 
     for (LineItem lineItem : lineItems) {
