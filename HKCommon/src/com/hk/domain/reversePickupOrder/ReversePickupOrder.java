@@ -7,6 +7,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "reverse_pickup_order")
-public class ReversePickupOrder {
+public class ReversePickupOrder implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

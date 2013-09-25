@@ -41,7 +41,8 @@ public class RpLineItem implements Serializable{
     @Column(name = "customer_comment", length = 100)
     private String customerComment;
 
-    @Column(name = "action_taken_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "action_taken_id")
     private Classification actionTaken;
 
     @Column(name = "action_on_status_id")
@@ -54,7 +55,8 @@ public class RpLineItem implements Serializable{
     @JoinColumn(name = "warehouse_condition_id")
     private Reason warehouseReceivedCondition;
 
-    @Column(name = "customer_action_status")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_action_status")
     private Classification customerActionStatus;
 
     @Column(name = "warehouse_comment")
