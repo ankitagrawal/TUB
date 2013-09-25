@@ -15,10 +15,6 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 </s:layout-component>
-<c:set var="shippingOrderStatusCustomerReturn" value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>"/>
-<c:set var="shippingOrderStatusCustomerAppease" value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>"/>
-<c:set var="shippingOrderStatusRTO_instantiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
-<c:set var="shippingOrderStatusSO_returned" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <s:layout-component name="heading">
     Master CRM Resolution Screen
 </s:layout-component>
@@ -119,7 +115,7 @@
 </script>
 
 <div>
-    <fieldset style="width: 60%;">
+    <fieldset style="width: 100%;">
         <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
             <table>
                 <tr>
@@ -152,38 +148,34 @@
                         </td>
                     </tr>
                 </c:if>
-
             </table>
-            
-            <table>
-            <tr>
-                <td><h5>CustomerName:</h5></td>
-                <td>${maBean.shippingOrder.baseOrder.user.name}</td>
-                <td><h5>SO date:</h5></td>
-                <td>${maBean.shippingOrder.createDate}</td>
-            </tr>
-            <tr>
-                <td><h5>Email:</h5></td>
-                <td>${maBean.shippingOrder.baseOrder.user.email}
-                </td>
-                <td><h5>Address:</h5></td>
-                <td>
-                        ${maBean.shippingOrder.baseOrder.address.city}<br/>
-                        ${maBean.shippingOrder.baseOrder.address.state}-
-                        (${maBean.shippingOrder.baseOrder.address.pincode.pincode})<br/>
-                    Ph: ${maBean.shippingOrder.baseOrder.address.phone}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h5>Status</h5>
-                </td>
-                <td>
-                        ${maBean.shippingOrder.orderStatus.name}
-                </td>
-            </tr>
-            </table>
-        </s:form>
+					<c:if test="${maBean.actionFlag == true}">
+						<table>
+							<tr>
+								<td><h5>CustomerName:</h5></td>
+								<td>${maBean.shippingOrder.baseOrder.user.name}</td>
+								<td><h5>SO date:</h5></td>
+								<td>${maBean.shippingOrder.createDate}</td>
+							</tr>
+							<tr>
+								<td><h5>Email:</h5></td>
+								<td>${maBean.shippingOrder.baseOrder.user.email}</td>
+								<td><h5>Address:</h5></td>
+								<td>${maBean.shippingOrder.baseOrder.address.city}<br />
+									${maBean.shippingOrder.baseOrder.address.state}-
+									(${maBean.shippingOrder.baseOrder.address.pincode.pincode})<br />
+									Ph: ${maBean.shippingOrder.baseOrder.address.phone}
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h5>Status</h5>
+								</td>
+								<td>${maBean.shippingOrder.orderStatus.name}</td>
+							</tr>
+						</table>
+					</c:if>
+				</s:form>
     </fieldset>
 </div>
 <div id="rewardDiv">
@@ -288,162 +280,60 @@
 </div>
 <!-- Refund block ends -->
 
-<div id="replacementDiv">
-<c:if test="${!empty maBean.shippingOrder}">
-    <fieldset style="float:left;">
-        <table>
-            <tr>
-                <td>
-                    <h5>Status</h5>
-                </td>
-                <td>
-                        ${maBean.shippingOrder.orderStatus.name}
-                </td>
-                <td>
+		<div id="replacementDiv">
+			<c:if test="${!empty maBean.shippingOrder}">
+				<fieldset style="float: left;">
+					<table>
+						<tr>
+							<td>
+								<h5>Status</h5>
+							</td>
+							<td>${maBean.shippingOrder.orderStatus.name}</td>
+							<td></td>
+						</tr>
+					</table>
+				</fieldset>
+				<c:if test="${maBean.replacementPossible == true}">
+					<fieldset>
+						<h4>Returned to origin</h4>
+						<s:form
+							beanclass="com.hk.web.action.admin.crm.MasterResolutionAction"
+							id="createReplacementOrderForRtoForm">
+							<s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}" />
+							<table border="1">
+								<thead>
+									<th>S No.</th>
+									<th>Product</th>
+									<th>Original Qty</th>
+								</thead>
+								<c:forEach items="${maBean.lineItems}" var="lineItem"
+									varStatus="lineItemCtr">
+									<tr>
+										<td>${lineItemCtr.count}</td>
+										<td>${lineItem.cartLineItem.productVariant.product.name}<br />
+											Variant: ${lineItem.cartLineItem.productVariant.id}
+										</td>
+										<td>${lineItem.qty}</td>
+									</tr>
+								</c:forEach>
+							</table>
+							<s:label name="Reason for Replacement:" style="margin-left:7px;" />
+							<s:select name="replacementOrderReason">
+								<s:option value="-Select Reason-">-Select Reason-</s:option>
+								<hk:master-data-collection service="<%=MasterDataDao.class%>"
+									serviceProperty="replacementOrderReasonForReplacement"
+									value="id" label="name" />
+							</s:select>
+							<br />
+							<br />
+							<s:label name="Comment/Remark:" style="margin-left:7px;" />
+							<s:textarea name="replacementComments" style="height:50px;" />
+							<s:submit class="createReplacementOrderButton"
+								name="createReplacementOrder" value="Generate Replacement Order" />
+						</s:form>
+					</fieldset>
 
-                    <c:if test="${maBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerReturn}">
-                        <a href="#" id="is-replacement-radio">
-                            <h5>Create RO<br />for Customer Return</h5>
-                        </a>
-                        (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
-                        <s:param name="reverseOrder" value="${maBean.reverseOrder}"/>
-                        <s:param name="shippingOrder" value="${maBean.shippingOrder}"/>
-                        View Reverse Order
-                    </s:link>)
-                    </c:if>
-
-                    <c:if test="${maBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerAppease}">
-                        <a href="#" id="is-replacement-radio">
-                            <h5>Create RO<br />for Customer Satisfaction</h5>
-                        </a>
-                    </c:if>
-                </td>
-                <td>
-
-                    <c:if test="${maBean.shippingOrder.orderStatus.id == shippingOrderStatusRTO_instantiated
-                            || maBean.shippingOrder.orderStatus.id == shippingOrderStatusSO_returned}">
-                        <a href="#" id="is-rto-radio">
-                            <h5>Create RO<br />for RTO</h5>
-                        </a>
-                    </c:if>
-                </td>
-            </tr>
-        </table>
-    </fieldset>
-
-    <fieldset style="display:none;" id="is-rto">
-        <h4>Returned to origin</h4>
-        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" id="createReplacementOrderForRtoForm">
-            <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
-            <table border="1">
-                <thead>
-                <th>S No.</th>
-                <th>Product</th>
-                <th>Original Qty</th>
-                </thead>
-                <c:forEach items="${maBean.lineItems}" var="lineItem" varStatus="lineItemCtr">
-                    <s:hidden name="lineItems[${lineItemCtr.index}].sku" value="${lineItem.sku}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].cartLineItem"
-                              value="${lineItem.cartLineItem.id}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].costPrice" value="${lineItem.costPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].markedPrice"
-                              value="${lineItem.markedPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].hkPrice" value="${lineItem.hkPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
-                              value="${lineItem.discountOnHkPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
-
-                    <tr>
-                        <td>${lineItemCtr.count}</td>
-                        <td>${lineItem.cartLineItem.productVariant.product.name}<br/>
-                            Variant: ${lineItem.cartLineItem.productVariant.id}
-                        </td>
-                        <td>${lineItem.qty}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-            <s:label name="Reason for Replacement:" style="margin-left:7px;"/>
-            <s:select name="replacementOrderReason">
-                <s:option value="-Select Reason-">-Select Reason-</s:option>
-                <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                           serviceProperty="replacementOrderReasonForRto" value="id"
-                                           label="name"/>
-            </s:select>
-            <br/><br/>
-            <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="replacementComments" style="height:50px;" />
-            <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
-        </s:form>
-    </fieldset>
-
-    <fieldset style="display:none;" id="is-replacement">
-        <h4>Replacement for Customer Return</h4>
-        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" id="createReplacementOrderForRepForm">
-            <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
-            <table border="1">
-                <thead>
-                <th>S No.</th>
-                <th>Product</th>
-                <th>Original Qty</th>
-                </thead>
-                <s:hidden name="isRto" value="0"/>
-                    <%--<c:choose>--%>
-                    <%--<c:when test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerAppease}">--%>
-                <c:forEach items="${replacementOrderBean.lineItems}" var="lineItem"
-                           varStatus="lineItemCtr">
-                    <s:hidden name="lineItems[${lineItemCtr.index}].sku" value="${lineItem.sku}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].cartLineItem"
-                              value="${lineItem.cartLineItem.id}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].costPrice"
-                              value="${lineItem.costPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].markedPrice"
-                              value="${lineItem.markedPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].hkPrice"
-                              value="${lineItem.hkPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
-                              value="${lineItem.discountOnHkPrice}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints"
-                              value="${lineItem.rewardPoints}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount"
-                              value="${lineItem.orderLevelDiscount}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].codCharges"
-                              value="${lineItem.codCharges}"/>
-                    <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges"
-                              value="${lineItem.shippingCharges}"/>
-                    <tr>
-                        <td>${lineItemCtr.count}</td>
-                        <td>
-                                ${lineItem.cartLineItem.productVariant.product.name} <br/>
-                            Variant: ${lineItem.cartLineItem.productVariant.id}
-                        </td>
-                        <td>${lineItem.qty}</td>
-                    </tr>
-                </c:forEach>
-                    <%--</c:when>--%>
-                    <%--<c:otherwise>--%>
-
-                    <%--</c:otherwise>--%>
-                    <%--</c:choose>--%>
-            </table>
-            <s:label name="Reason for Replacement:" style="margin-left:7px;"/>
-            <s:select name="replacementOrderReason">
-                <s:option value="-Select Reason-">-Select Reason-</s:option>
-                <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                           serviceProperty="replacementOrderReasonForReplacement" value="id"
-                                           label="name"/>
-            </s:select>
-            <br/><br/>
-            <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="replacementComments" style="height:50px;" />
-            <br/>
-            <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
-        </s:form>
-    </fieldset>
-
-</c:if>
-</div>
-</s:layout-component>
+				</c:if>
+		</div>
+	</s:layout-component>
 </s:layout-render>

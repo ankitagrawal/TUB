@@ -82,6 +82,7 @@ public class MasterResolutionAction extends BaseAction {
   private boolean actionFlag;
   private boolean rewardFlag;
   private boolean refundFlag;
+  private boolean replacementPossible;
 
   private Long shippingOrderId;
   private Long baseOrderId;
@@ -161,6 +162,12 @@ public class MasterResolutionAction extends BaseAction {
       shippingOrderId = shippingOrder.getId();
       lineItems = new ArrayList<LineItem>();
       lineItems.addAll(shippingOrder.getLineItems());
+      replacementPossible = shippingOrder.getReversePickupOrders() != null 
+    		  && !shippingOrder.getReversePickupOrders().isEmpty();
+      if (!replacementPossible) {
+    	  replacementPossible = EnumShippingOrderStatus.getReconcilableShippingOrderStatus()
+    			  									.contains(shippingOrder.getShippingOrderStatus().getId());
+      }
     }
     return new ForwardResolution("/pages/admin/crm/crmMasterControl.jsp");
   }
@@ -527,4 +534,20 @@ public class MasterResolutionAction extends BaseAction {
   public void setReplacementComments(String replacementComments) {
     this.replacementComments = replacementComments;
   }
+
+
+/**
+ * @return the replacementPossible
+ */
+public boolean isReplacementPossible() {
+	return replacementPossible;
+}
+
+
+/**
+ * @param replacementPossible the replacementPossible to set
+ */
+public void setReplacementPossible(boolean replacementPossible) {
+	this.replacementPossible = replacementPossible;
+}
 }
