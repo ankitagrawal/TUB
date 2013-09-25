@@ -183,7 +183,7 @@
                                 </td>
                                 <td>${lineItem.qty}</td>
                                 <td>
-                                    <s:hidden name="lineItems[${lineItemCtr.index}].rQty" value="${lineItem.qty}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].RQty" value="${lineItem.qty}"/>
                                         ${lineItem.qty}
                                 </td>
                             </tr>
@@ -245,7 +245,7 @@
                                             Variant: ${lineItem.cartLineItem.productVariant.id}
                                         </td>
                                         <td>${lineItem.qty}</td>
-                                        <td><s:text name="lineItems[${lineItemCtr.index}].rQty" class="qty"/>
+                                        <td><s:text name="lineItems[${lineItemCtr.index}].RQty" class="qty"/>
                                             <script type="text/javascript">
                                                 $('.qty').val(0);
                                             </script>

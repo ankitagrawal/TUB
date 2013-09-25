@@ -227,10 +227,9 @@ public class MasterResolutionAction extends BaseAction {
       }
     }
 
-    boolean isRTO = EnumShippingOrderStatus.SO_RTO.getId().equals(shippingOrder.getOrderStatus().getId()) ||
-        EnumShippingOrderStatus.RTO_Initiated.getId().equals(shippingOrder.getOrderStatus().getId());
-    replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRTO,
-        replacementOrderReason, replacementComments);
+    boolean isRTO = EnumShippingOrderStatus.SO_RTO.getId().equals(shippingOrder.getOrderStatus().getId()) ||  EnumShippingOrderStatus.RTO_Initiated.getId().equals(shippingOrder.getOrderStatus().getId());
+
+    replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRTO, replacementOrderReason, replacementComments);
     if (replacementOrder == null) {
       addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
     } else {

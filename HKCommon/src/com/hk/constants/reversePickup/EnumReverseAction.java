@@ -39,7 +39,7 @@ public enum EnumReverseAction {
     }
 
     public static List<EnumReverseAction> getAllCustomerActionStatus() {
-        return Arrays.asList(Pending_Approval, Approved);
+        return Arrays.asList(Pending_Approval, Approved, Reconciled);
     }
 
     public static String getNameById(Long id) {
