@@ -13,6 +13,7 @@ import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.EnumPaymentTransactionType;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -192,8 +193,8 @@ public class MasterResolutionAction extends BaseAction {
     if (rewardPointsAdded) {
       rewardPointService.approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
       Payment payment = order.getPayment();
-      /*paymentManager.createNewPayment(order, EnumPaymentMode.REWARD_POINT_MODE.asPaymenMode(),null,null,
-          null,payment.getBillingAddress());*/
+      paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REWARD.asPaymenStatus(), rewardAmount,
+          EnumPaymentMode.REWARD_POINT_MODE.asPaymenMode(), EnumPaymentTransactionType.REWARD);
       addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
       return new RedirectResolution(SearchUserAction.class, "search");
     } else {

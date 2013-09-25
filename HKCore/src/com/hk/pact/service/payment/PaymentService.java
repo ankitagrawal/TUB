@@ -8,6 +8,7 @@ import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.EnumPaymentTransactionType;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -71,4 +72,6 @@ public interface PaymentService {
 
     public double getRefundableAmount(Payment payment);
 
+    public Payment createNewGenericPayment(Payment basePayment, PaymentStatus paymentStatus, Double amount,
+                                         PaymentMode paymentMode, EnumPaymentTransactionType paymentTransactionType);
 }
