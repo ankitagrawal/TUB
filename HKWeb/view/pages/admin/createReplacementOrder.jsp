@@ -246,6 +246,7 @@
                                             Variant: ${lineItem.cartLineItem.productVariant.id}
                                         </td>
                                         <td>${lineItem.qty}</td>
+                                        <td><s:text name="lineItems[${lineItemCtr.index}].qty" class="qty"/>
                                         <td><s:text name="lineItems[${lineItemCtr.index}].RQty" class="qty"/>
                                             <script type="text/javascript">
                                                 $('.qty').val(0);
