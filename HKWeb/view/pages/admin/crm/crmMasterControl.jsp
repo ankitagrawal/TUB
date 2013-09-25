@@ -140,17 +140,19 @@
                     <td> <s:submit name="searchShippingOrder" value="Search"/>
                     </td>
                 </tr>
-                <c:if test="${maBean.actionFlag == true}"></c:if>
-                <tr>
-                    <td>Choose action on:</td>
-                    <td><s:select name="actionType" id="actionType" >
-                        <s:option value="none">-- Select --</s:option>
-                        <s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
-                        <s:option id="refund" value="refund">Refund</s:option>
-                        <s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
-                    </s:select>
-                    </td>
-                </tr>
+                <c:if test="${maBean.actionFlag == true}">
+                    <tr>
+                        <td>Choose action on:</td>
+                        <td><s:select name="actionType" id="actionType" >
+                            <s:option value="none">-- Select --</s:option>
+                            <s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
+                            <s:option id="refund" value="refund">Refund</s:option>
+                            <s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
+                        </s:select>
+                        </td>
+                    </tr>
+                </c:if>
+
             </table>
         </s:form>
     </fieldset>
