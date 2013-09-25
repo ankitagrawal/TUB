@@ -197,4 +197,7 @@ public class PermissionConstants {
     public static final String CLOSE_REVERSE_PICKUP = "CLOSE_REVERSE_PICKUP";
     public static final String RECONCILE_REVERSE_PICKUP = "RECONCILE_REVERSE_PICKUP";
 
+
+    public static final String MARK_RP_APPEASEMENT = "MARK_RP_APPEASEMENT";
+
 }

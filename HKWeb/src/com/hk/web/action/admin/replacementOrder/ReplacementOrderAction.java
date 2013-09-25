@@ -115,19 +115,9 @@ public class ReplacementOrderAction extends BaseAction {
 	}
 
 	public Resolution createReplacementOrder() {
-		if ((!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_RTO.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Appeasement.getId()))
-				) {
-			addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName() +
-					" OR <br />" + EnumShippingOrderStatus.SO_RTO.getName() +
-					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()  +
-					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Appeasement.getName()
-			)
-
-
-			);
+        boolean bookingExists = shippingOrder.getReversePickupOrders() != null && !shippingOrder.getReversePickupOrders().isEmpty();
+		if (!EnumShippingOrderStatus.getStatusForCreatingRO().contains(shippingOrder.getOrderStatus().getId()) && !bookingExists) {
+			addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status RTO Initiate, RTO & Lost Or If a booking exists"));
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
