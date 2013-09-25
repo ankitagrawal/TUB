@@ -44,7 +44,7 @@
                 var courierName = $(this).val();
                 $('.courier-name').val(courierName);
             });
-            $('.mainForm').on('submit',function(){
+            $('.mainForm').submit(function(){
                 if($('[name="reversePickupOrder.reversePickupType.id"]').val()==='-1'){
                     alert('Please select Booking Type');
                     $('[name="reversePickupOrder.reversePickupType.id"]').focus();
