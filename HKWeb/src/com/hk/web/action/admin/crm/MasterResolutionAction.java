@@ -355,6 +355,7 @@ public class MasterResolutionAction extends BaseAction {
                 } else {
                   lineItemForRP.setQty(lineItemForRP.getQty() + 1);
                 }
+                lineItemForRP.setRQty(lineItemForRP.getQty());
                 toBeProcessedAmount+= rpLineItem.getAmount();
               }
             }
