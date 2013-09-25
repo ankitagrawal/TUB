@@ -24,7 +24,7 @@ public class ReplacementOrderHelper {
     public static LineItem getLineItemForReplacementOrder(LineItem lineItem, Long qty) {
       LineItem replacementOrderLineItem = new LineItem();
       replacementOrderLineItem.setSku(lineItem.getSku());
-//          replacementOrderLineItem.setShippingOrder(lineItem.getShippingOrder());
+      replacementOrderLineItem.setShippingOrder(lineItem.getShippingOrder());
       replacementOrderLineItem.setCartLineItem(lineItem.getCartLineItem());
   //        replacementOrderLineItem.setQty(lineItem.getQty());
       replacementOrderLineItem.setCostPrice(lineItem.getCostPrice());
