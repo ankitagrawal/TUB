@@ -17,7 +17,7 @@ public enum EnumPaymentMode {
 	COUNTER_CASH(50L, "Counter Cash"),
 	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment"),
 	OFFLINE_CARD_PAYMENT(100L, "Offline Credit/Debit Card"),
-  REWARD_POINT_MODE(110L,"Reward Points Added");
+	REWARD_POINT(110L,"Reward Points");
 
 	private java.lang.String name;
 	private java.lang.Long id;

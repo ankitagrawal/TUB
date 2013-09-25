@@ -173,39 +173,30 @@ public class MasterResolutionAction extends BaseAction {
   }
 
   public Resolution addRewardPoints() {
-    rewardFlag = true;
-    Double rewardAmount = (Double) this.getActionProcessingElement(shippingOrder, this.REWARD_ACTION);
-    User referredUser = getUserService().getUserById(getPrincipal().getId());
-    // referredUser stores the id of the user who added reward points
-    // this logs the user who has added reward points
-    boolean rewardPointsAdded = true;
-    User user = shippingOrder.getBaseOrder().getUser();
-    if (user.equals(referredUser)) {
-      addRedirectAlertMessage(new SimpleMessage("A user cannot give reward points to himself"));
-      return new ForwardResolution(MasterResolutionAction.class, "pre");
-    }
-    RewardPoint rewardPoint = new RewardPoint();
-    Order order = orderService.find(baseOrderId);
-    try {
-      if (rewardAmount >= RewardPointConstants.MAX_REWARD_POINTS) {
-        throw new InvalidRewardPointsException(rewardAmount);
-      }
-      rewardPoint = rewardPointService.addRewardPoints(user, referredUser, order, rewardAmount, comment,
-          EnumRewardPointStatus.APPROVED, rewardPointMode);
-    } catch (InvalidRewardPointsException e) {
-      rewardPointsAdded = false;
-    }
-    if (rewardPointsAdded) {
-      rewardPointService.approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
-      Payment payment = order.getPayment();
-      paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REWARD.asPaymenStatus(), rewardAmount,
-          EnumPaymentMode.REWARD_POINT_MODE.asPaymenMode(), EnumPaymentTransactionType.REWARD);
-      addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
-      return new ForwardResolution(MasterResolutionAction.class, "pre");
-    } else {
-      addRedirectAlertMessage(new SimpleMessage("Reward Points cannot be more than " + RewardPointDao.MAX_REWARD_POINTS));
-      return new ForwardResolution(MasterResolutionAction.class, "pre");
-    }
+	rewardFlag = true;
+	Double rewardAmount = (Double) this.getActionProcessingElement(shippingOrder, this.REWARD_ACTION);
+	if (rewardAmount==0d) {
+  	  addRedirectAlertMessage(new SimpleMessage("No items found for which reward points could be added."));
+	} else {
+	  User referredUser = getUserService().getUserById(getPrincipal().getId());
+	  // referredUser stores the id of the user who added reward points
+	  // this logs the user who has added reward points
+	  User user = shippingOrder.getBaseOrder().getUser();
+	  if (user.equals(referredUser)) {
+		addRedirectAlertMessage(new SimpleMessage("A user cannot give reward points to himself"));
+		return new ForwardResolution(MasterResolutionAction.class, "pre");
+	  }
+	  RewardPoint rewardPoint = new RewardPoint();
+	  Order order = orderService.find(baseOrderId);
+	  rewardPoint = rewardPointService.addRewardPoints(user, referredUser, order, rewardAmount, comment,
+			EnumRewardPointStatus.APPROVED, rewardPointMode);
+	  rewardPointService.approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
+	  Payment payment = order.getPayment();
+	  paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), rewardAmount,
+			 EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REFUND);
+	  addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
+	}
+	return new ForwardResolution(MasterResolutionAction.class, "pre");
   }
 
   public Resolution createReplacementOrder() {
