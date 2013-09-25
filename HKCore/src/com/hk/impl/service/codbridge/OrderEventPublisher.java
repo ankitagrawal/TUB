@@ -46,8 +46,8 @@ public class OrderEventPublisher {
 
 	@Autowired
     ProducerFactory producerFactory;
-    @Autowired
-    UserCallResponseObserver userCallResponseObserver;
+    /*@Autowired
+    UserCallResponseObserver userCallResponseObserver;*/
     @Autowired
     OrderService orderService;
     
@@ -134,7 +134,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setPhone(customerPhoneNumber);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribe();
+            //userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -174,7 +174,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_FAILURE);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
             messagePublished =  producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribe();
+            //userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -187,7 +187,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             boolean messagePublished = producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribe();
+            //userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }

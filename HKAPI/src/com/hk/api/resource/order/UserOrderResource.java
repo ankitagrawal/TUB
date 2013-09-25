@@ -161,7 +161,7 @@ public class UserOrderResource {
         return response;
     }
 
-    /*@POST
+    @POST
     @Path("/order/source/{source}/order/{orderId}/action/{action}")
     @Produces("application/json")
     @Encoded
@@ -170,18 +170,34 @@ public class UserOrderResource {
                                       @PathParam("action") String action,
                                       @QueryParam("authToken") String authToken
     ) {
-        String key = authToken;
+
+        Response response = null;
+
+        String decryptKey = CryptoUtil.decrypt(authToken);
+        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        if (source.equalsIgnoreCase("knowlarity")) {
+            return knowlarityChangeOrderStatus(orderId, action, source);
+        } else if (source.equalsIgnoreCase("drishti")) {
+            return drishtiChangeOrderStatus(orderId, action, source);
+        }
+
+        return response;
+    }
+
+
+    private Response knowlarityChangeOrderStatus(Long orderId, String action, String source) {
+
         Response response = null;
         User loggedInUser = null;
         loggedInUser = userService.getAdminUser();
         Order order = orderService.find(orderId);
         UserCodCall userCodCall = null;
 
-        String decryptKey = CryptoUtil.decrypt(key);
-        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
         try {
+
             userCodCall = order.getUserCodCall();
             userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_KNOWLARITY.getId());
             userCodCall.setRemark(source);
@@ -234,30 +250,19 @@ public class UserOrderResource {
         if (userCodCall != null) {
             bucketService.updateCODBucket(userCodCall.getBaseOrder());
         }
+
         return response;
-    }*/
+    }
 
 
-    @POST
-    @Path("/order/source/{source}/order/{orderId}/action/{action}")
-    @Produces("application/json")
-    @Encoded
-    public Response changeOrderStatus(@PathParam("orderId") Long orderId,
-                                      @PathParam("source") String source,
-                                      @PathParam("action") String action,
-                                      @QueryParam("authToken") String authToken
-    ) {
-        String key = authToken;
+    private Response drishtiChangeOrderStatus(Long orderId, String action, String source) {
+
         Response response = null;
         User loggedInUser = null;
         loggedInUser = userService.getAdminUser();
         Order order = orderService.find(orderId);
         UserCodCall userCodCall = null;
 
-        String decryptKey = CryptoUtil.decrypt(key);
-        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
         try {
             userCodCall = order.getUserCodCall();
             userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_DRISHTI.getId());
@@ -309,6 +314,8 @@ public class UserOrderResource {
             bucketService.updateCODBucket(userCodCall.getBaseOrder());
         }
         return response;
+
+
     }
 
 
