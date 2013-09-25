@@ -176,7 +176,7 @@
 	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
 	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
 	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
-	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingOrder" value="${lineItem.shippingOrder}"/>
+	                         <%--<s:hidden name="lineItems[${lineItemCtr.index}].shippingOrder" value="${lineItem.shippingOrder}"/>--%>
 	                         <s:hidden name="lineItems[${lineItemCtr.index}].qty" value="${lineItem.qty}"/>
 
                             <tr>
@@ -241,8 +241,8 @@
                                               value="${lineItem.codCharges}"/>
                                     <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges"
                                               value="${lineItem.shippingCharges}"/>
-                                    <s:hidden name="lineItems[${lineItemCtr.index}].shippingOrder"
-                                              value="${lineItem.shippingOrder}"/>
+                                    <%--<s:hidden name="lineItems[${lineItemCtr.index}].shippingOrder"--%>
+                                              <%--value="${lineItem.shippingOrder}"/>--%>
                                     <s:hidden name="lineItems[${lineItemCtr.index}].qty"
                                               value="${lineItem.qty}"/>
                                     <tr>

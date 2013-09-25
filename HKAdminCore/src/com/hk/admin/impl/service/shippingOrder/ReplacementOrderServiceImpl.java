@@ -63,6 +63,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         for (LineItem lineItem : lineItems) {
             if (lineItem.getRQty() != 0) {
                 LineItem rLineItem = ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem, lineItem.getRQty());
+                rLineItem.setShippingOrder(replacementOrder);
                 rLineItem.setQty(lineItem.getRQty());
                 lineItemSet.add(rLineItem);
             }
