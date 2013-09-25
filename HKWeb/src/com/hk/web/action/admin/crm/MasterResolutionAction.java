@@ -220,7 +220,8 @@ public class MasterResolutionAction extends BaseAction {
 
     for (LineItem lineItem : lineItems) {
       String productName = lineItem.getCartLineItem().getProductVariant().getProduct().getName();
-      if (lineItem.getQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
+        lineItem.setRQty(lineItem.getQty());
+        if (lineItem.getQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
         addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " +
             productName + " out of stock."));
         return new ForwardResolution(MasterResolutionAction.class, "pre");
@@ -355,7 +356,6 @@ public class MasterResolutionAction extends BaseAction {
                 } else {
                   lineItemForRP.setQty(lineItemForRP.getQty() + 1);
                 }
-                lineItemForRP.setRQty(lineItemForRP.getQty());
                 toBeProcessedAmount+= rpLineItem.getAmount();
               }
             }
