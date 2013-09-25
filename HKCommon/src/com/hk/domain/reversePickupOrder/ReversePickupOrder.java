@@ -66,6 +66,9 @@ public class ReversePickupOrder {
     @Column(name = "tracking_number", length = 70)
     private String trackingNumber;
 
+    @Column(name = "booking_reference_no", length = 70)
+    private String bookingReferenceNumber;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "pickup_time")
     private Date pickupTime;
@@ -181,5 +184,13 @@ public class ReversePickupOrder {
 
     public void setReversePickupId(String reversePickupId) {
         this.reversePickupId = reversePickupId;
+    }
+
+    public String getBookingReferenceNumber() {
+        return bookingReferenceNumber;
+    }
+
+    public void setBookingReferenceNumber(String bookingReferenceNumber) {
+        this.bookingReferenceNumber = bookingReferenceNumber;
     }
 }
