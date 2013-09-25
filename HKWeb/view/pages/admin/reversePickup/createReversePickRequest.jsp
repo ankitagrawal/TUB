@@ -319,7 +319,7 @@
     <div style="float: left">
         <s:select name="reversePickupOrder.reversePickupType">
             <s:option value="">--Select-- </s:option>
-            <c:forEach items="<%=EnumReversePickupType.getRPTypeList()%>" var="reversePickupType">
+            <c:forEach items="<%=EnumReversePickupType.getAllRPTypeList()%>" var="reversePickupType">
                 <s:option value="${reversePickupType.id}">${reversePickupType.name}</s:option>
             </c:forEach>
         </s:select>

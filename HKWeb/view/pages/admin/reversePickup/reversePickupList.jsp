@@ -171,6 +171,13 @@
                                                        serviceProperty="allReversePickUpStatus"
                                                        value="id" label="status"/>
                         </s:select></span>
+                <span> <label>Reverse PickUp Type</label>
+                        <s:select name="reversePickupType">
+                            <s:option value="">--ALL--</s:option>
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                       serviceProperty="allReversePickUpType"
+                                                       value="id" label="name"/>
+                        </s:select></span>
             <span><label>CS Action Status</label>
                              <s:select name="customerActionStatus">
                                  <s:option value="">--Select-- </s:option>
@@ -395,6 +402,7 @@
                         <%-- Courier status --%>
                         <td rowspan="${length}">
                                 ${reversePickup.reversePickupStatus.status}
+                                ${reversePickup.reversePickupType.name}
                         </td>
                         <%-- RP Actions --%>
                         <td rowspan="${length}" class="action-link">

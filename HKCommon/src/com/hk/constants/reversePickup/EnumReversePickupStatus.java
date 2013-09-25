@@ -60,15 +60,30 @@ public enum EnumReversePickupStatus {
 
     public List<ReversePickupStatus> getPreRPStatusList(){
         return Arrays.asList(
-                EnumReversePickupStatus.RPU_Initiated.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_Picked.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_Received.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_Scheduled.asReversePickupStatus(),
-//                EnumReversePickupStatus.Return_Initiated.asReversePickupStatus(),
-//                EnumReversePickupStatus.Return_Received.asReversePickupStatus(),
-                EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_APPROVED.asReversePickupStatus());
+                RPU_Initiated.asReversePickupStatus(),
+                RPU_Picked.asReversePickupStatus(),
+                RPU_Received.asReversePickupStatus(),
+                RPU_Scheduled.asReversePickupStatus(),
+//                Return_Initiated.asReversePickupStatus(),
+//                Return_Received.asReversePickupStatus(),
+                Return_QC_Checkin.asReversePickupStatus(),
+                RPU_RECONCILATION.asReversePickupStatus(),
+                RPU_APPROVED.asReversePickupStatus());
+    }
+
+    public static List<EnumReversePickupStatus> getSearchRPStatusList() {
+        return Arrays.asList(
+                RPU_Initiated,
+                RPU_Picked,
+                RPU_Scheduled,
+                RPU_QC_Checked_In,
+                Return_Initiated,
+                RPU_CLOSED,
+                RPU_CANCEL,
+                RPU_NOTAVAILABLE,
+                Return_QC_Checkin,
+                RPU_RECONCILATION,
+                RPU_APPROVED);
     }
 
     public Long getId() {

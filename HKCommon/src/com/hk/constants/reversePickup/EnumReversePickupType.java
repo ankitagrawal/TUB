@@ -1,5 +1,6 @@
 package com.hk.constants.reversePickup;
 
+import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 import com.hk.domain.reversePickupOrder.ReversePickupType;
 
 import java.util.Arrays;
@@ -36,11 +37,16 @@ public enum EnumReversePickupType {
         return reversePickupType;
     }
 
-    public static List<ReversePickupType> getRPTypeList(){
+    public static List<ReversePickupType> getAllRPTypeList(){
         return Arrays.asList(
                 REVERSE_PICKUP.asReversePickupType(),
                 REPLACEMENT_ORDER.asReversePickupType(),
                 LOST.asReversePickupType(),
+                APPEASEMENT.asReversePickupType());
+    }
+
+    public static List<ReversePickupType> getReversePickupTypes() {
+        return Arrays.asList(REVERSE_PICKUP.asReversePickupType(),
                 APPEASEMENT.asReversePickupType());
     }
 

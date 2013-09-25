@@ -8,10 +8,12 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.reversePickup.EnumReversePickupStatus;
 
+import com.hk.constants.reversePickup.EnumReversePickupType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -44,6 +46,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
     private RpLineItem rpLineitem;
     private String errorMessage = "";
     private ReversePickupStatus reversePickupStatus;
+    private ReversePickupType reversePickupType;
     private String reversePickupId;
     private String bookingReferenceNumber;
 
@@ -56,13 +59,26 @@ public class ReversePickupListAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, EnumReversePickupStatus.getHealthKartManagedRPStatus(), courierName, getPageNo(), getPerPage());
+        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, EnumReversePickupStatus.getHealthKartManagedRPStatus(), courierName, getPageNo(), getPerPage(), EnumReversePickupType.getReversePickupTypes());
         reversePickupOrderList = reversePickupPage.getList();
         return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
     }
 
     public Resolution search() {
-        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, Arrays.asList(reversePickupStatus), courierName, getPageNo(), getPerPage());
+        List<ReversePickupStatus> reversePickupStatuses = new ArrayList<ReversePickupStatus>();
+        List<ReversePickupType> reversePickupTypes = new ArrayList<ReversePickupType>();
+        if(reversePickupStatus == null){
+            reversePickupStatuses = EnumReversePickupStatus.getHealthKartManagedRPStatus();
+        }else {
+            reversePickupStatuses.add(reversePickupStatus);
+        }
+        if(reversePickupType == null){
+            reversePickupTypes = EnumReversePickupType.getAllRPTypeList();
+        }else {
+            reversePickupTypes.add(reversePickupType);
+        }
+
+        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatuses , courierName, getPageNo(), getPerPage(), reversePickupTypes);
         reversePickupOrderList = reversePickupPage.getList();
         return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
     }
@@ -117,7 +133,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
             ReversePickupOrder localRPOrder = rpLineitem.getReversePickupOrder();
              int counter = localRPOrder.getRpLineItems().size();
                for(RpLineItem rpLineItem : localRPOrder.getRpLineItems()){
-                   if( (rpLineItem.getCustomerActionStatus() != null) && (rpLineItem.getCustomerActionStatus().equals(EnumReverseAction.Approved.getId()))){
+                   if( (rpLineItem.getCustomerActionStatus() != null) && (rpLineItem.getCustomerActionStatus().getId().equals(EnumReverseAction.Approved.getId()))){
                        counter--;
                    }
                }
@@ -211,6 +227,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         params.add("customerActionStatus");
         params.add("courierName");
         params.add("reversePickupStatus");
+        params.add("reversePickupType");
         return params;
     }
 
@@ -327,5 +344,13 @@ public class ReversePickupListAction extends BasePaginatedAction {
 
     public void setBookingReferenceNumber(String bookingReferenceNumber) {
         this.bookingReferenceNumber = bookingReferenceNumber;
+    }
+
+    public ReversePickupType getReversePickupType() {
+        return reversePickupType;
+    }
+
+    public void setReversePickupType(ReversePickupType reversePickupType) {
+        this.reversePickupType = reversePickupType;
     }
 }
