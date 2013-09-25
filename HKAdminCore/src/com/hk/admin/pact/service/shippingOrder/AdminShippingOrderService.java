@@ -62,4 +62,6 @@ public interface AdminShippingOrderService {
 
   public Boolean updateSOForB2BOrders(ShippingOrder shippingOrder);
 
+    public Object getActionProcessingElement(ShippingOrder localShippingOrder, Integer actionTypeConstant);
+
 }

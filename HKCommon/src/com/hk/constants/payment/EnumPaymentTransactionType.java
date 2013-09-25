@@ -11,6 +11,7 @@ public enum EnumPaymentTransactionType {
 
     SALE(0L, "Sale"),
     REFUND(1L,"Refund"),
+    REWARD_POINT(2L,"Reward Point"),
     ;
 
     private String name;
