@@ -62,6 +62,9 @@
               <input type="hidden" name="shippingOrder" value="${changeSOStatus.shippingOrder.id}" />
               <s:submit name="saveStatus" value="Save" id="saveStatus"/>
           </fieldset>
+
+              <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
+                               shippingOrders="${changeSoStatus.shippingOrderList}" hasAction="false" showCourier="true" isSearchShippingOrder = "true"/>
            </c:if>
           </s:form>
 </s:layout-component>
