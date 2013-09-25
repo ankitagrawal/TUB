@@ -1,13 +1,17 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ShippingOrderStatusChangeAction" var="changeSOStatus"/>
 
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Change Shipping Order Status">
-<s:layout-component name="htmlHead">
+    <s:layout-component name="htmlHead">
+        <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+        <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 
     <script type="text/javascript">
             $(document).ready(function(){
@@ -51,6 +55,9 @@
                                   <s:option value="${soStatus}">${soStatus.name}</s:option>
                                 </c:forEach>
                             </s:select>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                  Status Date &nbsp;&nbsp;<s:text name="statusDate" class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
               <br>
               <input type="hidden" name="shippingOrder" value="${changeSOStatus.shippingOrder.id}" />
               <s:submit name="saveStatus" value="Save" id="saveStatus"/>

@@ -14194,10 +14194,27 @@
             ALTER TABLE rp_line_item ADD COLUMN amount DECIMAL(10,2);
         </sql>
     </changeSet>
-        <changeSet author="Ankit Chhabra (generated)" id="20130926-03">
+    <changeSet author="Ankit Chhabra (generated)" id="20130926-03">
         <sql>
             INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2040', 'Reconciled', 'Approval');
             INSERT INTO `payment_mode` (id,name) VALUES ('110','Reward Points');
         </sql>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="20130926-04">
+        <addColumn tableName="shipment">
+            <column name="shipping_order_lost_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="shipment">
+            <column name="rto_initiated_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="shipment">
+            <column name="rto_approved_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
