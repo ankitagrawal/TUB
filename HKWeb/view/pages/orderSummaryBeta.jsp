@@ -97,7 +97,7 @@
     <div class="rightHalf">
 
         <div class="right_container" style="left: 15px;width: 245px;padding: 5px 10px;border: none;">
-            <div class="title">
+            <%--<div class="title">--%>
                 <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
                 <s:hidden name="order" value="${orderSummary.order.id}"/>
 
@@ -168,15 +168,16 @@
                     (inclusive of shipping, handling and taxes.)
                 </div>
 
-                    <div class="buttons">
+                    <%--<div class="buttons">--%>
                         <s:submit
                                 style="margin: 0px !important;"
                                 name="orderReviewed" value="PLACE ORDER"
                                 class="requiredFieldValidator btn btn-blue"/>
-                    </div>
+                    <%--</div>--%>
 
-            </div>
+
             </s:form>
+          <%--</div>--%>
 
         </div>
         <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 15px;border: none;margin-top: 20px;">

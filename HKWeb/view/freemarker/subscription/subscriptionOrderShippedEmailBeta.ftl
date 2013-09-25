@@ -39,11 +39,8 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                 </tr>
             <#list order.lineItems as lineItem>
                 <tr>
-                    <td>${lineItem.sku.productVariant.product.name}<br/>
-                        <#list lineItem.sku.productVariant.productOptions as
-                        productOption>
-                            <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
-                        </#list>
+                    <td>${lineItem.sku.productVariant.name}<br/>
+
                     </td>
                     <td>
                     ${lineItem.qty}

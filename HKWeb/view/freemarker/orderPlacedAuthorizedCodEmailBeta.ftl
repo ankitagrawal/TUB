@@ -6,10 +6,10 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 <#include "headerBeta.ftl">
-    <tbody>
+    <tbody style="font-size:13px; line-height:1.75em;">
     <#--<#include "header.ftl">-->
     <tr>
-        <td colspan="2" style="margin-bottom:1em">Hi ${order.user.name}!,</td>
+        <td colspan="2" style="padding-top:15px;padding-bottom:15px;margin-bottom:1em">Hi ${order.user.name}!,</td>
     </tr>
     <tr>
         <td colspan="2" style="margin-bottom:1em">
@@ -24,7 +24,7 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
             on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></td>
     </tr>
     <tr>
-        <td>
+        <td colspan="2" style="margin-bottom: 1em;padding-bottom: 15px;padding-top: 15px">
             <h3>Order Details</h3>
         <#--<h5>No of shipping addresses - ${pricingDto.shippingLineCount}</h5>-->
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
@@ -36,35 +36,30 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
                 </tr>
 
             <#list pricingDto.productLineItems as productLineItem>
-                <tr>
-                    <td>${productLineItem.productVariant.product.name}
-                        <#if productLineItem.productVariant.variantName??>
-                        ${productLineItem.productVariant.variantName}
-                        </#if>
-                        <br/>
-                        <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
-                    ${productOption.name} ${productOption.value}
-                    </#list></em>
-                    </td>
-                    <td>
-                    <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
+            <tr>
+            <td>${productLineItem.productVariant.name}
+
+
+            </td>
+                <td>
+                <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
                 ${productLineItem.qty}
-                    </td>
-                    <td>
-                        <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
-                            <span
-                                    style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
-                        </#if>
-                    ${productLineItem.hkPrice}
-                    </td>
-                    <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
-                </tr>
+                </td>
+                <td>
+                <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
+                    <span
+                            style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
+                </#if>
+                ${productLineItem.hkPrice}
+                </td>
+                <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
+            </tr>
             </#list>
             </table>
         </td>
     </tr>
     <tr>
-        <td>
+        <td colspan="2" style="padding-bottom: 15px;padding-top: 15px;margin-bottom: 1em">
             <h3>Order Summary</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -110,7 +105,7 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
     </tr>
 
     <tr>
-        <td>
+        <td colspan="2" style="padding-bottom: 15px;padding-top: 15px;margin-bottom: 1em">
             <h3>Other Details</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -141,7 +136,7 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
 
     <h3>Shipping Address & Customer details</h3>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">
+        <td colspan="2" style="margin-bottom:1em;padding-bottom: 15px;padding-top: 15px">
         ${order.address.name}<br/>
         ${order.address.line1}<br/>
         <#if order.address.line2??>
@@ -153,7 +148,9 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</td>
+        <td colspan="2" style="margin-bottom:1em; padding-bottom: 15px">We will send you an email as soon as your order
+            is shipped.
+        </td>
     </tr>
 
     <#--<#include "orderNote.ftl">-->

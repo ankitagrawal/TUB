@@ -10,14 +10,14 @@ Partial Order Cancellation for Order ID ${order.gatewayOrderId}
 <#include "headerBeta.ftl">
     <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
-        <td colspan="2"><a href="http://www.healthkart.com"><img
+        <td style="padding-top: 15px" colspan="2"><a href="http://www.healthkart.com"><img
                 src="http://img.healthkart.com/email/order_cancel_user_new/main_banner.jpg" width="500"
                 height="148" alt="Your order has been cancelled." border="0"/></a></td>
     </tr>
 
 
     <tr>
-        <td style="padding-top: 35px;padding-bottom: 15px">Hi ${order.user.name}! <br/>
+        <td colspan="2" style="padding-top: 35px;padding-bottom: 15px">Hi ${order.user.name}! <br/>
             <br/>
             Our sincere apologies, the product your ordered dated ${order.payment.paymentDate}, for
             INR ${shippingOrder.amount}, with order
@@ -42,10 +42,8 @@ Partial Order Cancellation for Order ID ${order.gatewayOrderId}
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.product.name}<br/>
-                        <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
-                    ${productOption.name} ${productOption.value}
-                    </#list></em>
+                    <td>${productLineItem.productVariant.name}<br/>
+
                     </td>
                     <td>
                     ${productLineItem.qty}
