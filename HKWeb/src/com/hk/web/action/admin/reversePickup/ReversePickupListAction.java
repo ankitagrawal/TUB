@@ -24,13 +24,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Seema
- * Date: 7/22/13
- * Time: 3:40 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class ReversePickupListAction extends BasePaginatedAction {
 
     private List<ReversePickupOrder> reversePickupOrderList;

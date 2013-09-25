@@ -57,7 +57,7 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         }
         if (customerActionStatus != null) {
             DetachedCriteria rpLineItemsCriteria = reversePickupDetachedCriteria.createCriteria("rpLineItems");
-            rpLineItemsCriteria.add(Restrictions.eq("customerActionStatus", customerActionStatus));
+            rpLineItemsCriteria.add(Restrictions.eq("customerActionStatus.id", customerActionStatus));
         }
         return reversePickupDetachedCriteria;
     }
