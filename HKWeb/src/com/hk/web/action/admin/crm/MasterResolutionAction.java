@@ -80,8 +80,6 @@ public class MasterResolutionAction extends BaseAction {
     private String replacementComments;
     private ReplacementOrder replacementOrder;
 
-    private Payment payment;
-
     @Validate(required = true, on = "addRewardPoints")
     private String comment;
 
@@ -154,14 +152,17 @@ public class MasterResolutionAction extends BaseAction {
 
     public Resolution addRewardPoints() {
         rewardFlag = true;
+        Order order = shippingOrder.getBaseOrder();
+        Payment payment = order.getPayment();
         Double rewardAmount = (Double) adminShippingOrderService.getActionProcessingElement(shippingOrder, REWARD_ACTION);
         if (rewardAmount == 0d) {
             addRedirectAlertMessage(new SimpleMessage("No items found for which reward points could be added."));
+        } else if (payment.isCODPayment() && EnumShippingOrderStatus.getReconcilableShippingOrderStatus().contains(shippingOrder.getOrderStatus().getId())) {
+            addRedirectAlertMessage(new SimpleMessage("Its a COD Order, How can reward points be added, for an RTO/Lost Order"));
         } else {
-            Order order = shippingOrder.getBaseOrder();
             RewardPoint rewardPoint = rewardPointService.addRewardPoints(order.getUser(), getUserService().getLoggedInUser(), order, rewardAmount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.RESOLUTION_SCREEN.asRewardPointMode());
             rewardPointService.approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
-            paymentService.createNewGenericPayment(order.getPayment(), EnumPaymentStatus.REFUNDED.asPaymenStatus(), rewardAmount, EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REWARD_POINT);
+            paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), rewardAmount, EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REWARD_POINT);
             addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
         }
         return new ForwardResolution(MasterResolutionAction.class, "pre");
@@ -217,18 +218,18 @@ public class MasterResolutionAction extends BaseAction {
                 try {
                     if (EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
                         basePayment = paymentService.updatePayment(gatewayOrderId);
-                        payment = paymentService.refundPayment(paymentGatewayOrderId, refundAmount);
+                        Payment refundPayment = paymentService.refundPayment(paymentGatewayOrderId, refundAmount);
                         String loggingComment = refundReason.getClassification().getPrimary() + "- " + refundComments;
-                        if (payment != null) {
-                            if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId())) {
+                        if (refundPayment != null) {
+                            if (EnumPaymentStatus.REFUNDED.getId().equals(refundPayment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.AmountRefundedOrderCancel.asOrderLifecycleActivity(),
                                         loggingComment);
 
-                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
+                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(refundPayment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
-                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())) {
+                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(refundPayment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
                             }
@@ -396,14 +397,6 @@ public class MasterResolutionAction extends BaseAction {
 
     public void setReplacementOrder(ReplacementOrder replacementOrder) {
         this.replacementOrder = replacementOrder;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
     }
 
     public String getReplacementComments() {
