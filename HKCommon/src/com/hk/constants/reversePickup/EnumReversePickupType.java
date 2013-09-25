@@ -7,10 +7,10 @@ import java.util.List;
 
 public enum EnumReversePickupType {
 
-    REVERSE_PICKUP(10L, "RPU_QC_Checked_In"),
-    REPLACEMENT_ORDER(20L, "RPU_QC_Checked_In"),
-    LOST(30L, "RPU_QC_Checked_In"),
-    APPEASEMENT(40L, "RPU_QC_Checked_In"),
+    REVERSE_PICKUP(10L, "REVERSE_PICKUP"),
+    REPLACEMENT_ORDER(20L, "REPLACEMENT_ORDER"),
+    LOST(30L, "LOST"),
+    APPEASEMENT(40L, "APPEASEMENT"),
     ;
 
     private Long id;
