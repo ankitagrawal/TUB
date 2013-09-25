@@ -1,4 +1,4 @@
-package com.hk.api.edge.integration.response.variant;
+package com.hk.api.edge.integration.response.variant.response;
 
 import com.hk.api.edge.integration.response.AbstractResponseFromHKR;
 
