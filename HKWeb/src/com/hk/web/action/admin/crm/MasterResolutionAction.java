@@ -357,23 +357,9 @@ public class MasterResolutionAction extends BaseAction {
     if (actionTypeConstant.equals(this.REPLACEMENT_ACTION)) {
       return toBeProcessedLineItemSet;
     } else {
-      toBeProcessedAmount = getPayableAmount(toBeProcessedLineItemSet);
       return toBeProcessedAmount;
     }
   }
-
-  private Double getPayableAmount(Set<LineItem> lineItems) {
-
-    Double reconciledAmount = 0D;
-
-    for (LineItem lineItem : lineItems) {
-      reconciledAmount += (lineItem.getHkPrice() * lineItem.getQty()) - (lineItem.getOrderLevelDiscount() - lineItem.getRewardPoints() - lineItem.getDiscountOnHkPrice());
-    }
-
-    return reconciledAmount;
-
-  }
-
 
   public boolean isReplacementFlag() {
     return replacementFlag;
