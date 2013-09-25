@@ -27,7 +27,7 @@ import java.util.List;
 public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDao {
 
     public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, int pageNo, int perPage, List<ReversePickupType> reversePickupTypeList) {
-        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatusList, courierName, null);
+        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatusList, courierName, reversePickupTypeList);
         reversePickupCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
         return list(reversePickupCriteria, true, pageNo, perPage);
     }
