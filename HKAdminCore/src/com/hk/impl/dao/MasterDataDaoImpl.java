@@ -559,7 +559,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<EnumReversePickupStatus> getAllReversePickUpStatus() {
-        return Arrays.asList(EnumReversePickupStatus.RPU_Initiated, EnumReversePickupStatus.RPU_Picked, EnumReversePickupStatus.RPU_Received, EnumReversePickupStatus.RPU_QC_Checked_In);
+        return Arrays.asList(EnumReversePickupStatus.RPU_Initiated, EnumReversePickupStatus.RPU_Picked, EnumReversePickupStatus.RPU_Received, EnumReversePickupStatus.RPU_QC_Checked_In,
+        EnumReversePickupStatus.RPU_Scheduled, EnumReversePickupStatus.RPU_CANCEL, EnumReversePickupStatus.RPU_CLOSED, EnumReversePickupStatus.Return_Initiated, EnumReversePickupStatus.Return_Received,
+        EnumReversePickupStatus.Return_QC_Checkin,EnumReversePickupStatus.RPU_RECONCILATION, EnumReversePickupStatus.RPU_NOTAVAILABLE, EnumReversePickupStatus.RPU_APPROVED);
     }
 
 

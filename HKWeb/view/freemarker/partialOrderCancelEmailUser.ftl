@@ -52,13 +52,14 @@ Partial Order Cancellation for Order ID ${order.gatewayOrderId}
                 <tr>
                     <td width="579" valign="top">Hi ${order.user.name}! <br/>
                         <br/>
-                        Our sincere apologies, the product your ordered dated ${order.payment.paymentDate}, for INR ${shippingOrder.amount}, with order
+                        Our sincere apologies, the product you ordered dated ${order.payment.paymentDate}, for INR ${shippingOrder.amount}, with order
                         confirmation number ${order.gatewayOrderId} could not be shipped.<br/>
                         <#if !isCOD>
                           We have initiated refund for the same and the amount should reflect in your account in 7-10 business days.<br/>
                         </#if>
-                        Please be assured that the remaining products of your order will be processed (if not processed yet) as communicated earlier.
-                        <br/>We look forward for your continued patronage with Healthkart.com.
+                        Please be assured that this was a one off case and the remaining products of your order will be processed (if not processed yet)
+                        as communicated earlier.
+                        <br/>We look forward to your continued patronage with Healthkart.com.
                         <br/>
 
                         The canceled product(s) are:<br/>
