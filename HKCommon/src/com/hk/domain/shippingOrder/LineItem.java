@@ -4,6 +4,7 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.core.Tax;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.warehouse.WHReportLineItem;
@@ -88,6 +89,10 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
   @JsonSkip
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
   private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
+    private List<RpLineItem> rpLineItems = new ArrayList<RpLineItem>();
 
   @JsonSkip
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
@@ -351,4 +356,12 @@ public class LineItem implements java.io.Serializable, Comparable<LineItem> {
   public void setRQty(Long rQty) {
     this.rQty = rQty;
   }
+
+    public List<RpLineItem> getRpLineItems() {
+        return rpLineItems;
+    }
+
+    public void setRpLineItems(List<RpLineItem> rpLineItems) {
+        this.rpLineItems = rpLineItems;
+    }
 }
