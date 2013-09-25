@@ -1,33 +1,35 @@
 package com.hk.web.action.admin.reward;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.discount.EnumRewardPointStatus;
+import java.util.Arrays;
+import java.util.Date;
+
 import com.hk.constants.discount.RewardPointConstants;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.domain.offer.rewardPoint.RewardPoint;
-import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.order.Order;
-import com.hk.domain.payment.Payment;
-import com.hk.domain.user.User;
-import com.hk.exception.InvalidRewardPointsException;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.service.order.OrderService;
-import com.hk.pact.service.order.RewardPointService;
-import com.hk.web.action.admin.crm.MasterResolutionAction;
-import com.hk.web.action.admin.user.SearchUserAction;
-import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.Arrays;
-import java.util.Date;
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.domain.offer.rewardPoint.RewardPointMode;
+import com.hk.domain.user.User;
+import com.hk.exception.InvalidRewardPointsException;
+import com.hk.pact.dao.reward.RewardPointDao;
+import com.hk.pact.service.order.RewardPointService;
+import com.hk.web.action.admin.user.SearchUserAction;
+import com.hk.web.action.error.AdminPermissionAction;
 
 /**
  * User: rahul Time: 4 May, 2010 11:11:47 AM
@@ -64,18 +66,12 @@ public class AddRewardPointAction extends BaseAction {
   @Validate(required = true, on = "add")
   private Long orderId;
 
-  @Autowired
-  PaymentManager paymentManager;
-  private Boolean rewardFlag;
-
   @DefaultHandler
   public Resolution pre() {
-//      return new ForwardResolution("/pages/admin/addRewardPoint.jsp");
-    return new ForwardResolution(MasterResolutionAction.class);
+    return new ForwardResolution("/pages/admin/addRewardPoint.jsp");
   }
 
   public Resolution add() {
-    rewardFlag = true;
     User referredUser = getUserService().getUserById(getPrincipal().getId());
     // referredUser stores the id of the user who added reward points
     // this logs the user who has added reward points
@@ -85,8 +81,8 @@ public class AddRewardPointAction extends BaseAction {
       return new RedirectResolution(SearchUserAction.class, "search");
     }
     RewardPoint rewardPoint = new RewardPoint();
-    Order order = orderService.find(orderId);
     try {
+      Order order = orderService.find(orderId);
       if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
         throw new InvalidRewardPointsException(value);
       }
@@ -97,9 +93,6 @@ public class AddRewardPointAction extends BaseAction {
     }
     if (rewardPointsAdded) {
       getRewardPointService().approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
-      Payment payment = order.getPayment();
-      paymentManager.createNewPayment(order, EnumPaymentMode.REWARD_POINT_MODE.asPaymenMode(),null,null,
-                                                                            null,payment.getBillingAddress());
       addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
       return new RedirectResolution(SearchUserAction.class, "search");
     } else {
@@ -158,13 +151,5 @@ public class AddRewardPointAction extends BaseAction {
 
   public void setOrderId(Long orderId) {
     this.orderId = orderId;
-  }
-
-  public Boolean getRewardFlag() {
-    return rewardFlag;
-  }
-
-  public void setRewardFlag(Boolean rewardFlag) {
-    this.rewardFlag = rewardFlag;
   }
 }
