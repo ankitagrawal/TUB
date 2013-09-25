@@ -130,10 +130,10 @@
                 </tr>
                 <tr>
                     <td>Shipping order ID:</td>
-                    <td><s:text name="shippingOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
+                    <td><s:text name="shippingOrderId"  style="width:200px;"/></td>
                 </tr>
                 <tr><td>Gateway order ID:</td>
-                    <td><s:text name="gatewayOrderId" id="shippingOrderIdText" style="width:200px;"/></td>
+                    <td><s:text name="gatewayOrderId"  style="width:200px;"/></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -154,6 +154,35 @@
                 </c:if>
 
             </table>
+            
+            <table>
+            <tr>
+                <td><h5>CustomerName:</h5></td>
+                <td>${maBean.shippingOrder.baseOrder.user.name}</td>
+                <td><h5>SO date:</h5></td>
+                <td>${maBean.shippingOrder.createDate}</td>
+            </tr>
+            <tr>
+                <td><h5>Email:</h5></td>
+                <td>${maBean.shippingOrder.baseOrder.user.email}
+                </td>
+                <td><h5>Address:</h5></td>
+                <td>
+                        ${maBean.shippingOrder.baseOrder.address.city}<br/>
+                        ${maBean.shippingOrder.baseOrder.address.state}-
+                        (${maBean.shippingOrder.baseOrder.address.pincode.pincode})<br/>
+                    Ph: ${maBean.shippingOrder.baseOrder.address.phone}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h5>Status</h5>
+                </td>
+                <td>
+                        ${maBean.shippingOrder.orderStatus.name}
+                </td>
+            </tr>
+            </table>
         </s:form>
     </fieldset>
 </div>
@@ -173,8 +202,7 @@
                     <td>Mode</td>
                     <td>
                         <s:select name="rewardPointMode">
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                       serviceProperty="rewardPointModes" value="id" label="name"/>
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
                         </s:select>
                     </td>
                     <td>Expiry Date</td>
@@ -264,24 +292,6 @@
 <c:if test="${!empty maBean.shippingOrder}">
     <fieldset style="float:left;">
         <table>
-            <tr>
-                <td><h5>CustomerName:</h5></td>
-                <td>${maBean.shippingOrder.baseOrder.user.name}</td>
-                <td><h5>SO date:</h5></td>
-                <td>${maBean.shippingOrder.createDate}</td>
-            </tr>
-            <tr>
-                <td><h5>Email:</h5></td>
-                <td>${maBean.shippingOrder.baseOrder.user.email}
-                </td>
-                <td><h5>Address:</h5></td>
-                <td>
-                        ${maBean.shippingOrder.baseOrder.address.city}<br/>
-                        ${maBean.shippingOrder.baseOrder.address.state}-
-                        (${maBean.shippingOrder.baseOrder.address.pincode.pincode})<br/>
-                    Ph: ${maBean.shippingOrder.baseOrder.address.phone}
-                </td>
-            </tr>
             <tr>
                 <td>
                     <h5>Status</h5>
