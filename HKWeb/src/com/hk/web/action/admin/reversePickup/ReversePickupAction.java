@@ -29,14 +29,6 @@ import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Seema
- * Date: 7/18/13
- * Time: 6:22 PM
- * To change this template use File | Settings | File Templates.
- */
-
 public class ReversePickupAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(ReversePickupAction.class);
 

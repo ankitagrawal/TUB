@@ -89,7 +89,7 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                 if (rpLineItem.getActionTaken() == null || rpLineItem.getActionTaken().getId().equals(EnumClassification.Decide_Later.getId())) {
                     rpLineItem.setCustomerActionStatus(null);
                 } else {
-                    rpLineItem.setCustomerActionStatus(EnumClassification.Decide_Later.asClassification());
+                    rpLineItem.setCustomerActionStatus(EnumClassification.Pending_Approval.asClassification());
                 }
                 saveRpLineItem(rpLineItem);
             }
