@@ -14205,4 +14205,9 @@
             ALTER TABLE `shipment` ADD COLUMN `rto_date` TIMESTAMP NULL DEFAULT NULL  AFTER `shipment_cost_calculate_date` , ADD COLUMN `rto_initiated_date` TIMESTAMP NULL DEFAULT NULL  AFTER `rto_date` , ADD COLUMN `lost_date` TIMESTAMP NULL DEFAULT NULL  AFTER `rto_initiated_date` ;
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="20130926-10">
+        <sql>
+            alter table payment MODIFY transaction_type VARCHAR(100);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
