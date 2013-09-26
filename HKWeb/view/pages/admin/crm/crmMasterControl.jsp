@@ -64,6 +64,13 @@
                 alert("No Action Chosen");
             }
         });
+        
+        $('#search').click(funtion(e) {
+        	if($('#actionType').selected().val()=="none") {
+        		e.preventDefault();
+        		alert("Choose an action to continue");
+        	}
+        });
 
         $('#shippingOrderId').focus();
 
@@ -74,41 +81,37 @@
     })
 </script>
 
-<div>
-    <fieldset style="width: 100%;">
-        <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
-            <table>
-                <tr>
-                    <td>
-                        <label>Search Shipping Order</label>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Shipping order ID:</td>
-                    <td><s:text name="shippingOrderId"  style="width:200px;"/></td>
-                </tr>
-                <tr><td>Gateway order ID:</td>
-                    <td><s:text name="gatewayOrderId"  style="width:200px;"/></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td> <s:submit name="searchShippingOrder" value="Search"/>
-                    </td>
-                </tr>
-                <c:if test="${maBean.actionFlag == true}">
-                    <tr>
-                        <td>Choose action on:</td>
-                        <td><s:select name="actionType" id="actionType" >
-                            <s:option value="none">-- Select --</s:option>
-                            <s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
-                            <s:option id="refund" value="refund">Refund</s:option>
-                            <s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
-                        </s:select>
-                        </td>
-                    </tr>
-                </c:if>
-            </table>
+		<div>
+			<fieldset style="width: 100%;">
+				<s:form
+					beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
+					<table>
+						<tr>
+							<td><label>Search Shipping Order</label></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Shipping order ID:</td>
+							<td><s:text name="shippingOrderId" style="width:200px;" /></td>
+						</tr>
+						<tr>
+							<td>Gateway order ID:</td>
+							<td><s:text name="gatewayOrderId" style="width:200px;" /></td>
+						</tr>
+						<tr>
+							<td>Choose action on:</td>
+							<td><s:select name="actionType" id="actionType">
+									<s:option value="none">-- Select --</s:option>
+									<s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
+									<s:option id="refund" value="refund">Refund</s:option>
+									<s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
+								</s:select></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><s:submit name="searchShippingOrder" value="Search" id="search" /></td>
+						</tr>
+					</table>
 					<c:if test="${maBean.actionFlag == true}">
 						<table>
 							<tr>
@@ -135,123 +138,132 @@
 							</tr>
 						</table>
 						<table border="1">
-								<thead>
-									<th>S No.</th>
-									<th>Product</th>
-									<th>Original Qty</th>
-								</thead>
-								<c:forEach items="${maBean.lineItems}" var="lineItem"
-									varStatus="lineItemCtr">
-									<tr>
-										<td>${lineItemCtr.count}</td>
-										<td>${lineItem.cartLineItem.productVariant.product.name}<br />
-											Variant: ${lineItem.cartLineItem.productVariant.id}
-										</td>
-										<td>${lineItem.qty}</td>
-									</tr>
-								</c:forEach>
-							</table>
-							
+							<thead>
+								<th>S No.</th>
+								<th>Product</th>
+								<th>Original Qty</th>
+							</thead>
+							<c:forEach items="${maBean.lineItems}" var="lineItem"
+								varStatus="lineItemCtr">
+								<tr>
+									<td>${lineItemCtr.count}</td>
+									<td>${lineItem.cartLineItem.productVariant.product.name}<br />
+										Variant: ${lineItem.cartLineItem.productVariant.id}
+									</td>
+									<td>${lineItem.qty}</td>
+								</tr>
+							</c:forEach>
+						</table>
+
 					</c:if>
 				</s:form>
-    </fieldset>
-</div>
-<div id="rewardDiv">
-    <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" method="post">
-        <fieldset style="width:60%">
-            <label style="color: #ff0000; font-weight: bold; font-size: 25px;">Reward Points given due
-                to cancellations will not be given from this screen. They will be given automatically</label>
-            <table>
-                <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
-                <s:hidden name="baseOrderId" value="${maBean.baseOrderId}"/>
-                <tr>
-                    <td>Rewardable Amount</td>
-                    <td>${maBean.paymentAmount}</td>
-                    <td>Base Order Id</td><td>${maBean.baseOrderId}</td>
-                </tr>
-                <tr>
-                    <td>Expiry Date</td>
-                    <td><s:text name="expiryDate" class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/></td>
-                    <td>Comment</td>
-                    <td><s:textarea name="comment"/></td>
-                </tr>
-                <tr>
-                	<td></td>
-                    <td><s:submit name="addRewardPoints" value="Add reward Points"/></td>
-                </tr>
-            </table>
-        </fieldset>
+			</fieldset>
+		</div>
+		<div id="rewardDiv">
+			<c:if test="${!empty maBean.shippingOrder}">
 
-    </s:form>
-</div>
+				<s:form
+					beanclass="com.hk.web.action.admin.crm.MasterResolutionAction"
+					method="post">
+					<fieldset style="width: 60%">
+						<table>
+							<s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}" />
+							<s:hidden name="baseOrderId" value="${maBean.baseOrderId}" />
+							<tr>
+								<td>Rewardable Amount</td>
+								<td>${maBean.paymentAmount}</td>
+								<td>Base Order Id</td>
+								<td>${maBean.baseOrderId}</td>
+							</tr>
+							<tr>
+								<td>Expiry Date</td>
+								<td><s:text name="expiryDate" class="date_input"
+										formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" /></td>
+								<td>Comment</td>
+								<td><s:textarea name="comment" /></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><s:submit name="addRewardPoints"
+										value="Add reward Points" /></td>
+							</tr>
+						</table>
+					</fieldset>
+
+				</s:form>
+			</c:if>
+		</div>
 <!-- Reward Points block ends -->
 
-<div id="refundDiv">
-    <div>
-        &nbsp;&nbsp;&nbsp;&nbsp;Payment Seeker (Currently works for ICICI/Citrus/EBS/Icici via Citrus (Credit debit cards only)
-    </div>
-    <s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
-        <fieldset style="width:45%;">
-            <br>
-            <table>
-                <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
-                <tr>
-                    <td><label>Refundable Amount</label></td>
-                    <td>${maBean.paymentAmount}</td>
-                </tr>
-                <tr>
-                    <td><label>Enter Reason for Refund</label></td>
-                    <td><s:select name="refundReason" style="width:185px;height:28px;">
-                        <s:option value="">-- Select --</s:option>
-                        <c:forEach items="${maBean.refundReasons}" var="reason">
-                            <s:option value="${reason.id}"> ${reason.classification.primary} - ${reason.classification.secondary}</s:option>
-                        </c:forEach>
-                    </s:select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Comments </td>
-                    <td><s:textarea name="refundComments" cols="5" rows="2" id="reasonCom" style="width:320px;height:80px;"/> </td>
-                </tr>
-            </table>
-            <br>
-            <s:submit name="refundPayment" value="Refund " id="refund"/>
-        </fieldset>
-    </s:form>
+		<div id="refundDiv">
+			<c:if test="${!empty maBean.shippingOrder}">
+				<div>&nbsp;&nbsp;&nbsp;&nbsp;Payment Seeker (Currently works
+					for ICICI/Citrus/EBS/Icici via Citrus (Credit debit cards only)</div>
+				<s:form
+					beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
+					<fieldset style="width: 45%;">
+						<br>
+						<table>
+							<s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}" />
+							<tr>
+								<td><label>Refundable Amount</label></td>
+								<td>${maBean.paymentAmount}</td>
+							</tr>
+							<tr>
+								<td><label>Enter Reason for Refund</label></td>
+								<td><s:select name="refundReason"
+										style="width:185px;height:28px;">
+										<s:option value="">-- Select --</s:option>
+										<c:forEach items="${maBean.refundReasons}" var="reason">
+											<s:option value="${reason.id}"> ${reason.classification.primary} - ${reason.classification.secondary}</s:option>
+										</c:forEach>
+									</s:select></td>
+							</tr>
+							<tr>
+								<td>Comments</td>
+								<td><s:textarea name="refundComments" cols="5" rows="2"
+										id="reasonCom" style="width:320px;height:80px;" /></td>
+							</tr>
+						</table>
+						<br>
+						<s:submit name="refundPayment" value="Refund " id="refund" />
+					</fieldset>
+				</s:form>
 
-    <c:if test="${not empty maBean.payment}">
-        <c:set var="count" value="1" />
-        <table>
-            <thead>
-            <th>Gateway Order Id </th>
-            <th>Transaction Type </th>
-            <th>Amount </th>
-            <th>Payment Status </th>
-            <th>Response Message </th>
-            <th>Root Reference No </th>
-            <th>Gateway </th>
-            <th>Payment Date </th>
-            <th>Error Log </th>
-            <th>Parent </th>
-            </thead>
-            <tbody>
-            <tr>
-                <td>${cpa.payment.gatewayOrderId}</td>
-                <td>${cpa.payment.transactionType}</td>
-                <td>${cpa.payment.amount}</td>
-                <td>${cpa.payment.paymentStatus.name}</td>
-                <td>${cpa.payment.responseMessage}</td>
-                <td>${cpa.payment.rrn}</td>
-                <td>${cpa.payment.gateway.name}</td>
-                <td>${cpa.payment.createDate}</td>
-                <td>${cpa.payment.errorLog}}</td>
-                <td>${cpa.payment.parent.gatewayOrderId}</td>
-            </tr>
-            </tbody>
-        </table>
-    </c:if>
-</div>
-<!-- Refund block ends -->
+				<c:if test="${not empty maBean.payment}">
+					<c:set var="count" value="1" />
+					<table>
+						<thead>
+							<th>Gateway Order Id</th>
+							<th>Transaction Type</th>
+							<th>Amount</th>
+							<th>Payment Status</th>
+							<th>Response Message</th>
+							<th>Root Reference No</th>
+							<th>Gateway</th>
+							<th>Payment Date</th>
+							<th>Error Log</th>
+							<th>Parent</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>${cpa.payment.gatewayOrderId}</td>
+								<td>${cpa.payment.transactionType}</td>
+								<td>${cpa.payment.amount}</td>
+								<td>${cpa.payment.paymentStatus.name}</td>
+								<td>${cpa.payment.responseMessage}</td>
+								<td>${cpa.payment.rrn}</td>
+								<td>${cpa.payment.gateway.name}</td>
+								<td>${cpa.payment.createDate}</td>
+								<td>${cpa.payment.errorLog}}</td>
+								<td>${cpa.payment.parent.gatewayOrderId}</td>
+							</tr>
+						</tbody>
+					</table>
+				</c:if>
+			</c:if>
+		</div>
+		<!-- Refund block ends -->
 
 		<div id="replacementDiv">
 			<c:if test="${!empty maBean.shippingOrder}">

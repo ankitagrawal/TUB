@@ -824,7 +824,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public Object getActionProcessingElement(ShippingOrder localShippingOrder,
     				Set<LineItem> toBeProcessedLineItemSet, Integer actionTypeConstant) {
         Integer SEARCH_ACTION = 4;
-        toBeProcessedLineItemSet = new HashSet<LineItem>();
         Double toBeProcessedAmount = 0d;
 
         if (localShippingOrder != null) {
