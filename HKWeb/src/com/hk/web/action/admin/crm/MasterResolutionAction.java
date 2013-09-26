@@ -16,6 +16,8 @@ import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.payment.EnumPaymentTransactionType;
+import com.hk.constants.queue.EnumClassification;
+import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.analytics.Reason;
@@ -28,6 +30,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.reverseOrder.ReverseLineItem;
+import com.hk.domain.reversePickupOrder.ReversePickupOrder;
+import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
@@ -36,6 +40,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pojo.LedgerMap;
 import com.hk.taglibs.Functions;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -122,6 +127,9 @@ public class MasterResolutionAction extends BaseAction {
     @Autowired
     ShippingOrderService shippingOrderService;
 
+
+    Map<String, Map<List<LineItem>, Double>> ledgerLineItemAmountMap = new HashMap<String, Map<List<LineItem>, Double>>();
+
     @DefaultHandler
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/crm/crmMasterControl.jsp");
@@ -159,7 +167,9 @@ public class MasterResolutionAction extends BaseAction {
             } else {
             	replacementFlag = true;
             }
+            ledgerLineItemAmountMap = generateReconcileMap(shippingOrder);
         }
+
         return new ForwardResolution("/pages/admin/crm/crmMasterControl.jsp");
     }
 
@@ -271,6 +281,54 @@ public class MasterResolutionAction extends BaseAction {
         return new ForwardResolution(MasterResolutionAction.class, "pre");
     }
 
+
+    private Map<String, Map<List<LineItem>, Double>> generateReconcileMap(ShippingOrder shippingOrder) {
+        Map<String, Map<List<LineItem>, Double>> ledgerLineItemAmountMap = new HashMap<String, Map<List<LineItem>, Double>>();
+        List<ReversePickupOrder> reversePickupOrders = reversePickupService.getReversePickupsForSO(shippingOrder);
+        //get all bookings
+        if (reversePickupOrders != null && !reversePickupOrders.isEmpty()) {
+            //ledger vs Set of RpLineItems
+            Map<String, Set<RpLineItem>> reconcileItemMap = new HashMap<String, Set<RpLineItem>>();
+            //for each booking
+            for (ReversePickupOrder reversePickupOrder : reversePickupOrders) {
+                List<RpLineItem> rpLineItems = reversePickupOrder.getRpLineItems();
+                for (RpLineItem rpLineItem : rpLineItems) {
+                    //for approved lineItem
+                    if (EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
+                        String actionTask = rpLineItem.getCustomerActionStatus().getPrimary();
+                        if (reconcileItemMap.containsKey(actionTask)) {
+                            Set<RpLineItem> rpLineItemMapValue = reconcileItemMap.get(actionTask);
+                            rpLineItemMapValue.add(rpLineItem);
+                            reconcileItemMap.put(actionTask, rpLineItemMapValue);
+                        } else {
+                            Set<RpLineItem> rpLineItemMapNewValue = new HashSet<RpLineItem>();
+                            rpLineItemMapNewValue.add(rpLineItem);
+                            reconcileItemMap.put(actionTask, rpLineItemMapNewValue);
+                        }
+                    }
+                }
+            }
+            Map<List<LineItem>, Double> lineItemAmountMap = new HashMap<List<LineItem>, Double>();
+            for (Map.Entry<String, Set<RpLineItem>> reconcileItemMapEntry : reconcileItemMap.entrySet()) {
+                for (Set<RpLineItem> rpLineItemSet : reconcileItemMap.values()) {
+                    List<LineItem> reconcileLineItemList = new ArrayList<LineItem>();
+                    Double reconcilableAmount = 0D;
+                    for (RpLineItem rpLineItem : rpLineItemSet) {
+                        LineItem lineItemForRP = rpLineItem.getLineItem();
+                        if (reconcileLineItemList.add(lineItemForRP)) {
+                            lineItemForRP.setQty(1l);
+                        } else {
+                            lineItemForRP.setQty(lineItemForRP.getQty() + 1);
+                        }
+                        reconcilableAmount += rpLineItem.getAmount();
+                    }
+                    lineItemAmountMap.put(reconcileLineItemList, reconcilableAmount);
+                }
+                ledgerLineItemAmountMap.put(reconcileItemMapEntry.getKey(), lineItemAmountMap);
+            }
+        }
+        return ledgerLineItemAmountMap;
+    }
 
     public boolean isReplacementFlag() {
         return replacementFlag;
@@ -466,5 +524,12 @@ public class MasterResolutionAction extends BaseAction {
 	public void setActionType(String actionType) {
 		this.actionType = actionType;
 	}
-    
+
+    public Map<String, Map<List<LineItem>, Double>> getLedgerLineItemAmountMap() {
+        return ledgerLineItemAmountMap;
+    }
+
+    public void setLedgerLineItemAmountMap(Map<String, Map<List<LineItem>, Double>> ledgerLineItemAmountMap) {
+        this.ledgerLineItemAmountMap = ledgerLineItemAmountMap;
+    }
 }
