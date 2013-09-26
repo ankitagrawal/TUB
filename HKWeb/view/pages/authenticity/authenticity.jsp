@@ -1,3 +1,4 @@
+<%@include file="/includes/_taglibInclude.jsp" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -11,6 +12,10 @@
 
 <body>
 <div class="header">
+    <div style="display:none">
+        <img src="images/dibba-blue.png"/>
+        <img src="images/dibba-red.png"/>
+    </div>
   <h1>Half the supplements<br />
     sold in India are fake</h1>
   <h4>and you cannot spot the fakes from the real.</h4>
@@ -24,7 +29,7 @@
 
 <div id="cont01">
   <div class="sub-cont01">
-    <div class="box1" data-offset="350" data-text-area="400" data-shift-limit="100"></div>
+    <div class="box1" data-offset="200" data-text-area="350" data-shift-limit="100"></div>
     <div class="box2"></div>
     <div class="msg" style="position: relative;overflow:hidden;padding-top: 193px;text-align: center;font-size: 1.5em;">
       <div style="position:relative;right:-9999px">We ensure you are not a <span class="lal-meri">victim of counterfeiting</span></div>
@@ -180,6 +185,8 @@
     </ul>
     <div class="cl"></div>
 
+    <div style="text-align: center"><h4>..and many more</h4></div>
+
     <div class="shop">
       <span>So what are you waiting for?</span>
       <div class="shop-btn"><a href="http://www.healthkart.com/">SHOP<br>
@@ -189,8 +196,7 @@
   </div><!--container-width close-->
 </div><!--cont07 close-->
 
-
-<script type="text/javascript">
+<s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="authenticity" allCategories="" brand=""/><script type="text/javascript">
 
 $.fn.shake = function(options){
   var settings = $.extend({},options);
@@ -378,7 +384,8 @@ var elms = {
 
 //store intial value of an element
 function prepareElementForScroll(elm){
-  elm.data('top',elm.offset().top);
+    console.log(($('.sub-cont01').css('top')).replace('px',''));
+  elm.data('top',(elm.offset().top - Number(($('.sub-cont01').css('top')).replace('px',''))));
   elm.data('wHeight',$(window).height());
 };
 
@@ -393,12 +400,13 @@ function scrollItem(elm){
   var scrollTop = $(window).scrollTop(); // current scroll position of browser
   //var threshold = elm.data('shiftLimit');
   var marginTop = 0;
-
-  if(wHeight + scrollTop - offset > elmPos){
+ console.log('elmPos'+elmPos);
+  if(wHeight + scrollTop -offset > elmPos){
     marginTop = wHeight + scrollTop - offset - elmPos; //possible new position
+      console.log(marginTop);
     if(marginTop < tHeight){
       //elm.siblings('.msg').hide();
-      elm.stop(true,true).animate({'margin-top':marginTop});
+      elm.stop(true,true).animate({'margin-top':marginTop},marginTop);
     } else {
 
       elm.stop(true,true).animate({'margin-top': tHeight});
@@ -427,10 +435,10 @@ function scrollBoxes(){
   if( top < 0 ){
     if( newTop > top ){
       if( scrollTop > 50 ){
-        $('.header').find('.scroll').css('visibility','hidden')
+        //$('.header').find('.scroll').css('visibility','hidden')
       }
       if( top!=newTop){
-        if(newTop >= -100){
+        if(newTop >= -80){
           scrollItem(elms.box1)
         }
         subCont1.stop(true,true).animate({'top':newTop});

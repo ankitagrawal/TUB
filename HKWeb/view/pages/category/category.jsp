@@ -174,8 +174,8 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/pages/campaign/nut-top-selling.jsp">
-                    <img src="${pageContext.request.contextPath}/images/banners/Static-banner-sp.jpg"
+                <a href="${pageContext.request.contextPath}/pages/campaign/clearance/sale.jsp">
+                    <img src="${pageContext.request.contextPath}/images/banners/Clearance-sale-sports.jpg"
                          alt="Twinlab Sale"
                          class="small_banner"/>
                 </a>
@@ -215,8 +215,8 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                <a href="${pageContext.request.contextPath}/personal-care/pain-relief/supports?brand=HealthViva">
+                    <img src="<hk:vhostImage/>/images/banners/healthviva-small-static-banner.jpg" alt="healthviva"
                          class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
