@@ -221,6 +221,10 @@
              target="_blank">
         <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/> Search SO
     </s:link>)
+    (<s:link beanclass="com.hk.web.action.admin.courier.ShippingOrderStatusChange" event="search"
+             target="_blank">
+        <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/> Change SO Status
+    </s:link>)
     (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
         SO Lifecycle
         <s:param name="shippingOrder" value="${shippingOrder}"/>
