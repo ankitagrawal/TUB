@@ -81,6 +81,7 @@ public class MasterResolutionAction extends BaseAction {
     private String replacementComments;
     private ReplacementOrder replacementOrder;
     private Payment payment;
+    private String actionType;
 
     @Validate(required = true, on = "addRewardPoints")
     private String comment;
@@ -150,6 +151,13 @@ public class MasterResolutionAction extends BaseAction {
             if (!replacementPossible) {
                 replacementPossible = EnumShippingOrderStatus.getReconcilableShippingOrderStatus()
                         .contains(shippingOrder.getShippingOrderStatus().getId());
+            }
+            if(actionType.equalsIgnoreCase("addRewardPoints")) {
+            	rewardFlag=true;
+            } else if (actionType.equalsIgnoreCase("refund")) {
+            	refundFlag = true;
+            } else {
+            	replacementFlag = true;
             }
         }
         return new ForwardResolution("/pages/admin/crm/crmMasterControl.jsp");
@@ -442,4 +450,21 @@ public class MasterResolutionAction extends BaseAction {
     public void setReplacementPossible(boolean replacementPossible) {
         this.replacementPossible = replacementPossible;
     }
+
+
+	/**
+	 * @return the actionType
+	 */
+	public String getActionType() {
+		return actionType;
+	}
+
+
+	/**
+	 * @param actionType the actionType to set
+	 */
+	public void setActionType(String actionType) {
+		this.actionType = actionType;
+	}
+    
 }

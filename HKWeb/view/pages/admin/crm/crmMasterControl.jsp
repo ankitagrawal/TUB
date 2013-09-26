@@ -65,7 +65,7 @@
             }
         });
         
-        $('#search').click(funtion(e) {
+        $('#search').click(function(e) {
         	if($('#actionType').selected().val()=="none") {
         		e.preventDefault();
         		alert("Choose an action to continue");
@@ -180,7 +180,7 @@
 								<td><s:text name="expiryDate" class="date_input"
 										formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" /></td>
 								<td>Comment</td>
-								<td><s:textarea name="comment" /></td>
+								<td><s:textarea name="comment" style="height:100px !important; width: 90px !important;"/></td>
 							</tr>
 							<tr>
 								<td></td>
