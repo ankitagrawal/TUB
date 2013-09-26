@@ -735,13 +735,13 @@
                       <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction"
                               target="_blank">
                           <s:param name="shippingOrder"
-                                   value="${shippingOrder.id}"/>Create Reverse Pickup</s:link><br>
+                                   value="${shippingOrder.id}"/>Create Booking</s:link><br>
                       </shiro:hasPermission>
                       <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
                           <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                   target="_blank">
                               <s:param name="shippingOrder"
-                                       value="${shippingOrder.id}"/>View Reverse Pickups</s:link>
+                                       value="${shippingOrder.id}"/>View Bookings</s:link>
                       </shiro:hasPermission>
                   </div>
               </div>

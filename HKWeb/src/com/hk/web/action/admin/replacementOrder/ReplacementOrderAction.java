@@ -99,18 +99,18 @@ public class ReplacementOrderAction extends BaseAction {
 			return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
-			lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem, lineItem.getQty()));
+			lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem, lineItem.getQty(), false));
 		}
 		shippingOrderId = shippingOrder.getId();
 
-		reverseOrder = reverseOrderService.getReverseOrderByShippingOrderId(shippingOrderId);
+		/*reverseOrder = reverseOrderService.getReverseOrderByShippingOrderId(shippingOrderId);
 		if(reverseOrder != null){
 			lineItems = new ArrayList<LineItem>();
 			for(ReverseLineItem reverseLineItem: reverseOrder.getReverseLineItems()){
 				LineItem replacementLineItem = ReplacementOrderHelper.getLineItemForReplacementOrder(reverseLineItem.getReferredLineItem(), reverseLineItem.getReturnQty());
 				lineItems.add(replacementLineItem);
 			}
-		}
+		}*/
 		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
 	}
 
