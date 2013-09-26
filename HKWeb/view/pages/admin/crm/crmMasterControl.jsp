@@ -288,9 +288,16 @@
 							<s:label name="Reason for Replacement:" style="margin-left:7px;" />
 							<s:select name="replacementOrderReason">
 								<s:option value="-Select Reason-">-Select Reason-</s:option>
+								<c:choose><c:when test="${maBean.rto== true}" >
+								<hk:master-data-collection service="<%=MasterDataDao.class%>"
+									serviceProperty="replacementOrderReasonForRto" value="id" label="name" />
+								</c:when>
+								<c:otherwise>
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 									serviceProperty="replacementOrderReasonForReplacement"
 									value="id" label="name" />
+								</c:otherwise>
+								</c:choose>
 							</s:select>
 							<br />
 							<br />

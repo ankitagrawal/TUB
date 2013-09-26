@@ -69,6 +69,7 @@ public class MasterResolutionAction extends BaseAction {
     private boolean rewardFlag;
     private boolean refundFlag;
     private boolean replacementPossible;
+    boolean rto;
 
     private Long shippingOrderId;
     private Long baseOrderId;
@@ -90,9 +91,6 @@ public class MasterResolutionAction extends BaseAction {
 
     @Validate(required = true, on = "addRewardPoints")
     private String comment;
-
-    @Validate(required = true, on = "addRewardPoints")
-    private RewardPointMode rewardPointMode;
 
     @Validate(required = true, on = "addRewardPoints")
     private Date expiryDate;
@@ -154,6 +152,9 @@ public class MasterResolutionAction extends BaseAction {
             Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
             paymentAmount = (Double)adminShippingOrderService.getActionProcessingElement(shippingOrder, toBeProcessedItems, SEARCH_ACTION);
             lineItems.addAll(toBeProcessedItems);
+            rto = EnumShippingOrderStatus.SO_RTO.getId().equals(shippingOrder.getOrderStatus().getId())
+            		|| EnumShippingOrderStatus.RTO_Initiated.getId().equals(shippingOrder.getOrderStatus().getId());
+
             replacementPossible = shippingOrder.getReversePickupOrders() != null
                     && !shippingOrder.getReversePickupOrders().isEmpty();
             if (!replacementPossible) {
@@ -187,6 +188,10 @@ public class MasterResolutionAction extends BaseAction {
             RewardPoint rewardPoint = rewardPointService.addRewardPoints(order.getUser(), getUserService().getLoggedInUser(), order, rewardAmount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.RESOLUTION_SCREEN.asRewardPointMode());
             rewardPointService.approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
             paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), rewardAmount, EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REWARD_POINT);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
+                    shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
+                          null, "Reward points given for SO after shipping.");
+
             addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
         }
         return new ForwardResolution(MasterResolutionAction.class, "pre");
@@ -213,12 +218,13 @@ public class MasterResolutionAction extends BaseAction {
             }
         }
 
-        boolean isRTO = EnumShippingOrderStatus.SO_RTO.getId().equals(shippingOrder.getOrderStatus().getId()) || EnumShippingOrderStatus.RTO_Initiated.getId().equals(shippingOrder.getOrderStatus().getId());
-
-        replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRTO, replacementOrderReason, replacementComments);
+        replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, rto, replacementOrderReason, replacementComments);
         if (replacementOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
         } else {
+        	shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
+                    shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
+                          null, "Repalcement Order created for SO after shipping.");
             addRedirectAlertMessage(new SimpleMessage("The Replacement order created. New gateway order id: " + replacementOrder.getGatewayOrderId()));
         }
         return new ForwardResolution(MasterResolutionAction.class, "pre");
@@ -262,6 +268,9 @@ public class MasterResolutionAction extends BaseAction {
                             } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(refundPayment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
+                                shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
+                                        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
+                                              null, "Refund given for SO after shipping.");
                             }
                         } else {
                             adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
@@ -426,13 +435,6 @@ public class MasterResolutionAction extends BaseAction {
         this.comment = comment;
     }
 
-    public RewardPointMode getRewardPointMode() {
-        return rewardPointMode;
-    }
-
-    public void setRewardPointMode(RewardPointMode rewardPointMode) {
-        this.rewardPointMode = rewardPointMode;
-    }
 
     public Date getExpiryDate() {
         return expiryDate;
@@ -532,4 +534,20 @@ public class MasterResolutionAction extends BaseAction {
     public void setLedgerLineItemAmountMap(Map<String, Map<List<LineItem>, Double>> ledgerLineItemAmountMap) {
         this.ledgerLineItemAmountMap = ledgerLineItemAmountMap;
     }
+
+	/**
+	 * @return the rto
+	 */
+	public boolean isRto() {
+		return rto;
+	}
+
+
+	/**
+	 * @param rto the rto to set
+	 */
+	public void setRto(boolean rto) {
+		this.rto = rto;
+	}
+
 }
