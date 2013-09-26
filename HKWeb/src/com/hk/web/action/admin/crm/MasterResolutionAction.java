@@ -236,10 +236,12 @@ public class MasterResolutionAction extends BaseAction {
         if (basePayment.getPaymentMode().getId().equals(EnumPaymentMode.ONLINE_PAYMENT.getId()) && gateway != null && refundAmount > 0 && refundReason != null && refundComments != null && !refundComments.isEmpty()) {
             if (EnumGateway.getManualRefundGateways().contains(gateway.getId())) {
                 adminEmailManager.sendManualRefundTaskToAdmin(shippingOrder.getAmount(), paymentGatewayOrderId, gateway.getName());
-                shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser, EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.ManualRefundInitiated.asReason(), comment);
-                payment = paymentService.createNewGenericPayment(basePayment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), refundAmount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode(), EnumPaymentTransactionType.REFUND);
-            }
-            else if (EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
+                shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser,
+                		EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),
+                		EnumReason.ManualRefundInitiated.asReason(), comment);
+                payment = paymentService.createNewGenericPayment(basePayment, EnumPaymentStatus.REFUNDED.asPaymenStatus(),
+                		refundAmount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode(), EnumPaymentTransactionType.REFUND);
+            } else if (EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
                 try {
                     if (EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
                         basePayment = paymentService.updatePayment(gatewayOrderId);
@@ -253,16 +255,22 @@ public class MasterResolutionAction extends BaseAction {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.AmountRefundedOrderCancel.asOrderLifecycleActivity(),
                                         loggingComment);
-
-                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
-                                adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
-                                        EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
-                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())) {
-                                adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
-                                        EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
+                                addRedirectAlertMessage(new SimpleMessage("Refund successful"));
                                 shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
                                         shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
                                               null, "Refund given for SO after shipping.");
+                             
+                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
+                                adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
+                                        EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
+                                addRedirectAlertMessage(new SimpleMessage("Refund failed."));
+                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())) {
+                                adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
+                                        EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
+                                addRedirectAlertMessage(new SimpleMessage("Refund in process."));
+                                shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
+                                        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
+                                              null, "Refund in process which was given for SO after shipping.");
                             }
                         } else {
                             adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
