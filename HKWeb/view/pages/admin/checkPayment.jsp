@@ -32,6 +32,11 @@
 
         <h2>Order Id ${checkPaymentBean.order.id}, Order Status: ${checkPaymentBean.order.orderStatus.name}</h2>
 
+        <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
+            <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${checkPaymentBean.pricingDto}"
+                             orderDate="${checkPaymentBean.payment.paymentDate}"/>
+        </div>
+
         <div class="leftPS">
 
             <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
@@ -44,11 +49,6 @@
                 </div>
 
             </div>
-
-        <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
-            <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${checkPaymentBean.pricingDto}"
-                             orderDate="${checkPaymentBean.payment.paymentDate}"/>
-        </div>
 
         <c:choose>
             <c:when test="${checkPaymentBean.payment.paymentStatus.id == paymentStatusAuthPending}">
