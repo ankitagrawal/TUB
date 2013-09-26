@@ -838,11 +838,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                             		rpLineItem.setCustomerActionStatus(EnumClassification.ReconciledGeneric.asClassification());
                             	}
                                 LineItem lineItemForRP = rpLineItem.getLineItem();
-                                if (toBeProcessedLineItemSet.add(lineItemForRP)) {
-                                    lineItemForRP.setRQty(1l);
-                                } else {
+                                if (toBeProcessedLineItemSet.contains(lineItemForRP)) {
+                                	toBeProcessedLineItemSet.remove(lineItemForRP);
                                     lineItemForRP.setRQty(lineItemForRP.getRQty() + 1);
+                                } else {
+                                	lineItemForRP.setRQty(1l);
                                 }
+                                toBeProcessedLineItemSet.add(lineItemForRP);
                                 toBeProcessedAmount += rpLineItem.getAmount();
                             }
                         }

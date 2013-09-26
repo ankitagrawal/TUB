@@ -159,7 +159,7 @@
 									<td>${lineItem.cartLineItem.productVariant.product.name}<br />
 										Variant: ${lineItem.cartLineItem.productVariant.id}
 									</td>
-									<td>${lineItem.qty}</td>
+									<td>${lineItem.RQty}</td>
 								</tr>
 							</c:forEach>
 						</table>
