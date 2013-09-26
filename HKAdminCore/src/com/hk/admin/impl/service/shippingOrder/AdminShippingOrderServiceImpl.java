@@ -579,7 +579,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
 		shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_RTO));
 		shippingOrder.getShipment().setReturnDate(new Date());
-		shippingOrder.getShipment().setRtoInitiatedDate(new Date());
 		getShippingOrderService().save(shippingOrder);
 		getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Returned);
 		Order order = shippingOrder.getBaseOrder();
@@ -839,11 +838,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                             		rpLineItem.setCustomerActionStatus(EnumClassification.ReconciledGeneric.asClassification());
                             	}
                                 LineItem lineItemForRP = rpLineItem.getLineItem();
-                                if (toBeProcessedLineItemSet.add(lineItemForRP)) {
-                                    lineItemForRP.setRQty(1l);
-                                } else {
+                                if (toBeProcessedLineItemSet.contains(lineItemForRP)) {
+                                	toBeProcessedLineItemSet.remove(lineItemForRP);
                                     lineItemForRP.setRQty(lineItemForRP.getRQty() + 1);
+                                } else {
+                                	lineItemForRP.setRQty(1l);
                                 }
+                                toBeProcessedLineItemSet.add(lineItemForRP);
                                 toBeProcessedAmount += rpLineItem.getAmount();
                             }
                         }

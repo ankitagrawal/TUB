@@ -31,13 +31,13 @@
         $('#refundDiv').hide();
         $('#replacementDiv').hide();
 
-        if (viewRefund == true) {
+        if (viewRefund == "true") {
             $('#refundDiv').show();
             $('#refund').attr('selected','selected');
-        } else if (viewReward == true) {
+        } else if (viewReward == "true") {
             $('#rewardDiv').show();
             $('#addRewardPoints').attr('selected','selected');
-        } else if (viewReplacement == true) {
+        } else if (viewReplacement == "true") {
             $('#replacementDiv').show();
             $('#replacementOrder').attr('selected','selected');
         }
@@ -159,7 +159,7 @@
 									<td>${lineItem.cartLineItem.productVariant.product.name}<br />
 										Variant: ${lineItem.cartLineItem.productVariant.id}
 									</td>
-									<td>${lineItem.qty}</td>
+									<td>${lineItem.RQty}</td>
 								</tr>
 							</c:forEach>
 						</table>
