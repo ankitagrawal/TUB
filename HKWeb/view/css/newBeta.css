@@ -5286,7 +5286,7 @@ color: #e62580;
 
 .applicableOfferDesc{
     position: relative;
-    float: left;
+    vertical-align: top;
     top: 10px;
     left: 15px;
     margin-bottom: 15px;
@@ -5309,8 +5309,7 @@ color: #e62580;
     left: 3px;
     width: 202px;
     height: auto;
-    position: relative;
-    float: left;
+    vertical-align:top;
     margin-bottom: 5px;
     word-wrap: break-word;
     border: 1px solid #ccc;
@@ -5536,9 +5535,7 @@ color: #e62580;
 }
 
 .removeButton{
-    position: relative;
-    float: left;
-    width: 0px;
+
 }
 
 .noCoupons{
@@ -5612,6 +5609,7 @@ color: #e62580;
 }
 
 .offerRow{
+  display:block;
   /*  position: relative;
     float: left;
     width: 100%;*/
