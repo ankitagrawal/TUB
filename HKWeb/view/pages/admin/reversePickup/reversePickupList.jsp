@@ -172,7 +172,7 @@
                                                        value="id" label="status"/>
                         </s:select></span>
                 <span> <label>Booking Type</label>
-                        <s:select name="reversePickupType" value="${revList.reversePickupStatus.id}">
+                        <s:select name="reversePickupType" value="${revList.reversePickupType.id}">
                             <s:option value="">--ALL--</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="allReversePickUpType"
