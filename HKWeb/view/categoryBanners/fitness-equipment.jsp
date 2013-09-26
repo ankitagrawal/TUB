@@ -15,6 +15,17 @@
 </style>
 
 <div style="margin-left: auto; margin-right: auto; width:960px;">
+<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
     <img src="${pageContext.request.contextPath}/images/banners/sports_strip_banner_fitness.jpg"
          alt="Beauty Offers">
+    </s:link>
+    <script type="text/javascript">
+        var params = {};
+        params['srcUrl'] = document.location.href;
+        params['topLevelCategory'] = $('#topCategoryContainer').html();
+        $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href') + '?' + $.param(params));
+
+        $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
+
+    </script>
 </div>
