@@ -64,6 +64,7 @@ public class MasterResolutionAction extends BaseAction {
     private boolean rewardFlag;
     private boolean refundFlag;
     private boolean replacementPossible;
+    boolean rto;
 
     private Long shippingOrderId;
     private Long baseOrderId;
@@ -146,6 +147,9 @@ public class MasterResolutionAction extends BaseAction {
             Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
             paymentAmount = (Double)adminShippingOrderService.getActionProcessingElement(shippingOrder, toBeProcessedItems, SEARCH_ACTION);
             lineItems.addAll(toBeProcessedItems);
+            rto = EnumShippingOrderStatus.SO_RTO.getId().equals(shippingOrder.getOrderStatus().getId())
+            		|| EnumShippingOrderStatus.RTO_Initiated.getId().equals(shippingOrder.getOrderStatus().getId());
+
             replacementPossible = shippingOrder.getReversePickupOrders() != null
                     && !shippingOrder.getReversePickupOrders().isEmpty();
             if (!replacementPossible) {
@@ -203,9 +207,7 @@ public class MasterResolutionAction extends BaseAction {
             }
         }
 
-        boolean isRTO = EnumShippingOrderStatus.SO_RTO.getId().equals(shippingOrder.getOrderStatus().getId()) || EnumShippingOrderStatus.RTO_Initiated.getId().equals(shippingOrder.getOrderStatus().getId());
-
-        replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRTO, replacementOrderReason, replacementComments);
+        replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, rto, replacementOrderReason, replacementComments);
         if (replacementOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
         } else {
@@ -466,5 +468,22 @@ public class MasterResolutionAction extends BaseAction {
 	public void setActionType(String actionType) {
 		this.actionType = actionType;
 	}
+
+
+	/**
+	 * @return the rto
+	 */
+	public boolean isRto() {
+		return rto;
+	}
+
+
+	/**
+	 * @param rto the rto to set
+	 */
+	public void setRto(boolean rto) {
+		this.rto = rto;
+	}
+	
     
 }

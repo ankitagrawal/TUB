@@ -275,6 +275,10 @@
                             SO Lifecycle
                             <s:param name="shippingOrder" value="${reversePickup.shippingOrder.id}"/>
                         </s:link>)
+                        (<s:link beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" event="pre"
+             			target="_blank">
+        				<s:param name="shippingOrderId" value="${shippingOrder.id}"/>
+        				</s:link>)
                         </td>
                     </c:if>
                     <td>
