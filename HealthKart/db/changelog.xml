@@ -14157,4 +14157,26 @@
     <changeSet author="Nihal (generated)" id="1379656965839-29">
         <addForeignKeyConstraint baseColumnNames="bin_id" baseTableName="sku_item" constraintName="fk_sku_item_bin1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bin" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1380121613158-01">
+        <addColumn tableName="bin">
+            <column defaultValue="1" name="sequence_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1380121613158-02">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="bin" tableName="bin"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1380121613158-03">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="shelf" tableName="bin"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1380121826284-04">
+        <dropForeignKeyConstraint baseTableName="bin_has_sku_item" constraintName="fk_bin_has_sku_item_bin1"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1380121826284-05">
+        <dropForeignKeyConstraint baseTableName="bin_has_sku_item" constraintName="fk_bin_has_sku_item_sku_item1"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1380121826284-06">
+        <dropTable tableName="bin_has_sku_item"/>
+    </changeSet>
 </databaseChangeLog>
