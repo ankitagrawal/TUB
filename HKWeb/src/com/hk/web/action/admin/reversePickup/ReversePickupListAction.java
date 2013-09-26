@@ -53,7 +53,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, EnumReversePickupStatus.getHealthKartManagedRPStatus(), courierName, getPageNo(), getPerPage(), EnumReversePickupType.getReversePickupTypes());
+        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, EnumReversePickupStatus.getPreRPStatusList(), courierName, getPageNo(), getPerPage(), EnumReversePickupType.getReversePickupTypes());
         reversePickupOrderList = reversePickupPage.getList();
         return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
     }
