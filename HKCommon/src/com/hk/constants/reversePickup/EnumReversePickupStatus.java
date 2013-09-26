@@ -58,14 +58,12 @@ public enum EnumReversePickupStatus {
         return reversePickupStatus;
     }
 
-    public List<ReversePickupStatus> getPreRPStatusList(){
+    public static List<ReversePickupStatus> getPreRPStatusList(){
         return Arrays.asList(
                 RPU_Initiated.asReversePickupStatus(),
                 RPU_Picked.asReversePickupStatus(),
                 RPU_Received.asReversePickupStatus(),
                 RPU_Scheduled.asReversePickupStatus(),
-//                Return_Initiated.asReversePickupStatus(),
-//                Return_Received.asReversePickupStatus(),
                 Return_QC_Checkin.asReversePickupStatus(),
                 RPU_RECONCILATION.asReversePickupStatus(),
                 RPU_APPROVED.asReversePickupStatus());

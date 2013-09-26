@@ -11,6 +11,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
@@ -52,6 +53,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     ShipmentService shipmentService;
     @Autowired
     InventoryService inventoryService;
+    @Autowired
+    OrderEventPublisher orderEventPublisher;
 
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason,
@@ -93,7 +96,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         String comment2 = "Replacement order created. Gateway order Id of replacement order: " + replacementOrder.getGatewayOrderId();
         shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser, EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(), null, comment2);
 
-        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(replacementOrder.getBaseOrder());
+
+        orderEventPublisher.publishOrderPlacedEvent(replacementOrder.getBaseOrder());
 
         return replacementOrder;
     }

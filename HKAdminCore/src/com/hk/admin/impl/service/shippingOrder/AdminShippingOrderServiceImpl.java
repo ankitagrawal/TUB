@@ -579,7 +579,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
 		shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_RTO));
 		shippingOrder.getShipment().setReturnDate(new Date());
-		shippingOrder.getShipment().setRtoInitiatedDate(new Date());
 		getShippingOrderService().save(shippingOrder);
 		getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Returned);
 		Order order = shippingOrder.getBaseOrder();
@@ -834,18 +833,16 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                     List<RpLineItem> rpLineItems = reversePickupOrder.getRpLineItems();
                     if (rpLineItems != null && !rpLineItems.isEmpty()) {
                         for (RpLineItem rpLineItem : rpLineItems) {
-                            if (EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
+                            if (rpLineItem.getCustomerActionStatus() != null && EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
                             	if (!SEARCH_ACTION.equals(actionTypeConstant)) {
                             		rpLineItem.setCustomerActionStatus(EnumClassification.ReconciledGeneric.asClassification());
                             	}
                                 LineItem lineItemForRP = rpLineItem.getLineItem();
-                                if (toBeProcessedLineItemSet.contains(lineItemForRP)) {
-                                	toBeProcessedLineItemSet.remove(lineItemForRP);
-                                    lineItemForRP.setQty(lineItemForRP.getQty() + 1);
+                                if (toBeProcessedLineItemSet.add(lineItemForRP)) {
+                                    lineItemForRP.setRQty(1l);
                                 } else {
-                                    lineItemForRP.setQty(1l);
+                                    lineItemForRP.setRQty(lineItemForRP.getRQty() + 1);
                                 }
-                                toBeProcessedLineItemSet.add(lineItemForRP);
                                 toBeProcessedAmount += rpLineItem.getAmount();
                             }
                         }

@@ -206,8 +206,8 @@ public class MasterResolutionAction extends BaseAction {
 
         for (LineItem lineItem : lineItems) {
             String productName = lineItem.getCartLineItem().getProductVariant().getProduct().getName();
-            lineItem.setRQty(lineItem.getQty());
-            if (lineItem.getQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
+//            lineItem.setRQty(lineItem.getQty());
+            if (lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
                 addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + productName + " out of stock."));
                 return new ForwardResolution(MasterResolutionAction.class, "pre");
             }
@@ -298,7 +298,7 @@ public class MasterResolutionAction extends BaseAction {
                 List<RpLineItem> rpLineItems = reversePickupOrder.getRpLineItems();
                 for (RpLineItem rpLineItem : rpLineItems) {
                     //for approved lineItem
-                    if (EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
+                    if (rpLineItem.getCustomerActionStatus() != null && EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
                         String actionTask = rpLineItem.getActionTaken().getPrimary();
                         if (reconcileItemMap.containsKey(actionTask)) {
                             Set<RpLineItem> rpLineItemMapValue = reconcileItemMap.get(actionTask);
