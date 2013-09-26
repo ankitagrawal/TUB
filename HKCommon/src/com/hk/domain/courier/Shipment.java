@@ -91,6 +91,18 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	@Transient
 	private String trackLink;
 
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "rto_initiated_date")
+  private Date rtoInitiatedDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "rto_date")
+  private Date rtoDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "lost_date")
+  private Date lostDate;
+
 	public int compareTo(Shipment shipment) {
 		if (this.getId() < shipment.getId()) return -1;
 		if (this.getId() > shipment.getId()) return 1;
@@ -281,4 +293,28 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
     public void setShipmentServiceType(ShipmentServiceType shipmentServiceType) {
         this.shipmentServiceType = shipmentServiceType;
     }
+
+  public Date getRtoInitiatedDate() {
+    return rtoInitiatedDate;
+  }
+
+  public void setRtoInitiatedDate(Date rtoInitiatedDate) {
+    this.rtoInitiatedDate = rtoInitiatedDate;
+  }
+
+  public Date getRtoDate() {
+    return rtoDate;
+  }
+
+  public void setRtoDate(Date rtoDate) {
+    this.rtoDate = rtoDate;
+  }
+
+  public Date getLostDate() {
+    return lostDate;
+  }
+
+  public void setLostDate(Date lostDate) {
+    this.lostDate = lostDate;
+  }
 }
