@@ -37,6 +37,7 @@
                              orderDate="${checkPaymentBean.payment.paymentDate}"/>
         </div>
 
+        <div class="leftPS">
         <s:form beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
 
             <div>
@@ -175,6 +176,7 @@
 
             </div>
         </s:form>
+        </div>
 
         <div class="leftPS">
 
