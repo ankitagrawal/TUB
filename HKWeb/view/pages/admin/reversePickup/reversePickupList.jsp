@@ -293,9 +293,9 @@
                         <c:set var="prevLineId" value="${currentLineId}"/>
                     </td>
                     <td>${rpLineitem.lineItem.sku.productVariant.product.name} ${rpLineitem.lineItem.sku.productVariant}
-                            ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}
+                            ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}   <br/>
                         <label>Value </label>
-                        <fmt:formatNumber value="${rp.amount}" type="currency" currencySymbol="Rs. "/>
+                        <fmt:formatNumber value="${rpLineitem.amount}" type="currency" currencySymbol="Rs. "/>
                     </td>
                     <td>${rpLineitem.customerReasonForReturn.classification.primary}</td>
                     <td>
