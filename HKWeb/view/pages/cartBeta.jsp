@@ -575,7 +575,7 @@ function _updateTotals(responseData) {
         </div>
         <div class="floatfix"></div>
     </div>
-</c:forEach>--%>
+</c:forEach>
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>

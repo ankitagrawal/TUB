@@ -974,17 +974,22 @@
 			params.productReferrerId = $('#productReferrerId').val();
 			function _addToCart(res) {
 				if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-					$('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
-					$('#productsInCart').html(res.data.itemsInCart);
-					if(res.data.itemsInCart > 0){
-						$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart.png");
-					}else{
-						$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");
-					}
-					$('.progressLoader').hide();
 
-					show_message();
-                    $('#gulal').show();
+                    var ele = $('#cartPop');
+                    var txt = ele.find('.body .msg');
+                    txt.html('');
+                    txt.append('<div class="fnt-bold mrgn-t-5">Cart Summary</div>');
+                    txt.append('<div>' + res.data.itemsInCart + ' item </div>');
+                    txt.append('<a href="/core/cart/Cart.action" class="btn btn-blue mrgn-bt-10" style="display:inline-block">Proceed to Cart</a>');
+                    $('[data-role=cart-counter]').text(res.data.itemsInCart);
+                    $('.cart-pop-container').addClass('cart-pop-container-hover').find('#cartPop').show();
+                    $('html,body').animate({scrollTop: 0}, 300);
+
+
+                    //$('.progressLoader').hide();
+
+//					show_message();
+//                    $('#gulal').show();
 				}
                 else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                    alert(res.message);
