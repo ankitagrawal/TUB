@@ -83,8 +83,7 @@
 
 		<div>
 			<fieldset style="width: 100%;">
-				<s:form
-					beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
+				<s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
 					<table>
 						<tr>
 							<td style="width: 49%;">

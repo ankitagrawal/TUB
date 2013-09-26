@@ -170,7 +170,6 @@ public class MasterResolutionAction extends BaseAction {
     }
 
     public Resolution addRewardPoints() {
-        rewardFlag = true;
         Order order = shippingOrder.getBaseOrder();
         Payment basePayment = order.getPayment();
         Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
@@ -193,7 +192,6 @@ public class MasterResolutionAction extends BaseAction {
     }
 
     public Resolution createReplacementOrder() {
-        replacementFlag = true;
         List<LineItem> lineItems = new ArrayList<LineItem>();
         Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
         adminShippingOrderService.getActionProcessingElement(shippingOrder,toBeProcessedItems, REPLACEMENT_ACTION);
@@ -228,7 +226,6 @@ public class MasterResolutionAction extends BaseAction {
     @DontValidate
     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
-        refundFlag = true;
         User loggedOnUser = getUserService().getLoggedInUser();
         Payment basePayment = shippingOrder.getBaseOrder().getPayment();
         Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
