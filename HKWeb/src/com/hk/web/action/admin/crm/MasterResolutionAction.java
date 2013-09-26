@@ -299,7 +299,7 @@ public class MasterResolutionAction extends BaseAction {
                 List<RpLineItem> rpLineItems = reversePickupOrder.getRpLineItems();
                 for (RpLineItem rpLineItem : rpLineItems) {
                     //for approved lineItem
-                    if (EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
+                    if (rpLineItem.getCustomerActionStatus() != null && EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
                         String actionTask = rpLineItem.getActionTaken().getPrimary();
                         if (reconcileItemMap.containsKey(actionTask)) {
                             Set<RpLineItem> rpLineItemMapValue = reconcileItemMap.get(actionTask);
