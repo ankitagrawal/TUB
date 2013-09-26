@@ -839,9 +839,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                             	}
                                 LineItem lineItemForRP = rpLineItem.getLineItem();
                                 if (toBeProcessedLineItemSet.add(lineItemForRP)) {
-                                    lineItemForRP.setQty(1l);
+                                    lineItemForRP.setRQty(1l);
                                 } else {
-                                    lineItemForRP.setQty(lineItemForRP.getQty() + 1);
+                                    lineItemForRP.setRQty(lineItemForRP.getRQty() + 1);
                                 }
                                 toBeProcessedAmount += rpLineItem.getAmount();
                             }
