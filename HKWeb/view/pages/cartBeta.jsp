@@ -26,6 +26,7 @@
 <script src="<hk:vhostJs/>/js/loader.js"></script>
 
 <script type="text/javascript">
+
 jQuery.fn.jqStepper = function(minValue, maxValue) {
     jQuery.fn.jqStepper.minValue = minValue;
     jQuery.fn.jqStepper.maxValue = maxValue;
@@ -64,7 +65,9 @@ function showCouponDetails() {
 }
 
 $(document).ready(function() {
-
+    $('.offers-label').click(function () {
+        $(this).parents('.offers-container').toggleClass('offers-displayed');
+    });
     $("#learnMore").click(function() {
         $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
     });
@@ -260,7 +263,7 @@ function _updateTotals(responseData) {
 }
 
 </script>
-<script type="text/javascript" src="<hk:vhostJs/>/js/otherScripts/jquery.glow.js"></script>
+<script type="text/javascript" src="<hk:vhostJs/>/otherScripts/jquery.glow.js"></script>
 </s:layout-component>
 
 <s:layout-component name="modal">
@@ -312,14 +315,30 @@ function _updateTotals(responseData) {
                 to your shopping cart</a>
         </c:if>
     </shiro:hasRole>
-    <div id="offerTextOnTop"></div>
+
 </s:layout-component>
 
 <s:layout-component name="cart_items">
+<div class="offers-container">
+    <a href="javascript:void(0)"
+       class="offers-label">
+        <span data-role="prompt-count"
+                                  style="background-color:orangered;color:white;padding-left:3px;padding-right:3px;margin-right:8px;margin-left:5px">
+                                  <div id="offerTextOnTop"></div>
+        </span>
+        ${shoppingCartPricingDto.appliedOfferId!=null?'OFFER APPLIED, CHANGE OFFER':'OFFERS AVAILABLE'}
+    </a>
 
+    <div></div>
+    <div class="offers-drop-down">
+        <div id="appliedOfferDiv"></div>
+        <div id="applicableOfferDiv"></div>
+    </div>
+</div>
+<script src="<hk:vhostJs/>/js/appBeta.js"></script>
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 
-<div id="appliedOfferDiv"></div>
+
 <div class='products_container' style="min-height: 300px;">
 
 <div style="display: none;">
@@ -745,7 +764,7 @@ function _updateTotals(responseData) {
         });
     </script>
 </div>
-<div id="applicableOfferDiv"></div>
+
 
 <!--div class='orderSummaryHeading'>
 <div class="deliveryDetails"> DELIVERY DETAILS</div>
@@ -940,9 +959,19 @@ function _updateTotals(responseData) {
         </tr>
     </table>
 </div>
-<script src="<hk:vhostJs/>/js/app.js"></script>
+
 
 <style type="text/css">
+    #offerTextOnTop,#offerTextOnTop div{
+        display:inline;
+
+    }
+    #applicableOfferDiv ,#applicableOfferDiv div{
+        display:inline-block;
+    }
+    #appliedOfferDiv{
+        display:none
+    }
     .main_container {
         border: none;
         border-radius: 0px;
@@ -1052,5 +1081,91 @@ function _updateTotals(responseData) {
     .align_right {
         text-align: right;
     }
+        /* cart offers drop down begins*/
+    .offers-container {
+        text-align: center;
+        display:none;
+        margin-bottom: 25px;
+    }
+
+    .offers-container.offers-displayed {
+        background: white;
+    }
+
+    .offers-container .offers-label {
+        line-height: 1.6em;
+        display: inline-block;
+        border: 1px solid #c8c8c8;
+        padding-right: 28px;
+        z-index: 1;
+        background-image: url('../images/arrow-down.png');
+        background-repeat: no-repeat;
+        background-position: 97%;
+        font-weight: 600;
+
+    }
+
+    .offers-container.offers-displayed .offers-label {
+        background-color: white;
+        background-image: url('../images/arrow-up.png');
+        border-bottom-color: transparent;
+    }
+
+    .offers-container .offers-drop-down {
+        padding: 15px 30px;
+        text-align: left;
+        background-color: white;
+        position: relative;
+        display: none;
+        margin-top: -1px;
+        border: 1px solid #c8c8c8;
+        box-shadow: 0px 4px 20px #c8c8c8;
+        z-index: 0;
+    }
+
+    .offers-container.offers-displayed .offers-drop-down {
+        display: inline-block;
+    }
+
+    .offers-container .offer-tile-container {
+        display: inline-block;
+        width: 160px;
+        padding: 10px 5px 5px 10px;
+        margin-right: 24px;
+        margin-left: 24px;
+        border: 1px dashed #dcdcdc;
+        vertical-align: top;
+        height: 8.5em;
+    }
+
+    .offers-container .icn-scissor {
+        position: absolute;
+        margin-top: -17px;
+        margin-left: 140px;
+    }
+
+    .offers-container .offer-tile-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 600;
+        height: 6em;
+        text-transform: capitalize;
+    }
+
+    .offers-container .offer-tile-text {
+        height: 4em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .offers-container .offer-tile-buttons {
+
+    }
+
+    .offers-container .offer-tile-buttons .btn {
+        display: inline-block;
+    }
+
+        /* cart offers derop down ends*/
 
 </style>
