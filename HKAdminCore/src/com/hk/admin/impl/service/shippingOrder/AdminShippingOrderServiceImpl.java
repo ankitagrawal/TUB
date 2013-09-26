@@ -833,7 +833,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                     List<RpLineItem> rpLineItems = reversePickupOrder.getRpLineItems();
                     if (rpLineItems != null && !rpLineItems.isEmpty()) {
                         for (RpLineItem rpLineItem : rpLineItems) {
-                            if (EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
+                            if (rpLineItem.getCustomerActionStatus() != null && EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
                             	if (!SEARCH_ACTION.equals(actionTypeConstant)) {
                             		rpLineItem.setCustomerActionStatus(EnumClassification.ReconciledGeneric.asClassification());
                             	}
