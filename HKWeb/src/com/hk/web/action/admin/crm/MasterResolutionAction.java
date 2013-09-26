@@ -181,6 +181,10 @@ public class MasterResolutionAction extends BaseAction {
             RewardPoint rewardPoint = rewardPointService.addRewardPoints(order.getUser(), getUserService().getLoggedInUser(), order, rewardAmount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.RESOLUTION_SCREEN.asRewardPointMode());
             rewardPointService.approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
             paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), rewardAmount, EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REWARD_POINT);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
+                    shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
+                          null, "Reward points given for SO after shipping.");
+
             addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
         }
         return new ForwardResolution(MasterResolutionAction.class, "pre");
@@ -211,6 +215,9 @@ public class MasterResolutionAction extends BaseAction {
         if (replacementOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order."));
         } else {
+        	shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
+                    shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
+                          null, "Repalcement Order created for SO after shipping.");
             addRedirectAlertMessage(new SimpleMessage("The Replacement order created. New gateway order id: " + replacementOrder.getGatewayOrderId()));
         }
         return new ForwardResolution(MasterResolutionAction.class, "pre");
@@ -254,6 +261,9 @@ public class MasterResolutionAction extends BaseAction {
                             } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(refundPayment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
+                                shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
+                                        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
+                                              null, "Refund given for SO after shipping.");
                             }
                         } else {
                             adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
