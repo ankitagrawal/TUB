@@ -69,7 +69,7 @@ public class MasterResolutionAction extends BaseAction {
     private boolean rewardFlag;
     private boolean refundFlag;
     private boolean replacementPossible;
-    boolean rto;
+    boolean rto = false;
 
     private Long shippingOrderId;
     private Long baseOrderId;
@@ -154,12 +154,8 @@ public class MasterResolutionAction extends BaseAction {
             rto = EnumShippingOrderStatus.SO_RTO.getId().equals(shippingOrder.getOrderStatus().getId())
             		|| EnumShippingOrderStatus.RTO_Initiated.getId().equals(shippingOrder.getOrderStatus().getId());
 
-            replacementPossible = shippingOrder.getReversePickupOrders() != null
-                    && !shippingOrder.getReversePickupOrders().isEmpty();
-            if (!replacementPossible) {
-                replacementPossible = EnumShippingOrderStatus.getReconcilableShippingOrderStatus()
-                        .contains(shippingOrder.getShippingOrderStatus().getId());
-            }
+            replacementPossible = !shippingOrder.getReversePickupOrders().isEmpty();
+
             if(actionType.equalsIgnoreCase("addRewardPoints")) {
             	rewardFlag=true;
             } else if (actionType.equalsIgnoreCase("refund")) {

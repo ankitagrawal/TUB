@@ -84,7 +84,7 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SOSTATUS}, authActionBean = AdminPermissionAction.class)
     public Resolution saveStatus(){
-      if(shippingOrder!=null && statusDate !=null &&  statusDate.after(shippingOrder.getShipment().getShipDate()) && statusDate.before(DateUtils.getEndOfDay(new Date())) ){
+      if(shippingOrder!=null && statusDate !=null &&  statusDate.after(DateUtils.getEndOfPreviousDay(shippingOrder.getShipment().getShipDate())) && statusDate.before(DateUtils.getEndOfDay(new Date())) ){
         currentStatus=shippingOrder.getShippingOrderStatus().getName();
         Shipment shippingOrderShipment = shippingOrder.getShipment();
         switch (enumSoUpdatedStatusId) {

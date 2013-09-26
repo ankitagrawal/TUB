@@ -1,9 +1,9 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
@@ -20,6 +20,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,9 +61,15 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         if (roComment == null) roComment = "";
 
         ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
+
+        boolean freeOrder = false;
+        if(shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Delivered.getId())){
+            freeOrder = !shippingOrder.getReversePickupOrders().isEmpty();
+        }
+
         for (LineItem lineItem : lineItems) {
             if (lineItem.getRQty() != 0) {
-                LineItem rLineItem = ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem, lineItem.getRQty());
+                LineItem rLineItem = ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem, lineItem.getRQty(), freeOrder);
                 rLineItem.setShippingOrder(replacementOrder);
                 rLineItem.setQty(lineItem.getRQty());
                 lineItemSet.add(rLineItem);

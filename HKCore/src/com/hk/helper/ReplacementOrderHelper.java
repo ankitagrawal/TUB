@@ -1,7 +1,5 @@
 package com.hk.helper;
 
-import java.util.Date;
-
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ReplacementOrder;
@@ -9,6 +7,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,29 +21,33 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
 public class ReplacementOrderHelper {
 
-    public static LineItem getLineItemForReplacementOrder(LineItem lineItem, Long qty) {
-      LineItem replacementOrderLineItem = new LineItem();
-      replacementOrderLineItem.setSku(lineItem.getSku());
-//      replacementOrderLineItem.setShippingOrder(lineItem.getShippingOrder());
-      replacementOrderLineItem.setCartLineItem(lineItem.getCartLineItem());
-  //        replacementOrderLineItem.setQty(lineItem.getQty());
-      replacementOrderLineItem.setCostPrice(lineItem.getCostPrice());
-      replacementOrderLineItem.setMarkedPrice(lineItem.getSku().getProductVariant().getMarkedPrice());
-      replacementOrderLineItem.setHkPrice(lineItem.getHkPrice());
-      double factor = qty / lineItem.getQty();
-      replacementOrderLineItem.setDiscountOnHkPrice(lineItem.getDiscountOnHkPrice() * factor);
-      replacementOrderLineItem.setTax(lineItem.getTax());
-      replacementOrderLineItem.setQty(qty);
+    public static LineItem getLineItemForReplacementOrder(LineItem lineItem, Long qty, boolean freeOrder) {
+        LineItem replacementOrderLineItem = new LineItem();
+        replacementOrderLineItem.setSku(lineItem.getSku());
+        replacementOrderLineItem.setCartLineItem(lineItem.getCartLineItem());
+        replacementOrderLineItem.setCostPrice(lineItem.getCostPrice());
+        replacementOrderLineItem.setMarkedPrice(lineItem.getSku().getProductVariant().getMarkedPrice());
+        replacementOrderLineItem.setHkPrice(lineItem.getHkPrice());
 
-      replacementOrderLineItem.setRewardPoints(lineItem.getRewardPoints());
-      replacementOrderLineItem.setOrderLevelDiscount(lineItem.getOrderLevelDiscount()* factor);
-      replacementOrderLineItem.setCodCharges(lineItem.getCodCharges()* factor);
-      replacementOrderLineItem.setShippingCharges(lineItem.getShippingCharges()* factor);
+        replacementOrderLineItem.setTax(lineItem.getTax());
+        replacementOrderLineItem.setQty(qty);
+        double factor = freeOrder ? 0 : qty / lineItem.getQty();
 
-      return replacementOrderLineItem;
+        if (freeOrder) {
+            replacementOrderLineItem.setDiscountOnHkPrice(replacementOrderLineItem.getHkPrice());
+        } else {
+            replacementOrderLineItem.setDiscountOnHkPrice(lineItem.getDiscountOnHkPrice() * factor);
+        }
+
+        replacementOrderLineItem.setRewardPoints(lineItem.getRewardPoints() * factor);
+        replacementOrderLineItem.setOrderLevelDiscount(lineItem.getOrderLevelDiscount() * factor);
+        replacementOrderLineItem.setCodCharges(lineItem.getCodCharges() * factor);
+        replacementOrderLineItem.setShippingCharges(lineItem.getShippingCharges() * factor);
+
+        return replacementOrderLineItem;
     }
 
-    public static ReplacementOrder getReplacementOrderFromShippingOrder(ShippingOrder shippingOrder,ShippingOrderStatusService shippingOrderStatusService, ReconciliationStatusDao reconciliationStatusDao) {
+    public static ReplacementOrder getReplacementOrderFromShippingOrder(ShippingOrder shippingOrder, ShippingOrderStatusService shippingOrderStatusService, ReconciliationStatusDao reconciliationStatusDao) {
         ReplacementOrder replacementOrder = new ReplacementOrder();
         replacementOrder.setBaseOrder(shippingOrder.getBaseOrder());
         replacementOrder.setWarehouse(shippingOrder.getWarehouse());
