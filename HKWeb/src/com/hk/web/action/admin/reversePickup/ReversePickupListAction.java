@@ -221,7 +221,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         params.add("customerActionStatus");
         params.add("courierName");
         params.add("reversePickupStatus.id");
-        params.add("reversePickupType");
+        params.add("reversePickupType.id");
         return params;
     }
 

@@ -12,7 +12,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" var="rev"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup Booking Screen">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Approved Booking Screen">
 <s:layout-component name="content">
 <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -143,7 +143,7 @@
 
 </style>
 <div style="height: 50px;" class="heading">
-    <p>Edit Reverse Pickup No. ${rev.reversePickupOrder.reversePickupId}</p>
+    <p>Edit Booking No. ${rev.reversePickupOrder.reversePickupId}</p>
 </div>
 <div style="text-align: left; font-size: 13px;color: green;" class="msg">
 
