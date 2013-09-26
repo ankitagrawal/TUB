@@ -234,7 +234,10 @@
                     <c:if test="${ctr.first}">
                         <td rowspan="${length}">${revCount.index + 1}</td>
                         <td rowspan="${length}">
-                        ${reversePickup.reversePickupId}  </br>
+                        ${reversePickup.reversePickupId}
+                            <label>Amount </label>
+                            <fmt:formatNumber value="${reversePickup.amount}" type="currency" currencySymbol="Rs. "/>
+                            </br>
                             <shiro:hasPermission name="<%=PermissionConstants.AVAILABLE_REVERSE_PICKUP%>">
                             <c:if test="${reversePickup.reversePickupStatus.id == rpuInitiatedId}">
                                 <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
@@ -259,12 +262,6 @@
                             </s:link>
                                 </c:if>
                             </shiro:hasPermission>
-                            <%--<c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">--%>
-                            <%--<s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"--%>
-                                    <%--event="rpReconcile"><span class="RPStatus">(Reconcile)</span>--%>
-                                <%--<s:param name="reversePickupOrder" value="${reversePickup.id}"/>--%>
-                            <%--</s:link>--%>
-                                <%--</c:if>--%>
                         </td>
                         <td rowspan="${length}">
                             (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction"
@@ -296,7 +293,10 @@
                         <c:set var="prevLineId" value="${currentLineId}"/>
                     </td>
                     <td>${rpLineitem.lineItem.sku.productVariant.product.name} ${rpLineitem.lineItem.sku.productVariant}
-                            ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}   </td>
+                            ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}
+                        <label>Value </label>
+                        <fmt:formatNumber value="${rpLineitem.amount}" type="currency" currencySymbol="Rs. "/>
+                    </td>
                     <td>${rpLineitem.customerReasonForReturn.classification.primary}</td>
                     <td>
                                 ${rpLineitem.actionTaken.primary}
