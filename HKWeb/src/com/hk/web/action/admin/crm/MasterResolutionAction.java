@@ -56,6 +56,7 @@ public class MasterResolutionAction extends BaseAction {
     private final Integer REWARD_ACTION = 1;
     private final Integer REFUND_ACTION = 2;
     private final Integer REPLACEMENT_ACTION = 3;
+    private final Integer SEARCH_ACTION = 4;
 
 
     private boolean replacementFlag;
@@ -80,6 +81,7 @@ public class MasterResolutionAction extends BaseAction {
     private String replacementComments;
     private ReplacementOrder replacementOrder;
     private Payment payment;
+    private String actionType;
 
     @Validate(required = true, on = "addRewardPoints")
     private String comment;
@@ -141,12 +143,21 @@ public class MasterResolutionAction extends BaseAction {
             paymentAmount = shippingOrder.getAmount();
             shippingOrderId = shippingOrder.getId();
             lineItems = new ArrayList<LineItem>();
-            lineItems.addAll(shippingOrder.getLineItems());
+            Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
+            paymentAmount = (Double)adminShippingOrderService.getActionProcessingElement(shippingOrder, toBeProcessedItems, SEARCH_ACTION);
+            lineItems.addAll(toBeProcessedItems);
             replacementPossible = shippingOrder.getReversePickupOrders() != null
                     && !shippingOrder.getReversePickupOrders().isEmpty();
             if (!replacementPossible) {
                 replacementPossible = EnumShippingOrderStatus.getReconcilableShippingOrderStatus()
                         .contains(shippingOrder.getShippingOrderStatus().getId());
+            }
+            if(actionType.equalsIgnoreCase("addRewardPoints")) {
+            	rewardFlag=true;
+            } else if (actionType.equalsIgnoreCase("refund")) {
+            	refundFlag = true;
+            } else {
+            	replacementFlag = true;
             }
         }
         return new ForwardResolution("/pages/admin/crm/crmMasterControl.jsp");
@@ -156,7 +167,8 @@ public class MasterResolutionAction extends BaseAction {
         rewardFlag = true;
         Order order = shippingOrder.getBaseOrder();
         Payment payment = order.getPayment();
-        Double rewardAmount = (Double) adminShippingOrderService.getActionProcessingElement(shippingOrder, REWARD_ACTION);
+        Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
+        Double rewardAmount = (Double) adminShippingOrderService.getActionProcessingElement(shippingOrder,toBeProcessedItems, REWARD_ACTION);
         if (rewardAmount == 0d) {
             addRedirectAlertMessage(new SimpleMessage("No items found for which reward points could be added."));
         } else if (payment.isCODPayment() && EnumShippingOrderStatus.getReconcilableShippingOrderStatus().contains(shippingOrder.getOrderStatus().getId())) {
@@ -173,7 +185,9 @@ public class MasterResolutionAction extends BaseAction {
     public Resolution createReplacementOrder() {
         replacementFlag = true;
         List<LineItem> lineItems = new ArrayList<LineItem>();
-        lineItems.addAll((Set<LineItem>) adminShippingOrderService.getActionProcessingElement(shippingOrder, REPLACEMENT_ACTION));
+        Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
+        adminShippingOrderService.getActionProcessingElement(shippingOrder,toBeProcessedItems, REPLACEMENT_ACTION);
+        lineItems.addAll(toBeProcessedItems);
 
         if (lineItems.isEmpty() || replacementOrderReason == null) {
             addRedirectAlertMessage(new SimpleMessage("No reason selected or no appropriate items found for creating replacement order."));
@@ -206,7 +220,8 @@ public class MasterResolutionAction extends BaseAction {
         refundFlag = true;
         User loggedOnUser = getUserService().getLoggedInUser();
         Payment basePayment = shippingOrder.getBaseOrder().getPayment();
-        Double refundAmount = (Double) adminShippingOrderService.getActionProcessingElement(shippingOrder, REFUND_ACTION);
+        Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
+        Double refundAmount = (Double) adminShippingOrderService.getActionProcessingElement(shippingOrder,toBeProcessedItems, REFUND_ACTION);
         Gateway gateway = basePayment.getGateway();
         String paymentGatewayOrderId = basePayment.getGatewayOrderId();
 
@@ -435,4 +450,21 @@ public class MasterResolutionAction extends BaseAction {
     public void setReplacementPossible(boolean replacementPossible) {
         this.replacementPossible = replacementPossible;
     }
+
+
+	/**
+	 * @return the actionType
+	 */
+	public String getActionType() {
+		return actionType;
+	}
+
+
+	/**
+	 * @param actionType the actionType to set
+	 */
+	public void setActionType(String actionType) {
+		this.actionType = actionType;
+	}
+    
 }

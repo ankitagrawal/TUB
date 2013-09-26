@@ -814,16 +814,16 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
   }
 
     /**
-     * This method returns the lineItems for replacement order and amount for refunf/reward
+     * This method returns the lineItems for replacement order and amount for refund/reward
      * It has been created in generic way so as to move to a helper class for code reuse.
      *
      * @param localShippingOrder
      * @param actionTypeConstant
      * @return
      */
-    public Object getActionProcessingElement(ShippingOrder localShippingOrder, Integer actionTypeConstant) {
-        Integer REPLACEMENT_ACTION = 3;
-        Set<LineItem> toBeProcessedLineItemSet = new HashSet<LineItem>();
+    public Object getActionProcessingElement(ShippingOrder localShippingOrder,
+    				Set<LineItem> toBeProcessedLineItemSet, Integer actionTypeConstant) {
+        Integer SEARCH_ACTION = 4;
         Double toBeProcessedAmount = 0d;
 
         if (localShippingOrder != null) {
@@ -834,7 +834,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                     if (rpLineItems != null && !rpLineItems.isEmpty()) {
                         for (RpLineItem rpLineItem : rpLineItems) {
                             if (EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
-                                rpLineItem.setCustomerActionStatus(EnumClassification.ReconciledGeneric.asClassification());
+                            	if (!SEARCH_ACTION.equals(actionTypeConstant)) {
+                            		rpLineItem.setCustomerActionStatus(EnumClassification.ReconciledGeneric.asClassification());
+                            	}
                                 LineItem lineItemForRP = rpLineItem.getLineItem();
                                 if (toBeProcessedLineItemSet.add(lineItemForRP)) {
                                     lineItemForRP.setQty(1l);
@@ -848,7 +850,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 }
             }
         }
-        return actionTypeConstant.equals(REPLACEMENT_ACTION) ? toBeProcessedLineItemSet : toBeProcessedAmount;
+        return  toBeProcessedAmount;
     }
 
 
