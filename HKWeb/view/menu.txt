@@ -255,7 +255,7 @@
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
---/sports/apparel/3D T Shirts
+--/sports/apparel/3d-t-shirts : 3D T Shirts
 --/sports/apparel/gym-clothing
 --/sports/apparel/sports-wear
 --/sports/apparel/bags
