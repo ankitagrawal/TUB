@@ -44,10 +44,6 @@
                 </div>
 
             </div>
-        </div>
-
-
-        <div class="leftPS">
 
         <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
             <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${checkPaymentBean.pricingDto}"
