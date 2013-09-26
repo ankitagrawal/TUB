@@ -751,8 +751,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     // Assumption is deleting of all entries but  in future partial deletion
     List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstBOCancellation(cartLineItem);
     if (infos != null) {
-      deleteSicliAndSili(cartLineItem);
       Boolean status = isBrightItemCheckInAtAqua(cartLineItem);
+      deleteSicliAndSili(cartLineItem);
       if (status) {
         freeFsiclis(infos, false);
       } else {
