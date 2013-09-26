@@ -88,9 +88,6 @@ public class MasterResolutionAction extends BaseAction {
     private String comment;
 
     @Validate(required = true, on = "addRewardPoints")
-    private RewardPointMode rewardPointMode;
-
-    @Validate(required = true, on = "addRewardPoints")
     private Date expiryDate;
 
     @Autowired
@@ -380,13 +377,6 @@ public class MasterResolutionAction extends BaseAction {
         this.comment = comment;
     }
 
-    public RewardPointMode getRewardPointMode() {
-        return rewardPointMode;
-    }
-
-    public void setRewardPointMode(RewardPointMode rewardPointMode) {
-        this.rewardPointMode = rewardPointMode;
-    }
 
     public Date getExpiryDate() {
         return expiryDate;

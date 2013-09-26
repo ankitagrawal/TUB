@@ -275,14 +275,14 @@
                             SO Lifecycle
                             <s:param name="shippingOrder" value="${reversePickup.shippingOrder.id}"/>
                         </s:link>)
-                        (<s:link beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" event="pre"
+                        (<s:link beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" event="search"
              			target="_blank">
-        				<s:param name="shippingOrderId" value="${shippingOrder.id}"/>
+        				<s:param name="shippingOrderId" value="${reversePickup.shippingOrder.id}"/> Master CRM
         				</s:link>)
                         </td>
                     </c:if>
                     <td>
-                        <c:set value="flase" var="valueSet"/>
+                        <c:set value="false" var="valueSet"/>
                         <c:if test="${prevLineId == currentLineId || ctr.first}">
                             ${unitNo}
                             <c:set value="true" var="valueSet"/>
