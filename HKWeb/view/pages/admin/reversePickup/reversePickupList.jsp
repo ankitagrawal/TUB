@@ -446,7 +446,7 @@
                                 </c:otherwise>
                             </c:choose>
                                <br>
-                               <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
+                               <shiro:hasPermission name="<%=PermissionConstants.RECONCILE_REVERSE_PICKUP%>">
                                     <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
                                         <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                                 event="editRPToReconcile"><span class="RPStatus">
