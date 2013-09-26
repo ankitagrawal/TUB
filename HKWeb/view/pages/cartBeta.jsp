@@ -26,9 +26,7 @@
 <script src="<hk:vhostJs/>/js/loader.js"></script>
 
 <script type="text/javascript">
-$('.offers-label').click(function () {
-    $(this).parents('.offers-container').toggleClass('offers-displayed');
-});
+
 jQuery.fn.jqStepper = function(minValue, maxValue) {
     jQuery.fn.jqStepper.minValue = minValue;
     jQuery.fn.jqStepper.maxValue = maxValue;
@@ -67,7 +65,9 @@ function showCouponDetails() {
 }
 
 $(document).ready(function() {
-
+    $('.offers-label').click(function () {
+        $(this).parents('.offers-container').toggleClass('offers-displayed');
+    });
     $("#learnMore").click(function() {
         $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
     });
@@ -323,7 +323,7 @@ function _updateTotals(responseData) {
     <a href="javascript:void(0)"
        class="offers-label">
         <span data-role="prompt-count"
-                                  style="background-color:orangered;color:white;padding-left:3px;padding-right:3px;margin-right:8px;">
+                                  style="background-color:orangered;color:white;padding-left:3px;padding-right:3px;margin-right:8px;margin-left:5px">
                                   <div id="offerTextOnTop"></div>
         </span>
         ${shoppingCartPricingDto.appliedOfferId!=null?'OFFER APPLIED, CHANGE OFFER':'OFFERS AVAILABLE'}
@@ -335,6 +335,7 @@ function _updateTotals(responseData) {
         <div id="applicableOfferDiv"></div>
     </div>
 </div>
+<script src="<hk:vhostJs/>/js/appBeta.js"></script>
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 
 
@@ -958,12 +959,18 @@ function _updateTotals(responseData) {
         </tr>
     </table>
 </div>
-<script src="<hk:vhostJs/>/js/appBeta.js"></script>
+
 
 <style type="text/css">
     #offerTextOnTop,#offerTextOnTop div{
         display:inline;
 
+    }
+    #applicableOfferDiv ,#applicableOfferDiv div{
+        display:inline-block;
+    }
+    #appliedOfferDiv{
+        display:none
     }
     .main_container {
         border: none;
@@ -1077,6 +1084,7 @@ function _updateTotals(responseData) {
         /* cart offers drop down begins*/
     .offers-container {
         text-align: center;
+        display:none;
         margin-bottom: 25px;
     }
 

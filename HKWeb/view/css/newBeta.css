@@ -5395,12 +5395,12 @@ color: #e62580;
 }
 
 .applicableOfferContainer{
-    position: relative;
+  /*  position: relative;
     float: left;
     width: 73%;
     border-radius: 5px;
     height: auto;
-    margin-bottom: 50px;
+    margin-bottom: 50px;*/
 }
 
 .offerContainer:hover {
@@ -5502,6 +5502,7 @@ color: #e62580;
     width: 60px !important;
     height: 22px !important;
     margin-left:10px;
+    cursor: pointer;
 }
 
 .applicableOfferBottomContainer{
@@ -5564,9 +5565,9 @@ color: #e62580;
 }
 
 .applyFormButton{
-    position: relative;
+  /*  position: relative;
     float: left;
-    left: 10px;
+    left: 10px;*/
 }
 
 .appliedOfferText{
@@ -5611,9 +5612,9 @@ color: #e62580;
 }
 
 .offerRow{
-    position: relative;
+  /*  position: relative;
     float: left;
-    width: 100%;
+    width: 100%;*/
 }
 
 .offerTextOnTopText{
