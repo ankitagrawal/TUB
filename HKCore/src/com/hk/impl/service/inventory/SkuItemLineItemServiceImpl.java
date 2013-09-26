@@ -749,7 +749,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
   public boolean freeBookingInventoryAtBright(CartLineItem cartLineItem) {
     // Assumption is deleting of all entries but  in future partial deletion
-    List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstBOCancellation(cartLineItem);
+   // List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstBOCancellation(cartLineItem);
+    List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstSoValidation(cartLineItem);
     if (infos != null) {
       Boolean status = isBrightItemCheckInAtAqua(cartLineItem);
       deleteSicliAndSili(cartLineItem);
@@ -937,6 +938,43 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
 
+
+  public List<HKAPIForeignBookingResponseInfo> freeBrightInventoryAgainstSoValidation(CartLineItem cartLineItem) {
+    List<HKAPIForeignBookingResponseInfo> infos = null;
+    try {
+
+      List<ForeignSkuItemCLI> foreignSkuItemCLIs = cartLineItem.getForeignSkuItemCLIs();
+      List<Long> fsicliIds = new ArrayList<Long>();
+
+      for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+        fsicliIds.add(foreignSkuItemCLI.getId());
+      }
+      Gson gson = new Gson();
+      String json = gson.toJson(fsicliIds);
+
+      String url = brightlifecareRestUrl + "product/variant/" + "freeBrightInventoryForSOValidation/";
+      ClientRequest request = new ClientRequest(url);
+      request.body("application/json", json);
+      ClientResponse response = request.post();
+      int status = response.getStatus();
+      if (status == 200) {
+        String data = (String) response.getEntity(String.class);
+        Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
+        }.getType();
+        infos = new Gson().fromJson(data, listType);
+        logger.debug("Successfully freed Bright Inventory against So Validation# " + cartLineItem.getOrder().getId() + " cancellation");
+        return infos;
+      }
+      logger.debug("Could not free Bright Inventory So Validation# " + cartLineItem.getOrder().getId() + " cancellation");
+      return infos;
+    } catch (Exception e) {
+      logger.error("Exception while freeing bright inventory against cancelling SO# " + cartLineItem.getOrder().getId(), e.getMessage());
+      return infos;
+    }
+  }
+
+
+
   public List<LineItem> freeBooking(ShippingOrder shippingOrder){
 
     List<LineItem> failedBookingItems = new ArrayList<LineItem>();
@@ -952,7 +990,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
 
 
-  public void removeRefusedFsicli (List<HKAPIForeignBookingResponseInfo> infos ){
+  public void   removeRefusedFsicli (List<HKAPIForeignBookingResponseInfo> infos ){
 
     for (HKAPIForeignBookingResponseInfo info : infos ){
       if (info.getProcessed().equals(EnumUnitProcessedStatus.REFUSED.getId())){

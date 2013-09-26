@@ -62,6 +62,8 @@ public interface SkuItemLineItemService {
 
   public List<HKAPIForeignBookingResponseInfo> freeBrightInventoryAgainstBOCancellation(CartLineItem cartLineItem);
 
+  public List<HKAPIForeignBookingResponseInfo> freeBrightInventoryAgainstSoValidation(CartLineItem cartLineItem);
+
   public boolean deleteSicliAndSili (CartLineItem cartLineItem);
 
   public Boolean freeBookingItem(Long cartLineItemId);
