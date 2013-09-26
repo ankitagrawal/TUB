@@ -1017,7 +1017,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     List<ForeignSkuItemCLI> fsiclis = cartLineItem.getForeignSkuItemCLIs();
     for (ForeignSkuItemCLI foreignSkuItemCLI  : fsiclis){
       SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
-      if (skuItem.getSkuItemStatus().equals(EnumSkuItemStatus.BOOKED.getId())){
+      if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())){
         return  true;
       }
     }
