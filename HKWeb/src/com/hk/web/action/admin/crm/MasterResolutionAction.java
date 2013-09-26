@@ -79,6 +79,7 @@ public class MasterResolutionAction extends BaseAction {
     private String refundComments;
     private String replacementComments;
     private ReplacementOrder replacementOrder;
+    private Payment payment;
 
     @Validate(required = true, on = "addRewardPoints")
     private String comment;
@@ -135,6 +136,7 @@ public class MasterResolutionAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
         } else {
             actionFlag = true;
+            payment = shippingOrder.getBaseOrder().getPayment();
             baseOrderId = shippingOrder.getBaseOrder().getId();
             paymentAmount = shippingOrder.getAmount();
             shippingOrderId = shippingOrder.getId();
@@ -407,6 +409,13 @@ public class MasterResolutionAction extends BaseAction {
         this.replacementComments = replacementComments;
     }
 
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
 
     /**
      * @return the replacementPossible

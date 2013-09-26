@@ -214,7 +214,7 @@
                     <td>
                        ${savedRpLineItem.customerActionStatus.primary}
                         <s:hidden name="rpLineItems[${index}].customerActionStatus"
-                                  value="${savedRpLineItem.customerActionStatus}"/>
+                                  value="${savedRpLineItem.customerActionStatus.id}"/>
 
                     </td>
                     <td>

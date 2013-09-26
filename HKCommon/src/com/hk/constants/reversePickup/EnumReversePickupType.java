@@ -9,7 +9,7 @@ import java.util.List;
 public enum EnumReversePickupType {
 
     REVERSE_PICKUP(10L, "REVERSE_PICKUP"),
-    REPLACEMENT_ORDER(20L, "REPLACEMENT_ORDER"),
+    RTO(20L, "RTO"),
     LOST(30L, "LOST"),
     APPEASEMENT(40L, "APPEASEMENT"),
     ;
@@ -40,7 +40,7 @@ public enum EnumReversePickupType {
     public static List<ReversePickupType> getAllRPTypeList(){
         return Arrays.asList(
                 REVERSE_PICKUP.asReversePickupType(),
-                REPLACEMENT_ORDER.asReversePickupType(),
+                RTO.asReversePickupType(),
                 LOST.asReversePickupType(),
                 APPEASEMENT.asReversePickupType());
     }

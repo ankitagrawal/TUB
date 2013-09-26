@@ -18,7 +18,7 @@ public enum EnumReverseAction {
     Refund_In_Cash(2110L, EnumClassification.Refund_In_Cash),
     Refund_Reward_Points(2120L, EnumClassification.Refund_Reward_Points),
     Replacement_Order(2130L, EnumClassification.Replacement_Order),
-    Decide_Later(2170L, EnumClassification.Decide_Later),
+    Decide_Later(2140L, EnumClassification.Decide_Later),
     /* CS Action Status */
 
     Pending_Approval(2010L, EnumClassification.Pending_Approval),
