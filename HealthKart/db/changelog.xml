@@ -14192,6 +14192,13 @@
     <changeSet author="Pratham (generated)" id="20130926-02">
         <sql>
             ALTER TABLE rp_line_item ADD COLUMN amount DECIMAL(10,2);
+
+            update rp_line_item rli
+            join line_item li on rli.line_item_id=li.id
+            set rli.amount=li.hk_price-((li.discount_on_hk_price+li.reward_point_discount+li.order_level_discount)/li.qty);
+
+            update reverse_pickup_order rp join (select reverse_pickup_id,sum(amount) as total from rp_line_item group by reverse_pickup_id) rli on rli.reverse_pickup_id=rp.id
+            set rp.amount=rli.total;
         </sql>
     </changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="20130926-03">
