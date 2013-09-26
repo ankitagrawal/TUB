@@ -165,14 +165,14 @@
                                                serviceProperty="couriersForReversePickup"
                                                value="name" label="name"/> </s:select></span>
                      <span> <label>Booking Status</label>
-                        <s:select name="reversePickupStatus">
+                        <s:select name="reversePickupStatus" value="${revList.reversePickupStatus.id}}">
                             <s:option value="">--ALL--</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="allReversePickUpStatus"
                                                        value="id" label="status"/>
                         </s:select></span>
                 <span> <label>Booking Type</label>
-                        <s:select name="reversePickupType">
+                        <s:select name="reversePickupType" value="${revList.reversePickupStatus.id}">
                             <s:option value="">--ALL--</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="allReversePickUpType"
