@@ -58,17 +58,30 @@ public enum EnumReversePickupStatus {
         return reversePickupStatus;
     }
 
-    public List<ReversePickupStatus> getPreRPStatusList(){
+    public static List<ReversePickupStatus> getPreRPStatusList(){
         return Arrays.asList(
-                EnumReversePickupStatus.RPU_Initiated.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_Picked.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_Received.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_Scheduled.asReversePickupStatus(),
-//                EnumReversePickupStatus.Return_Initiated.asReversePickupStatus(),
-//                EnumReversePickupStatus.Return_Received.asReversePickupStatus(),
-                EnumReversePickupStatus.Return_QC_Checkin.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_RECONCILATION.asReversePickupStatus(),
-                EnumReversePickupStatus.RPU_APPROVED.asReversePickupStatus());
+                RPU_Initiated.asReversePickupStatus(),
+                RPU_Picked.asReversePickupStatus(),
+                RPU_Received.asReversePickupStatus(),
+                RPU_Scheduled.asReversePickupStatus(),
+                Return_QC_Checkin.asReversePickupStatus(),
+                RPU_RECONCILATION.asReversePickupStatus(),
+                RPU_APPROVED.asReversePickupStatus());
+    }
+
+    public static List<ReversePickupStatus> getSearchRPStatusList() {
+        return Arrays.asList(
+                RPU_Initiated.asReversePickupStatus(),
+                RPU_Picked.asReversePickupStatus(),
+                RPU_Scheduled.asReversePickupStatus(),
+                RPU_QC_Checked_In.asReversePickupStatus(),
+                Return_Initiated.asReversePickupStatus(),
+                RPU_CLOSED.asReversePickupStatus(),
+                RPU_CANCEL.asReversePickupStatus(),
+                RPU_NOTAVAILABLE.asReversePickupStatus(),
+                Return_QC_Checkin.asReversePickupStatus(),
+                RPU_RECONCILATION.asReversePickupStatus(),
+                RPU_APPROVED.asReversePickupStatus());
     }
 
     public Long getId() {

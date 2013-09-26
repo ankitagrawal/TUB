@@ -38,7 +38,6 @@
         }
         pageContext.setAttribute("topCategoryNameList", topCategoryNameList);
     %>
-
     <c:set var="fitnessCategories" value="fitness-equipment,premium-fitness-equipments,treadmills,crosstrainers,exercise-bike,
      rowers,home-gym,smith-machines,steppers,bench-equipments,multi-utility-equipments,abdominal-machines,
      heart-rate-monitors,massage-equipments,trampolines,weighing-scales,miscellaneous-equipments"/>
@@ -67,7 +66,7 @@
     </c:if>
 
     <c:choose>
-        <c:when test="${fn:contains(fitnessCategories, categories)}">
+        <c:when test="${categories!=null and fn:contains(fitnessCategories, categories)}">
             <jsp:include page="/categoryBanners/fitness-equipment.jsp"/>
         </c:when>
         <c:otherwise>

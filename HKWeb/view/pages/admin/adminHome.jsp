@@ -76,6 +76,11 @@
         <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">
             Seek Payment
         </s:link></h3>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" event="pre">
+            CRM Master Screen
+        </s:link></h3>
+
 
     <h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
