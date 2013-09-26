@@ -144,7 +144,6 @@ public class MasterResolutionAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
         } else {
             actionFlag = true;
-            payment = shippingOrder.getBaseOrder().getPayment();
             baseOrderId = shippingOrder.getBaseOrder().getId();
             paymentAmount = shippingOrder.getAmount();
             shippingOrderId = shippingOrder.getId();
@@ -173,7 +172,7 @@ public class MasterResolutionAction extends BaseAction {
     public Resolution addRewardPoints() {
         rewardFlag = true;
         Order order = shippingOrder.getBaseOrder();
-        Payment payment = order.getPayment();
+        payment = order.getPayment();
         Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
         Double rewardAmount = (Double) adminShippingOrderService.getActionProcessingElement(shippingOrder,toBeProcessedItems, REWARD_ACTION);
         if (rewardAmount == 0d) {
@@ -250,18 +249,18 @@ public class MasterResolutionAction extends BaseAction {
                         if(basePayment == null){
                             basePayment = shippingOrder.getBaseOrder().getPayment();
                         }
-                        Payment refundPayment = paymentService.refundPayment(paymentGatewayOrderId, refundAmount);
+                        payment = paymentService.refundPayment(paymentGatewayOrderId, refundAmount);
                         String loggingComment = refundReason.getClassification().getPrimary() + "- " + refundComments;
-                        if (refundPayment != null) {
-                            if (EnumPaymentStatus.REFUNDED.getId().equals(refundPayment.getPaymentStatus().getId())) {
+                        if (payment != null) {
+                            if (EnumPaymentStatus.REFUNDED.getId().equals(payment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.AmountRefundedOrderCancel.asOrderLifecycleActivity(),
                                         loggingComment);
 
-                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(refundPayment.getPaymentStatus().getId())) {
+                            } else if (EnumPaymentStatus.REFUND_FAILURE.getId().equals(payment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.RefundAmountFailed.asOrderLifecycleActivity(), loggingComment);
-                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(refundPayment.getPaymentStatus().getId())) {
+                            } else if (EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.getId().equals(payment.getPaymentStatus().getId())) {
                                 adminOrderService.logOrderActivity(basePayment.getOrder(), loggedOnUser,
                                         EnumOrderLifecycleActivity.RefundAmountInProcess.asOrderLifecycleActivity(), loggingComment);
                                 shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),

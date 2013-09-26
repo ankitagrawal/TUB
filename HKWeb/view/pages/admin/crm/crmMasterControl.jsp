@@ -87,64 +87,73 @@
 					beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
 					<table>
 						<tr>
-							<td><label>Search Shipping Order</label></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>Shipping order ID:</td>
-							<td><s:text name="shippingOrderId" style="width:200px;" /></td>
-						</tr>
-						<tr>
-							<td>Gateway order ID:</td>
-							<td><s:text name="gatewayOrderId" style="width:200px;" /></td>
-						</tr>
-						<tr>
-							<td>Choose action on:</td>
-							<td><s:select name="actionType" id="actionType">
-									<s:option value="none">-- Select --</s:option>
-									<s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
-									<s:option id="refund" value="refund">Refund</s:option>
-									<s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
-								</s:select></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><s:submit name="searchShippingOrder" value="Search" id="search" /></td>
+							<td style="width: 49%;">
+								<table>
+									<tr>
+										<td><label>Search Shipping Order</label></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td>Shipping order ID:</td>
+										<td><s:text name="shippingOrderId" style="width:200px;" /></td>
+									</tr>
+									<tr>
+										<td>Gateway order ID:</td>
+										<td><s:text name="gatewayOrderId" style="width:200px;" /></td>
+									</tr>
+									<tr>
+										<td>Choose action on:</td>
+										<td><s:select name="actionType" id="actionType">
+												<s:option value="none">-- Select --</s:option>
+												<s:option id="addRewardPoints" value="addRewardPoints">Reward Points</s:option>
+												<s:option id="refund" value="refund">Refund</s:option>
+												<s:option id="replacementOrder" value="replacementOrder">Replacement Order</s:option>
+											</s:select></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td><s:submit name="searchShippingOrder" value="Search"
+												id="search" /></td>
+									</tr>
+								</table>
+							</td>
+							<td style="width: 49%;"><c:if
+									test="${maBean.actionFlag == true}">
+									<table>
+										<tr>
+											<td><h5>CustomerName:</h5></td>
+											<td>${maBean.shippingOrder.baseOrder.user.name}</td>
+											<td><h5>SO date:</h5></td>
+											<td>${maBean.shippingOrder.createDate}</td>
+										</tr>
+										<tr>
+											<td><h5>Email:</h5></td>
+											<td>${maBean.shippingOrder.baseOrder.user.email}</td>
+											<td><h5>Address:</h5></td>
+											<td>${maBean.shippingOrder.baseOrder.address.city}<br />
+												${maBean.shippingOrder.baseOrder.address.state}-
+												(${maBean.shippingOrder.baseOrder.address.pincode.pincode})<br />
+												Ph: ${maBean.shippingOrder.baseOrder.address.phone}
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<h5>Status</h5>
+											</td>
+											<td>${maBean.shippingOrder.orderStatus.name}</td>
+										</tr>
+									</table>
+								</c:if></td>
 						</tr>
 					</table>
-					<c:if test="${maBean.actionFlag == true}">
-						<table>
-							<tr>
-								<td><h5>CustomerName:</h5></td>
-								<td>${maBean.shippingOrder.baseOrder.user.name}</td>
-								<td><h5>SO date:</h5></td>
-								<td>${maBean.shippingOrder.createDate}</td>
-							</tr>
-							<tr>
-								<td><h5>Email:</h5></td>
-								<td>${maBean.shippingOrder.baseOrder.user.email}</td>
-								<td><h5>Address:</h5></td>
-								<td>${maBean.shippingOrder.baseOrder.address.city}<br />
-									${maBean.shippingOrder.baseOrder.address.state}-
-									(${maBean.shippingOrder.baseOrder.address.pincode.pincode})<br />
-									Ph: ${maBean.shippingOrder.baseOrder.address.phone}
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<h5>Status</h5>
-								</td>
-								<td>${maBean.shippingOrder.orderStatus.name}</td>
-							</tr>
-						</table>
+					<c:if test="${!empty maBean.lineItems}">
 						<table border="1">
 							<thead>
 								<th>S No.</th>
 								<th>Product</th>
-								<th>Original Qty</th>
+								<th>Qty</th>
 							</thead>
-							<c:forEach items="${maBean.lineItems}" var="lineItem"
-								varStatus="lineItemCtr">
+							<c:forEach items="${maBean.lineItems}" var="lineItem" varStatus="lineItemCtr">
 								<tr>
 									<td>${lineItemCtr.count}</td>
 									<td>${lineItem.cartLineItem.productVariant.product.name}<br />
@@ -154,7 +163,6 @@
 								</tr>
 							</c:forEach>
 						</table>
-
 					</c:if>
 				</s:form>
 			</fieldset>
@@ -162,10 +170,8 @@
 		<div id="rewardDiv">
 			<c:if test="${!empty maBean.shippingOrder}">
 
-				<s:form
-					beanclass="com.hk.web.action.admin.crm.MasterResolutionAction"
-					method="post">
-					<fieldset style="width: 60%">
+				<s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" method="post">
+					<fieldset style="width: 75%">
 						<table>
 							<s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}" />
 							<s:hidden name="baseOrderId" value="${maBean.baseOrderId}" />
@@ -179,8 +185,8 @@
 								<td>Expiry Date</td>
 								<td><s:text name="expiryDate" class="date_input"
 										formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" /></td>
-								<td>Comment</td>
-								<td><s:textarea name="comment" style="height:100px !important; width: 90px !important;"/></td>
+								<td>Comments</td>
+								<td><s:textarea name="comment" style="width:320px;height:80px;"/></td>
 							</tr>
 							<tr>
 								<td></td>
@@ -197,11 +203,8 @@
 
 		<div id="refundDiv">
 			<c:if test="${!empty maBean.shippingOrder}">
-				<div>&nbsp;&nbsp;&nbsp;&nbsp;Payment Seeker (Currently works
-					for ICICI/Citrus/EBS/Icici via Citrus (Credit debit cards only)</div>
-				<s:form
-					beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
-					<fieldset style="width: 45%;">
+				<s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction">
+					<fieldset style="width: 75%;">
 						<br>
 						<table>
 							<s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}" />
@@ -229,7 +232,9 @@
 						<s:submit name="refundPayment" value="Refund " id="refund" />
 					</fieldset>
 				</s:form>
-
+				</c:if>
+			</div>
+			<div>
 				<c:if test="${not empty maBean.payment}">
 					<c:set var="count" value="1" />
 					<table>
@@ -247,65 +252,59 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>${cpa.payment.gatewayOrderId}</td>
-								<td>${cpa.payment.transactionType}</td>
-								<td>${cpa.payment.amount}</td>
-								<td>${cpa.payment.paymentStatus.name}</td>
-								<td>${cpa.payment.responseMessage}</td>
-								<td>${cpa.payment.rrn}</td>
-								<td>${cpa.payment.gateway.name}</td>
-								<td>${cpa.payment.createDate}</td>
-								<td>${cpa.payment.errorLog}}</td>
-								<td>${cpa.payment.parent.gatewayOrderId}</td>
+								<td>${maBean.payment.gatewayOrderId}</td>
+								<td>${maBean.payment.transactionType}</td>
+								<td>${maBean.payment.amount}</td>
+								<td>${maBean.payment.paymentStatus.name}</td>
+								<td>${maBean.payment.responseMessage}</td>
+								<td>${maBean.payment.rrn}</td>
+								<td>${maBean.payment.gateway.name}</td>
+								<td>${maBean.payment.createDate}</td>
+								<td>${maBean.payment.errorLog}</td>
+								<td>${maBean.payment.parent.gatewayOrderId}</td>
 							</tr>
 						</tbody>
 					</table>
 				</c:if>
-			</c:if>
+			
 		</div>
 		<!-- Refund block ends -->
 
 		<div id="replacementDiv">
 			<c:if test="${!empty maBean.shippingOrder}">
-				<fieldset style="float: left;">
-					<table>
-						<tr>
-							<td>
-								<h5>Status</h5>
-							</td>
-							<td>${maBean.shippingOrder.orderStatus.name}</td>
-							<td></td>
-						</tr>
-					</table>
-				</fieldset>
 				<c:if test="${maBean.replacementPossible == true}">
-					<fieldset>
-						<h4>Returned to origin</h4>
-						<s:form
-							beanclass="com.hk.web.action.admin.crm.MasterResolutionAction"
-							id="createReplacementOrderForRtoForm">
+					<fieldset style="width: 75%">
+						<s:form beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" id="createReplacementOrderForRtoForm">
 							<s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}" />
-							<s:label name="Reason for Replacement:" style="margin-left:7px;" />
-							<s:select name="replacementOrderReason">
-								<s:option value="-Select Reason-">-Select Reason-</s:option>
-								<c:choose><c:when test="${maBean.rto== true}" >
-								<hk:master-data-collection service="<%=MasterDataDao.class%>"
-									serviceProperty="replacementOrderReasonForRto" value="id" label="name" />
-								</c:when>
-								<c:otherwise>
-								<hk:master-data-collection service="<%=MasterDataDao.class%>"
-									serviceProperty="replacementOrderReasonForReplacement"
-									value="id" label="name" />
-								</c:otherwise>
-								</c:choose>
-							</s:select>
-							<br />
-							<br />
-							<s:label name="Comment/Remark:" style="margin-left:7px;" />
-							<s:textarea name="replacementComments" style="height:50px;" />
-							<s:submit class="createReplacementOrderButton"
-								name="createReplacementOrder" value="Generate Replacement Order" />
+							<table>
+								<tr>
+									<td>Reason for Replacement:</td>
+									<td>
+									<s:select name="replacementOrderReason">
+										<s:option value="-Select Reason-">-Select Reason-</s:option>
+										<c:choose>
+											<c:when test="${maBean.rto== true}">
+												<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="replacementOrderReasonForRto" value="id"
+														label="name" />
+											</c:when>
+											<c:otherwise>
+						 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="replacementOrderReasonForReplacement"
+														value="id" label="name" />
+											</c:otherwise>
+										</c:choose>
+									</s:select>
+									</td>
+								</tr>
+								<tr>
+									<td>Comments</td>
+									<td><s:textarea name="replacementComments" style="width:320px;height:80px;" /></td>
+								</tr>
+								<tr>
+									<td></td><td><s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order" /></td>
+								</tr>
+							</table>
 						</s:form>
+						<br>
 					</fieldset>
 
 				</c:if>
