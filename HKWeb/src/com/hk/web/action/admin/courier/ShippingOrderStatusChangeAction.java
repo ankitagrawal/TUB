@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.akube.framework.util.DateUtils;
 import com.hk.domain.courier.Shipment;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -83,8 +84,7 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SOSTATUS}, authActionBean = AdminPermissionAction.class)
     public Resolution saveStatus(){
-      if(shippingOrder!=null && statusDate !=null && shippingOrder.getShipment().getShipDate().after(statusDate)
-          && Calendar.getInstance().getTime().before(statusDate)){
+      if(shippingOrder!=null && statusDate !=null &&  statusDate.after(shippingOrder.getShipment().getShipDate()) && statusDate.before(DateUtils.getEndOfDay(new Date())) ){
         currentStatus=shippingOrder.getShippingOrderStatus().getName();
         Shipment shippingOrderShipment = shippingOrder.getShipment();
         switch (enumSoUpdatedStatusId) {
