@@ -33,7 +33,7 @@
   <div class="jqmWindow" id="discountCouponModal"></div>
   <s:layout-component name="modal"/>
 
-  <div id="container">
+  <div id="container" class="container_24">
     <s:layout-component name="header">
       <s:layout-render name="/layouts/embed/_headerBeta.jsp"/>
     </s:layout-component>

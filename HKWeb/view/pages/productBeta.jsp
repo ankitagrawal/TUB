@@ -189,8 +189,8 @@
 </s:layout-component>
 
 <s:layout-component name="breadcrumbs">
-	<s:layout-render name="/layouts/embed/catalogBreadcrumbBeta.jsp" breadcrumbProduct="${product}" lastLink="true"
-	                 topHeading="${seoData.h1}"/>
+	<%--<s:layout-render name="/layouts/embed/catalogBreadcrumbBeta.jsp" breadcrumbProduct="${product}" lastLink="true"--%>
+	                 <%--topHeading="${seoData.h1}"/>--%>
 </s:layout-component>
 
 <s:layout-component name="topCategory">${pa.topCategoryUrlSlug}</s:layout-component>
@@ -319,77 +319,77 @@
 
 <s:layout-component name="product_detail_links">
 
-	<div class='infos' style="border-bottom:0px;">
-		<c:if test="${hk:isNotBlank(product.brand)}">
-          <span class='title'>
-            Brand:
-          </span>
-          <span class='info' itemprop="brand">
-            <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
-	            ${product.brand}
-	            <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
-	            <s:param name="topLevelCategory" value="${product.primaryCategory.name}"/>
-            </s:link>
-          </span>
-		</c:if>
-		<c:if test="${hk:isNotBlank(product.manufacturer)}">
-			|
-          <span class='title'>
-            Manufacturer:
-          </span>
-          <span class='info'>
-		          ${product.manufacturer.name}
-          </span>
-		</c:if>
-		|
-		<c:choose>
-			<c:when test="${product.codAllowed != null && !product.codAllowed}">
-				<span style="color:red;font-weight:bold;">COD Not Available</span>
-			</c:when>
-			<c:otherwise>
-				<span style="color:green;font-weight:bold;">COD Available</span>
-			</c:otherwise>
-		</c:choose>  		
-		|
-    <span class='title'>
-      Dispatched in:
-    </span>
-    <span class='info orange' title="Delivery time is extra depending on the location">
-      <c:choose><c:when test="${hk:isNotBlank(product.maxDays)}">
-	      ${product.minDays} - ${product.maxDays} working days
-      </c:when>
-	      <c:otherwise>
-		      <c:choose>
-			      <c:when test="${pa.topCategoryUrlSlug == 'beauty'}">
-				      2 - 7 working days
-			      </c:when>
-			      <c:otherwise>
-				      1 - 3 working days
-			      </c:otherwise>
-		      </c:choose>
-	      </c:otherwise>
-      </c:choose>
-    </span>
+	<%--<div class='infos' style="border-bottom:0px;">--%>
+		<%--<c:if test="${hk:isNotBlank(product.brand)}">--%>
+          <%--<span class='title'>--%>
+            <%--Brand:--%>
+          <%--</span>--%>
+          <%--<span class='info' itemprop="brand">--%>
+            <%--<s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">--%>
+	            <%--${product.brand}--%>
+	            <%--<s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>--%>
+	            <%--<s:param name="topLevelCategory" value="${product.primaryCategory.name}"/>--%>
+            <%--</s:link>--%>
+          <%--</span>--%>
+		<%--</c:if>--%>
+		<%--<c:if test="${hk:isNotBlank(product.manufacturer)}">--%>
+			<%--|--%>
+          <%--<span class='title'>--%>
+            <%--Manufacturer:--%>
+          <%--</span>--%>
+          <%--<span class='info'>--%>
+		          <%--${product.manufacturer.name}--%>
+          <%--</span>--%>
+		<%--</c:if>--%>
+		<%--|--%>
+		<%--<c:choose>--%>
+			<%--<c:when test="${product.codAllowed != null && !product.codAllowed}">--%>
+				<%--<span style="color:red;font-weight:bold;">COD Not Available</span>--%>
+			<%--</c:when>--%>
+			<%--<c:otherwise>--%>
+				<%--<span style="color:green;font-weight:bold;">COD Available</span>--%>
+			<%--</c:otherwise>--%>
+		<%--</c:choose>  		--%>
+		<%--|--%>
+    <%--<span class='title'>--%>
+      <%--Dispatched in:--%>
+    <%--</span>--%>
+    <%--<span class='info orange' title="Delivery time is extra depending on the location">--%>
+      <%--<c:choose><c:when test="${hk:isNotBlank(product.maxDays)}">--%>
+	      <%--${product.minDays} - ${product.maxDays} working days--%>
+      <%--</c:when>--%>
+	      <%--<c:otherwise>--%>
+		      <%--<c:choose>--%>
+			      <%--<c:when test="${pa.topCategoryUrlSlug == 'beauty'}">--%>
+				      <%--2 - 7 working days--%>
+			      <%--</c:when>--%>
+			      <%--<c:otherwise>--%>
+				      <%--1 - 3 working days--%>
+			      <%--</c:otherwise>--%>
+		      <%--</c:choose>--%>
+	      <%--</c:otherwise>--%>
+      <%--</c:choose>--%>
+    <%--</span>--%>
 
-		<c:if test="${!empty pa.userReviews}">
+		<%--<c:if test="${!empty pa.userReviews}">--%>
 
-			<div style="float:right;margin-right:5px;margin-bottom:3px;">
-				<a class="top_link" href='#user_reviews' style="border-bottom:0px;">
-						${pa.totalReviews} Reviews &darr;
-				</a>
+			<%--<div style="float:right;margin-right:5px;margin-bottom:3px;">--%>
+				<%--<a class="top_link" href='#user_reviews' style="border-bottom:0px;">--%>
+						<%--${pa.totalReviews} Reviews &darr;--%>
+				<%--</a>--%>
 
-				<div class="rating_bar">
-					<div class="blueStarTop" id="blueStarTop">
-						<script type="text/javascript">
-							var averageRating = ${pa.averageRating};
-							averageRating = (averageRating * 20) + "%";
-							$('.blueStarTop').width(averageRating);
-						</script>
-					</div>
-				</div>
-			</div>
-		</c:if>
-	</div>
+				<%--<div class="rating_bar">--%>
+					<%--<div class="blueStarTop" id="blueStarTop">--%>
+						<%--<script type="text/javascript">--%>
+							<%--var averageRating = ${pa.averageRating};--%>
+							<%--averageRating = (averageRating * 20) + "%";--%>
+							<%--$('.blueStarTop').width(averageRating);--%>
+						<%--</script>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+		<%--</c:if>--%>
+	<%--</div>--%>
 
 	<%--<div class='top_links'>--%>
 		<%--<c:if test="${!empty product.description}">--%>
@@ -864,106 +864,106 @@
   </h5>
 </s:layout-component>--%>
 
-<s:layout-component name="user_reviews">
-	<div class='products content' id="user_reviews" itemscope itemtype="http://data-vocabulary.org/Review-aggregate">
+<%--<s:layout-component name="user_reviews">--%>
+	<%--<div class='products content' id="user_reviews" itemscope itemtype="http://data-vocabulary.org/Review-aggregate">--%>
 
-	<hr style="color:#F0F0F0;border-style:hidden"/>
+	<%--<hr style="color:#F0F0F0;border-style:hidden"/>--%>
 
-	<c:choose>
-		<c:when test="${!empty pa.userReviews}">
-			<table width="950" class="reviewLinksTable">
-				<tr height="40">
-					<td style="font-size:14px;font-weight:bold;border-style:none">Reviews of <span itemprop="itemreviewed">${product.name}</span></td>
-					<td style="border-style:none">
-						<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
-							<s:param name="product" value="${product.id}"/>
-							<strong>Write a Review</strong>
-						</s:link>
-					</td>
-				</tr>
-
-				<tr height="50">
-					<td colspan="2" style="border-style:none"><span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating">Average Rating : <strong>
-            <span itemprop="rating"><fmt:formatNumber value="${pa.averageRating}" maxFractionDigits="1"/></span>/<span itemprop="best">5</span></strong> </span><br/>
-						(based on <span itemprop="count">${pa.totalReviews}</span> reviews) <br/>
-
-						<div class="rating_bar">
-							<div id="blueStar" class="blueStar">
-								<script type="text/javascript">
-									var averageRating = ${pa.averageRating};
-									averageRating = (averageRating * 20) + "%";
-									$('.blueStar').width(averageRating);
-								</script>
-							</div>
-						</div>
-					</td>
-				</tr>
-			</table>
-
-			<hr style="color:#F0F0F0;border-style:dotted"/>
-			<c:if test="${pa.totalReviews > 5}">
-				<strong>&nbsp;Showing 5 of ${pa.totalReviews} reviews</strong>
-				<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
-					<s:param name="product" value="${product.id}"/>
-					<strong>(Read All Reviews)</strong>
-				</s:link>
-			</c:if>
-
-			<c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">
-
-				<table width="950" class="reviewContentTable" style="border-style:none">
-					<tr style="border-style:none">
-						<td width="150" style="border-style:none"><strong>${review.postedBy.name}</strong>
-								<%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
-							<div class="rating_bar">
-								<div class="blueStarRating${ctr.index}"></div>
-								<script type="text/javascript">
-									var index = ${ctr.index};
-									var rating = ${review.starRating};
-									rating = (rating * 20) + "%";
-									$('.blueStarRating' + index).width(rating);
-								</script>
-							</div>
-						</td>
-						<td style="border-style:none">                    
-							<div style="word-wrap:break-word">
-									${review.review}
-							</div>
-						</td>
-					</tr>
-					<tr style="border-style:none">
-						<td colspan="2" style="border-style:none">
-							<hr style="color:#F0F0F0;border-style:dotted"/>
-						</td>
-					</tr>
-				</table>
-				<br/>
-			</c:forEach>
-			<%--<a class='go_to_top' href='#top'>go to top &uarr;</a>--%>
-			</div>
-		</c:when>
-		<c:otherwise>
-			<table width="950" style="border:none">
-				<tr height="40">
-					<td colspan="2" style="font-size:14px;font-weight:bold;">No Reviews!!</td>
-				</tr>
-				<tr>
-					<td>
-						Be the first one to <s:link
-							beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
-							event="writeNewReview">
-						<s:param name="product" value="${product.id}"/>
-						<strong>Write a Review</strong>
-					</s:link>
-					</td>
-				</tr>
-				<%--<tr>--%>
-					<%--<td><a class='go_to_top' href='#top'>go to top &uarr;</a></td>--%>
+	<%--<c:choose>--%>
+		<%--<c:when test="${!empty pa.userReviews}">--%>
+			<%--<table width="950" class="reviewLinksTable">--%>
+				<%--<tr height="40">--%>
+					<%--<td style="font-size:14px;font-weight:bold;border-style:none">Reviews of <span itemprop="itemreviewed">${product.name}</span></td>--%>
+					<%--<td style="border-style:none">--%>
+						<%--<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">--%>
+							<%--<s:param name="product" value="${product.id}"/>--%>
+							<%--<strong>Write a Review</strong>--%>
+						<%--</s:link>--%>
+					<%--</td>--%>
 				<%--</tr>--%>
-			</table>
-		</c:otherwise>
-	</c:choose>
-</s:layout-component>
+
+				<%--<tr height="50">--%>
+					<%--<td colspan="2" style="border-style:none"><span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating">Average Rating : <strong>--%>
+            <%--<span itemprop="rating"><fmt:formatNumber value="${pa.averageRating}" maxFractionDigits="1"/></span>/<span itemprop="best">5</span></strong> </span><br/>--%>
+						<%--(based on <span itemprop="count">${pa.totalReviews}</span> reviews) <br/>--%>
+
+						<%--<div class="rating_bar">--%>
+							<%--<div id="blueStar" class="blueStar">--%>
+								<%--<script type="text/javascript">--%>
+									<%--var averageRating = ${pa.averageRating};--%>
+									<%--averageRating = (averageRating * 20) + "%";--%>
+									<%--$('.blueStar').width(averageRating);--%>
+								<%--</script>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+					<%--</td>--%>
+				<%--</tr>--%>
+			<%--</table>--%>
+
+			<%--<hr style="color:#F0F0F0;border-style:dotted"/>--%>
+			<%--<c:if test="${pa.totalReviews > 5}">--%>
+				<%--<strong>&nbsp;Showing 5 of ${pa.totalReviews} reviews</strong>--%>
+				<%--<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">--%>
+					<%--<s:param name="product" value="${product.id}"/>--%>
+					<%--<strong>(Read All Reviews)</strong>--%>
+				<%--</s:link>--%>
+			<%--</c:if>--%>
+
+			<%--<c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">--%>
+
+				<%--<table width="950" class="reviewContentTable" style="border-style:none">--%>
+					<%--<tr style="border-style:none">--%>
+						<%--<td width="150" style="border-style:none"><strong>${review.postedBy.name}</strong>--%>
+								<%--&lt;%&ndash;<td style="border-style:none"><h4>${review.title}</h4></td>&ndash;%&gt;--%>
+							<%--<div class="rating_bar">--%>
+								<%--<div class="blueStarRating${ctr.index}"></div>--%>
+								<%--<script type="text/javascript">--%>
+									<%--var index = ${ctr.index};--%>
+									<%--var rating = ${review.starRating};--%>
+									<%--rating = (rating * 20) + "%";--%>
+									<%--$('.blueStarRating' + index).width(rating);--%>
+								<%--</script>--%>
+							<%--</div>--%>
+						<%--</td>--%>
+						<%--<td style="border-style:none">                    --%>
+							<%--<div style="word-wrap:break-word">--%>
+									<%--${review.review}--%>
+							<%--</div>--%>
+						<%--</td>--%>
+					<%--</tr>--%>
+					<%--<tr style="border-style:none">--%>
+						<%--<td colspan="2" style="border-style:none">--%>
+							<%--<hr style="color:#F0F0F0;border-style:dotted"/>--%>
+						<%--</td>--%>
+					<%--</tr>--%>
+				<%--</table>--%>
+				<%--<br/>--%>
+			<%--</c:forEach>--%>
+			<%--&lt;%&ndash;<a class='go_to_top' href='#top'>go to top &uarr;</a>&ndash;%&gt;--%>
+			<%--</div>--%>
+		<%--</c:when>--%>
+		<%--<c:otherwise>--%>
+			<%--<table width="950" style="border:none">--%>
+				<%--<tr height="40">--%>
+					<%--<td colspan="2" style="font-size:14px;font-weight:bold;">No Reviews!!</td>--%>
+				<%--</tr>--%>
+				<%--<tr>--%>
+					<%--<td>--%>
+						<%--Be the first one to <s:link--%>
+							<%--beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"--%>
+							<%--event="writeNewReview">--%>
+						<%--<s:param name="product" value="${product.id}"/>--%>
+						<%--<strong>Write a Review</strong>--%>
+					<%--</s:link>--%>
+					<%--</td>--%>
+				<%--</tr>--%>
+				<%--&lt;%&ndash;<tr>&ndash;%&gt;--%>
+					<%--&lt;%&ndash;<td><a class='go_to_top' href='#top'>go to top &uarr;</a></td>&ndash;%&gt;--%>
+				<%--&lt;%&ndash;</tr>&ndash;%&gt;--%>
+			<%--</table>--%>
+		<%--</c:otherwise>--%>
+	<%--</c:choose>--%>
+<%--</s:layout-component>--%>
 
 <s:layout-component name="endScripts">
 	<script type="text/javascript">

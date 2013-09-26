@@ -20,7 +20,7 @@
 </shiro:hasPermission>
 <div>
 <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm" onsubmit="return validQty();">
-<div class="buy_prod">
+<div class="buy_prod disp-inln">
     <div class="left_col mrgn-b-20">
         <div class='prices cont-lft' style="font-size: 14px;">
             <%--<div class='cut' style="font-size: 14px;">--%>
@@ -35,7 +35,7 @@
                       maxFractionDigits="0"/>%</span>
             <%--</div>--%>
             <p class='hk'>
-                <span class='num' style="font-size: 1.9em;">
+                <span class='num' style="font-size: 1.8em;">
                   Now Rs. <fmt:formatNumber
                         value="${combo.hkPrice}"
                         maxFractionDigits="0"/>
@@ -46,15 +46,36 @@
     <div class="right_col">
         <c:choose>
             <c:when test="${!combo.outOfStock}">
-                <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta btn btn-blue cont-rht"/>
+                <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta btn btn-blue cont-rht" style="margin-bottom:5px;"/>
+                <div class="fnt-caps mrgn-t-5">Instock</div>
+                <div class="fnt-sz9">DISPATCHED IN 1 - 3 DAYS</div>
             </c:when>
             <c:otherwise>
                 <div><a class="button_orange cont-rht"><b>Sold Out</b></a></div>
+                <div class="fnt-caps mrgn-t-5">Out of stock</div>
             </c:otherwise>
         </c:choose>
 
             <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>--%>
     </div>
+</div>
+<div class="mrgn-b-10 brdr-b-sd pad-b-5 fnt-sz9">
+    <c:choose>
+        <c:when test="${product.codAllowed != null && !product.codAllowed}">
+            <span class="fnt-light">Cash on Delivery Not Available</span>
+        </c:when>
+        <c:otherwise>
+            <span class="fnt-light">Cash on Delivery Available</span>
+        </c:otherwise>
+    </c:choose>
+    <c:choose>
+        <c:when test="${combo.hkPrice > 500}">
+            | <span class="fnt-light"> This product is available for Free Shipping</span>
+        </c:when>
+        <c:otherwise>
+            | <span class="fnt-light">Free Shipping if total order amount is Rs. 500 or above. Add Rs. 50 otherwise</span>
+        </c:otherwise>
+    </c:choose>
 </div>
 <table class="varnts-tbl">
   <s:hidden name="combo" value="${combo}"/>
