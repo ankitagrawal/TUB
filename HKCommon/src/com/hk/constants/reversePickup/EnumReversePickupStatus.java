@@ -71,19 +71,19 @@ public enum EnumReversePickupStatus {
                 RPU_APPROVED.asReversePickupStatus());
     }
 
-    public static List<EnumReversePickupStatus> getSearchRPStatusList() {
+    public static List<ReversePickupStatus> getSearchRPStatusList() {
         return Arrays.asList(
-                RPU_Initiated,
-                RPU_Picked,
-                RPU_Scheduled,
-                RPU_QC_Checked_In,
-                Return_Initiated,
-                RPU_CLOSED,
-                RPU_CANCEL,
-                RPU_NOTAVAILABLE,
-                Return_QC_Checkin,
-                RPU_RECONCILATION,
-                RPU_APPROVED);
+                RPU_Initiated.asReversePickupStatus(),
+                RPU_Picked.asReversePickupStatus(),
+                RPU_Scheduled.asReversePickupStatus(),
+                RPU_QC_Checked_In.asReversePickupStatus(),
+                Return_Initiated.asReversePickupStatus(),
+                RPU_CLOSED.asReversePickupStatus(),
+                RPU_CANCEL.asReversePickupStatus(),
+                RPU_NOTAVAILABLE.asReversePickupStatus(),
+                Return_QC_Checkin.asReversePickupStatus(),
+                RPU_RECONCILATION.asReversePickupStatus(),
+                RPU_APPROVED.asReversePickupStatus());
     }
 
     public Long getId() {
