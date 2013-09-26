@@ -304,7 +304,7 @@ public class MasterResolutionAction extends BaseAction {
                 for (RpLineItem rpLineItem : rpLineItems) {
                     //for approved lineItem
                     if (EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
-                        String actionTask = rpLineItem.getCustomerActionStatus().getPrimary();
+                        String actionTask = rpLineItem.getActionTaken().getPrimary();
                         if (reconcileItemMap.containsKey(actionTask)) {
                             Set<RpLineItem> rpLineItemMapValue = reconcileItemMap.get(actionTask);
                             rpLineItemMapValue.add(rpLineItem);
