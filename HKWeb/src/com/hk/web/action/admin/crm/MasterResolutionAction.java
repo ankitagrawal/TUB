@@ -250,9 +250,8 @@ public class MasterResolutionAction extends BaseAction {
                     addRedirectAlertMessage(new SimpleMessage("Payment Seek exception for gateway order id " + paymentGatewayOrderId));
                 }
             }
-            addRedirectAlertMessage(new SimpleMessage("Please ensure, its an online payment, plus enter reason and related comments for the refund."));
-        }else{
-            addRedirectAlertMessage(new SimpleMessage("No Applicable amount to be refunded, or all units already reconciled"));
+        }else {
+            addRedirectAlertMessage(new SimpleMessage("Please ensure, its an online payment, plus enter reason and related comments for the refund or No Applicable amount to be refunded, or all units already reconciled"));
         }
         return new ForwardResolution(MasterResolutionAction.class, "pre");
     }
