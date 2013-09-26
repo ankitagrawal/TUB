@@ -34,6 +34,7 @@ import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.queue.Classification;
+import com.hk.domain.reversePickupOrder.ReversePickupStatus;
 import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.domain.review.Mail;
 import com.hk.domain.review.ReviewStatus;
@@ -205,7 +206,7 @@ public interface MasterDataDao {
 
     public List<Courier> getCouriersForReversePickup();
 
-    public List<EnumReversePickupStatus> getAllReversePickUpStatus();
+    public List<ReversePickupStatus> getAllReversePickUpStatus();
 
     public List<ReversePickupType> getAllReversePickUpType();
 

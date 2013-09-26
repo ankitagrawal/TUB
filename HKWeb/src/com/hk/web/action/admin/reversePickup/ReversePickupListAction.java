@@ -62,7 +62,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         List<ReversePickupStatus> reversePickupStatuses = new ArrayList<ReversePickupStatus>();
         List<ReversePickupType> reversePickupTypes = new ArrayList<ReversePickupType>();
         if(reversePickupStatus == null){
-            reversePickupStatuses = EnumReversePickupStatus.getHealthKartManagedRPStatus();
+            reversePickupStatuses = EnumReversePickupStatus.getSearchRPStatusList();
         }else {
             reversePickupStatuses.add(reversePickupStatus);
         }
@@ -140,7 +140,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         } else {
             errorMessage = "Error in Approving";
         }
-        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+        return new RedirectResolution(ReversePickupListAction.class, "search").addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
 
@@ -220,8 +220,8 @@ public class ReversePickupListAction extends BasePaginatedAction {
         params.add("endDate");
         params.add("customerActionStatus");
         params.add("courierName");
-        params.add("reversePickupStatus");
-        params.add("reversePickupType");
+        params.add("reversePickupStatus.id");
+        params.add("reversePickupType.id");
         return params;
     }
 

@@ -5,7 +5,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction" var="revList"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup List Screen">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Booking List Screen">
 
 <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -135,7 +135,7 @@
 </style>
 
 <div class="heading" style="height: 30px;">
-    <p>Reverse PickUp List</p>
+    <p>Booking List</p>
 </div>
 
 
@@ -164,15 +164,15 @@
                     <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                serviceProperty="couriersForReversePickup"
                                                value="name" label="name"/> </s:select></span>
-                     <span> <label>Reverse PickUp Status</label>
-                        <s:select name="reversePickupStatus">
+                     <span> <label>Booking Status</label>
+                        <s:select name="reversePickupStatus" value="${revList.reversePickupStatus.id}}">
                             <s:option value="">--ALL--</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="allReversePickUpStatus"
                                                        value="id" label="status"/>
                         </s:select></span>
-                <span> <label>Reverse PickUp Type</label>
-                        <s:select name="reversePickupType">
+                <span> <label>Booking Type</label>
+                        <s:select name="reversePickupType" value="${revList.reversePickupType.id}">
                             <s:option value="">--ALL--</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="allReversePickUpType"
@@ -295,7 +295,7 @@
                     <td>${rpLineitem.lineItem.sku.productVariant.product.name} ${rpLineitem.lineItem.sku.productVariant}
                             ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}
                         <label>Value </label>
-                        <fmt:formatNumber value="${rpLineitem.amount}" type="currency" currencySymbol="Rs. "/>
+                        <fmt:formatNumber value="${rp.amount}" type="currency" currencySymbol="Rs. "/>
                     </td>
                     <td>${rpLineitem.customerReasonForReturn.classification.primary}</td>
                     <td>

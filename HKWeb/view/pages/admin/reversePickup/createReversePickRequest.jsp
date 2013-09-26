@@ -12,7 +12,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" var="rev"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup Booking Screen">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create Update Booking Screen">
 
 
 <s:layout-component name="htmlHead">
@@ -125,12 +125,12 @@
     <c:choose>
         <c:when test="${rev.reversePickupOrder != null}">
             <div class="heading">
-                <p>Edit Reverse Pickup No. ${rev.reversePickupOrder.reversePickupId}</p>
+                <p>Edit Booking No. ${rev.reversePickupOrder.reversePickupId}</p>
             </div>
         </c:when>
         <c:otherwise>
             <div class="heading">
-                <p>Reverse Pickup Booking Screen</p>
+                <p>Booking Screen</p>
             </div>
         </c:otherwise>
     </c:choose>
