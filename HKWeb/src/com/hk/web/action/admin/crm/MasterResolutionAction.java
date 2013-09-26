@@ -172,17 +172,17 @@ public class MasterResolutionAction extends BaseAction {
     public Resolution addRewardPoints() {
         rewardFlag = true;
         Order order = shippingOrder.getBaseOrder();
-        payment = order.getPayment();
+        Payment basePayment = order.getPayment();
         Set<LineItem> toBeProcessedItems = new HashSet<LineItem>();
         Double rewardAmount = (Double) adminShippingOrderService.getActionProcessingElement(shippingOrder,toBeProcessedItems, REWARD_ACTION);
         if (rewardAmount == 0d) {
             addRedirectAlertMessage(new SimpleMessage("No items found for which reward points could be added."));
-        } else if (payment.isCODPayment() && EnumShippingOrderStatus.getReconcilableShippingOrderStatus().contains(shippingOrder.getOrderStatus().getId())) {
+        } else if (basePayment.isCODPayment() && EnumShippingOrderStatus.getReconcilableShippingOrderStatus().contains(shippingOrder.getOrderStatus().getId())) {
             addRedirectAlertMessage(new SimpleMessage("Its a COD Order, How can reward points be added, for an RTO/Lost Order"));
         } else {
             RewardPoint rewardPoint = rewardPointService.addRewardPoints(order.getUser(), getUserService().getLoggedInUser(), order, rewardAmount, comment, EnumRewardPointStatus.APPROVED, EnumRewardPointMode.RESOLUTION_SCREEN.asRewardPointMode());
             rewardPointService.approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
-            paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), rewardAmount, EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REWARD_POINT);
+            payment = paymentService.createNewGenericPayment(basePayment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), rewardAmount, EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REWARD_POINT);
             shippingOrderService.logShippingOrderActivity(shippingOrder, getUserService().getLoggedInUser(),
                     shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.POST_SHIPPED_RECONCILIATION),
                           null, "Reward points given for SO after shipping.");
@@ -240,7 +240,7 @@ public class MasterResolutionAction extends BaseAction {
             if (EnumGateway.getManualRefundGateways().contains(gateway.getId())) {
                 adminEmailManager.sendManualRefundTaskToAdmin(shippingOrder.getAmount(), paymentGatewayOrderId, gateway.getName());
                 shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser, EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.ManualRefundInitiated.asReason(), comment);
-                paymentService.createNewGenericPayment(basePayment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), refundAmount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode(), EnumPaymentTransactionType.REFUND);
+                payment = paymentService.createNewGenericPayment(basePayment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), refundAmount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode(), EnumPaymentTransactionType.REFUND);
             }
             else if (EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
                 try {
@@ -279,7 +279,7 @@ public class MasterResolutionAction extends BaseAction {
                     addRedirectAlertMessage(new SimpleMessage("Payment Seek exception for gateway order id " + paymentGatewayOrderId));
                 }
             }
-        }else {
+        } else {
             addRedirectAlertMessage(new SimpleMessage("Please ensure, its an online payment, plus enter reason and related comments for the refund or No Applicable amount to be refunded, or all units already reconciled"));
         }
         return new ForwardResolution(MasterResolutionAction.class, "pre");
