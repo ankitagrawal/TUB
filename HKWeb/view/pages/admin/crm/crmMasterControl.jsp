@@ -70,6 +70,7 @@
         $('.createReplacementOrderButton').click(function(event){
             $(this).hide();
 	        });
+        
     })
 </script>
 
@@ -133,6 +134,24 @@
 								<td>${maBean.shippingOrder.orderStatus.name}</td>
 							</tr>
 						</table>
+						<table border="1">
+								<thead>
+									<th>S No.</th>
+									<th>Product</th>
+									<th>Original Qty</th>
+								</thead>
+								<c:forEach items="${maBean.lineItems}" var="lineItem"
+									varStatus="lineItemCtr">
+									<tr>
+										<td>${lineItemCtr.count}</td>
+										<td>${lineItem.cartLineItem.productVariant.product.name}<br />
+											Variant: ${lineItem.cartLineItem.productVariant.id}
+										</td>
+										<td>${lineItem.qty}</td>
+									</tr>
+								</c:forEach>
+							</table>
+							
 					</c:if>
 				</s:form>
     </fieldset>
@@ -146,24 +165,18 @@
                 <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
                 <s:hidden name="baseOrderId" value="${maBean.baseOrderId}"/>
                 <tr>
-                    <td>Total Amount</td>
+                    <td>Rewardable Amount</td>
                     <td>${maBean.paymentAmount}</td>
                     <td>Base Order Id</td><td>${maBean.baseOrderId}</td>
                 </tr>
                 <tr>
-                    <td>Mode</td>
-                    <td>
-                        <s:select name="rewardPointMode">
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="rewardPointModes" value="id" label="name"/>
-                        </s:select>
-                    </td>
                     <td>Expiry Date</td>
                     <td><s:text name="expiryDate" class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/></td>
-                </tr>
-                <tr>
                     <td>Comment</td>
                     <td><s:textarea name="comment"/></td>
-                    <td></td>
+                </tr>
+                <tr>
+                	<td></td>
                     <td><s:submit name="addRewardPoints" value="Add reward Points"/></td>
                 </tr>
             </table>
@@ -183,7 +196,7 @@
             <table>
                 <s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}"/>
                 <tr>
-                    <td><label>Total Amount</label></td>
+                    <td><label>Refundable Amount</label></td>
                     <td>${maBean.paymentAmount}</td>
                 </tr>
                 <tr>
@@ -260,23 +273,6 @@
 							beanclass="com.hk.web.action.admin.crm.MasterResolutionAction"
 							id="createReplacementOrderForRtoForm">
 							<s:hidden name="shippingOrder" value="${maBean.shippingOrder.id}" />
-							<table border="1">
-								<thead>
-									<th>S No.</th>
-									<th>Product</th>
-									<th>Original Qty</th>
-								</thead>
-								<c:forEach items="${maBean.lineItems}" var="lineItem"
-									varStatus="lineItemCtr">
-									<tr>
-										<td>${lineItemCtr.count}</td>
-										<td>${lineItem.cartLineItem.productVariant.product.name}<br />
-											Variant: ${lineItem.cartLineItem.productVariant.id}
-										</td>
-										<td>${lineItem.qty}</td>
-									</tr>
-								</c:forEach>
-							</table>
 							<s:label name="Reason for Replacement:" style="margin-left:7px;" />
 							<s:select name="replacementOrderReason">
 								<s:option value="-Select Reason-">-Select Reason-</s:option>
