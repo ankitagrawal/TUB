@@ -287,11 +287,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		}
 		for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext(); ) {
 			SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+			baseDao.refresh(skuItemCLI);
 			List<SkuItemLineItem> silis = skuItemCLI.getSkuItemLineItems();
 			if (silis != null && silis.size() > 0) {
-				for (SkuItemLineItem sili : silis) {
-					skuItemCLI.getSkuItemLineItems().remove(sili);
-				}
+				skuItemCLI.setSkuItemLineItems(null);
+				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
 				baseDao.deleteAll(silis);
 			}
 			baseDao.delete(skuItemCLI);
