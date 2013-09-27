@@ -69,13 +69,12 @@
 
       <p style="font-size: 1.2em;">0124-4616444 <br/> <span style="font-size: 10px;">9 AM to 12 AM (midnight)</span></p>
         <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())) {%>
-        <div style="color: red; float: left; ">&nbsp;(Customer service will be unavailable from 3:00PM to mid-night today.)
+        <div style="color: red; float: left;">&nbsp;(Customer service will be unavailable from 3:00PM to mid-night today.)
         </div>
         <%}%>
-      <br/>
 
       <%--<p style="color: gray">If you are not satisfied with the response, please write to us at <a href="mailto:ceo@healthkart.com">ceo@healthkart.com</a></p>--%>
-
+        &nbsp;
       <h2>Headquarters</h2>
 
       <p>
