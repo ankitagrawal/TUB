@@ -88,7 +88,8 @@
         <jsp:include page="/categoryBanners/parenting_static.jsp"/>
     </c:if>
 
-    <%--<c:if test="${hk:collectionContains(topCategoryNameList, 'diabetes')}">--%>
-    <%--<jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>--%>
-    <%--</c:if>--%>
+    <c:if test="${hk:collectionContains(topCategoryNameList, 'diabetes')}">
+    <jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>
+    </c:if>
+
 </s:layout-definition>
