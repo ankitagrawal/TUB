@@ -292,8 +292,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 				for (SkuItemLineItem sili : silis) {
 					skuItemCLI.getSkuItemLineItems().remove(sili);
 				}
+				baseDao.deleteAll(silis);
 			}
-			baseDao.deleteAll(silis);
 			baseDao.delete(skuItemCLI);
 			iterator.remove();
 		}
