@@ -14217,6 +14217,12 @@
             alter table payment MODIFY transaction_type VARCHAR(100);
         </sql>
     </changeSet>
+    <changeSet author="Ajeet (written)" id="20130927-01">
+    <sql>
+        delete from bin;
+    </sql>
+
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1380121613158-01">
         <addColumn tableName="bin">
             <column defaultValue="1" name="sequence_number" type="INT">
