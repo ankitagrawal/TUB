@@ -52,7 +52,7 @@
         <%--<s:layout-component name="zopim">
           <jsp:include page="/includes/_zopim.jsp"/>
         </s:layout-component>--%>
-    </div>
+
     </body>
     </html>
 </s:layout-definition>
