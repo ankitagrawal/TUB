@@ -146,6 +146,7 @@
           <th>Tax</th>
           <th>Net Inventory</th>
           <th>Booked Qty</th>
+          <th>Bright InStock units</th>
           <th>Net Available Unbooked Inventory</th>
         </tr>
         </thead>
@@ -174,6 +175,9 @@
             <td>
                 ${hk:bookedQty(sku)}
             </td>
+              <td>
+                 ${hk:netAvailableBrightUnbookedInventory(sku)}
+              </td>
             <td>
                 ${hk:netAvailableUnbookedInventory(sku)}
             </td>

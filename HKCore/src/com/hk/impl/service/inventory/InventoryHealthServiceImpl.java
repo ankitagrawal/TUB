@@ -1163,7 +1163,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   public Long getUnbookedInventoryOfBrightForMrp(ProductVariant productVariant, String tinPrefix, Double mrp) {
     Long qty = 0L;
     try {
-      String url = brightlifecareRestUrl + "product/variant/unbookedInventoryForMrp/" + productVariant.getId()+"/" + tinPrefix +"/" + mrp;
+      String url = null;
+      if (mrp == null){
+        url = brightlifecareRestUrl + "product/variant/unbookedInventory/" + productVariant.getId()+"/" + tinPrefix ;
+      }else {
+        url = brightlifecareRestUrl + "product/variant/unbookedInventoryForMrp/" + productVariant.getId()+"/" + tinPrefix +"/" + mrp;
+      }
+
       ClientRequest request = new ClientRequest(url);
       ClientResponse response = request.get();
       int status = response.getStatus();

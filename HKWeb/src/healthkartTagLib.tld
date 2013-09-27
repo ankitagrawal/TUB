@@ -1332,4 +1332,15 @@
       ${hk:countLineItemQty(${shipingOrder})}
     </example>
   </function>
+    <function>
+        <description>
+            returns the net available unbooked inventory of Bright product variant or sku
+        </description>
+        <name>netAvailableBrightUnbookedInventory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long netAvailableBrightUnbookedInventory(java.lang.Object)</function-signature>
+        <example>
+            ${hk:netAvailableUnbookedInventory(${object})}
+        </example>
+    </function>
 </taglib>
