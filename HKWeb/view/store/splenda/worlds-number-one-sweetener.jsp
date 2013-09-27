@@ -2,23 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Splenda - World's Number 1 Sweetener</title>
+<title>Splenda - World's No. 1 Sweetener</title>
 <link href="stylesheet/style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 <div class="row header">
 	<div class="headerInr">
-    	<div class="splendaLogo"><a href="index.jsp"><img src="images/splenda.png" alt="Splenda" /></a></div>
+    	<div class="splendaLogo"><a href="index.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/splenda.png" alt="Splenda" /></a></div>
       <div class="headerRightBar">
        	  	<div class="socialIconsHeader">
-           	 	<a href="https://www.facebook.com/DiabetesSweetAndSimple/app_326983627416726" target="_blank"><img src="images/icon-facebook.jpg" alt="Facebook" /></a>
-                <a href="#"><img src="images/icon-twitter.jpg" alt="Twitter" /></a>
+           	 	<a href="https://www.facebook.com/DiabetesSweetAndSimple/app_326983627416726?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-facebook.jpg" alt="Facebook" /></a>
+                <a href="https://twitter.com/Splendaindia?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-twitter.jpg" alt="Twitter" /></a>
                 <a href="#"><img src="images/icon-pinterest.jpg" alt="Pinterest" /></a>
                 <a href="#"><img src="images/icon-blog.jpg" alt="Blog" /></a>
             </div>
             <div class="clr"></div>
-            <div class="healthkartLogo"><a href="http://www.healthkart.com"><img src="images/healthkart-dot-com.png" alt="HealthKart.com" /></a></div>
+            <div class="healthkartLogo"><a href="http://www.healthkart.com?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/healthkart-dot-com.png" alt="HealthKart.com" /></a></div>
         </div>
         <div class="clr"></div>
     </div>
@@ -26,11 +26,11 @@
 <div class="bgNav">
 	<div class="nav">
     	<ul>
-        	<li><a href="index.jsp">Home</a></li>
-            <li><a href="product.jsp">Product</a></li>
-            <li><a href="hundred-percent-taste.jsp">100% Taste</a></li>
-            <li><a href="zero-percent-compromise.jsp">0% Compromise</a></li>
-            <li class="lastLi"><a href="worlds-number-one-sweetener.jsp" class="selected">World's No. 1 Sweetener</a></li>
+        	<li><a href="index.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">Home</a></li>
+            <li><a href="product.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">Product</a></li>
+            <li><a href="hundred-percent-taste.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">100% Taste</a></li>
+            <li><a href="zero-percent-compromise.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">0% Compromise</a></li>
+            <li class="lastLi"><a href="worlds-number-one-sweetener.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" class="selected">World's No. 1 Sweetener</a></li>
         </ul>
     </div>
 </div>
@@ -40,7 +40,7 @@
         	<div class="row bannerShadow"><img src="images/banner-worlds-number-one-sweetener.png" alt="World's No.1 Sweetener"/></div>
             <div class="row"><p>SPLENDA&reg; is made through a patented process that starts with sugar and converted to a no-calorie, non-carbohydrate sweetener.
               <br />
-          The result is a very stable sweetener that tastes like sugar -without its calories. When ingested, SPLENDA&reg; is not broken down for energy, <br />
+          The result is a very stable sweetener that tastes like sugar - without its calories. When ingested, SPLENDA&reg; is not broken down for energy, <br />
           so the body does not recognize it as a carbohydrate.</p>
           <p>&nbsp;</p>
           <p>SPLENDA&reg; is found in more than 4000 products as a part of healthy diets worldwide.</p>
@@ -112,7 +112,7 @@ ketonuria (PKU)</td>
           </div>
           <div class="row">&nbsp;</div>
           <div class="row">
-          	<h1 class="blueHeading">Sugar SPLENDA&reg; conversion chart </h1>
+          	<h1 class="blueHeading">Sugar SPLENDA&reg; Conversion Chart </h1>
           </div>
           <div class="row">
           	<table width="780" align="center" border="0" cellspacing="0" cellpadding="0" class="tblOuterBrdr">
@@ -143,7 +143,7 @@ ketonuria (PKU)</td>
 </div>
 
 <div class="footer">	
-	<div class="footerData"><a href="http://www.healthkart.com/pages/termsAndConditions.jsp" target="_blank">Terms & Conditions</a></div>
+	<div class="footerData"><a href="http://www.healthkart.com/pages/termsAndConditions.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank">Terms & Conditions</a></div>
 
 </div>
 

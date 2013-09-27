@@ -76,7 +76,8 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_CancelledInventoryMismatch(1020L, "SO  Cancelled due to inventory mismatch"),
   Reconciliation(1050l,"Reconciliation"),
   SO_COULD_NOT_BE_CANCELLED_AUTO(1060l,"SO could not be cancelled automatically."),
-  RPU_STATUS_CHANGED(1200l,"RPU Status Changed")
+  RPU_STATUS_CHANGED(1200l,"RPU Status Changed"),
+  POST_SHIPPED_RECONCILIATION(1070l,"SO Reconciled post shipped"),
   ;
 
   private String name;

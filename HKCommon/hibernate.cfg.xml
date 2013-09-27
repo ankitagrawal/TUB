@@ -223,6 +223,7 @@
         <mapping class="com.hk.domain.reversePickupOrder.ReversePickupOrder"/>
         <mapping class="com.hk.domain.reversePickupOrder.RpLineItem"/>
         <mapping class="com.hk.domain.reversePickupOrder.ReversePickupStatus"/>
+        <mapping class="com.hk.domain.reversePickupOrder.ReversePickupType"/>
         <mapping class="com.hk.domain.sku.SkuItemLineItem"/>
         <mapping class="com.hk.domain.sku.SkuItemCLI"/>
         <mapping class="com.hk.domain.sku.SkuItemOwner"/>

@@ -1,6 +1,7 @@
 package com.hk.domain.reversePickupOrder;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.queue.Classification;
 import com.hk.domain.shippingOrder.LineItem;
 import com.itextpdf.text.pdf.LongHashtable;
 
@@ -32,6 +33,8 @@ public class RpLineItem implements Serializable{
     @JoinColumn(name = "line_item_id", nullable = false)
     private LineItem lineItem;
 
+    @Column(name = "amount")
+    private Double        amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_reason_for_return_id")
@@ -40,8 +43,9 @@ public class RpLineItem implements Serializable{
     @Column(name = "customer_comment", length = 100)
     private String customerComment;
 
-    @Column(name = "action_taken_id")
-    private Long actionTaken;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "action_taken_id")
+    private Classification actionTaken;
 
     @Column(name = "action_on_status_id")
     private Long actionTakenOnStatus;
@@ -53,8 +57,9 @@ public class RpLineItem implements Serializable{
     @JoinColumn(name = "warehouse_condition_id")
     private Reason warehouseReceivedCondition;
 
-    @Column(name = "customer_action_status")
-    private Long customerActionStatus;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_action_status")
+    private Classification customerActionStatus;
 
     @Column(name = "warehouse_comment")
     private Long warehouseComment;
@@ -103,11 +108,11 @@ public class RpLineItem implements Serializable{
         this.customerComment = customerComment;
     }
 
-    public Long getActionTaken() {
+    public Classification getActionTaken() {
         return actionTaken;
     }
 
-    public void setActionTaken(Long actionTaken) {
+    public void setActionTaken(Classification actionTaken) {
         this.actionTaken = actionTaken;
     }
 
@@ -135,11 +140,11 @@ public class RpLineItem implements Serializable{
         this.warehouseReceivedCondition = warehouseReceivedCondition;
     }
 
-    public Long getCustomerActionStatus() {
+    public Classification getCustomerActionStatus() {
         return customerActionStatus;
     }
 
-    public void setCustomerActionStatus(Long customerActionStatus) {
+    public void setCustomerActionStatus(Classification customerActionStatus) {
         this.customerActionStatus = customerActionStatus;
     }
 
@@ -172,5 +177,13 @@ public class RpLineItem implements Serializable{
 
     public void setItemBarcode(String itemBarcode) {
         this.itemBarcode = itemBarcode;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }
