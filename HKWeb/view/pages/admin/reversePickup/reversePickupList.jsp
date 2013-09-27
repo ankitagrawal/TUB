@@ -5,7 +5,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction" var="revList"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup List Screen">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Booking List Screen">
 
 <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -135,7 +135,7 @@
 </style>
 
 <div class="heading" style="height: 30px;">
-    <p>Reverse PickUp List</p>
+    <p>Booking List</p>
 </div>
 
 
@@ -164,12 +164,19 @@
                     <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                serviceProperty="couriersForReversePickup"
                                                value="name" label="name"/> </s:select></span>
-                     <span> <label>Reverse PickUp Status</label>
-                        <s:select name="reversePickupStatus">
+                     <span> <label>Booking Status</label>
+                        <s:select name="reversePickupStatus" value="${revList.reversePickupStatus.id}}">
                             <s:option value="">--ALL--</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="allReversePickUpStatus"
                                                        value="id" label="status"/>
+                        </s:select></span>
+                <span> <label>Booking Type</label>
+                        <s:select name="reversePickupType" value="${revList.reversePickupType.id}">
+                            <s:option value="">--ALL--</s:option>
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                       serviceProperty="allReversePickUpType"
+                                                       value="id" label="name"/>
                         </s:select></span>
             <span><label>CS Action Status</label>
                              <s:select name="customerActionStatus">
@@ -227,7 +234,10 @@
                     <c:if test="${ctr.first}">
                         <td rowspan="${length}">${revCount.index + 1}</td>
                         <td rowspan="${length}">
-                        ${reversePickup.reversePickupId}  </br>
+                        ${reversePickup.reversePickupId}
+                            <label>Amount </label>
+                            <fmt:formatNumber value="${reversePickup.amount}" type="currency" currencySymbol="Rs. "/>
+                            </br>
                             <shiro:hasPermission name="<%=PermissionConstants.AVAILABLE_REVERSE_PICKUP%>">
                             <c:if test="${reversePickup.reversePickupStatus.id == rpuInitiatedId}">
                                 <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
@@ -252,12 +262,6 @@
                             </s:link>
                                 </c:if>
                             </shiro:hasPermission>
-                            <%--<c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">--%>
-                            <%--<s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"--%>
-                                    <%--event="rpReconcile"><span class="RPStatus">(Reconcile)</span>--%>
-                                <%--<s:param name="reversePickupOrder" value="${reversePickup.id}"/>--%>
-                            <%--</s:link>--%>
-                                <%--</c:if>--%>
                         </td>
                         <td rowspan="${length}">
                             (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction"
@@ -271,10 +275,14 @@
                             SO Lifecycle
                             <s:param name="shippingOrder" value="${reversePickup.shippingOrder.id}"/>
                         </s:link>)
+                        (<s:link beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" event="search"
+             			target="_blank">
+        				<s:param name="shippingOrderId" value="${reversePickup.shippingOrder.id}"/> Master CRM
+        				</s:link>)
                         </td>
                     </c:if>
                     <td>
-                        <c:set value="flase" var="valueSet"/>
+                        <c:set value="false" var="valueSet"/>
                         <c:if test="${prevLineId == currentLineId || ctr.first}">
                             ${unitNo}
                             <c:set value="true" var="valueSet"/>
@@ -289,15 +297,13 @@
                         <c:set var="prevLineId" value="${currentLineId}"/>
                     </td>
                     <td>${rpLineitem.lineItem.sku.productVariant.product.name} ${rpLineitem.lineItem.sku.productVariant}
-                            ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}   </td>
+                            ${rpLineitem.lineItem.sku.productVariant.optionsPipeSeparated}   <br/>
+                        <label>Value </label>
+                        <fmt:formatNumber value="${rpLineitem.amount}" type="currency" currencySymbol="Rs. "/>
+                    </td>
                     <td>${rpLineitem.customerReasonForReturn.classification.primary}</td>
                     <td>
-                        <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
-                                   var="actionTaken">
-                            <c:if test="${rpLineitem.actionTaken == actionTaken.id}">
-                                ${actionTaken.name}
-                            </c:if>
-                        </c:forEach>
+                                ${rpLineitem.actionTaken.primary}
                     </td>
                     <%--<td>--%>
                         <%--<c:forEach--%>
@@ -313,15 +319,9 @@
                             ${rpLineitem.customerComment}
                     </td>
                     <td>
-                        <c:forEach
-                                items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
-                                var="actionStatus">
-                            <c:if test="${rpLineitem.customerActionStatus == actionStatus.id}">
-                                ${actionStatus.name}
-                            </c:if>
-                        </c:forEach>
+                                ${rpLineitem.customerActionStatus.primary}
                         <c:set value="<%=EnumReverseAction.Pending_Approval.getId()%>" var="pending"/>
-                        <c:if test="${rpLineitem.customerActionStatus == pending}">
+                        <c:if test="${rpLineitem.customerActionStatus.id == pending}">
                             <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                     event="approveCSAction"><span class="approve">(Approve)</span>
                                 <s:param name="rpLineitem" value="${rpLineitem.id}"/>
@@ -406,12 +406,13 @@
                         <%-- Courier status --%>
                         <td rowspan="${length}">
                                 ${reversePickup.reversePickupStatus.status}
+                                ${reversePickup.reversePickupType.name}
                         </td>
                         <%-- RP Actions --%>
                         <td rowspan="${length}" class="action-link">
                             <c:set value="false" var="isRpApproved"/>
                             <c:forEach items="${reversePickup.rpLineItems}" var="rplineitem">
-                                <c:if test="${rplineitem.customerActionStatus == approved}">
+                                <c:if test="${rplineitem.customerActionStatus.id == approved}">
                                     <c:set value="true" var="isRpApproved"/>
                                 </c:if>
                             </c:forEach>
@@ -445,7 +446,7 @@
                                 </c:otherwise>
                             </c:choose>
                                <br>
-                               <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
+                               <shiro:hasPermission name="<%=PermissionConstants.RECONCILE_REVERSE_PICKUP%>">
                                     <c:if test="${reversePickup.reversePickupStatus.id == rpuApprovedId}">
                                         <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
                                                 event="editRPToReconcile"><span class="RPStatus">
