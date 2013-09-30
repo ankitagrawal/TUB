@@ -184,14 +184,13 @@
 			                 affiliateId="${pa.affiliate.id}"/>
 		</shiro:hasPermission>
 
-	<div class="jqmWindow" style="display:none;" id="notifyMeWindow"></div>
 
 </s:layout-component>
 
-<s:layout-component name="breadcrumbs">
+<%--<s:layout-component name="breadcrumbs">--%>
 	<%--<s:layout-render name="/layouts/embed/catalogBreadcrumbBeta.jsp" breadcrumbProduct="${product}" lastLink="true"--%>
 	                 <%--topHeading="${seoData.h1}"/>--%>
-</s:layout-component>
+<%--</s:layout-component>--%>
 
 <s:layout-component name="topCategory">${pa.topCategoryUrlSlug}</s:layout-component>
 <s:layout-component name="allCategories">${pa.allCategories}</s:layout-component>
@@ -208,6 +207,12 @@
 
 <%--</s:layout-component>--%>
 <s:layout-component name="prod_title">
+
+    <div class="crumb_outer mrgn-t-10">
+        <a href="/" class="crumb">Home</a>
+        <span>»</span>
+        <span class="fnt-bold">${product.name}</span>
+    </div>
 
     <div class="ttl-cntnr">
         <span class="icn icn-sqre "></span>
