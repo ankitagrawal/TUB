@@ -11,7 +11,7 @@
                    <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
                 </span>
             <span>&raquo;</span>
-            <span class="txt-blue fnt-bold">Orders</span>
+            <span class="fnt-bold">Orders</span>
         </div>
         <%--breadcrumbs ends--%>
     </s:layout-component>
