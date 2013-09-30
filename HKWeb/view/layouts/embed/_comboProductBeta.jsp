@@ -51,8 +51,8 @@
                 <div class="fnt-sz9">DISPATCHED IN 1 - 3 DAYS</div>
             </c:when>
             <c:otherwise>
-                <div><a class="button_orange cont-rht"><b>Sold Out</b></a></div>
-                <div class="fnt-caps mrgn-t-5">Out of stock</div>
+                <div class="btn btn-orange cont-rht"><b>Sold Out</b></div>
+                <div class="fnt-caps mrgn-t-50">Out of stock</div>
             </c:otherwise>
         </c:choose>
 
