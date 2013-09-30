@@ -287,8 +287,9 @@
                                 <h2 class="orderIdText">
                                     Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
                                 </h2>
-                                <p class="codMessage">You will shortly get an automated <span class="orangeBold">verification call</span>. Please take the call and respond as per instructions to verify
-                                your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                                <p class="codMessage">Please give a<span class="orangeBold"> missed call on 0124-4616414 </span>to confirm the order.
+                                    In case you are unable to give the missed call, our customer care will call you to verify.
+                                    Once verified, your order will go into processing.</p>
                                 <br/>
                             </c:when>
                             <c:otherwise>
