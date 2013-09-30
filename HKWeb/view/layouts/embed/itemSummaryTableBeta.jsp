@@ -172,7 +172,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                     <div class='name' style="position: relative;float: left;width: 42%;">
                         <table>
                             <tr>
-                                <td style="padding:5px;">
+                                <td style="padding:5px;width: 90%">
                                     ${invoiceLineItem.comboInstance.combo.name}<br/>
                                     <c:forEach items="${invoiceLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
                       <span style="font-size:10px;">

@@ -441,7 +441,7 @@ function _updateTotals(responseData) {
                 <c:otherwise>
                     <div class="hk">
                         <div class="num">
-              <span class="lineItemHkTotal ">Rs <fmt:formatNumber
+              <span class="lineItemHkTotal  fnt-sz16">Rs <fmt:formatNumber
                       value="${cartLineItem.hkPrice * cartLineItem.qty}"
                       pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                         </div>
@@ -492,7 +492,7 @@ function _updateTotals(responseData) {
 
 </script>
 
-<%--<c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
+<c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
     <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
     <div class="lineItemRow product">
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
@@ -512,7 +512,7 @@ function _updateTotals(responseData) {
             </c:choose>
         </a>
 
-        <div class="name" style="width: 200px;position: relative;float: left;">
+        <div class="name" style="word-wrap:break-word;width: 200px;position: relative;float: left;">
             <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
             <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
@@ -526,7 +526,7 @@ function _updateTotals(responseData) {
             </c:forEach>
         </div>
         <div class="dispatchedDateNew">
-            <div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays}
+            <div>${cartLineItem.comboInstance.combo.minDays} - ${cartLineItem.comboInstance.combo.maxDays}
                 working days
             </div>
         </div>
@@ -549,27 +549,28 @@ function _updateTotals(responseData) {
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="cut">
-                        <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
-                            <fmt:formatNumber
-                                    value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
-                                    pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                  <div class="hk">
+                    <div class="num">
+      <span class="lineItemHkTotal fnt-sz16"> Rs <fmt:formatNumber
+          value="${cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
+          pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                     </div>
-                    --%><%--<div class='special green'>
+                  </div>
+                    <div class='special green'>
                       (saved
                 <span class='num '>
                 Rs <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
                     value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem) - cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
                     pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                 </span>
-                    </div>--%><%--
-                    <div class="hk">
-                        <div class="num">
-      <span class="lineItemHkTotal arialBlackBold"> Rs <fmt:formatNumber
-              value="${cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
-              pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
-                        </div>
                     </div>
+                  <div class="cut">
+                    <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
+                      <fmt:formatNumber
+                          value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
+                          pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                  </div>
+
                 </c:otherwise>
             </c:choose>
         </div>
