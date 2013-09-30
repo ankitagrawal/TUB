@@ -572,6 +572,13 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setCODAllowed(false);
         }
 
+        Product freebieProduct = product.hasFreebie();
+        if(freebieProduct != null){
+            solrProduct.setFreebieDesc(freebieProduct.getName());  //can be simply called as freebie as well
+        } else {
+           solrProduct.setFreebieDesc("");
+        }
+
         solrProduct.setProductUrl(convertToWww(getProductUrl(product, false)));
         if (product.getMainImageId() != null) {
             solrProduct.setSmallImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId()));
@@ -669,6 +676,7 @@ public class ProductServiceImpl implements ProductService {
     productVO.setMaxDiscountMRP(solrProduct.getMaximumDiscountProductVariantMRP());
     productVO.setProductURL(solrProduct.getProductUrl());
     productVO.setMainImageId(solrProduct.getMainImageId());
+    productVO.setFreebieDesc(solrProduct.getFreebieDesc());  //can be simply called as freebie as well
     productVO.setGoogleAdDisallowed(solrProduct.getGoogleAdDisallowed());
     productVO.setDeleted(solrProduct.getDeleted());
     productVO.setHidden(solrProduct.isHidden());
@@ -689,7 +697,13 @@ public class ProductServiceImpl implements ProductService {
 
     productVO.setProductURL(linkManager.getProductURL(product, 0L));
     productVO.setMainImageId(product.getMainImageId());
-    productVO.setGoogleAdDisallowed(product.isGoogleAdDisallowed());
+      Product freebieProduct = product.hasFreebie();
+      if (freebieProduct != null) {
+          productVO.setFreebieDesc(freebieProduct.getName());  //can be simply called as freebie as well
+      } else {
+          productVO.setFreebieDesc("");
+      }
+      productVO.setGoogleAdDisallowed(product.isGoogleAdDisallowed());
     productVO.setDeleted(product.isDeleted());
     productVO.setHidden(product.isHidden());
     productVO.setOutOfStock(product.isOutOfStock());
@@ -730,6 +744,10 @@ public class ProductServiceImpl implements ProductService {
 		return productDAO.getAllBrands(brandLike);
 	}
 
+ @Override
+    public List<Product> getProductListWithFreebie(ProductVariant productVariant) {
+        return productDAO.getProductsWithFreebie(productVariant);
+    }
 
     public ProductVariant updatePVForBrightInventory(HKApiSkuResponse hKApiSkuResponse, ProductVariant productVariant){
     				logger.debug("hKApiSkuResponse got -"+hKApiSkuResponse.getVariantId()+", qty - "+hKApiSkuResponse.getQty()+", MRP -"+hKApiSkuResponse.getMrp());

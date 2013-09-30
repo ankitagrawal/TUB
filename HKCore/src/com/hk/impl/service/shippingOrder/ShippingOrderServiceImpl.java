@@ -18,6 +18,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.helper.OrderDateUtil;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.BaseDao;
@@ -157,10 +158,15 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     Date targetDispatchDate = HKDateUtil.addToDate(refDate, Calendar.DAY_OF_MONTH, dispatchDays[1].intValue());
     shippingOrder.setTargetDispatchDate(targetDispatchDate);
 
-    //todo need to write correct logic for targetDeliveryDate, based on historical TAT
-    shippingOrder.setTargetDelDate(targetDispatchDate);
-    getShippingOrderDao().save(shippingOrder);
-  }
+        //Promise Date = Confirmation date + Max (min days-1), if confirmed before 4 PM same day
+        //Promise Date = Confirmation date + Max (min days), if confirmed after 4 PM same day
+        Date promiseDispatchDate = OrderDateUtil.getTargetDispatchDateForWH(refDate, dispatchDays[0]);
+        shippingOrder.setPromiseDispatchDate(promiseDispatchDate);
+
+        //targetDeliveryDate is reset at the time when order is shipped based on historical TAT
+        shippingOrder.setTargetDelDate(targetDispatchDate);
+        getShippingOrderDao().save(shippingOrder);
+    }
 
   /**
    * Creates a shipping order with basic details
@@ -266,7 +272,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
   }
 
 
-  public void validateShippingOrder(ShippingOrder shippingOrder) {
+  public Boolean validateShippingOrder(ShippingOrder shippingOrder) {
+if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()){
+      return false;
+    }
     Set<LineItem> lineItems = shippingOrder.getLineItems();
     for (LineItem item : lineItems) {
       List<Sku> skuList = new ArrayList<Sku>();
@@ -385,6 +394,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
       }
     }
+	return true;
   }
 
 

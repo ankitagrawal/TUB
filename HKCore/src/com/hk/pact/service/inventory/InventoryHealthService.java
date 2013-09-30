@@ -46,8 +46,6 @@ public interface InventoryHealthService {
 
   public void createSicliAndSiliAndTempBookingForBright(CartLineItem cartLineItem, Long warehouseIdForBright);
 
-  public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant);
-
  public Boolean bookInventoryForReplacementOrder(LineItem lineItem);
 
   public Long getUnbookedInventoryOfBrightForMrp(ProductVariant productVariant, String tinPrefix, Double mrp);

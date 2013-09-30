@@ -130,6 +130,8 @@ public interface ProductService {
     public String getAppendedProductURL(String baseUrl, String parameter, String value);
 
     public List<String> getAllBrands(String brandLike);
+	
+	public List<Product> getProductListWithFreebie(ProductVariant productVariant);
 
     public ProductVariant updatePVForBrightInventory(HKApiSkuResponse hKApiSkuResponse, ProductVariant productVariant);
 }

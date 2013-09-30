@@ -6,6 +6,7 @@ import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.*;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.dto.pos.PosProductSearchDto;
 import com.hk.dto.pos.PosSkuGroupSearchDto;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -30,13 +31,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   @Autowired
   WarehouseDao warehouseDao;
 
-  private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
+  private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus, List<SkuItemOwner> skuItemOwners) {
     DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
     if (skuGroup != null) {
       skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
     }
     if (skuItemStatus != null && skuItemStatus.size() > 0) {
       skuItemCriteria.add(Restrictions.in("skuItemStatus", skuItemStatus));
+    }
+    if (skuItemOwners != null && skuItemOwners.size() > 0) {
+      skuItemCriteria.add(Restrictions.in("skuItemOwner", skuItemOwners));
     }
     return skuItemCriteria;
   }
@@ -48,7 +52,8 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
     List<SkuItemStatus> itemStatus = new ArrayList<SkuItemStatus>();
     itemStatus.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, itemStatus);
+    List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, itemStatus, skuItemOwners);
     return findByCriteria(skuItemCriteria);
   }
 
@@ -56,7 +61,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     if (skuGroup == null) {
       return new ArrayList<SkuItem>();
     }
-    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus);
+    List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus, skuItemOwners);
+    return findByCriteria(skuItemCriteria);
+  }
+  
+  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus, List<SkuItemOwner> skuItemOwners){
+    if (skuGroup == null) {
+      return new ArrayList<SkuItem>();
+    }
+    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus, skuItemOwners);
     return findByCriteria(skuItemCriteria);
   }
 
@@ -302,6 +316,17 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   }
 
 
+public List<ProductVariantInventory> getPVIInfo(String barcode) {
+    String sql = "select si from SkuItem si where si.barcode = :barcode";
+    Query query = getSession().createQuery(sql).setParameter("barcode", barcode);
+    SkuItem skuItem = (SkuItem) query.uniqueResult();
+    if (skuItem != null) {
+      String sql2 = "select pvi from ProductVariantInventory pvi where pvi.skuItem=:skuItem";
+      Query query2 = getSession().createQuery(sql2).setParameter("skuItem", skuItem);
+      return query2.list();
+    }
+    return null;
+  }
 
   public SkuItem getSkuItem(Long fsicliId) {
     String sql = "select si from SkuItem si where si.foreignSkuItemCLI.id = :fsicliId";

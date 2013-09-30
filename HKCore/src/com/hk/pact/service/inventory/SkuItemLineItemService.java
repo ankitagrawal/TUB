@@ -36,9 +36,11 @@ public interface SkuItemLineItemService {
 
   public Boolean freeInventoryForSOCancellation(ShippingOrder shippingORder);
 
-  public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
+    public Boolean freeInventoryForRTOCheckIn(ShippingOrder shippingORder);
 
-  public Boolean freeBookingTable(ShippingOrder shippingOrder);
+    public SkuItemLineItem getBySkuItemId(Long skuItemLineItemId);
+    
+    public Boolean freeBookingTable(ShippingOrder shippingOrder);
 
   public boolean sicliAlreadyExists(CartLineItem cartLineItem);
 
