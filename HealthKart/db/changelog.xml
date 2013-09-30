@@ -14217,6 +14217,14 @@
             alter table payment MODIFY transaction_type VARCHAR(100);
         </sql>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1379656965839-4">
+        <addColumn tableName="sku_item">
+            <column name="bin_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1379656965839-29">
+        <addForeignKeyConstraint baseColumnNames="bin_id" baseTableName="sku_item" constraintName="fk_sku_item_bin1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bin" referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="Ajeet (written)" id="20130927-01">
     <sql>
         delete from bin;
