@@ -226,7 +226,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
   public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
                                        StockTransferLineItem stockTransferLineItem, EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner, InvTxnType invTxnType, Long qty, User txnBy) {
 
-    InventoryHealthService inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
     ProductVariantInventory pvi = new ProductVariantInventory();
     // pvi.setProductVariant(sku.getProductVariant());
     pvi.setSku(sku);
@@ -255,6 +254,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
     if (qty > 0) {
+      InventoryHealthService inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
       inventoryHealthService.pendingOrdersInventoryHealthCheck(sku.getProductVariant());
     }
 
@@ -378,7 +378,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
       if (checkedInSkuItem.getSkuGroup().getBarcode() == null && (checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX_AQ) || checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX_BRT))) {
         data = checkedInSkuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
             + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
-      } else {
+      }
+      else 
+      	if (checkedInSkuItem.getSkuGroup().getBarcode() != null && (checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX_AQ) || checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX_BRT))) {
+          data = checkedInSkuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+              + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
+        }
+      else {
         data = checkedInSkuItem.getSkuGroup().getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
             + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
       }
