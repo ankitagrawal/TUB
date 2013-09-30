@@ -32,21 +32,21 @@
                 <div class="footer-menu">
                     <h4>Get to Know Us</h4>
                     <ul>
-                        <li><a href="/beta/hk/AboutUs.action">About Us</a> </li>
-                        <li><a href="/beta/hk/Careers.action">Careers</a></li>
-                        <li><a href="/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
+                        <li><a href="">About Us</a> </li>
+                        <li><a href="">Careers</a></li>
+                        <li><a href="">Terms & Conditions</a></li>
                         <li><a href="http://www.healthkart.com/resources">Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-menu">
                     <h4>Can We Help You</h4>
                     <ul>
-                        <li><a href="/beta/account/MyAccount.action">Your Account</a></li>
+                        <li><s:link beanclass="com.hk.web.action.core.user.MyAccountAction">Your Account</s:link></li>
                         <%--<li><a href="">Shipping Rates & Policies</a></li>--%>
-                        <li><a href="/beta/hk/FAQ.action#delivery">Delivery Policies</a></li>
-                        <li><a href="/beta/hk/FAQ.action#return">Returns Policy</a></li>
-                        <li><a href="/beta/hk/FAQ.action">FAQs and Help</a></li>
-                        <li><a href="/beta/hk/ContactUs.action">Contact Us</a></li>
+                        <li><a href="">Delivery Policies</a></li>
+                        <li><a href="">Returns Policy</a></li>
+                        <li><a href="">FAQs and Help</a></li>
+                        <li><a href="">Contact Us</a></li>
                     </ul>
                 </div>
                 <div class="footer-menu">
@@ -60,14 +60,14 @@
                 <div class="footer-menu">
                     <h4>Brands</h4>
                     <ul>
-                        <li><a href="/brand/muscleblaze?navKey=BR-539">MuscleBlaze</a></li>
-                        <li><a href="/brand/healthviva?navKey=BR-427">HealthViva</a></li>
-                        <li><a href="/brand/optium?navKey=BR-203">Optimum Nutrition</a></li>
-                        <li><a href="/brand/dymatize?navKey=BR-497">Dymatize</a></li>
-                        <li><a href="/brand/gaspari-nutrition?navKey=BR-498">Gaspari</a></li>
-                        <li><a href="/brand/accu-chek?navKey=BR-165">Accu-Chek</a></li>
-                        <li><a href="/brand/loreal-paris?navKey=BR-107">L'Oreal Paris</a></li>
-                        <li><a href="/brand/muscletech?navKey=BR-502">Muscletech</a></li>
+                        <li><a href="">MuscleBlaze</a></li>
+                        <li><a href="">HealthViva</a></li>
+                        <li><a href="">Optimum Nutrition</a></li>
+                        <li><a href="">Dymatize</a></li>
+                        <li><a href="">Gaspari</a></li>
+                        <li><a href="">Accu-Chek</a></li>
+                        <li><a href="">L'Oreal Paris</a></li>
+                        <li><a href="">Muscletech</a></li>
                     </ul>
                 </div>
 
