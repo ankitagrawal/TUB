@@ -208,7 +208,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+        <a href="${pageContext.request.contextPath}/product/bajaj-popular-induction-cooktop/BAJ071?productReferrerId=1&bpi">
+                <img src="<hk:vhostImage/>/images/banners/Cooktop.jpg" alt="Free shipping and COD"
                      class="small_banner"/>
             </c:when>
 
