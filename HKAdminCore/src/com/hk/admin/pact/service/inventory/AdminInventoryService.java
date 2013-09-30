@@ -51,11 +51,12 @@ public interface AdminInventoryService {
 
   /**
    * @param sku
+   * @param shippingOrderStatusIds
    * @return Inventory count of all action awaiting and in process orders
    */
-  public Long getBookedInventory(Sku sku);
+  public Long getBookedInventory(Sku sku, List<Long> shippingOrderStatusIds);
 
-  public Long getBookedInventory(ProductVariant productVariant);
+  public Long getBookedInventory(ProductVariant productVariant, List<Long> shippingOrderStatusIds);
 
   public Long getNetInventory(Sku sku);
 

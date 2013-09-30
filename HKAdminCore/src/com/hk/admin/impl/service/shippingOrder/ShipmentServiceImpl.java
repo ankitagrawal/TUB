@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import com.hk.admin.engine.ShipmentCostDistributor;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
@@ -21,11 +22,16 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.Classification;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.WHReportLineItem;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.ShipmentServiceMapper;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +65,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     UserService userService;
     @Autowired
     AdminEmailManager adminEmailManager;
+    private static Logger logger = LoggerFactory.getLogger(ShipmentServiceImpl.class);
+
 
     public Shipment validateShipment(ShippingOrder shippingOrder) {
         Shipment validShipment = null;
@@ -125,18 +133,34 @@ public class ShipmentServiceImpl implements ShipmentService {
             shippingOrder.setShipment(shipment);
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 Double estimatedShipmentCharge = shipmentPricingEngine.calculateShipmentCost(shippingOrder);
-                shipment.setEstmShipmentCharge(estimatedShipmentCharge);
                 shipment.setOrderPlacedShipmentCharge(estimatedShipmentCharge);
-                shipment.setShipmentCostCalculateDate(new Date());
-                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                calculateAndDistributeShipmentCost(shipment);
             }
             shippingOrder = shippingOrderService.save(shippingOrder);
             String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
                     null, comment);
         }
+        this.shipmentDao.save(shippingOrder);
         return shippingOrder.getShipment();
+    }
+
+    public Shipment calculateAndDistributeShipmentCost(Shipment shipment) {
+        ShippingOrder shippingOrder = shipment.getShippingOrder();
+        shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+        shipment.setShipmentCostCalculateDate(new Date());
+        shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+        shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+        if (shipment.getEstmShipmentCharge() != null && shipment.getEstmCollectionCharge() != null && shipment.getExtraCharge() != null) {
+            List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
+            for (WHReportLineItem whReportLineItem : whReportLineItemList) {
+                logger.debug("Line Item" + whReportLineItem.getLineItem() + " shipment charge "
+                        + whReportLineItem.getEstmShipmentCharge() + " collection charge "
+                        + whReportLineItem.getEstmCollectionCharge() + " extra charge " + whReportLineItem.getExtraCharge());
+                shipmentDao.save(whReportLineItem);
+            }
+        }
+        return shipment;
     }
 
     public Shipment save(Shipment shipment) {

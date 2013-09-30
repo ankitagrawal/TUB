@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.exception.ReversePickupException;
 
@@ -27,7 +28,7 @@ public interface ReversePickupService {
 
     public void updateRpLineItems(List<RpLineItem> rpLineItemList, Long customerActionStatus);
 
-    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, ReversePickupStatus reversePickupStatus, String courierName, int pageNo, int perPage);
+    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, int pageNo, int perPage, List<ReversePickupType> reversePickupTypeList);
 
     public void SaveModifiedRpLineItems(List<RpLineItem> oldRpLineItems, ReversePickupOrder reversePickupOrder, List<RpLineItem> newRpLineItems);
 

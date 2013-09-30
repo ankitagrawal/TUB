@@ -33,9 +33,18 @@
       Zone Crud Operations
     </s:link>
   </h3>
+
+  <h3>
+    <s:link beanclass="com.hk.web.action.admin.courier.AddPincodeRegionZoneAction">
+        Pincode Region Zone
+    </s:link>
+  </h3>
+    <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
+    </shiro:hasPermission>
 </div>
 
-<div class="cl"></div>
 
 <div class="left roundBox">
   <h2>Shipment Associated Tasks</h2>
@@ -62,7 +71,6 @@
 
 </div>
 
-<div class="cl"></div>
 
 <div class="left roundBox">
   <h2>Delivery Mark Related Tasks</h2>
@@ -88,7 +96,6 @@
   </c:if>
 </div>
 
-<div class="cl"></div>
 
 <div class="left roundBox">
   <h2>Courier Awb Actions</h2>
@@ -100,9 +107,10 @@
   <h3><s:link
       beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing details</s:link></h3>
 
+  <h3><s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateHKReachPricingEngineAction">Change HK Reach Pricing</s:link></h3>
+
 </div>
 
-<div class="cl"></div>
 
 <div class="left roundBox">
   <h2>Courier Intelligence (Futuristic)</h2>
@@ -113,7 +121,6 @@
   <h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 </div>
 
-<div class="cl"></div>
 
 <div class="left roundBox">
   <h2>Courier Shipment Analytics</h2>
@@ -140,8 +147,6 @@
   </h3>
 </div>
 
-<div class="cl"></div>
-
 
 <div class="left roundBox">
     <h2>Shipment Estimated/Actual Cost Upload/Download</h2>
@@ -154,8 +159,6 @@
 
 </div>
 
-<div class="cl"></div>
-
 
 <div class="left roundBox">
   <h2>Courier Shipment Reporting</h2>
@@ -167,7 +170,6 @@
 
 </div>
 
-<div class="cl"></div>
 
 <div class="left roundBox">
   <h2>Healthkart Reach</h2>

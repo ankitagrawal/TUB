@@ -24,6 +24,7 @@ public class XslConstants {
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String MRP = "MRP";
     public static final String HK_PRICE = "HK_PRICE";
+    public static final String B2B_PRICE = "B2B_PRICE";
     public static final String PERCENTAGE_DISCOUNT = "PERCENTAGE_DISCOUNT";
     public static final String COST = "COST";
     public static final String SHIPPING = "SHIPPING";
@@ -82,7 +83,9 @@ public class XslConstants {
     public static final String ESTIMATED_SHIPPING_COST_NON_COD = "ESTIMATED_SHIPPING_COST_TECH";
     public static final String DEFAULT_COURIER_SHEET = "PincodeDefaultCourier";
     public static final String ZONE = "ZONE";
-
+    public static final String NEAREST_HUB = "NEAREST_HUB";
+    public static final String CONVEYANCE_COST = "CONVEYANCE_COST";
+    
     public static final String SUPPLIER_TIN = "SUPPLIER_TIN";
     public static final String SUPPLIER_STATE = "SUPPLIER_STATE";
 

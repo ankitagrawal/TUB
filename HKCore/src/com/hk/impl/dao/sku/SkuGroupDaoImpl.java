@@ -26,9 +26,13 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
   public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant) {
     return (List<SkuGroup>) getSession().createQuery("from SkuGroup sg where sg.sku.productVariant = :productVariant").setParameter("productVariant", productVariant).list();
   }
-
+  
   public List<SkuGroup> getAllCheckedInBatches(Sku sku) {
     return (List<SkuGroup>) getSession().createQuery("from SkuGroup sg where sg.sku = :sku").setParameter("sku", sku).list();
+  }
+  
+  public List<SkuGroup> getAllCheckedInBatchesWithBarcode(Sku sku) {
+    return (List<SkuGroup>) getSession().createQuery("from SkuGroup sg where sg.sku = :sku  and sg.barcode is not null ").setParameter("sku", sku).list();
   }
 
   public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusIds) {

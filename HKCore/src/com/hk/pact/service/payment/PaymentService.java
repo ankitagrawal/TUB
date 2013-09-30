@@ -8,6 +8,7 @@ import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.EnumPaymentTransactionType;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -16,6 +17,7 @@ import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.store.Store;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pojo.HkPaymentResponse;
 
@@ -66,8 +68,10 @@ public interface PaymentService {
 
     public Map<Long,Object> reconciliationOnCancel(Long reconciliationType, Order order, Double amount, String comment) ;
 
-    public boolean isValidReconciliation(Payment payment) ;
+    public boolean isValidReconciliation(Payment payment, Store store) ;
 
     public double getRefundableAmount(Payment payment);
 
+    public Payment createNewGenericPayment(Payment basePayment, PaymentStatus paymentStatus, Double amount,
+                                         PaymentMode paymentMode, EnumPaymentTransactionType paymentTransactionType);
 }

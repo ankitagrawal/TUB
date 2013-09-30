@@ -36,8 +36,8 @@ public class MasterDataService {
 	private static Logger logger = LoggerFactory.getLogger(MasterDataService.class);
 	//    @Autowired
 //    RoleSeedData                           roleSeedData;
-//    @Autowired
-//    PermissionSeedData                     permissionSeedData;
+    @Autowired
+    PermissionSeedData                     permissionSeedData;
 //    @Autowired
 //    RoleHasPermissionSeedData              roleHasPermissionSeedData;
 //    @Autowired
@@ -75,8 +75,8 @@ public class MasterDataService {
 	OrderLifecycleActivitySeedData orderLifecycleActivitySeedData;
 	@Autowired
 	ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
-	@Autowired
-	BoxSizeSeedData boxSizeSeedData;
+//	@Autowired
+//	BoxSizeSeedData boxSizeSeedData;
 	@Autowired
 	PurchaseOrderStatusSeedData poStatusSeedData;
 	@Autowired
@@ -159,8 +159,8 @@ public class MasterDataService {
 //        logger.debug("inserting roles");
 //        roleSeedData.invokeInsert();
 //
-//        logger.debug("inserting permissions");
-//        permissionSeedData.invokeInsert();
+        logger.debug("inserting permissions");
+        permissionSeedData.invokeInsert();
 
 //        logger.debug("inserting role has permissions");
 //        roleHasPermissionSeedData.invokeInsert();
@@ -220,8 +220,8 @@ public class MasterDataService {
 		logger.debug("inserting shippingOrderLifecycleActivity");
 		shippingOrderLifecycleActivitySeedData.invokeInsert();
 
-		logger.debug("inserting boxSize");
-		boxSizeSeedData.invokeInsert();
+//		logger.debug("inserting boxSize");
+//		boxSizeSeedData.invokeInsert();
 
 		logger.debug("inserting purchaseOrderStatus");
 		poStatusSeedData.invokeInsert();

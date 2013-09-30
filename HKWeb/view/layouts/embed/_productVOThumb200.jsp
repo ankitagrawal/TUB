@@ -45,6 +45,22 @@
       opacity: 1.0;
       filter: alpha(opacity = 100);
     }
+
+    .freebie-cntnr{color:#000; font-weight:bold;padding:5px 0;}
+    .freebie-cntnr h6{
+        font-size:11px;
+    }
+    .hk-offer{
+        background: #fbff90;
+        color:#000;
+        text-transform: uppercase;
+        width: 50px;
+        padding: 1px;
+        position: relative;
+        bottom: 40px;
+        font-weight: bold;
+        right: 10px;
+    }
   </style>
   <c:if test="${!productVO.googleAdDisallowed && !productVO.deleted && !productVO.hidden}">
 
@@ -61,9 +77,12 @@
                src="${hk:getS3ImageUrl(imageMediumSize, productVO.mainImageId)}" alt="${productVO.name}"
                title="${productVO.name}">
         </a>
-        <shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
+          <c:if test="${fn:length(productVO.freebieDesc) > 3}">
+              <div class="hk-offer">Offer</div>
+          </c:if>
+        <%--<shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
           Missing Image - <a href="${pageContext.request.contextPath}/rest/api/product/resizeImage/${productVO.id}/m/bt" target="_blank">Click here</a>
-        </shiro:hasAnyRoles>
+        </shiro:hasAnyRoles>--%>
       </div>
       <div>
 					<span style="height:20px;max-width:240px;">
@@ -138,7 +157,11 @@
           </c:if>
         </c:otherwise>
       </c:choose>
-
+        <c:if test="${fn:length(productVO.freebieDesc) > 3}">
+            <div class="freebie-cntnr with-variants">
+                <h6 >${productVO.freebieDesc} FREE</h6>
+            </div>
+        </c:if>
       <div class="floatfix"></div>
     </div>
   </c:if>

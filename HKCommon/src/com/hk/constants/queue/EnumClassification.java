@@ -38,9 +38,32 @@ public enum EnumClassification {
     ProductDamaged(540L, "Product Damaged", "Reverse Pickup Product Damaged "),
     ProductExpired(550L, "Product Expired", "Reverse Pickup Product Expired "),
     WrongColor(560L, "Wrong Color", "Reverse Pickup Wrong Color"),
-    WrongSize(570L, "Wrong Size", "Reverse Pickup Wrong Size");
 
-    private Long id;
+    CUSTOMER_REQUEST_PRODUCT_CHANGE(610L, "Customer Request", "Product Change"),
+    CUSTOMER_REQUEST_CANCEL(620L, "Customer Request", "Cancellation"),
+    CUSTOMER_REQUEST_ON_HOLD(630L, "Customer Request", "Put on Hold"),
+    PRODUCT_NOT_AVAILABLE_DAMAGE(640L, "Product Not Available", "Damaged"),
+    PRODUCT_NOT_AVAILABLE_EXPIRE(650L, "Product Not Available", "Expired"),
+    PRODUCT_NOT_AVAILABLE_INV_MISMATCH(660L, "Product Not Available", "Inventory Mismatch"),
+    MRP_MISMATCH_CHEAPER(670L, "Mrp Mismatch", "Invoice MRP > Product MRP"),
+    MRP_MISMATCH_DEARER(680L, "Mrp Mismatch", "Invoice MRP < 50% Product MRP && Diff > 1000"),
+    DISPATCH_ISSUE_COURIER_CHANGE(690L, "Dispatch Issue", "Courier service changed"),
+    INV_PRESENT_DIFF_WAREHOUSE(1560L, "SO Not cancelled automatically", "Inventory found in other warehouse"),
+    JIT_IN_SO(1570L, "SO Not cancelled automatically", "No inventory only for JIT items"),
+
+    Refund_In_Cash(2110l,"Refund in Cash", "Reconcile"),
+    Refund_Reward_Points(2120l,"Refund Reward Points", "Reconcile"),
+    Replacement_Order(2130l,"Replacement Order", "Reconcile"),
+    Decide_Later(2140l,"Decide Later", "Reconcile"),
+    Pending_Approval(2010l,"Pending Approval", "Approval"),
+    Approved(2020l,"Approved", "Approval"),
+    Force_Approval(2030l,"Force Approval", "Approval"),
+    ReconciledGeneric(2040l,"Reconciled","Approval")
+
+    ;
+
+
+  private Long id;
     private String primary;
     private String secondary;
 

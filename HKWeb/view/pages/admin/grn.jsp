@@ -318,7 +318,7 @@ $(document).ready(function() {
 </script>
 </s:layout-component>
 <s:layout-component name="heading">
-    Edit GRN of PO # ${pa.grn.purchaseOrder.id}
+    Edit GRN # ${pa.grn.id} of PO # ${pa.grn.purchaseOrder.id}
 </s:layout-component>
 <s:layout-component name="content">
 <div style="display: none;">
@@ -338,7 +338,7 @@ $(document).ready(function() {
         <td>Tax</td>
         <td>
             <c:choose>
-                <c:when test="${pa.grn.purchaseOrder.supplier.state == pa.grn.warehouse.state}">
+                <c:when test="${hk:equalsIgnoreCase(pa.grn.purchaseOrder.supplier.state, pa.grn.warehouse.state)}">
                     <label class="state">NON-CST</label>
                 </c:when>
                 <c:otherwise>

@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -44,8 +45,6 @@
 
     <s:layout-component name="content"/>
 
-   
-    <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${topCategory}"/>
 
     <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>

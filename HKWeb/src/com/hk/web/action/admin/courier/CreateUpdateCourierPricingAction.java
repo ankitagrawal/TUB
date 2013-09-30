@@ -1,18 +1,20 @@
 package com.hk.web.action.admin.courier;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
-import com.hk.pact.dao.BaseDao;
+import com.hk.util.HKCollectionUtils;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,38 +24,56 @@ import com.hk.pact.dao.BaseDao;
  * To change this template use File | Settings | File Templates.
  */
 public class CreateUpdateCourierPricingAction extends BaseAction {
+
   @Autowired
-  CourierPricingEngineDao courierPricingEngineDao;
-  @Autowired
-  BaseDao baseDao;
-  private CourierPricingEngine courierPricingEngine;
+  CourierService courierService;
 
   private Courier courier;
   private RegionType regionType;
+  private List<CourierPricingEngine> courierPricingEngineList = new ArrayList<CourierPricingEngine>();
+  private List<Courier> courierList = new ArrayList<Courier>();
+  private List<RegionType> regionTypeList = new ArrayList<RegionType>();
+  private Set<RegionType> regionTypesForCourier= new HashSet<RegionType>();
 
   @DefaultHandler
   public Resolution pre() {
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
-  public Resolution getCourierPricing(){
-   courierPricingEngine = courierPricingEngineDao.getCourierPricingInfo(courier,regionType,null);
-   return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
+  private void initialize() {
+    courierList = courierService.getAllActiveCourier();
+    regionTypeList = courierService.getRegionTypeList();
   }
 
-  public Resolution save() {
-    courierPricingEngineDao.save(courierPricingEngine);
-    addRedirectAlertMessage(new SimpleMessage("courier info saved"));
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW}, authActionBean = AdminPermissionAction.class)
+  public Resolution search() {
+    if(courier == null) {
+      addRedirectAlertMessage(new SimpleMessage("Please select the Courier"));
+    }
+    courierPricingEngineList = courierService.getCourierPricingInfoByCourier(courier);
+    if(courier != null && courierPricingEngineList.size() == 0) {
+      addRedirectAlertMessage(new SimpleMessage("No data exist for your selected choice"));
+    }
+    this.initialize();
+    this.regionTypesForCourier.addAll(courierService.getRegionsForCourier(courier));
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
-
-  public CourierPricingEngine getCourierPricingEngine() {
-    return courierPricingEngine;
-  }
-
-  public void setCourierPricingEngine(CourierPricingEngine courierPricingEngine) {
-    this.courierPricingEngine = courierPricingEngine;
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE}, authActionBean = AdminPermissionAction.class)
+  public Resolution save() {
+    CourierPricingEngine duplicatePricingEngine = (CourierPricingEngine)HKCollectionUtils.findDuplicate(courierPricingEngineList,
+                null, "courier", "regionType", "validUpto");
+    if (duplicatePricingEngine == null) {
+      courierService.saveUpdateCourierPricingInfo(courierPricingEngineList);
+      addRedirectAlertMessage(new SimpleMessage("Courier Info saved"));
+    } else {
+      addRedirectAlertMessage(new SimpleError("You are trying to save duplicate entry for courier "
+          + duplicatePricingEngine.getCourier().getName() + " and region "
+          + duplicatePricingEngine.getRegionType().getName() + " and date " +
+          new SimpleDateFormat("yyyy-MM-dd").format(duplicatePricingEngine.getValidUpto())));
+    }
+    initialize();
+    return new RedirectResolution(CreateUpdateCourierPricingAction.class, "search").addParameter("courier", courier);
   }
 
   public RegionType getRegionType() {
@@ -70,5 +90,37 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
 
   public void setCourier(Courier courier) {
     this.courier = courier;
+  }
+
+  public List<CourierPricingEngine> getCourierPricingEngineList() {
+    return courierPricingEngineList;
+  }
+
+  public void setCourierPricingEngineList(List<CourierPricingEngine> courierPricingEngineList) {
+    this.courierPricingEngineList = courierPricingEngineList;
+  }
+
+  public List<Courier> getCourierList() {
+    return courierList;
+  }
+
+  public void setCourierList(List<Courier> courierList) {
+    this.courierList = courierList;
+  }
+
+  public List<RegionType> getRegionTypeList() {
+    return regionTypeList;
+  }
+
+  public void setRegionTypeList(List<RegionType> regionTypeList) {
+    this.regionTypeList = regionTypeList;
+  }
+
+  public Set<RegionType> getRegionTypesForCourier() {
+    return regionTypesForCourier;
+  }
+
+  public void setRegionTypesForCourier(Set<RegionType> regionTypesForCourier) {
+    this.regionTypesForCourier = regionTypesForCourier;
   }
 }

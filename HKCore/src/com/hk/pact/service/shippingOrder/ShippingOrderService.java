@@ -20,50 +20,56 @@ import com.hk.domain.warehouse.Warehouse;
  */
 public interface ShippingOrderService {
 
-	public ShippingOrder find(Long shippingOrderId);
+  public ShippingOrder find(Long shippingOrderId);
 
-	public ShippingOrder findByGatewayOrderId(String gatewayOrderId);
+  public ShippingOrder findByGatewayOrderId(String gatewayOrderId);
 
-	public ShippingOrder save(ShippingOrder shippingOrder);
+  public ShippingOrder save(ShippingOrder shippingOrder);
 
-	public ShippingOrderLifeCycleActivity getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
+  public ShippingOrderLifeCycleActivity getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
 
-	public List<ShippingOrder> getShippingOrdersToSendShipmentEmail();
-
-
-	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria);
-
-	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse, int pageNo, int perPage);
-
-	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage);
-
-	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse);
-
-    //Creates a shipping order with basic details
-	public ShippingOrder createSOWithBasicDetails(Order baseOrder, Warehouse warehouse);
-
-	public void nullifyCodCharges(ShippingOrder shippingOrder);
-	
-	public ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) ;
-	
-	public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder);
+  public List<ShippingOrder> getShippingOrdersToSendShipmentEmail();
 
 
-	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
+  public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria);
 
-	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason, String comments);
+  public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse, int pageNo, int perPage);
 
-	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, Reason reason, String comments);
+  public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage);
 
-	public ShippingOrderLifecycle logShippingOrderActivityByAdmin(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason);
+  public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse);
 
-	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
-	
-	public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant, Double mrp);
+  //Creates a shipping order with basic details
+  public ShippingOrder createSOWithBasicDetails(Order baseOrder, Warehouse warehouse);
 
-    public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds);
+  public void nullifyCodCharges(ShippingOrder shippingOrder);
 
-    public void validateShippingOrder(ShippingOrder shippingOrder);
+  public ShippingOrder setGatewayIdAndTargetDateOnShippingOrder(ShippingOrder shippingOrder) ;
+
+  public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder);
+
+
+  public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder,
+                                     EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
+
+  public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder,
+                      EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason,
+                      String comments);
+
+  public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, User user,
+                                    ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, Reason reason,
+                                    String comments);
+
+  public ShippingOrderLifecycle logShippingOrderActivityByAdmin(ShippingOrder shippingOrder,
+                                    EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason);
+
+  public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
+
+  public boolean shippingOrderContainsProductVariant(ShippingOrder shippingOrder, ProductVariant productVariant, Double mrp);
+
+  public List<Reason> getReasonForReversePickup(List<Long> listOfReasonIds);
+
+  public Boolean validateShippingOrder(ShippingOrder shippingOrder);
 
   public void validateShippingOrderAB(ShippingOrder shippingOrder);
 

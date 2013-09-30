@@ -110,6 +110,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     }
 
+  public Boolean isFreeVariant(ProductVariant variant) {
+    List<ProductVariant> productVariants = getProductVariantDao().findVariantsFromFreeVariant(variant);
+    return productVariants != null && !productVariants.isEmpty();
+  }
+
 	public ProductVariantServiceType getVariantServiceType(EnumProductVariantServiceType enumProductVariantServiceType) {
 		return getProductVariantDao().get(ProductVariantServiceType.class, enumProductVariantServiceType.getId());
 	}

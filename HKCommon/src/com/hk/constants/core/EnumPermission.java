@@ -125,7 +125,17 @@ public enum EnumPermission {
   EDIT_REVERSE_PICKUP                            (PermissionConstants.EDIT_REVERSE_PICKUP),
   APPROVE_REVERSE_PICKUP                         (PermissionConstants.APPROVE_REVERSE_PICKUP),
   AUTO_UPDATE_PAYMENT                            (PermissionConstants.AUTO_UPDATE_PAYMENT),
-  MANUAL_UPDATE_PAYMENT                          (PermissionConstants.MANUAL_UPDATE_PAYMENT)
+  MANUAL_UPDATE_PAYMENT                          (PermissionConstants.MANUAL_UPDATE_PAYMENT),
+  OPS_MANAGER_COURIER_PRICING_UPDATE             (PermissionConstants.OPS_MANAGER_COURIER_PRICING_UPDATE),
+  OPS_MANAGER_COURIER_PRICING_VIEW               (PermissionConstants.OPS_MANAGER_COURIER_PRICING_VIEW),
+  DELETE_REVERSE_PICKUP                          (PermissionConstants.DELETE_REVERSE_PICKUP),
+  AVAILABLE_REVERSE_PICKUP                       (PermissionConstants.AVAILABLE_REVERSE_PICKUP),
+  EDIT_RECONCILE_REVERSE_PICKUP                  (PermissionConstants.EDIT_RECONCILE_REVERSE_PICKUP),
+  CANCEL_REVERSE_PICKUP                          (PermissionConstants.CANCEL_REVERSE_PICKUP),
+  CLOSE_REVERSE_PICKUP                           (PermissionConstants.CLOSE_REVERSE_PICKUP),
+  RECONCILE_REVERSE_PICKUP                       (PermissionConstants.RECONCILE_REVERSE_PICKUP),
+
+    MARK_RP_APPEASEMENT                       (PermissionConstants.MARK_RP_APPEASEMENT)
   ;
 
   String permissionName;

@@ -1,22 +1,22 @@
 package com.hk.domain.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.*;
-
+import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.core.Tax;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.reversePickupOrder.RpLineItem;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.warehouse.WHReportLineItem;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.akube.framework.gson.JsonSkip;
-import com.hk.domain.core.Tax;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.sku.Sku;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,309 +25,343 @@ import com.hk.domain.sku.Sku;
 @Where(clause = "deleted = 0")
 public class LineItem implements java.io.Serializable, Comparable<LineItem> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long          id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id", unique = true, nullable = false)
+  private Long id;
 
-    @Column(name = "qty", nullable = false)
-    private Long          qty;
+  @Column(name = "qty", nullable = false)
+  private Long qty;
 
-    @Column(name = "marked_price", nullable = false)
-    private Double        markedPrice;
+  @Column(name = "marked_price", nullable = false)
+  private Double markedPrice;
 
-    @Column(name = "hk_price", nullable = false)
-    private Double        hkPrice;
+  @Column(name = "hk_price", nullable = false)
+  private Double hkPrice;
 
-    @Column(name = "discount_on_hk_price", nullable = false)
-    private Double        discountOnHkPrice;
+  @Column(name = "discount_on_hk_price", nullable = false)
+  private Double discountOnHkPrice;
 
-    @Column(name = "cost_price", nullable = false)
-    private Double        costPrice;
+  @Column(name = "cost_price", nullable = false)
+  private Double costPrice;
 
-    @Column(name = "version", nullable = false)
-    private Long          version            = new Long(1);
+  @Column(name = "version", nullable = false)
+  private Long version = new Long(1);
 
-    @Column(name = "deleted", nullable = false)
-    private Boolean       deleted            = false;
+  @Column(name = "deleted", nullable = false)
+  private Boolean deleted = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_id")
-    private Sku           sku;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "sku_id")
+  private Sku sku;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipping_order_id")
-    private ShippingOrder shippingOrder;
+  @JsonSkip
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "shipping_order_id")
+  private ShippingOrder shippingOrder;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_line_item_id")
-    private CartLineItem  cartLineItem;
+  @JsonSkip
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "cart_line_item_id")
+  private CartLineItem cartLineItem;
 
-    @Column(name = "shipping_charge", nullable = false)
-    private Double        shippingCharges    = 0D;
+  @Column(name = "shipping_charge", nullable = false)
+  private Double shippingCharges = 0D;
 
-    @Column(name = "cod_charge", nullable = false)
-    private Double        codCharges         = 0D;
+  @Column(name = "cod_charge", nullable = false)
+  private Double codCharges = 0D;
 
-    @Column(name = "reward_point_discount", nullable = false)
-    private Double        rewardPoints       = 0D;
+  @Column(name = "reward_point_discount", nullable = false)
+  private Double rewardPoints = 0D;
 
-    @Column(name = "order_level_discount", nullable = false)
-    private Double        orderLevelDiscount = 0D;
+  @Column(name = "order_level_discount", nullable = false)
+  private Double orderLevelDiscount = 0D;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tax_id")
-    private Tax           tax;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "tax_id")
+  private Tax tax;
 
-    @JsonSkip
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_dt", nullable = false, length = 19)
-    private Date          createDate         = new Date();
+  @JsonSkip
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "create_dt", nullable = false, length = 19)
+  private Date createDate = new Date();
+
+  @JsonSkip
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
+  private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
-    private List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
+    private List<RpLineItem> rpLineItems = new ArrayList<RpLineItem>();
 
-    public Long getId() {
-        return this.id;
+  @JsonSkip
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "lineItem")
+  private WHReportLineItem whReportLineItem;
+
+  @Transient
+  private Long rQty;
+
+  public Long getId() {
+    return this.id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public ShippingOrder getShippingOrder() {
+    return shippingOrder;
+  }
+
+  public void setShippingOrder(ShippingOrder shippingOrder) {
+    this.shippingOrder = shippingOrder;
+  }
+
+  public CartLineItem getCartLineItem() {
+    return cartLineItem;
+  }
+
+  public void setCartLineItem(CartLineItem cartLineItem) {
+    this.cartLineItem = cartLineItem;
+  }
+
+  public Long getQty() {
+    if (this.qty == null) {
+      return 0L;
     }
+    return this.qty;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
+  public Boolean isDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
+  public void setQty(Long qty) {
+    if (qty == null) {
+      this.qty = new Long(0);
     }
+    this.qty = qty;
+  }
 
-    public ShippingOrder getShippingOrder() {
-        return shippingOrder;
+  public Double getMarkedPrice() {
+    if (this.markedPrice == null) {
+      return 0D;
     }
+    return this.markedPrice;
+  }
 
-    public void setShippingOrder(ShippingOrder shippingOrder) {
-        this.shippingOrder = shippingOrder;
+  public void setMarkedPrice(Double markedPrice) {
+    this.markedPrice = markedPrice;
+  }
+
+  public Double getDiscountOnHkPrice() {
+    if (discountOnHkPrice == null) {
+      return 0D;
     }
+    return discountOnHkPrice;
+  }
 
-    public CartLineItem getCartLineItem() {
-        return cartLineItem;
+  public void setDiscountOnHkPrice(Double discountOnHkPrice) {
+    this.discountOnHkPrice = discountOnHkPrice;
+  }
+
+  public Double getHkPrice() {
+    if (this.hkPrice == null) {
+      return 0D;
     }
+    return this.hkPrice;
+  }
 
-    public void setCartLineItem(CartLineItem cartLineItem) {
-        this.cartLineItem = cartLineItem;
+  public void setHkPrice(Double hkPrice) {
+    this.hkPrice = hkPrice;
+  }
+
+  public Double getCostPrice() {
+    if (this.costPrice == null) {
+      return 0D;
     }
+    return this.costPrice;
+  }
 
-    public Long getQty() {
-        if (this.qty == null) {
-            return 0L;
+  public void setCostPrice(Double costPrice) {
+    this.costPrice = costPrice;
+  }
+
+  public Sku getSku() {
+    return sku;
+  }
+
+  public void setSku(Sku sku) {
+    this.sku = sku;
+  }
+
+  public List<SkuItemLineItem> getSkuItemLineItems() {
+    return skuItemLineItems;
+  }
+
+  public void setSkuItemLineItems(List<SkuItemLineItem> skuItemLineItems) {
+    this.skuItemLineItems = skuItemLineItems;
+  }
+
+  @Override
+  public String toString() {
+    return id == null ? "" : id.toString();
+  }
+
+  public String getLineItemDetails() {
+    String lineItemid = id != null ? id.toString() : "";
+    String productVariantString = sku != null ? sku.toString() : "";
+    return "lineItem Details, id=" + lineItemid + ", productVariant=" + productVariantString + ", qty=" + qty + ", markedPrice=" + markedPrice + ", hkPrice=" + hkPrice
+        + ", discountOnHkPrice=" + discountOnHkPrice + // ", lineItemType=" + lineItemType.getName() +
+        // ", lineItemStatus=" + lineItemStatusString +
+        ", order=" + shippingOrder.toString();
+  }
+
+  public int compareTo(LineItem lineItem) {
+    if (this.getId() < lineItem.getId())
+      return -1;
+    if (this.getId() > lineItem.getId())
+      return 1;
+    return 0;
+  }
+
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+
+    if (this == o)
+      return true;
+
+    if (o instanceof LineItem) {
+      LineItem lineItem = (LineItem) o;
+
+      if (this.id != null && lineItem.getId() != null && this.id.equals(lineItem.getId())) {
+        return true;
+      } else {
+        EqualsBuilder equalsBuilder = new EqualsBuilder();
+        if (this.getShippingOrder() != null && lineItem.getShippingOrder() != null) {
+          equalsBuilder.append(this.getShippingOrder().getId(), lineItem.getShippingOrder().getId());
         }
-        return this.qty;
-    }
-
-    public Boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public void setQty(Long qty) {
-        if (qty == null) {
-            this.qty = new Long(0);
+        if (this.getSku() != null && lineItem.getSku() != null) {
+          equalsBuilder.append(this.getSku().getId(), lineItem.getSku().getId());
         }
-        this.qty = qty;
-    }
-
-    public Double getMarkedPrice() {
-        if (this.markedPrice == null) {
-            return 0D;
+        if (this.qty != null && lineItem.getQty() != null) {
+          equalsBuilder.append(this.qty, lineItem.getQty());
         }
-        return this.markedPrice;
-    }
-
-    public void setMarkedPrice(Double markedPrice) {
-        this.markedPrice = markedPrice;
-    }
-
-    public Double getDiscountOnHkPrice() {
-        if (discountOnHkPrice == null) {
-            return 0D;
+        if (this.cartLineItem != null && lineItem.getCartLineItem() != null) {
+          equalsBuilder.append(this.cartLineItem, lineItem.getCartLineItem());
         }
-        return discountOnHkPrice;
+        /*
+        * if (this.lineItemType != null && lineItem.getLineItemType() != null) {
+        * equalsBuilder.append(this.lineItemType.getId(), lineItem.getLineItemType().getId()); }
+        */
+        return equalsBuilder.isEquals();
+      }
+
     }
 
-    public void setDiscountOnHkPrice(Double discountOnHkPrice) {
-        this.discountOnHkPrice = discountOnHkPrice;
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    if (this.id != null) {
+      return new HashCodeBuilder().append(this.id).toHashCode();
+    } else {
+      HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+      if (this.getShippingOrder() != null) {
+        hashCodeBuilder.append(this.getShippingOrder().getId());
+      }
+      if (this.getSku() != null) {
+        hashCodeBuilder.append(this.getSku().getId());
+      }
+      /*
+      * if (this.lineItemType != null) { hashCodeBuilder.append(this.lineItemType.getId()); }
+      */
+      return hashCodeBuilder.toHashCode();
+    }
+  }
+
+  public Double getShippingCharges() {
+    return shippingCharges;
+  }
+
+  public void setShippingCharges(Double shippingCharges) {
+    this.shippingCharges = shippingCharges;
+  }
+
+  public Double getCodCharges() {
+    return codCharges;
+  }
+
+  public void setCodCharges(Double codCharges) {
+    this.codCharges = codCharges;
+  }
+
+  public Double getRewardPoints() {
+    return rewardPoints;
+  }
+
+  public void setRewardPoints(Double rewardPoints) {
+    this.rewardPoints = rewardPoints;
+  }
+
+  public Double getOrderLevelDiscount() {
+    return orderLevelDiscount;
+  }
+
+  public void setOrderLevelDiscount(Double orderLevelDiscount) {
+    this.orderLevelDiscount = orderLevelDiscount;
+  }
+
+  public Tax getTax() {
+    return tax;
+  }
+
+  public void setTax(Tax tax) {
+    this.tax = tax;
+  }
+
+  public Date getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
+  }
+
+  public WHReportLineItem getWhReportLineItem() {
+    return whReportLineItem;
+  }
+
+  public void setWhReportLineItem(WHReportLineItem whReportLineItem) {
+    this.whReportLineItem = whReportLineItem;
+  }
+
+  public Long getRQty() {
+    return rQty;
+  }
+
+  public void setRQty(Long rQty) {
+    this.rQty = rQty;
+  }
+
+    public List<RpLineItem> getRpLineItems() {
+        return rpLineItems;
     }
 
-    public Double getHkPrice() {
-        if (this.hkPrice == null) {
-            return 0D;
-        }
-        return this.hkPrice;
+    public void setRpLineItems(List<RpLineItem> rpLineItems) {
+        this.rpLineItems = rpLineItems;
     }
-
-    public void setHkPrice(Double hkPrice) {
-        this.hkPrice = hkPrice;
-    }
-
-    public Double getCostPrice() {
-        if (this.costPrice == null) {
-            return 0D;
-        }
-        return this.costPrice;
-    }
-
-    public void setCostPrice(Double costPrice) {
-        this.costPrice = costPrice;
-    }
-
-    public Sku getSku() {
-        return sku;
-    }
-
-    public void setSku(Sku sku) {
-        this.sku = sku;
-    }
-
-    public List<SkuItemLineItem> getSkuItemLineItems() {
-        return skuItemLineItems;
-    }
-
-    public void setSkuItemLineItems(List<SkuItemLineItem> skuItemLineItems) {
-        this.skuItemLineItems = skuItemLineItems;
-    }
-
-    @Override
-    public String toString() {
-        return id == null ? "" : id.toString();
-    }
-
-    public String getLineItemDetails() {
-        String lineItemid = id != null ? id.toString() : "";
-        String productVariantString = sku != null ? sku.toString() : "";
-        return "lineItem Details, id=" + lineItemid + ", productVariant=" + productVariantString + ", qty=" + qty + ", markedPrice=" + markedPrice + ", hkPrice=" + hkPrice
-                + ", discountOnHkPrice=" + discountOnHkPrice + // ", lineItemType=" + lineItemType.getName() +
-                // ", lineItemStatus=" + lineItemStatusString +
-                ", order=" + shippingOrder.toString();
-    }
-
-    public int compareTo(LineItem lineItem) {
-        if (this.getId() < lineItem.getId())
-            return -1;
-        if (this.getId() > lineItem.getId())
-            return 1;
-        return 0;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o)
-            return true;
-
-        if (o instanceof LineItem) {
-            LineItem lineItem = (LineItem) o;
-
-            if (this.id != null && lineItem.getId() != null && this.id.equals(lineItem.getId())) {
-                return true;
-            } else {
-                EqualsBuilder equalsBuilder = new EqualsBuilder();
-                if (this.getShippingOrder() != null && lineItem.getShippingOrder() != null) {
-                    equalsBuilder.append(this.getShippingOrder().getId(), lineItem.getShippingOrder().getId());
-                }
-                if (this.getSku() != null && lineItem.getSku() != null) {
-                    equalsBuilder.append(this.getSku().getId(), lineItem.getSku().getId());
-                }
-                if (this.qty != null && lineItem.getQty() != null) {
-                    equalsBuilder.append(this.qty, lineItem.getQty());
-                }
-                if (this.cartLineItem != null && lineItem.getCartLineItem() != null) {
-                    equalsBuilder.append(this.cartLineItem, lineItem.getCartLineItem());
-                }
-                /*
-                 * if (this.lineItemType != null && lineItem.getLineItemType() != null) {
-                 * equalsBuilder.append(this.lineItemType.getId(), lineItem.getLineItemType().getId()); }
-                 */
-                return equalsBuilder.isEquals();
-            }
-
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        if (this.id != null) {
-            return new HashCodeBuilder().append(this.id).toHashCode();
-        } else {
-            HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
-            if (this.getShippingOrder() != null) {
-                hashCodeBuilder.append(this.getShippingOrder().getId());
-            }
-            if (this.getSku() != null) {
-                hashCodeBuilder.append(this.getSku().getId());
-            }
-            /*
-             * if (this.lineItemType != null) { hashCodeBuilder.append(this.lineItemType.getId()); }
-             */
-            return hashCodeBuilder.toHashCode();
-        }
-    }
-
-    public Double getShippingCharges() {
-        return shippingCharges;
-    }
-
-    public void setShippingCharges(Double shippingCharges) {
-        this.shippingCharges = shippingCharges;
-    }
-
-    public Double getCodCharges() {
-        return codCharges;
-    }
-
-    public void setCodCharges(Double codCharges) {
-        this.codCharges = codCharges;
-    }
-
-    public Double getRewardPoints() {
-        return rewardPoints;
-    }
-
-    public void setRewardPoints(Double rewardPoints) {
-        this.rewardPoints = rewardPoints;
-    }
-
-    public Double getOrderLevelDiscount() {
-        return orderLevelDiscount;
-    }
-
-    public void setOrderLevelDiscount(Double orderLevelDiscount) {
-        this.orderLevelDiscount = orderLevelDiscount;
-    }
-
-    public Tax getTax() {
-        return tax;
-    }
-
-    public void setTax(Tax tax) {
-        this.tax = tax;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
 }

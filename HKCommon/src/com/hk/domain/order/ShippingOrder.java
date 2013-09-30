@@ -8,6 +8,7 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.queue.ActionItem;
+import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.warehouse.Warehouse;
@@ -86,6 +87,9 @@ public class ShippingOrder implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private List<ShippingOrderLifecycle> shippingOrderLifecycles = new ArrayList<ShippingOrderLifecycle>(0);
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
+    private List<ReversePickupOrder> reversePickupOrders = new ArrayList<ReversePickupOrder>(0);
+
     @Transient
     private Reason reason;
 
@@ -94,6 +98,9 @@ public class ShippingOrder implements java.io.Serializable {
 
     @Column(name = "target_dispatch_date", nullable = true)
     private Date targetDispatchDate;
+
+    @Column(name = "promise_dispatch_date", nullable = true)
+    private Date promiseDispatchDate;
 
     @Column(name = "target_del_date", nullable = true)
     private Date targetDelDate;
@@ -348,4 +355,20 @@ public class ShippingOrder implements java.io.Serializable {
 	public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
 		this.purchaseOrders = purchaseOrders;
 	}
+
+    public Date getPromiseDispatchDate() {
+        return promiseDispatchDate;
+    }
+
+    public void setPromiseDispatchDate(Date promiseDispatchDate) {
+        this.promiseDispatchDate = promiseDispatchDate;
+    }
+
+    public List<ReversePickupOrder> getReversePickupOrders() {
+        return reversePickupOrders;
+    }
+
+    public void setReversePickupOrders(List<ReversePickupOrder> reversePickupOrders) {
+        this.reversePickupOrders = reversePickupOrders;
+    }
 }

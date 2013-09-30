@@ -5,6 +5,7 @@ import com.hk.admin.pact.dao.courier.reversePickup.ReversePickupDao;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.impl.dao.BaseDaoImpl;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,13 +25,14 @@ import java.util.List;
  */
 @Repository
 public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDao {
-    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, ReversePickupStatus reversePickupStatus, String courierName, int pageNo, int perPage) {
-        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatus, courierName);
+
+    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, int pageNo, int perPage, List<ReversePickupType> reversePickupTypeList) {
+        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatusList, courierName, reversePickupTypeList);
         reversePickupCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
         return list(reversePickupCriteria, true, pageNo, perPage);
     }
 
-    private DetachedCriteria getReversePickupOrderDetachedCriteria(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, ReversePickupStatus reversePickupStatus, String courierName) {
+    private DetachedCriteria getReversePickupOrderDetachedCriteria(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, List<ReversePickupType> reversePickupTypeList) {
         DetachedCriteria reversePickupDetachedCriteria = DetachedCriteria.forClass(ReversePickupOrder.class);
         if (shippingOrder != null) {
             reversePickupDetachedCriteria.add(Restrictions.eq("shippingOrder.id", shippingOrder.getId()));
@@ -41,27 +43,33 @@ public class ReversePickupDaoImpl extends BaseDaoImpl implements ReversePickupDa
         if (courierName != null && !StringUtils.isEmpty(courierName)) {
             reversePickupDetachedCriteria.add(Restrictions.eq("courierName", courierName));
         }
-        if (reversePickupStatus != null) {
-            reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupStatus.id", reversePickupStatus.getId()));
+
+        if(shippingOrder == null && reversePickupStatusList != null && !reversePickupStatusList.isEmpty()){
+            reversePickupDetachedCriteria.add(Restrictions.in("reversePickupStatus", reversePickupStatusList));
         }
+
+        if(reversePickupTypeList != null && !reversePickupTypeList.isEmpty()){
+            reversePickupDetachedCriteria.add(Restrictions.in("reversePickupType", reversePickupTypeList));
+        }
+
         if (reversePickupId != null) {
             reversePickupDetachedCriteria.add(Restrictions.eq("reversePickupId", reversePickupId.trim()));
         }
         if (customerActionStatus != null) {
             DetachedCriteria rpLineItemsCriteria = reversePickupDetachedCriteria.createCriteria("rpLineItems");
-            rpLineItemsCriteria.add(Restrictions.eq("customerActionStatus", customerActionStatus));
+            rpLineItemsCriteria.add(Restrictions.eq("customerActionStatus.id", customerActionStatus));
         }
         return reversePickupDetachedCriteria;
     }
 
 
     public List<ReversePickupOrder> getReversePickupsForSO(ShippingOrder shippingOrder) {
-        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, null, null, null, null, null, null);
+        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(shippingOrder, null, null, null, null, null, null, null);
         return findByCriteria(reversePickupCriteria);
     }
 
     public ReversePickupOrder getByReversePickupId(String reversePickupId) {
-        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(null, reversePickupId, null, null, null, null, null);
+        DetachedCriteria reversePickupCriteria = getReversePickupOrderDetachedCriteria(null, reversePickupId, null, null, null, null, null, null);
         List<ReversePickupOrder> reversePickupOrderList = findByCriteria(reversePickupCriteria);
         return reversePickupOrderList != null && reversePickupOrderList.size() > 0 ? reversePickupOrderList.get(0) : null;
     }

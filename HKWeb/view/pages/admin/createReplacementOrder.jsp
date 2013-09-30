@@ -122,11 +122,12 @@
                                 <a href="#" id="is-replacement-radio">
                                     <h5>Create RO<br />for Customer Return</h5>
                                 </a>
-                                (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
-                                    <s:param name="reverseOrder" value="${replacementOrderBean.reverseOrder}"/>
-                                     <s:param name="shippingOrder" value="${replacementOrderBean.shippingOrder}"/>
-                                    View Reverse Order
-                                </s:link>)
+                           </c:if>
+
+                            <c:if test="${fn:length(replacementOrderBean.shippingOrder.reversePickupOrders) > 0}">
+                                <a href="#" id="is-replacement-radio">
+                                    <h5>Create RO<br />for Booking</h5>
+                                </a>
                             </c:if>
 
                             <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerAppease}">
@@ -175,6 +176,8 @@
 	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
 	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
 	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
+	                         <%--<s:hidden name="lineItems[${lineItemCtr.index}].shippingOrder" value="${lineItem.shippingOrder}"/>--%>
+	                         <s:hidden name="lineItems[${lineItemCtr.index}].qty" value="${lineItem.qty}"/>
 
                             <tr>
                                 <td>${lineItemCtr.count}</td>
@@ -183,7 +186,7 @@
                                 </td>
                                 <td>${lineItem.qty}</td>
                                 <td>
-                                    <s:hidden name="lineItems[${lineItemCtr.index}].qty" value="${lineItem.qty}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].RQty" value="${lineItem.qty}"/>
                                         ${lineItem.qty}
                                 </td>
                             </tr>
@@ -238,6 +241,10 @@
                                               value="${lineItem.codCharges}"/>
                                     <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges"
                                               value="${lineItem.shippingCharges}"/>
+                                    <%--<s:hidden name="lineItems[${lineItemCtr.index}].shippingOrder"--%>
+                                              <%--value="${lineItem.shippingOrder}"/>--%>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].qty"
+                                              value="${lineItem.qty}"/>
                                     <tr>
                                         <td>${lineItemCtr.count}</td>
                                         <td>
@@ -245,7 +252,7 @@
                                             Variant: ${lineItem.cartLineItem.productVariant.id}
                                         </td>
                                         <td>${lineItem.qty}</td>
-                                        <td><s:text name="lineItems[${lineItemCtr.index}].qty" class="qty"/>
+                                        <td><s:text name="lineItems[${lineItemCtr.index}].RQty" class="qty"/>
                                             <script type="text/javascript">
                                                 $('.qty').val(0);
                                             </script>

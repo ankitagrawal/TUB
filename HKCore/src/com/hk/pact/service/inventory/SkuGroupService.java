@@ -41,7 +41,6 @@ public interface SkuGroupService {
 
   public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
 
-
   /**
    * SkuItemDao Methods *
    */

@@ -173,7 +173,7 @@
                 ${hk:netInventory(sku)}
             </td>
             <td>
-                ${hk:bookedQty(sku)}
+                ${hk:bookedQty(sku, null)}
             </td>
               <td>
                  ${hk:netAvailableBrightUnbookedInventory(sku)}
