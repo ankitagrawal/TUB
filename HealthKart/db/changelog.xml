@@ -14133,4 +14133,88 @@
             insert into reconciliation_type values (210,"Vendor Replacement"),(220,"Vendor Rejected");
         </sql>
     </changeSet>
+    <changeSet author="RD" id="20130918-01">
+        <sql>
+            alter table rp_line_item MODIFY customer_comment VARCHAR(1000);
+            alter table rp_line_item MODIFY warehouse_remark VARCHAR(1000);
+            alter table reverse_pickup_order  add column booking_reference_no VARCHAR(70);
+            insert into reverse_pickup_status values(110,'RPU Reconcile');
+            insert into reverse_pickup_status values(120,'RPU Not Available');
+            insert into reverse_pickup_status values(130,'RPU Approved');
+            update reverse_pickup_status set status = 'RPU_Scheduled' where id=80;
+        </sql>
+    </changeSet>
+    <changeSet author="RD" id="20130920-01">
+        <sql>
+            insert into reverse_pickup_status values(80,'RPU_Scheduled');
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="20130925-01">
+        <sql>
+            CREATE TABLE `reverse_pickup_type` (
+            `id` int(11) NOT NULL,
+            `name` varchar(100) NOT NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+            ALTER TABLE reverse_pickup_order ADD COLUMN reverse_pickup_type_id INT(11);
+
+            ALTER TABLE reverse_pickup_order ADD FOREIGN KEY fk_reverse_pickup_order_reverse_pickup_type_id1 (reverse_pickup_type_id) REFERENCES reverse_pickup_type(id) ON DELETE CASCADE;
+
+            ALTER TABLE rp_line_item ADD FOREIGN KEY fk_rp_line_item_action_taken_id_classification_id1 (action_taken_id) REFERENCES classification(id) ON DELETE CASCADE;
+
+            ALTER TABLE rp_line_item ADD FOREIGN KEY fk_rp_line_item_customer_action_status_id_classification_id2 (customer_action_status) REFERENCES classification(id) ON DELETE CASCADE;
+
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2110', 'Refund in Cash', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2120', 'Refund Reward Points', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2130', 'Replacement Order', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2140', 'Decide Later', 'Reconcile');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2010', 'Pending Approval', 'Approval');
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2020', 'Approved', 'Approval');
+
+            update `rp_line_item` set action_taken_id = 2110 WHERE action_taken_id = 10;
+            update `rp_line_item` set action_taken_id = 2120 WHERE action_taken_id = 20;
+            update `rp_line_item` set action_taken_id = 2130 WHERE action_taken_id = 30;
+            update `rp_line_item` set action_taken_id = 2140 WHERE action_taken_id = 70;
+
+            update `rp_line_item` set customer_action_status = 2010 WHERE customer_action_status = 80;
+            update `rp_line_item` set customer_action_status = 2020 WHERE customer_action_status = 90;
+
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('10', 'REVERSE_PICKUP');
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('20', 'REPLACEMENT_ORDER');
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('30', 'LOST');
+            INSERT INTO `reverse_pickup_type` (`id`, `name`) VALUES ('40', 'APPEASEMENT');
+
+            update reverse_pickup_order set reverse_pickup_type_id = 10;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="20130926-02">
+        <sql>
+            ALTER TABLE rp_line_item ADD COLUMN amount DECIMAL(10,2);
+
+            update rp_line_item rli
+            join line_item li on rli.line_item_id=li.id
+            set rli.amount=li.hk_price-((li.discount_on_hk_price+li.reward_point_discount+li.order_level_discount)/li.qty);
+
+            update reverse_pickup_order rp join (select reverse_pickup_id,sum(amount) as total from rp_line_item group by reverse_pickup_id) rli on rli.reverse_pickup_id=rp.id
+            set rp.amount=rli.total;
+        </sql>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="20130926-03">
+        <sql>
+            INSERT INTO `classification` (`id`, `primary`, `secondary`) VALUES ('2040', 'Reconciled', 'Approval');
+            INSERT INTO `payment_mode` (id,name) VALUES ('110','Reward Points');
+        </sql>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="20130926-07">
+        <sql>
+            ALTER TABLE `shipment` ADD COLUMN `rto_date` TIMESTAMP NULL DEFAULT NULL  AFTER `shipment_cost_calculate_date` , ADD COLUMN `rto_initiated_date` TIMESTAMP NULL DEFAULT NULL  AFTER `rto_date` , ADD COLUMN `lost_date` TIMESTAMP NULL DEFAULT NULL  AFTER `rto_initiated_date` ;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="20130926-10">
+        <sql>
+            alter table payment MODIFY transaction_type VARCHAR(100);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

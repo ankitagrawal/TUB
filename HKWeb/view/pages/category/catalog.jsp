@@ -112,14 +112,12 @@
   </s:layout-component>
 </c:if>
 <s:layout-component name="catalog">
-<!--google remarketing page type-->
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" categories="${ca.allCategories}" topLevelCategory="${ca.topCategoryUrlSlug}"/>
-<!-- yahoo marketing page -->
-<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"/>
+<%--<!-- yahoo marketing page -->--%>
+<%--<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"/>--%>
 
-<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}" secondaryLevelCategory="${ca.childCategorySlug}" />
-<!-- BLADE marketing-->
-<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="category" />
+<%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}" secondaryLevelCategory="${ca.childCategorySlug}" />--%>
+<%--<!-- BLADE marketing-->--%>
+<%--<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="category" />--%>
 
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
@@ -422,6 +420,17 @@
   </div>
 </c:if>
 </div>
+
+<%--<!--google remarketing page type-->--%>
+<s:layout-render
+    name="/layouts/embed/remarketingWithCustomParams.jsp"
+    pageType="<%=HealthkartConstants.Remarketing.PageType.catalog%>"
+    allCategories="${ca.allCategories}"
+    primaryCategory="${ca.topCategoryUrlSlug}"
+    secondaryCategory="${ca.childCategorySlug}"
+    tertiaryCategory="${ca.secondaryChildCategorySlug}"
+    brand="${ca.brand}"
+    />
 
 		<c:if test="${not isSecure }">
 			<iframe
