@@ -89,13 +89,26 @@
                 <c:set var="productVariant" value="${sku.productVariant}"/>
                 <c:set var="listOfSkuGroup" value="${skuSkuGroup.value}"/>
                     <td>${productVariant.id}</td>
-                    <td>${productVariant.optionsPipeSeparated}</td>
+                    <td>${productVariant.product.name} <br/> ${productVariant.optionsPipeSeparated}</td>
                     <td colspan="3">
                     <table>
                         <c:forEach items="${listOfSkuGroup}" var="skuGroup">
                           <tr>
                               <td>${skuGroup.batchNumber}</td>
-                              <td>${skuGroup.barcode}</td>
+                              <td>
+                                  <c:choose>
+                                  <c:when test="${skuGroup.barcode != null}">
+                                       ${skuGroup.barcode}
+                                  </c:when>
+                                      <c:otherwise>
+                                        <c:if test="${!empty skuGroup.skuItems}">
+                                            <c:set var="siBarcode" value="${skuGroup.skuItems[0].barcode}"/>
+                                            <c:set var="siBarcodeArr" value="${fn:split(siBarcode, '-')}"/>
+                                             ${siBarcodeArr[0]}-${siBarcodeArr[1]}
+                                        </c:if>
+                                      </c:otherwise>
+                                  </c:choose>
+                              </td>
                               <td>${fn:length(skuGroup.skuItems)}</td>
                           </tr>
                         </c:forEach>
