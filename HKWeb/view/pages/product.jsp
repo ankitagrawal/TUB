@@ -33,6 +33,8 @@
     pageContext.setAttribute("isSecure", isSecure);
     Category stethoscope = categoryDao.getCategoryByName("stethoscope");
     pageContext.setAttribute("stethoscope", stethoscope);
+    String categoryNames = (String) pageContext.getAttribute("categories");
+    pageContext.setAttribute("categories", categoryNames);
 
     String gosf = request.getParameter("gosf");
     pageContext.setAttribute("gosf", gosf);
@@ -201,7 +203,7 @@
 <s:layout-component name="urlFragment">${pa.menuNodeUrlFragment}</s:layout-component>
 
 <s:layout-component name="topBanner">
-	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}"/>
+	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${categories}" />
 	<div class="clear"></div>
 	<c:if test="${product.service}">
 		<s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
