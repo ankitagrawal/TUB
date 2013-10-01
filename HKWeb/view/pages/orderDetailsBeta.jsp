@@ -23,7 +23,7 @@
                 <s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">Orders</s:link>
             </span>
             <span>&raquo;</span>
-            <span class="txt-blue fnt-bold">Order Details</span>
+            <span class="fnt-bold">Order Details</span>
         </div>
         <%--breadcrumbs ends--%>
     </s:layout-component>

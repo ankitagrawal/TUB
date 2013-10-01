@@ -23,7 +23,7 @@
                 <s:link beanclass="com.hk.web.action.core.user.MyAccountAction">Account</s:link>
             </span>
             <span>&raquo;</span>
-            <span class="txt-blue fnt-bold">Edit Basic Information</span>
+            <span class="fnt-bold">Edit Basic Information</span>
         </div>
         <%--breadcrumbs ends--%>
     </s:layout-component>

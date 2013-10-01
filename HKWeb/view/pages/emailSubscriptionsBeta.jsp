@@ -13,7 +13,7 @@
                    <s:link beanclass="com.hk.web.action.HomeAction">Home</s:link>
                 </span>
             <span>&raquo;</span>
-            <span class="txt-blue fnt-bold">Email Subscriptions</span>
+            <span class="fnt-bold">Email Subscriptions</span>
         </div>
         <%--breadcrumbs ends--%>
     </s:layout-component>

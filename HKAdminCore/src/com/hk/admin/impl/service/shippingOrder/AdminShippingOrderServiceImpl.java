@@ -5,6 +5,7 @@ import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.courier.reversePickup.ReversePickupService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.order.AdminOrderService;
@@ -23,6 +24,9 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.EnumPaymentTransactionType;
+import com.hk.constants.queue.EnumClassification;
+import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
@@ -36,6 +40,8 @@ import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.reversePickupOrder.ReversePickupOrder;
+import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
@@ -131,6 +137,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	private AdminShippingOrderDao adminShippingOrderDao;
 	@Autowired
 	private LoyaltyProgramService loyaltyProgramService;
+
+    @Autowired
+    ReversePickupService reversePickupService;
 
   @Autowired
   private PaymentService paymentService;
@@ -371,7 +380,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             //paymentService.setRefundAmount(shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
             getShippingOrderService().logShippingOrderActivity(shippingOrder, loggedOnUser,
                     EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(), EnumReason.RewardGiven.asReason(),comment);
-
+            Payment payment = shippingOrder.getBaseOrder().getPayment();
+            paymentService.createNewGenericPayment(payment, EnumPaymentStatus.REFUNDED.asPaymenStatus(), shippingOrder.getAmount(),
+                    EnumPaymentMode.REWARD_POINT.asPaymenMode(), EnumPaymentTransactionType.REWARD_POINT);
         } else if (EnumReconciliationActionType.RefundAmount.getId().equals(reconciliationType)) {
             refundPayment(shippingOrder,comment);
         } else if (EnumReconciliationActionType.None.getId().equals(reconciliationType)) {
@@ -802,7 +813,50 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
   }
 
-  public ShippingOrderService getShippingOrderService() {
+    /**
+     * This method returns the lineItems for replacement order and amount for refund/reward
+     * It has been created in generic way so as to move to a helper class for code reuse.
+     *
+     * @param localShippingOrder
+     * @param actionTypeConstant
+     * @return
+     */
+    public Object getActionProcessingElement(ShippingOrder localShippingOrder,
+    				Set<LineItem> toBeProcessedLineItemSet, Integer actionTypeConstant) {
+        Integer SEARCH_ACTION = 4;
+        Double toBeProcessedAmount = 0d;
+
+        if (localShippingOrder != null) {
+            List<ReversePickupOrder> reversePickupOrders = reversePickupService.getReversePickupsForSO(localShippingOrder);
+            if (reversePickupOrders != null && !reversePickupOrders.isEmpty()) {
+                for (ReversePickupOrder reversePickupOrder : reversePickupOrders) {
+                    List<RpLineItem> rpLineItems = reversePickupOrder.getRpLineItems();
+                    if (rpLineItems != null && !rpLineItems.isEmpty()) {
+                        for (RpLineItem rpLineItem : rpLineItems) {
+                            if (rpLineItem.getCustomerActionStatus() != null && EnumReverseAction.Approved.getId().equals(rpLineItem.getCustomerActionStatus().getId())) {
+                            	if (!SEARCH_ACTION.equals(actionTypeConstant)) {
+                            		rpLineItem.setCustomerActionStatus(EnumClassification.ReconciledGeneric.asClassification());
+                            	}
+                                LineItem lineItemForRP = rpLineItem.getLineItem();
+                                if (toBeProcessedLineItemSet.contains(lineItemForRP)) {
+                                	toBeProcessedLineItemSet.remove(lineItemForRP);
+                                    lineItemForRP.setRQty(lineItemForRP.getRQty() + 1);
+                                } else {
+                                	lineItemForRP.setRQty(1l);
+                                }
+                                toBeProcessedLineItemSet.add(lineItemForRP);
+                                toBeProcessedAmount += rpLineItem.getAmount();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return  toBeProcessedAmount;
+    }
+
+
+    public ShippingOrderService getShippingOrderService() {
 		return shippingOrderService;
 	}
 

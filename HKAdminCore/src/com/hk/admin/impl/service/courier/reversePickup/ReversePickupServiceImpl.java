@@ -7,8 +7,8 @@ import com.hk.admin.pact.service.courier.reversePickup.ReversePickupService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.queue.EnumClassification;
 import com.hk.constants.reversePickup.EnumReverseAction;
-import com.hk.constants.reversePickup.EnumReverseActionOnStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
@@ -17,9 +17,9 @@ import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.user.User;
@@ -31,7 +31,6 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,10 +86,10 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                 if (reversePickupOrder != null) {
                     rpLineItem.setReversePickupOrder(reversePickupOrder);
                 }
-                if (rpLineItem.getActionTaken() == null || rpLineItem.getActionTaken().equals(EnumReverseAction.Decide_Later.getId())) {
+                if (rpLineItem.getActionTaken() == null || rpLineItem.getActionTaken().getId().equals(EnumClassification.Decide_Later.getId())) {
                     rpLineItem.setCustomerActionStatus(null);
                 } else {
-                    rpLineItem.setCustomerActionStatus(EnumReverseAction.Pending_Approval.getId());
+                    rpLineItem.setCustomerActionStatus(EnumClassification.Pending_Approval.asClassification());
                 }
                 saveRpLineItem(rpLineItem);
             }
@@ -101,8 +100,8 @@ public class ReversePickupServiceImpl implements ReversePickupService {
         saveRpLineItems(null, rpLineItemList, customerActionStatus);
     }
 
-    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, ReversePickupStatus reversePickupStatus, String courierName, int pageNo, int perPage) {
-        return reversePickupDao.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatus, courierName, pageNo, perPage);
+    public Page getReversePickRequest(ShippingOrder shippingOrder, String reversePickupId, Date startDate, Date endDate, Long customerActionStatus, List<ReversePickupStatus> reversePickupStatusList, String courierName, int pageNo, int perPage, List<ReversePickupType> reversePickupTypeList) {
+        return reversePickupDao.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatusList, courierName, pageNo, perPage, reversePickupTypeList);
 
     }
 

@@ -267,7 +267,7 @@
 
       </div>
     </div>
-  </div>
+
   <script>
       $('.hdr-drop-cntnr').hover(function () {
                   $(this).addClass('hdr-drop-cntnr-hover').find('.hdr-drop-down').show();

@@ -255,12 +255,19 @@ public class ProductAction extends BaseAction {
         }
 
         if (combo == null) {
-            return new ForwardResolution("/pages/product.jsp");
+            if(isHybridRelease())
+                return new ForwardResolution("/pages/productBeta.jsp");
+            else
+                return new ForwardResolution("/pages/product.jsp");
         } else {
             List<SuperSaverImage> superSaverImages = getSuperSaverImageService().getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE);
             String directTo;
             if (superSaverImages == null || superSaverImages.isEmpty()) {
-                directTo = "product.jsp";
+                if(isHybridRelease())
+                    directTo = "productBeta.jsp";
+                else
+                    directTo = "product.jsp";
+
             } else {
                 SuperSaverImage latestSuperSaverImage = superSaverImages.get(superSaverImages.size() - 1);
                 superSaverImageId = latestSuperSaverImage.getId();

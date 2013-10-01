@@ -99,36 +99,25 @@ public class ReplacementOrderAction extends BaseAction {
 			return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
-			lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
+			lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem, lineItem.getQty(), false));
 		}
 		shippingOrderId = shippingOrder.getId();
 
-		reverseOrder = reverseOrderService.getReverseOrderByShippingOrderId(shippingOrderId);
+		/*reverseOrder = reverseOrderService.getReverseOrderByShippingOrderId(shippingOrderId);
 		if(reverseOrder != null){
 			lineItems = new ArrayList<LineItem>();
 			for(ReverseLineItem reverseLineItem: reverseOrder.getReverseLineItems()){
-				LineItem replacementLineItem = ReplacementOrderHelper.getLineItemForReplacementOrder(reverseLineItem.getReferredLineItem());
-				replacementLineItem.setQty(reverseLineItem.getReturnQty());
+				LineItem replacementLineItem = ReplacementOrderHelper.getLineItemForReplacementOrder(reverseLineItem.getReferredLineItem(), reverseLineItem.getReturnQty());
 				lineItems.add(replacementLineItem);
 			}
-		}
+		}*/
 		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public Resolution createReplacementOrder() {
-		if ((!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_RTO.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Appeasement.getId()))
-				) {
-			addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName() +
-					" OR <br />" + EnumShippingOrderStatus.SO_RTO.getName() +
-					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()  +
-					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Appeasement.getName()
-			)
-
-
-			);
+        boolean bookingExists = shippingOrder.getReversePickupOrders() != null && !shippingOrder.getReversePickupOrders().isEmpty();
+		if (!EnumShippingOrderStatus.getStatusForCreatingRO().contains(shippingOrder.getOrderStatus().getId()) && !bookingExists) {
+			addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status RTO Initiate, RTO & Lost Or If a booking exists"));
 			return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 		}
 
@@ -139,18 +128,18 @@ public class ReplacementOrderAction extends BaseAction {
 
 		int valid_item_flag = 0;
 		for (LineItem lineItem : lineItems) {
-			if (lineItem.getQty() > 0) {
+			if (lineItem.getRQty() > 0) {
 				valid_item_flag++;
 			}
-			if (lineItem.getQty() != 0 && lineItem.getQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
+			if (lineItem.getRQty() != 0 && lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
 				addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " out of stock."));
 				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}
-			if (lineItem.getQty() < 0) {
+			if (lineItem.getRQty() < 0) {
 				addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be less than zero."));
 				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}
-			if (lineItem.getQty() > getLineItemDao().getMatchingLineItemForDuplicateShippingOrder(lineItem, shippingOrder).getQty()) {
+			if (lineItem.getRQty() > lineItem.getQty()) {
 				addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be more than original quantity."));
 				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}

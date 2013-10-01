@@ -347,7 +347,7 @@
                 <td>Tax</td>
                 <td>
                     <c:choose>
-                        <c:when test="${pa.debitNote.supplier.state == 'HARYANA'}">
+                        <c:when test="${hk:equalsIgnoreCase(pa.debitNote.supplier.state , pa.debitNote.warehouse.state)}">
                             Non - CST
                         </c:when>
                         <c:otherwise>
