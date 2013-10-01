@@ -58,17 +58,17 @@
                     </ul>
                 </div>
                 <div class="footer-menu">
-                    <h4>Brands</h4>
-                    <ul>
-                        <li><a href="">MuscleBlaze</a></li>
-                        <li><a href="">HealthViva</a></li>
-                        <li><a href="">Optimum Nutrition</a></li>
-                        <li><a href="">Dymatize</a></li>
-                        <li><a href="">Gaspari</a></li>
-                        <li><a href="">Accu-Chek</a></li>
-                        <li><a href="">L'Oreal Paris</a></li>
-                        <li><a href="">Muscletech</a></li>
-                    </ul>
+                    <%--<h4>Brands</h4>--%>
+                    <%--<ul>--%>
+                        <%--<li><a href="">MuscleBlaze</a></li>--%>
+                        <%--<li><a href="">HealthViva</a></li>--%>
+                        <%--<li><a href="">Optimum Nutrition</a></li>--%>
+                        <%--<li><a href="">Dymatize</a></li>--%>
+                        <%--<li><a href="">Gaspari</a></li>--%>
+                        <%--<li><a href="">Accu-Chek</a></li>--%>
+                        <%--<li><a href="">L'Oreal Paris</a></li>--%>
+                        <%--<li><a href="">Muscletech</a></li>--%>
+                    <%--</ul>--%>
                 </div>
 
 
