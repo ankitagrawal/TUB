@@ -22,6 +22,7 @@
     <a href='${pageContext.request.contextPath}/beauty'>
      <img src="${pageContext.request.contextPath}/images/banners/strip_Beauty_banner.jpg"
             alt="Beauty Offers">
+        </a>
 </div>
 <%
   } else {
