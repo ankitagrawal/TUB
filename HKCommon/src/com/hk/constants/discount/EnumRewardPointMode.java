@@ -9,9 +9,20 @@ import java.util.List;
  * Generated
  */
 public enum EnumRewardPointMode {
-    TPSL_ADJUSTMENTS(10L, "TPSL Adjustments"), HK_CASHBACK(20L, "HealthKart Cashback"), HK_ADJUSTMENTS(30L, "HealthKart Adjustments"), REFERRAL(40L, "Referral"), FB_SHARING(50L,
-            "Facebook Sharing"), Prepay_Offer(60L, "Prepay"), HKPLUS_POINTS(70L, "HK Plus Points"), HKLOYALTY_POINTS(80L,"HK Loyalty Points"),
-    HK_ORDER_CANCEL_POINTS(90L, "Order Cancellation Rewards Points");
+    TPSL_ADJUSTMENTS(10L, "TPSL Adjustments"),
+    HK_CASHBACK(20L, "HealthKart Cashback"),
+    HK_ADJUSTMENTS(30L, "HealthKart Adjustments"),
+    REFERRAL(40L, "Referral"),
+    FB_SHARING(50L,"Facebook Sharing"),
+    Prepay_Offer(60L, "Prepay"),
+    HKPLUS_POINTS(70L, "HK Plus Points"),
+    HKLOYALTY_POINTS(80L,"HK Loyalty Points"),
+    HK_ORDER_CANCEL_POINTS(90L, "Order Cancellation Rewards Points"),
+    RESOLUTION_SCREEN(1000L, "Order Reconciliation"),
+    RTO(1010L, "RTO Order"),
+    Reverse_Pickup(1020L, "Reverse_Pickup"),
+    Appeasement(1030L, "Appeasement"),
+    LOST(1040L, "LOST");
 
     private String name;
     private Long   id;

@@ -12,7 +12,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" var="rev"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup Booking Screen">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Approved Booking Screen">
 <s:layout-component name="content">
 <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -143,7 +143,7 @@
 
 </style>
 <div style="height: 50px;" class="heading">
-    <p>Edit Reverse Pickup No. ${rev.reversePickupOrder.reversePickupId}</p>
+    <p>Edit Booking No. ${rev.reversePickupOrder.reversePickupId}</p>
 </div>
 <div style="text-align: left; font-size: 13px;color: green;" class="msg">
 
@@ -194,7 +194,7 @@
                                 <s:select name="rpLineItems[${index}].customerReasonForReturn"
                                           value="${savedRpLineItem.customerReasonForReturn.id}"
                                           class="reason-entered-select"
-                                          disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}">
+                                          disabled="${savedRpLineItem.customerActionStatus.id == approvedId? 'disabled' : ''}">
                                     <s:option value="">--Select-- </s:option>
                                     <c:forEach items="${customerReasonList}" var="reason">
                                         <s:option value="${reason.id}">${reason.classification.primary}</s:option>
@@ -203,8 +203,8 @@
                             </td>
                             <td>
                                 <s:select name="rpLineItems[${index}].actionTaken"
-                                          value="${savedRpLineItem.actionTaken}"
-                                          disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}">
+                                          value="${savedRpLineItem.actionTaken.id}"
+                                          disabled="${savedRpLineItem.customerActionStatus.id == approvedId? 'disabled' : ''}">
                                     <s:option value="">--Select-- </s:option>
                                     <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
                                                var="actionTaken">
@@ -226,26 +226,21 @@
                                 <%--</s:select>--%>
                             <%--</td>--%>
                             <td>
-                                <c:forEach items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
-                                           var="customerActionStatusenum">
-                                    <c:if test="${savedRpLineItem.customerActionStatus == customerActionStatusenum.id}">
-                                        ${customerActionStatusenum.name}
-                                    </c:if>
-                                </c:forEach>
+                                ${savedRpLineItem.customerActionStatus.primary}
                             </td>
                             <td>
                                 <s:textarea style="width: 300px; height: 60px;"
                                             name="rpLineItems[${index}].customerComment"
                                             value="${savedRpLineItem.customerComment}" class="reason-entered-area"
-                                            disabled="${savedRpLineItem.customerActionStatus == approvedId? 'disabled' : ''}"/>
+                                            disabled="${savedRpLineItem.customerActionStatus.id == approvedId? 'disabled' : ''}"/>
                             </td>
                             <td>
-                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
+                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus.id == pendingId}">
                                     <a href="javascript:void(0)" class="save-link" style="color: green;" >
                                         <span class="link">(Save)</span> <br><br><br>
                                     </a>
                                 </c:if>
-                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus == pendingId}">
+                                <c:if test="${savedRpLineItem.customerActionStatus == null || savedRpLineItem.customerActionStatus.id == pendingId}">
                                     <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction"
                                             style="color:red;"
                                             event="deleteRpLineItem"> <span class="link">(Delete)</span>

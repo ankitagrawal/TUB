@@ -18,6 +18,7 @@ import java.util.List;
  * Time: 11:40:00 AM
  * To change this template use File | Settings | File Templates.
  */
+@Deprecated
 public interface ReverseOrderService {
 
     public ReverseOrder createReverseOrder(ShippingOrder shippingOrder, String returnOrderReason, String reverseOrderType);

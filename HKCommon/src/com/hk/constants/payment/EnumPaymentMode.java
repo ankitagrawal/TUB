@@ -8,7 +8,7 @@ import com.hk.domain.core.PaymentMode;
 
 
 public enum EnumPaymentMode {
-    ONLINE_PAYMENT(1000L, "Online Payment"),
+  ONLINE_PAYMENT(1000L, "Online Payment"),
 	FREE_CHECKOUT(5L, "Free"),
 	NEFT(20L, "NEFT"),
 	ChequeDeposit(25L, "Cheque Deposit"),
@@ -16,7 +16,8 @@ public enum EnumPaymentMode {
 	COD(40L, "COD"),
 	COUNTER_CASH(50L, "Counter Cash"),
 	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment"),
-	OFFLINE_CARD_PAYMENT(100L, "Offline Credit/Debit Card");
+	OFFLINE_CARD_PAYMENT(100L, "Offline Credit/Debit Card"),
+	REWARD_POINT(110L,"Reward Points");
 
 	private java.lang.String name;
 	private java.lang.Long id;
