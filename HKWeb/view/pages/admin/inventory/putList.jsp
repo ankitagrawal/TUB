@@ -101,11 +101,11 @@
                                        ${skuGroup.barcode}
                                   </c:when>
                                       <c:otherwise>
-                                        <c:if test="${!empty skuGroup.skuItems}">
-                                            <c:set var="siBarcode" value="${skuGroup.skuItems[0].barcode}"/>
+                                        <c:forEach items="${skuGroup.skuItems}" var="skuItem" begin="0" end="0">
+                                            <c:set var="siBarcode" value="${skuItem.barcode}"/>
                                             <c:set var="siBarcodeArr" value="${fn:split(siBarcode, '-')}"/>
                                              ${siBarcodeArr[0]}-${siBarcodeArr[1]}
-                                        </c:if>
+                                        </c:forEach>
                                       </c:otherwise>
                                   </c:choose>
                               </td>
