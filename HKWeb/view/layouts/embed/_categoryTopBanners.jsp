@@ -38,7 +38,6 @@
         }
         pageContext.setAttribute("topCategoryNameList", topCategoryNameList);
     %>
-    <c:out value="RD-${}-and -${}-Dixit-{}"></c:out>
     <c:set var="fitnessCategories" value="fitness-equipment,premium-fitness-equipments,treadmills,crosstrainers,exercise-bike,
      rowers,home-gym,smith-machines,steppers,bench-equipments,multi-utility-equipments,abdominal-machines,
      heart-rate-monitors,massage-equipments,trampolines,weighing-scales,miscellaneous-equipments"/>
