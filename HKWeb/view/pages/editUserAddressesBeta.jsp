@@ -15,7 +15,7 @@
                 <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction">Addresses</s:link>
             </span>
             <span>&raquo;</span>
-            <span class="txt-blue fnt-bold">Edit Address</span>
+            <span class="fnt-bold">Edit Address</span>
         </div>
         <%--breadcrumbs ends--%>
     </s:layout-component>

@@ -55,7 +55,7 @@
         <%
           }
         %>
-        <span class="txt-blue fnt-bold">${topHeading}</span>
+        <span class="fnt-bold">${topHeading}</span>
 
   </div>
   </s:layout-component>
