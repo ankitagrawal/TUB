@@ -43,25 +43,28 @@
     });
   </script>
 
-	<%--<%
-		DateTime dateTime = new DateTime();
-		Date endOfOfferDate = new Date(new DateTime(2012, 12, 26, 18, 59, 59, 59).getMillis());
-		if (dateTime.isBefore(endOfOfferDate.getTime())) {
+	<%
+     // Custom code to check offer/message validity
+    Date startDate = new Date(new DateTime(2013, 10, 01, 19, 59, 59, 59).getMillis());
+    Date endDate = new Date(new DateTime(2013, 10, 02, 23, 59, 59, 59).getMillis());
+    boolean isValid = startDate.before(new Date()) && endDate.after(new Date());
+		if (isValid) {
 	%>
-	<div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
-			--%><%--<div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
-									<strong>Great Online Shopping Festival</strong>! Over 500 products, upto <strong>80% off! *</strong>, <strong><a href="http://www.healthkart.com/online-shopping-festival?src=hk2">Click here to start Shopping!</a></strong><br/>
-									<span style="font-size: 1.2em; color: #e62580">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</span>
-							</div>--%><%--
+    <div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
+        <%--<div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
+            <strong>Great Online Shopping Festival</strong>! Over 500 products, upto <strong>80% off! *</strong>,
+            <strong><a href="http://www.healthkart.com/online-shopping-festival?src=hk2">Click here to start
+                Shopping!</a></strong><br/>
+            <span style="font-size: 1.2em; color: #e62580">Only <strong><%=Functions.periodFromNow(endDate)%>
+            </strong> remaining</span>
+        </div>--%>
 
-		<div
-				style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 20px; padding-top: 3px; font-size: 1em;">
-			Our customer care phone lines are down due to technical issues. Sincere apologies for the inconvenience caused.
-		</div>
-	</div>
+        <div style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 20px; padding-top: 3px; font-size: 1em;">
+           <strong> Customer support will be unavailable on 2nd of October, 2013</strong>
+        </div>
 	<%
 		}
-	%>--%>
+	%>
 
     <div class='menuBar' id="top">
 
