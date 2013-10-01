@@ -455,18 +455,17 @@
             </td>
         </tr>
         <tr>
-            <td>Discount ${baseOrder.offerInstance.coupon.code}</td>
-            <c:choose>
-                <c:when test="${orderSummary.invoiceDto.totalDiscount > 0}">
-                    <td class="fnt-bold">
-                </c:when>
-                <c:otherwise>
-                    <td>
-                </c:otherwise>
-            </c:choose>
+            <td>
+                <c:if test="${orderSummary.invoiceDto.totalDiscount > 0}"><b></c:if>
+                Discount ${baseOrder.offerInstance.coupon.code}
+                <c:if test="${orderSummary.invoiceDto.totalDiscount > 0}"></b></c:if>
+            </td>
+            <td>
+                <c:if test="${orderSummary.invoiceDto.totalDiscount > 0}"><b></c:if>
                 <fmt:formatNumber
                         value="${orderSummary.invoiceDto.totalDiscount}"
                         type="currency" currencySymbol="Rs. "/>
+                <c:if test="${orderSummary.invoiceDto.totalDiscount > 0}"></b></c:if>
             </td>
         </tr>
         <c:if test="${orderSummary.invoiceDto.rewardPoints > 0}">
