@@ -151,12 +151,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setShipmentCostCalculateDate(new Date());
         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
         shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-        List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
-        for (WHReportLineItem whReportLineItem : whReportLineItemList) {
-            logger.debug("Line Item" + whReportLineItem.getLineItem() + " shipment charge "
-                    + whReportLineItem.getEstmShipmentCharge() + " collection charge "
-                    + whReportLineItem.getEstmCollectionCharge() + " extra charge " + whReportLineItem.getExtraCharge());
-            shipmentDao.save(whReportLineItem);
+        if (shipment.getEstmShipmentCharge() != null && shipment.getEstmCollectionCharge() != null && shipment.getExtraCharge() != null) {
+            List<WHReportLineItem> whReportLineItemList = ShipmentCostDistributor.distributeShippingCost(shippingOrder);
+            for (WHReportLineItem whReportLineItem : whReportLineItemList) {
+                logger.debug("Line Item" + whReportLineItem.getLineItem() + " shipment charge "
+                        + whReportLineItem.getEstmShipmentCharge() + " collection charge "
+                        + whReportLineItem.getEstmCollectionCharge() + " extra charge " + whReportLineItem.getExtraCharge());
+                shipmentDao.save(whReportLineItem);
+            }
         }
         return shipment;
     }

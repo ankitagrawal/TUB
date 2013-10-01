@@ -255,6 +255,7 @@
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
+--/sports/apparel/3d-t-shirts : 3D T Shirts
 --/sports/apparel/gym-clothing
 --/sports/apparel/sports-wear
 --/sports/apparel/bags
@@ -281,7 +282,7 @@
 --/sports/fab-corner/league-of-innovations
 --/sports/fab-corner/new-arrivals
 --/sports/fab-corner/footwear-clearance
---/sports/fab-corner/flat-50%-off
+--/sports/fab-corner/flat-50-off
 
 /diabetes
 -/diabetes/devices : Monitoring Devices

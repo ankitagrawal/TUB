@@ -22,7 +22,7 @@
                 <br>
                 <table>
                     <tr>
-                        <td><label>Enter Gateway Order Id</label></td>
+                        <td><label>Enter Payment Gateway Order Id</label></td>
                         <td><s:text name="gatewayOrderId" id = "gatewayOrderId" style="width:180px;height:25px;"/></td>
                     </tr>
 

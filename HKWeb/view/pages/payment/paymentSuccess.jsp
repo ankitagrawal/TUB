@@ -7,6 +7,7 @@
 <%@ page import="com.hk.constants.marketing.AnalyticsConstants"%>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -244,47 +245,17 @@
   }());
   </script>
 
-	<!-- Start MicroAd Blade conversion Code  -->
-	<%--<script type="text/javascript">
-		var blade_co_account_id='4184';
-		var blade_group_id='convtrack14344';
-
-		(function() {
-		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
-		var path = '/js/bl_track_others.js';
-
-		var bs = document.createElement('script');
-		bs.type = 'text/javascript'; bs.async = true;
-		bs.charset = 'utf-8'; bs.src = host + path;
-
-		var s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(bs, s);
-		})();
-	</script>
-	<script type="text/javascript">
-		var blade_co_account_id='4184';
-		var blade_group_id='';
-		(function() {
-		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
-		var path = '/js/bl_track_others.js';
-
-		var bs = document.createElement('script');
-		bs.type = 'text/javascript'; bs.async = true;
-		bs.charset = 'utf-8'; bs.src = host + path;
-
-		var s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(bs, s);
-		})();
-	</script>--%>
-	<!--End: Tracking code for MicroAd Blade-->
-	
-
-
   <%
     }
   %>
-  <!-- Google Code for Payment Success Conversion Page -->
-  <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
+  <%--<!-- Google Code for Payment Success Conversion Page -->--%>
+  <s:layout-render
+      name="/layouts/embed/paymentSuccessConversionTags.jsp"
+      conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}"
+      order_id="${actionBean.payment.gatewayOrderId}"
+      order="${actionBean.order}"
+      pageType="<%=HealthkartConstants.Remarketing.PageType.paymentSuccess%>"
+      />
 
 </c:if>
 
@@ -564,7 +535,8 @@
 
 </s:layout-component>
 
-<s:layout-component name="analytics">
+<s:layout-component name="remarketing">
+
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
     <script type="text/javascript">
         var vizuryLink = "https://ssl.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e500&orderid=${actionBean.gatewayOrderId}&orderprice=${actionBean.payment.amount}&uid=${user_hash}";
@@ -575,5 +547,7 @@
         document.getElementById("vizuryTargeting").src = vizuryLink;
     </script>
 </s:layout-component>
+
+<s:layout-component name="analytics"> </s:layout-component>
 
 </s:layout-render>
