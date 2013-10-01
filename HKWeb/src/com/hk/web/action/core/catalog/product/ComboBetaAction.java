@@ -254,7 +254,7 @@ public class ComboBetaAction extends BaseAction {
 
         }
 
-        if (combo != null) {
+        if (isHybridRelease() && combo != null) {
             return new ForwardResolution("/pages/productBeta.jsp");
         }
         return null;
