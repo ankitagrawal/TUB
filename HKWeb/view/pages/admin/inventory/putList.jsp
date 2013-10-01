@@ -52,16 +52,7 @@
 </style>
 
 
-<table class="header">
-    <tr>
-        <td>
-            <p>Put List for GRN
-                <c:out value="${ica.grn.id}"/>
-            </p>
-        </td>
-    </tr>
-
-</table>
+<h2>Put List for GRN ${ica.grn.id}</h2>
 <div class="alert messages">
     <s:messages key="generalMessages"/></div>
 <div class="clear"></div>
@@ -73,8 +64,8 @@
             <th width="100px">Product Variant</th>
             <th width="250px">Item</th>
             <th width="150px">Batch</th>
-            <th width="100px">Barcode</th>
-            <th width="100px">CheckedIn Qty</th>
+            <th width="150px">Barcode</th>
+            <th width="150px">Qty</th>
 
         </tr>
         <c:forEach items="${ica.skuSkuGroupMap}" var="skuSkuGroup" varStatus="sno">
@@ -89,7 +80,7 @@
                         <c:forEach items="${listOfSkuGroup}" var="skuGroup">
                             <tr>
                                 <td width="150px">${skuGroup.batchNumber}</td>
-                                <td width="70px">
+                                <td width="150px">
                                     <c:choose>
                                         <c:when test="${skuGroup.barcode != null}">
                                             ${skuGroup.barcode}
@@ -103,7 +94,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
-                                <td width="100px">${fn:length(skuGroup.skuItems)}</td>
+                                <td width="150px">${fn:length(skuGroup.skuItems)}</td>
                             </tr>
                         </c:forEach>
                     </table>
