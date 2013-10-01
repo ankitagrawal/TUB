@@ -579,10 +579,6 @@ function _updateTotals(responseData) {
     </div>
 </c:forEach>
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
-<!--google remarketing-->
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
-<!--BLADe marketing-->
-<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="cart"/>
 
 <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
 
