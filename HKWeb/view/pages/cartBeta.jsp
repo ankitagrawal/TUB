@@ -404,7 +404,7 @@ function _updateTotals(responseData) {
 
             <%--HTML code for dispatch date--%>
         <div class="dispatchedDateNew">
-            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} working days
+            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} days
             </div>
         </div>
 
@@ -527,7 +527,7 @@ function _updateTotals(responseData) {
         </div>
         <div class="dispatchedDateNew">
             <div>${cartLineItem.comboInstance.combo.minDays} - ${cartLineItem.comboInstance.combo.maxDays}
-                working days
+                days
             </div>
         </div>
         <div class="quantity" style="width:80px;left:15px;bottom:5px;">
@@ -1017,7 +1017,7 @@ function _updateTotals(responseData) {
     font-size: 12px !important;
     padding-top: 1px;
     text-transform: lowercase;
-    top: 10px;
+    top: 1px;
 }
 
 .tabletitle.tableTitleNew {
@@ -1060,7 +1060,7 @@ function _updateTotals(responseData) {
     background-color: white; /*border: 2px solid #336699;*/
     padding: 0px;
     z-index: 102;
-    font-family: Verdana;
+    /*font-family: Verdana;*/
     font-size: 10pt;
     color: #333;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
