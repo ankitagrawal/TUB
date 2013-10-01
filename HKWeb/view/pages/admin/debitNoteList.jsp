@@ -53,11 +53,11 @@
         <th>Create Date</th>
         <th>Supplier</th>
         <th>Supplier TIN</th>
+        <th>Supplier Invoice</th>
         <th>Warehouse</th>
         <th>Status</th>
         <!-- <th>Reconciled</th> -->
         <th>Actions</th>
-          <th>Supplier Invoice</th>
       </tr>
       </thead>
       <c:forEach items="${poa.debitNoteList}" var="debitNote" varStatus="ctr">
@@ -73,6 +73,7 @@
           <td><fmt:formatDate value="${debitNote.createDate}" type="both" timeStyle="short"/></td>
           <td>${debitNote.supplier.name}</td>
           <td>${debitNote.supplier.tinNumber}</td>
+          <td><c:if test="${debitNote.purchaseInvoice!=null }">${debitNote.purchaseInvoice.invoiceNumber}</c:if></td>
           <td>${debitNote.warehouse.identifier}</td>
           <td>${debitNote.debitNoteStatus.name}</td>
           <%-- <td>
@@ -93,7 +94,6 @@
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="print">Print
               <s:param name="debitNote" value="${debitNote.id}"/>
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
-              
               <c:if test = "${debitNote.reconciliationVoucher!=null }">
               &nbsp;
               <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="printAsRtv">Print As RTV
@@ -101,7 +101,6 @@
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
               </c:if>
           </td>
-            <td><c:if test="${debitNote.purchaseInvoice!=null }">${debitNote.purchaseInvoice.invoiceNumber}</c:if></td>
         </tr>
       </c:forEach>
     </table>
