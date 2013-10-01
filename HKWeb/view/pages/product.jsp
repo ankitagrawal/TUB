@@ -209,7 +209,6 @@
 </s:layout-component>
 <s:layout-component name="prod_title">
 
-   <c:out value="RAHHUUUUUUUU-----${categories}"/>
 	<div>
 		<shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
 			<s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank"
