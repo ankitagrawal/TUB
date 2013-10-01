@@ -5,6 +5,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -788,8 +789,14 @@ function _updateTotals(responseData) {
 </ul>
 </div-->
 
-<s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
-<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+<%--<s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>--%>
+<%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>--%>
+
+<s:layout-render
+    name="/layouts/embed/remarketingWithCustomParams.jsp"
+    pageType="<%=HealthkartConstants.Remarketing.PageType.cart%>"
+    order="${cartAction.order}"
+    />
 
 <c:if test="${not isSecure }">
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1"

@@ -10,6 +10,7 @@
 <%@ page import="com.hk.cache.CategoryCache" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -1139,12 +1140,15 @@
 	</c:if>
 
     <!--google remarketing-->
-    <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="product" googleProduct="${product}" topLevelCategory="${product.primaryCategory.name}" categories="${product.pipeSeparatedCategories}"/>
-    <!--google remarketing-->
-    <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="product" topLevelCategory="${product.primaryCategory.name}"/>
-    <!--Ozone remarketing-->
-    <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="product" googleProduct="${product}" topLevelCategory="${product.primaryCategory.name}"
-                     secondaryLevelCategory ="${product.secondaryCategory.name}"/>
+  <s:layout-render
+      name="/layouts/embed/remarketingWithCustomParams.jsp"
+      pageType="<%=HealthkartConstants.Remarketing.PageType.product%>"
+      product="${product}"
+      allCategories="${pa.allCategories}"
+      primaryCategory="${product.primaryCategory.name}"
+      secondaryCategory="${product.secondaryCategory.name}"
+      brand="${product.brand}"
+      />
 
 
 </s:layout-component>
