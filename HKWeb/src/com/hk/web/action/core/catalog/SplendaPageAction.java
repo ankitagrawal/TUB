@@ -21,6 +21,6 @@ public class SplendaPageAction extends BaseAction {
 
     @DefaultHandler
     public Resolution splenda() {
-        return new ForwardResolution("store/splenda/index.jsp");
+        return new ForwardResolution("/store/splenda/index.jsp");
     }
 }
