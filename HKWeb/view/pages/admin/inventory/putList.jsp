@@ -52,13 +52,13 @@
 </style>
 
 
-<h2>Put List for GRN ${ica.grn.id}</h2>
+<strong>Put List for GRN ${ica.grn.id}</strong>
+<br/>
 <div class="alert messages">
     <s:messages key="generalMessages"/></div>
 <div class="clear"></div>
 
 <div>
-    <h3>Put List Details</h3>
     <table style="font-size: .8em; width:700px; padding:0">
         <tr>
             <th width="100px">Product Variant</th>
@@ -76,7 +76,7 @@
                 <td>${productVariant.id}</td>
                 <td>${productVariant.product.name} <br/> ${productVariant.optionsPipeSeparated}</td>
                 <td colspan="3">
-                    <table>
+                    <table width="450px">
                         <c:forEach items="${listOfSkuGroup}" var="skuGroup">
                             <tr>
                                 <td width="150px">${skuGroup.batchNumber}</td>
