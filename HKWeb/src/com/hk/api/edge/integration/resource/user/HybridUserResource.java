@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.hk.api.edge.integration.response.user.UserTempResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,13 +45,15 @@ public class HybridUserResource {
     @Produces("application/json")
     public String isTempUser(@PathParam("id")
     Long userId) {
-        boolean bool = false;
+      UserTempResponse userTempResponse = new UserTempResponse();
         try {
-            bool = getHybridUserService().isTempUser(userId);
+          userTempResponse = getHybridUserService().isTempUser(userId);
         } catch (InvalidParameterException ipe) {
-            return new JSONResponseBuilder().addField("isTempUser", bool).addField("msgs", ipe.getMessage()).build();
+            userTempResponse.addMessage(ipe.getMessage());
+            return new JSONResponseBuilder().addField("results", userTempResponse).build();
         }
-        return new JSONResponseBuilder().addField("isTempUser", bool).addField("msgs", "UserExist").build();
+      userTempResponse.addMessage("User Exist");
+      return new JSONResponseBuilder().addField("results", userTempResponse).build();
     }
 
     public HybridUserService getHybridUserService() {
