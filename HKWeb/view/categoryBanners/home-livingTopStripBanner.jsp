@@ -13,9 +13,9 @@
         <%--<area shape="rect" coords="468,-1,655,98" href="${pageContext.request.contextPath}/home-living/mix-grind-chop/juicer-mixer-grinder&camp=home_living_25_off" />--%>
         <%--<area shape="rect" coords="667,1,874,80" href="${pageContext.request.contextPath}/home-living/mix-grind-chop/food-processor&camp=home_living_25_off" />--%>
 
-            <area shape="rect" coords="162,-7,553,94"
+            <area shape="rect" coords="0,-7,500,94"
                   href="${pageContext.request.contextPath}/home-living/home-appliances/iron/steam?brand=Philips&phi"/>
-            <area shape="rect" coords="568,-1,874,98"
+            <area shape="rect" coords="500,-1,999,98"
                   href="${pageContext.request.contextPath}/home-living/mix-grind-chop/juicer-mixer-grinder?brand=Philips&phi"/>
       </map>
 
