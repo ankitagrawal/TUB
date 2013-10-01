@@ -20,7 +20,7 @@ import net.sourceforge.stripes.action.UrlBinding;
 public class SplendaPageAction extends BaseAction {
 
     @DefaultHandler
-    public Resolution revital() {
-        return new ForwardResolution("/pages/store/splenda/index.jsp");
+    public Resolution splenda() {
+        return new ForwardResolution("store/splenda/index.jsp");
     }
 }
