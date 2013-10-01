@@ -51,9 +51,9 @@
 
 </style>
 
-
-<strong>Put List for GRN ${ica.grn.id}</strong>
-<br/>
+<div style="padding:10px;">
+    <strong>Put List for GRN ${ica.grn.id}</strong>
+</div>
 <div class="alert messages">
     <s:messages key="generalMessages"/></div>
 <div class="clear"></div>
