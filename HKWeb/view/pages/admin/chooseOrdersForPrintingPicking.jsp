@@ -187,15 +187,6 @@
 					<div style="float:left; font-size: 0.9em; margin-top: 7px; margin-left:50px">
 						<s:submit name="sendOrdersBackToProcessingQueue" id="sendOrdersBackToProcessingQueue"
 						          value="Move orders to processing Queue"/>
-						<s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" target="_blank" class="button_orange">
-							<s:param name="category" value="${printPickBean.category}"/>
-							<s:param name="courier" value="${printPickBean.courier}"/>
-							<s:param name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>
-							<s:param name="gatewayOrderId" value="${printPickBean.gatewayOrderId}"/>
-							<s:param name="startDate" value="${printPickBean.startDate}"/>
-							<s:param name="endDate" value="${printPickBean.endDate}"/>
-							Print Job Card
-						</s:link>
 						<s:submit name="clearPickingQueue" value="Job Done - Clear Queue"/>
 					</div>
 				</c:if>
