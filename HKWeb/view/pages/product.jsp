@@ -195,7 +195,6 @@
 	<s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbProduct="${product}" lastLink="true"
 	                 topHeading="${seoData.h1}"/>
 </s:layout-component>
-
 <s:layout-component name="topCategory">${pa.topCategoryUrlSlug}</s:layout-component>
 <s:layout-component name="allCategories">${pa.allCategories}</s:layout-component>
 <s:layout-component name="brand">${product.brand}</s:layout-component>
