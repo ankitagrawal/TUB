@@ -80,9 +80,9 @@
           <c:if test="${fn:length(productVO.freebieDesc) > 3}">
               <div class="hk-offer">Offer</div>
           </c:if>
-        <shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
+        <%--<shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
           Missing Image - <a href="${pageContext.request.contextPath}/rest/api/product/resizeImage/${productVO.id}/m/bt" target="_blank">Click here</a>
-        </shiro:hasAnyRoles>
+        </shiro:hasAnyRoles>--%>
       </div>
       <div>
 					<span style="height:20px;max-width:240px;">

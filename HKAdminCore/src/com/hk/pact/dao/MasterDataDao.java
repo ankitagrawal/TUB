@@ -5,6 +5,7 @@ import java.util.List;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.reversePickup.EnumReversePickupStatus;
+import com.hk.constants.reversePickup.EnumReversePickupType;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -32,6 +33,9 @@ import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.queue.Classification;
+import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.domain.review.Mail;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
@@ -202,7 +206,9 @@ public interface MasterDataDao {
 
     public List<Courier> getCouriersForReversePickup();
 
-    public List<EnumReversePickupStatus> getAllReversePickUpStatus();
+    public List<ReversePickupStatus> getAllReversePickUpStatus();
 
-		public List<Category> getCategoriesForPOS();
+    public List<ReversePickupType> getAllReversePickUpType();
+
+	public List<Category> getCategoriesForPOS();
 }

@@ -382,7 +382,7 @@
     .gm {
         display: inline-block;
         position: relative;
-        z-index: 25;
+        z-index: 100;
         background: white;
         margin: 0px;
         box-shadow: 0px 0px 25px #ccc;

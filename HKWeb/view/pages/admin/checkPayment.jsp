@@ -32,88 +32,12 @@
 
         <h2>Order Id ${checkPaymentBean.order.id}, Order Status: ${checkPaymentBean.order.orderStatus.name}</h2>
 
+        <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
+            <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${checkPaymentBean.pricingDto}"
+                             orderDate="${checkPaymentBean.payment.paymentDate}"/>
+        </div>
+
         <div class="leftPS">
-
-            <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
-                <h2 class="paymentH2">Order Summary</h2>
-
-                <div class="itemSummaryNew">
-                    <s:layout-render name="/layouts/embed/itemSummaryTable.jsp"
-                                     pricingDto="${checkPaymentBean.pricingDto}"
-                                     orderDate="${checkPaymentBean.payment.paymentDate}"/>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="rightPS">
-
-            <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
-                <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${checkPaymentBean.pricingDto}"
-                                 orderDate="${checkPaymentBean.payment.paymentDate}"/>
-            </div>
-
-            <c:choose>
-                <c:when test="${checkPaymentBean.payment.paymentStatus.id == paymentStatusAuthPending}">
-                    <%--your cod ka message--%>
-                    <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
-                          <span class="youPay">
-                            Pay on delivery:
-                          </span>
-                        <strong>
-                            <span id="summaryGrandTotalPayable" class="youPayValue">
-                              <fmt:formatNumber value="${checkPaymentBean.pricingDto.grandTotalPayable}" type="currency"
-                                                currencySymbol="Rs. "/>
-                            </span>
-                        </strong>
-
-                        <div class='newShippingHandling'>
-                            (inclusive of discounts, shipping, handling and taxes.)
-                        </div>
-                    </h1>
-
-                </c:when>
-                <%--your non cod ka message--%>
-                <c:otherwise>
-                    <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
-                          <span class="youPay">
-                            You paid:
-                          </span>
-                        <strong>
-                            <span id="summaryGrandTotalPayable" class="youPayValue">
-                              <fmt:formatNumber value="${checkPaymentBean.pricingDto.grandTotalPayable}" type="currency"
-                                                currencySymbol="Rs. "/>
-                            </span>
-                        </strong>
-
-                        <div class='newShippingHandling'>
-                            (inclusive of discounts, shipping, handling and taxes.)
-                        </div>
-                    </h1>
-
-                </c:otherwise>
-            </c:choose>
-
-            <div class="orderShippedTo" style="margin-bottom: 60px;width: 105%;">
-                <h2 class="paymentH2"
-                    style="font-weight:bold;border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER
-                    SHIPPED TO</h2>
-
-                <p>
-                    <c:set var="address" value="${checkPaymentBean.payment.order.address}"/>
-                    <strong>${address.name}</strong> <br/>
-                        ${address.line1},
-                    <c:if test="${not empty address.line2}">
-                        ${address.line2},
-                    </c:if>
-                        ${address.city} - ${address.pincode.pincode}<br/>
-                        ${address.state}, <span class="upc">INDIA</span><br/>
-                    <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
-                </p>
-            </div>
-
-        </div>
-
         <s:form beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
 
             <div>
@@ -151,6 +75,7 @@
                         <th>Gateway Transaction Id</th>
                         <th>RRN</th>
                         <th>AuthId Code</th>
+                        <th>Txn Type</th>
                     </tr>
                     </thead>
                     <c:forEach items="${checkPaymentBean.paymentList}" var="payment" varStatus="ctr">
@@ -169,20 +94,20 @@
                                     Edit Payment
                                 </s:link>)
                                 </shiro:hasPermission>
-                            <c:if test="${payment.transactionType ne refundTxn}">
-                                (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
-                                         event="seekPayment" >
-                                <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
-                                Seek Payment
-                            </s:link>) </c:if>
+                                <c:if test="${payment.transactionType ne refundTxn}">
+                                    (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
+                                             event="seekPayment" >
+                                    <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
+                                    Seek Payment
+                                </s:link>) </c:if>
 
-                             <c:if test="${payment.transactionType ne refundTxn and payment.paymentStatus.id eq paymentStatusSuccess}">
-                                (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
-                                         event="refundPayment">
-                                <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
-                                <s:param name="amount" value="${payment.amount}"/>
-                                 Refund Payment
-                            </s:link>) </c:if>
+                                <c:if test="${payment.transactionType ne refundTxn and payment.paymentStatus.id eq paymentStatusSuccess}">
+                                    (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
+                                             event="refundPayment">
+                                    <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
+                                    <s:param name="amount" value="${payment.amount}"/>
+                                    Refund Payment
+                                </s:link>) </c:if>
                             </td>
                             <td><fmt:formatDate value="${payment.createDate}" type="both"/></td>
                             <td><fmt:formatDate value="${payment.paymentDate}" type="both"/></td>
@@ -194,7 +119,7 @@
                             </c:if>
                             </td>
                             <td><c:if test="${payment.issuer != null}">
-                                    ${payment.issuer.name}
+                                ${payment.issuer.name}
                             </c:if></td>
                             <td>
                                     ${payment.responseMessage}
@@ -211,6 +136,9 @@
                             <td>
                                     ${payment.authIdCode}
                             </td>
+                            <td>
+                                    ${payment.transactionType}
+                            </td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -219,19 +147,19 @@
             <div>
                 <s:hidden name="order"/>
 
-                <%--<c:when test="${checkPaymentBean.payment.paymentMode.id eq onlinePaymentMode}">--%>
-                    <shiro:hasPermission name="<%=PermissionConstants.AUTO_UPDATE_PAYMENT%>">
-                        <s:submit name="autoUpdate" value="Auto Confirm" onclick="return confirm('Are you sure?')"/>
-                    </shiro:hasPermission>
-                    <shiro:hasPermission name="<%=PermissionConstants.MANUAL_UPDATE_PAYMENT%>">
-                        <s:submit name="manualUpdate" value="Manual Confirm" onclick="retrun confirm('Are you sure')"/> 
-                    </shiro:hasPermission>
-                <%--</c:when>--%>
-                <%--<c:otherwise>--%>
-                    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PAYMENT%>">
-                        <s:submit name="acceptAsSuccessful" value="Confirm Cheque/Neft/Cash" onclick="retrun confirm('Are you sure')"/>    
-                    </shiro:hasPermission>                                        
-                <%--</c:otherwise>--%>
+                    <%--<c:when test="${checkPaymentBean.payment.paymentMode.id eq onlinePaymentMode}">--%>
+                <shiro:hasPermission name="<%=PermissionConstants.AUTO_UPDATE_PAYMENT%>">
+                    <s:submit name="autoUpdate" value="Auto Confirm" onclick="return confirm('Are you sure?')"/>
+                </shiro:hasPermission>
+                <shiro:hasPermission name="<%=PermissionConstants.MANUAL_UPDATE_PAYMENT%>">
+                    <s:submit name="manualUpdate" value="Manual Confirm" onclick="retrun confirm('Are you sure')"/>
+                </shiro:hasPermission>
+                    <%--</c:when>--%>
+                    <%--<c:otherwise>--%>
+                <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PAYMENT%>">
+                    <s:submit name="acceptAsSuccessful" value="Confirm Cheque/Neft/Cash" onclick="retrun confirm('Are you sure')"/>
+                </shiro:hasPermission>
+                    <%--</c:otherwise>--%>
 
 
                     <%--
@@ -245,9 +173,85 @@
                               <s:submit name="associateToPayment" value="Associate to payment" onclick="return confirm('Are you sure?')"/>
                             </c:if>
                     --%>
-                
+
             </div>
         </s:form>
+        </div>
+
+        <div class="leftPS">
+
+            <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
+                <h2 class="paymentH2">Order Summary</h2>
+
+                <div class="itemSummaryNew">
+                    <s:layout-render name="/layouts/embed/itemSummaryTable.jsp"
+                                     pricingDto="${checkPaymentBean.pricingDto}"
+                                     orderDate="${checkPaymentBean.payment.paymentDate}"/>
+                </div>
+
+            </div>
+
+        <c:choose>
+            <c:when test="${checkPaymentBean.payment.paymentStatus.id == paymentStatusAuthPending}">
+                <%--your cod ka message--%>
+                <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+                          <span class="youPay">
+                            Pay on delivery:
+                          </span>
+                    <strong>
+                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                              <fmt:formatNumber value="${checkPaymentBean.pricingDto.grandTotalPayable}" type="currency"
+                                                currencySymbol="Rs. "/>
+                            </span>
+                    </strong>
+
+                    <div class='newShippingHandling'>
+                        (inclusive of discounts, shipping, handling and taxes.)
+                    </div>
+                </h1>
+
+            </c:when>
+            <%--your non cod ka message--%>
+            <c:otherwise>
+                <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+                          <span class="youPay">
+                            You paid:
+                          </span>
+                    <strong>
+                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                              <fmt:formatNumber value="${checkPaymentBean.pricingDto.grandTotalPayable}" type="currency"
+                                                currencySymbol="Rs. "/>
+                            </span>
+                    </strong>
+
+                    <div class='newShippingHandling'>
+                        (inclusive of discounts, shipping, handling and taxes.)
+                    </div>
+                </h1>
+
+            </c:otherwise>
+        </c:choose>
+
+        <div class="orderShippedTo" style="margin-bottom: 60px;width: 105%;">
+            <h2 class="paymentH2"
+                style="font-weight:bold;border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER
+                SHIPPED TO</h2>
+
+            <p>
+                <c:set var="address" value="${checkPaymentBean.payment.order.address}"/>
+                <strong>${address.name}</strong> <br/>
+                    ${address.line1},
+                <c:if test="${not empty address.line2}">
+                    ${address.line2},
+                </c:if>
+                    ${address.city} - ${address.pincode.pincode}<br/>
+                    ${address.state}, <span class="upc">INDIA</span><br/>
+                <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
+            </p>
+        </div>
+
+
+
     </s:layout-component>
 
 </s:layout-render>

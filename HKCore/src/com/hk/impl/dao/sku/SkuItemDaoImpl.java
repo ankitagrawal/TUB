@@ -31,13 +31,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   @Autowired
   WarehouseDao warehouseDao;
 
-  private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus) {
+  private DetachedCriteria getSkuItemCriteria(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus, List<SkuItemOwner> skuItemOwners) {
     DetachedCriteria skuItemCriteria = DetachedCriteria.forClass(SkuItem.class);
     if (skuGroup != null) {
       skuItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
     }
     if (skuItemStatus != null && skuItemStatus.size() > 0) {
       skuItemCriteria.add(Restrictions.in("skuItemStatus", skuItemStatus));
+    }
+    if (skuItemOwners != null && skuItemOwners.size() > 0) {
+      skuItemCriteria.add(Restrictions.in("skuItemOwner", skuItemOwners));
     }
     return skuItemCriteria;
   }
@@ -49,7 +52,8 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
     List<SkuItemStatus> itemStatus = new ArrayList<SkuItemStatus>();
     itemStatus.add(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, itemStatus);
+    List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, itemStatus, skuItemOwners);
     return findByCriteria(skuItemCriteria);
   }
 
@@ -57,7 +61,16 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     if (skuGroup == null) {
       return new ArrayList<SkuItem>();
     }
-    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus);
+    List<SkuItemOwner> skuItemOwners = new ArrayList<SkuItemOwner>();
+    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus, skuItemOwners);
+    return findByCriteria(skuItemCriteria);
+  }
+  
+  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus, List<SkuItemOwner> skuItemOwners){
+    if (skuGroup == null) {
+      return new ArrayList<SkuItem>();
+    }
+    DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, skuItemStatus, skuItemOwners);
     return findByCriteria(skuItemCriteria);
   }
 
