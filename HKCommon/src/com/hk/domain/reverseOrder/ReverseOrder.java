@@ -18,6 +18,7 @@ import java.util.HashSet;
 @Entity
 @Table(name = "reverse_order")
 @NamedQuery(name = "getReverseOrderById", query = "select rvo from ReverseOrder rvo where id = :reverseOrderId")
+@Deprecated
 public class ReverseOrder implements java.io.Serializable {
 
 	@Id

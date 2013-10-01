@@ -7,6 +7,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "reverse_pickup_order")
-public class ReversePickupOrder {
+public class ReversePickupOrder implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -56,15 +57,21 @@ public class ReversePickupOrder {
     @JoinColumn(name = "reverse_pickup_status_id", nullable = false)
     private ReversePickupStatus reversePickupStatus;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reverse_pickup_type_id", nullable = false)
+    private ReversePickupType reversePickupType;
+
     @Column(name = "courier_managed_by")
     private Long courierManagedBy;
-
 
     @Column(name = "courier_name")
     private String courierName;
 
     @Column(name = "tracking_number", length = 70)
     private String trackingNumber;
+
+    @Column(name = "booking_reference_no", length = 70)
+    private String bookingReferenceNumber;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "pickup_time")
@@ -182,4 +189,21 @@ public class ReversePickupOrder {
     public void setReversePickupId(String reversePickupId) {
         this.reversePickupId = reversePickupId;
     }
+
+    public ReversePickupType getReversePickupType() {
+        return reversePickupType;
+    }
+
+    public void setReversePickupType(ReversePickupType reversePickupType) {
+        this.reversePickupType = reversePickupType;
+    }
+
+    public String getBookingReferenceNumber() {
+        return bookingReferenceNumber;
+    }
+
+    public void setBookingReferenceNumber(String bookingReferenceNumber) {
+        this.bookingReferenceNumber = bookingReferenceNumber;
+    }
+
 }

@@ -35,6 +35,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
@@ -56,7 +57,7 @@ import com.hk.web.action.admin.inventory.InventoryCheckinAction.HTTPResponseReso
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Component
-@Secure(hasAnyRoles = { RoleConstants.WH_MANAGER_L1 }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKIN}, authActionBean = AdminPermissionAction.class)
 public class UniqueBarcodeAction extends BaseAction {
 
 	private static Logger logger = LoggerFactory.getLogger(UniqueBarcodeAction.class);
