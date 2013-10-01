@@ -60,7 +60,7 @@
         </div>--%>
 
         <div style="border-top: 2px solid #ff9999; border-bottom: 2px solid #ff6666; height: 20px; padding-top: 3px; font-size: 1em;">
-           <strong> Customer support will be unavailable on 2nd of October, 2013</strong>
+           <strong>Customer support will be unavailable on 2nd October 2013</strong>
         </div>
 	<%
 		}
