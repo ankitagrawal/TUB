@@ -1,124 +1,124 @@
 package com.hk.web.action.core.catalog.product;
 
+import net.sourceforge.stripes.action.*;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang.StringUtils;
+import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.marketing.EnumProductReferrer;
-import com.hk.constants.review.EnumReviewStatus;
-import com.hk.domain.MapIndia;
-import com.hk.domain.affiliate.Affiliate;
-import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
-import com.hk.domain.catalog.product.combo.SuperSaverImage;
+import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.content.SeoData;
+import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.review.UserReview;
 import com.hk.domain.subscription.SubscriptionProduct;
-import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Address;
+import com.hk.domain.MapIndia;
 import com.hk.dto.AddressDistanceDto;
 import com.hk.dto.menu.MenuNode;
+import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.constants.review.EnumReviewStatus;
+import com.hk.util.SeoManager;
 import com.hk.helper.MenuHelper;
-import com.hk.manager.LinkManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.core.AddressDao;
-import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
-import com.hk.pact.service.image.ProductImageService;
-import com.hk.pact.service.search.ProductSearchService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
-import com.hk.util.SeoManager;
-import com.hk.web.action.core.search.SearchAction;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
+import com.hk.pact.service.search.ProductSearchService;
+import com.hk.manager.LinkManager;
 import com.hk.web.filter.WebContext;
+import com.hk.web.action.core.search.SearchAction;
 import com.hk.cache.ProductCache;
 import com.shiro.PrincipalImpl;
-import net.sourceforge.stripes.action.*;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
 
 import java.util.*;
 
-@UrlBinding("/product/{productSlug}/{productId}")
+/**
+ * @author Rimal
+ */
+@UrlBinding("/combo/{productSlug}/{productId}")
 @Component
-public class ProductAction extends BaseAction {
-    @SuppressWarnings("unused")
-    private static Logger              logger        = Logger.getLogger(ProductAction.class);
+public class ComboBetaAction extends BaseAction {
 
-    Long                               superSaverImageId;
-    String                             productId;
-    Product                            product;
-    String                             productSlug;
-    List<ProductImage>                 productImages;
-    private List<AddressDistanceDto>   addressDistanceDtos;
-    SeoData                            seoData;
-    String                             topCategoryUrlSlug;
-    String                             allCategories;
-    Affiliate                          affiliate;
-    Combo                              combo;
-    String                             feed;
-    String                             affid;
-    Double                             averageRating;
-    List<UserReview>                   userReviews   = new ArrayList<UserReview>();
-    Long                               totalReviews  = 0L;
-    List<Combo>                        relatedCombos = new ArrayList<Combo>();
-    String                             renderComboUI = "false";
-    SubscriptionProduct                subscriptionProduct;
+    Long superSaverImageId;
+    String productId;
+    Product product;
+    String productSlug;
+    List<ProductImage> productImages;
+    private List<AddressDistanceDto> addressDistanceDtos;
+    SeoData seoData;
+    String topCategoryUrlSlug;
+    String allCategories;
+    Affiliate affiliate;
+    Combo combo;
+    String feed;
+    String affid;
+    Double averageRating;
+    List<UserReview> userReviews = new ArrayList<UserReview>();
+    Long totalReviews = 0L;
+    List<Combo> relatedCombos = new ArrayList<Combo>();
+    String renderComboUI = "false";
+    SubscriptionProduct subscriptionProduct;
 
-    Long                               productReferrerId;  // Same as HealthkartConstants.URL.productReferrerId
-    String                             productPosition;  // Same as HealthkartConstants.URL.productPosition
-    boolean                            isOutOfStockPage = false;
-    String                             menuNodeUrlFragment;
+    Long productReferrerId;  // Same as HealthkartConstants.URL.productReferrerId
+    String productPosition;  // Same as HealthkartConstants.URL.productPosition
+    boolean isOutOfStockPage = false;
+    String menuNodeUrlFragment;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
-    private String                     preferredZone;
-    private String                     urlFragment;
+    private String preferredZone;
+    private String urlFragment;
 
     @Autowired
-    private SeoManager                 seoManager;
+    private SeoManager seoManager;
 
     @Autowired
-    private MenuHelper                 menuHelper;
+    private MenuHelper menuHelper;
     @Autowired
-    private AffiliateDao               affiliateDao;
+    private AffiliateDao affiliateDao;
 
     @Autowired
-    private MapIndiaDao                mapIndiaDao;
+    private MapIndiaDao mapIndiaDao;
     @Autowired
-    private LocalityMapDao             localityMapDao;
+    private LocalityMapDao localityMapDao;
     @Autowired
-    private AddressDao                 addressDao;
+    private AddressDao addressDao;
     @Autowired
-    private ProductService             productService;
+    private ProductService productService;
     @Autowired
-    private SuperSaverImageService     superSaverImageService;
+    private SuperSaverImageService superSaverImageService;
     @Autowired
     private SubscriptionProductService subscriptionProductService;
     @Autowired
-    private LinkManager                linkManager;
+    private LinkManager linkManager;
     @Autowired
-    ProductImageService                productImageService;
-    private ProductVariant             validTryOnProductVariant;
+    ProductImageService productImageService;
+    private ProductVariant validTryOnProductVariant;
     @Autowired
-    TrafficAndUserBrowsingService      trafficAndUserBrowsingService;
+    TrafficAndUserBrowsingService trafficAndUserBrowsingService;
 
-   @Autowired
-   ProductSearchService productSearchService;
+    @Autowired
+    ProductSearchService productSearchService;
 
-  @Override
+    @Override
     public PrincipalImpl getPrincipal() {
-        return super.getPrincipal();    //To change body of overridden methods use File | Settings | File Templates.
+        return super.getPrincipal();
     }
 
     @DefaultHandler
     @DontValidate
+    @SuppressWarnings("unchecked")
     public Resolution pre() {
         // getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (300*1000)); // 5 min in
         // future.
@@ -140,30 +140,30 @@ public class ProductAction extends BaseAction {
             trafficAndUserBrowsingService.saveBrowsingHistory(product, WebContext.getRequest(), productReferrerId, productPosition);
             // In case of search log the first clicked position in search log table
             if (productReferrerId != null && productReferrerId.equals(EnumProductReferrer.searchPage.getId())) {
-              productSearchService.updatePositionInSearchLog(productPosition);
+                productSearchService.updatePositionInSearchLog(productPosition);
             }
         } else {
             WebContext.getResponse().setStatus(310); // redirection
             return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
         }
 
-      // code to check if this page has all variants out of stock. this is used to fire a GA custom event
-      if (!product.isDeleted()) {
-        if (product.getProductVariants() != null && !product.getProductVariants().isEmpty() && product.getProductVariants().size() > 1) {
-          // multiple products
-	        isOutOfStockPage = true;
-          for (ProductVariant productVariant: product.getProductVariants()) {
-            if (!productVariant.isDeleted() && !productVariant.isOutOfStock()) {
-              isOutOfStockPage = false;
+        // code to check if this page has all variants out of stock. this is used to fire a GA custom event
+        if (!product.isDeleted()) {
+            if (product.getProductVariants() != null && !product.getProductVariants().isEmpty() && product.getProductVariants().size() > 1) {
+                // multiple products
+                isOutOfStockPage = true;
+                for (ProductVariant productVariant : product.getProductVariants()) {
+                    if (!productVariant.isDeleted() && !productVariant.isOutOfStock()) {
+                        isOutOfStockPage = false;
+                    }
+                }
+            } else if (product.getProductVariants() != null && !product.getProductVariants().isEmpty()) {
+                ProductVariant productVariant = product.getProductVariants().get(0);
+                if (!productVariant.isDeleted() && productVariant.isOutOfStock()) {
+                    isOutOfStockPage = true;
+                }
             }
-          }
-        } else if (product.getProductVariants() != null && !product.getProductVariants().isEmpty()) {
-          ProductVariant productVariant = product.getProductVariants().get(0);
-          if (!productVariant.isDeleted() && productVariant.isOutOfStock()) {
-            isOutOfStockPage = true;
-          }
         }
-      }
 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
@@ -254,21 +254,10 @@ public class ProductAction extends BaseAction {
 
         }
 
-        if (combo == null) {
-            return new ForwardResolution("/pages/product.jsp");
-        } else {
-            List<SuperSaverImage> superSaverImages = getSuperSaverImageService().getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE);
-            String directTo;
-            if (superSaverImages == null || superSaverImages.isEmpty()) {
-                directTo = "product.jsp";
-            } else {
-                SuperSaverImage latestSuperSaverImage = superSaverImages.get(superSaverImages.size() - 1);
-                superSaverImageId = latestSuperSaverImage.getId();
-                directTo = "combo.jsp";
-            }
-
-            return new ForwardResolution("/pages/" + directTo);
+        if (combo != null) {
+            return new ForwardResolution("/pages/productBeta.jsp");
         }
+        return null;
     }
 
     public Resolution productBanner() {
@@ -286,7 +275,7 @@ public class ProductAction extends BaseAction {
         return addressDistanceDtos;
     }
 
-  public class DistanceComparator implements Comparator<AddressDistanceDto> {
+    public class DistanceComparator implements Comparator<AddressDistanceDto> {
         public int compare(AddressDistanceDto dist1, AddressDistanceDto dist2) {
             if (dist1.getDistance() != null && dist2.getDistance() != null) {
                 return dist1.getDistance().compareTo(dist2.getDistance());
@@ -472,11 +461,11 @@ public class ProductAction extends BaseAction {
     }
 
     public String getProductPosition() {
-      return productPosition;
+        return productPosition;
     }
 
     public void setProductPosition(String productPosition) {
-      this.productPosition = productPosition;
+        this.productPosition = productPosition;
     }
 
     public SuperSaverImageService getSuperSaverImageService() {
@@ -491,19 +480,19 @@ public class ProductAction extends BaseAction {
         this.validTryOnProductVariant = validTryOnProductVariant;
     }
 
-  public boolean isOutOfStockPage() {
-    return isOutOfStockPage;
-  }
+    public boolean isOutOfStockPage() {
+        return isOutOfStockPage;
+    }
 
-  public void setOutOfStockPage(boolean outOfStockPage) {
-    isOutOfStockPage = outOfStockPage;
-  }
+    public void setOutOfStockPage(boolean outOfStockPage) {
+        isOutOfStockPage = outOfStockPage;
+    }
 
-  public String getMenuNodeUrlFragment() {
-    return menuNodeUrlFragment;
-  }
+    public String getMenuNodeUrlFragment() {
+        return menuNodeUrlFragment;
+    }
 
-  public void setMenuNodeUrlFragment(String menuNodeUrlFragment) {
-    this.menuNodeUrlFragment = menuNodeUrlFragment;
-  }
+    public void setMenuNodeUrlFragment(String menuNodeUrlFragment) {
+        this.menuNodeUrlFragment = menuNodeUrlFragment;
+    }
 }
