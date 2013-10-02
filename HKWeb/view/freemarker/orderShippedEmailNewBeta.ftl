@@ -43,7 +43,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
             <#list order.lineItems as lineItem>
                 <tr>
 
-                    <td>${lineItem.sku.productVariant.name}
+                    <td>${lineItem.sku.productVariant.variantName}
 
                     </td>
                     <td>
@@ -95,7 +95,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                     <#list shippingOrder.lineItems as lineItem>
                         <tr>
-                            <td>${lineItem.sku.productVariant.name}
+                            <td>${lineItem.sku.productVariant.variantName}
 
                             </td>
                             <td>

@@ -52,7 +52,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
                     <td style="margin-bottom: 1em">
-                    ${productLineItem.productVariant.name}
+                    ${productLineItem.productVariant.variantName}
                     </td>
                     <td>
                     <#--${productLineItem.qty/pricingDto.shippingLineCount}-->

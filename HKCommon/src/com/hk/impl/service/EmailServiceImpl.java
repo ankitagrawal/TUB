@@ -149,9 +149,9 @@ public class EmailServiceImpl implements EmailService {
 
         for (Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
             HtmlEmail htmlEmail = mapEntry.getValue();
+            logger.debug("-----ftl entry-------" + htmlEmail);
             // send this email asynchrounously, we do not want to wait for this process
             sendEmail(htmlEmail);
-            logger.debug("-----ftl entry-------" + htmlEmail);
         }
         return true;
     }

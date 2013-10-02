@@ -39,7 +39,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                 </tr>
             <#list order.lineItems as lineItem>
                 <tr>
-                    <td>${lineItem.sku.productVariant.name}<br/>
+                    <td>${lineItem.sku.productVariant.variantName}<br/>
 
                     </td>
                     <td>
