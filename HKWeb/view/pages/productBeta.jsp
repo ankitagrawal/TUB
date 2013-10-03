@@ -98,7 +98,7 @@
 		}
 	</style>
 
-	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>	
+	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jcarousel.min.js"></script>
 
@@ -124,7 +124,7 @@
 			$("#sizeGuide").click(function toggleVM() {
 				$("#frameChart").toggle();
 			});
-			
+
 			 $("#similarProducts").click(function toggleVM(){
            		 $("#similarProductsVM").toggle();
         	});
@@ -578,7 +578,7 @@
 						</c:when>
 						<c:otherwise>
 							<s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"
-							                 subscriptionProduct="${subscriptionProduct}"/>							
+							                 subscriptionProduct="${subscriptionProduct}"/>
 							<c:choose>
 								<c:when test="${empty product.inStockVariants && !empty product.similarProducts}">
 									<s:layout-render name="/layouts/embed/_hkSimilarProducts.jsp" product="${product}"/>
@@ -975,7 +975,7 @@
 	<script type="text/javascript">
 		var validateCheckbox;
 		$(document).ready(function () {
-           
+
 			var params = {};
 			params.productReferrerId = $('#productReferrerId').val();
 			function _addToCart(res) {

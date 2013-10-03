@@ -396,7 +396,7 @@ function _updateTotals(responseData) {
             <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}" alt="${storeVariantBasic.name}"/>
         </a>
 
-        <div class="name" style="width: 200px;position: relative;float: left;" :>
+        <div class="name" style="word-wrap:break-word;width: 180px;position: relative;float: left;margin: 0 10px 0 5px;" :>
             <a href="${storeVariantBasic.url}">${storeVariantBasic.name} </a>
             <%--<a href="${pageContext.request.contextPath}${cartLineItem.productVariant.url}">${cartLineItem.productVariant.variantName} </a>--%>
                 <%--${cartLineItem.productVariant.variantName}<br/>--%>
@@ -405,12 +405,12 @@ function _updateTotals(responseData) {
 
             <%--HTML code for dispatch date--%>
         <div class="dispatchedDateNew">
-            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} Days
+            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} days
             </div>
         </div>
 
 
-        <div class="quantity" style="width:80px;left:${cartLineItem.hkPrice != 0.0 ? 35 : 10}px;">
+        <div class="quantity" style="width:80px;bottom:5px;left:${cartLineItem.hkPrice != 0.0 ? 15 : 10}px;">
             <c:choose>
                 <c:when test="${cartLineItem.hkPrice == 0.0}">
                     ${cartLineItem.qty}
@@ -513,7 +513,7 @@ function _updateTotals(responseData) {
             </c:choose>
         </a>
 
-        <div class="name" style="word-wrap:break-word;width: 200px;position: relative;float: left;">
+        <div class="name" style="word-wrap:break-word;width: 180px;position: relative;float: left;margin: 0 10px 0 5px;">
             <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
             <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
@@ -528,10 +528,10 @@ function _updateTotals(responseData) {
         </div>
         <div class="dispatchedDateNew">
             <div>${cartLineItem.comboInstance.combo.minDays} - ${cartLineItem.comboInstance.combo.maxDays}
-                working days
+                days
             </div>
         </div>
-        <div class="quantity" style="width: 80px;left: 35px;">
+        <div class="quantity" style="width:80px;left:15px;bottom:5px;">
             <input value="${hk:getComboCount(cartLineItem)}" size="1" class="comboQty"
                    style="width: 20px; height: 18px;"/>
             <a style="" class='remove removeComboLink' href='#'>
@@ -557,14 +557,14 @@ function _updateTotals(responseData) {
           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                     </div>
                   </div>
-                    <div class='special green'>
-                      (saved
-                <span class='num '>
-                Rs <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
-                    value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem) - cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
-                    pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
-                </span>
-                    </div>
+                    <%--<div class='special green'>--%>
+                      <%--(saved--%>
+                <%--<span class='num '>--%>
+                <%--Rs <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber--%>
+                    <%--value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem) - cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"--%>
+                    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)--%>
+                <%--</span>--%>
+                    <%--</div>--%>
                   <div class="cut">
                     <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
                       <fmt:formatNumber
@@ -1010,7 +1010,7 @@ function _updateTotals(responseData) {
 
 .remove.removeLink, .remove.removeComboLink {
     position: absolute;
-    margin-left: 130px !important;
+    margin-left: 145px !important;
     height: 20px;
     width: 20px;
     background: transparent;
@@ -1020,6 +1020,7 @@ function _updateTotals(responseData) {
     font-size: 12px !important;
     padding-top: 1px;
     text-transform: lowercase;
+    top: 1px;
 }
 
 .tabletitle.tableTitleNew {
@@ -1062,7 +1063,7 @@ function _updateTotals(responseData) {
     background-color: white; /*border: 2px solid #336699;*/
     padding: 0px;
     z-index: 102;
-    font-family: Verdana;
+    /*font-family: Verdana;*/
     font-size: 10pt;
     color: #333;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);

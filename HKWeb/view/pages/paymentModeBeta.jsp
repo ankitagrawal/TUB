@@ -711,7 +711,7 @@
       /*border: 2px solid #336699;*/
       padding: 0px;
       z-index: 102;
-      font-family: Verdana;
+      /*font-family: Verdana;*/
       font-size: 10pt;
       color: #333;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
