@@ -26,16 +26,16 @@ public class DropShipChangeAction extends BaseAction {
 
   @DefaultHandler
   public Resolution pre() {
-    return new ForwardResolution("/pages/admin/shippingOrder/dropShippingOrder.jsp");
+    return new ForwardResolution("/pages/admin/shippingOrder/dropShipStatusChange.jsp");
   }
 
   public Resolution search() {
     shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
     if (shippingOrder == null) {
       addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id"));
-      return new RedirectResolution("/pages/admin/shippingOrder/dropShippingOrder.jsp");
+      return new RedirectResolution("/pages/admin/shippingOrder/dropShipStatusChange.jsp");
     }
-    return new ForwardResolution("/pages/admin/shippingOrder/dropShippingOrder.jsp");
+    return new ForwardResolution("/pages/admin/shippingOrder/dropShipStatusChange.jsp");
   }
 
   public Resolution saveStatus() {
@@ -50,4 +50,12 @@ public class DropShipChangeAction extends BaseAction {
   public void setShippingOrder(ShippingOrder shippingOrder) {
     this.shippingOrder = shippingOrder;
   }
+
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
 }

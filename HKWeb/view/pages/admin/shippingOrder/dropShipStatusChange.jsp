@@ -19,7 +19,7 @@
                     });
         </script>
 
-        <s:layout-component name="heading">Change Shipping Order Status </s:layout-component>
+        <s:layout-component name="heading">Change SO DropShip Status </s:layout-component>
         <s:layout-component name="content">
             <s:form beanclass="com.hk.web.action.admin.courier.ShippingOrderStatusChangeAction" method="get"
                     autocomplete="false">
