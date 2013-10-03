@@ -23,8 +23,8 @@
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
 <%
     DateTime dateTime = new DateTime();
-    Date startOfOfferDate = new Date(new DateTime(2013, 9, 9, 00, 00, 00, 00).getMillis());
-    Date endOfOfferDate = new Date(new DateTime(2013, 9, 14, 23, 59, 59, 00).getMillis());
+    Date startOfOfferDate = new Date(new DateTime(2013, 9, 27, 00, 00, 00, 00).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 10, 05, 23, 59, 59, 00).getMillis());
 %>
 <c:if test="${categoryBean.category.name == 'services'}">
     <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
@@ -50,14 +50,9 @@
 </c:if>
 
 <s:layout-component name="htmlHead">
-    <!--google remarketing page type-->
-    <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category"
-                     topLevelCategory="${categoryBean.category.name}"/>
-    <!-- YAHOO marketing -->
-    <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category"
-                     topLevelCategory="${categoryBean.category.name}"/>
-    <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category"
-                     topLevelCategory="${categoryBean.category.name}"/>
+    <%--<!-- YAHOO marketing -->--%>
+    <%--<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>--%>
+    <%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>--%>
     <c:if test="${categoryBean.category.name == 'services'}">
         <script type="text/javascript">
             $(document).ready(function () {
@@ -153,11 +148,9 @@
                             </a>
                         </li>
                     </c:when>
-
                     <c:otherwise>
                         <li><hk:categoryImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"/></li>
                     </c:otherwise>
-
                 </c:choose>
             </c:forEach>
         </ul>
@@ -179,8 +172,8 @@
                     <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg"
                          alt="Bulk Order above 25000/-" class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/twinlab-100-whey-protein-fuel/NUT1264?productReferrerId=13&productPosition=1/1">
-                    <img src="${pageContext.request.contextPath}/images/banners/Twinlab_Static.jpg"
+                <a href="${pageContext.request.contextPath}/pages/campaign/clearance/sale.jsp">
+                    <img src="${pageContext.request.contextPath}/images/banners/Clearance-sale-sports.jpg"
                          alt="Twinlab Sale"
                          class="small_banner"/>
                 </a>
@@ -215,13 +208,14 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+        <a href="${pageContext.request.contextPath}/product/bajaj-popular-induction-cooktop/BAJ071?productReferrerId=1&bpi">
+                <img src="<hk:vhostImage/>/images/banners/Cooktop.jpg" alt="Free shipping and COD"
                      class="small_banner"/>
             </c:when>
 
             <c:when test="${categoryBean.category.name eq personalCare}">
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                <a href="${pageContext.request.contextPath}/personal-care/pain-relief/supports?brand=HealthViva">
+                    <img src="<hk:vhostImage/>/images/banners/healthviva-small-static-banner.jpg" alt="healthviva"
                          class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/personal-care/women/self-defense">
@@ -241,16 +235,30 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq eye}">
+                <%
+                    if (dateTime.isAfter(startOfOfferDate.getTime()) && dateTime.isBefore(endOfOfferDate.getTime())) {
+                %>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/brand/eye/Scott">
-                    <img src="<hk:vhostImage/>/images/banners/scott.jpg" alt="eye"
+
+                <a href="${pageContext.request.contextPath}/brand/eye/Dorche-Well">
+                    <img src="<hk:vhostImage/>/images/banners/Eye_banner.jpg" alt="eye"
                          class="small_banner"/>
                 </a>
+                <%
+                } else { %>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                         class="small_banner"/>
+                </a>
+                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+                     class="small_banner"/>
+                <%
+                    }
+                %>
             </c:when>
-
             <c:when test="${categoryBean.category.name eq parenting}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
@@ -261,19 +269,6 @@
             </c:when>
 
             <c:when test="${categoryBean.category.name eq beauty}">
-                <%
-                    if (dateTime.isAfter(startOfOfferDate.getTime()) && dateTime.isBefore(endOfOfferDate.getTime())) {
-                %>
-                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
-                         class="small_banner"/>
-                </a>
-                <a href="${pageContext.request.contextPath}/brand/beauty/Rare+T">
-                    <img src="<hk:vhostImage/>/images/banners/Rare%20T-%20Main%20Banner.jpg" alt="beauty"
-                         class="small_banner"/>
-                </a>
-                <%
-                } else { %>
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
@@ -282,9 +277,6 @@
                     <img src="<hk:vhostImage/>/images/banners/Nurture--whole-range.jpg" alt="beauty"
                          class="small_banner"/>
                 </a>
-                <%
-                    }
-                %>
             </c:when>
             <c:when test="${categoryBean.category.name eq diabetes}">
                 <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
@@ -423,6 +415,13 @@
                 ${categoryBean.seoData.description}
         </div>
     </c:if>
+
+    <%--<!--google remarketing page type-->--%>
+    <s:layout-render
+        name="/layouts/embed/remarketingWithCustomParams.jsp"
+        pageType="<%=HealthkartConstants.Remarketing.PageType.category%>"
+        primaryCategory="${categoryBean.category.name}"
+        />
 
     <c:choose>
         <c:when test="${not isSecure}">

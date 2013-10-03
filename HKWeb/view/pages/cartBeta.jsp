@@ -5,6 +5,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -26,6 +27,7 @@
 <script src="<hk:vhostJs/>/js/loader.js"></script>
 
 <script type="text/javascript">
+
 jQuery.fn.jqStepper = function(minValue, maxValue) {
     jQuery.fn.jqStepper.minValue = minValue;
     jQuery.fn.jqStepper.maxValue = maxValue;
@@ -64,7 +66,9 @@ function showCouponDetails() {
 }
 
 $(document).ready(function() {
-
+    $('.offers-label').click(function () {
+        $(this).parents('.offers-container').toggleClass('offers-displayed');
+    });
     $("#learnMore").click(function() {
         $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
     });
@@ -135,15 +139,15 @@ $(document).ready(function() {
 
         $.getJSON($('#lineItemUpdateLink').attr('href'), {'cartLineItem':lineItemId,'cartLineItem.qty':0}, function(responseData) {
             removeItem(lineItemStyleId);
-            count = Math.round($('#productsInCart').html());
+            count = Math.round($('[data-role=cart-counter]').html());
             simpleProductCount = Math.round($('#simpleProductsInCart').html())
             if (count == 1 || simpleProductCount == 1) {
-                $('#productsInCart').html(0);
+                $('[data-role=cart-counter]').html(0);
                 //$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");
                 location.reload();
             }
             else if (count > 1) {
-                $('#productsInCart').html(count - 1);
+                $('[data-role=cart-counter]').html(count - 1);
                 $('#simpleProductsInCart').html(simpleProductCount - 1);
             }
             $('#numProdTitle').html(count - 1);
@@ -169,12 +173,12 @@ $(document).ready(function() {
 
         $.getJSON($('#lineItemUpdateLink').attr('href'), {'cartLineItem':lineItemId,'comboInstance.qty':0}, function(responseData) {
             removeItem(lineItemStyleId);
-            count = Math.round($('#productsInCart').html());
+            count = Math.round($('[data-role=cart-counter]').html());
             if (count == 1) {
                 location.reload();
             }
             else if (count > 2) {
-                $('#productsInCart').html(count - 1);
+                $('[data-role=cart-counter]').html(count - 1);
             }
             else {
                 $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>&nbsp;<span class='num' id='productsInCart'>1</span> item in<br/>your shopping cart");
@@ -260,7 +264,7 @@ function _updateTotals(responseData) {
 }
 
 </script>
-<script type="text/javascript" src="<hk:vhostJs/>/js/otherScripts/jquery.glow.js"></script>
+<script type="text/javascript" src="<hk:vhostJs/>/otherScripts/jquery.glow.js"></script>
 </s:layout-component>
 
 <s:layout-component name="modal">
@@ -312,14 +316,30 @@ function _updateTotals(responseData) {
                 to your shopping cart</a>
         </c:if>
     </shiro:hasRole>
-    <div id="offerTextOnTop"></div>
+
 </s:layout-component>
 
 <s:layout-component name="cart_items">
 
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
+<div class="offers-container">
+    <a href="javascript:void(0)"
+       class="offers-label">
+        <span data-role="prompt-count"
+              style="background-color:orangered;color:white;padding-left:3px;padding-right:3px;margin-right:8px;margin-left:5px">
+                                  <div id="offerTextOnTop"></div>
+        </span>
+        ${shoppingCartPricingDto.appliedOfferId!=null?'OFFER APPLIED, CHANGE OFFER':'OFFERS AVAILABLE'}
+    </a>
 
-<div id="appliedOfferDiv"></div>
+    <div></div>
+    <div class="offers-drop-down">
+        <div id="appliedOfferDiv"></div>
+        <div id="applicableOfferDiv"></div>
+    </div>
+</div>
+<script src="<hk:vhostJs/>/js/appBeta.js"></script>
+
 <div class='products_container' style="min-height: 300px;">
 
 <div style="display: none;">
@@ -376,7 +396,7 @@ function _updateTotals(responseData) {
             <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}" alt="${storeVariantBasic.name}"/>
         </a>
 
-        <div class="name" style="width: 200px;position: relative;float: left;" :>
+        <div class="name" style="word-wrap:break-word;width: 180px;position: relative;float: left;margin: 0 10px 0 5px;" :>
             <a href="${storeVariantBasic.url}">${storeVariantBasic.name} </a>
             <%--<a href="${pageContext.request.contextPath}${cartLineItem.productVariant.url}">${cartLineItem.productVariant.variantName} </a>--%>
                 <%--${cartLineItem.productVariant.variantName}<br/>--%>
@@ -385,12 +405,12 @@ function _updateTotals(responseData) {
 
             <%--HTML code for dispatch date--%>
         <div class="dispatchedDateNew">
-            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} Days
+            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} days
             </div>
         </div>
 
 
-        <div class="quantity" style="width:80px;left:${cartLineItem.hkPrice != 0.0 ? 35 : 10}px;">
+        <div class="quantity" style="width:80px;bottom:5px;left:${cartLineItem.hkPrice != 0.0 ? 15 : 10}px;">
             <c:choose>
                 <c:when test="${cartLineItem.hkPrice == 0.0}">
                     ${cartLineItem.qty}
@@ -422,7 +442,7 @@ function _updateTotals(responseData) {
                 <c:otherwise>
                     <div class="hk">
                         <div class="num">
-              <span class="lineItemHkTotal ">Rs <fmt:formatNumber
+              <span class="lineItemHkTotal  fnt-sz16">Rs <fmt:formatNumber
                       value="${cartLineItem.hkPrice * cartLineItem.qty}"
                       pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                         </div>
@@ -473,7 +493,7 @@ function _updateTotals(responseData) {
 
 </script>
 
-<%--<c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
+<c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
     <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
     <div class="lineItemRow product">
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
@@ -493,7 +513,7 @@ function _updateTotals(responseData) {
             </c:choose>
         </a>
 
-        <div class="name" style="width: 200px;position: relative;float: left;">
+        <div class="name" style="word-wrap:break-word;width: 180px;position: relative;float: left;margin: 0 10px 0 5px;">
             <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
             <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
@@ -507,11 +527,11 @@ function _updateTotals(responseData) {
             </c:forEach>
         </div>
         <div class="dispatchedDateNew">
-            <div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays}
-                working days
+            <div>${cartLineItem.comboInstance.combo.minDays} - ${cartLineItem.comboInstance.combo.maxDays}
+                days
             </div>
         </div>
-        <div class="quantity" style="width: 80px;left: 35px;">
+        <div class="quantity" style="width:80px;left:15px;bottom:5px;">
             <input value="${hk:getComboCount(cartLineItem)}" size="1" class="comboQty"
                    style="width: 20px; height: 18px;"/>
             <a style="" class='remove removeComboLink' href='#'>
@@ -530,38 +550,35 @@ function _updateTotals(responseData) {
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="cut">
-                        <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
-                            <fmt:formatNumber
-                                    value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
-                                    pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                  <div class="hk">
+                    <div class="num">
+      <span class="lineItemHkTotal fnt-sz16"> Rs <fmt:formatNumber
+          value="${cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
+          pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                     </div>
-                    --%><%--<div class='special green'>
-                      (saved
-                <span class='num '>
-                Rs <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
-                    value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem) - cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
-                    pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
-                </span>
-                    </div>--%><%--
-                    <div class="hk">
-                        <div class="num">
-      <span class="lineItemHkTotal arialBlackBold"> Rs <fmt:formatNumber
-              value="${cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
-              pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
-                        </div>
-                    </div>
+                  </div>
+                    <%--<div class='special green'>--%>
+                      <%--(saved--%>
+                <%--<span class='num '>--%>
+                <%--Rs <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber--%>
+                    <%--value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem) - cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"--%>
+                    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)--%>
+                <%--</span>--%>
+                    <%--</div>--%>
+                  <div class="cut">
+                    <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
+                      <fmt:formatNumber
+                          value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
+                          pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                  </div>
+
                 </c:otherwise>
             </c:choose>
         </div>
         <div class="floatfix"></div>
     </div>
-</c:forEach>--%>
+</c:forEach>
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
-<!--google remarketing-->
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
-<!--BLADe marketing-->
-<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="cart"/>
 
 <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
 
@@ -745,7 +762,7 @@ function _updateTotals(responseData) {
         });
     </script>
 </div>
-<div id="applicableOfferDiv"></div>
+
 
 <!--div class='orderSummaryHeading'>
 <div class="deliveryDetails"> DELIVERY DETAILS</div>
@@ -768,8 +785,14 @@ function _updateTotals(responseData) {
 </ul>
 </div-->
 
-<s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
-<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+<%--<s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>--%>
+<%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>--%>
+
+<s:layout-render
+    name="/layouts/embed/remarketingWithCustomParams.jsp"
+    pageType="<%=HealthkartConstants.Remarketing.PageType.cart%>"
+    order="${cartAction.order}"
+    />
 
 <c:if test="${not isSecure }">
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1"
@@ -821,9 +844,6 @@ function _updateTotals(responseData) {
         });
     </script>
 </c:if>
-
-</s:layout-component>
-</s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>
 <div id="dialog2" class="web_dialog">
@@ -929,7 +949,7 @@ function _updateTotals(responseData) {
             <td colspan="2" style="text-align: center;">
 
                 <c:if test="${cartAction.sizeOfCLI > 0}">
-                <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                    <a class="button_green" style="width:120px; height: 18px;">Continue</a>
             </td>
             <td>
                 </c:if>
@@ -940,117 +960,225 @@ function _updateTotals(responseData) {
         </tr>
     </table>
 </div>
-<script src="<hk:vhostJs/>/js/app.js"></script>
+
 
 <style type="text/css">
-    .main_container {
-        border: none;
-        border-radius: 0px;
-        box-shadow: none;
-    }
+#offerTextOnTop,#offerTextOnTop div{
+    display:inline;
 
-    .jqStepper-down, .jqStepper-up {
-        border: 1px solid #999;
-        border-radius: 100%;
-        height: 20px;
-        width: 20px;
-        margin-right: 5px;
-        margin-top: 2px;
-        background: transparent;
-        font-size: 12px;
-        padding-top: 1px;
+}
+#applicableOfferDiv ,#applicableOfferDiv div{
+    display:inline-block;
+}
 
-    }
+#applicableOfferDiv .offerRow{
+    display:block;
+}
 
-    .jqStepper-up {
-        margin-right: 0px;
-        margin-left: 5px;
-    }
+#appliedOfferDiv{
+    display:none
+}
+.main_container {
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+}
 
-    .jqStepper a span {
-        visibility: visible;
-        font-size: inherit;
-        line-height: inherit;
-    }
+.jqStepper-down, .jqStepper-up {
+    border: 1px solid #999;
+    border-radius: 100%;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+    margin-top: 2px;
+    background: transparent;
+    font-size: 12px;
+    padding-top: 1px;
 
-    .remove.removeLink, .remove.removeComboLink {
-        position: absolute;
-        margin-left: 130px !important;
-        height: 20px;
-        width: 20px;
-        background: transparent;
-        margin-top: 0px !important;
-        border: 1px solid #999 !important;
-        border-radius: 100%;
-        font-size: 12px !important;
-        padding-top: 1px;
-        text-transform: lowercase;
-    }
+}
 
-    .tabletitle.tableTitleNew {
-        padding-bottom: 4px;
-        font-weight: 100;
-        font-size: 1.2em;
-    }
+.jqStepper-up {
+    margin-right: 0px;
+    margin-left: 5px;
+}
 
-    .tableTitleNew {
-        height: auto;
-        border-width: 0px 0px 1px 0px;
-    }
+.jqStepper a span {
+    visibility: visible;
+    font-size: inherit;
+    line-height: inherit;
+}
 
-    .web_dialog_overlay {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        background: #000000;
-        opacity: .15;
-        filter: alpha(opacity = 15);
-        -moz-opacity: .15;
-        z-index: 101;
-        display: none;
-    }
+.remove.removeLink, .remove.removeComboLink {
+    position: absolute;
+    margin-left: 145px !important;
+    height: 20px;
+    width: 20px;
+    background: transparent;
+    margin-top: 0px !important;
+    border: 1px solid #999 !important;
+    border-radius: 100%;
+    font-size: 12px !important;
+    padding-top: 1px;
+    text-transform: lowercase;
+    top: 1px;
+}
 
-    .web_dialog {
-        display: none;
-        position: fixed;
-        width: 450px; /*height: 400px;*/
-        top: 50%;
-        left: 50%;
-        margin-left: -265px;
-        margin-top: -180px; /*background-color: #ffffff;*/
-        background-color: white; /*border: 2px solid #336699;*/
-        padding: 0px;
-        z-index: 102;
-        font-family: Verdana;
-        font-size: 10pt;
-        color: #333;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
-    }
+.tabletitle.tableTitleNew {
+    padding-bottom: 4px;
+    font-weight: 100;
+    font-size: 1.2em;
+}
 
-    .web_dialog_title {
+.tableTitleNew {
+    height: auto;
+    border-width: 0px 0px 1px 0px;
+}
+
+.web_dialog_overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #000000;
+    opacity: .15;
+    filter: alpha(opacity = 15);
+    -moz-opacity: .15;
+    z-index: 101;
+    display: none;
+}
+
+.web_dialog {
+    display: none;
+    position: fixed;
+    width: 450px; /*height: 400px;*/
+    top: 50%;
+    left: 50%;
+    margin-left: -265px;
+    margin-top: -180px; /*background-color: #ffffff;*/
+    background-color: white; /*border: 2px solid #336699;*/
+    padding: 0px;
+    z-index: 102;
+    /*font-family: Verdana;*/
+    font-size: 10pt;
+    color: #333;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+.web_dialog_title {
     /*border-bottom: solid 2px #336699;*/
     /*background-color: #336699;*/
-        font-size: 16px;
-        font-weight: bold;
-        padding: 5px;
-        background-color: #f2f7fb;
-        color: White;
-        font-weight: bold;
-    }
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    background-color: #f2f7fb;
+    color: White;
+    font-weight: bold;
+}
 
-    .web_dialog_title a {
-        color: White;
-        text-decoration: none;
-    }
+.web_dialog_title a {
+    color: White;
+    text-decoration: none;
+}
 
-    .align_right {
-        text-align: right;
-    }
+.align_right {
+    text-align: right;
+}
+    /* cart offers drop down begins*/
+.offers-container {
+    text-align: center;
+    display:none;
+    margin-bottom: 25px;
+}
+
+.offers-container.offers-displayed {
+    background: white;
+}
+
+.offers-container .offers-label {
+    line-height: 1.6em;
+    display: inline-block;
+    border: 1px solid #c8c8c8;
+    padding-right: 28px;
+    z-index: 1;
+    background-image: url('../images/arrow-down.png');
+    background-repeat: no-repeat;
+    background-position: 97%;
+    font-weight: 600;
+
+}
+
+.offers-container.offers-displayed .offers-label {
+    background-color: white;
+    background-image: url('../images/arrow-up.png');
+    border-bottom-color: transparent;
+}
+
+.offers-container .offers-drop-down {
+    padding: 15px 30px;
+    text-align: left;
+    background-color: white;
+    position: relative;
+    display: none;
+    margin-top: -1px;
+    border: 1px solid #c8c8c8;
+    box-shadow: 0px 4px 20px #c8c8c8;
+    z-index: 0;
+}
+
+.offers-container.offers-displayed .offers-drop-down {
+    display: inline-block;
+    max-width: 700px;
+}
+
+.offers-container .offer-tile-container {
+    display: inline-block;
+    width: 160px;
+    padding: 10px 5px 5px 10px;
+    margin-right: 24px;
+    margin-left: 24px;
+    border: 1px dashed #dcdcdc;
+    vertical-align: top;
+    height: 8.5em;
+}
+
+.offers-container .icn-scissor {
+    position: absolute;
+    margin-top: -17px;
+    margin-left: 140px;
+}
+
+.offers-container .offer-tile-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    height: 6em;
+    text-transform: capitalize;
+}
+
+.offers-container .offer-tile-text {
+    height: 4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.offers-container .offer-tile-buttons {
+
+}
+
+.offers-container .offer-tile-buttons .btn {
+    display: inline-block;
+}
+
+    /* cart offers derop down ends*/
 
 </style>
+
+
+</s:layout-component>
+</s:layout-render>
+

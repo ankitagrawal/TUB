@@ -86,6 +86,13 @@ a:focus {
     outline: 1px dotted invert
 }
 
+a.send-lnk{
+    font-size: 0.9em;
+    font-weight: 600;
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+
 hr {
     border: 0 #ccc solid;
     border-top-width: 1px;
@@ -201,6 +208,7 @@ img.prod320 {
     width: 320px;
     text-align: center;
     margin: 0 auto;
+    border: 1px solid #ccc;
 }
 
 .img320 img {
@@ -1161,15 +1169,15 @@ span.error {
     padding-left: 5px;
     margin-top: 5px;
     margin-bottom: 0.833em;
-    font-size: 10px;
+    font-size: 14px;
     border-bottom: 1px dotted transparent;
-    color: #bbb;
+    /*color: #bbb;*/
 }
 
 /* line 452, ../sass/main.scss */
 .crumb_outer a.crumb {
     vertical-align: baseline;
-    color: #bbb;
+    /*color: #bbb;*/
     border: 0;
     margin: 2px 5px;
 }
@@ -1185,14 +1193,14 @@ span.error {
 
 /* line 460, ../sass/main.scss */
 .crumb_outer a.crumb:hover {
-    border-bottom: 1px solid #888;
-    color: #888;
+    /*border-bottom: 1px solid #888;*/
+    color: #1b75bb;
 }
 
 /* line 465, ../sass/main.scss */
 .crumb_outer h1.title {
     float: right;
-    color: #bbb;
+    /*color: #bbb;*/
     clear: right;
     font-size: 1.333em;
     margin-right: 5px;
@@ -4507,16 +4515,17 @@ span.outOfStock {
 }
 
 .buy_prod .left_col {
-    width: 35%;
-    border-right: 1px dotted #ddd;
+    width: 65%;
+    /*border-right: 1px dotted #ddd;*/
     float: left;
+    text-align: left;
     margin-right: 10px;
     padding-right: 10px;
 }
 
-.buy_prod .prices {
-    text-align: right;
-}
+/*.buy_prod .prices {*/
+    /*text-align: right;*/
+/*}*/
 
 .buy_prod .prices .cut, .buy_prod .prices .hk, .buy_prod .prices .special {
     margin-right: 5px;
@@ -4526,8 +4535,9 @@ span.outOfStock {
 }
 
 .buy_prod .right_col {
-    width: 60%;
-    float: left;
+    width: 25%;
+    float: right;
+    text-align: right;
 }
 
 .buy_prod .right_col .prom {
@@ -5279,7 +5289,7 @@ color: #e62580;
 
 .applicableOfferDesc{
     position: relative;
-    float: left;
+    vertical-align: top;
     top: 10px;
     left: 15px;
     margin-bottom: 15px;
@@ -5302,8 +5312,7 @@ color: #e62580;
     left: 3px;
     width: 202px;
     height: auto;
-    position: relative;
-    float: left;
+    vertical-align:top;
     margin-bottom: 5px;
     word-wrap: break-word;
     border: 1px solid #ccc;
@@ -5388,12 +5397,12 @@ color: #e62580;
 }
 
 .applicableOfferContainer{
-    position: relative;
+  /*  position: relative;
     float: left;
     width: 73%;
     border-radius: 5px;
     height: auto;
-    margin-bottom: 50px;
+    margin-bottom: 50px;*/
 }
 
 .offerContainer:hover {
@@ -5495,6 +5504,7 @@ color: #e62580;
     width: 60px !important;
     height: 22px !important;
     margin-left:10px;
+    cursor: pointer;
 }
 
 .applicableOfferBottomContainer{
@@ -5528,9 +5538,7 @@ color: #e62580;
 }
 
 .removeButton{
-    position: relative;
-    float: left;
-    width: 0px;
+
 }
 
 .noCoupons{
@@ -5557,9 +5565,9 @@ color: #e62580;
 }
 
 .applyFormButton{
-    position: relative;
+  /*  position: relative;
     float: left;
-    left: 10px;
+    left: 10px;*/
 }
 
 .appliedOfferText{
@@ -5591,12 +5599,7 @@ color: #e62580;
 }
 
 .offerTextOnTop{
-    position: relative;
-    float: left;
-    border: 1px solid #ccc;
-    padding: 12px;
-    margin-bottom: 10px;
-    width: 67%;
+
 
 
 }
@@ -5609,9 +5612,10 @@ color: #e62580;
 }
 
 .offerRow{
-    position: relative;
+  display:block;
+  /*  position: relative;
     float: left;
-    width: 100%;
+    width: 100%;*/
 }
 
 .offerTextOnTopText{
@@ -5810,7 +5814,7 @@ color: #e62580;
 .dispatchedDateNew{
     position: relative;
     float: left;
-    margin-left: 15px;
+    margin-left: 25px;
     margin-right: 15px;
     width: 100px;
 }
@@ -5818,8 +5822,11 @@ color: #e62580;
 .dispatchedDateNew2{
     position: relative;
     float: left;
-    margin-left: 30px;
-    left: 15px;
+    margin-left: 25px;
+    left: 5px;
+    width: 18%;
+    padding: 5px;
+    text-align: center;
 }
 
 .signUpInputNew{
@@ -5850,15 +5857,15 @@ color: #e62580;
 .dispatchDateQuesMark{
     border: 1px solid #ddd;
     background: #ddd;
-    border-radius: 9px;
-    width: 12px;
-    height: 11px;
+    border-radius: 14px;
+    width: 14px;
+    height: 14px;
     position: relative;
     float: left;
     padding: 3px;
     text-align: center;
     cursor: pointer;
-    top: -3px;
+    top: 0px;
 }
 
 .dispatchDateText2{
@@ -5939,23 +5946,31 @@ color: #e62580;
 .productGrid{
     position: relative;
     float: left;
-    width: 47%;
+    width: 48%;
     margin-top: 5px;
-    margin-left: 5px;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .prodQuantityGrid{
     position: relative;
     float: left;
-    width: 3%;
+    width: 8%;
     margin-top: 5px;
+}
+
+.prodDispatchGrid{
+    width: 22%;
+    float: left;
+    margin-top: 5px;
+    text-align: center;
+    word-wrap: break-word;
 }
 
 .prodPriceGrid{
     position: relative;
     float: left;
-    width: 25%;
-    left: 35px;
+    width: 20%;
     margin-top: 5px;
     text-align: center;
 }
@@ -6373,6 +6388,10 @@ label{
 
 .pad10 {
     padding: 10px;
+}
+
+.pad-b-5 {
+    padding-bottom: 5px;
 }
 
 .pad-b-10 {
@@ -6907,8 +6926,8 @@ label{
     border-left-color: #009AEC;
     background-color: #0091d7;
     color: white;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .btn.btn-blue:hover {
@@ -6939,12 +6958,50 @@ label{
     box-shadow: -1px -1px 10px #E1E2E2;
 }
 
+.btn.btn-orange{
+    border-color: #646464;
+    border-top-color: #646464;
+    border-left-color: #646464;
+    background-color: #ffb000;
+    color: #fff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.btn.btn-orange-mini{
+    border-color: #646464;
+    border-top-color: #646464;
+    border-left-color: #646464;
+    background-color: #ffb000;
+    color: #fff;
+    font-size: 0.9em;
+    padding: 5px 10px;
+}
+
+.btn.btn-orange:hover, .btn.btn-orange-mini:hover {
+    background-color: #FFA300;
+    box-shadow: 1px 1px 10px #FF9900;
+}
+
+.btn.btn-orange:active, .btn.btn-orange.active, .btn.btn-orange-mini:active, .btn.btn-orange-mini.active {
+    background-color: #FF9900;
+    box-shadow: -1px -1px 10px #F8DB92;
+}
+
 .btn[disabled=disabled], .btn.inactive, .btn:hover.inactive, .btn:active.inactive, .btn.active.inactive {
     background-color: #ddd !important;
     border-color: #888 !important;
     color: #888;
     box-shadow: none !important;
     cursor: default !important;
+}
+
+.btn2 {
+    padding: 11px;
+    border-radius: 2px;
+    width: 131px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 /*Button utils *End*/
@@ -7791,3 +7848,139 @@ input[type="text"]:focus, input[type="password"]:focus{
 
 /* payment status utils ends */
 
+
+.clr-cont {
+    position: relative;
+    clear: both;
+}
+
+/** variant/combo page css integration beginss**/
+
+.varnts-tbl {
+    margin: 20px 0 30px 0;
+}
+
+.varnts-tbl th {
+    padding: 0 10px;
+
+}
+.varnts-tbl td {
+    padding: 5px 10px;
+}
+
+.varnts-tbl th.head-items {
+    border-left: 1px solid #c8c8c8;
+    /*padding: 0 0 15px 15px ;*/
+}
+
+.varnts-tbl th.head-items.last {
+    border-right: 1px solid #c8c8c8;
+}
+
+.varnts-tbl tr td:first-child {
+    border-left: 0;
+}
+
+.varnts-tbl tr.varnt-specs-tr:hover {
+    background: #d9d9d9;
+}
+
+.varnts-tbl tr td:last-child {
+    border-right: 0;
+}
+
+.varnts-tbl .varnt-title {
+    text-align: left;
+}
+
+.varnts-tbl .specs-hdr-tr {
+    background: #f0f0f0;
+}
+
+.varnts-tbl .specs-hdr-tr {
+    padding: 10px;
+}
+
+.varnts-tbl .varnt-title .price {
+    color: #232323;
+    font-weight: 700;
+}
+
+.varnts-tbl thead tr:last-child th {
+    padding-bottom: 10px !important;
+}
+
+.varnts-tbl td.varnt-hdr {
+    padding: 5px 5px 35px 5px;
+    width: 190px;
+}
+
+.varnts-tbl tbody tr.first-tr {
+    border-top: 5px solid #0091d7;
+}
+
+.varnts-tbl th.last-cell {
+    vertical-align: bottom;
+    text-align: left;
+    padding: 0 0 15px 15px;
+    border-right: 1px solid #c8c8c8;
+}
+
+.varnts-tbl th:last-child {
+    border-right: 1px solid #ffffff !important;
+}
+
+.varnts-tbl th.last-cell.end {
+    border-right: 1px solid #ffffff;
+}
+
+.varnts-tbl td.varnt-price {
+    color: #005000;
+    font-weight: bold;
+    font-size: 1.10em;
+}
+
+.varnts-tbl .varnt-specs-hdr {
+    font-size: 1em;
+    font-weight: bold;
+    padding: 0 10px 0 0;
+    text-transform: uppercase;
+}
+
+.varnts-tbl .empty-row {
+    padding: 12px 0px;
+}
+
+.varnts-tbl .border-td {
+    border-right: 1px solid #c8c8c8;
+    border-left: 1px solid #c8c8c8;
+    /*padding: 10px 15px;*/
+
+}
+
+.varnts-tbl .btm-brdr {
+    border-bottom: 1px solid #c8c8c8;
+}
+
+.varnts-tbl .top-brdr {
+    border-top: 1px solid #c8c8c8;
+}
+
+.varnts-tbl .bg-gray {
+    background: #f5f5f5;
+}
+
+/** variant/combo page css integration ends**/
+
+
+/* display box css begins */
+
+.disp-inln {
+    display: inline-block;
+}
+
+.disp-blk {
+    display: block;
+}
+
+/* display box css ends */

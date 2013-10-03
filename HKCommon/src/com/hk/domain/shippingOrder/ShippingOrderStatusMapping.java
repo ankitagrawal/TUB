@@ -20,7 +20,7 @@ public class ShippingOrderStatusMapping {
     public Map<String, List> getShippingOrderStatusMap(){
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Shipped.getName(), Arrays.asList(EnumShippingOrderStatus.SO_Delivered,EnumShippingOrderStatus.RTO_Initiated));
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Delivered.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped,EnumShippingOrderStatus.RTO_Initiated));
-        shippingOrderStatusMap.put(EnumShippingOrderStatus.RTO_Initiated.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.RTO_Initiated.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_RTO));
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_RTO.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped));
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName(),Arrays.asList(EnumShippingOrderStatus.RTO_Initiated));
         shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName(),Arrays.asList(EnumShippingOrderStatus.RTO_Initiated));

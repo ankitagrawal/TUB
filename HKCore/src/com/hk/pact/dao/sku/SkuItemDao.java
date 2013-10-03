@@ -26,6 +26,8 @@ public interface SkuItemDao extends BaseDao {
   public List<PosSkuGroupSearchDto> getCheckedInSkuItemsByGroup(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
 
   public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus);
+  
+  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup, List<SkuItemStatus> skuItemStatus, List<SkuItemOwner> skuItemOwners);
 
   public Long getInventoryCount(List<Sku> skuList, List<Long> skuItemStatusIds);
 
@@ -33,6 +35,8 @@ public interface SkuItemDao extends BaseDao {
 
   public Long getLatestcheckedInBatchInventoryCount(ProductVariant productVariant);
 
-  public List<ProductVariantInventory> getPVIInfo(String barcode); 
+  public List<ProductVariantInventory> getPVIInfo(String barcode);
+  
+  public SkuItem getSkuItemByBarcode(String barcode);
 
 }

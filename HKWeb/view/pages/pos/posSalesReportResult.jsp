@@ -16,23 +16,27 @@
     <table class="cont" width="100%">
       <tr>
         <th>Cash Collection</th>
-        <th>Cash Refund</th>
+        <th>Refund</th>
+        <th>Total Cash</th>
         <th>Credit Card Collection</th>
         <th>Items Sold</th>
         <th>Items Returned</th>
         <th>Total Collection</th>
         <th>No of Bills</th>
         <th>Avg Collection</th>
+        <th>Loyalty Points Redeemed</th>
       </tr>
       <tr>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.cashAmountCollected}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.cashAmountRefunded}" maxFractionDigits="2"/></td>
+        <td><fmt:formatNumber value="${posBean.posSummaryDto.cashAmountCollected - posBean.posSummaryDto.cashAmountRefunded}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.creditCardAmountCollected}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.itemsSold}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.itemsReturned}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.totalCollection}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.noOfBills}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${posBean.posSummaryDto.avgAmtPerInvoice}" maxFractionDigits="2"/></td>
+        <td><fmt:formatNumber value="${posBean.posSummaryDto.rewardPointsRedeemed}" maxFractionDigits="2"/></td>
       </tr>
     </table>
 

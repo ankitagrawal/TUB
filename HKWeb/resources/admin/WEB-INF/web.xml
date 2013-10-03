@@ -285,6 +285,9 @@
 	    <url-pattern>/clearance-sale</url-pattern>
         <url-pattern>/valentines-day-2013</url-pattern>
         <url-pattern>/loyaltypg/*</url-pattern>
+
+        <url-pattern>/combo</url-pattern>
+        <url-pattern>/combo/*</url-pattern>
     </servlet-mapping>
     
     <servlet>

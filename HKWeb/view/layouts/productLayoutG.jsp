@@ -74,12 +74,9 @@
     <s:layout-render name="/includes/_footer.jsp"/>
   </div>
 
-  <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${allCategories}"/>
-
   <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>
     </s:layout-component>--%>
-    <s:layout-render name="/includes/_zopim.jsp" topCategory="${topCategory}" brand="${brand}" allCategories="${allCategories}"/>
 
   <s:layout-component name="endScripts"/>
   </body>

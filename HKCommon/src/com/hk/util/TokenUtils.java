@@ -25,7 +25,7 @@ public class TokenUtils {
     }
 
     public static String generateReversePickupOrderId(ShippingOrder shippingOrder) {
-        return shippingOrder.getId() + "-" + "RP" + BaseUtils.getRandomNumber(5);
+        return BaseUtils.getRandomNumber(5) + "-" + "RP" + shippingOrder.getId();
     }
 
     public static String generateShippingOrderGatewayOrderId(ShippingOrder shippingOrder){

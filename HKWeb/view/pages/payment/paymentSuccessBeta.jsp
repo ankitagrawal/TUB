@@ -7,6 +7,7 @@
 <%@ page import="com.hk.constants.marketing.AnalyticsConstants"%>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -248,8 +249,13 @@
         }
     %>
     <!-- Google Code for Payment Success Conversion Page -->
-    <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
-
+  <s:layout-render
+      name="/layouts/embed/paymentSuccessConversionTags.jsp"
+      conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}"
+      order_id="${actionBean.payment.gatewayOrderId}"
+      order="${actionBean.order}"
+      pageType="<%=HealthkartConstants.Remarketing.PageType.paymentSuccess%>"
+      />
 </c:if>
 
 <c:choose>
@@ -270,7 +276,7 @@
 
 
 <div class="leftPS">
-    <div class='orderSummaryHeading mrgn-bt-10 pad10'>
+    <div class='mrgn-bt-10'>
         <c:choose>
             <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
                 <c:choose>
@@ -309,7 +315,7 @@
 
     <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
         <div class='promos'>
-            <div class='orderSummaryHeading mrgn-bt-10 pad10'>
+            <div class='mrgn-bt-10'>
                 <div class="deliveryDetails fnt-bold" style="padding-left: 5px">You have not activated your HealthKart account</div>
                 <p class="lrg pad5">
                     To activate your account, please click on the activation link sent in your email. By activating your
@@ -356,7 +362,7 @@
               </span>
           </p>
         </c:if>--%>
-    <br/>
+
 
     <shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
         <div class='orderSummaryHeading mrgn-bt-10 pad10'>
@@ -368,28 +374,29 @@
     </shiro:lacksRole>
 
     <shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-        <div class='loyaltyMessage' >
-            <p>
+        <div class='mrgn-bt-10'>
+            <p class="pad5">
                 <c:if test="${actionBean.loyaltyPointsEarned > 0}">
                 You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your loyalty account once your order has been delivered.
                 </c:if>
 
                 <c:if test="${actionBean.loyaltyPointsEarned <= 0}">
-                <br/> Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
+                Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
                 </c:if>
-                <br/>
+                <%--<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.--%>
+            </p>
+            <p class="pad5">
                 <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
-            <p>
+            </p>
         </div>
-        <br/>
     </shiro:hasRole>
 
-    <div class='orderSummaryHeading mrgn-bt-10 pad10'>
+    <div class='mrgn-bt-10'>
         <p class="pad5">The estimated dispatch time for each product is mentioned below. The delivery time would be extra and will vary according to your location.</p>
         <span id="learnMore" class="learnMore pad5" style="margin: 0px;float: right; color:#0091d7;" >learn more</span>
     </div>
 
-    <div class='orderSummaryHeading mrgn-bt-10 pad10'>
+    <div class='mrgn-bt-10'>
         <p class="pad5">For any query, please call us: 0124-4616444 or you can drop us an email at <span class="txt-blue">info@healthkart.com</span> with your Order ID.</p>
     </div>
 

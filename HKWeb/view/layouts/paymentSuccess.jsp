@@ -5,17 +5,14 @@
     "http://www.w3.org/TR/html4/loose.dtd">
     <html>
     <head>
-        <!--google remarketing-->
-        <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
-        <!--YAHOO marketing-->
-        <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>
-
-        <!--OZONE marketing-->
-        <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
-        <!--Blade marketing-->
-        <s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="purchase"/>
-        <!--Tyroo marketing-->
-        <s:layout-render name="/layouts/embed/_tyrooMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
+        <%--<!--YAHOO marketing-->--%>
+        <%--<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>--%>
+        <%--<!--OZONE marketing-->--%>
+        <%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>--%>
+        <%--<!--Blade marketing-->--%>
+        <%--<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="purchase"/>--%>
+        <%--<!--Tyroo marketing-->--%>
+        <%--<s:layout-render name="/layouts/embed/_tyrooMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>--%>
 
         <title>
             <c:choose>

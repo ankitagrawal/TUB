@@ -10,10 +10,11 @@ public class POSSummaryDto {
   private Long itemsSold;
   private Long itemsReturned;
   private Long noOfBills;
+  private Double rewardPointsRedeemed;
 
   public POSSummaryDto(Double cashAmountCollected, Double cashAmountRefunded, Double creditCardAmountCollected,
                        Double creditCardAmountRefunded, Long itemsSold, Long itemsReturned,
-                       Double totalCollection, Double avgAmtPerInvoice, Long noOfBills) {
+                       Double totalCollection, Double avgAmtPerInvoice, Long noOfBills, Double rewardPointsRedeemed) {
     this.cashAmountCollected = cashAmountCollected;
     this.cashAmountRefunded = cashAmountRefunded;
     this.creditCardAmountCollected = creditCardAmountCollected;
@@ -24,6 +25,7 @@ public class POSSummaryDto {
     this.avgAmtPerInvoice = avgAmtPerInvoice;
     this.itemsReturned = itemsReturned;
     this.noOfBills=noOfBills;
+    this.rewardPointsRedeemed=rewardPointsRedeemed;
   }
 
   public Double getAvgAmtPerInvoice() {
@@ -96,5 +98,13 @@ public class POSSummaryDto {
 
   public void setNoOfBills(Long noOfBills) {
     this.noOfBills = noOfBills;
+  }
+
+  public Double getRewardPointsRedeemed() {
+    return rewardPointsRedeemed;
+  }
+
+  public void setRewardPointsRedeemed(Double rewardPointsRedeemed) {
+    this.rewardPointsRedeemed = rewardPointsRedeemed;
   }
 }

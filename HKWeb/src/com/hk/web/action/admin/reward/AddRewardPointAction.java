@@ -37,119 +37,119 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.AWARD_REWARD_POINTS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class AddRewardPointAction extends BaseAction {
-    private static Logger      logger = LoggerFactory.getLogger(AddRewardPointAction.class);
+  private static Logger      logger = LoggerFactory.getLogger(AddRewardPointAction.class);
 
-    @Autowired
-    RewardPointDao             rewardPointDao;
+  @Autowired
+  RewardPointDao             rewardPointDao;
 
-    @Autowired
-    private RewardPointService rewardPointService;
+  @Autowired
+  private RewardPointService rewardPointService;
 
-    @Autowired
-    private OrderService orderService;
+  @Autowired
+  private OrderService orderService;
 
-    @Validate(required = true, on = "add")
-    private Double             value;
+  @Validate(required = true, on = "add")
+  private Double             value;
 
-    @Validate(required = true, on = "add")
-    private String             comment;
+  @Validate(required = true, on = "add")
+  private String             comment;
 
-    @Validate(required = true)
-    private User               user;
+  @Validate(required = true)
+  private User               user;
 
-    @Validate(required = true, on = "add")
-    private RewardPointMode    rewardPointMode;
+  @Validate(required = true, on = "add")
+  private RewardPointMode    rewardPointMode;
 
-    @Validate(required = true, on = "add")
-    private Date               expiryDate;
+  @Validate(required = true, on = "add")
+  private Date               expiryDate;
 
-    @Validate(required = true, on = "add")
-    private Long orderId;
+  @Validate(required = true, on = "add")
+  private Long orderId;
 
-    @DefaultHandler
-    public Resolution pre() {
-        return new ForwardResolution("/pages/admin/addRewardPoint.jsp");
+  @DefaultHandler
+  public Resolution pre() {
+    return new ForwardResolution("/pages/admin/addRewardPoint.jsp");
+  }
+
+  public Resolution add() {
+    User referredUser = getUserService().getUserById(getPrincipal().getId());
+    // referredUser stores the id of the user who added reward points
+    // this logs the user who has added reward points
+    boolean rewardPointsAdded = true;
+    if(user.equals(referredUser)){
+      addRedirectAlertMessage(new SimpleMessage("A user cannot give reward points to himself"));
+      return new RedirectResolution(SearchUserAction.class, "search");
     }
-
-    public Resolution add() {
-        User referredUser = getUserService().getUserById(getPrincipal().getId());
-        // referredUser stores the id of the user who added reward points
-        // this logs the user who has added reward points
-        boolean rewardPointsAdded = true;
-        if(user.equals(referredUser)){
-            addRedirectAlertMessage(new SimpleMessage("A user cannot give reward points to himself"));
-            return new RedirectResolution(SearchUserAction.class, "search");
-        }
-        RewardPoint rewardPoint = new RewardPoint();
-        try {
-            Order order = orderService.find(orderId);
-            if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
-                throw new InvalidRewardPointsException(value);
-            }
-            rewardPoint = rewardPointDao.addRewardPoints(user, referredUser, order, value, comment, EnumRewardPointStatus.APPROVED, rewardPointMode);
-        } catch (InvalidRewardPointsException e) {
-            logger.error("Reward point cannot be added", e);
-            rewardPointsAdded = false;
-        }
-        if (rewardPointsAdded) {
-            getRewardPointService().approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
-            addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
-            return new RedirectResolution(SearchUserAction.class, "search");
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Reward Points cannot be more than " + RewardPointDao.MAX_REWARD_POINTS));
-            return new RedirectResolution(SearchUserAction.class, "search");
-        }
+    RewardPoint rewardPoint = new RewardPoint();
+    try {
+      Order order = orderService.find(orderId);
+      if (value >= RewardPointConstants.MAX_REWARD_POINTS) {
+        throw new InvalidRewardPointsException(value);
+      }
+      rewardPoint = rewardPointDao.addRewardPoints(user, referredUser, order, value, comment, EnumRewardPointStatus.APPROVED, rewardPointMode);
+    } catch (InvalidRewardPointsException e) {
+      logger.error("Reward point cannot be added", e);
+      rewardPointsAdded = false;
     }
-
-    public User getUser() {
-        return user;
+    if (rewardPointsAdded) {
+      getRewardPointService().approveRewardPoints(Arrays.asList(rewardPoint), expiryDate);
+      addRedirectAlertMessage(new SimpleMessage("Reward Points added successfully"));
+      return new RedirectResolution(SearchUserAction.class, "search");
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Reward Points cannot be more than " + RewardPointDao.MAX_REWARD_POINTS));
+      return new RedirectResolution(SearchUserAction.class, "search");
     }
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public Double getValue() {
-        return value;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void setValue(Double value) {
-        this.value = value;
-    }
+  public Double getValue() {
+    return value;
+  }
 
-    public String getComment() {
-        return comment;
-    }
+  public void setValue(Double value) {
+    this.value = value;
+  }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+  public String getComment() {
+    return comment;
+  }
 
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
+  public Date getExpiryDate() {
+    return expiryDate;
+  }
 
-    public RewardPointMode getRewardPointMode() {
-        return rewardPointMode;
-    }
+  public void setExpiryDate(Date expiryDate) {
+    this.expiryDate = expiryDate;
+  }
 
-    public void setRewardPointMode(RewardPointMode rewardPointMode) {
-        this.rewardPointMode = rewardPointMode;
-    }
+  public RewardPointMode getRewardPointMode() {
+    return rewardPointMode;
+  }
 
-    public RewardPointService getRewardPointService() {
-        return rewardPointService;
-    }
+  public void setRewardPointMode(RewardPointMode rewardPointMode) {
+    this.rewardPointMode = rewardPointMode;
+  }
 
-    public Long getOrderId() {
-        return orderId;
-    }
+  public RewardPointService getRewardPointService() {
+    return rewardPointService;
+  }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
+  public Long getOrderId() {
+    return orderId;
+  }
+
+  public void setOrderId(Long orderId) {
+    this.orderId = orderId;
+  }
 }

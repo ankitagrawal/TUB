@@ -231,7 +231,9 @@ public class PaymentServiceImpl implements PaymentService {
         if (basePayment != null && basePayment.getGateway() != null && EnumGateway.getHKServiceEnabledGateways().contains(basePayment.getGateway().getId())) {
             if (EnumPaymentStatus.SUCCESS.getId().equals(basePayment.getPaymentStatus().getId())) {
                 HkPaymentService hkPaymentService = getHkPaymentService(basePayment.getGateway());
-                refundRequestPayment = createNewRefundPayment(basePayment, EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount, EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode());
+                refundRequestPayment = createNewGenericPayment(basePayment,
+                    EnumPaymentStatus.REFUND_REQUEST_IN_PROCESS.asPaymenStatus(), amount,
+                    EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode(), EnumPaymentTransactionType.REFUND);
                 try {
                     HkPaymentResponse hkRefundPaymentResponse = hkPaymentService.refundPayment(basePayment, amount);
                     // handle the case of citrus
@@ -629,18 +631,19 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Transactional
-    private Payment createNewRefundPayment(Payment basePayment, PaymentStatus paymentStatus, Double amount, PaymentMode paymentMode){
-        Payment refundPayment = getPaymentManager().createNewPayment(basePayment.getOrder(), paymentMode,
+    public Payment createNewGenericPayment(Payment basePayment, PaymentStatus paymentStatus, Double amount,
+                                            PaymentMode paymentMode, EnumPaymentTransactionType paymentTransactionType){
+        Payment genericPayment = getPaymentManager().createNewPayment(basePayment.getOrder(), paymentMode,
                 basePayment.getIp(), basePayment.getGateway(), basePayment.getIssuer(), basePayment.getBillingAddress());
 
-        refundPayment.setPaymentStatus(paymentStatus);
-        refundPayment.setParent(basePayment);
-        refundPayment.setAmount(amount);
-        refundPayment.setTransactionType(EnumPaymentTransactionType.REFUND.getName());
-        refundPayment.setPaymentDate(new Date());
-        refundPayment = paymentDao.save(refundPayment);
+        genericPayment.setPaymentStatus(paymentStatus);
+        genericPayment.setParent(basePayment);
+        genericPayment.setAmount(amount);
+        genericPayment.setTransactionType(paymentTransactionType.getName());
+        genericPayment.setPaymentDate(new Date());
+        genericPayment = paymentDao.save(genericPayment);
 
-        return refundPayment;
+        return genericPayment;
     }
 
     private boolean isCitrusResponseSuccessful(List<HkPaymentResponse> hkPaymentResponseList) {
