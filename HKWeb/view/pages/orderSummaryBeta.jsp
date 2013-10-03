@@ -83,9 +83,9 @@
             <%--<c:if test="${orderSummary.availableCourierList == null}">--%>
             <%--<div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>--%>
             <%--</c:if>--%>
-        <h3 style="margin-bottom: 15px;" class="arialBlackBold">
-            Your Order
-        </h3>
+        <%--<h3 style="margin-bottom: 15px;" class="arialBlackBold">--%>
+            <%--Your Order--%>
+        <%--</h3>--%>
         <s:layout-render name="/layouts/embed/itemSummaryTableBeta.jsp" pricingDto="${orderSummary.pricingDto}"
                          orderDate="${orderDate}"/>
         <script type="text/javascript">
@@ -96,7 +96,7 @@
     </div>
     <div class="rightHalf">
 
-        <div class="right_container" style="left: 15px;width: 245px;padding: 5px 10px;border: none;">
+        <div class="right_container" style="left: 40px;width: 245px;padding: 5px 10px;border: none;float: right;">
             <%--<div class="title">--%>
                 <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
                 <s:hidden name="order" value="${orderSummary.order.id}"/>
@@ -110,14 +110,41 @@
                    <div class="commentTypeText"><s:radio value="3" name="order.commentType" class="commentType" style="width: 11px;"/> Others</div>
                </div>
            <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" class="newTextArea" placeholder="(e.g. preferred delivery time)"/>--%>
-                <div class="title">
-                    <h3>
-                        Confirm order
-                    </h3>
-                </div>
+                <%--<div class="title">--%>
+                    <%--<h3>--%>
+                        <%--Confirm order--%>
+                    <%--</h3>--%>
+                <%--</div>--%>
+
+                    <div class="you-pay-container">
+                        <div style="width:48%;overflow:hidden;display:inline-block;float:left">
+                            <div class="fnt-light fnt-bold">
+                                YOU PAY
+                            </div>
+                            <div id="summaryGrandTotalPayable" class="fnt-sz14" style="color: #090">
+                                    <fmt:formatNumber value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
+                                    currencySymbol="Rs. "/>
+                            </div>
+                        </div>
+                        <div style="width:48%;overflow:hidden;display:inline-block;float: right;margin-bottom: 10px;">
+                            <s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
+                                <s:hidden name="order" value="${cartAction.order}"/>
+                                <s:submit style="margin: 0px !important;font-family: 'Open Sans';font-size: 0.9em;float: right;"
+                                          name="orderReviewed" value="PAY NOW"
+                                          class="requiredFieldValidator btn btn-blue" />
+                            </s:form>
+
+                        </div>
+                        <hr>
+                    </div>
+
 
                 <s:layout-render name="/layouts/embed/orderSummaryTableBeta.jsp" pricingDto="${orderSummary.pricingDto}"
                                  orderDate="${orderDate}"/>
+
+                    <div class="newShippingHandling">
+                        (inclusive of shipping, handling and taxes.)
+                    </div>
 
                 <c:if test="${orderSummary.redeemableRewardPoints > 0}">
                     <div class="right_container rewardPointsRightContainer">
@@ -152,27 +179,14 @@
                     </div>
                 </c:if>
 
-                <h1 style="position: relative;float: left;width: 100%;padding: 0px;">
-          <span class="youPay">
-            You pay:
-          </span>
-                    <strong>
-            <span id="summaryGrandTotalPayable" class="youPayValue">
-              <fmt:formatNumber value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
-                                currencySymbol="Rs. "/>
-            </span>
-                    </strong>
-                </h1>
 
-                <div class='newShippingHandling'>
-                    (inclusive of shipping, handling and taxes.)
-                </div>
+
+                <%--<div class='newShippingHandling'>--%>
+                    <%--(inclusive of shipping, handling and taxes.)--%>
+                <%--</div>--%>
 
                     <%--<div class="buttons">--%>
-                        <s:submit
-                                style="margin: 0px !important;"
-                                name="orderReviewed" value="PLACE ORDER"
-                                class="requiredFieldValidator btn btn-blue"/>
+
                     <%--</div>--%>
 
 
@@ -180,7 +194,7 @@
           <%--</div>--%>
 
         </div>
-        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 15px;border: none;margin-top: 20px;">
+        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 40px;border: none;margin-top: 20px;float: right;">
 
 
             <div class='title newTextHeading ' style="float: left;padding-bottom:5px;width: 100%;">
@@ -190,7 +204,7 @@
                 <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="btn btn-gray" style="display: inline-block; float:right;font-size: 10px; ">
                     CHANGE </s:link>
             </div>
-            <div class='detail'>
+            <div class='detail' style="font-size: 1em;line-height: 1.4em;">
                 <div class='name'>
                         ${orderSummary.order.address.name}
                 </div>
