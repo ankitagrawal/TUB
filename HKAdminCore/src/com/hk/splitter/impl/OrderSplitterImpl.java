@@ -142,7 +142,8 @@ public class OrderSplitterImpl implements OrderSplitter {
 				for (UniqueWhCombination uniqueWhCombination : whCombinations) {
 					List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
 					long cost = calculateCost(order, dummyOrders);
-					if (cost < bestCost) {
+					// here negative value being sent as invalid value
+					if (cost > 0 && cost < bestCost) {
 						bestCost = cost;
 						bestShips = dummyOrders;
 					}
