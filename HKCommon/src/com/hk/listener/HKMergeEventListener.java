@@ -55,10 +55,20 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
     private void audit(String productVariantId, ProductVariant savedProductVariant) {
 
-        String oldProductVariantJson = getOriginalProductVariantById(productVariantId);
+        JSONResponseBuilder oldProductVariantJsonBuilder = getOriginalProductVariantById(productVariantId);
+
+        String oldProductVariantJson = oldProductVariantJsonBuilder.toString();
         User loggedUser = getUserService().getLoggedInUser();
 
         JSONResponseBuilder newJsonBuilder = new JSONResponseBuilder();
+
+        Double newMarkedPrice = savedProductVariant.getMarkedPrice();
+        Double oldMarkedPrice = (Double)oldProductVariantJsonBuilder.getParam("marked_price");
+        
+        if(newMarkedPrice.equals(oldMarkedPrice)){
+            
+            
+        }
 
         newJsonBuilder.addField("id", savedProductVariant.getId());
         newJsonBuilder.addField("hk_price", savedProductVariant.getHkPrice());
@@ -101,7 +111,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
     }
 
     @SuppressWarnings("unchecked")
-    public String getOriginalProductVariantById(String productVariantId) {
+    public JSONResponseBuilder getOriginalProductVariantById(String productVariantId) {
 
         JSONResponseBuilder oldProductVariantJsonBuilder = new JSONResponseBuilder();
         try {
@@ -140,7 +150,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
             logger.error("Error getting old pv :" + productVariantId);
         }
 
-        return oldProductVariantJsonBuilder.build();
+        return oldProductVariantJsonBuilder;
     }
 
     @SuppressWarnings("unchecked")
