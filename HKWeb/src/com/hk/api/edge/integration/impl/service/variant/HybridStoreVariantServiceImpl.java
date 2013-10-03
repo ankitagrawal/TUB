@@ -14,6 +14,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.request.VariantStockSyncRequest;
 import com.hk.edge.response.variant.StoreVariantBasicResponse;
 import com.hk.edge.response.variant.StoreVariantBasicResponseWrapper;
 import com.hk.manager.LinkManager;
@@ -35,16 +36,16 @@ import java.util.List;
 @Service
 public class HybridStoreVariantServiceImpl implements HybridStoreVariantService, HybridStoreVariantServiceFromHKR {
 
-    private static final String BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
+    private static final String   BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
+    private static final String   VARIANT_STOCK              = "variant/stock/";
 
     @Autowired
-    private LinkManager linkManager;
+    private LinkManager           linkManager;
 
     @Autowired
-    private ProductService productService;
+    private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
-
 
     @Override
     public StoreVariantBasicResponse getStoreVariantBasicDetailsFromEdge(String oldVariantId) {
@@ -56,6 +57,18 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
         }
 
         return null;
+    }
+
+    @Override
+    public void syncStockOnEdge(VariantStockSyncRequest variantStockSyncRequest) {
+        URIBuilder builder = new URIBuilder().fromURI(ServiceEndPoints.SYNC + VARIANT_STOCK);
+
+        HkHttpClient.executePostForObject(builder.getWebServiceUrl(), variantStockSyncRequest.getParameters(), null);
+    }
+
+    @Override
+    public void syncVariantDetailsFromEdge() {
+
     }
 
     @Override
@@ -121,7 +134,6 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
         }
         return null;
     }
-
 
     public LinkManager getLinkManager() {
         return linkManager;

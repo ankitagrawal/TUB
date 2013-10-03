@@ -8,4 +8,5 @@ public class ServiceEndPoints {
 
     public static final String  STORE_MENU       = END_POINT_PREFIX.concat("/menu/");
     public static final String  STORE_VARIANT    = END_POINT_PREFIX.concat("/variant/");
+    public static final String  SYNC             = END_POINT_PREFIX.concat("/int/sync/");
 }
