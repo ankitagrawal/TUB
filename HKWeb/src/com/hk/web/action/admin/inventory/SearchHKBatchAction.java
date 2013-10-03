@@ -1,6 +1,8 @@
 package com.hk.web.action.admin.inventory;
 
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.sku.SkuItemStatus;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -38,12 +40,15 @@ public class SearchHKBatchAction extends BaseAction {
     SkuGroupService skuGroupService;
     @Autowired
     UserService userService;
+    @Autowired
+    SkuItemDao skuItemDao;
 
     @Validate(required = true)
     private String hkBarcode;
 
     private List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
     private SkuItem skuItemBarcode;
+    private List<ProductVariantInventory> pviList;
 
 
     @DefaultHandler
@@ -63,6 +68,7 @@ public class SearchHKBatchAction extends BaseAction {
         }
         else {
         if (StringUtils.isNotBlank(hkBarcode)) {
+        	pviList = skuItemDao.getPVIInfo(hkBarcode);
             skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), skuItemStatusList, skuItemOwners);
             if (skuItemBarcode != null) {
                 skuGroupList.add(skuItemBarcode.getSkuGroup());
@@ -100,4 +106,12 @@ public class SearchHKBatchAction extends BaseAction {
     public void setSkuItemBarcode(SkuItem skuItemBarcode) {
         this.skuItemBarcode = skuItemBarcode;
     }
+
+		public List<ProductVariantInventory> getPviList() {
+			return pviList;
+		}
+
+		public void setPviList(List<ProductVariantInventory> pviList) {
+			this.pviList = pviList;
+		}
 }

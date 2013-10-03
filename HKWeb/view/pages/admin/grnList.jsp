@@ -185,8 +185,8 @@
 
 			        <br/>
 		        </c:if>
-		        <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryClosedStatus}">
-			        <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
+                <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryClosedStatus}">
+			        <s:link beanclass="com.hk.web.action.admin.queue.PutListAction" event="putList">
 				        Put List
 				        <s:param name="grn" value="${grn.id}"/></s:link>
 		        </c:if>
