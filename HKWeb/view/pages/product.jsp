@@ -371,7 +371,7 @@
         </div>
         <div class='top_links' style="padding-top:3px;">
             <c:if test="${!empty pa.userReviews}">
-                <div style="float:left; padding-bottom: 3px;">
+                <div style="float:left; padding-bottom: 7px;">
                     <a class="top_link" href='#user_reviews' style="border-bottom:0px;">
                             ${pa.totalReviews} Reviews &darr;
                     </a>
