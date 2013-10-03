@@ -7,6 +7,7 @@
 <%@ page import="com.hk.constants.marketing.AnalyticsConstants"%>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -248,8 +249,13 @@
         }
     %>
     <!-- Google Code for Payment Success Conversion Page -->
-    <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
-
+  <s:layout-render
+      name="/layouts/embed/paymentSuccessConversionTags.jsp"
+      conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}"
+      order_id="${actionBean.payment.gatewayOrderId}"
+      order="${actionBean.order}"
+      pageType="<%=HealthkartConstants.Remarketing.PageType.paymentSuccess%>"
+      />
 </c:if>
 
 <c:choose>

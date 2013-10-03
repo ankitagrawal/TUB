@@ -15,6 +15,8 @@ public class UserResponseFromHKR extends BaseUserResponseFromHKR {
   private Set<String> permissions = new HashSet<String>();
   private String birthDt;
   private String gender;
+  private String userHash;
+  private Integer orderCount;
 
   public String getLogin() {
     return login;
@@ -64,6 +66,21 @@ public class UserResponseFromHKR extends BaseUserResponseFromHKR {
     this.gender = gender;
   }
 
+  public String getUserHash() {
+    return userHash;
+  }
+
+  public void setUserHash(String userHash) {
+    this.userHash = userHash;
+  }
+
+  public Integer getOrderCount() {
+    return orderCount;
+  }
+
+  public void setOrderCount(Integer orderCount) {
+    this.orderCount = orderCount;
+  }
 
   @Override
   protected String[] getKeys() {
@@ -78,7 +95,9 @@ public class UserResponseFromHKR extends BaseUserResponseFromHKR {
         "nm",
         "roles",
         "exception",
-        "msgs"
+        "msgs",
+        "userHash",
+        "orderCount"
     };
   }
 
@@ -95,7 +114,9 @@ public class UserResponseFromHKR extends BaseUserResponseFromHKR {
         this.getNm(),
         this.getRoles(),
         this.exception,
-        this.msgs
+        this.msgs,
+        this.userHash,
+        this.orderCount
     };
   }
 }

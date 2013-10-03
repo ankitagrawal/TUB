@@ -10,7 +10,7 @@ public class ComboHKR extends JSONObject {
 
     private String id;
     private String name;
-    private String url = "/combos";
+    private String url;
     private String sLinkForImage;
     private String mLinkForImage;
 

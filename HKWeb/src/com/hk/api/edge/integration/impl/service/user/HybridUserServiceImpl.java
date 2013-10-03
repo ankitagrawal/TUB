@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hk.api.edge.integration.response.user.UserTempResponse;
+import com.hk.pact.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +23,26 @@ public class HybridUserServiceImpl implements HybridUserService {
 
   @Autowired
   private UserService userService;
+  @Autowired
+  private OrderService orderService;
 
-  public boolean isTempUser(Long userId) {
+  public UserTempResponse isTempUser(Long userId) {
     if (userId == null) {
       throw new InvalidParameterException("INVALID USER ID");
     }
+    UserTempResponse userTempResponse = new UserTempResponse();
     User user = getUserService().getUserById(userId);
     if (user == null) {
       throw new InvalidParameterException("User Doesn't Exist");
     }
     if (user.getRoles().contains(EnumRole.TEMP_USER.toRole())) {
-      return true;
+      userTempResponse.setException(false);
+      userTempResponse.setTempUser(true);
+      return userTempResponse;
     }
-    return false;
+    userTempResponse.setException(false);
+    userTempResponse.setTempUser(false);
+    return userTempResponse;
   }
 
   public UserResponseFromHKR getUserResponseById(Long userId) {
@@ -58,6 +67,14 @@ public class HybridUserServiceImpl implements HybridUserService {
       userApiResponse.setException(false);
       userApiResponse.setId(user.getId());
       userApiResponse.setNm(user.getName());
+      userApiResponse.setUserHash(user.getUserHash());
+      Integer orderCount = 0;
+      try{
+        orderCount = getOrderService().getOrderCountByUser(user.getId());
+      }catch (Exception e){
+        System.out.println(e.getStackTrace());
+      }
+      userApiResponse.setOrderCount(orderCount);
       if(user.getBirthDate()!=null) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         String dateString = df.format(user.getBirthDate());
@@ -92,5 +109,9 @@ public class HybridUserServiceImpl implements HybridUserService {
 
   public UserService getUserService() {
     return userService;
+  }
+
+  public OrderService getOrderService() {
+    return orderService;
   }
 }
