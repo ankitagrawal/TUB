@@ -116,12 +116,12 @@ Pass an attribute called pricingDto to render a table with pricing details
                     <%--HTML code for dispatch date--%>
                 <div class="dispatchedDateNew2">
                     <div>${invoiceLineItem.productVariant.product.minDays}
-                        - ${invoiceLineItem.productVariant.product.maxDays} working days
+                        - ${invoiceLineItem.productVariant.product.maxDays} days
                     </div>
                 </div>
 
 
-                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 20px;">
+                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 10px;">
                     <c:choose>
                         <c:when test="${invoiceLineItem.hkPrice == 0.0}">
                             <div style="left: 70px;position: relative;">
@@ -178,8 +178,8 @@ Pass an attribute called pricingDto to render a table with pricing details
                         <div align="left" style="text-align:center;width:5%;padding: 5px;position: relative;float: left;">${hk:getComboCount(invoiceLineItem)}</div>
                     </div>
 
-                    <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div></div>
-                    <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 20px;">
+                    <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} days</div></div>
+                    <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 10px;">
 
                         <div class="cut">
                             <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;">  Rs
@@ -231,10 +231,10 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
                 <div class="dispatchedDateNew2">
                     <div>${invoiceLineItem.productVariant.product.minDays}
-                        - ${invoiceLineItem.productVariant.product.maxDays} working days
+                        - ${invoiceLineItem.productVariant.product.maxDays} days
                     </div>
                 </div>
-                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 20px;">
+                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 10px;">
 
                     <div class="cut">
                         <div class="num lineItemSubTotalMrp arialGrayBold"
