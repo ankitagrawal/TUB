@@ -96,14 +96,16 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             List<Combo> relatedCombosForProduct = getProductService().getRelatedCombos(product);
             for (Combo relatedCombo : relatedCombosForProduct) {
                 if (getProductService().isComboInStock(relatedCombo) && !relatedCombo.isDeleted() && !relatedCombo.isHidden() && !relatedCombo.isGoogleAdDisallowed()) {
-                    /*String baseUrl = getLinkManager().getRelativeProductURL(relatedCombo, EnumProductReferrer.relatedProductsPage.getId());
-                    String productUrl = getProductService().getAppendedProductURL(baseUrl, param, null);*/
+                    String baseUrl = getLinkManager().getRelativeProductURL(relatedCombo, EnumProductReferrer.relatedProductsPage.getId());
+                    baseUrl = baseUrl.replaceAll("/product/", "/combo/");
+
+                    String productUrl = getProductService().getAppendedProductURL(baseUrl, param, null);
 
                     String sImageUrl = HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, relatedCombo.getMainImageId());
                     String mImageUrl = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, relatedCombo.getMainImageId());
 
                     ComboHKR comboHKR = new ComboHKR(relatedCombo);
-//                    comboHKR.setUrl(productUrl);
+                    comboHKR.setUrl(productUrl);
                     comboHKR.setSLinkForImage(sImageUrl);
                     comboHKR.setMLinkForImage(mImageUrl);
 

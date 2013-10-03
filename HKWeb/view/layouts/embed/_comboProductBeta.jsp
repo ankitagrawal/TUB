@@ -95,10 +95,11 @@
         <c:choose>
           <c:when test="${fn:length(comboProduct.allowedInStockVariants) == 1}">
             <tr class="${ctr.index % 2 == 0 ? 'alt':''} top-brdr btm-brdr varnt-specs-tr">
-               <td>
-                <c:forEach items="${comboProduct.allowedInStockVariants[0].productOptions}" var="option">
-                  ${option.name}:${option.value};
-                </c:forEach></td>
+               <td class="fnt-sz9">
+                    <c:forEach items="${comboProduct.allowedInStockVariants[0].productOptions}" var="option">
+                      ${option.name}:${option.value};
+                    </c:forEach>
+               </td>
               <td>
                 <s:hidden name="productVariantList[${globalCtr}]" value="${comboProduct.allowedInStockVariants[0].id}"/>
                 <s:hidden name="productVariantList[${globalCtr}].selected" value="true"/>
@@ -119,7 +120,7 @@
                 <c:if test="${!(ctr2.first || ctr2.last)}">
                     <tr class="${ctr2.index%2==0? 'varnt-specs-tr':' varnt-specs-tr bg-gray'}" >
                 </c:if>
-                <td>
+                <td class="fnt-sz9">
                   <c:forEach items="${variant.productOptions}" var="option">
                     ${option.name}:${option.value};
                   </c:forEach>
@@ -173,7 +174,7 @@
         <c:choose>
           <c:when test="${fn:length(comboProduct.product.inStockVariants) == 1}">
             <tr class="${ctr.index % 2 == 0 ? 'alt':''} top-brdr btm-brdr varnt-specs-tr">
-               <td>
+               <td class="fnt-sz9">
                 <c:forEach items="${comboProduct.product.inStockVariants[0].productOptions}" var="option">
                   ${option.name}:${option.value};
                 </c:forEach></td>
@@ -199,7 +200,7 @@
                 <c:if test="${!(ctr2.first || ctr2.last)}">
                     <tr class="${ctr.index % 2 == 0 ? 'alt':''} ${ctr2.index%2==0? 'varnt-specs-tr':' varnt-specs-tr bg-gray'}" >
                 </c:if>
-                <td>
+                <td class="fnt-sz9">
                   <c:forEach items="${variant.productOptions}" var="option">
                     ${option.name}:${option.value};
                   </c:forEach></td>
