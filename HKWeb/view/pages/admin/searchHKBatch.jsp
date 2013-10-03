@@ -40,42 +40,63 @@
                      <h2>Batch Info of ${skuGroup.barcode}</h2>
                   </c:if>
 
-                  <table>
-	                <tr>
-	                  <td>Name:</td><td>${product.name}</td>
-	                </tr><tr>
-	                <td>Variant:</td><td>${variant.id}</td>
-	              </tr><tr>
-	                <td>Variant Options:</td><td>${variant.optionsSlashSeparated}</td>
-	              </tr><tr>
-	                <td>MRP:</td><td>${variant.markedPrice}</td>
-	              </tr><tr>
-	                <td>Batch:</td><td>${skuGroup.batchNumber}</td>
-	              </tr><tr>
-	                <td>Mfg. Date:</td><td>${skuGroup.mfgDate}</td>
-	              </tr><tr>
-	                <td>Exp. Date:</td><td>${skuGroup.expiryDate}</td>
-	              </tr><tr>
-	                <td>Net Physical Inventory:</td><td>
-	                ${fn:length(hk:getNetPhysicalAvailableStockSkuItems(skuGroup))}
-                  </td>
-	              </tr><tr>
-	                <td>Net Available Unbooked Inventory (CHECKED IN):</td><td>
-	                ${fn:length(hk:getInStockSkuItems(skuGroup))}
-                  </td>
-	              </tr>
-                      <tr>
-                       <c:set var="status" value="${ssba.skuItemBarcode.skuItemStatus.id}"/>
-                        <c:if test="${ssba.skuItemBarcode != null  && status == checkedInStatus ||  status == TempBookedStatus || status == bookedStatus}">
-                            <td> Item Available</td>
-                        </c:if>
-                       <c:if test="${ssba.skuItemBarcode != null  && !(status == checkedInStatus ||  status == TempBookedStatus || status == bookedStatus)}">                            
-                            <td> Item Not Available</td>
-                        </c:if>
+							<table class="t1">
+								<tr>
+									<td>Name:</td>
+									<td>${product.name}</td>
+								</tr>
+								<tr>
+									<td>Variant:</td>
+									<td>${variant.id}</td>
+								</tr>
+								<tr>
+									<td>Variant Options:</td>
+									<td>${variant.optionsSlashSeparated}</td>
+								</tr>
+								<tr>
+									<td>MRP:</td>
+									<td>${variant.markedPrice}</td>
+								</tr>
+								<tr>
+									<td>Batch:</td>
+									<td>${skuGroup.batchNumber}</td>
+								</tr>
+								<tr>
+									<td>Mfg. Date:</td>
+									<td>${skuGroup.mfgDate}</td>
+								</tr>
+								<tr>
+									<td>Exp. Date:</td>
+									<td>${skuGroup.expiryDate}</td>
+								</tr>
+								<tr>
+									<td>Bin Number:</td>
+									<td>${ssba.skuItemBarcode.bin.barcode}</td>
+								</tr>
+								<tr>
+									<td>Net Physical Inventory:</td>
+									<td>${fn:length(hk:getNetPhysicalAvailableStockSkuItems(skuGroup))}</td>
+								</tr>
+								<tr>
+									<td>Net Available Unbooked Inventory (CHECKED IN):</td>
+									<td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
+								</tr>
+								<tr>
+									<c:set var="status" value="${ssba.skuItemBarcode.skuItemStatus.id}" />
+									<c:if
+										test="${ssba.skuItemBarcode != null  && status == checkedInStatus ||  status == TempBookedStatus || status == bookedStatus}">
+										<td>Item Available</td>
+										<td>Yes</td>
+									</c:if>
+									<c:if
+										test="${ssba.skuItemBarcode != null  && !(status == checkedInStatus ||  status == TempBookedStatus || status == bookedStatus)}">
+										<td>Item Available</td>
+										<td>No</td>
+									</c:if>
 
-                      </tr>
-	              </table>
-	            </c:forEach>
+									</tr>
+								</table>
+							</c:forEach>
             </c:when>
             <c:otherwise>
               <c:if test="${ssba.hkBarcode != null}">
@@ -84,5 +105,61 @@
             </c:otherwise>
           </c:choose>
         </td></tr></table>
-  </s:layout-component>
+    
+    <hr>
+    <c:choose>
+    <c:when test="${fn:length(ssba.pviList)>0 }">
+    <br><strong>PVI Info</strong>
+    <table class="t1">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>PVID</th>
+                <th>WH</th>
+                <th>GRN</th>
+                <th>RV</th>
+                <th>ST</th>
+                <th>SO</th>
+                <th>LI</th>
+                <th>Txn Type</th>
+                <th>Qty</th>
+            </tr>
+            </thead>
+
+            <c:forEach items="${ssba.pviList}" var="pvi">
+                <tr>
+                    <td>${pvi.txnDate}</td>
+                    <td>${pvi.sku.productVariant.id}</td>
+                    <td>${pvi.sku.warehouse.identifier}</td>
+                    <td>${pvi.grnLineItem.goodsReceivedNote.id}</td>
+                    <td>${pvi.rvLineItem.reconciliationVoucher.id}</td>
+                    <td>${pvi.stockTransferLineItem.stockTransfer.id}</td>
+                    <td>${pvi.shippingOrder.id}</td>
+                    <td>${pvi.lineItem.id}</td>
+                    <td>${pvi.invTxnType.name}</td>
+                    <td>${pvi.qty}</td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:when>
+    <c:otherwise>
+    </c:otherwise>
+    </c:choose>
+    </s:layout-component>
 </s:layout-render>
+<style>
+    .t1 {
+        border-width: 0 0 1px 1px;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .t1 tr td{
+        text-align: left;
+        font-size: small;
+        border-width: 1px 1px 0 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+
+</style>

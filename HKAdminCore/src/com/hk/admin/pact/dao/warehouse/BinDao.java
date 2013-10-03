@@ -11,17 +11,16 @@ import com.hk.pact.dao.BaseDao;
 @Repository
 public interface BinDao extends BaseDao {
 
-    public Bin getOrCreateBin(Bin bin, Warehouse warehouse);
+	public Bin getOrCreateBin(Bin bin, Warehouse warehouse);
 
-    public Bin findByBarCodeAndWarehouse(String barcode, Warehouse warehouse);
+	public Bin findByBarCodeAndWarehouse(String barcode, Warehouse warehouse);
 
-    public Bin saveBin(Bin bin, Warehouse warehouse);
+	public Bin saveBin(Bin bin, Warehouse warehouse);
 
-  public Bin createBin(Bin bin, Warehouse warehouse);
+	public Bin createBin(Bin bin, Warehouse warehouse);
 
-  public Bin getBin(Bin bin, Warehouse warehouse);
+	public Bin getBin(Bin bin, Warehouse warehouse);
 
- public List<Bin> getAllBinByWarehouse(Warehouse warehouse);
-
-
+	public List<Bin> getAllBinByWarehouse(Warehouse warehouse);
+	
 }
