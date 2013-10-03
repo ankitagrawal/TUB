@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
+import com.hk.pact.service.inventory.InventoryService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -26,6 +27,9 @@ public class SkuGroupAction extends BaseAction {
 	@Autowired
 	SkuGroupDao skuGroupDao;
 
+  @Autowired
+  InventoryService inventoryService;
+
 	@DefaultHandler
 	public Resolution pre() {
 		return new ForwardResolution("/pages/admin/skuGroup.jsp");
@@ -42,6 +46,7 @@ public class SkuGroupAction extends BaseAction {
 				return new RedirectResolution(SkuGroupAction.class).addParameter("skuGroup", skuGroup.getId()).addParameter("gatewayOrderId", gatewayOrderId);
 			}
 			skuGroupDao.save(skuGroup);
+      getInventoryService().checkInventoryHealth(skuGroup.getSku().getProductVariant());
 			addRedirectAlertMessage(new SimpleMessage("SkuGroupUpdated."));
 			return new RedirectResolution(SkuGroupAction.class).addParameter("skuGroup", skuGroup.getId()).addParameter("gatewayOrderId", gatewayOrderId);
 		} catch (Exception e) {
@@ -66,4 +71,12 @@ public class SkuGroupAction extends BaseAction {
 	public void setGatewayOrderId(String gatewayOrderId) {
 		this.gatewayOrderId = gatewayOrderId;
 	}
+
+  public InventoryService getInventoryService() {
+    return inventoryService;
+  }
+
+  public void setInventoryService(InventoryService inventoryService) {
+    this.inventoryService = inventoryService;
+  }
 }
