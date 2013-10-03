@@ -69,12 +69,10 @@
 									<td>Exp. Date:</td>
 									<td>${skuGroup.expiryDate}</td>
 								</tr>
-								<c:if test="${ssba.skuItemBarcode!=null && ssba.skuItemBarcode.bin!=null }">
 								<tr>
 									<td>Bin Number:</td>
 									<td>${ssba.skuItemBarcode.bin.barcode}</td>
 								</tr>
-								</c:if>
 								<tr>
 									<td>Net Physical Inventory:</td>
 									<td>${fn:length(hk:getNetPhysicalAvailableStockSkuItems(skuGroup))}</td>
