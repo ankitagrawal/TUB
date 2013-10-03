@@ -193,7 +193,6 @@
 	<s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbProduct="${product}" lastLink="true"
 	                 topHeading="${seoData.h1}"/>
 </s:layout-component>
-
 <s:layout-component name="topCategory">${pa.topCategoryUrlSlug}</s:layout-component>
 <s:layout-component name="allCategories">${pa.allCategories}</s:layout-component>
 <s:layout-component name="brand">${product.brand}</s:layout-component>
@@ -201,7 +200,7 @@
 <s:layout-component name="urlFragment">${pa.menuNodeUrlFragment}</s:layout-component>
 
 <s:layout-component name="topBanner">
-	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}"/>
+	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />
 	<div class="clear"></div>
 	<c:if test="${product.service}">
 		<s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
@@ -209,7 +208,6 @@
 
 </s:layout-component>
 <s:layout-component name="prod_title">
-
 
 	<div>
 		<shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
