@@ -967,4 +967,122 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return ServiceLocatorFactory.getService(ShippingOrderService.class);
   }
 
+  public Boolean freeBookingItem(Long cartlineItemId) {
+    CartLineItem cartLineItem = null;
+    Boolean bookingRemoved = false;
+
+    cartLineItem = baseDao.get(CartLineItem.class, cartlineItemId);
+
+    if (cartLineItem != null) {
+      if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() <= 0) {
+        bookingRemoved = freeBookingInventoryAtAqua(cartLineItem);
+      } else {
+        if (bookedOnBright(cartLineItem)) {
+          bookingRemoved = freeBookingInventoryAtBright(cartLineItem);
+        }
+
+      }
+    }
+
+    return bookingRemoved;
+  }
+
+
+  public boolean freeBookingInventoryAtAqua(CartLineItem cartLineItem) {
+    List<SkuItemCLI> siclis = cartLineItem.getSkuItemCLIs();
+    deleteSicliAndSili(cartLineItem);
+
+    return true;
+  }
+
+
+  public Boolean validateBooking(CartLineItem cartLineItem) {
+
+    if (cartLineItem.getForeignSkuItemCLIs() == null) {
+      logger.debug("Call to validate Booked inventory by  aqua for cartlineItem  :" + cartLineItem.getId());
+      if (!swappingForAquaBooking(cartLineItem)) return false;
+    } else {
+      if (bookedOnBright(cartLineItem)) {
+        logger.debug("Call to validate Booked inventory by bright for cartlineItem  :" + cartLineItem.getId());
+        if (!swappingForBrightBooking(cartLineItem)) return false;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  public boolean swappingForAquaBooking(CartLineItem cartLineItem) {
+
+    LineItem item = lineItemDao.getLineItem(cartLineItem);
+    List<SkuItemLineItem> skuItemLineItems = item.getSkuItemLineItems();
+    List<Sku> skuList = Arrays.asList(item.getSku());
+    List<Long> skuStatusIdList = Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
+    List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
+    List<SkuItemStatus> skuItemStatus = new ArrayList<SkuItemStatus>();
+    skuItemStatus.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+    skuItemStatus.add(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+
+    Warehouse aquaWarehouse = item.getSku().getWarehouse();
+    String tinPrefix = aquaWarehouse.getTinPrefix();
+    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
+    warehouses.remove(aquaWarehouse);
+    Long wareHouseIdForBright = warehouses.get(0).getId();
+
+    Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(cartLineItem, null);
+    Long aquaInventoryCount = invMap.get("aquaInventory");
+    Long brtInventoryCount = invMap.get("brtInventory");
+
+    if (aquaInventoryCount >= cartLineItem.getQty()) {
+      logger.debug("Aqua inventory count in swapping For Aqua Booking for cartlineItem Id  : " + cartLineItem.getId() + " for variant :" + cartLineItem.getProductVariant().getId() + " is :" + aquaInventoryCount + "for Marked price : " + item.getMarkedPrice());
+      List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+      if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
+
+        for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+          if (!skuItemLineItem.getSkuItem().getSkuGroup().getMrp().equals(item.getMarkedPrice()) || !skuItemStatus.contains(skuItemLineItem.getSkuItem().getSkuItemStatus())) {
+            SkuItem skuItem = skuItemLineItem.getSkuItem();
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+            skuItem = (SkuItem) baseDao.save(skuItem);
+
+            SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
+            skuItemToBeSet.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+            skuItemToBeSet = (SkuItem) baseDao.save(skuItemToBeSet);
+
+            skuItemLineItem.getSkuItemCLI().setSkuItem(skuItemToBeSet);
+            baseDao.save(skuItemLineItem.getSkuItemCLI());
+            skuItemLineItem.setSkuItem(skuItemToBeSet);
+            skuItemLineItem = (SkuItemLineItem) baseDao.save(skuItemLineItem);
+          }
+        }
+      } else {
+        return false;
+      }
+    } else {
+
+      if (brtInventoryCount >= cartLineItem.getQty()) {
+        logger.debug("Bright inventory count  for Aqua swapping for cartlineItem Id  : " + cartLineItem.getId() + " for variant :" + cartLineItem.getProductVariant().getId() + " is : " + brtInventoryCount + "for Marked price : " + item.getMarkedPrice());
+        boolean incorrectMrp = false;
+        for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+          if (!skuItemLineItem.getSkuItem().getSkuGroup().getMrp().equals(item.getMarkedPrice()) || !skuItemStatus.contains(skuItemLineItem.getSkuItem().getSkuItemStatus())) {
+            incorrectMrp = true;
+            break;
+          }
+        }
+        for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+          SkuItem skuItem = skuItemLineItem.getSkuItem();
+          skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+          skuItem = (SkuItem) baseDao.save(skuItem);
+        }
+        if (incorrectMrp) {
+          freeBookingInventoryAtAqua(cartLineItem);
+          getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(cartLineItem, wareHouseIdForBright);
+        }
+      } else {
+        return false;
+      }
+
+    }
+    return true;
+  }
+
 }
