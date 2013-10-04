@@ -120,7 +120,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
 
       freeBookingItem(lineItem.getCartLineItem().getId());
-      boolean roStatus = inventoryHealthService.bookInventoryForReplacementOrder(lineItem);
+      boolean roStatus = getInventoryHealthService().bookInventoryForReplacementOrder(lineItem);
       return roStatus;
       /*
       boolean createSkuCLIFlag = false;
