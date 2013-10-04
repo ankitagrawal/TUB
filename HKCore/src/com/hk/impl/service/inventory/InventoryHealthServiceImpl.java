@@ -667,6 +667,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
 
             getBaseDao().save(productVariant);
+            updateVariantInfoOnEdge(productVariant);
 
             List<ProductVariant> inStockVariants = product.getInStockVariants();
             if (inStockVariants != null && inStockVariants.isEmpty()) {
@@ -682,6 +683,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     private void updateVariantInfoOnEdge(ProductVariant productVariant) {
         if (AppConstants.isHybridRelease) {
             VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
+            variantStockSyncRequest.setOldVariantId(productVariant.getId());
             variantStockSyncRequest.setCostPrice(productVariant.getCostPrice());
             variantStockSyncRequest.setMrp(productVariant.getMarkedPrice());
             variantStockSyncRequest.setOos(productVariant.isOutOfStock());

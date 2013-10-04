@@ -60,7 +60,7 @@ Order Id ${order.gatewayOrderId} received. ${order.payment.paymentMode.name} con
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.name}
+                    <td>${productLineItem.productVariant.variantName}
 
                     </td>
                     <td>

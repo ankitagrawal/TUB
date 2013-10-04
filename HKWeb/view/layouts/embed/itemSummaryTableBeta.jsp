@@ -22,18 +22,16 @@ Pass an attribute called pricingDto to render a table with pricing details
 <div class='orderSummaryHeading'>
     <div class="productGrid">Product</div>
     <div class="prodQuantityGrid">Qty</div>
-    <div class="prodDispatchGrid">
-        <span class="dispatchDateText2">Dispatch Days</span>
-        <span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>
-        <span class="dispatchDateText2" style="font-size: 9px;">Delivery time would be extra</span>
+    <div class="prodDispatchGrid">Dispatch</div>
+        <%--<span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>--%>
+        <%--<span class="dispatchDateText2" style="font-size: 9px;">Delivery time would be extra</span>--%>
 
-        <div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our
-            warehouse. The delivery time would be extra and will vary according to your location.
+        <%--<div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our--%>
+            <%--warehouse. The delivery time would be extra and will vary according to your location.--%>
 
-            <span id="crossNew" style="position: relative;float: right;top: 12px;cursor: pointer;">X</span>
-            <span class="arrowNew2"></span>
-        </div>
-    </div>
+            <%--<span id="crossNew" style="position: relative;float: right;top: 12px;cursor: pointer;">X</span>--%>
+            <%--<span class="arrowNew2"></span>--%>
+        <%--</div>--%>
     <div class="prodPriceGrid">Price</div>
 </div>
 <div class='products_container' style="overflow: visible;min-height: 0px;clear: both;">
@@ -44,7 +42,7 @@ Pass an attribute called pricingDto to render a table with pricing details
         <c:if
                 test="${invoiceLineItem.comboInstance == null && invoiceLineItem.productVariant.paymentType.name != 'Postpaid'}">
             <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
-                <div class='img48' style="vertical-align:top;position: relative;float: left;width: 8%;">
+                <div class='img48' style="vertical-align:top;position: relative;float: left;width: 8%;margin-left: 10px;border: 1px solid #ccc;padding: 3px;">
                         <%--<c:choose>--%>
                             <%--<c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">--%>
                                 <%--<hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"--%>
@@ -59,12 +57,12 @@ Pass an attribute called pricingDto to render a table with pricing details
                     <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
                          alt="${storeVariantBasic.name}"/>
                 </div>
-                <div class='name' style="position: relative;float: left;width: 42%;">
-                    <div style="padding:5px;width:85%;position: relative;float: left;word-wrap:break-word;">
+                <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
+                    <div style="padding:5px;width:80%;position: relative;float: left;word-wrap:break-word;">
                             ${storeVariantBasic.name} <br/>
                             <%--${invoiceLineItem.productVariant.variantName}--%>
                     </div>
-                    <div align="left" style="text-align:center;width:5%;padding: 5px;position: relative;float: left;">${invoiceLineItem.qty}</div>
+                    <div align="left" style="text-align:center;width:12%;padding: 5px;position: relative;float: left;">${invoiceLineItem.qty}</div>
                         <c:set var="TH" value="TH"/>
                         <c:set var="THBF" value="THBF"/>
                         <c:set var="CO" value="CO"/>
@@ -121,22 +119,22 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
 
 
-                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 10px;">
+                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 21%;right: 5px;">
                     <c:choose>
                         <c:when test="${invoiceLineItem.hkPrice == 0.0}">
-                            <div style="left: 70px;position: relative;">
+                            <div style="position: relative;">
                                 <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Free!</span>
                             </div>
                         </c:when>
                         <c:otherwise>
                             <div class="cut">
                                 <div class="num lineItemSubTotalMrp arialGrayBold"
-                                     style="left: 70px;position: relative;margin-bottom: 7px;"> Rs
+                                     style="position: relative;margin-bottom: 7px;"> Rs
                                     <fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
                                                       pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                             </div>
-                            <div style="left: 70px;position: relative;">
-                  <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
+                            <div style="position: relative;">
+                  <span class="lineItemSubTotalMrp fnt-sz16" style="color: #090">Rs <fmt:formatNumber
                           value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
                           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                             </div>
@@ -154,7 +152,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                <c:set var="firstComboLineItem" value="${invoiceLineItem.comboInstance.combo}"/>
                 <c:set var="firstComboLineItem" value="${firstComboLineItem} + ',' + ${invoiceLineItem.comboInstance.id} + ','" />
                 <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
-                    <div class='img48' style="vertical-align:top;position: relative;float: left;">
+                    <div class='img48' style="vertical-align:top;position: relative;float: left;width: 8%;margin-left: 10px;border: 1px solid #ccc;padding: 3px;">
                         <c:choose>
                             <c:when test="${invoiceLineItem.comboInstance.combo.mainImageId != null}">
                                 <hk:productImage imageId="${invoiceLineItem.comboInstance.combo.mainImageId}"
@@ -167,27 +165,27 @@ Pass an attribute called pricingDto to render a table with pricing details
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <div class='name' style="position: relative;float: left;width: 42%;">
-                        <div style="padding:5px;width:85%;position: relative;float: left;">
+                    <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
+                        <div style="padding:5px;width:80%;position: relative;float: left;">
                                     ${invoiceLineItem.comboInstance.combo.name}<br/>
                                     <c:forEach items="${invoiceLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
                                       <span style="font-size:10px;">${comboVariant.qty} x </span>
                                       <span style="font-size:10px;word-wrap:break-word;">${comboVariant.productVariant.product.name} - ${comboVariant.productVariant.optionsCommaSeparated}</span>
                                     </c:forEach>
                                 </div>
-                        <div align="left" style="text-align:center;width:5%;padding: 5px;position: relative;float: left;">${hk:getComboCount(invoiceLineItem)}</div>
+                        <div align="left" style="text-align:center;width:12%;padding: 5px;position: relative;float: left;">${hk:getComboCount(invoiceLineItem)}</div>
                     </div>
 
                     <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} days</div></div>
-                    <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 10px;">
+                    <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 21%;right: 5px;">
 
                         <div class="cut">
-                            <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;">  Rs
+                            <div class="num lineItemSubTotalMrp arialGrayBold" style="position: relative;margin-bottom: 7px;">  Rs
                                 <fmt:formatNumber value="${invoiceLineItem.comboInstance.combo.markedPrice * hk:getComboCount(invoiceLineItem)}"
                                                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                         </div>
-                        <div style="left: 70px;position: relative;">
-            <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
+                        <div style="position: relative;">
+            <span class="lineItemSubTotalMrp fnt-sz16" style="color: #090">Rs <fmt:formatNumber
                     value="${invoiceLineItem.comboInstance.combo.hkPrice * hk:getComboCount(invoiceLineItem)}"
                     pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                         </div>
@@ -207,7 +205,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 
         <c:if test="${invoiceLineItem.productVariant.paymentType.name == 'Postpaid'}">
             <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
-                <div class='img48' style="vertical-align:top;position: relative;float: left;">
+                <div class='img48' style="vertical-align:top;position: relative;float: left;width: 8%;margin-left: 10px;border: 1px solid #ccc;padding: 3px;">
                         <%--<c:choose>
                             <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
                                 <hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"
@@ -222,29 +220,29 @@ Pass an attribute called pricingDto to render a table with pricing details
                     <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
                          alt="${storeVariantBasic.name}"/>
                 </div>
-                <div class='name' style="position: relative;float: left;width: 42%;">
-                    <div style="padding:5px;width:85%;position: relative;float: left;word-wrap:break-word">
+                <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
+                    <div style="padding:5px;width:80%;position: relative;float: left;word-wrap:break-word">
                                     ${storeVariantBasic.name} <br/>
                                     <%--${invoiceLineItem.productVariant.variantName}--%>
                     </div>
-                    <div align="left" style="text-align:center;width:5%;padding: 5px;position: relative;float: left;">${invoiceLineItem.qty}</div>
+                    <div align="left" style="text-align:center;width:12%;padding: 5px;position: relative;float: left;">${invoiceLineItem.qty}</div>
                 </div>
                 <div class="dispatchedDateNew2">
                     <div>${invoiceLineItem.productVariant.product.minDays}
                         - ${invoiceLineItem.productVariant.product.maxDays} days
                     </div>
                 </div>
-                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 16%;right: 10px;">
+                <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 21%;right: 5px;">
 
                     <div class="cut">
                         <div class="num lineItemSubTotalMrp arialGrayBold"
-                             style="left: 70px;position: relative;margin-bottom: 7px;"> Rs<fmt:formatNumber
+                             style="position: relative;margin-bottom: 7px;"> Rs<fmt:formatNumber
                                 value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
                                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                     </div>
                 </div>
-                <div style="left: 70px;position: relative;">
-            <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
+                <div style="position: relative;">
+            <span class="lineItemSubTotalMrp fnt-sz16" style="color: #090">Rs <fmt:formatNumber
                     value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
                     pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                 </div>
