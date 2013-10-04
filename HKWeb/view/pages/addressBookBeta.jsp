@@ -192,7 +192,7 @@
                 <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
                     <s:layout-render name="/layouts/addressLayoutBeta.jsp"/>
                     <s:hidden name="countryId" value="${countryId}"/>
-                    <div style="display: inline-block; margin: 20px 0 0;">
+                    <div style="display: inline-block; margin: 20px 0 0; float: right; width: 255px;">
                         <s:submit name="create" value="Continue" class="btn btn-blue continue"/>
                     </div>
                 </s:form>
