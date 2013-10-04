@@ -560,6 +560,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             order.setConfirmationDate(new Date());
             orderService.save(order);
             orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+            emailManager.sendCodConfirmEmailToUser(order);
             getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         }
         return payment;

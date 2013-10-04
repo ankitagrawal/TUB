@@ -79,4 +79,5 @@ public class EmailTemplateConstants {
     public static final String poMailNotSentToSupplier = "/poMailNotSentToSupplier.ftl";
     public static final String partialOrderCancelEmailUser = "/partialOrderCancelEmailUser.ftl";
     public static String manualRefundTaskToAdminMail="/manualRefundTaskToAdminMail.ftl";
+    public static String codConfirmEmail = "/codConfirmEmail.ftl";
 }
