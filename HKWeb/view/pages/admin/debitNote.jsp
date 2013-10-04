@@ -323,6 +323,7 @@
     Edit <label class="dnRtvLabel">Debit Note</label> # ${pa.debitNote.id}
     <c:if test="${pa.debitNote.purchaseInvoice!=null }">(Against PI # ${pa.debitNote.purchaseInvoice.id})</c:if> 
     <c:if test="${pa.debitNote.reconciliationVoucher!=null }">(Against RV # ${pa.debitNote.reconciliationVoucher.id})</c:if>
+    <c:if test="${pa.debitNote.debitNoteNumber!=null }">(DN number # ${pa.debitNote.debitNoteNumber})</c:if>
 </s:layout-component>
 <s:layout-component name="content">
     <div style="display: none;">

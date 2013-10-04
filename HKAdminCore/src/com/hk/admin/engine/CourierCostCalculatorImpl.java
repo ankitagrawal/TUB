@@ -97,6 +97,8 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
                 pincodeObj.getNearestHub(), shipmentDate);
             if(hkReachPricingEngine != null){
               totalCost = shipmentPricingEngine.calculateHKReachCost(hkReachPricingEngine, weight, pincodeObj);
+            } else {
+            	totalCost = -1d;
             }
           } else {
             totalCost = -1d;
