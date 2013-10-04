@@ -42,7 +42,7 @@ Partial Order Cancellation for Order ID ${order.gatewayOrderId}
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.name}<br/>
+                    <td>${productLineItem.productVariant.variantName}<br/>
 
                     </td>
                     <td>

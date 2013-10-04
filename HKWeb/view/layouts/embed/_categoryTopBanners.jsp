@@ -42,6 +42,7 @@
      rowers,home-gym,smith-machines,steppers,bench-equipments,multi-utility-equipments,abdominal-machines,
      heart-rate-monitors,massage-equipments,trampolines,weighing-scales,miscellaneous-equipments"/>
 
+
     <c:if test="${hk:collectionContains(topCategoryNameList, 'home-living')}">
         <jsp:include page="/categoryBanners/home-livingTopStripBanner.jsp"/>
     </c:if>

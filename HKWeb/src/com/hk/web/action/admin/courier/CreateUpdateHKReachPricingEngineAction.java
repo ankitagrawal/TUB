@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -84,6 +85,9 @@ public class CreateUpdateHKReachPricingEngineAction extends BaseAction {
   public Resolution add() {
     List<HKReachPricingEngine> localEngines= courierService.searchHKReachPricing(hkReachPricingEngine.getWarehouse(),
             hkReachPricingEngine.getHub());
+    if (localEngines == null ) {
+    	localEngines = new ArrayList<HKReachPricingEngine>();
+    }
     localEngines.add(hkReachPricingEngine);
     HKReachPricingEngine duplicateEngine =
         (HKReachPricingEngine) HKCollectionUtils.findDuplicate(localEngines,null,"warehouse","hub","validFrom");

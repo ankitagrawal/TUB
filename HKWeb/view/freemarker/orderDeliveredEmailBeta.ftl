@@ -113,7 +113,7 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
                 <#list shippingOrder.lineItems as lineItem>
                     <tr>
 
-                        <td>${lineItem.sku.productVariant.name}
+                        <td>${lineItem.sku.productVariant.variantName}
 
                         </td>
                         <td>

@@ -291,6 +291,7 @@
         <url-pattern>/sitemap.txt</url-pattern>
         <url-pattern>/ror.xml</url-pattern>
         <url-pattern>/revital</url-pattern>
+        <url-pattern>/store/splenda</url-pattern>
         <url-pattern>/super-savers</url-pattern>
         <url-pattern>/faq/*</url-pattern>
 	    <url-pattern>/dmp</url-pattern>

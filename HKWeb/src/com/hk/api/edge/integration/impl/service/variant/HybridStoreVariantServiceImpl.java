@@ -1,5 +1,14 @@
 package com.hk.api.edge.integration.impl.service.variant;
 
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.api.edge.constants.ServiceEndPoints;
 import com.hk.api.edge.http.HkHttpClient;
 import com.hk.api.edge.http.URIBuilder;
@@ -14,20 +23,16 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.request.VariantPricingSyncRequest;
+import com.hk.edge.request.VariantStockSyncRequest;
 import com.hk.edge.response.variant.StoreVariantBasicResponse;
 import com.hk.edge.response.variant.StoreVariantBasicResponseWrapper;
 import com.hk.manager.LinkManager;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.taglibs.Functions;
 import com.hk.util.HKImageUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author vaibhav.adlakha
@@ -35,16 +40,18 @@ import java.util.List;
 @Service
 public class HybridStoreVariantServiceImpl implements HybridStoreVariantService, HybridStoreVariantServiceFromHKR {
 
-    private static final String BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
+    private static final String   BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
+    private static final String   VARIANT_STOCK              = "variant/stock/";
 
     @Autowired
-    private LinkManager linkManager;
+    private LinkManager           linkManager;
 
     @Autowired
-    private ProductService productService;
+    private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
-
+    @Autowired
+    private BaseDao               baseDao;
 
     @Override
     public StoreVariantBasicResponse getStoreVariantBasicDetailsFromEdge(String oldVariantId) {
@@ -56,6 +63,32 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
         }
 
         return null;
+    }
+
+    @Override
+    public void syncStockOnEdge(VariantStockSyncRequest variantStockSyncRequest) {
+        URIBuilder builder = new URIBuilder().fromURI(ServiceEndPoints.SYNC + VARIANT_STOCK);
+
+        HkHttpClient.executePostForObject(builder.getWebServiceUrl(), variantStockSyncRequest.getParameters(), null);
+    }
+
+    @Override
+    public void syncAllVariantDetailsFromEdge() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    @Transactional
+    public void syncPricingFromEdge(VariantPricingSyncRequest variantPricingSyncRequest) {
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantPricingSyncRequest.getOldVariantId());
+
+        if (productVariant != null) {
+            productVariant.setHkPrice(Double.valueOf(((Integer) variantPricingSyncRequest.getOfferPrice()).toString()));
+            productVariant.setDiscountPercent(variantPricingSyncRequest.getDiscount());
+            getBaseDao().save(productVariant);
+        }
+
     }
 
     @Override
@@ -122,7 +155,6 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
         return null;
     }
 
-
     public LinkManager getLinkManager() {
         return linkManager;
     }
@@ -134,4 +166,9 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     public ProductVariantService getProductVariantService() {
         return productVariantService;
     }
+
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
 }
