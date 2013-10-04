@@ -667,6 +667,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
 
             getBaseDao().save(productVariant);
+            updateVariantInfoOnEdge(productVariant);
 
             List<ProductVariant> inStockVariants = product.getInStockVariants();
             if (inStockVariants != null && inStockVariants.isEmpty()) {
