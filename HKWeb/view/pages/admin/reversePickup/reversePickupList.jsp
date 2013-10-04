@@ -321,13 +321,15 @@
                     <td>
                                 ${rpLineitem.customerActionStatus.primary}
                         <c:set value="<%=EnumReverseAction.Pending_Approval.getId()%>" var="pending"/>
-                        <c:if test="${rpLineitem.customerActionStatus.id == pending}">
-                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
-                                    event="approveCSAction"><span class="approve">(Approve)</span>
-                                <s:param name="rpLineitem" value="${rpLineitem.id}"/>
-                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
-                            </s:link>
-                        </c:if>
+                                    <shiro:hasPermission name="<%=PermissionConstants.APPROVE_REVERSE_PICKUP%>">
+                                        <c:if test="${rpLineitem.customerActionStatus.id == pending}">
+                                            <s:link beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"
+                                                    event="approveCSAction"><span class="approve">(Approve)</span>
+                                                <s:param name="rpLineitem" value="${rpLineitem.id}"/>
+                                                <s:param name="reversePickupOrder" value="${reversePickup.id}"/>
+                                            </s:link>
+                                        </c:if>
+                                    </shiro:hasPermission>
                     </td>
                     <td>
                             ${rpLineitem.warehouseReceivedCondition.classification.primary}
@@ -374,7 +376,8 @@
                                         <br><br>
                                     </c:when>
                                     <c:otherwise>
-                                        AWB : <span> ${reversePickup.trackingNumber}</span><br>
+                                        AWB : <span> <a href="https://www.fedex.com/fedextrack/?tracknumbers=${reversePickup.trackingNumber}" target="_blank">
+                                                        ${reversePickup.trackingNumber}</a> </span><br>
                                         <s:hidden name="trackingNumber" class="trackingnum"/>
                                         <s:submit value="Edit AWB" name="editTrackingNumber"
                                                   style="font:10px;padding:0em;background-color: #ffffff;color:#0000ff;font-weight :bolder;"
