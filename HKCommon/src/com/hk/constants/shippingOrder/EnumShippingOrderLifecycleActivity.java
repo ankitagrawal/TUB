@@ -74,6 +74,7 @@ public enum EnumShippingOrderLifecycleActivity {
   RewardPointsRevertBack(1009L,"Reward Points given back to user in SO cancellation"),
   RefundAmountInProcess(400L,"Refund is in process, Please contact tech support"),
   SO_CancelledInventoryMismatch(1020L, "SO  Cancelled due to inventory mismatch"),
+  SO_ReadyForValidation(1030L, "SO  on pre cancellation phase could be fulfilled at Bright  end"),
   Reconciliation(1050l,"Reconciliation"),
   SO_COULD_NOT_BE_CANCELLED_AUTO(1060l,"SO could not be cancelled automatically."),
   RPU_STATUS_CHANGED(1200l,"RPU Status Changed"),

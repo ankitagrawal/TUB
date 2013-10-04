@@ -32,6 +32,7 @@ public enum EnumReason {
     ShipmentNotCreatedManual(210L, "Shipment Not Created", EnumReasonType.NotManualEscalated),
     InvalidPaymentStatusManual(220L, "Payment Status is AuthPending/Error", EnumReasonType.NotManualEscalated),
     InsufficientUnbookedInventoryManual(230L, "Insufficient Unbooked Inventory", EnumReasonType.NotManualEscalated),
+    InventoryBookedOnBrightBehalf(240L, "Inventory Booked on  Bright Behalf", EnumReasonType.NotAutoEscalated),
 
     CourierServiceChange(700L, "Courier Service Change", EnumReasonType.CourierChange),
     ChangeFromGroundToAirShipping(710L, "Change From Ground To Air Shipping", EnumReasonType.CourierChange),

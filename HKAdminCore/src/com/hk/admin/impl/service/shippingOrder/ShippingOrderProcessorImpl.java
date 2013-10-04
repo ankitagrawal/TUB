@@ -216,11 +216,22 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             loggedInUser = getUserService().getAdminUser();
           }
           // todo auto escalation code need to be changed
-//          shippingOrderService.validateShippingOrder(shippingOrder);
-//          shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
-//          if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
-//            return false;
-//          }
+          shippingOrderService.validateShippingOrder(shippingOrder);
+          shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
+          if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
+            return false;
+          } else {
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+              for (SkuItemLineItem sili : lineItem.getSkuItemLineItems()) {
+                if (sili.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())) {
+                  shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder,
+                      EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,
+                      EnumReason.InventoryBookedOnBrightBehalf.asReason());
+                  return false;
+                }
+              }
+            }
+          }
           if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
             Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
             if (newShipment == null) {
@@ -267,7 +278,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
                   EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue),
               EnumReason.PROD_INV_MISMATCH.asReason(), comments);
         } else if( this.countValidSILI(lineItem.getSkuItemLineItems()) < orderedQty) {
-          // also if there is no unbooked inventory at different MRP
+
           if (inventoryService.getAvailableUnbookedInventory(lineItem.getSku(), null) < orderedQty) {
             selectedItems.add(lineItem);
             String comments = "Invalid or no inventory booked for " + lineItem.getSku().getProductVariant();
@@ -501,9 +512,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
   private Integer countValidSILI(List<SkuItemLineItem> items) {
     Integer count = 0;
     for (SkuItemLineItem item: items) {
-      if (item.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
+      if (item.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId()) || item.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())) {
         if (EnumSkuGroupStatus.UNDER_REVIEW.equals(item.getSkuItem().getSkuGroup().getStatus())) {
-          break;
+          continue;
         } else {
           count++;
         }
@@ -590,8 +601,14 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
     }
 
-    Payment payment = cancelledSO.getBaseOrder().getPayment();
-    Store store = cancelledSO.getBaseOrder().getStore();
+     cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+     shippingOrderService.save(cancelledSO);
+
+    /*
+
+      Payment payment = cancelledSO.getBaseOrder().getPayment();
+     Store store = cancelledSO.getBaseOrder().getStore();
+
     if (paymentService.isValidReconciliation(payment, store)) {
       this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
                                                         EnumReconciliationActionType.RefundAmount.getId(), false);
@@ -604,9 +621,13 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     } else {
       emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
     }
+
+    */
     shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CancelledInventoryMismatch),
-              EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled after splitting.");
+        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
+              EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on  pre cancel state could be fulfilled from Bright end Validate it.");
+
+
       return true;
   }
 

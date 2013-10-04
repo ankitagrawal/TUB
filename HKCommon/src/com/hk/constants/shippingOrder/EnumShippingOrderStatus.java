@@ -28,6 +28,7 @@ public enum EnumShippingOrderStatus {
   SO_Customer_Return_Refunded(260L, "SO Customer Return and Refund"),
   SO_Customer_Appeasement(270L, "SO Customer Satisfaction"),
   SO_ReversePickup_Initiated(280L, "SO Reverse Pickup Initiated"),
+  SO_Ready_For_Validation(290L,"SO  Validation Required"),
   SO_Cancelled(999L, "SO Cancelled");
 
 

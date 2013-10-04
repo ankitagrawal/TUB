@@ -17,6 +17,8 @@ public interface LineItemDao extends BaseDao {
 
     public LineItem getLineItem(CartLineItem cartLineItem);
 
+    public  List<LineItem>  getAllLineItem(CartLineItem cartLineItem);
+
     public void flipProductVariants(Sku srcSKu, Sku dstSku, ShippingOrder shippingOrder);
 
 	public LineItem getMatchingLineItemForDuplicateShippingOrder(LineItem lineItem, ShippingOrder originalShippingOrder);

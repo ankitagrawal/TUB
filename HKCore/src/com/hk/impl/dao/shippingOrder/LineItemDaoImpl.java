@@ -16,47 +16,54 @@ import com.hk.pact.dao.shippingOrder.LineItemDao;
 @Repository
 public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
 
-    @Transactional
-    public LineItem save(LineItem lineItem) {
-        if (lineItem.getDiscountOnHkPrice() == null) {
-            lineItem.setDiscountOnHkPrice(0D);
-        }
-        return (LineItem) super.save(lineItem);
+  @Transactional
+  public LineItem save(LineItem lineItem) {
+    if (lineItem.getDiscountOnHkPrice() == null) {
+      lineItem.setDiscountOnHkPrice(0D);
     }
+    return (LineItem) super.save(lineItem);
+  }
 
-    public List<LineItem> getLineItem(Sku sku, ShippingOrder shippingOrder) {
-        String query = "select li from LineItem li where li.sku = :sku  and li.shippingOrder = :shippingOrder";
-        return (List<LineItem>) getSession().createQuery(query).setEntity("sku", sku).setEntity("shippingOrder", shippingOrder).list();
-    }
+  public List<LineItem> getLineItem(Sku sku, ShippingOrder shippingOrder) {
+    String query = "select li from LineItem li where li.sku = :sku  and li.shippingOrder = :shippingOrder";
+    return (List<LineItem>) getSession().createQuery(query).setEntity("sku", sku).setEntity("shippingOrder", shippingOrder).list();
+  }
 
-    public LineItem getLineItem(CartLineItem cartLineItem) {
-        String query = "select li from LineItem li where li.cartLineItem = :cartLineItem order by id desc";
-        List<LineItem> lineItems = (List<LineItem>) getSession().createQuery(query).setParameter("cartLineItem", cartLineItem).list();
-        return lineItems != null && !lineItems.isEmpty() ? lineItems.get(0) : null;
-    }
+  public LineItem getLineItem(CartLineItem cartLineItem) {
+    String query = "select li from LineItem li where li.cartLineItem = :cartLineItem order by id desc";
+    List<LineItem> lineItems = (List<LineItem>) getSession().createQuery(query).setParameter("cartLineItem", cartLineItem).list();
+    return lineItems != null && !lineItems.isEmpty() ? lineItems.get(0) : null;
+  }
 
-    public void flipProductVariants(Sku srcSku, Sku dstSku, ShippingOrder shippingOrder) {
 
-        LineItem li = (LineItem) findUniqueByNamedParams(" from LineItem li where li.shippingOrder = :shippingOrder and li.sku = :srcSku ",
-            new String[]{"shippingOrder","srcSku"},
-            new Object[]{shippingOrder, srcSku});
-        li.setSku(dstSku);
-        update(li);
+  public List<LineItem> getAllLineItem(CartLineItem cartLineItem) {
+    String query = "select li from LineItem li where li.cartLineItem = :cartLineItem ";
+    return (List<LineItem>) getSession().createQuery(query).setParameter("cartLineItem", cartLineItem).list();
+  }
+
+
+  public void flipProductVariants(Sku srcSku, Sku dstSku, ShippingOrder shippingOrder) {
+
+    LineItem li = (LineItem) findUniqueByNamedParams(" from LineItem li where li.shippingOrder = :shippingOrder and li.sku = :srcSku ",
+        new String[]{"shippingOrder", "srcSku"},
+        new Object[]{shippingOrder, srcSku});
+    li.setSku(dstSku);
+    update(li);
         
         /*getSession().createQuery("update LineItem li  set li.sku = :dstSku where li.shippingOrder = :shippingOrder and li.sku = :srcSKu").setParameter("dstSku", dstSku).setParameter(
                 "shippingOrder", shippingOrder).setParameter("srcSKu", srcSKu).executeUpdate();*/
+  }
+
+  public LineItem getMatchingLineItemForDuplicateShippingOrder(LineItem lineItem, ShippingOrder shippingOrderOld) {
+    for (LineItem lineItemOld : shippingOrderOld.getLineItems()) {
+      if (lineItemOld.getCartLineItem().getId().equals(lineItem.getCartLineItem().getId())) {
+        return lineItemOld;
+      }
     }
+    return null;
+  }
 
-	public LineItem getMatchingLineItemForDuplicateShippingOrder(LineItem lineItem, ShippingOrder shippingOrderOld){
-		for(LineItem lineItemOld : shippingOrderOld.getLineItems()){
-			if(lineItemOld.getCartLineItem().getId().equals(lineItem.getCartLineItem().getId())){
-				return lineItemOld;
-			}
-		}
-		return null;
-	}
-
-    public List<String> getLineItemListShippedByCourier(Date startDate, Date endDate, Long courier_id) {
+  public List<String> getLineItemListShippedByCourier(Date startDate, Date endDate, Long courier_id) {
 
         /*
          * if (startDate == null) { Calendar calendar = Calendar.getInstance(); calendar.add(Calendar.MONTH, -1);
@@ -67,16 +74,16 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
          * .list();
          */
 
-        return null;
+    return null;
 
-        // TODO: # warehouse fix this
+    // TODO: # warehouse fix this
 
-    }
+  }
 
-    @Deprecated
-    public List<LineItem> getCourierDeliveryReport(Date startDate, Date endDate, Long courier_id) {
+  @Deprecated
+  public List<LineItem> getCourierDeliveryReport(Date startDate, Date endDate, Long courier_id) {
 
-        // TODO: # warehouse fix this.
+    // TODO: # warehouse fix this.
 
         /*
          * if (startDate == null) { Calendar calendar = Calendar.getInstance(); calendar.add(Calendar.MONTH, -1);
@@ -96,13 +103,13 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
          * null and li.ship_date BETWEEN '2011-9-1' AND '2011-10-15' group by li.tracking_id order by li.ship_date
          */
 
-        return null;
-    }
+    return null;
+  }
 
-    // @Deprecated
-    // public List<LineItem> getShippedLineItemsBetweenTimeFrame(Date startDate, Date endDate, List<OrderStatus>
-    // applicableOrderStatusList, List<LineItemType> applicableLineItemTypes) {
-    // TODO: # warehouse fix this.
+  // @Deprecated
+  // public List<LineItem> getShippedLineItemsBetweenTimeFrame(Date startDate, Date endDate, List<OrderStatus>
+  // applicableOrderStatusList, List<LineItemType> applicableLineItemTypes) {
+  // TODO: # warehouse fix this.
 
     /*
      * if (startDate == null) { Calendar calendar = Calendar.getInstance(); calendar.add(Calendar.DATE, 1); startDate =

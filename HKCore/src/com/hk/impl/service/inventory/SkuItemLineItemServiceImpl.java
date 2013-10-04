@@ -674,9 +674,12 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       lineItemDao.saveOrUpdate(skuItemsToBeFreed);
       cartLineItem.setSkuItemCLIs(null);
 //      cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
-      LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
-      lineItem.setSkuItemLineItems(null);
-      lineItemDao.save(lineItem);
+     // LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
+      List<LineItem> lineItems = lineItemDao.getAllLineItem(cartLineItem);
+      for (LineItem lineItem : lineItems){
+        lineItem.setSkuItemLineItems(null);
+        lineItemDao.save(lineItem);
+      }
 
       lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
       lineItemDao.deleteAll(skuItemCLIsToBeDeleted);

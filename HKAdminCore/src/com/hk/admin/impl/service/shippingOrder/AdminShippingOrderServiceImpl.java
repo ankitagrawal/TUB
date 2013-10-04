@@ -165,7 +165,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType,
                                   boolean reconcileAll) {
 		// Check if Order is in Action Queue before cancelling it.
-		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+		if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId()) || shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Ready_For_Validation.getId()) ) {
 			logger.warn("Cancelling Shipping order gateway id:::" + shippingOrder.getGatewayOrderId());
 			shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
 			skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
