@@ -8,10 +8,12 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.reversePickup.EnumReverseAction;
 import com.hk.constants.reversePickup.EnumReversePickupStatus;
 
+import com.hk.constants.reversePickup.EnumReversePickupType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupOrder;
 import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.domain.reversePickupOrder.RpLineItem;
 
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -22,13 +24,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Seema
- * Date: 7/22/13
- * Time: 3:40 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class ReversePickupListAction extends BasePaginatedAction {
 
     private List<ReversePickupOrder> reversePickupOrderList;
@@ -44,6 +40,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
     private RpLineItem rpLineitem;
     private String errorMessage = "";
     private ReversePickupStatus reversePickupStatus;
+    private ReversePickupType reversePickupType;
     private String reversePickupId;
     private String bookingReferenceNumber;
 
@@ -56,13 +53,26 @@ public class ReversePickupListAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, EnumReversePickupStatus.getHealthKartManagedRPStatus(), courierName, getPageNo(), getPerPage());
+        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, EnumReversePickupStatus.getPreRPStatusList(), courierName, getPageNo(), getPerPage(), EnumReversePickupType.getReversePickupTypes());
         reversePickupOrderList = reversePickupPage.getList();
         return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
     }
 
     public Resolution search() {
-        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, Arrays.asList(reversePickupStatus), courierName, getPageNo(), getPerPage());
+        List<ReversePickupStatus> reversePickupStatuses = new ArrayList<ReversePickupStatus>();
+        List<ReversePickupType> reversePickupTypes = new ArrayList<ReversePickupType>();
+        if(reversePickupStatus == null){
+            reversePickupStatuses = EnumReversePickupStatus.getSearchRPStatusList();
+        }else {
+            reversePickupStatuses.add(reversePickupStatus);
+        }
+        if(reversePickupType == null){
+            reversePickupTypes = EnumReversePickupType.getAllRPTypeList();
+        }else {
+            reversePickupTypes.add(reversePickupType);
+        }
+
+        reversePickupPage = reversePickupService.getReversePickRequest(shippingOrder, reversePickupId, startDate, endDate, customerActionStatus, reversePickupStatuses , courierName, getPageNo(), getPerPage(), reversePickupTypes);
         reversePickupOrderList = reversePickupPage.getList();
         return new ForwardResolution("/pages/admin/reversePickup/reversePickupList.jsp");
     }
@@ -111,13 +121,13 @@ public class ReversePickupListAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.APPROVE_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution approveCSAction() {
         if (rpLineitem != null) {
-             rpLineitem.setCustomerActionStatus(EnumReverseAction.Approved.getId());
+             rpLineitem.setCustomerActionStatus(EnumReverseAction.Approved.getClassification());
               /*call automatic  refund services here*/
             reversePickupService.saveRpLineItem(rpLineitem);
             ReversePickupOrder localRPOrder = rpLineitem.getReversePickupOrder();
              int counter = localRPOrder.getRpLineItems().size();
                for(RpLineItem rpLineItem : localRPOrder.getRpLineItems()){
-                   if( (rpLineItem.getCustomerActionStatus() != null) && (rpLineItem.getCustomerActionStatus().equals(EnumReverseAction.Approved.getId()))){
+                   if( (rpLineItem.getCustomerActionStatus() != null) && (rpLineItem.getCustomerActionStatus().getId().equals(EnumReverseAction.Approved.getId()))){
                        counter--;
                    }
                }
@@ -130,7 +140,7 @@ public class ReversePickupListAction extends BasePaginatedAction {
         } else {
             errorMessage = "Error in Approving";
         }
-        return new RedirectResolution(ReversePickupListAction.class).addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
+        return new RedirectResolution(ReversePickupListAction.class, "search").addParameter("shippingOrder", reversePickupOrder.getShippingOrder().getId())
                 .addParameter("errorMessage", errorMessage);
     }
 
@@ -210,7 +220,8 @@ public class ReversePickupListAction extends BasePaginatedAction {
         params.add("endDate");
         params.add("customerActionStatus");
         params.add("courierName");
-        params.add("reversePickupStatus");
+        params.add("reversePickupStatus.id");
+        params.add("reversePickupType.id");
         return params;
     }
 
@@ -327,5 +338,13 @@ public class ReversePickupListAction extends BasePaginatedAction {
 
     public void setBookingReferenceNumber(String bookingReferenceNumber) {
         this.bookingReferenceNumber = bookingReferenceNumber;
+    }
+
+    public ReversePickupType getReversePickupType() {
+        return reversePickupType;
+    }
+
+    public void setReversePickupType(ReversePickupType reversePickupType) {
+        this.reversePickupType = reversePickupType;
     }
 }

@@ -23,8 +23,8 @@
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
 <%
     DateTime dateTime = new DateTime();
-    Date startOfOfferDate = new Date(new DateTime(2013, 9, 17, 00, 00, 00, 00).getMillis());
-    Date endOfOfferDate = new Date(new DateTime(2013, 9, 24, 23, 59, 59, 00).getMillis());
+    Date startOfOfferDate = new Date(new DateTime(2013, 9, 27, 00, 00, 00, 00).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 10, 05, 23, 59, 59, 00).getMillis());
 %>
 <c:if test="${categoryBean.category.name == 'services'}">
     <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
@@ -148,11 +148,9 @@
                             </a>
                         </li>
                     </c:when>
-
                     <c:otherwise>
                         <li><hk:categoryImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"/></li>
                     </c:otherwise>
-
                 </c:choose>
             </c:forEach>
         </ul>
@@ -210,7 +208,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+        <a href="${pageContext.request.contextPath}/product/bajaj-popular-induction-cooktop/BAJ071?productReferrerId=1&bpi">
+                <img src="<hk:vhostImage/>/images/banners/Cooktop.jpg" alt="Free shipping and COD"
                      class="small_banner"/>
             </c:when>
 
@@ -244,8 +243,8 @@
                          class="small_banner"/>
                 </a>
 
-                <a href="${pageContext.request.contextPath}/eye/eyeglasses?filterOptions[0]=13619&minPrice=153&maxPrice=2146 ">
-                    <img src="<hk:vhostImage/>/images/banners/SunGlassbanner.jpg" alt="eye"
+                <a href="${pageContext.request.contextPath}/brand/eye/Dorche-Well">
+                    <img src="<hk:vhostImage/>/images/banners/Eye_banner.jpg" alt="eye"
                          class="small_banner"/>
                 </a>
                 <%
@@ -259,7 +258,6 @@
                 <%
                     }
                 %>
-
             </c:when>
             <c:when test="${categoryBean.category.name eq parenting}">
                 <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
@@ -279,7 +277,6 @@
                     <img src="<hk:vhostImage/>/images/banners/Nurture--whole-range.jpg" alt="beauty"
                          class="small_banner"/>
                 </a>
-
             </c:when>
             <c:when test="${categoryBean.category.name eq diabetes}">
                 <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
