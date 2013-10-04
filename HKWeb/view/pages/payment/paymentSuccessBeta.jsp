@@ -365,7 +365,7 @@
 
 
     <shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-        <div class='orderSummaryHeading mrgn-bt-10 pad10'>
+        <div class='brdr mrgn-bt-10 pad10'>
             <div class="deliveryDetails fnt-bold" style="padding-left: 5px">Did you know about our Loyalty Program yet?</div>
             <p class="pad5">It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
                 <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" class="txt-blue" target="_blank">Click here</a>, to know more.
@@ -437,7 +437,7 @@
 
     <div style="clear:both;"></div>
 
-    <div class='orderSummaryHeading' style="margin-bottom: 50px;margin-top: 50px;padding: 10px;">
+    <div class='brdr' style="margin-bottom: 50px;margin-top: 50px;padding: 10px;">
         <div class="deliveryDetails" style="padding-left: 7px;font-weight: 600"> DELIVERY DETAILS</div>
         <ol style="padding-left:25px;font-size: 12px;">
             <li>
@@ -461,7 +461,7 @@
 
 <div class="rightPS">
 
-    <div class="orderSummaryNew" style="width: 100%;left:0;margin-bottom: 30px;">
+    <div class="orderSummaryNew" style="width: 100%;left:0;margin-bottom: 20px;">
         <s:layout-render name="/layouts/embed/orderSummaryTableBeta.jsp" pricingDto="${actionBean.pricingDto}"
                          orderDate="${actionBean.payment.paymentDate}"/>
     </div>
@@ -487,11 +487,11 @@
         <%--your non cod ka message--%>
         <c:otherwise>
             <h1 class="youPaid" style="border-bottom: 1px solid #ddd;width: 100%;">
-                          <span class="youPay">
-                            You paid:
+                          <span class="youPay fnt-light fnt-bold">
+                            YOU PAID:
                           </span>
                 <strong>
-                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                            <span id="summaryGrandTotalPayable" class="youPayValue" style="color: #090">
                               <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
                             </span>
                 </strong>
