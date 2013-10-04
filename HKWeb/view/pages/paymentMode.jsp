@@ -315,7 +315,7 @@
 
                         <h4>Terms and Conditions for Cash on Delivery</h4>
 
-                        <p>Please note that COD orders will not be confirmed and shipped from our end untill we manually confirm the order on the phone number provided by you.<br/>
+                        <p>Please note that COD order will be processed and shipped only after verification. <br/>
                             Also please ensure that the above person is available at the given location at all times.
                         </p>
                     </s:form>

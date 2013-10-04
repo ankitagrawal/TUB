@@ -89,6 +89,7 @@
    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
   <div>
     <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+     <c:if test="${actionBean.payment.paymentMode.id != paymentModeCOD}">
       <c:choose>
         <c:when test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
           <img src="${pageContext.request.contextPath}/images/banners/hkplus-15off-banner.jpg" alt="HealthKartPlus 15% Off"/>
@@ -96,7 +97,7 @@
         <c:otherwise>
           <img src="${pageContext.request.contextPath}/images/banners/hkplus-app.jpg" alt="HealthKartPlus App"/>
         </c:otherwise>
-      </c:choose>
+      </c:choose></c:if>
     </a>
   </div>
 </s:layout-component>
@@ -283,17 +284,39 @@
                         <c:choose>
                             <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
                                 <%--your cod ka message--%>
-                                <div class="congratsText">Your order has been received and is <span class="orangeBold">pending verification</span></div>
-                                <h2 class="orderIdText">
-                                    Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
-                                </h2>
-                                <p class="codMessage">Please give a<span class="orangeBold"> missed call on 0124-4616414 </span>to confirm the order.
+                                <div class="congratsText" style="font-size: 1.25em">Your order has been received and is <span class="orangeBold">pending verification</span></div>
+                                <div style="position: relative;bottom: 15px;" >
+                                <div class="icnTriangle"></div>
+                                <div class="smsConfirmText " style=" height: 135px;background: #ce731a;width: 91%;color: #fff;border-radius: 5px;font-size: 0.75em;line-height: 1.5em;word-spacing: 2px;padding: 10px;">
+                                    <div style="float: left; width: 5%">
+                                        <img src="${pageContext.request.contextPath}/images/alert-icon.png" width="45" height="45" style="position: relative; top: 43px"/>
+                                    </div>
+                                    <div style="float: right; width: 89%">
+
+                                        <div style="margin-left:1%; padding-top:1%">ACTION REQUIRED :</div>
+                                        <div style="font-weight : bold; margin-left:1%; padding-top:1%">Please give a missed call on 0124-4616414 to verify your order automatically.
+                                        </div>
+                                        <div style="margin-left:1%;font-size: 1em">(you will receive an SMS confirmation post verification)</div>
+
+                                        <div style="margin-left:1%; padding-top: 1.5%; font-size: 1em">Please note, you can only verify by calling from the number that you have given as COD contact. In case you are unable to verify, our customer care department will call on the COD contact number to verify your order.</div>
+
+                                    </div>
+
+                                </div>
+
+                                    <h2 class="orderIdText" style="font-size: 1.25em">
+                                        Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
+                                    </h2>
+                                </div>
+
+
+                                <%--<p class="codMessage">Please give a<span class="orangeBold"> missed call on 0124-4616414 </span>to confirm the order.
                                     In case you are unable to give the missed call, our customer care will call you to verify.
                                     Once verified, your order will go into processing.</p>
-                                <br/>
+                                <br/>--%>
                             </c:when>
                             <c:otherwise>
-                                <div class="congratsText">Your order has been received and is <span class="orangeBold">pending authorization</span> from the gateway.</div>
+                                <div class="congratsText" style="margin-top: 40px;">Your order has been received and is <span class="orangeBold">pending authorization</span> from the gateway.</div>
                                 <h2 class="orderIdText">
                                     Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
                                 </h2>
@@ -316,7 +339,7 @@
 
                 <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
                     <div class='promos'>
-                        <div class='prom yellow help' style="width: 95%; padding:5px;">
+                        <div class='prom yellow help' style="width: 92.5%; padding:5px;">
                             <p class="lrg"><strong>You have not activated your HealthKart account.</strong><br/>
                                 To activate your account, please click on the activation link sent in your email. By activating your
                                 account,
@@ -367,7 +390,7 @@
                 </c:if>--%>
                 <br/>
                 
-			<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+			<%--<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
 				<div class='loyaltyMessage' >
   				<p>Did you know about our Loyalty Program yet?<br>
   				It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
@@ -376,7 +399,7 @@
     			</p>
     			</div>
     			<br/>
-    		</shiro:lacksRole>
+    		</shiro:lacksRole>--%>
   		
   			<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
   				<div class='loyaltyMessage' >
@@ -462,8 +485,22 @@
                     </ul>
                 </div>
             </div>
+        <c:choose>
+            <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
 
-            <div class="rightPS">
+            <div class="rightPS" style="top: 106px">
+
+                <shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+                    <div class='loyaltyMessage' style="background : rgba(115, 166, 213,0.3); border-radius: 5px" >
+                        <p>Did you know about our Loyalty Program yet?<br>
+                            It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
+                            <br>
+                            <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
+                        </p>
+                    </div>
+                    <br/>
+                </shiro:lacksRole>
+
 
                 <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
                     <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${actionBean.pricingDto}"
@@ -477,14 +514,14 @@
                           <span class="youPay">
                             Pay on delivery:
                           </span>
-                          <strong>
+                            <strong>
                             <span id="summaryGrandTotalPayable" class="youPayValue">
                               <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
                             </span>
-                          </strong>
-                           <div class='newShippingHandling'>
-                               (inclusive of discounts, shipping, handling and taxes.)
-                           </div>
+                            </strong>
+                            <div class='newShippingHandling'>
+                                (inclusive of discounts, shipping, handling and taxes.)
+                            </div>
                         </h1>
 
                     </c:when>
@@ -494,11 +531,11 @@
                           <span class="youPay">
                             You paid:
                           </span>
-                          <strong>
+                            <strong>
                             <span id="summaryGrandTotalPayable" class="youPayValue">
                               <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
                             </span>
-                          </strong>
+                            </strong>
                             <div class='newShippingHandling'>
                                 (inclusive of discounts, shipping, handling and taxes.)
                             </div>
@@ -524,6 +561,84 @@
                 </div>
 
             </div>
+            </c:when>
+            <c:otherwise>
+                <div class="rightPS" style="top: 60px">
+
+                    <shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+                        <div class='loyaltyMessage' style="background : rgba(115, 166, 213,0.3); border-radius: 5px" >
+                            <p>Did you know about our Loyalty Program yet?<br>
+                                It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
+                                <br>
+                                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
+                            </p>
+                        </div>
+                        <br/>
+                    </shiro:lacksRole>
+
+
+                    <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
+                        <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${actionBean.pricingDto}"
+                                         orderDate="${actionBean.payment.paymentDate}"/>
+                    </div>
+
+                    <c:choose>
+                        <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
+                            <%--your cod ka message--%>
+                            <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+                          <span class="youPay">
+                            Pay on delivery:
+                          </span>
+                                <strong>
+                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                              <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+                            </span>
+                                </strong>
+                                <div class='newShippingHandling'>
+                                    (inclusive of discounts, shipping, handling and taxes.)
+                                </div>
+                            </h1>
+
+                        </c:when>
+                        <%--your non cod ka message--%>
+                        <c:otherwise>
+                            <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+                          <span class="youPay">
+                            You paid:
+                          </span>
+                                <strong>
+                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                              <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+                            </span>
+                                </strong>
+                                <div class='newShippingHandling'>
+                                    (inclusive of discounts, shipping, handling and taxes.)
+                                </div>
+                            </h1>
+
+                        </c:otherwise>
+                    </c:choose>
+
+                    <div class="orderShippedTo" style="margin-bottom: 60px;width: 105%;">
+                        <h2 class="paymentH2" style="font-weight:bold;border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER SHIPPED TO</h2>
+
+                        <p>
+                            <c:set var="address" value="${actionBean.payment.order.address}"/>
+                            <strong>${address.name}</strong> <br/>
+                                ${address.line1},
+                            <c:if test="${not empty address.line2}">
+                                ${address.line2},
+                            </c:if>
+                                ${address.city} - ${address.pincode.pincode}<br/>
+                                ${address.state}, <span class="upc">INDIA</span><br/>
+                            <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
+                        </p>
+                    </div>
+                </div>
+            </c:otherwise>
+
+        </c:choose>
+
 
             <a href="/" class="backTOHomeButton">GO BACK TO HEALTHKART.COM</a>
 
