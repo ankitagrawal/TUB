@@ -58,9 +58,9 @@
       <div class="fnt-sz10 fnt-light" style="text-align:right">
 
               14 day return policy &nbsp;
-          Contact Us &nbsp;
-          <img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/>&nbsp;&nbsp;
-          <img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/>
+          <a href="">Contact Us</a>&nbsp;
+          <a href="http://www.healthkartplus.com"><img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/></a>&nbsp;&nbsp;
+          <a href="http://www.healthkart.com/resources"><img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/></a>
       </div>
       <s:link href="/" title='go to healthkart home'>
       <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart" style="position:absolute;top:-2px;"/><br>
