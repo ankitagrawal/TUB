@@ -21,7 +21,7 @@
 
         <s:layout-component name="heading">Change SO DropShip Status </s:layout-component>
         <s:layout-component name="content">
-            <s:form beanclass="com.hk.web.action.admin.courier.ShippingOrderStatusChangeAction" method="get"
+            <s:form beanclass="com.hk.web.action.admin.shippingOrder.DropShipChangeAction" method="get"
                     autocomplete="false">
                 <fieldset class="top_label">
                     <h3></h3><label>Gateway Order ID</label></h3>
@@ -30,18 +30,19 @@
                     <s:submit name="search" value="Search" id="search"/>
                     <div class="clear"></div>
                 </fieldset>
-                <c:if test="${changeSOStatus.shippingOrder!=null}">
+                <c:if test="${dropShip.shippingOrder!=null}">
                     <fieldset>
                         <h2>Change SO DropShip Status</h2>
                         <br>
-                        Current DropShip Status : <span
-                            style="color:blue;"> ${dropShip.shippingOrder.dropShipping}</span>
+                        Current DropShip Status :
+                        <input type="hidden" name="shippingOrder" value="${dropShip.shippingOrder.id}" />
+                        <span style="color:blue;"> ${dropShip.shippingOrder.dropShipping}</span>
                         <c:choose>
                             <c:when test="${dropShip.shippingOrder.dropShipping==true}">
-                                <s:submit name="removeDropShip" value="RemoveDropShip" id="saveStatus"/>
+                                <s:submit name="removeDropShip" value="RemoveDropShip" id="removeDropShipStatus"/>
                             </c:when>
                             <c:otherwise>
-                                <s:submit name="addDropShip" value="AddDropShip" id="saveStatus"/>
+                                <s:submit name="addDropShip" value="AddDropShip" id="addDropShipStatus"/>
                             </c:otherwise>
 
                         </c:choose>

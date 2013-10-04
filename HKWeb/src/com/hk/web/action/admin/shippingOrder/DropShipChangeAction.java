@@ -38,10 +38,20 @@ public class DropShipChangeAction extends BaseAction {
     return new ForwardResolution("/pages/admin/shippingOrder/dropShipStatusChange.jsp");
   }
 
-  public Resolution saveStatus() {
+    public Resolution removeDropShipStatus() {
+        shippingOrder.setDropShipping(false);
+        getBaseDao().save(shippingOrder);
+        addRedirectAlertMessage(new SimpleMessage("remove drop ship successfully"));
+        return new RedirectResolution(DropShipChangeAction.class);
+    }
 
-    return new RedirectResolution(DropShipChangeAction.class);
-  }
+    public Resolution addDropShipStatus() {
+        shippingOrder.setDropShipping(true);
+        getBaseDao().save(shippingOrder);
+        addRedirectAlertMessage(new SimpleMessage("add drop ship successfully"));
+        return new RedirectResolution(DropShipChangeAction.class);
+    }
+
 
   public ShippingOrder getShippingOrder() {
     return shippingOrder;
