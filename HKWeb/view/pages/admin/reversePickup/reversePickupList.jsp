@@ -376,8 +376,15 @@
                                         <br><br>
                                     </c:when>
                                     <c:otherwise>
-                                        AWB : <span> <a href="https://www.fedex.com/fedextrack/?tracknumbers=${reversePickup.trackingNumber}" target="_blank">
-                                                        ${reversePickup.trackingNumber}</a> </span><br>
+                                        AWB : <span>
+                                        <c:if test="${reversePickup.courierName eq 'FedEx'}">
+                                            <a href="https://www.fedex.com/fedextrack/?tracknumbers=${reversePickup.trackingNumber}" target="_blank">
+                                        </c:if>
+                                          ${reversePickup.trackingNumber}
+                                        <c:if test="${reversePickup.courierName eq 'FedEx'}">
+                                            </a>
+                                        </c:if>
+                                        </span><br>
                                         <s:hidden name="trackingNumber" class="trackingnum"/>
                                         <s:submit value="Edit AWB" name="editTrackingNumber"
                                                   style="font:10px;padding:0em;background-color: #ffffff;color:#0000ff;font-weight :bolder;"
