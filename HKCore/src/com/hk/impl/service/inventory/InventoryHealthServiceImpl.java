@@ -1112,8 +1112,22 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
       }
       if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1){
-        Boolean status =   skuItemLineItemService.createNewSkuItemLineItem(lineItem);
-        return  status;
+        List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+        for (SkuItemCLI skuItemCLI : skuItemCLIs){
+          SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+          SkuItem skuItem = skuItemCLI.getSkuItem();
+          skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+          baseDao.save(skuItem);
+          skuItemLineItem.setSkuItem(skuItemCLI.getSkuItem());
+
+          skuItemLineItem.setLineItem(lineItem);
+          skuItemLineItem.setProductVariant(skuItemCLI.getProductVariant());
+          skuItemLineItem.setUnitNum(skuItemCLI.getUnitNum());
+          skuItemLineItem.setCreateDate(new Date());
+          skuItemLineItem.setSkuItemCLI(skuItemCLI);
+          baseDao.save(skuItemLineItem);
+        }
+        return  true;
       }
     } else {
       // Bright call

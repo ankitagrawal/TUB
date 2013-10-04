@@ -77,4 +77,6 @@ public interface SkuItemLineItemService {
   public List<LineItem> freeBooking(ShippingOrder shippingOrder);
 
   public void removeRefusedFsicli (List <HKAPIForeignBookingResponseInfo> infos );
+
+  public Boolean createNewSkuItemLineItemForFlipping(CartLineItem cartLineItem);
 }
