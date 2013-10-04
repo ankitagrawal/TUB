@@ -327,4 +327,11 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
     }
     return null;
   }
+ 
+ public SkuItem getSkuItemByBarcode(String barcode){
+	 String sql = "select si from SkuItem si where si.barcode = :barcode";
+   Query query = getSession().createQuery(sql).setParameter("barcode", barcode);
+   SkuItem skuItem = (SkuItem) query.uniqueResult();
+   return skuItem;
+ }
 }

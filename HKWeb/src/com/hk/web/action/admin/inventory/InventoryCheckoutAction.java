@@ -3,7 +3,6 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.dto.inventory.CycleCountDto;
-import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
@@ -97,8 +96,6 @@ public class InventoryCheckoutAction extends BaseAction {
   private ProductVariantService productVariantService;
   @Autowired
   private OrderManager orderManager;
-  @Autowired
-  BinManager binManager;
   @Autowired
   CycleCountService cycleCountService;
 
@@ -324,7 +321,7 @@ public class InventoryCheckoutAction extends BaseAction {
               boolean checkedOut = getAdminInventoryService().checkoutMethod(lineItem, skuItem);
 
               if (checkedOut) {
-                binManager.removeBinAllocated(skuItem);
+              	skuItem.setBin(null);
                 addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
                 String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
                 shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, null, comments);
