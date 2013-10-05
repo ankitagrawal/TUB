@@ -115,32 +115,35 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   }
 
   public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<Long> skuItemOwners, Double mrp) {
-    String sql = "from SkuItem si where si.skuGroup.sku in (:skuList) ";
+    if (skuList != null && !skuList.isEmpty()) {
+      String sql = "from SkuItem si where si.skuGroup.sku in (:skuList) ";
 
-    if (statusIds != null && statusIds.size() > 0) {
-      sql += "and si.skuItemStatus.id in (:statusIds) ";
+      if (statusIds != null && statusIds.size() > 0) {
+        sql += "and si.skuItemStatus.id in (:statusIds) ";
+      }
+      if (skuItemOwners != null && skuItemOwners.size() > 0) {
+        sql += "and si.skuItemOwner.id in (:skuItemOwners) ";
+      }
+      if (mrp != null) {
+        sql += "and si.skuGroup.mrp = :mrp ";
+      }
+      sql += "and si.skuGroup.status != :skuStatus ";
+      String orderByClause = " order by si.skuGroup.expiryDate asc";
+      sql += orderByClause;
+      Query query = getSession().createQuery(sql).setParameterList("skuList", skuList);
+      if (statusIds != null && statusIds.size() > 0) {
+        query.setParameterList("statusIds", statusIds);
+      }
+      if (skuItemOwners != null && skuItemOwners.size() > 0) {
+        query.setParameterList("skuItemOwners", skuItemOwners);
+      }
+      if (mrp != null) {
+        query.setParameter("mrp", mrp);
+      }
+      query.setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW);
+      return query.list();
     }
-    if (skuItemOwners != null && skuItemOwners.size() > 0) {
-      sql += "and si.skuItemOwner.id in (:skuItemOwners) ";
-    }
-    if (mrp != null) {
-      sql += "and si.skuGroup.mrp = :mrp ";
-    }
-    sql += "and si.skuGroup.status != :skuStatus ";
-    String orderByClause = " order by si.skuGroup.expiryDate asc";
-    sql += orderByClause;
-    Query query = getSession().createQuery(sql).setParameterList("skuList", skuList);
-    if (statusIds != null && statusIds.size() > 0) {
-      query.setParameterList("statusIds", statusIds);
-    }
-    if (skuItemOwners != null && skuItemOwners.size() > 0) {
-      query.setParameterList("skuItemOwners", skuItemOwners);
-    }
-    if (mrp != null) {
-      query.setParameter("mrp", mrp);
-    }
-    query.setParameter("skuStatus", EnumSkuGroupStatus.UNDER_REVIEW);
-    return query.list();
+    return null;
   }
 
 
