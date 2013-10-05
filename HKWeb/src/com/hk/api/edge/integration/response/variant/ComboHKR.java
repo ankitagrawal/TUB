@@ -98,6 +98,10 @@ public class ComboHKR extends JSONObject {
 
     @Override
     protected Object[] getValues() {
-        return new Object[]{this.id, this.name, this.url, this.sLinkForImage, this.mLinkForImage, this.mrp, this.offerPrice, this.discount*100 };
+        double discount = 0;
+        if (this.mrp != 0) {
+            discount = (this.mrp - this.offerPrice) / this.mrp * 100;
+        }
+        return new Object[]{this.id, this.name, this.url, this.sLinkForImage, this.mLinkForImage, (int) Math.round(this.mrp), (int) Math.round(this.offerPrice), (int) Math.round(discount)};
     }
 }
