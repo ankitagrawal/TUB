@@ -6933,6 +6933,7 @@ label{
     word-spacing: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: 'Open Sans';
 }
 
 .btn:hover {
