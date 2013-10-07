@@ -287,9 +287,9 @@
                                 <div class="congratsText" style="font-size: 1.25em">Your order has been received and is <span class="orangeBold">pending verification</span></div>
                                 <div style="position: relative;bottom: 15px;" >
                                 <div class="icnTriangle"></div>
-                                <div class="smsConfirmText " style=" height: 135px;background: #ce731a;width: 91%;color: #fff;border-radius: 5px;font-size: 0.75em;line-height: 1.5em;word-spacing: 2px;padding: 10px;">
+                                <div class="smsConfirmText " style=" height: 135px;background: #ce731a;width: 92.5%;color: #fff;border-radius: 5px;font-size: 0.75em;line-height: 1.5em;word-spacing: 2px;padding: 10px;">
                                     <div style="float: left; width: 5%">
-                                        <img src="${pageContext.request.contextPath}/images/alert-icon.png" width="45" height="45" style="position: relative; top: 43px"/>
+                                        <img src="${pageContext.request.contextPath}/images/alert-icon.png" width="50" height="50" style="position: relative; top: 43px"/>
                                     </div>
                                     <div style="float: right; width: 89%">
 
@@ -298,7 +298,7 @@
                                         </div>
                                         <div style="margin-left:1%;font-size: 1em">(you will receive an SMS confirmation post verification)</div>
 
-                                        <div style="margin-left:1%; padding-top: 1.5%; font-size: 1em">Please note, you can only verify by calling from the number that you have given as COD contact. In case you are unable to verify, our customer care department will call on the COD contact number to verify your order.</div>
+                                        <div style="margin-left:1%; padding-top: 1.5%; font-size: 1em">Please note, you can only verify by calling from the number that you have given as COD contact number - <%=actionBean.getOrder().getAddress().getPhone()%>. In case you are unable to verify, our customer care department will call on the COD contact number to verify your order.</div>
 
                                     </div>
 
@@ -339,7 +339,7 @@
 
                 <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
                     <div class='promos'>
-                        <div class='prom yellow help' style="width: 92.5%; padding:5px;">
+                        <div class='prom yellow help' style="width: 94%; padding:5px;">
                             <p class="lrg"><strong>You have not activated your HealthKart account.</strong><br/>
                                 To activate your account, please click on the activation link sent in your email. By activating your
                                 account,
@@ -401,7 +401,7 @@
     			<br/>
     		</shiro:lacksRole>--%>
   		
-  			<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+  			<%--<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
   				<div class='loyaltyMessage' >
   				<p>
   				<c:if test="${actionBean.loyaltyPointsEarned > 0}">
@@ -416,7 +416,7 @@
   				<p>
   				</div>
   				<br/>
-  			</shiro:hasRole>
+  			</shiro:hasRole>--%>
   		
                 <div class="confirmationEmailText" >
                     <p>The estimated dispatch time for each product is mentioned below. The delivery time would be extra and will vary according to your location.</p>
@@ -492,7 +492,7 @@
 
                 <shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
                     <div class='loyaltyMessage' style="background : rgba(115, 166, 213,0.3); border-radius: 5px" >
-                        <p>Did you know about our Loyalty Program yet?<br>
+                        <p>Did you know about our <strong>Loyalty Program</strong> yet?<br>
                             It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
                             <br>
                             <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
@@ -500,6 +500,23 @@
                     </div>
                     <br/>
                 </shiro:lacksRole>
+
+                <shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+                    <div class='loyaltyMessage' style="background : rgba(115, 166, 213,0.3); border-radius: 5px" >
+                        <p>
+                            <c:if test="${actionBean.loyaltyPointsEarned > 0}">
+                            You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your loyalty account once your order has been delivered.
+                            </c:if>
+
+                            <c:if test="${actionBean.loyaltyPointsEarned <= 0}">
+                            <br/> Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
+                            </c:if>
+                            <br/>
+                            <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
+                        <p>
+                    </div>
+                    <br/>
+                </shiro:hasRole>
 
 
                 <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
@@ -567,7 +584,7 @@
 
                     <shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
                         <div class='loyaltyMessage' style="background : rgba(115, 166, 213,0.3); border-radius: 5px" >
-                            <p>Did you know about our Loyalty Program yet?<br>
+                            <p>Did you know about our <strong>Loyalty Program</strong> yet?<br>
                                 It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
                                 <br>
                                 <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
@@ -575,6 +592,23 @@
                         </div>
                         <br/>
                     </shiro:lacksRole>
+
+                    <shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+                        <div class='loyaltyMessage' style="background : rgba(115, 166, 213,0.3); border-radius: 5px" >
+                            <p>
+                                <c:if test="${actionBean.loyaltyPointsEarned > 0}">
+                                You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your loyalty account once your order has been delivered.
+                                </c:if>
+
+                                <c:if test="${actionBean.loyaltyPointsEarned <= 0}">
+                                <br/> Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
+                                </c:if>
+                                <br/>
+                                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
+                            <p>
+                        </div>
+                        <br/>
+                    </shiro:hasRole>
 
 
                     <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
