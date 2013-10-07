@@ -148,6 +148,7 @@
 <div class='left_controls tabs'>
     <ul>
         <li class='selected' id="tab1">Credit Cards</li>
+        <li class='selected' id="tab9">Debit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
             <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
@@ -160,7 +161,7 @@
 	            </c:if>
             </c:if>
         </shiro:lacksRole>
-        <li class='selected' id="tab1">Debit Cards</li>
+
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <li id="tab6">Counter Cash</li>
         </shiro:hasRole>
@@ -183,6 +184,34 @@
             </td>
 
         </tr>
+        <%--check for paypal, give it an id so that js can work--%>
+    </c:forEach>
+    </table>
+    <div style="float: right; width: 90%;"><s:submit
+            name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
+            disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
+    </div>
+</s:form></div>
+<div id="tabs_content9" class="tab_content"><s:form
+        beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
+    <s:hidden name="order" value="${orderSummary.order.id}" />
+
+    <table><c:forEach items="${paymentModeBean.debitCardIssuers}" var="cardIssuer">
+
+            <tr>
+                <td style="padding: 4px;"><s:radio name="issuer" value="${cardIssuer.id}"
+                                                   id="${cardIssuer.name}"/></td>
+                <td style="padding: 4px;"><img src="<hk:vhostImage/>${hk:readIssuerImageIcon(cardIssuer.imageIcon, cardIssuer.name)}"
+                                               height="30px" alt="gateway image">
+                </td>
+                <td style="padding: 4px;">${cardIssuer.name}<br/>
+                    <label style="font-size: .9em;font-weight: bold;color: #000000;">${cardIssuer.tagLine}</label>
+                </td>
+
+            </tr>
+
+
+
         <%--check for paypal, give it an id so that js can work--%>
     </c:forEach>
     </table>
@@ -458,12 +487,19 @@
 
         });
           $("#tab1").click(function(){
-              alert("test");
+             // alert("test");
               $("#CODOption").hide();
               $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
         $('#tab1').trigger('click');
+        $("#tab9").click(function(){
+            // alert("test");
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
+            $("input:radio:checked").attr('checked', false);
+        });
+        $('#tab9').trigger('click');
         $("#tab5").click(function(){
             $("#CODOption").hide();
             $("#nonCODOption").show();
