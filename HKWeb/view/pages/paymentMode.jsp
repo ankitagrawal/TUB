@@ -147,7 +147,7 @@
 <div class='outer'>
 <div class='left_controls tabs'>
     <ul>
-        <li class='selected' id="tab1">Credit/Debit Cards</li>
+        <li class='selected' id="tab1">Credit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
             <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
@@ -160,6 +160,7 @@
 	            </c:if>
             </c:if>
         </shiro:lacksRole>
+        <li class='selected' id="tab1">Debit Cards</li>
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <li id="tab6">Counter Cash</li>
         </shiro:hasRole>
