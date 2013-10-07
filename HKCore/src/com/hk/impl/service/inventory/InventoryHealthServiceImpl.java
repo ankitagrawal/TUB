@@ -387,6 +387,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
     Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
+
+      for (InventoryInfo info : infos) {
+          for (SkuInfo skuInfo : info.getSkuInfoList()) {
+              logger.debug("SkuInfo " + skuInfo.toString());
+          }
+      }
+
     boolean invAdded = false;
     boolean newSkuInfoFlag = false;
     boolean updateSkuInfoFlag = false;

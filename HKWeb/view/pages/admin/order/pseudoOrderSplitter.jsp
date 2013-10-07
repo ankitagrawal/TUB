@@ -68,7 +68,7 @@
                         <tr>
                             <th>Variant Id</th>
                             <th>Name</th>
-                            <th>CostPrice</th>
+                            <th>MRP</th>
                             <th>HK Price</th>
                             <th>Weight</th>
                             <th>Tax</th>
@@ -85,7 +85,7 @@
                                     ${cartLineItem.productVariant.id}
                                 </td>
                                 <td>${cartLineItem.productVariant.product.name}: <span class="small gry em">${cartLineItem.productVariant.optionsCommaSeparated}</span> </td>
-                                <td> ${cartLineItem.productVariant.costPrice}</td>
+                                <td> ${cartLineItem.markedPrice}</td>
                                 <td> ${cartLineItem.productVariant.hkPrice}</td>
                                 <td>${cartLineItem.productVariant.weight}</td>
                                 <td><c:forEach items="${skus}" var="sku">${sku.warehouse.identifier}:${sku.tax.value}<br></c:forEach></td>
