@@ -82,7 +82,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 	}
 
 
-    public Collection<LineItemClassification> feedData(Order order) {
+    public Collection<LineItemClassification> feedData(Order order) throws OrderSplitException{
         List<Warehouse> whs = warehouseService.getServiceableWarehouses(order);
 
         LineItemContainer container = new LineItemContainer();
@@ -99,6 +99,7 @@ public class OrderSplitterImpl implements OrderSplitter {
                 for (SkuInfo skuInfo : skuList) {
                     Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
                     if (whs.contains(sku.getWarehouse())) {
+                        logger.debug("Sku added in pool, Variant Id " + sku.getProductVariant().getId() + " Warehouse " + sku.getWarehouse().getIdentifier());
                         container.addLineItem(sku.getWarehouse(), cartLineItem);
                         isAdded = true;
                     }
@@ -110,6 +111,7 @@ public class OrderSplitterImpl implements OrderSplitter {
                         Collection<Sku> skus = skuService.getSkus(cartLineItem.getProductVariant(), whs);
                         for (Sku sku : skus) {
                             container.addLineItem(sku.getWarehouse(), cartLineItem);
+                            logger.debug("Sku added in pool, Variant Id " + sku.getProductVariant().getId() + " Warehouse " + sku.getWarehouse().getIdentifier());
                             isAdded = true;
                         }
                     }
@@ -161,7 +163,7 @@ public class OrderSplitterImpl implements OrderSplitter {
     }
 
 
-    private Set<ShippingOrder> decideBestFit(Set<ShippingOrder> shippingOrders, Order order, Map<List<DummyOrder>, Long> dummyOrderCostingMap){
+    private Set<ShippingOrder> decideBestFit(Set<ShippingOrder> shippingOrders, Order order, Map<List<DummyOrder>, Long> dummyOrderCostingMap) throws OrderSplitException{
 
         List<DummyOrder> bestShips = null;
         long bestCost = Long.MAX_VALUE;

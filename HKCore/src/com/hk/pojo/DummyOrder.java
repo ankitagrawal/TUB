@@ -191,4 +191,20 @@ public class DummyOrder {
         }
         return hashCodeBuilder.toHashCode();
     }
+
+    @Override
+    public String toString() {
+
+        StringBuilder cartLineItemList = new StringBuilder();
+
+        for (CartLineItem cartLineItem : this.getCartLineItemList()) {
+            cartLineItemList.append(cartLineItem.getProductVariant().getId());
+            cartLineItemList.append("_#");
+        }
+
+        return "DummyOrder{" +
+                "cartLineItemList=" + cartLineItemList +
+                ", warehouse=" + warehouse.getIdentifier() +
+                '}';
+    }
 }
