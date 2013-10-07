@@ -55,7 +55,12 @@ public class OrderSplitterHelper {
         for (DummySO dummySO : dummySOs) {
             shipmentCost += dummySO.getShipmentCost();
         }
-        return (shipmentCost.longValue() + totalTax.longValue());     //check better way
+        if (shipmentCost >0 ) {
+        	return (shipmentCost.longValue() + totalTax.longValue());     //check better way
+        } else {
+        	// negative values being used as invalid values
+        	return -1l;
+        }
     }
 
     private Double calculateTaxIncurred(List<DummyOrder> dummyOrdersList) {

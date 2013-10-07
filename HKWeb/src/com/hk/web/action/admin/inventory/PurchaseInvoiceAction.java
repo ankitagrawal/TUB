@@ -400,8 +400,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			extraInventoryLineItemsToSave.addAll(extraInventoryLineItems);
 		}
 		for (ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsToSave) {
-			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
+			//ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
 			ExtraInventoryLineItem eili = extraInventoryLineItemService.getExtraInventoryLineItemById(extraInventoryLineItem.getId());
+            ExtraInventory extraInventory = eili.getExtraInventory();
 			extraInventoryLineItem.setExtraInventory(extraInventory);
 			extraInventoryLineItem.setPurchaseInvoices(invoices);
 			extraInventoryLineItem.setExtraInventoryLineItemType(eili.getExtraInventoryLineItemType());
