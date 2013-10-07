@@ -163,7 +163,7 @@ public class OrderEventPublisher {
 
             if (!order.isSubscriptionOrder()) {
               logger.info(" Temp booking for order " + order.getId() + " for thread id " + Thread.currentThread().getId() + " name " + Thread.currentThread().getName());
-              inventoryHealthService.tempBookSkuLineItemForOrder(order);
+               inventoryHealthService.tempBookSkuLineItemForOrder(order);
             }
 
             orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);

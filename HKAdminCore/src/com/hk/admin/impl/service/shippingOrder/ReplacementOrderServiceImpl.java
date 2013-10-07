@@ -97,7 +97,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser, EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(), null, comment2);
 
 
-        orderEventPublisher.publishOrderPlacedEvent(replacementOrder.getBaseOrder());
+     //   orderEventPublisher.publishOrderPlacedEvent(replacementOrder.getBaseOrder());
+         orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(replacementOrder.getBaseOrder());
 
         return replacementOrder;
     }
