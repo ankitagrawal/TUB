@@ -458,6 +458,7 @@
 
         });
           $("#tab1").click(function(){
+              alert("test");
               $("#CODOption").hide();
               $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
