@@ -257,14 +257,27 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
     Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 
+      for (SkuInfo skuInfo : checkedInInvList) {
+          logger.debug("checkedInInvList skuInfo " + skuInfo.toString());
+      }
+
     Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
 
     List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
+
+      for (SkuInfo skuInfo : inProcessList) {
+          logger.debug("inProcessList skuInfo " + skuInfo.toString());
+      }
+
+
     if (inProcessList != null) {
       for (SkuInfo inProcessInfo : inProcessList) {
         List<SkuInfo> infos = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
         long leftQty = inProcessInfo.getQty();
         for (SkuInfo skuInfo : infos) {
+
+            logger.debug("searchBySkuIdAndMrp skuInfo " + skuInfo.toString());
+
           long qty = skuInfo.getQty() - leftQty;
           if (qty < 0) {
             leftQty = -qty;
