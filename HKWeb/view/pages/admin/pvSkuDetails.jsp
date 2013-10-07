@@ -13,11 +13,15 @@
         if (productVariant != null) {
             pageContext.setAttribute("productVariant", productVariant);
             MasterInventoryService masterInventoryService = ServiceLocatorFactory.getService(MasterInventoryService.class);
-            List<MasterInventoryService.SKUDetails> skuDetailsList = masterInventoryService.getSkuDetails(productVariant);
+            Double mrp = null;
+            if (request.getParameter("mrp") != null) {
+                mrp = Double.valueOf((String) request.getParameter("mrp"));
+            }
+            List<MasterInventoryService.SKUDetails> skuDetailsList = masterInventoryService.getSkuDetails(productVariant, mrp);
             pageContext.setAttribute("skuDetailsList", skuDetailsList);
-            pageContext.setAttribute("unbookedCLIUnits", masterInventoryService.getUnbookedCLIUnits(productVariant));
-            pageContext.setAttribute("availableUnits", masterInventoryService.getAvailableUnits(productVariant));
-            pageContext.setAttribute("underReviewUnits", masterInventoryService.getUnderReviewUnits(productVariant));
+            pageContext.setAttribute("unbookedCLIUnits", masterInventoryService.getUnbookedCLIUnits(productVariant, mrp));
+            pageContext.setAttribute("availableUnits", masterInventoryService.getAvailableUnits(productVariant, mrp));
+            pageContext.setAttribute("underReviewUnits", masterInventoryService.getUnderReviewUnits(productVariant, mrp));
         }
     }
 
@@ -76,7 +80,7 @@
 
     <div>
         <div style="font-weight:bold;">
-            Variant = ${productVariant.id} | Unbooked CLI Qty = ${unbookedCLIUnits} | Available Qty = ${availableUnits} | Under Review Units = ${underReviewUnits}
+            Variant = ${productVariant.id} | Unbooked CLI Qty* = ${unbookedCLIUnits} | Available Qty = ${availableUnits} | Under Review Units = ${underReviewUnits}
         </div>
         <table style="font-size: .8em; width:800px; padding:0">
             <tr>
@@ -87,8 +91,8 @@
                 <th>CI Qty <br/> (Under Review)</th>
                 <th>Booked Qty</th>
                 <th>Booked Qty <br/> (Under Review)</th>
-                <th>Unbooked LI Qty</th>
-                <th>Available Qty</th>
+                <th>Unbooked LI Qty *</th>
+                <th>Available Qty <br/> (CI - UBLI)</th>
             </tr>
             <c:forEach items="${skuDetailsList}" var="skuDetails">
                 <tr>
@@ -103,6 +107,11 @@
                     <td>${skuDetails.ciQty - skuDetails.unbookedLIQty}</td>
                 </tr>
             </c:forEach>
+            <tfoot>
+            <tr>
+                <td colspan="9">* : Not Mrp Dependent</td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 

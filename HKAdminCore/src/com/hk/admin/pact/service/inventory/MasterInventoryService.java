@@ -7,29 +7,29 @@ import java.util.List;
 
 public interface MasterInventoryService {
 
-  public List<SKUDetails> getSkuDetails(ProductVariant productVariant); //Master method to get details of all SKUs of a PV
+  public List<SKUDetails> getSkuDetails(ProductVariant productVariant, Double mrp); //Master method to get details of all SKUs of a PV
 
-  public Long getCheckedInUnits(List<Sku> skuList);//CI
+  public Long getCheckedInUnits(List<Sku> skuList, Double mrp);//CI
 
-  public Long getUnderReviewCheckedInUnits(List<Sku> skuList);//CI + Under Review
+  public Long getUnderReviewCheckedInUnits(List<Sku> skuList, Double mrp);//CI + Under Review
 
-  public Long getBookedUnits(List<Sku> skuList);//TB+Booked
+  public Long getBookedUnits(List<Sku> skuList, Double mrp);//TB+Booked
 
-  public Long getUnderReviewBookedUnits(List<Sku> skuList);//(TB+Booked) + UnderReview
+  public Long getUnderReviewBookedUnits(List<Sku> skuList, Double mrp);//(TB+Booked) + UnderReview
 
-  public Long getUncheckedOutUnits(List<Sku> skuList);//CI+TB+Booked = Net Inventory
+  public Long getUncheckedOutUnits(List<Sku> skuList, Double mrp);//CI+TB+Booked = Net Inventory
 
-  public Long getUnbookedCLIUnits(ProductVariant productVariant);//NB_CLI = CLIs for which no booking took place
+  public Long getUnbookedCLIUnits(ProductVariant productVariant, Double mrp);//NB_CLI = CLIs for which no booking took place
 
-  public Long getUnbookedLIUnits(List<Sku> skuList);//NB_LI = LIs for which no booking took place
+  public Long getUnbookedLIUnits(List<Sku> skuList, Double mrp);//NB_LI = LIs for which no booking took place
 
   public Long getLIUnits(List<Sku> skuList, List<Long> shippingOrderStatusIds);//For units in AQ and PQ
 
   public Long getUnsplitBOCLIUnits(ProductVariant productVariant);//For units of unsplit BOs
 
-  public Long getAvailableUnits(ProductVariant productVariant); //AI = CI-NB-US
+  public Long getAvailableUnits(ProductVariant productVariant, Double mrp); //AI = CI-NB-US
 
-  public Long getUnderReviewUnits(ProductVariant productVariant);
+  public Long getUnderReviewUnits(ProductVariant productVariant, Double mrp);
 
   public static class SKUDetails {
     private Sku sku;
