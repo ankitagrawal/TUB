@@ -19,6 +19,9 @@
       <legend>Search Debit Note</legend>
       <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
         <%--<label>GRN ID:</label><s:text name="grn"/>--%>
+          <label>DN ID:</label><s:text name="debitNote"/>
+          <label>DN NO:</label><s:text name="debitNoteNo"/>
+          <label>PI NO:</label><s:text name="purchaseInvoice"/>
         <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Supplier Name:</label><s:text name="supplierName"/>
         <label>Status:</label><s:select name="debitNoteStatus">
@@ -33,6 +36,7 @@
             <s:option value="${wh.id}">${wh.identifier}</s:option>
           </c:forEach>
         </s:select>
+          <label>Supplier Invoice:</label><s:text name="supplierInvoice"/>
         <s:submit name="pre" value="Search Debit Note"/>
       </s:form>
     </fieldset>
@@ -44,10 +48,12 @@
       <thead>
       <tr>
         <th>DN ID</th>
+          <th>DebitNote No</th>
           <%--<th>GRN ID</th>--%>
         <th>Create Date</th>
         <th>Supplier</th>
         <th>Supplier TIN</th>
+        <th>Supplier Invoice</th>
         <th>Warehouse</th>
         <th>Status</th>
         <!-- <th>Reconciled</th> -->
@@ -57,6 +63,7 @@
       <c:forEach items="${poa.debitNoteList}" var="debitNote" varStatus="ctr">
         <tr>
           <td>${debitNote.id}</td>
+            <td>${debitNote.debitNoteNumber}</td>
             <%--<td>
               <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">
                 <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/>
@@ -66,6 +73,7 @@
           <td><fmt:formatDate value="${debitNote.createDate}" type="both" timeStyle="short"/></td>
           <td>${debitNote.supplier.name}</td>
           <td>${debitNote.supplier.tinNumber}</td>
+          <td><c:if test="${debitNote.purchaseInvoice!=null }">${debitNote.purchaseInvoice.invoiceNumber}</c:if></td>
           <td>${debitNote.warehouse.identifier}</td>
           <td>${debitNote.debitNoteStatus.name}</td>
           <%-- <td>
@@ -86,7 +94,6 @@
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="print">Print
               <s:param name="debitNote" value="${debitNote.id}"/>
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
-              
               <c:if test = "${debitNote.reconciliationVoucher!=null }">
               &nbsp;
               <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="printAsRtv">Print As RTV

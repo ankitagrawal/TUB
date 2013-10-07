@@ -141,11 +141,13 @@
     }
 
     .rowLabel {
-      display: block;
+      display: inline-block;
       padding-right: 5px;
-      width: 150px;
+      width: 120px;
       margin-top: 5px;
       margin-bottom: 5px;
+      text-align: right;
+      margin-right:30px ;
     }
 
     .rowText {
@@ -153,6 +155,7 @@
       padding-top: 0;
       padding-bottom: 0;
       font: inherit;
+      width:240px !important;
     }
 
     .error {
@@ -219,7 +222,7 @@
 
   <div class="row">
     <s:label class="rowLabel" name="State*"/>
-    <s:select name="address.state" id="stateselect" style="width:315px;">
+    <s:select name="address.state" id="stateselect" style="width:254px;">
       <s:option value=""> --------- Select State --------- </s:option>
       <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="stateList"
                                  value="name" label="name"/>

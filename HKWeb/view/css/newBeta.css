@@ -2579,7 +2579,7 @@ h2.prod_title {
   margin-right: 5px;
   width: 910px;
   display: block;
-  padding: 20px;
+  /*padding: 20px;*/
   padding-top: 50px; /*border: 1px dotted #ddd;*/
   margin-top: -25px;
   margin-bottom: 20px;
@@ -2736,12 +2736,12 @@ h2.prod_title {
 .step2 .products_container .product .name {
     display: inline;
     float: left;
-    margin-left: 5px;
+    /*margin-left: 5px;*/
     margin-right: 5px;
     width: 390px;
 
     position: relative;
-    left: 20px;
+    left: 10px;
     display: inline-block;
     float: none;
     color: #666;
@@ -2751,7 +2751,7 @@ h2.prod_title {
 .step2 .products_container .product .price {
     width: 150px;
     position: relative;
-    margin-left: -10px;
+    /*margin-left: -10px;*/
     clear: right;
     display: inline-block;
     float: none;
@@ -2835,7 +2835,7 @@ h2.prod_title {
 /* line 1212, ../sass/main.scss */
 .step2 .right_container {
     display: inline;
-    float: left;
+    float: right;
     width: 190px;
     position: relative;
     left: 40px;
@@ -3510,7 +3510,7 @@ box-shadow: -4px 1px 4px #ccc;
     float: left;
     margin-left: 5px;
     margin-right: 5px;
-    width: 110px;
+    width: 120px;
     position: relative;
     left: 25px;
     text-align: center;
@@ -5433,13 +5433,14 @@ color: #e62580;
 }
 
 .checkoutContainer{
-    left: 30px !important;
+    /*left: 30px !important;*/
     margin-bottom: 2px !important;
-    width: 258px !important;
+    width: 242px !important;
     margin-left: initial !important;
     margin-right: initial !important;
     border: none !important;
     padding: 0px !important;
+    float: right;
 }
 
 .checkoutContainerText{
@@ -5479,7 +5480,7 @@ color: #e62580;
     position: relative;
     float: left;
     text-align: left;
-    margin-bottom: 15px;
+    margin: 10px 0;
     font-size: 11px;
     line-height: 15px;
     color: rgb(68, 68, 68);
@@ -5813,10 +5814,13 @@ color: #e62580;
 
 .dispatchedDateNew{
     position: relative;
-    float: left;
-    margin-left: 25px;
-    margin-right: 15px;
-    width: 100px;
+    /*float: left;*/
+    margin-left: 15px;
+    margin-right: 10px;
+    width: 80px;
+    margin-top: 5px;
+    display: inline-block;
+    left: 25px;
 }
 
 .dispatchedDateNew2{
@@ -5931,6 +5935,10 @@ color: #e62580;
     border: 1px solid #ddd;
     width: 630px;
     left: 5px;
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 10px 0;
+    border-width: 0px 0px 1px 0px;
 }
 
 .newProductContainer{
@@ -5941,6 +5949,7 @@ color: #e62580;
     position: relative;
     float: left;
     width: 100%;
+    border-width: 0px 0px 1px 0px;
 }
 
 .productGrid{
@@ -5957,6 +5966,7 @@ color: #e62580;
     float: left;
     width: 8%;
     margin-top: 5px;
+    /*text-align: center;*/
 }
 
 .prodDispatchGrid{
@@ -5973,6 +5983,7 @@ color: #e62580;
     width: 20%;
     margin-top: 5px;
     text-align: center;
+    right: 10px;
 }
 
 .newTotals{
@@ -6031,7 +6042,7 @@ color: #e62580;
 .rightHalf{
     position: relative;
     width: 30%;
-    float: left;
+    float: right;
 }
 
 .backTOHomeButton{
@@ -6625,6 +6636,20 @@ label{
     width: 10px;
     height: 10px;
     cursor: pointer;
+}
+.icn-expand2 {
+    background: url(../images/arrow-down.png) no-repeat center;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    float: right;
+}
+.icn-collapse2 {
+    background: url(../images/arrow-up.png) no-repeat center;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    float: right;
 }
 
 .icn-add-img {
@@ -7982,5 +8007,6 @@ input[type="text"]:focus, input[type="password"]:focus{
 .disp-blk {
     display: block;
 }
-
+.hide{display: none;}
+.show{display: block;}
 /* display box css ends */

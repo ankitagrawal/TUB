@@ -360,16 +360,17 @@ function _updateTotals(responseData) {
       style="display: none;">${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)}</span>
 
 <div class='tabletitle tableTitleNew' style="border-radius: 0px;">
-    <div class='name' style="width: 35%;left: 5px;text-transform:uppercase;">
+    <div class='name' style="width: 40%;left: 5px;text-transform:capitalize;font-weight:600;padding-bottom:5px;">
         You are buying
     </div>
-    <div class='name' style="width: 25%;left: 30px">
-        DISPATCH
+    <div class='quantity' style="width: 10%;left: 20px;text-transform:capitalize;font-weight:600;padding-bottom:5px;text-align: center;">
+        qty
     </div>
-    <div class='quantity' style="width: 15%;left: 0px;">
-        QTY
+    <div class='name' style="width: 20%;left: 50px;text-transform:capitalize;font-weight:600;padding-bottom:5px;">
+        dispatch
     </div>
-    <div class='price' style="width: 15%;left: 35px;">
+
+    <div class='price' style="width: 20%;left: 50px;text-transform:capitalize;font-weight:600;padding-bottom:5px;">
         Price
     </div>
     <div class='floatfix'></div>
@@ -381,7 +382,7 @@ function _updateTotals(responseData) {
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
         <a href="${storeVariantBasic.url}"
-           style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
+           style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;border: 1px solid #ccc;padding: 3px;margin-left: 10px;">
             <%--<c:choose>
                 <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
                     <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
@@ -396,7 +397,7 @@ function _updateTotals(responseData) {
             <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}" alt="${storeVariantBasic.name}"/>
         </a>
 
-        <div class="name" style="word-wrap:break-word;width: 180px;position: relative;float: left;margin: 0 10px 0 5px;" :>
+        <div class="name" style="word-wrap:break-word;width: 190px;position: relative;float: left;margin: 5px 5px 0 0;" :>
             <a href="${storeVariantBasic.url}">${storeVariantBasic.name} </a>
             <%--<a href="${pageContext.request.contextPath}${cartLineItem.productVariant.url}">${cartLineItem.productVariant.variantName} </a>--%>
                 <%--${cartLineItem.productVariant.variantName}<br/>--%>
@@ -404,19 +405,14 @@ function _updateTotals(responseData) {
         </div>
 
             <%--HTML code for dispatch date--%>
-        <div class="dispatchedDateNew">
-            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} days
-            </div>
-        </div>
 
-
-        <div class="quantity" style="width:80px;bottom:5px;left:${cartLineItem.hkPrice != 0.0 ? 15 : 10}px;">
+        <div class="quantity" style="width:80px;left: 30px;bottom: 0px;">
             <c:choose>
                 <c:when test="${cartLineItem.hkPrice == 0.0}">
                     ${cartLineItem.qty}
                 </c:when>
                 <c:otherwise>
-                    <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
+                    <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 30px; height: 20px;text-align: center;"/>
                 </c:otherwise>
             </c:choose>
             <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
@@ -425,6 +421,13 @@ function _updateTotals(responseData) {
                 </a>
             </c:if>
         </div>
+
+        <div class="dispatchedDateNew">
+            <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} days
+            </div>
+        </div>
+
+
         <div class="price">
             <c:choose>
                 <c:when test="${cartLineItem.hkPrice == 0.0}">
@@ -440,6 +443,11 @@ function _updateTotals(responseData) {
                     </div>
                 </c:when>
                 <c:otherwise>
+                    <div class="cut">
+                        <div class="num lineItemSubTotalMrp fnt-light"> Rs
+                            <fmt:formatNumber value="${cartLineItem.markedPrice * cartLineItem.qty}"
+                                              pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                    </div>
                     <div class="hk">
                         <div class="num">
               <span class="lineItemHkTotal  fnt-sz16">Rs <fmt:formatNumber
@@ -447,11 +455,7 @@ function _updateTotals(responseData) {
                       pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                         </div>
                     </div>
-                    <div class="cut">
-                        <div class="num lineItemSubTotalMrp fnt-light"> Rs
-                            <fmt:formatNumber value="${cartLineItem.markedPrice * cartLineItem.qty}"
-                                              pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
-                    </div>
+
                     <%--<div class='special green'>
                       (saved
                               <span class='num '>
@@ -499,7 +503,7 @@ function _updateTotals(responseData) {
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
         <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}"
-           style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
+           style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;border: 1px solid #ccc;padding: 3px;margin-left: 10px;">
             <c:choose>
                 <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
                     <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}"
@@ -513,7 +517,7 @@ function _updateTotals(responseData) {
             </c:choose>
         </a>
 
-        <div class="name" style="word-wrap:break-word;width: 180px;position: relative;float: left;margin: 0 10px 0 5px;">
+        <div class="name" style="word-wrap:break-word;width: 190px;position: relative;float: left;margin: 5px 5px 0 0;">
             <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
             <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
@@ -526,17 +530,17 @@ function _updateTotals(responseData) {
                 <br/>
             </c:forEach>
         </div>
+        <div class="quantity" style="width:80px;left: 30px;bottom: 0px;">
+            <input value="${hk:getComboCount(cartLineItem)}" size="1" class="comboQty"
+                   style="width: 30px; height: 20px;text-align: center;"/>
+            <a style="" class='remove removeComboLink' href='#'>
+                X
+            </a>
+        </div>
         <div class="dispatchedDateNew">
             <div>${cartLineItem.comboInstance.combo.minDays} - ${cartLineItem.comboInstance.combo.maxDays}
                 days
             </div>
-        </div>
-        <div class="quantity" style="width:80px;left:15px;bottom:5px;">
-            <input value="${hk:getComboCount(cartLineItem)}" size="1" class="comboQty"
-                   style="width: 20px; height: 18px;"/>
-            <a style="" class='remove removeComboLink' href='#'>
-                X
-            </a>
         </div>
         <div class="price">
             <c:choose>
@@ -550,6 +554,12 @@ function _updateTotals(responseData) {
                     </div>
                 </c:when>
                 <c:otherwise>
+                    <div class="cut">
+                        <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
+                            <fmt:formatNumber
+                                    value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
+                                    pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                    </div>
                   <div class="hk">
                     <div class="num">
       <span class="lineItemHkTotal fnt-sz16"> Rs <fmt:formatNumber
@@ -565,12 +575,7 @@ function _updateTotals(responseData) {
                     <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)--%>
                 <%--</span>--%>
                     <%--</div>--%>
-                  <div class="cut">
-                    <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
-                      <fmt:formatNumber
-                          value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
-                          pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
-                  </div>
+
 
                 </c:otherwise>
             </c:choose>
@@ -603,23 +608,18 @@ function _updateTotals(responseData) {
             <div class="fnt-light fnt-bold">
                 YOU PAY
             </div>
-            <div id="summaryGrandTotalPayable" class="fnt-sz14">
+            <div id="summaryGrandTotalPayable" class="fnt-sz14" style="color: #090">
                 <fmt:formatNumber value="${cartAction.pricingDto.grandTotalPayable}" type="currency"
                                   currencySymbol="Rs. "/>
             </div>
         </div>
-        <div style="width:48%;overflow:hidden;display:inline-block">
+        <div style="width:48%;overflow:hidden;display:inline-block;float: right;margin-bottom: 10px;">
             <s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
                 <s:hidden name="order" value="${cartAction.order}"/>
-                <s:submit name="checkout" value="PAY NOW" class="btn btn-blue"/>
-
+                <s:submit name="checkout" value="PLACE ORDER" class="btn btn-blue" style="font-family: 'Open Sans';font-size: 0.9em;"/>
             </s:form>
 
         </div>
-
-        <strong>
-
-        </strong>
     </div>
     <hr>
     <div class="offerContainer">
@@ -659,7 +659,7 @@ function _updateTotals(responseData) {
         </shiro:lacksRole>
     </div>
     <hr>
-    <div class="mrgn-b-20 fnt-light fnt-bold fnt-caps">CHECK OUT DETAILS</div>
+    <div class="mrgn-b-10 fnt-light fnt-bold fnt-caps">CHECK OUT DETAILS</div>
 
 
     <div style="">
@@ -1010,7 +1010,7 @@ function _updateTotals(responseData) {
 
 .remove.removeLink, .remove.removeComboLink {
     position: absolute;
-    margin-left: 145px !important;
+    margin-left: 245px !important;
     height: 20px;
     width: 20px;
     background: transparent;

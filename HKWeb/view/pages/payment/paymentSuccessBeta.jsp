@@ -49,21 +49,29 @@
 <s:layout-component name="steps">
     <s:layout-render name="/layouts/embed/_checkoutStripBeta.jsp"  index="5" />
 </s:layout-component>
-<s:layout-component name="heading">
-    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
-    <div>
+
+
+<c:if test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
+  <c:if test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
+    <s:layout-component name="heading">
+      <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
+      <div>
         <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
-            <c:choose>
-                <c:when test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
-                    <img src="${pageContext.request.contextPath}/images/banners/hkplus-15off-banner.jpg" alt="HealthKartPlus 15% Off"/>
-                </c:when>
-                <c:otherwise>
-                    <img src="${pageContext.request.contextPath}/images/banners/hkplus-app.jpg" alt="HealthKartPlus App"/>
-                </c:otherwise>
-            </c:choose>
+          <c:choose>
+            <c:when test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+              <img src="${pageContext.request.contextPath}/images/banners/hkplus-15off-banner.jpg" alt="HealthKartPlus 15% Off"/>
+            </c:when>
+            <c:otherwise>
+              <img src="${pageContext.request.contextPath}/images/banners/hkplus-app.jpg" alt="HealthKartPlus App"/>
+            </c:otherwise>
+          </c:choose>
         </a>
-    </div>
-</s:layout-component>
+      </div>
+    </s:layout-component>
+
+  </c:if>
+</c:if>
+
 
 <s:layout-component name="left_col">
 
@@ -274,135 +282,243 @@
     </s:link>
 </div>--%>
 
+<style>
 
-<div class="leftPS">
-    <div class='mrgn-bt-10'>
-        <c:choose>
-            <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
-                <c:choose>
-                    <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
-                        <%--your cod ka message--%>
-                        <p class="pad5">Your order has been received and is <span style="color: #0091d7;">pending verification</span></p>
-                        <p class="pad5">
-                            Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
-                        </p>
-                        <p class="pad5">You will shortly get an automated <span style="color: #0091d7;">verification call</span>. Please take the call and respond as per instructions to verify
-                            your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.
-                        </p>
-                    </c:when>
-                    <c:otherwise>
-                        <p class="pad5">Your order has been received and is <span style="color: #0091d7;">pending authorization</span> from the gateway.</p>
-                        <p class="pad5">
-                            Your Order ID is: <span class="txt-blue">${actionBean.payment.order.gatewayOrderId}</span>.
-                        </p>
-                        <p class="pad5">
-                            We would update you with the status of your payment within 48hours. Once authorized, your order will go into processing.
-                        </p>
-                    </c:otherwise>
-                </c:choose>
-            </c:when>
-            <%--your non cod ka message--%>
-            <c:otherwise>
-                <p class="pad5">Congratulations! your order is <span class="greenBold">confirmed</span>.</p>
-                <p class="pad5">
-                    Your Order ID is: <span class="txt-blue">${actionBean.payment.order.gatewayOrderId}</span>.
-                </p>
-            </c:otherwise>
-        </c:choose>
+
+  .hdr-qstn {
+    background: #f0f0f0;
+    color: #1b75bb;
+    padding: 5px 5px;
+    font-size: 0.9em;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .cntnt-answer {
+    font-size: 0.9em;
+    padding: 5px 4px;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+  }
+  .span5{
+    width: 280px;
+    float: left;
+    min-height: 1px;
+    margin-left: 20px;
+  }
+  .span16 {
+    width: 950px;
+    float: left;
+    min-height: 1px;
+  }
+  .prc-ofr {
+    color: #090;
+    font-size: 1.2em;
+  }
+
+    /** order success page css begins   **/
+  .shipping-add-cntnr {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding-left: 20px;
+    min-height: 160px;
+  }
+
+  .loyalty-cntnr {
+    width: 520px;
+    margin: 0 auto;
+  }
+
+  .loyalty-cntnr .loyalty-text {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+
+  }
+
+
+    /** order success page css ends   **/
+</style>
+<div class="mrgn-t-35" style="width: 940px;float: left;">
+
+  <div class="span5">
+    <p class="mrgn-b-10 fnt-caps">order details:</p>
+
+    <p class="mrgn-b-10"><span class="fnt-caps">status:</span>
+    <c:choose>
+      <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
+      <c:choose>
+      <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
+        <%--your cod ka message--%>
+    <span class="prc-ofr">COD Verification Pending</span></p>
+    <%--message for cod ver Pending--%>
+    <p class="pad5">You will shortly get an automated <span style="color: #0091d7;">verification call</span>. Please take the call and respond as per instructions to verify
+      your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.
+    </p>
+    <p class="mrgn-b-10"><span class="fnt-caps">order id:</span> ${actionBean.payment.order.gatewayOrderId} </p>
+    </c:when>
+    <c:otherwise>
+      <span class="prc-ofr">Authorization pending</span></p>
+
+      <%--message for auth pending--%>
+      <p class="pad5">
+        We would update you with the status of your payment within 48hours. Once authorized, your order will go into processing.
+      </p>
+      <p class="mrgn-b-10"><span class="fnt-caps">order id:</span> ${actionBean.payment.order.gatewayOrderId}</p>
+
+    </c:otherwise>
+    </c:choose>
+    </c:when>
+      <%--your order confirm ka message--%>
+    <c:otherwise>
+      <span class="prc-ofr">Order Confirmed</span></p>
+      <p class="mrgn-b-10"><span class="fnt-caps">order id:</span> ${actionBean.payment.order.gatewayOrderId}</p>
+    </c:otherwise>
+    </c:choose>
+
+    <p class="mrgn-b-10"><span class="fnt-caps">you pay:</span>
+        <span class="youPayValue" style="color: #090;float: none;">
+          <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+        </span>
+    </p>
+
+    <p class="mrgn-b-10"><span class="fnt-caps">total items:</span> ${fn:length(actionBean.pricingDto.productLineItems)}</p>
+  </div>
+
+  <div class="span5 shipping-add-cntnr alpha">
+    <p class="fnt-caps mrgn-b-10">order shipped to:</p>
+    <c:set var="address" value="${actionBean.payment.order.address}"/>
+    <p><strong>${address.name}</strong> </p>
+    <p>
+      ${address.line1},
+    <c:if test="${not empty address.line2}">
+      ${address.line2},
+    </c:if>
+    </p>
+
+    <p>  ${address.city} - ${address.pincode.pincode}</p>
+    <p>${address.state}, <span class="upc">INDIA</span></p>
+    <p><span class="sml lgry upc">Phone </span> ${address.phone}</p>
+
+  </div>
+
+  <div class="span5">
+    <p class="fnt-caps mrgn-b-10">important information:</p>
+
+    <p>
+      The estimated dispatch time for each
+      product is mentioned below. The
+      delivery time would be extra and will
+      vary according to your location.
+    </p>
+
+    <p><span class="icn icn-sqre-blue"></span>
+      <span id="learnMore" class="learnMore pad5" style="margin: 0px;color:#0091d7; float: none;" >learn more</span>
+    </p>
+
+
+  </div>
+
+</div>
+
+<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+  <div class='brdr mrgn-bt-10 pad10 cont-lft'>
+    <div class="fnt-bold" style="padding-left: 5px">Did you know about our Loyalty Program yet?</div>
+    <p class="pad5">It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
+      <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" class="txt-blue" target="_blank">Click here</a>, to know more.
+    </p>
+  </div>
+</shiro:lacksRole>
+
+<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+  <div class='brdr mrgn-bt-10 pad10 cont-lft'>
+    <p class="pad5">
+      <c:if test="${actionBean.loyaltyPointsEarned > 0}">
+        You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your loyalty account once your order has been delivered.
+      </c:if>
+
+      <c:if test="${actionBean.loyaltyPointsEarned <= 0}">
+        Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
+      </c:if>
+        <%--<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.--%>
+    </p>
+    <p class="pad5">
+      <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank" style="text-decoration: underline;cursor: pointer;margin: 0px;color: #0091d7;float: none;">Click here</a>, to know more.
+    </p>
+  </div>
+</shiro:hasRole>
+
+<shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
+  <div class="cont-lft">
+    <div class="span16 row hdr-qstn show-answer">
+      <span class=" mrgn-lr-5">You have not activated your HealthKart account</span>
+      <span class="icn icn-expand2 mrgn-bt-5 mrgn-lr-5 show-answer-icn" ></span>
+      <span class="icn icn-collapse2 mrgn-bt-5 mrgn-lr-5 hide-answer-icn hide"></span>
     </div>
+    <div class="span16  cntnt-answer hide">
+      <p class="lrg pad5">
+        To activate your account, please click on the activation link sent in your email. By activating your
+        account,we get to know that you have a valid email id and we can send special offers on your email.
+      </p>
+      <p class="pad5"><strong>If you haven't received the mail,
+        <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink txt-blue">Click here to resend it.</s:link>
+      </strong>
+        <span class="emailSendMessage alert" style="display: none; font-weight:600;"></span>
+      </p>
+      <p class="pad5" style="display:none;" class="emailNotReceived">
+        If you do not receive this email, please check your spam/bulk folder. Write to us at info@healthkart.com if
+        you face problems.
+      </p>
+    </div>
+  </div>
+
+
+
+
+  <script type="text/javascript">
+
+    <%-- Re-Send Activation Link --%>
+    $('.resendActivationEmailLink').click(function() {
+
+      var clickedLink = $(this);
+      var clickedP = clickedLink.parents('p');
+      clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
+      $.getJSON(clickedLink.attr('href'), function(res) {
+        if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+          clickedP.find('.emailSendMessage').html(res.data.message).show();
+          $('.emailNotReceived').show();
+        }
+      });
+      return false;
+    });
+
+
+    $('.hdr-qstn').click(function () {
+      if ($(this).hasClass('show-answer')) {
+        $(this).removeClass('show-answer').addClass('hide-answer');
+        $(this).children('.show-answer-icn').hide();
+        $(this).children('.hide-answer-icn').show();
+        $(this).parent().children('.cntnt-answer').slideDown('slow');
+      }
+      else {
+        $(this).addClass('show-answer').removeClass('hide-answer');
+        $(this).children('.show-answer-icn').show();
+        $(this).children('.hide-answer-icn').hide();
+        $(this).parent().children('.cntnt-answer').slideUp('slow');
+      }
+    });
+
+
+  </script>
+</shiro:hasRole>
+
+
+<div class="leftPS mrgn-t-30">
 
     <jsp:include page="/includes/checkoutNotice.jsp"/>
-
-    <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
-        <div class='promos'>
-            <div class='mrgn-bt-10'>
-                <div class="deliveryDetails fnt-bold" style="padding-left: 5px">You have not activated your HealthKart account</div>
-                <p class="lrg pad5">
-                    To activate your account, please click on the activation link sent in your email. By activating your
-                    account,we get to know that you have a valid email id and we can send special offers on your email.
-                </p>
-                <p class="pad5"><strong>If you haven't received the mail,
-                    <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink txt-blue">Click here to resend it.</s:link>
-                </strong>
-                    <span class="emailSendMessage alert" style="display: none; font-weight:600;"></span>
-                </p>
-                <p class="pad5" style="display:none;" class="emailNotReceived">
-                    If you do not receive this email, please check your spam/bulk folder. Write to us at info@healthkart.com if
-                    you face problems.
-                </p>
-            </div>
-        </div>
-        <script type="text/javascript">
-
-            <%-- Re-Send Activation Link --%>
-            $('.resendActivationEmailLink').click(function() {
-
-                var clickedLink = $(this);
-                var clickedP = clickedLink.parents('p');
-                clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
-                $.getJSON(clickedLink.attr('href'), function(res) {
-                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                        clickedP.find('.emailSendMessage').html(res.data.message).show();
-                        $('.emailNotReceived').show();
-                    }
-                });
-                return false;
-            });
-
-        </script>
-    </shiro:hasRole>
-
-
-        <%--<c:if test="${actionBean.payment.paymentMode.id == paymentModeId_DefaultGateway}">
-          <p> With this order you have earned reward points worth
-            <span class="orange">
-               <strong>
-                 <fmt:formatNumber value="${actionBean.payment.amount * cashBackPercentage}" type="currency" currencySymbol="Rs. "/>
-               </strong>
-              </span>
-          </p>
-        </c:if>--%>
-
-
-    <shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-        <div class='orderSummaryHeading mrgn-bt-10 pad10'>
-            <div class="deliveryDetails fnt-bold" style="padding-left: 5px">Did you know about our Loyalty Program yet?</div>
-            <p class="pad5">It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
-                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" class="txt-blue" target="_blank">Click here</a>, to know more.
-            </p>
-        </div>
-    </shiro:lacksRole>
-
-    <shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-        <div class='mrgn-bt-10'>
-            <p class="pad5">
-                <c:if test="${actionBean.loyaltyPointsEarned > 0}">
-                You have earned <strong>${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)}</strong> loyalty points. These loyalty points will be transferred to your loyalty account once your order has been delivered.
-                </c:if>
-
-                <c:if test="${actionBean.loyaltyPointsEarned <= 0}">
-                Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
-                </c:if>
-                <%--<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.--%>
-            </p>
-            <p class="pad5">
-                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
-            </p>
-        </div>
-    </shiro:hasRole>
-
-    <div class='mrgn-bt-10'>
-        <p class="pad5">The estimated dispatch time for each product is mentioned below. The delivery time would be extra and will vary according to your location.</p>
-        <span id="learnMore" class="learnMore pad5" style="margin: 0px;float: right; color:#0091d7;" >learn more</span>
-    </div>
-
-    <div class='mrgn-bt-10'>
-        <p class="pad5">For any query, please call us: 0124-4616444 or you can drop us an email at <span class="txt-blue">info@healthkart.com</span> with your Order ID.</p>
-    </div>
-
     <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
-        <div style="background-color: lightgoldenrodyellow;">
-            <h2>You have won a Complementary Coupon!</h2>
+        <div style="padding: 10px; border: 1px solid #dddddd;">
+            <h2 style="color: #0091d7; font-weight:600;">You have won a Complementary Coupon!</h2>
             <p>
                     ${actionBean.payment.order.offerInstance.offer.complimentaryCouponDescription}<br/>
                 Your Complementary Coupon Code : <strong>${actionBean.payment.order.offerInstance.coupon.complimentaryCoupon}</strong>
@@ -414,17 +530,15 @@
     </c:if>
 
     <div class="step2 success_order_summary" style="padding: 5px 5px 5px 0; float: left; margin-right: 5px;margin-bottom: 20px;">
-        <h2 class="paymentH2">Order Summary</h2>
-
         <div class="itemSummaryNew">
-            <s:layout-render name="/layouts/embed/itemSummaryTableBeta.jsp" pricingDto="${actionBean.pricingDto}"
+            <s:layout-render name="/layouts/embed/itemSummaryTableBeta.jsp" pricingDto="${actionBean.pricingDto}" youBoughtText= "You Bought"
                              orderDate="${actionBean.payment.paymentDate}"/>
         </div>
 
     </div>
 
     <c:if test="${actionBean.pricingDto.totalCashback > 0.0}">
-        <div style="padding: 10px;background-color: lightgoldenrodyellow; position:relative;float: left;width: 622px;">
+        <div style="padding: 10px; position:relative;float: left;width: 610px;border: 1px solid #ddd;">
             Cashback Pending <strong>(Rs. <fmt:formatNumber pattern="<%=FormatUtils.currencyFormatPattern%>" value="${actionBean.pricingDto.totalCashback}"/>)</strong>
             <p>
                 Your cashback will be automatically credited into your HealthKart account depending on the payment mode :<br/>
@@ -437,7 +551,7 @@
 
     <div style="clear:both;"></div>
 
-    <div class='orderSummaryHeading' style="margin-bottom: 50px;margin-top: 50px;padding: 10px;">
+    <div class='brdr' style="margin-bottom: 50px;margin-top: 20px;padding: 10px;">
         <div class="deliveryDetails" style="padding-left: 7px;font-weight: 600"> DELIVERY DETAILS</div>
         <ol style="padding-left:25px;font-size: 12px;">
             <li>
@@ -455,13 +569,15 @@
             <li>
                 For Rest of India Non Serviceable through Couriers: 7-15 business days (Delivery done by Indian Post)
             </li>
+          <li>For any query, please call us: 0124-4616444 or you can drop us an email at <span class="txt-blue">info@healthkart.com</span> with your Order ID.</li>
         </ol>
     </div>
 </div>
 
-<div class="rightPS">
+<div class="rightPS mrgn-t-30" style="top:20px;">
+  <h2 style="font-size: 1.2em;font-weight: 600;border-bottom: 1px solid #ddd;padding-bottom: 10px;" class="paymentH2 ">Payment Details</h2>
 
-    <div class="orderSummaryNew" style="width: 100%;left:0;margin-bottom: 30px;">
+  <div class="orderSummaryNew" style="width: 100%;left:0;margin-bottom: 20px;">
         <s:layout-render name="/layouts/embed/orderSummaryTableBeta.jsp" pricingDto="${actionBean.pricingDto}"
                          orderDate="${actionBean.payment.paymentDate}"/>
     </div>
@@ -487,11 +603,11 @@
         <%--your non cod ka message--%>
         <c:otherwise>
             <h1 class="youPaid" style="border-bottom: 1px solid #ddd;width: 100%;">
-                          <span class="youPay">
-                            You paid:
+                          <span class="youPay fnt-light fnt-bold">
+                            YOU PAID:
                           </span>
                 <strong>
-                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                            <span id="summaryGrandTotalPayable" class="youPayValue" style="color: #090">
                               <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
                             </span>
                 </strong>
@@ -502,23 +618,6 @@
 
         </c:otherwise>
     </c:choose>
-
-    <div class="orderShippedTo" style="margin-bottom: 30px;width: 100%;margin-right: 0;">
-        <h2 class="paymentH2" style="font-weight:600;border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER SHIPPED TO</h2>
-
-        <p>
-            <c:set var="address" value="${actionBean.payment.order.address}"/>
-            <strong>${address.name}</strong> <br/>
-                ${address.line1},
-            <c:if test="${not empty address.line2}">
-                ${address.line2},
-            </c:if>
-                ${address.city} - ${address.pincode.pincode}<br/>
-                ${address.state}, <span class="upc">INDIA</span><br/>
-            <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
-        </p>
-    </div>
-
     <s:link class="btn btn-blue" href="/" title='go to healthkart home'>
         GO BACK TO HOME Page
     </s:link>

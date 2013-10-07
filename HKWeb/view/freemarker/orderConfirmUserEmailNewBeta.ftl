@@ -40,7 +40,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.name}
+                    <td>${productLineItem.productVariant.variantName}
 
                     </td>
                     <td>
