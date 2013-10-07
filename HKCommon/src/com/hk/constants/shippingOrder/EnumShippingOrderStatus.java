@@ -11,6 +11,7 @@ public enum EnumShippingOrderStatus {
 
   SO_ActionAwaiting(110L, "SO Action Awaiting"),     //when shipping order could not be auto escalated
   SO_OnHold(112L, "SO On Hold"),
+  SO_Ready_For_Validation(113L,"SO  Validation Required"),
   SO_EscalatedBack(115L, "SO Escalated Back"),
   SO_ReadyForProcess(120L, "SO Ready for Process"),     //same as escalated to packing queue
   SO_ReadyForDropShipping(125L, "SO ready for drop shipping"),
@@ -28,7 +29,6 @@ public enum EnumShippingOrderStatus {
   SO_Customer_Return_Refunded(260L, "SO Customer Return and Refund"),
   SO_Customer_Appeasement(270L, "SO Customer Satisfaction"),
   SO_ReversePickup_Initiated(280L, "SO Reverse Pickup Initiated"),
-  SO_Ready_For_Validation(290L,"SO  Validation Required"),
   SO_Cancelled(999L, "SO Cancelled");
 
 
@@ -77,6 +77,7 @@ public enum EnumShippingOrderStatus {
 
   public static List<EnumShippingOrderStatus> getStatusForBookedInventory() {
     return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
+        EnumShippingOrderStatus.SO_Ready_For_Validation,
         EnumShippingOrderStatus.SO_OnHold,
         EnumShippingOrderStatus.SO_ReadyForProcess,
         EnumShippingOrderStatus.SO_MarkedForPrinting,
@@ -99,11 +100,11 @@ public enum EnumShippingOrderStatus {
 
 
   public static List<EnumShippingOrderStatus> getStatusForActionQueue() {
-    return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold);//, EnumShippingOrderStatus.SO_EscalatedBack);
+    return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold, EnumShippingOrderStatus.SO_Ready_For_Validation);//, EnumShippingOrderStatus.SO_EscalatedBack);
   }
 
   public static List<Long> getStatusIdsForActionQueue() {
-    return Arrays.asList(SO_ActionAwaiting.getId(), SO_OnHold.getId());
+    return Arrays.asList(SO_ActionAwaiting.getId(), SO_OnHold.getId(), SO_Ready_For_Validation.getId());
   }
 
   public static List<Long> getStatusIdsForProcessingQueue() {
@@ -164,6 +165,7 @@ public enum EnumShippingOrderStatus {
 
   public static List<EnumShippingOrderStatus> getStatusForShipmentResolution() {
     return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
+        EnumShippingOrderStatus.SO_Ready_For_Validation,
         EnumShippingOrderStatus.SO_OnHold,
         EnumShippingOrderStatus.SO_ReadyForDropShipping,
         EnumShippingOrderStatus.SO_Shipped

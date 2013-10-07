@@ -148,7 +148,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       if(firewall && SOFirewall.isAmountMismatch(payment.getOrder())){
         reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
       }
-      if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+      if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId()) ||
+          shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Ready_For_Validation.getId()) ) {
         if(shippingOrder.isServiceOrder()){
           return true;
         }
@@ -209,7 +210,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
   private boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
     if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
-      if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+      if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())
+          || shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Ready_For_Validation.getId())) {
         if(!(shippingOrder.isServiceOrder())){
           User loggedInUser = getUserService().getLoggedInUser();
           if(loggedInUser == null){
