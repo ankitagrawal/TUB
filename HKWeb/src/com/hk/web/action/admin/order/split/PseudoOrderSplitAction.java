@@ -1,8 +1,11 @@
 package com.hk.web.action.admin.order.split;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.splitter.LineItemClassification;
+import com.hk.splitter.impl.OrderSplitterImpl;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -36,6 +39,9 @@ public class PseudoOrderSplitAction extends BaseAction {
     OrderSplitterServiceImpl orderSplitterServiceImpl;
 
     @Autowired
+    OrderSplitterImpl orderSplitter;
+
+    @Autowired
     WarehouseService warehouseService;
 
     @Autowired
@@ -49,6 +55,8 @@ public class PseudoOrderSplitAction extends BaseAction {
 
     Order order;
 
+    Collection<LineItemClassification> lineItemClassifications;
+
     @DefaultHandler
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/order/pseudoOrderSplitter.jsp");
@@ -58,6 +66,17 @@ public class PseudoOrderSplitAction extends BaseAction {
         order = orderService.findByGatewayOrderId(gatewayOrderId);
         if (order != null) {
             sortedDummyOrderMaps = orderSplitterServiceImpl.listSortedDummyOrderMapPractically(order);
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("No Order found for corresponding gateway Order ID"));
+        }
+        return new ForwardResolution("/pages/admin/order/pseudoOrderSplitter.jsp");
+    }
+
+    public Resolution splitViaNewSplitter() {
+        order = orderService.findByGatewayOrderId(gatewayOrderId);
+        if (order != null) {
+            lineItemClassifications = orderSplitter.feedData(order);
+            sortedDummyOrderMaps = orderSplitter.createCombinations(null,order,lineItemClassifications);
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Order found for corresponding gateway Order ID"));
         }

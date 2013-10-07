@@ -87,7 +87,7 @@
                                 <td> ${cartLineItem.productVariant.costPrice}</td>
                                 <td> ${cartLineItem.productVariant.hkPrice}</td>
                                 <td>${cartLineItem.productVariant.weight}</td>
-                                <td><c:forEach items="${skus}" var="sku">${sku.warehouse.city}:${sku.tax.value}<br></c:forEach></td>
+                                <td><c:forEach items="${skus}" var="sku">${sku.warehouse.identifier}:${sku.tax.value}<br></c:forEach></td>
                             </tr>
                         </c:forEach>
                     </table>
@@ -119,7 +119,7 @@
                                         <div class="clear"></div>
                                         <div class="row">
                                             <label class="valueLabel">Warehouse</label>
-                                            <label class="nameLabel bolderValue">${dummyOrder.warehouse.city}</label>
+                                            <label class="nameLabel bolderValue">${dummyOrder.warehouse.identifier}</label>
                                         </div>
                                         <div class="clear"></div>
 
