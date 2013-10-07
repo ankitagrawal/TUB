@@ -1185,9 +1185,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
     boolean sicliToBeCreated = false;
-    if ((cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) && (lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1)) {
-      sicliToBeCreated = true;
-    }
+
     // it means no entry
 
     List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
@@ -1197,6 +1195,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     if (countOfAvailableUnBookedSkuItemsInAqua >= cartLineItem.getQty()) {
       if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+        sicliToBeCreated = true;
       }
       List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
       for (SkuItemCLI skuItemCLI : skuItemCLIs) {
