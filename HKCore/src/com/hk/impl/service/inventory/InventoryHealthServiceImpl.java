@@ -1195,6 +1195,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     if (countOfAvailableUnBookedSkuItemsInAqua >= cartLineItem.getQty()) {
       if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+      }
+      if (cartLineItem.getSkuItemCLIs()  != null || cartLineItem.getSkuItemCLIs().size() > 0) {
         sicliToBeCreated = true;
       }
       List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
