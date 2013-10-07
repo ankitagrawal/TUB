@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hk.domain.courier.Zone;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -72,6 +73,8 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     private CourierService             courierService;
     @Autowired
     InvoicePDFGenerator                invoicePDFgenerator;
+    @Autowired
+    SkuItemLineItemService             skuItemLineItemService;
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
 
@@ -148,7 +151,10 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
                 // shippingOrder.setAccountingInvoiceNumber();
                 String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
                 shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
-                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+                shippingOrder =(ShippingOrder) adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+                if (shippingOrder != null){
+                  skuItemLineItemService.freeBooking(shippingOrder);
+               }
             }
             addRedirectAlertMessage(new SimpleMessage("Orders have been marked as shipped"));
         } else {

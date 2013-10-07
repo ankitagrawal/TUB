@@ -119,8 +119,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
     if (lineItem.getShippingOrder() instanceof ReplacementOrder) {
 
-      freeBookingItem(lineItem.getCartLineItem().getId());
-      boolean roStatus = getInventoryHealthService().bookInventoryForReplacementOrder(lineItem);
+//      freeBookingItem(lineItem.getCartLineItem().getId());
+     boolean roStatus = getInventoryHealthService().bookInventoryReplacementAB(lineItem);
+
       return roStatus;
       /*
       boolean createSkuCLIFlag = false;
@@ -614,9 +615,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
    // List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstBOCancellation(cartLineItem);
     List<HKAPIForeignBookingResponseInfo> infos = freeBrightInventoryAgainstSoValidation(cartLineItem);
     if (infos != null) {
-      Boolean status = isBrightItemCheckInAtAqua(cartLineItem);
+      Boolean status = BrightItemStatusAtAqua(cartLineItem,EnumSkuItemStatus.BOOKED.getId());
+      // considering the case of freeing booked inventory when item has been already checked out at aqua
+      boolean checkedOutStatus = BrightItemStatusAtAqua(cartLineItem,EnumSkuItemStatus.Checked_OUT.getId());
       deleteSicliAndSili(cartLineItem);
-      if (status) {
+      if (status || checkedOutStatus) {
         freeFsiclis(infos, false);
       } else {
         freeFsiclis(infos, true);
@@ -663,7 +666,12 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
       for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()) {
         SkuItem skuItem = skuItemCLI.getSkuItem();
-        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+
+        // this  case will cover the free booking of skuItems when it shipped
+        if (!skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())){
+          skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+        }
+
         skuItemsToBeFreed.add(skuItem);
         if (skuItemCLI.getSkuItemLineItems() != null) {
           skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
@@ -915,12 +923,12 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
 
-  public Boolean isBrightItemCheckInAtAqua(CartLineItem cartLineItem  ) {
+  public Boolean BrightItemStatusAtAqua(CartLineItem cartLineItem, Long statusId  ) {
     // need to check whether booked inventory has already been checked in at bright
     List<ForeignSkuItemCLI> fsiclis = cartLineItem.getForeignSkuItemCLIs();
     for (ForeignSkuItemCLI foreignSkuItemCLI  : fsiclis){
       SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
-      if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())){
+      if (skuItem.getSkuItemStatus().getId().equals(statusId)){
         return  true;
       }
     }

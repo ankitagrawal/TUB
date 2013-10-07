@@ -72,6 +72,8 @@ public interface SkuItemLineItemService {
 
   public boolean freeBookingInventoryAtAqua(CartLineItem cartLineItem);
 
+  public boolean freeBookingInventoryAtBright(CartLineItem cartLineItem);
+
   public Boolean validateBooking(CartLineItem cartLineItem);
 
   public List<LineItem> freeBooking(ShippingOrder shippingOrder);
@@ -79,4 +81,6 @@ public interface SkuItemLineItemService {
   public void removeRefusedFsicli (List <HKAPIForeignBookingResponseInfo> infos );
 
   public Boolean createNewSkuItemLineItemForFlipping(CartLineItem cartLineItem);
+
+  public List<SkuItem> freeFsiclis(List<HKAPIForeignBookingResponseInfo> infos , Boolean isSkuItemsToBeDeleted);
 }
