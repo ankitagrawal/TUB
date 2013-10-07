@@ -1184,7 +1184,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       return true;
     }
 
-    boolean sicliToBeCreated = false;
+    boolean sicliAlreadyCreated = false;
 
     // it means no entry
 
@@ -1196,13 +1196,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
       }
+      getBaseDao().refresh(cartLineItem);
       if (cartLineItem.getSkuItemCLIs()  != null || cartLineItem.getSkuItemCLIs().size() > 0) {
-        sicliToBeCreated = true;
+        sicliAlreadyCreated = true;
       }
       List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
       for (SkuItemCLI skuItemCLI : skuItemCLIs) {
         SkuItem skuItem = null;
-        if (sicliToBeCreated) {
+        if (sicliAlreadyCreated) {
           skuItem = skuItemCLI.getSkuItem();
         } else {
           skuItem = (SkuItem) skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice()).get(0);
