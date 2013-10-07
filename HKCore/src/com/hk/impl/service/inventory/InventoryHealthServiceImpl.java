@@ -415,10 +415,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
     }
     boolean brightInventoryInfoAdded = false;
+    logger.debug("Getting inventory infos  from Aqua for variant during splitting -- " + variant.getId());
     Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
     if ((infos != null && infos.size() <= 0) && (skuItemCLIs != null && skuItemCLIs.size() <= 0 )) {
       // make a call to Bright side for inventory Info
+      logger.debug("Getting inventory infos from Bright for variant during splitting -- " + variant.getId());
       infos = avaialbleSkuInfoInfoOfBright(variant, cartLineItem.getId());
+      logger.debug("infos  got from Bright for variant during splitting -- " + infos);
       brightInventoryInfoAdded = true;
 
     }
@@ -483,6 +486,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
             if (filter.getWarehouseId() == null
                 || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
+              logger.debug(" Going to add skuId  during splitting : " + skuInfo.getSkuId() );
               skus.add(skuInfo);
               invAdded = true;
             }
@@ -616,14 +620,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           }
           Long warehouseIdAtPV = productVariant.getWarehouse().getId();
           productVariant =(ProductVariant) productVariantService.getVariantById(productVariant.getId());
-          logger.debug("Temp Booking On Aqua Side");
-//          Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+          logger.debug("Warehouse id at product variant during temp-booking : " + warehouseIdAtPV.toString());
+
 
           if (whIds.contains(warehouseIdAtPV)) {
+            logger.debug("Temp Booking On Aqua Side");
             cartLineItem = tempBookAquaInventory(cartLineItem,warehouseIdAtPV);
           } else {
             //book inventory on Bright
             if (isBookingRequireAtBright(cartLineItem)) {
+              logger.debug("Going to temp book inventory at bright for Non-JIT product Variant : " + cartLineItem.getProductVariant().getId());
               getBaseDao().refresh(cartLineItem);
               if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
               cartLineItem = tempBookBrightInventory(cartLineItem,warehouseIdAtPV);
@@ -645,6 +651,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   @Transactional
   public CartLineItem createSkuGroupAndItem(CartLineItem cartLineItem, Long warehouseId) {
+     logger.debug("  going to Create Sku group for  cartLineItem -- " + cartLineItem.getId() + " and warehouse id --" + warehouseId);
 
       ForeignSkuItemCLI fsicli = cartLineItem.getForeignSkuItemCLIs().get(0);
       ProductVariant productVariant = cartLineItem.getProductVariant();
@@ -659,6 +666,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       skuGroup = skuGroupDao.getForeignSkuGroup(foreignSkuGroupId);
       if (fsicli.getSkuItemId() != null) {
         if (skuGroup == null) {
+          logger.debug("  going to Create New Sku group for  cartLineItem -- " + cartLineItem.getId() + " and warehouse id --" + warehouseId);
           skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
               fsicli.getFsgCostPrice(), fsicli.getFsgMrp(), null, null, null, sku);
           skuGroup.setForeignSkuGroupId(foreignSkuGroupId);
@@ -668,15 +676,17 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         // Need to discus about setting of foreign sku_group id
 
         List<SkuItem> skuItems = new ArrayList<SkuItem>();
-        for (ForeignSkuItemCLI fsicli1 : cartLineItem.getForeignSkuItemCLIs()) {
+        logger.debug("Going to create sku item for skuGroup during Bright Booking :"  + skuGroup.getId());
+        for (ForeignSkuItemCLI tempFsicli : cartLineItem.getForeignSkuItemCLIs()) {
           SkuItem skuItem = new SkuItem();
           skuItem.setSkuGroup(skuGroup);
           skuItem.setCreateDate(new Date());
           skuItem.setSkuItemStatus(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus());
-          skuItem.setBarcode(fsicli1.getForeignBarcode());
+          skuItem.setBarcode(tempFsicli.getForeignBarcode());
           skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-          skuItem.setForeignSkuItemCLI(fsicli1);
+          skuItem.setForeignSkuItemCLI(tempFsicli);
           skuItem = (SkuItem) getBaseDao().save(skuItem);
+          logger.debug("sku item  has been created for skuGroup during Bright Booking  for fsicli  :"  + tempFsicli.getId());
           skuItems.add(skuItem);
         }
       }
@@ -690,6 +700,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       getBaseDao().refresh(cartLineItem);
       if (cartLineItem.getForeignSkuItemCLIs() != null) {
         for (ForeignSkuItemCLI foreignSkuItemCLI : cartLineItem.getForeignSkuItemCLIs()) {
+          logger.debug(" Going to populate SICLI for cartlineItem - " + cartLineItem.getId() + " and fsicli id --" + foreignSkuItemCLI.getId());
           SkuItem skuItem = skuItemLineItemService.getSkuItem(foreignSkuItemCLI.getId());
           if (skuItem != null) {
             SkuItemCLI skuItemCLI = new SkuItemCLI();
@@ -699,6 +710,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             skuItemCLI.setProductVariant(cartLineItem.getProductVariant());
             skuItemCLI.setSkuItem(skuItem);
             skuItemCLI = (SkuItemCLI) getBaseDao().save(skuItemCLI);
+            logger.debug("Populated SICLI  for fsicli id : " + foreignSkuItemCLI.getId());
           }
         }
       }
@@ -707,14 +719,17 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   @Transactional
   public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, Long warehouseId) {
-    logger.debug("Going to book inv on Bright Side");
     ProductVariant productVariant = cartLineItem.getProductVariant();
+    logger.debug("Going to temp  book inv on Bright Side for product Variant : " + productVariant.getId());
     productVariant = productVariantService.getVariantById(productVariant.getId());
      Long warehouseIdAtOrderPlacement = warehouseId;
     // now make a API call to booked inventory at Bright
     Long fsicliId = null;
 
+    logger.debug("Going to populate FSICLI  during temp booking  cartlineItem Id : " + cartLineItem.getId());
     List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
+    logger.debug("  FSICLI has been populated during temp booking  cartlineItem Id : " + cartLineItem.getId());
+
     List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
     for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLis) {
       HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
@@ -738,23 +753,26 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       try {
         Gson gson = new Gson();
         String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
-        logger.debug("json to be sent on Bright for Inv Booking - " + json);
+        logger.debug("json to be sent on Bright for Inv Temp Booking - " + json);
         String url = brightlifecareRestUrl + "product/variant/" + "tempBookInventoryOnBright/";
         ClientRequest request = new ClientRequest(url);
         request.body("application/json", json);
         ClientResponse response = request.post();
         int status = response.getStatus();
         if (status == 200) {
+          logger.debug(" Status  got from Bright   for Inv Temp Booking - " + status);
           String data = (String) response.getEntity(String.class);
           Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
           }.getType();
           infos = new Gson().fromJson(data, listType);
         }else {
+          logger.debug(" Failed response got from Bright  for Inv Temp Booking  hence going to delete fsicli- " + status );
           ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
           cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
           cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
           getBaseDao().save(cartLineItem);
           getBaseDao().delete(foreignSkuItemCLI);
+          logger.debug(" Deleted FSICLi for failed temp booking at Bright ");
 
         }
       } catch (Exception e) {
@@ -764,16 +782,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
         getBaseDao().save(cartLineItem);
         getBaseDao().delete(foreignSkuItemCLI);
+        logger.debug(" Deleted FSICLi for failed temp booking at Bright  due to exception occur");
       }
       if (infos == null || infos.size() <= 0){
+        logger.debug(" Going to delete  FSICLi for  temp booking at Bright as infos got is null");
         ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
         cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-//        if (cartLineItem != null) {
-//          cartLineItem.setForeignSkuItemCLIs(null);
-//        }
         cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
         getBaseDao().save(cartLineItem);
         getBaseDao().delete(foreignSkuItemCLI);
+        logger.debug(" Deleted FSICLi for failed temp booking at Bright  due to null infos");
       } else if (infos != null && infos.size() > 0) {
         updateForeignSICLITable(infos);
       }
@@ -873,6 +891,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   public void updateForeignSICLITable(List<HKAPIForeignBookingResponseInfo> infos) {
     for (HKAPIForeignBookingResponseInfo info : infos) {
       long fsiliId = info.getFsiCLIId();
+      logger.debug("  going to update FSICLI for id -- " + fsiliId);
       ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemService.getForeignSkuItemCLI(fsiliId);
       if (foreignSkuItemCLI != null && info.getFsiId() != null) {
         foreignSkuItemCLI.setForeignBarcode(info.getBarcode());
@@ -902,6 +921,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
          foreignSkuItemCLI.setForeignShippingOrderId(info.getFsoId());
        }
         foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
+        logger.debug(" FSICLI has been updated for id -- " + fsiliId);
       }
     }
   }

@@ -716,8 +716,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
 
   public List<ForeignSkuItemCLI> updateSkuItemForABJit(List<HKAPIForeignBookingResponseInfo> infos) {
+
     List<ForeignSkuItemCLI> foreignSkuItemCLIs = new ArrayList<ForeignSkuItemCLI>();
     for (HKAPIForeignBookingResponseInfo info : infos) {
+      logger.debug("Update fsicli with info got after splitting");
       long fsiliId = info.getFsiCLIId();
       ForeignSkuItemCLI foreignSkuItemCLI = getForeignSkuItemCLI(fsiliId);
       if (foreignSkuItemCLI != null) {
@@ -729,6 +731,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         skuItem.setBarcode(info.getBarcode());
         baseDao.save(skuItem);
         foreignSkuItemCLIs.add(foreignSkuItemCLI);
+        logger.debug(" updated fsicli for fsicli " + info.getFsiId());
       }
 
     }
@@ -739,6 +742,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   public void populateSILIForABJit(List<ForeignSkuItemCLI> foreignSkuItemCLIs, LineItem lineItem) {
    List <SkuItemLineItem> silis = new ArrayList<SkuItemLineItem>();
     for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+      logger.debug(" populating sili for Ab JIT");
       SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
       skuItemLineItem.setProductVariant(foreignSkuItemCLI.getProductVariant());
       skuItemLineItem.setUnitNum(foreignSkuItemCLI.getUnitNum());
@@ -749,6 +753,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       skuItemLineItem.setSkuItemCLI(skuItemCli);
       skuItemLineItem.setCreateDate(new Date());
       skuItemLineItem =(SkuItemLineItem) baseDao.save(skuItemLineItem);
+      logger.debug(" populated  sili for Ab JIT");
       silis.add(skuItemLineItem);
     }
      lineItem.setSkuItemLineItems(silis);

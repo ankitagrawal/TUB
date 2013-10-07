@@ -79,6 +79,8 @@ public class OrderSplitterImpl implements OrderSplitter {
 		validate(order);
 
 		List<Warehouse> whs = warehouseService.getServiceableWarehouses(order);
+    if (whs != null)
+    logger.debug("Serviceable Warehouse during splitting is -- "  +whs.size());
 		
 		long startTime = System.currentTimeMillis();
 
@@ -95,6 +97,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 				Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkusForSplitter(cartLineItem.getProductVariant(), filter, cartLineItem);
 				for (SkuInfo skuInfo : skuList) {
 					Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+          logger.debug("Sku Info got for splitting is : " +  skuInfo.getSkuId());
 					if(whs.contains(sku.getWarehouse())) {
 						container.addLineItem(sku.getWarehouse(), cartLineItem);
 						isAdded = true;
@@ -140,8 +143,10 @@ public class OrderSplitterImpl implements OrderSplitter {
 				List<DummyOrder> bestShips = null;
 				long bestCost = Long.MAX_VALUE;
 				for (UniqueWhCombination uniqueWhCombination : whCombinations) {
+          logger.debug("Warehouse combination got while splitting is : " + uniqueWhCombination.getBuckets().toArray());
 					List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
 					long cost = calculateCost(order, dummyOrders);
+          logger.debug("Cost got  while splitting is : " + cost);
 					if (cost < bestCost) {
 						bestCost = cost;
 						bestShips = dummyOrders;

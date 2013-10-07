@@ -323,7 +323,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 		Payment payment = shippingOrder.getBaseOrder().getPayment();
 		User adminUser = getUserService().getAdminUser();
 		if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
-			if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+			if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())
+       || shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Ready_For_Validation.getId()) ) {
 				if (shippingOrder.isDropShipping()) {
 					shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
 							shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue),

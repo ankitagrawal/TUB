@@ -732,7 +732,7 @@ public class OrderServiceImpl implements OrderService {
             CartLineItem cartLineItem = lineItem.getCartLineItem();
             // manual split
             if(bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null  || lineItem.getSkuItemLineItems().size() < 1)){
-              logger.debug("Update booking on Bright");
+              logger.debug("Update booking on Bright after splitting");
               Long   warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
               Warehouse warehouse = warehouseService.getWarehouseById(warehousIdForAqua);
               List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(warehouse.getTinPrefix());
@@ -788,6 +788,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, Long warehouseId) {
+    logger.debug(" Going to book inventory at Bright for lineItem --" + lineItem.getId());
     List<HKAPIForeignBookingResponseInfo> infos = null;
     List<HKAPIForeignBookingResponseInfo> infos1 = new ArrayList<HKAPIForeignBookingResponseInfo>();
     try {
@@ -811,6 +812,7 @@ public class OrderServiceImpl implements OrderService {
         ClientResponse response = request.post();
         int status = response.getStatus();
         if (status == 200) {
+          logger.debug(" got Success response during bright inv  booking for lineitem  " + lineItem.getId());
           String data = (String) response.getEntity(String.class);
           Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
           }.getType();
@@ -821,7 +823,7 @@ public class OrderServiceImpl implements OrderService {
     } catch (Exception e) {
       logger.error("Exception while booking/updating Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId(), e);
     }
-
+    logger.debug(" Infos got from bright for booking inv for lineItem" + lineItem.getId() + " infos --" + infos1);
     return infos1;
 
   }
