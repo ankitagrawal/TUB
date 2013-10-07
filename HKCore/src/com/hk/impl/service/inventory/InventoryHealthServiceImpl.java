@@ -1184,8 +1184,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       return true;
     }
 
-    boolean sicliAlreadyCreated = false;
 
+    boolean sicliAlreadyCreated = false ;
+    if (cartLineItem.getSkuItemCLIs()  != null && cartLineItem.getSkuItemCLIs().size() > 0) {
+      sicliAlreadyCreated = true;
+    }
     // it means no entry
 
     List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
@@ -1193,13 +1196,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
     if (countOfAvailableUnBookedSkuItemsInAqua >= cartLineItem.getQty()) {
-      if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
-        cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
-      }
+       if (!sicliAlreadyCreated ) {
+         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+       }
+
       getBaseDao().refresh(cartLineItem);
-      if (cartLineItem.getSkuItemCLIs()  != null || cartLineItem.getSkuItemCLIs().size() > 0) {
-        sicliAlreadyCreated = true;
-      }
+
       List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
       for (SkuItemCLI skuItemCLI : skuItemCLIs) {
         SkuItem skuItem = null;
