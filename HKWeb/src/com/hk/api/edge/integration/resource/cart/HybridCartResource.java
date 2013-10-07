@@ -151,6 +151,7 @@ public class HybridCartResource {
       UpdateCartResponseFromHKR updateCartResponseFromHKR = new UpdateCartResponseFromHKR(user.getId());
       ProductVariant productVariant = getProductVariantService().getVariantById(addVariantWithExtraOptions.getOldVariantId());
       if(productVariant!=null){
+        productVariant.setQty(1L);
         try {
           List<ProductLineItemWithExtraOptionsDto> productLineItemWithExtraOptionsDtos = new ArrayList<ProductLineItemWithExtraOptionsDto>();
           if(addVariantWithExtraOptions.getLeftExtOpt()!=null && StringUtils.isNotBlank(addVariantWithExtraOptions.getLeftExtOpt())){
@@ -170,11 +171,13 @@ public class HybridCartResource {
           updateCartResponseFromHKR.setCartSummaryFromHKR(cartSummaryFromHKR);
           updateCartResponseFromHKR.setLastAddedItemName(productVariant.getVariantName());
           updateCartResponseFromHKR.setLoginForUser(user.getLogin());
+          return new JSONResponseBuilder().addField("results",updateCartResponseFromHKR).build();
         } catch (OutOfStockException e) {
           updateCartResponseFromHKR.setException(true).addMessage(MessageConstants.PRODUCT_OOS);
           return new JSONResponseBuilder().addField("results",updateCartResponseFromHKR).build();
         } catch(Exception ex){
           updateCartResponseFromHKR.setException(true).addMessage(MessageConstants.UNABLE_TO_ADD_TO_CART);
+          return new JSONResponseBuilder().addField("results",updateCartResponseFromHKR).build();
         }
       }else{
         updateCartResponseFromHKR.setException(true).addMessage(MessageConstants.UNABLE_TO_ADD_TO_CART);
