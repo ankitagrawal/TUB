@@ -1214,6 +1214,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         skuItemLineItem.setUnitNum(skuItemCLI.getUnitNum());
         skuItemLineItem.setCreateDate(new Date());
         skuItemLineItem.setSkuItemCLI(skuItemCLI);
+        skuItemLineItem.setSkuItem(skuItem);
         baseDao.save(skuItemLineItem);
       }
       return true;
