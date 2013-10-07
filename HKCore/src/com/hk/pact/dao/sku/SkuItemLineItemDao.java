@@ -35,5 +35,5 @@ public interface SkuItemLineItemDao extends BaseDao {
 
   public Long getUnbookedCLICount(ProductVariant productVariant);
 
-  public Long getUnbookedLICount(List<Sku> skuList);
+  public Long getUnbookedLICount(List<Sku> skuList, Double mrp);
 }

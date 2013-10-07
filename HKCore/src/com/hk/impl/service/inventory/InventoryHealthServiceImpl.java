@@ -24,6 +24,7 @@ import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
@@ -68,8 +69,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   CartLineItemDao cartLineItemDao;
 
   ShippingOrderService shippingOrderService;
-/*  @Autowired
-  AdminOrderService adminOrderService;*/
+
+  private SkuItemLineItemDao skuItemLineItemDao;
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
@@ -257,40 +258,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
     Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 
-      for (SkuInfo skuInfo : checkedInInvList) {
-          logger.debug("checkedInInvList skuInfo " + skuInfo.toString());
-      }
-
-    Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
-
-    List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
-
-      for (SkuInfo skuInfo : inProcessList) {
-          logger.debug("inProcessList skuInfo " + skuInfo.toString());
-      }
-
-
-    if (inProcessList != null) {
-      for (SkuInfo inProcessInfo : inProcessList) {
-        List<SkuInfo> infos = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
-        long leftQty = inProcessInfo.getQty();
-        for (SkuInfo skuInfo : infos) {
-
-            logger.debug("searchBySkuIdAndMrp skuInfo " + skuInfo.toString());
-
-          long qty = skuInfo.getQty() - leftQty;
-          if (qty < 0) {
-            leftQty = -qty;
-            skuInfo.setQty(0);
-            skuInfo.setUnbookedQty(0);
-          } else {
-            leftQty = 0;
-            skuInfo.setQty(qty);
-            skuInfo.setUnbookedQty(qty);
-          }
-        }
-      }
+    for (SkuInfo skuInfo : checkedInInvList) {
+      logger.debug("checkedInInvList skuInfo " + skuInfo.toString());
     }
+
 
     List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
     Map<Double, List<InventoryInfo>> mrpMap = new LinkedHashMap<Double, List<InventoryInfo>>();
@@ -314,16 +285,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       }
       info.addSkuInfo(skuInfo);
     }
-
+    
+    Map<Sku, Map<Double, Long>> skuMrpUnbookedQtyMap = new HashMap<Sku, Map<Double, Long>>();
     for (Map.Entry<Double, List<InventoryInfo>> entry : mrpMap.entrySet()) {
       Double mrp = entry.getKey();
-      Long bookedQty = bookedQtyMap.get(mrp);
-
-      if (bookedQty != null) {
-        long leftQty = bookedQty;
         for (InventoryInfo inventoryInfo : entry.getValue()) {
           long netInveQty = 0l;
           for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+            Sku sku = getBaseDao().get(Sku.class, skuInfo.getSkuId());
+            Map<Double, Long> mrpUnbookedQtyMap = skuMrpUnbookedQtyMap.get(sku);
+            if (mrpUnbookedQtyMap == null) {
+              mrpUnbookedQtyMap = new HashMap<Double, Long>();
+              Long unbookedQty = mrpUnbookedQtyMap.get(mrp);
+              if (unbookedQty == null) {
+                unbookedQty = getSkuItemLineItemDao().getUnbookedLICount(Arrays.asList(sku), mrp);
+                mrpUnbookedQtyMap.put(mrp, unbookedQty);
+              }
+              skuMrpUnbookedQtyMap.put(sku, mrpUnbookedQtyMap);
+            }
+            long leftQty = skuMrpUnbookedQtyMap.get(sku).get(mrp);
             long qty = skuInfo.getQty() - leftQty;
             if (qty < 0) {
               leftQty = -qty;
@@ -332,11 +312,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
               leftQty = 0;
               skuInfo.setQty(qty);
             }
+            skuMrpUnbookedQtyMap.get(sku).put(mrp, leftQty);
+
             netInveQty += skuInfo.getQty();
           }
           inventoryInfo.setQty(netInveQty);
         }
-      }
     }
     return invList;
   }
@@ -800,7 +781,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     return ServiceLocatorFactory.getService(ShippingOrderService.class);
   }
 
-/*  public AdminOrderService getAdminOrderService() {
-    return adminOrderService;
-  }*/
+  public SkuItemLineItemDao getSkuItemLineItemDao() {
+    if(skuItemLineItemDao == null){
+      skuItemLineItemDao = ServiceLocatorFactory.getService(SkuItemLineItemDao.class);
+    }
+    return skuItemLineItemDao;
+  }
 }

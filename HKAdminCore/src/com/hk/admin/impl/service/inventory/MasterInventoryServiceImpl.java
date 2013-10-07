@@ -102,7 +102,7 @@ public class MasterInventoryServiceImpl implements MasterInventoryService {
 
   @Override
   public Long getUnbookedLIUnits(List<Sku> skuList, Double mrp) {
-    return getSkuItemLineItemDao().getUnbookedLICount(skuList);
+    return getSkuItemLineItemDao().getUnbookedLICount(skuList, mrp);
   }
 
   @Override

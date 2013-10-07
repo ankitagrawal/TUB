@@ -89,7 +89,7 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
     return cliQty != null ? cliQty : 0L;
   }
 
-  public Long getUnbookedLICount(List<Sku> skuList) {
+  public Long getUnbookedLICount(List<Sku> skuList, Double mrp) {
     Long liQty = 0L;
     if(skuList != null && !skuList.isEmpty()){
     List<Long> statuses = new ArrayList<Long>();
@@ -97,10 +97,18 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
 
     String query2 = " select sum(li.qty) from LineItem li inner join li.shippingOrder as so " +
         "where li.sku in (:skuList) and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.skuItemLineItems.size <= 0 ";
+      if(mrp != null){
+      query2 += "and li.markedPrice = :mrp ";
+      }
 
-    liQty = (Long) getSession().createQuery(query2)
-        .setParameterList("shippingOrderStatusIds", statuses)
-        .setParameterList("skuList", skuList).uniqueResult();
+      Query query = getSession().createQuery(query2)
+          .setParameterList("shippingOrderStatusIds", statuses)
+          .setParameterList("skuList", skuList);
+      if (mrp != null) {
+        query = query.setParameter("mrp", mrp);
+      }
+
+      liQty = (Long) query.uniqueResult();
 
     }
     return liQty != null ? liQty : 0L;
