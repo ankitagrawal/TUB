@@ -75,7 +75,7 @@
 
 </style>
 <h2>
-  SKU Details of Variant = ${productVariant.id}
+  SKU Details of Variant = ${productVariant.id} | ${productVariant.product.name} - ${productVariant.optionsCommaSeparated}
 </h2>
 
     <div>
