@@ -45,7 +45,9 @@ public class MasterInventoryServiceImpl implements MasterInventoryService {
       skuDetails.setSku(sku);
       skuDetails.setPhyQty(getUncheckedOutUnits(Arrays.asList(sku)));
       skuDetails.setCiQty(getCheckedInUnits(Arrays.asList(sku)));
+      skuDetails.setCiQtyUnderReview(getUnderReviewCheckedInUnits(Arrays.asList(sku)));
       skuDetails.setBookedQty(getBookedUnits(Arrays.asList(sku)));
+      skuDetails.setBookedQtyUnderReview(getUnderReviewBookedUnits(Arrays.asList(sku)));
       skuDetails.setUnbookedLIQty(getUnbookedLIUnits(Arrays.asList(sku)));
 
       skuDetailsList.add(skuDetails);
@@ -57,7 +59,15 @@ public class MasterInventoryServiceImpl implements MasterInventoryService {
   public Long getCheckedInUnits(List<Sku> skuList) {
     List<SkuItem> skuItems = getSkuItemDao().getSkuItems(skuList,
         Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()),
-        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null);
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null, false);
+    return skuItems != null && !skuItems.isEmpty() ? Long.valueOf(skuItems.size()) : 0L;
+  }
+
+  @Override
+  public Long getUnderReviewCheckedInUnits(List<Sku> skuList) {
+    List<SkuItem> skuItems = getSkuItemDao().getSkuItems(skuList,
+        Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()),
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null, true);
     return skuItems != null && !skuItems.isEmpty() ? Long.valueOf(skuItems.size()) : 0L;
   }
 
@@ -65,7 +75,15 @@ public class MasterInventoryServiceImpl implements MasterInventoryService {
   public Long getBookedUnits(List<Sku> skuList) {
     List<SkuItem> skuItems = getSkuItemDao().getSkuItems(skuList,
         Arrays.asList(EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId()),
-        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null);
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null, false);
+    return skuItems != null && !skuItems.isEmpty() ? Long.valueOf(skuItems.size()) : 0L;
+  }
+
+  @Override
+  public Long getUnderReviewBookedUnits(List<Sku> skuList) {
+    List<SkuItem> skuItems = getSkuItemDao().getSkuItems(skuList,
+        Arrays.asList(EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId()),
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null, true);
     return skuItems != null && !skuItems.isEmpty() ? Long.valueOf(skuItems.size()) : 0L;
   }
 
@@ -73,7 +91,7 @@ public class MasterInventoryServiceImpl implements MasterInventoryService {
   public Long getUncheckedOutUnits(List<Sku> skuList) {
     List<SkuItem> skuItems = getSkuItemDao().getSkuItems(skuList,
         Arrays.asList(EnumSkuItemStatus.Checked_IN.getId(), EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId()),
-        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null);
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null, false);
     return skuItems != null && !skuItems.isEmpty() ? Long.valueOf(skuItems.size()) : 0L;
   }
 
@@ -105,6 +123,15 @@ public class MasterInventoryServiceImpl implements MasterInventoryService {
     Long unbookedCLIUnits = getUnbookedCLIUnits(productVariant);
     Long unbookedLIUnits = getUnbookedLIUnits(skuList);
     return inUnits - unbookedCLIUnits - unbookedLIUnits;
+  }
+
+  @Override
+  public Long getUnderReviewUnits(ProductVariant productVariant) {
+    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+    List<SkuItem> skuItems = getSkuItemDao().getSkuItems(skuList,
+        Arrays.asList(EnumSkuItemStatus.Checked_IN.getId(), EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId()),
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null, true);
+    return skuItems != null && !skuItems.isEmpty() ? Long.valueOf(skuItems.size()) : 0L;
   }
 
   public SkuService getSkuService() {

@@ -17,6 +17,7 @@
             pageContext.setAttribute("skuDetailsList", skuDetailsList);
             pageContext.setAttribute("unbookedCLIUnits", masterInventoryService.getUnbookedCLIUnits(productVariant));
             pageContext.setAttribute("availableUnits", masterInventoryService.getAvailableUnits(productVariant));
+            pageContext.setAttribute("underReviewUnits", masterInventoryService.getUnderReviewUnits(productVariant));
         }
     }
 
@@ -75,15 +76,17 @@
 
     <div>
         <div style="font-weight:bold;">
-            Variant = ${productVariant.id} | Unbooked CLI Qty = ${unbookedCLIUnits} | Available Qty = ${availableUnits}
+            Variant = ${productVariant.id} | Unbooked CLI Qty = ${unbookedCLIUnits} | Available Qty = ${availableUnits} | Under Review Units = ${underReviewUnits}
         </div>
-        <table style="font-size: .8em; width:700px; padding:0">
+        <table style="font-size: .8em; width:800px; padding:0">
             <tr>
                 <th>SKU ID</th>
                 <th>WH</th>
                 <th>Phy Qty</th>
                 <th>CI Qty</th>
+                <th>CI Qty <br/> (Under Review)</th>
                 <th>Booked Qty</th>
+                <th>Booked Qty <br/> (Under Review)</th>
                 <th>Unbooked LI Qty</th>
                 <th>Available Qty</th>
             </tr>
@@ -93,7 +96,9 @@
                     <td>${skuDetails.sku.warehouse.identifier}</td>
                     <td>${skuDetails.phyQty}</td>
                     <td>${skuDetails.ciQty}</td>
+                    <td>${skuDetails.ciQtyUnderReview}</td>
                     <td>${skuDetails.bookedQty}</td>
+                    <td>${skuDetails.bookedQtyUnderReview}</td>
                     <td>${skuDetails.unbookedLIQty}</td>
                     <td>${skuDetails.ciQty - skuDetails.unbookedLIQty}</td>
                 </tr>
