@@ -3,9 +3,11 @@ package com.hk.api.edge.integration.resource.cart;
 import com.hk.api.edge.constants.MessageConstants;
 import com.hk.api.edge.integration.pact.service.cart.HybridCartService;
 import com.hk.api.edge.integration.request.variant.AddProductVariantToCartRequest;
+import com.hk.api.edge.integration.request.variant.AddVariantWithExtraOptions;
 import com.hk.api.edge.integration.response.cart.CartSummaryFromHKR;
 import com.hk.api.edge.integration.response.cart.UpdateCartResponseFromHKR;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.edge.pact.service.HybridStoreVariantService;
@@ -17,7 +19,9 @@ import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.report.dto.order.ProductLineItemWithExtraOptionsDto;
 import com.hk.util.json.JSONResponseBuilder;
+import net.sourceforge.stripes.validation.SimpleError;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -129,6 +133,70 @@ public class HybridCartResource {
         return new JSONResponseBuilder().addField("results", MessageConstants.UNABLE_TO_ADD_TO_CART).build();
 
     }
+
+  @SuppressWarnings("deprecation")
+  @POST
+  @Path("/extOpt/add")
+  public String addProductVariantToHKRCartWithExtOpt(AddVariantWithExtraOptions addVariantWithExtraOptions){
+    if (StringUtils.isNotBlank(addVariantWithExtraOptions.getOldVariantId())) {
+      User user = null;
+      if (addVariantWithExtraOptions.getUserId() != null) {
+        user = getUserService().getUserById(addVariantWithExtraOptions.getUserId());
+      }
+      if (user == null) {
+        user = getUserManager().createAndLoginAsGuestUser(null, null);
+      }
+
+      Order order = getOrderManager().getOrCreateOrder(user);
+      UpdateCartResponseFromHKR updateCartResponseFromHKR = new UpdateCartResponseFromHKR(user.getId());
+      ProductVariant productVariant = getProductVariantService().getVariantById(addVariantWithExtraOptions.getOldVariantId());
+      if(productVariant!=null){
+        try {
+          List<ProductLineItemWithExtraOptionsDto> productLineItemWithExtraOptionsDtos = new ArrayList<ProductLineItemWithExtraOptionsDto>();
+          if(addVariantWithExtraOptions.getLeftExtOpt()!=null && StringUtils.isNotBlank(addVariantWithExtraOptions.getLeftExtOpt())){
+            productLineItemWithExtraOptionsDtos.add(getProductLineItemWithExtraOptionsDtoByExtOptions(productVariant, addVariantWithExtraOptions.getLeftExtOpt()));
+          }
+          if(addVariantWithExtraOptions.getRightExtOpt()!=null && StringUtils.isNotBlank(addVariantWithExtraOptions.getRightExtOpt())){
+            productLineItemWithExtraOptionsDtos.add(getProductLineItemWithExtraOptionsDtoByExtOptions(productVariant, addVariantWithExtraOptions.getRightExtOpt()));
+          }
+          for (ProductLineItemWithExtraOptionsDto dto : productLineItemWithExtraOptionsDtos) {
+            List<CartLineItemExtraOption> extraOptions = dto.getExtraOptions();
+            getOrderManager().createLineItems(productVariant, extraOptions, order, null);
+            userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
+          }
+          Long itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size()) + 1L;
+          CartSummaryFromHKR cartSummaryFromHKR = new CartSummaryFromHKR();
+          cartSummaryFromHKR.setItemsInCart(Integer.valueOf(itemsInCart.toString()));
+          updateCartResponseFromHKR.setCartSummaryFromHKR(cartSummaryFromHKR);
+          updateCartResponseFromHKR.setLastAddedItemName(productVariant.getVariantName());
+          updateCartResponseFromHKR.setLoginForUser(user.getLogin());
+        } catch (OutOfStockException e) {
+          updateCartResponseFromHKR.setException(true).addMessage(MessageConstants.PRODUCT_OOS);
+          return new JSONResponseBuilder().addField("results",updateCartResponseFromHKR).build();
+        } catch(Exception ex){
+          updateCartResponseFromHKR.setException(true).addMessage(MessageConstants.UNABLE_TO_ADD_TO_CART);
+        }
+      }else{
+        updateCartResponseFromHKR.setException(true).addMessage(MessageConstants.UNABLE_TO_ADD_TO_CART);
+      }
+    }
+    return new JSONResponseBuilder().addField("results", MessageConstants.UNABLE_TO_ADD_TO_CART).build();
+  }
+
+  private ProductLineItemWithExtraOptionsDto getProductLineItemWithExtraOptionsDtoByExtOptions(ProductVariant productVariant, String extOption){
+    ProductLineItemWithExtraOptionsDto productLineItemWithExtraOptionsDto = new ProductLineItemWithExtraOptionsDto();
+    productLineItemWithExtraOptionsDto.setProductVariant(productVariant);
+    String[] extOpt = extOption.split(",");
+    List<CartLineItemExtraOption> cartLineItemExtraOptions = new ArrayList<CartLineItemExtraOption>();
+    for(String exOp : extOpt){
+      CartLineItemExtraOption cartLineItemExtraOption = new CartLineItemExtraOption();
+      cartLineItemExtraOption.setName(exOp.split(":")[0]);
+      cartLineItemExtraOption.setValue(exOp.split(":")[1]);
+      cartLineItemExtraOptions.add(cartLineItemExtraOption);
+    }
+    productLineItemWithExtraOptionsDto.setExtraOptions(cartLineItemExtraOptions);
+    return productLineItemWithExtraOptionsDto;
+  }
 
     public HybridCartService getHybridCartService() {
         return hybridCartService;
