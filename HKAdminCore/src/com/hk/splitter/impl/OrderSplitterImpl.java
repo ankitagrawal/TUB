@@ -148,6 +148,10 @@ public class OrderSplitterImpl implements OrderSplitter {
                 for (UniqueWhCombination uniqueWhCombination : whCombinations) {
                     List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
                     long cost = calculateCost(order, dummyOrders);
+                    for (DummyOrder dummyOrder : dummyOrders) {
+                        logger.debug("For Combination" + dummyOrder.toString());
+                    }
+                    logger.debug("Shipping Cost Plus Tax calculated is " + cost);
                     dummyOrderCostingMap.put(dummyOrders, cost);
                 }
             }

@@ -51,6 +51,7 @@
                         <div style="margin-top:15px;"></div>
                         <s:submit name="splitOrderPractically" value="Split Order Practically" style="float:left"/>
                         <s:submit name="splitOrderIdeally" value="Split Order Ideally" style="float:left"/>
+                        <s:submit name="splitViaNewSplitter" value="Split Order Via New Splitter" style="float:left"/>
                     </fieldset>
                 </s:form>
             </div>
