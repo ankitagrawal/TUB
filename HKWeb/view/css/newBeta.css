@@ -6637,6 +6637,20 @@ label{
     height: 10px;
     cursor: pointer;
 }
+.icn-expand2 {
+    background: url(../images/arrow-down.png) no-repeat center;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    float: right;
+}
+.icn-collapse2 {
+    background: url(../images/arrow-up.png) no-repeat center;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    float: right;
+}
 
 .icn-add-img {
     background: url(../images/add-img.png) no-repeat center;
@@ -7993,5 +8007,6 @@ input[type="text"]:focus, input[type="password"]:focus{
 .disp-blk {
     display: block;
 }
-
+.hide{display: none;}
+.show{display: block;}
 /* display box css ends */

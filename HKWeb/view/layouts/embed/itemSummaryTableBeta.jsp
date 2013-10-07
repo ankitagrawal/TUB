@@ -20,7 +20,8 @@ Pass an attribute called pricingDto to render a table with pricing details
 
 <div class="topFullContainer">
 <div class='orderSummaryHeading'>
-    <div class="productGrid">Product</div>
+    <div class="productGrid">${fn:length(youBoughtText)>0 ? youBoughtText:'Product'} </div>
+
     <div class="prodQuantityGrid">Qty</div>
     <div class="prodDispatchGrid">Dispatch</div>
         <%--<span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>--%>
