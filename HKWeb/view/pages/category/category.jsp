@@ -186,8 +186,8 @@
               </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
-                <a class="dietPlan" href="#" style="cursor: pointer;">
-                                    <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
+                <a href="${pageContext.request.contextPath}/brand/health-nutrition/HealthViva">
+                                    <img src="${pageContext.request.contextPath}/images/banners/HN-strip-banner.jpg"
                                          alt="DIET_PLAN" class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/pages/offers/top-nutrition-brands/top-nut-brands.jsp">
