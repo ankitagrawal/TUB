@@ -24,6 +24,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.edge.pact.service.HybridStoreVariantService;
 import com.hk.edge.request.VariantPricingSyncRequest;
+import com.hk.edge.request.VariantSavedSyncRequest;
 import com.hk.edge.request.VariantStockSyncRequest;
 import com.hk.edge.response.variant.StoreVariantBasicResponse;
 import com.hk.edge.response.variant.StoreVariantBasicResponseWrapper;
@@ -73,8 +74,27 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     }
 
     @Override
-    public void syncAllVariantDetailsFromEdge() {
-        // TODO Auto-generated method stub
+    public void syncVariantSaveFromEdge(VariantSavedSyncRequest variantSavedSyncRequest) {
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantSavedSyncRequest.getOldVariantId());
+
+        if (productVariant != null) {
+            productVariant.setHkPrice(Double.valueOf(((Integer) variantSavedSyncRequest.getOfferPrice()).toString()));
+            productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
+
+            //avoiding lazy init exception here
+            Product product = getProductService().getProductById(productVariant.getProduct().getId());
+            product.setCodAllowed(variantSavedSyncRequest.isCodAllowed());
+            product.setJit(variantSavedSyncRequest.isJit());
+            product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
+            product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
+
+            if (variantSavedSyncRequest.isJit()) {
+                productVariant.setMarkedPrice(variantSavedSyncRequest.getMrp());
+            }
+
+            getBaseDao().save(product);
+            getBaseDao().save(productVariant);
+        }
 
     }
 

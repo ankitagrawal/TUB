@@ -12,13 +12,15 @@ import org.springframework.stereotype.Component;
 
 import com.hk.edge.pact.service.HybridStoreVariantService;
 import com.hk.edge.request.VariantPricingSyncRequest;
+import com.hk.edge.request.VariantSavedSyncRequest;
 import com.hk.util.json.JSONResponseBuilder;
 
 @Component
 @Path("/hkr/sync/")
 public class SyncResource {
 
-    private ExecutorService           pricingSyncExecutorService = Executors.newFixedThreadPool(40);
+    private ExecutorService           pricingSyncExecutorService     = Executors.newFixedThreadPool(40);
+    private ExecutorService           variantSaveSyncExecutorService = Executors.newFixedThreadPool(40);
 
     @Autowired
     private HybridStoreVariantService hybridStoreVariantService;
@@ -35,6 +37,20 @@ public class SyncResource {
             }
         });
         return new JSONResponseBuilder().addField("msg", "synced for" + variantPricingSyncRequest.getOldVariantId()).build();
+    }
+
+    @POST
+    @Path("/variant/save")
+    @Produces("application/json")
+    public String syncVariantSaveFromEdge(final VariantSavedSyncRequest variantSavedSyncRequest) {
+
+        variantSaveSyncExecutorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                getHybridStoreVariantService().syncVariantSaveFromEdge(variantSavedSyncRequest);
+            }
+        });
+        return new JSONResponseBuilder().addField("msg", "synced for" + variantSavedSyncRequest.getOldVariantId()).build();
     }
 
     public HybridStoreVariantService getHybridStoreVariantService() {
