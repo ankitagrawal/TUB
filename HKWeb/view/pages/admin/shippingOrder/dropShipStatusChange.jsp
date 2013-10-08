@@ -39,10 +39,10 @@
                         <span style="color:blue;"> ${dropShip.shippingOrder.dropShipping}</span>
                         <c:choose>
                             <c:when test="${dropShip.shippingOrder.dropShipping==true}">
-                                <s:submit name="removeDropShip" value="RemoveDropShip" id="removeDropShipStatus"/>
+                                <s:submit name="removeDropShipStatus" value="RemoveDropShip" id="removeDropShipStatus"/>
                             </c:when>
                             <c:otherwise>
-                                <s:submit name="addDropShip" value="AddDropShip" id="addDropShipStatus"/>
+                                <s:submit name="addDropShipStatus" value="AddDropShip" id="addDropShipStatus"/>
                             </c:otherwise>
 
                         </c:choose>
