@@ -26,7 +26,7 @@
     Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
 		boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
-    String orderConfirmRoute = (String) ServiceLocatorFactory.getService(Keys.Env.codRoute);
+    String orderConfirmRoute = (String) ServiceLocatorFactory.getProperty(Keys.Env.codRoute);
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
@@ -302,7 +302,7 @@
 
                         <p style="margin-left: 100px"><strong class="orangeBold">Please ensure that you enter the correct mobile number</strong></p>
                         <c:choose>
-                            <c:when test="${orderConfirmRoute eq 'smsCountry'}">
+                            <c:when test="${orderConfirmRoute == 'smsCountry'}">
                                 <p style="font-weight: 500">
                                     After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
                                     You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.

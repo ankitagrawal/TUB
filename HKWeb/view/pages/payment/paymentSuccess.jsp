@@ -14,7 +14,7 @@
 <%
     Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
     Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
-    String orderConfirmRoute = (String) ServiceLocatorFactory.getService(Keys.Env.codRoute);
+    String orderConfirmRoute = (String) ServiceLocatorFactory.getProperty(Keys.Env.codRoute);
 %>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentModeCOD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -280,14 +280,15 @@
 
             <div class="leftPS">
             <div>
-                <c:choose>
+                 <c:choose>
                     <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
                         <c:choose>
                             <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
                                 <%--your cod ka message--%>
 
                                 <c:choose>
-                                    <c:when test="${orderConfirmRoute eq 'smsCountry'}">
+
+                                    <c:when test="${orderConfirmRoute == 'smsCountry'}">
                                         <div class="congratsText" style="font-size: 1.25em">Your order has been received and is <span class="orangeBold">pending verification</span></div>
                                         <div style="position: relative;bottom: 15px;" >
                                             <div class="icnTriangle"></div>
