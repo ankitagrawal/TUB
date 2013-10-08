@@ -299,11 +299,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
               Long unbookedQty = mrpUnbookedQtyMap.get(mrp);
               if (unbookedQty == null) {
                 unbookedQty = getSkuItemLineItemDao().getUnbookedLICount(Arrays.asList(sku), mrp);
+                logger.debug("Unbooked Qty for SKU=" + sku.getId() + ";mrp=" + mrp + "; qty=" + unbookedQty);
                 mrpUnbookedQtyMap.put(mrp, unbookedQty);
               }
               skuMrpUnbookedQtyMap.put(sku, mrpUnbookedQtyMap);
             }
-            long leftQty = skuMrpUnbookedQtyMap.get(sku).get(mrp);
+            long leftQty = 0l;
+            if (skuMrpUnbookedQtyMap.get(sku) != null && skuMrpUnbookedQtyMap.get(sku).get(mrp) != null){
+              leftQty = skuMrpUnbookedQtyMap.get(sku).get(mrp);
+              logger.debug("Left Unbooked Qty for SKU=" + sku.getId() + ";mrp=" + mrp + "; qty=" + leftQty);
+            }
             long qty = skuInfo.getQty() - leftQty;
             if (qty < 0) {
               leftQty = -qty;

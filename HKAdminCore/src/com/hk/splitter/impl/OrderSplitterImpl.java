@@ -266,6 +266,7 @@ public class OrderSplitterImpl implements OrderSplitter {
         }
     }
 
+  //TODO: Seems problem here
     private List<DummyOrder> createDummyOrders(Order order, UniqueWhCombination combination) {
         Collection<WarehouseBucket> whBuckets = combination.getBuckets();
         List<DummyOrder> dummyOrders = new ArrayList<DummyOrder>();
