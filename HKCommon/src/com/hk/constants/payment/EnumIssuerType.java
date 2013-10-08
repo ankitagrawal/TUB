@@ -10,8 +10,8 @@ package com.hk.constants.payment;
 public enum EnumIssuerType {
 
     Bank("Bank", "Bank"),
-    Card("Card", "Card");
-
+    Card("Card", "Card"),
+    Debit("Debit","Debit");
     private java.lang.String name;
     private String id;
 
