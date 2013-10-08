@@ -286,10 +286,15 @@ public class UserOrderResource {
                     logger.debug("Order Payment Already Confirmed" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-                adminOrderService.confirmCodOrder(order, source, null);
-                userCodCall.setRemark("Confirmed By Customer");
-                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
-                userCodCall.setSource("Healthkart");
+                if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
+                    List<EnumOrderStatus> actionQueueOrderStatusList = EnumOrderStatus.getStatusForActionQueue();
+                    if (EnumOrderStatus.getOrderStatusIDs(actionQueueOrderStatusList).contains(order.getOrderStatus().getId())) {
+                        adminOrderService.confirmCodOrder(order, source, null);
+                        userCodCall.setRemark("Confirmed By Customer");
+                        userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+                        userCodCall.setSource("Healthkart");
+                    }
+                }
             } else if (action.equalsIgnoreCase(HKAPIConstants.HEALTHKART)) {
                 userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getName());
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
