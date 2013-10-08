@@ -88,7 +88,7 @@
 </s:layout-component>
 <s:layout-component name="heading">
    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
-  <div>
+  <%--<div>
     <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
      <c:if test="${actionBean.payment.paymentMode.id != paymentModeCOD}">
       <c:choose>
@@ -100,7 +100,7 @@
         </c:otherwise>
       </c:choose></c:if>
     </a>
-  </div>
+  </div>--%>
 </s:layout-component>
 
 <s:layout-component name="left_col">
