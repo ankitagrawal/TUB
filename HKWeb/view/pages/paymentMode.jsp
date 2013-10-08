@@ -148,7 +148,7 @@
 <div class='left_controls tabs'>
     <ul>
         <li class='selected' id="tab1">Credit Cards</li>
-        <li class='selected' id="tab9">Debit Cards</li>
+        <li id="tab9">Debit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
             <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
