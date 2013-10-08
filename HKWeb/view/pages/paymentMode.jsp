@@ -148,7 +148,7 @@
 <div class='left_controls tabs'>
     <ul>
         <li class='selected' id="tab1">Credit Cards</li>
-        <li id="tab9">Debit Cards</li>
+        <li id="tab2">Debit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
             <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
@@ -493,13 +493,13 @@
               $("input:radio:checked").attr('checked', false);
           });
         $('#tab1').trigger('click');
-        $("#tab9").click(function(){
+        $("#tab2").click(function(){
             // alert("test");
             $("#CODOption").hide();
             $("#nonCODOption").show();
             $("input:radio:checked").attr('checked', false);
         });
-        $('#tab9').trigger('click');
+        $('#tab2').trigger('click');
         $("#tab5").click(function(){
             $("#CODOption").hide();
             $("#nonCODOption").show();
@@ -513,10 +513,6 @@
         $("#tab4").click(function(){
             $("#CODOption").show();
             $("#nonCODOption").hide();
-        });
-        $("#tab2").click(function(){
-            $("#CODOption").hide();
-            $("#nonCODOption").show();
         });
         $("#tab6").click(function(){
             $("#CODOption").hide();
