@@ -9,7 +9,7 @@
 <%
   DateTime currentDateTime = new DateTime();
     Date startOfOfferDate = new Date(new DateTime(2013, 9, 27, 00, 00, 00, 00).getMillis());
-    Date endOfOfferDate = new Date(new DateTime(2013, 9, 27, 23, 59, 59, 59).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 10, 02, 23, 59, 59, 59).getMillis());
 %>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Contact Us for Customer Support or Business Queries">
 
@@ -69,7 +69,7 @@
 
       <p style="font-size: 1.2em;">0124-4616444 <br/> <span style="font-size: 10px;">9 AM to 12 AM (midnight)</span></p>
         <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())) {%>
-        <div style="color: red; float: left;">&nbsp;(Customer service will be unavailable from 3:00PM to mid-night today.)
+        <div style="color: red; float: left;">&nbsp;(Customer support will be unavailable on 2nd of October, 2013)
         </div>
         <%}%>
 

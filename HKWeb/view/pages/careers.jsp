@@ -414,7 +414,7 @@
 
 <div id="tech">
 
-  <h3>Position: Lead/Senior Software Engineer(Java/J2EE)</h3>
+  <h3>Position: Lead/Senior/Junior Software Engineer(Java/J2EE)</h3>
   <p>
     <b>Responsibilities:</b>
   <ul style="list-style:circle; padding-left:20px">
@@ -430,18 +430,20 @@
     <b>Skills required:</b>
   <ul style="list-style:circle; padding-left:20px">
     <li>Language – Java; should be proficient in core java concepts</li>
-    <li>Java Framework Technologies – Hibernate, Spring/Struts/Stripes, Guice</li>
+    <li>Java Framework Technologies – Hibernate, Spring/Struts/Stripes</li>
     <li>DB Technologies: MySQL/Oracle; proficient in DB designing and writing queries</li>
-    <li>Scripting Technologies: Javascript/jQuery, Groovy, Ruby</li>
+    <li>Scripting Technologies: Javascript(jQuery, backbone.js etc.), Groovy</li>
     <li>Front end Technologies: HTML, CSS, JSP</li>
-    <li>Project and Team Management</li>
+    <li>Comfortable in Linux, Tomcat and Apache</li>
+    <li>Others - Solid problem solving skills, quick lerner and good team player</li>
+    <li>Proven record of quality work as an individual and as a team member</li>
   </ul>
   </p>
 
   <p>
     <b>Experience:</b>
   <ul style="list-style:circle; padding-left:20px">
-    <li>5-10 years of experience in Java web application development</li>
+    <li>1-6 years of experience in Java web application development</li>
     <li>Should have worked in a significant capacity in the development stages of an internet based product
     </li>
     <li>Comfortable with the backend stack from business logic to database design</li>
@@ -452,7 +454,7 @@
     <b>Compensation:</b>
   <ul style="list-style:circle; padding-left:20px">
     <li>Would be commensurate with experience</li>
-    <li>Range between Rs 10 LPA to 18 LPA. Will consider higher salary for exceptional candidates</li>
+    <li>Range between Rs 5 LPA to 20 LPA. Will consider higher salary for exceptional candidates</li>
   </ul>
   </p>
 

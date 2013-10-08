@@ -532,8 +532,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		}
 		for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext(); ) {
 			SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
-			baseDao.delete(skuItemCLI);
-			iterator.remove();
+			baseDao.refresh(skuItemCLI);
+			List<SkuItemLineItem> silis = skuItemCLI.getSkuItemLineItems();
+			if (silis != null && silis.size() > 0) {
+				skuItemCLI.setSkuItemLineItems(null);
+				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+				baseDao.deleteAll(silis);
+			}
 		}
     getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Inventory freed for SO.");
 		return true;

@@ -186,8 +186,8 @@
               </script>
             </c:when>
             <c:when test="${categoryBean.category.name eq healthNutrition}">
-                <a class="dietPlan" href="#" style="cursor: pointer;">
-                                    <img src="${pageContext.request.contextPath}/images/banners/GET-FREE-DIET-PLAN.jpg"
+                <a href="${pageContext.request.contextPath}/brand/health-nutrition/HealthViva">
+                                    <img src="${pageContext.request.contextPath}/images/banners/HN-strip-banner.jpg"
                                          alt="DIET_PLAN" class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/pages/offers/top-nutrition-brands/top-nut-brands.jsp">
@@ -208,7 +208,8 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+        <a href="${pageContext.request.contextPath}/product/bajaj-popular-induction-cooktop/BAJ071?productReferrerId=1&bpi">
+                <img src="<hk:vhostImage/>/images/banners/Cooktop.jpg" alt="Free shipping and COD"
                      class="small_banner"/>
             </c:when>
 
@@ -228,7 +229,7 @@
                          class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
-                    <img src="<hk:vhostImage/>/images/banners/product-of-the-week-omron-BP2.jpg" alt="Omron"
+                    <img src="<hk:vhostImage/>/images/banners/Omron-HD.jpg" alt="Omron"
                          class="small_banner"/>
                 </a>
             </c:when>

@@ -143,20 +143,19 @@ public class OrderSplitterImpl implements OrderSplitter {
 				List<DummyOrder> bestShips = null;
 				long bestCost = Long.MAX_VALUE;
 				for (UniqueWhCombination uniqueWhCombination : whCombinations) {
-          logger.debug("Warehouse combination got while splitting is : " + uniqueWhCombination.getBuckets().toArray());
 					List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
 					long cost = calculateCost(order, dummyOrders);
-          logger.debug("Cost got  while splitting is : " + cost);
-					if (cost < bestCost) {
+					// here negative value being sent as invalid value
+					if (cost > 0 && cost <= bestCost) { //a less than equal to check to pick combination for a higher warehouse id
 						bestCost = cost;
 						bestShips = dummyOrders;
 					}
 				}
-				
+
 				if(bestCost == Long.MAX_VALUE) {
 					throw new OrderSplitException("Order is not good for split.", order); 
 				}
-				
+
 				if(bestShips != null) {
 					shippingOrders.addAll(createDaywiseShippingOrders(order, bestShips));
 				}

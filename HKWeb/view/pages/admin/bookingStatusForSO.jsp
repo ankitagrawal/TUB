@@ -29,15 +29,17 @@
 	<c:choose>
 	<c:when test="${adminBookingBean.shippingOrderId!=null && fn:length(adminBookingBean.skuLiList)>0}">
 	Shipping Order Id = ${adminBookingBean.shippingOrderId}
-		<table class="t1" id="skuItemLineItemTable" border="1" >
+		<table class="t1" id="skuItemLineItemTable" border="1" align="center" >
 				<tr>
-					<th>SkuItemLineItem ID</th>
-					<th>Product Variant Id</th>
+					<th>SILI ID</th>
+					<th>PV Id</th>
 					<th>SKU Item ID</th>
 					<th>SKU Item Status</th>
+					<th>Barcode</th>
+					<th>Bin</th>
 					<th>Line Item ID</th>
-					<th>Unit Number Booked</th>
-					<th>SkuItemCartLineItem Id</th>
+					<th>Unit #</th>
+					<th>CLI Id</th>
 					<th>Create Date</th>
 					<th>Update Date</th>
                     <th> Action </th>
@@ -48,6 +50,8 @@
 						<td>${skuItemLineItem.productVariant.id }</td>
 						<td>${skuItemLineItem.skuItem.id }</td>
 						<td>${skuItemLineItem.skuItem.skuItemStatus.name }</td>
+						<td>${skuItemLineItem.skuItem.barcode }</td>
+						<td>${skuItemLineItem.skuItem.bin.barcode }</td>
 						<td>${skuItemLineItem.lineItem.id}</td>
 						<td>${skuItemLineItem.unitNum}</td>
 						<td>${skuItemLineItem.skuItemCLI.id}</td>
@@ -90,12 +94,14 @@
             <div align="center"><label><u><strong>SkuItemCLI entries for Base Order : ${adminBookingBean.baseOrderId }</strong></u></label></div>
 			<table class="t1" id="skuCartItemLineItemTable" border="1">
 				<tr>
-					<th>SkuItemCLI ID</th>
-					<th>Product Variant Id</th>
+					<th>SICLI ID</th>
+					<th>PV Id</th>
 					<th>SKU Item ID</th>
 					<th>SKU Item Status</th>
-					<th>Cart Line Item ID</th>
-					<th>Unit Number Booked</th>
+					<th>Barcode</th>
+					<th>Bin</th>
+					<th>CLI ID</th>
+					<th>Unit #</th>
 					<th>Create Date</th>
 					<th>Update Date</th>
                     <th> Action</th>
@@ -106,6 +112,8 @@
 						<td>${skuCartItemLineItem.productVariant.id }</td>
 						<td>${skuCartItemLineItem.skuItem.id }</td>
 						<td>${skuCartItemLineItem.skuItem.skuItemStatus.name }</td>
+						<td>${skuCartItemLineItem.skuItem.barcode}</td>
+						<td>${skuCartItemLineItem.skuItem.bin.barcode}</td>
 						<td>${skuCartItemLineItem.cartLineItem.id}</td>
 						<td>${skuCartItemLineItem.unitNum}</td>
 						<td>${skuCartItemLineItem.createDate}</td>
@@ -142,15 +150,17 @@
 			<c:forEach var="soSiLiMap" items="${adminBookingBean.soSiLiMap}" varStatus="ctr">
 			<c:if test="${ fn:length(soSiLiMap.value)>0}">
 			Shipping Orders: ${soSiLiMap.key.id}
-			<table class="t1" id="skuItemLineItemTable" border="1">
+			<table class="t1" id="skuItemLineItemTable" border="1" align="center">
 				<tr>
-					<th>SkuItemLineItem ID</th>
-					<th>Product Variant Id</th>
+					<th>SILI ID</th>
+					<th>PV Id</th>
 					<th>SKU Item ID</th>
 					<th>SKU Item Status</th>
+					<th>Barcode</th>
+					<th>Bin</th>
 					<th>Line Item ID</th>
-					<th>Unit Number Booked</th>
-					<th>SkuItemCartLineItem Id</th>
+					<th>Unit #</th>
+					<th>SICLI Id</th>
 					<th>Create Date</th>
 					<th>Update Date</th>
                     <th> Action </th>
@@ -161,6 +171,8 @@
 						<td>${skuItemLineItem.productVariant.id }</td>
 						<td>${skuItemLineItem.skuItem.id }</td>
 						<td>${skuItemLineItem.skuItem.skuItemStatus.name }</td>
+						<td>${skuItemLineItem.skuItem.barcode }</td>
+						<td>${skuItemLineItem.skuItem.bin.barcode }</td>
 						<td>${skuItemLineItem.lineItem.id}</td>
 						<td>${skuItemLineItem.unitNum}</td>
 						<td>${skuItemLineItem.skuItemCLI.id}</td>
