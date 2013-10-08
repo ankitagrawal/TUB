@@ -3218,6 +3218,7 @@ label{
 }
 
 .btn {
+    font-family: 'Open Sans';
     display: inline-block;
     *display: inline;
     text-transform: uppercase;

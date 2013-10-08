@@ -74,7 +74,7 @@
 
         <c:if test="${fn:length(addressBean.addresses)>0}">
             <div class='left2' style="float: left;">
-                <h3 class="arialBlackBold" style="text-align: left; margin-bottom: 20px;">
+                <h3 class="arialBlackBold" style="font-weight: 700;text-align: left; margin-bottom: 20px;">
                     Use one of your saved addresses
                 </h3>
 
@@ -177,10 +177,8 @@
             </div>
         </c:if>
 
-        <div class='right'
-             style="width: 440px; background: initial; border: none; padding: 0 0 0 50px; float: right;   ${fn:length(addressBean.addresses)<=0 ? 'float: none;margin: 0 auto; left:0;' : ''} ">
-            <h3 class="shippingAddressheading arialBlackBold"
-                style="margin-bottom: 20px;float: right;text-align: left;display: inline-block;width: 320px;">
+        <div class='right'style="width: 440px; background: initial; border: none; padding: 0 0 0 50px; float: right;   ${fn:length(addressBean.addresses)<=0 ? 'float: none;margin: 0 auto; left:0;' : ''} ">
+            <h3 class="shippingAddressheading arialBlackBold"  style="font-weight: 700;margin-bottom: 20px;float: right;text-align: left;display: inline-block;width: 255px;">
                 <c:if test="${fn:length(addressBean.addresses)>0}">
                     Or
                 </c:if>
