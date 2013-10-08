@@ -229,7 +229,7 @@
                          class="small_banner"/>
                 </a>
                 <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
-                    <img src="<hk:vhostImage/>/images/banners/product-of-the-week-omron-BP2.jpg" alt="Omron"
+                    <img src="<hk:vhostImage/>/images/banners/Omron-HD.jpg" alt="Omron"
                          class="small_banner"/>
                 </a>
             </c:when>
