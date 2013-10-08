@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
@@ -45,5 +46,14 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
     public List<Reason> getReasonsByType(String type) {
         String queryString = "from Reason r where r.type=:type";
         return findByNamedParams(queryString, new String[]{"type"}, new Object[]{type});
+    }
+
+    public String getAwbByShippingOrderLifeCycle(ShippingOrder shippingOrder) {
+        Long shippingOrderId = shippingOrder.getId();
+        String queryAwb = "select final.sol_awb from ( select shipping_order_id , left(substr(comments,locate('=''', comments)+2),length(substr(comments,locate('=''', comments)+2))-2) as sol_awb," +
+                "max(create_dt) FROM shipping_order_lifecycle where shipping_order_lifecycle_activity_id=616 group by shipping_order_id) final where final.sol_awb REGEXP '^[A-Z,0-9]*[0-9]$' " +
+                "and final.sol_awb is not null and final.shipping_order_id=:shippingOrderId ";
+        return queryAwb;
+
     }
 }

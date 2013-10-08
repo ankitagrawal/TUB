@@ -13,6 +13,7 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -61,6 +62,8 @@ import java.util.List;
     CourierGroupService courierGroupService;
     @Autowired
     private ShipmentPricingEngine shipmentPricingEngine;
+    @Autowired
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
 
     @DontValidate
     @DefaultHandler
@@ -115,7 +118,9 @@ import java.util.List;
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
-        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus())) {
+        String soLifeCycleAwb = shippingOrderLifecycleService.getAwbByShippingOrderLifeCycle(shippingOrder);
+        String shipmentAwb = shipment.getAwb().getAwbNumber();
+        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus()) && soLifeCycleAwb.equals(shipmentAwb)) {
             shipment = shipmentService.save(shipment);
             if (!shippingOrder.isDropShipping()) {
                 shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
@@ -127,7 +132,7 @@ import java.util.List;
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, null, shipment.getAwb().toString());
             addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed"));
+            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed or AWB mismatch"));
         }
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
