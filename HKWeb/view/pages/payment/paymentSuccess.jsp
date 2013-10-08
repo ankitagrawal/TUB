@@ -14,13 +14,14 @@
 <%
     Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
     Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
-
+    String orderConfirmRoute = (String) ServiceLocatorFactory.getService(Keys.Env.codRoute);
 %>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentModeCOD" value="<%=EnumPaymentMode.COD.getId()%>"/>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
+<c:set var="orderConfirmRoute" value="<%=orderConfirmRoute%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 
@@ -284,30 +285,64 @@
                         <c:choose>
                             <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
                                 <%--your cod ka message--%>
-                                <div class="congratsText" style="font-size: 1.25em">Your order has been received and is <span class="orangeBold">pending verification</span></div>
-                                <div style="position: relative;bottom: 15px;" >
-                                <div class="icnTriangle"></div>
-                                <div class="smsConfirmText " style=" height: 135px;background: #ce731a;width: 92.5%;color: #fff;border-radius: 5px;font-size: 0.75em;line-height: 1.5em;word-spacing: 2px;padding: 10px;">
-                                    <div style="float: left; width: 5%">
-                                        <img src="${pageContext.request.contextPath}/images/alert-icon.png" width="50" height="50" style="position: relative; top: 43px"/>
-                                    </div>
-                                    <div style="float: right; width: 89%">
 
-                                        <div style="margin-left:1%; padding-top:1%">ACTION REQUIRED :</div>
-                                        <div style="font-weight : bold; margin-left:1%; padding-top:1%">Please give a missed call on 0124-4616414 to verify your order automatically.
+                                <c:choose>
+                                    <c:when test="${orderConfirmRoute eq 'smsCountry'}">
+                                        <div class="congratsText" style="font-size: 1.25em">Your order has been received and is <span class="orangeBold">pending verification</span></div>
+                                        <div style="position: relative;bottom: 15px;" >
+                                            <div class="icnTriangle"></div>
+                                            <div class="smsConfirmText " style=" height: 135px;background: #ce731a;width: 92.5%;color: #fff;border-radius: 5px;font-size: 0.75em;line-height: 1.5em;word-spacing: 2px;padding: 10px;">
+                                                <div style="float: left; width: 5%">
+                                                    <img src="${pageContext.request.contextPath}/images/alert-icon.png" width="50" height="50" style="position: relative; top: 43px"/>
+                                                </div>
+
+
+                                                <div style="float: right; width: 89%">
+
+                                                    <div style="margin-left:1%; padding-top:1%">ACTION REQUIRED :</div>
+                                                    <div style="font-weight : bold; margin-left:1%; padding-top:1%">Please give a missed call on 0124-4616414 to verify your order automatically.
+                                                    </div>
+                                                    <div style="margin-left:1%;font-size: 1em">(you will receive an SMS confirmation post verification)</div>
+
+                                                    <div style="margin-left:1%; padding-top: 1.5%; font-size: 1em">Please note, you can only verify by calling from the number that you have given as COD contact number - <%=actionBean.getOrder().getAddress().getPhone()%>. In case you are unable to verify, our customer care department will call on the COD contact number to verify your order.</div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <h2 class="orderIdText" style="font-size: 1.25em">
+                                                Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
+                                            </h2>
                                         </div>
-                                        <div style="margin-left:1%;font-size: 1em">(you will receive an SMS confirmation post verification)</div>
 
-                                        <div style="margin-left:1%; padding-top: 1.5%; font-size: 1em">Please note, you can only verify by calling from the number that you have given as COD contact number - <%=actionBean.getOrder().getAddress().getPhone()%>. In case you are unable to verify, our customer care department will call on the COD contact number to verify your order.</div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="congratsText" style="font-size: 1.25em">Your order has been received and is <span class="orangeBold">pending verification</span></div>
+                                        <div style="position: relative;bottom: 15px;" >
+                                            <div class="icnTriangle"></div>
+                                            <div class="smsConfirmText " style=" height: 75px;background: #ce731a;width: 92.5%;color: #fff;border-radius: 5px;font-size: 0.75em;line-height: 1.5em;word-spacing: 2px;padding: 10px;">
+                                                <div style="float: left; width: 5%">
+                                                    <img src="${pageContext.request.contextPath}/images/alert-icon.png" width="50" height="50" style="position: relative; top: 11px"/>
+                                                </div>
 
-                                    </div>
 
-                                </div>
+                                                <div style="float: right; width: 89%">
 
-                                    <h2 class="orderIdText" style="font-size: 1.25em">
-                                        Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
-                                    </h2>
-                                </div>
+                                                    <div style="margin-left:1%; padding-top: 1.5%; font-size: 1em">You will shortly get an automated <strong>verification call</strong>. Please take the call and respond as per instructions to verify
+                                                        your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <h2 class="orderIdText" style="font-size: 1.25em">
+                                                Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
+                                            </h2>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+
+
 
 
                                 <%--<p class="codMessage">Please give a<span class="orangeBold"> missed call on 0124-4616414 </span>to confirm the order.

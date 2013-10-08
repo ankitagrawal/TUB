@@ -26,12 +26,14 @@
     Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
 		boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
+    String orderConfirmRoute = (String) ServiceLocatorFactory.getService(Keys.Env.codRoute);
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
 <c:set var="codCharges" value="<%=codCharges%>"/>
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>"/>
 <c:set var="prePaidPaymentType" value="<%=EnumPaymentType.PrePaid.getId()%>"/>
+<c:set var="orderConfirmRoute" value="<%=orderConfirmRoute%>"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp"
                  pageTitle="Payment Options">
@@ -299,10 +301,19 @@
                         </div>
 
                         <p style="margin-left: 100px"><strong class="orangeBold">Please ensure that you enter the correct mobile number</strong></p>
-                        <p style="font-weight: 500">
-                            After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
-                            You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.
-                            Once verified, your order will go into processing.</p>
+                        <c:choose>
+                            <c:when test="${orderConfirmRoute eq 'smsCountry'}">
+                                <p style="font-weight: 500">
+                                    After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+                                    You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.
+                                    Once verified, your order will go into processing.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <p>You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                                    your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                            </c:otherwise>
+                        </c:choose>
+
                         <div class="buttons" style="font-size: 1.3em;">
                             <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="PLACE ORDER"
                                       class="positive phoneValidation placeOrderButtonNew"/></div>
