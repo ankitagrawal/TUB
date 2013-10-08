@@ -2,6 +2,7 @@ package com.hk.edge.request;
 
 public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
 
+    private String  oldProductId;
     private double  mrp;            // synced only in case of jit
     private long    minDispatchDays;
     private long    maxDispatchDays;
@@ -47,6 +48,14 @@ public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
 
     public void setJit(boolean jit) {
         this.jit = jit;
+    }
+
+    public String getOldProductId() {
+        return oldProductId;
+    }
+
+    public void setOldProductId(String oldProductId) {
+        this.oldProductId = oldProductId;
     }
 
 }

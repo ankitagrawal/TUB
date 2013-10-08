@@ -81,8 +81,8 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             productVariant.setHkPrice(Double.valueOf(((Integer) variantSavedSyncRequest.getOfferPrice()).toString()));
             productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
 
-            //avoiding lazy init exception here
-            Product product = getProductService().getProductById(productVariant.getProduct().getId());
+
+            Product product = getProductService().getProductById(variantSavedSyncRequest.getOldProductId());
             product.setCodAllowed(variantSavedSyncRequest.isCodAllowed());
             product.setJit(variantSavedSyncRequest.isJit());
             product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
