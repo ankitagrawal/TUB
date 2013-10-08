@@ -74,6 +74,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     }
 
     @Override
+    @Transactional
     public void syncVariantSaveFromEdge(VariantSavedSyncRequest variantSavedSyncRequest) {
         ProductVariant productVariant = getProductVariantService().getVariantById(variantSavedSyncRequest.getOldVariantId());
 
