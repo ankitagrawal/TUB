@@ -53,9 +53,9 @@ public class OrderSplitterHelper {
         List<DummySO> dummySOs = getSOsForShippingCost(dummyOrders);
         Double shipmentCost = 0D;
         for (DummySO dummySO : dummySOs) {
-            shipmentCost += dummySO.getShipmentCost();
+            shipmentCost += dummySO.getShipmentCost();            
         }
-        if (shipmentCost >0 ) {
+        if (shipmentCost >0 ) {          	
         	return (shipmentCost.longValue() + totalTax.longValue());     //check better way
         } else {
         	// negative values being used as invalid values
