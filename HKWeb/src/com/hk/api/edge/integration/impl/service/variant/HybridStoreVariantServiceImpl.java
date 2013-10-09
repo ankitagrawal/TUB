@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.pact.service.inventory.InventoryService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,8 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     private ProductVariantService productVariantService;
     @Autowired
     private BaseDao               baseDao;
+    @Autowired
+    private InventoryService inventoryService;
 
     @Override
     public StoreVariantBasicResponse getStoreVariantBasicDetailsFromEdge(String oldVariantId) {
@@ -155,6 +158,15 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
         return null;
     }
 
+  @Override
+  public Long getUnbookedInventoryForProductVariant(String productVariantId){
+    ProductVariant productVariant = getProductVariantService().getVariantById(productVariantId);
+    if(productVariant == null){
+      throw new InvalidParameterException("INVALID PRODUCT VARIANT ID");
+    }
+     return getInventoryService().getAvailableUnBookedInventory(productVariant);
+  }
+
     public LinkManager getLinkManager() {
         return linkManager;
     }
@@ -171,4 +183,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
         return baseDao;
     }
 
+  public InventoryService getInventoryService() {
+    return inventoryService;
+  }
 }

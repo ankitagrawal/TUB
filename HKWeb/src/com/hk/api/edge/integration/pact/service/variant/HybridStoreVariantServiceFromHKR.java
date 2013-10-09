@@ -11,4 +11,6 @@ public interface HybridStoreVariantServiceFromHKR {
     public FreeVariantResponseFromHKR getFreeVariantForProductVariant(String productVariantId);
 
     public ComboResponseFromHKR getCombosForProductVariant(String productVariantId, int maxResults);
+
+    public Long getUnbookedInventoryForProductVariant(String productVariantId);
 }
