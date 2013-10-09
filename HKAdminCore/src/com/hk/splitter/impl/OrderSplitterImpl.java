@@ -143,7 +143,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 					List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
 					long cost = calculateCost(order, dummyOrders);
 					// here negative value being sent as invalid value
-					if (cost > 0 && cost <= bestCost) { //a less than equal to check to pick combination for a higher warehouse id
+					if (cost > 0 && cost < bestCost) { //Note: <= to pick combination for a higher warehouse id (KPHD) - reverted
 						bestCost = cost;
 						bestShips = dummyOrders;
 					}
