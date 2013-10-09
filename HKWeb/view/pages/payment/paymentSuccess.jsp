@@ -545,7 +545,7 @@
                             </c:if>
 
                             <c:if test="${actionBean.loyaltyPointsEarned <= 0}">
-                            <br/> Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
+                             Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
                             </c:if>
                             <br/>
                             <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
@@ -637,7 +637,7 @@
                                 </c:if>
 
                                 <c:if test="${actionBean.loyaltyPointsEarned <= 0}">
-                                <br/> Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
+                                 Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more and start earning loyalty points.
                                 </c:if>
                                 <br/>
                                 <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
