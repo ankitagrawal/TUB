@@ -1,6 +1,7 @@
 package com.hk.edge.pact.service;
 
 import com.hk.edge.request.VariantPricingSyncRequest;
+import com.hk.edge.request.VariantSavedSyncRequest;
 import com.hk.edge.request.VariantStockSyncRequest;
 import com.hk.edge.response.variant.StoreVariantBasicResponse;
 
@@ -28,5 +29,5 @@ public interface HybridStoreVariantService {
      * this will be called to update details like dispatch days, discount and flags etc when sv is saved on catalog
      * admin
      */
-    public void syncAllVariantDetailsFromEdge();
+    public void syncVariantSaveFromEdge(VariantSavedSyncRequest variantSavedSyncRequest);
 }

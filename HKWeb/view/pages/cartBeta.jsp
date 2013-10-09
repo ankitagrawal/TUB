@@ -1010,7 +1010,6 @@ function _updateTotals(responseData) {
 
 .remove.removeLink, .remove.removeComboLink {
     position: absolute;
-    margin-left: 245px !important;
     height: 20px;
     width: 20px;
     background: transparent;
@@ -1021,6 +1020,8 @@ function _updateTotals(responseData) {
     padding-top: 1px;
     text-transform: lowercase;
     top: 1px;
+    float: right;
+    left: 315px;
 }
 
 .tabletitle.tableTitleNew {
