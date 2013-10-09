@@ -6,7 +6,11 @@ import java.util.List;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.pact.dao.BaseDao;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -17,8 +21,12 @@ import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 
+
 @Repository
 public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements ShippingOrderLifecycleDao {
+
+    @Autowired
+    BaseDao baseDao;
 
     public Date getActivityDateForShippingOrder(ShippingOrder shippingOrder, List<EnumShippingOrderLifecycleActivity> shippingOrderLifecycleActivites) {
         List<Long> lifecycleActivityIds = EnumShippingOrderLifecycleActivity.getSOLifecycleActivityIDs(shippingOrderLifecycleActivites);
@@ -50,10 +58,18 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
 
     public String getAwbByShippingOrderLifeCycle(ShippingOrder shippingOrder) {
         Long shippingOrderId = shippingOrder.getId();
-        String queryAwb = "select final.sol_awb from ( select shipping_order_id , left(substr(comments,locate('=''', comments)+2),length(substr(comments,locate('=''', comments)+2))-2) as sol_awb," +
-                "max(create_dt) FROM shipping_order_lifecycle where shipping_order_lifecycle_activity_id=616 group by shipping_order_id) final where final.sol_awb REGEXP '^[A-Z,0-9]*[0-9]$' " +
-                "and final.sol_awb is not null and final.shipping_order_id=:shippingOrderId ";
-        return queryAwb;
-
+        String queryAwb = "select final.sol_awb as solcAwb from ( select shipping_order_id , left(substr(comments,locate('=''', comments)+2),length(substr(comments,locate('=''', comments)+2))-2) as sol_awb," +
+                "max(create_dt) FROM shipping_order_lifecycle where shipping_order_lifecycle_activity_id=" + EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.getId() +
+                " group by shipping_order_id  ) final where final.sol_awb REGEXP '^[A-Z,0-9]*[0-9]$' " +
+                "and final.sol_awb is not null and final.shipping_order_id =:shippingOrderId";
+        SQLQuery query = baseDao.createSqlQuery(queryAwb);
+        query.addScalar("solcAwb", Hibernate.STRING);
+        query.setParameter("shippingOrderId", shippingOrder.getId());
+        List<String> awbList = query.list();
+        if (awbList != null && awbList.size() > 0) {
+            return awbList.get(0);
+        } else {
+            return null;
+        }
     }
 }
