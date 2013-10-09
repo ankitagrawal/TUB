@@ -696,6 +696,40 @@ public class OrderServiceImpl implements OrderService {
 //                    shippingOrderService.validateShippingOrder(shippingOrder);
 //                }
             }
+
+
+          logger.debug("post split will create sku item line item");
+          for (ShippingOrder shippingOrder : order.getShippingOrders()){
+            //Check to ignore old orders whose status is greater equal than 180
+            if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()){
+              continue;
+            }
+            for (LineItem lineItem : shippingOrder.getLineItems()){
+              lineItemDao.refresh(lineItem);
+              CartLineItem cartLineItem = lineItem.getCartLineItem();
+              // manual split
+              if(bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null  || lineItem.getSkuItemLineItems().size() < 1)){
+                logger.debug("Update booking on Bright after splitting");
+                Long   warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
+                Warehouse warehouse = warehouseService.getWarehouseById(warehousIdForAqua);
+                List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(warehouse.getTinPrefix());
+                warehouses.remove(lineItem.getSku().getWarehouse());
+                Long  warehouseIdForBright = warehouses.get(0).getId();
+
+                List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem,warehouseIdForBright);
+                List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
+                skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
+
+              }
+              else
+              if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
+                Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
+                if(!skuItemLineItemStatus){
+                  shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
+                }
+              }
+            }
+          }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
@@ -720,41 +754,7 @@ public class OrderServiceImpl implements OrderService {
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         }
-      {
-        logger.debug("post split will create sku item line item");
-        for (ShippingOrder shippingOrder : order.getShippingOrders()){
-          //Check to ignore old orders whose status is greater equal than 180
-          if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_Shipped.getId()){
-            continue;
-          }
-          for (LineItem lineItem : shippingOrder.getLineItems()){
-              lineItemDao.refresh(lineItem);
-            CartLineItem cartLineItem = lineItem.getCartLineItem();
-            // manual split
-            if(bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null  || lineItem.getSkuItemLineItems().size() < 1)){
-              logger.debug("Update booking on Bright after splitting");
-              Long   warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
-              Warehouse warehouse = warehouseService.getWarehouseById(warehousIdForAqua);
-              List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(warehouse.getTinPrefix());
-              warehouses.remove(lineItem.getSku().getWarehouse());
-              Long  warehouseIdForBright = warehouses.get(0).getId();
 
-              List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem,warehouseIdForBright);
-              List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
-              skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
-
-            }
-            else
-            if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() == 0){
-              Boolean skuItemLineItemStatus = skuItemLineItemService.createNewSkuItemLineItem(lineItem);
-              if(!skuItemLineItemStatus){
-                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "No Entry in sku_item_cart_line_item");
-              }
-            }
-          }
-        }
-      }
-        if(order.getShippingOrders() != null && order.getShippingOrders().size() > 0)
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {

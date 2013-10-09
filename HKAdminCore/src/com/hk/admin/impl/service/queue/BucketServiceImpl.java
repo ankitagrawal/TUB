@@ -24,6 +24,8 @@ import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.util.BucketAllocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,7 @@ import java.util.*;
 @Service
 public class BucketServiceImpl implements BucketService {
 
+  private static Logger logger = LoggerFactory.getLogger(BucketServiceImpl.class);
     @Autowired
     UserService userService;
 
@@ -279,6 +282,8 @@ public class BucketServiceImpl implements BucketService {
         if (lineItem.getSkuItemLineItems() != null) {
           bookedQty = (long) lineItem.getSkuItemLineItems().size();
         }
+        logger.debug("Available unbooked Inventory of -- variant " + lineItem.getSku().getProductVariant().getId() + "--" + availableUnbookedInv + " --Net inventory --"  + availableNetPhysicalInventory
+            + "--Booked qty -- " + bookedQty + "--ordered qty --" + orderedQty);
         List<ForeignSkuItemCLI> fsiclis  = lineItem.getCartLineItem().getForeignSkuItemCLIs();
         if (fsiclis != null && fsiclis.size() > 0) {
           categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
