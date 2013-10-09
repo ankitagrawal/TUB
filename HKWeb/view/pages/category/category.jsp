@@ -285,8 +285,8 @@
                     <img src="<hk:vhostImage/>/images/banners/Contour-super-saver-pack.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/quanto-diab/HNUT46?camp=qunat">
-                    <img src="<hk:vhostImage/>/images/banners/quanto-diab.jpg" alt="diabetes"
+                <a href="${pageContext.request.contextPath}/diabetes/diabetic-food?brand=Splenda">
+                    <img src="<hk:vhostImage/>/images/banners/splenda_static-banner.jpg" alt="diabetes"
                          class="small_banner"/>
                 </a>
             </c:when>
