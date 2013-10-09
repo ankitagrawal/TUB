@@ -43,9 +43,15 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td>${productLineItem.productVariant.variantName}
-
-
+                    <td><#if productLineItem.productVariant.variantName??>
+                    ${productLineItem.productVariant.variantName}
+                    <#else>
+                    ${productLineItem.productVariant.product.name}
+                    </#if>
+                      <br/>
+                      <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
+                    ${productOption.name} ${productOption.value}
+                    </#list></em>
                     </td>
                     <td>
                     <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
