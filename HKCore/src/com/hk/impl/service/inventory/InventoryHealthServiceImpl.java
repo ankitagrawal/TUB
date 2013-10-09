@@ -681,7 +681,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
     private void updateVariantInfoOnEdge(ProductVariant productVariant) {
-        if (AppConstants.isHybridRelease) {
+        /*if (AppConstants.isHybridRelease) {*/
             VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
             variantStockSyncRequest.setOldVariantId(productVariant.getId());
             variantStockSyncRequest.setCostPrice(productVariant.getCostPrice());
@@ -689,7 +689,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             variantStockSyncRequest.setOos(productVariant.isOutOfStock());
 
             getHybridStoreVariantService().syncStockOnEdge(variantStockSyncRequest);
-        }
+        /*}*/
     }
 
     public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
