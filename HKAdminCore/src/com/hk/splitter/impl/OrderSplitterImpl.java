@@ -68,104 +68,106 @@ public class OrderSplitterImpl implements OrderSplitter {
 
 	@Override
 	public Set<ShippingOrder> split(long orderId) {
-		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+    Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-		Order order = getOrderService().find(orderId);
-		if (order.isB2bOrder()) {
-			logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is B2B order. Will not split.");
-			return Collections.emptySet();
-		}
+    Order order = getOrderService().find(orderId);
+    if (order.isB2bOrder()) {
+      logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is B2B order. Will not split.");
+      return Collections.emptySet();
+    }
 
-		validate(order);
+    validate(order);
 
-		List<Warehouse> whs = warehouseService.getServiceableWarehouses(order);
+    List<Warehouse> whs = warehouseService.getServiceableWarehouses(order);
     if (whs != null)
-    logger.debug("Serviceable Warehouse during splitting is -- "  +whs.size());
-		
-		long startTime = System.currentTimeMillis();
+      logger.debug("Serviceable Warehouse during splitting is -- " + whs.size());
 
-		LineItemContainer container = new LineItemContainer();
-		for (CartLineItem cartLineItem : order.getCartLineItems()) {
-			if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
-				boolean isAdded = false;
-				
-				SkuFilter filter = new SkuFilter();
-				filter.setFetchType(FetchType.FIRST_ORDER);
-				filter.setMinQty(cartLineItem.getQty());
-				filter.setMrp(cartLineItem.getMarkedPrice());
-				
-				Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkusForSplitter(cartLineItem.getProductVariant(), filter, cartLineItem);
-				for (SkuInfo skuInfo : skuList) {
-					Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
-          logger.debug("Sku Info got for splitting is : " +  skuInfo.getSkuId());
-					if(whs.contains(sku.getWarehouse())) {
-						container.addLineItem(sku.getWarehouse(), cartLineItem);
-						isAdded = true;
-					}
-				}
-				
-				if(!isAdded) {
-					Product product = cartLineItem.getProductVariant().getProduct();
-					if(product.isDropShipping() || (product.isJit() && !product.isService())) {
-						Collection<Sku> skus = skuService.getSkus(cartLineItem.getProductVariant(), whs);
-						for (Sku sku : skus) {
-							container.addLineItem(sku.getWarehouse(), cartLineItem);
-							isAdded = true;
-						}
-					}
+    long startTime = System.currentTimeMillis();
 
-					if(product.isService()) {
-						container.addLineItem(warehouseService.getCorporateOffice(), cartLineItem);
-						isAdded = true;
-					}
-				}
-                //ps hack to split prescription eyeglasses
-                if (cartLineItem.getCartLineItemConfig() != null){
-                    container.addLineItem(warehouseService.getAquaDefaultWarehouse() ,cartLineItem);
-                    isAdded = true;
-                }
-				
-				if(!isAdded) {
-					throw new OrderSplitException("Inventory is not available for Variant: " + cartLineItem.getProductVariant().getId(), order); 
-				}
-			}
-		}
+    LineItemContainer container = new LineItemContainer();
+    for (CartLineItem cartLineItem : order.getCartLineItems()) {
+      if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+        boolean isAdded = false;
 
-		Collection<LineItemClassification> lineItemClassifications = container.getAllClassifications();
-		for (LineItemClassification lic : lineItemClassifications) {
-			if (lic.getClassification() == Classification.SERVICE) {
-				Collection<LineItemBucket> lineItemBuckets = lic.getLineItemBuckets();
-				for (LineItemBucket lineItemBucket : lineItemBuckets) {
-					shippingOrders.add(getOrderService().createSOForService(lineItemBucket.getLineItem()));
-				}
-			} else {
-				Collection<UniqueWhCombination> whCombinations = lic.generatePerfactCombinations();
-				logger.debug("size of unique warehouse combination got is -- " + whCombinations.size() );
-				List<DummyOrder> bestShips = null;
-				long bestCost = Long.MAX_VALUE;
-				for (UniqueWhCombination uniqueWhCombination : whCombinations) {
-					List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
-					long cost = calculateCost(order, dummyOrders);
-					logger.debug(" Cost got  while splitting is : " + cost);
-					// here negative value being sent as invalid value
-					if (cost > 0 && cost <= bestCost) { //a less than equal to check to pick combination for a higher warehouse id
-						bestCost = cost;
-						bestShips = dummyOrders;
-					}
-				}
+        SkuFilter filter = new SkuFilter();
+        filter.setFetchType(FetchType.FIRST_ORDER);
+        filter.setMinQty(cartLineItem.getQty());
+        filter.setMrp(cartLineItem.getMarkedPrice());
 
-				if(bestCost == Long.MAX_VALUE) {
-					throw new OrderSplitException("Order is not good for split.", order); 
-				}
+        Collection<SkuInfo> skuList = inventoryHealthService.getAvailableSkusForSplitter(cartLineItem.getProductVariant(), filter, cartLineItem);
+        for (SkuInfo skuInfo : skuList) {
+          Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+          logger.debug("Sku Info got for splitting is : " + skuInfo.getSkuId());
+          if (whs.contains(sku.getWarehouse())) {
+            container.addLineItem(sku.getWarehouse(), cartLineItem);
+            isAdded = true;
+          }
+        }
 
-				if(bestShips != null) {
-					shippingOrders.addAll(createDaywiseShippingOrders(order, bestShips));
-				}
-			}
-		}
-		logger.info("Total time to split order[" + order.getId() + "] " + "Shipping Orders Size [" + shippingOrders.size() + "] "  + (System.currentTimeMillis() - startTime));
-		return shippingOrders;
-	}
+        if (!isAdded) {
+          Product product = cartLineItem.getProductVariant().getProduct();
+          if (product.isDropShipping() || (product.isJit() && !product.isService())) {
+            Collection<Sku> skus = skuService.getSkus(cartLineItem.getProductVariant(), whs);
+            for (Sku sku : skus) {
+              container.addLineItem(sku.getWarehouse(), cartLineItem);
+              isAdded = true;
+            }
+          }
+
+          if (product.isService()) {
+            container.addLineItem(warehouseService.getCorporateOffice(), cartLineItem);
+            isAdded = true;
+          }
+        }
+        //ps hack to split prescription eyeglasses
+        if (cartLineItem.getCartLineItemConfig() != null) {
+          container.addLineItem(warehouseService.getAquaDefaultWarehouse(), cartLineItem);
+          isAdded = true;
+        }
+
+        if (!isAdded) {
+          throw new OrderSplitException("Inventory is not available for Variant: " + cartLineItem.getProductVariant().getId(), order);
+        }
+      }
+    }
+
+    Collection<LineItemClassification> lineItemClassifications = container.getAllClassifications();
+    for (LineItemClassification lic : lineItemClassifications) {
+      if (lic.getClassification() == Classification.SERVICE) {
+        Collection<LineItemBucket> lineItemBuckets = lic.getLineItemBuckets();
+        for (LineItemBucket lineItemBucket : lineItemBuckets) {
+          shippingOrders.add(getOrderService().createSOForService(lineItemBucket.getLineItem()));
+        }
+      } else {
+        Collection<UniqueWhCombination> whCombinations = lic.generatePerfactCombinations();
+        logger.debug("Number of unique  warehouse combination got for splitting is --" + whCombinations.size());
+        List<DummyOrder> bestShips = null;
+        long bestCost = Long.MAX_VALUE;
+        int count = 1;
+        for (UniqueWhCombination uniqueWhCombination : whCombinations) {
+          List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
+          long cost = calculateCost(order, dummyOrders);
+          logger.debug("Cost got for unique Combination " + count + "-- is "  + cost);
+          // here negative value being sent as invalid value
+          if (cost > 0 && cost <= bestCost) { //a less than equal to check to pick combination for a higher warehouse id
+            bestCost = cost;
+            bestShips = dummyOrders;
+          }
+          count ++;
+        }
+
+        if (bestCost == Long.MAX_VALUE) {
+          throw new OrderSplitException("Order is not good for split.", order);
+        }
+
+        if (bestShips != null) {
+          shippingOrders.addAll(createDaywiseShippingOrders(order, bestShips));
+        }
+      }
+    }
+    logger.info("Total time to split order[" + order.getId() + "] " + "Shipping Orders Size [" + shippingOrders.size() + "] " + (System.currentTimeMillis() - startTime));
+    return shippingOrders;
+  }
 
 	private Collection<ShippingOrder> createDaywiseShippingOrders(Order order, List<DummyOrder> dummyOrders) {
 		Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
