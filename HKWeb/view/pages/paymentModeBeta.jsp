@@ -398,7 +398,7 @@
 
           <div class="label">Total Payable Amount</div>
           <div class="num"
-               style="font-size: 1.8em; color:#090;">
+               style="font-size: 16px; color:#090;">
             <fmt:formatNumber
                 value="${orderSummary.pricingDto.grandTotalPayable}"
                 currencySymbol="Rs. " type="currency"/></div>
@@ -445,7 +445,7 @@
               value="<%=EnumPaymentMode.COUNTER_CASH.getId()%>"/>
     <div class="label">Total Payable Amount</div>
     <div class="num"
-         style="font-size: 1.8em;  color: #090;">
+         style="font-size: 16px;  color: #090;">
       <fmt:formatNumber
           value="${orderSummary.pricingDto.grandTotalPayable}"
           currencySymbol="Rs. " type="currency"/></div>
