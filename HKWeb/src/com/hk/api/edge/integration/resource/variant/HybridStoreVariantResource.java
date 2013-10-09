@@ -1,18 +1,23 @@
 package com.hk.api.edge.integration.resource.variant;
 
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.api.edge.integration.pact.service.variant.HybridStoreVariantServiceFromHKR;
-import com.hk.api.edge.integration.response.variant.response.FreeVariantResponseFromHKR;
 import com.hk.api.edge.integration.response.variant.response.ComboResponseFromHKR;
+import com.hk.api.edge.integration.response.variant.response.FreeVariantResponseFromHKR;
 import com.hk.api.edge.integration.response.variant.response.InventoryResponseFromHkr;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.util.json.JSONResponseBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.ws.rs.*;
-import java.security.InvalidParameterException;
 
 /**
  * @author Rimal
@@ -46,7 +51,7 @@ public class HybridStoreVariantResource {
   }
 
   @GET
-  @Path("{id}/inventory")
+  @Path("/inventory/{id}")
   @Produces("application/json")
   public String getInventoryForProductVariant(@PathParam("id") String productVariantId) {
     InventoryResponseFromHkr inventoryResponseFromHkr = new InventoryResponseFromHkr();
