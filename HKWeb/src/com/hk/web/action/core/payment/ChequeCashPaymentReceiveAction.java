@@ -11,6 +11,7 @@ import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.payment.PaymentService;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -38,6 +39,8 @@ public class ChequeCashPaymentReceiveAction extends BaseAction {
   private UserService userService;
   @Autowired
   private PaymentService paymentService;
+  @Autowired
+  InventoryHealthService inventoryHealthService;
 
 
   @Validate(required = true)
@@ -91,8 +94,11 @@ public class ChequeCashPaymentReceiveAction extends BaseAction {
       Payment payment = getPaymentManager().createNewPayment(order, getPaymentService().findPaymentMode(paymentMode), BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
       String gatewayOrderId = payment.getGatewayOrderId();
       try {
-        getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
-        getPaymentManager().chequeCashSuccess(gatewayOrderId, bankName, bankBranch, bankCity, getPaymentService().findPaymentMode(paymentMode), chequeNumber);
+       getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
+       order = (Order) getPaymentManager().chequeCashSuccess(gatewayOrderId, bankName, bankBranch, bankCity, getPaymentService().findPaymentMode(paymentMode), chequeNumber);
+       if (order != null)  {
+         inventoryHealthService.tempBookSkuLineItemForOrder(order);
+       }
         resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
       } catch (HealthkartPaymentGatewayException e) {
         getPaymentManager().error(gatewayOrderId, e);

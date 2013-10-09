@@ -140,16 +140,20 @@ public class OrderSplitterImpl implements OrderSplitter {
         }
       } else {
         Collection<UniqueWhCombination> whCombinations = lic.generatePerfactCombinations();
+        logger.debug("Number of unique  warehouse combination got for splitting is --" + whCombinations.size());
         List<DummyOrder> bestShips = null;
         long bestCost = Long.MAX_VALUE;
+        int count = 1;
         for (UniqueWhCombination uniqueWhCombination : whCombinations) {
           List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
           long cost = calculateCost(order, dummyOrders);
+          logger.debug("Cost got for unique Combination " + count + "-- is "  + cost);
           // here negative value being sent as invalid value
           if (cost > 0 && cost <= bestCost) { //a less than equal to check to pick combination for a higher warehouse id
             bestCost = cost;
             bestShips = dummyOrders;
           }
+          count ++;
         }
 
         if (bestCost == Long.MAX_VALUE) {

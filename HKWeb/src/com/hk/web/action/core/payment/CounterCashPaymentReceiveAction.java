@@ -12,6 +12,7 @@ import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.payment.PaymentService;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -36,6 +37,8 @@ public class CounterCashPaymentReceiveAction extends BaseAction {
   private UserService userService;
   @Autowired
   private OrderManager orderManager;
+  @Autowired
+  InventoryHealthService inventoryHealthService;
 
   @Validate(required = true)
   private Order order;
@@ -55,7 +58,11 @@ public class CounterCashPaymentReceiveAction extends BaseAction {
       String gatewayOrderId = payment.getGatewayOrderId();
       try {
         getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
-        getPaymentManager().counterCashSuccess(gatewayOrderId, getBaseDao().get(PaymentMode.class, paymentMode));
+       order = (Order)  getPaymentManager().counterCashSuccess(gatewayOrderId, getBaseDao().get(PaymentMode.class, paymentMode));
+
+        if (order != null) {
+          inventoryHealthService.tempBookSkuLineItemForOrder(order);
+        }
 
         resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
       } catch (HealthkartPaymentGatewayException e) {
