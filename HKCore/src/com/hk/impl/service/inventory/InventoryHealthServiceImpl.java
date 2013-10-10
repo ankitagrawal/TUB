@@ -393,6 +393,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       }
     }
 
+    //TODO: Verify some issue here. Not picking all SKUs
     boolean invAdded = false;
     boolean newSkuInfoFlag = false;
     boolean updateSkuInfoFlag = false;
@@ -445,6 +446,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     for (InventoryInfo inventoryInfo : infos) {
       if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
         for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+          logger.debug("In for loop to test and add SkuInfo for getAvailableSkusForSplitter  = " + skuInfo.toString());
           if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
             Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
             if (filter.getWarehouseId() == null
