@@ -547,7 +547,7 @@
     }
 
 .flyout-menu{
-    width:218px;
+    width:220px;
 }
 .flyout-menu .menu-hdr {
     z-index: 10;
