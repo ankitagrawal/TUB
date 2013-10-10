@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
         	if(UserThreadLocal.get() != null) {
         		return getUserDao().getUserById(UserThreadLocal.get().getId());
         	} else {
-        		throw new RuntimeException(e);
+        		throw new  RuntimeException(e);
         	}
         }
         return loggedOnUser;

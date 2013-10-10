@@ -193,7 +193,6 @@
 	<s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbProduct="${product}" lastLink="true"
 	                 topHeading="${seoData.h1}"/>
 </s:layout-component>
-
 <s:layout-component name="topCategory">${pa.topCategoryUrlSlug}</s:layout-component>
 <s:layout-component name="allCategories">${pa.allCategories}</s:layout-component>
 <s:layout-component name="brand">${product.brand}</s:layout-component>
@@ -201,7 +200,8 @@
 <s:layout-component name="urlFragment">${pa.menuNodeUrlFragment}</s:layout-component>
 
 <s:layout-component name="topBanner">
-	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}"/>
+	<%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />--%>
+    <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" />
 	<div class="clear"></div>
 	<c:if test="${product.service}">
 		<s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
@@ -209,7 +209,6 @@
 
 </s:layout-component>
 <s:layout-component name="prod_title">
-
 
 	<div>
 		<shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
@@ -313,224 +312,224 @@
 </s:layout-component>
 
 <s:layout-component name="product_detail_links">
-	<h2 class='prod_title' itemprop="name">
-			${product.name}
-	</h2>
+<h2 class='prod_title' itemprop="name">
+        ${product.name}
+</h2>
 
-	<div class='infos' style="border-bottom:0px;">
-		<c:if test="${hk:isNotBlank(product.brand)}">
+<div class='infos' style="border-bottom:0px;">
+    <div style="float:left;">
+        <div>
+            <c:if test="${hk:isNotBlank(product.brand)}">
           <span class='title'>
             Brand:
           </span>
           <span class='info' itemprop="brand">
             <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
-	            ${product.brand}
-	            <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
-	            <s:param name="topLevelCategory" value="${product.primaryCategory.name}"/>
+                ${product.brand}
+                <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
+                <s:param name="topLevelCategory" value="${product.primaryCategory.name}"/>
             </s:link>
           </span>
-		</c:if>
-		<c:if test="${hk:isNotBlank(product.manufacturer)}">
-			|
+            </c:if>
+            <c:if test="${hk:isNotBlank(product.manufacturer)}">
+                |
           <span class='title'>
             Manufacturer:
           </span>
           <span class='info'>
-		          ${product.manufacturer.name}
+                  ${product.manufacturer.name}
           </span>
-		</c:if>
-		|
-		<c:choose>
-			<c:when test="${product.codAllowed != null && !product.codAllowed}">
-				<span style="color:red;font-weight:bold;">COD Not Available</span>
-			</c:when>
-			<c:otherwise>
-				<span style="color:green;font-weight:bold;">COD Available</span>
-			</c:otherwise>
-		</c:choose>  		
-		|
+            </c:if>
+            |
+            <c:choose>
+                <c:when test="${product.codAllowed != null && !product.codAllowed}">
+                    <span style="color:red;font-weight:bold;">COD Not Available</span>
+                </c:when>
+                <c:otherwise>
+                    <span style="color:green;font-weight:bold;">COD Available</span>
+                </c:otherwise>
+            </c:choose>
+            |
     <span class='title'>
       Dispatched in:
     </span>
     <span class='info orange' title="Delivery time is extra depending on the location">
       <c:choose><c:when test="${hk:isNotBlank(product.maxDays)}">
-	      ${product.minDays} - ${product.maxDays} working days
+          ${product.minDays} - ${product.maxDays} working days
       </c:when>
-	      <c:otherwise>
-		      <c:choose>
-			      <c:when test="${pa.topCategoryUrlSlug == 'beauty'}">
-				      2 - 7 working days
-			      </c:when>
-			      <c:otherwise>
-				      1 - 3 working days
-			      </c:otherwise>
-		      </c:choose>
-	      </c:otherwise>
+          <c:otherwise>
+              <c:choose>
+                  <c:when test="${pa.topCategoryUrlSlug == 'beauty'}">
+                      2 - 7 working days
+                  </c:when>
+                  <c:otherwise>
+                      1 - 3 working days
+                  </c:otherwise>
+              </c:choose>
+          </c:otherwise>
       </c:choose>
     </span>
+        </div>
+        <div class='top_links' style="padding-top:3px;">
+            <c:if test="${!empty pa.userReviews}">
+                <div style="float:left; padding-bottom: 7px;">
+                    <a class="top_link" href='#user_reviews' style="border-bottom:0px;">
+                            ${pa.totalReviews} Reviews &darr;
+                    </a>
 
-		<c:if test="${!empty pa.userReviews}">
-
-			<div style="float:right;margin-right:5px;margin-bottom:3px;">
-				<a class="top_link" href='#user_reviews' style="border-bottom:0px;">
-						${pa.totalReviews} Reviews &darr;
-				</a>
-
-				<div class="rating_bar">
-					<div class="blueStarTop" id="blueStarTop">
-						<script type="text/javascript">
-							var averageRating = ${pa.averageRating};
-							averageRating = (averageRating * 20) + "%";
-							$('.blueStarTop').width(averageRating);
-						</script>
-					</div>
-				</div>
-			</div>
-		</c:if>
-	</div>
-
-	<div class='top_links'>
-		<c:if test="${!empty product.description}">
-			<a class='top_link' href='#description'>
-				Description &darr;
-			</a>
-		</c:if>
-		<c:if test="${!empty product.productFeatures}">
-			<a class='top_link' href='#features'>
-				Technical Specs &darr;
-			</a>
-		</c:if>
-		<c:if test="${!empty pa.relatedCombos}">
-			<a class='top_link' href='#related_combos' id="related_combo_link" style="font-weight:bold;">
-				Special Offers &darr;
-			</a>
-		</c:if>
-		<c:if test="${!empty product.relatedProducts}">
-			<a class='top_link' id="related_product_link" href='#related_products'>
-				Recommended Products &darr;
-			</a>
-		</c:if>
-
-        <c:set var="freebie" value="${hk:showFreebie(product)}"/>
-        <c:if test="${freebie != null}">
-            <div class="freebie-cntnr">
-
-                <h6 >Offer Available</h6>
-                <div>
-                        ${freebie.name} FREE with selected variants of this product. Offer valid till stocks last.
+                    <div class="rating_bar">
+                        <div class="blueStarTop" id="blueStarTop">
+                            <script type="text/javascript">
+                                var averageRating = ${pa.averageRating};
+                                averageRating = (averageRating * 20) + "%";
+                                $('.blueStarTop').width(averageRating);
+                            </script>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </c:if>
-<%--
-        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
-            <div id="tryOnLink" class="content">
-                <c:if test="${pa.validTryOnProductVariant != null}">
-                    <a href="${hk:getTryOnImageURL(pa.validTryOnProductVariant)}" style="float:right;color:black;font-size:1.2em;background: #DDD;border:1px solid black;padding:5px;"> TRY IT NOW </a>
+            </c:if>
+            <div>
+                <c:if test="${!empty product.productFeatures}">
+                    <a class='top_link' href='#features'>
+                        Technical Specs &darr;
+                    </a>
+                </c:if>
+                <c:if test="${!empty pa.relatedCombos}">
+                    <a class='top_link' href='#related_combos' id="related_combo_link" style="font-weight:bold;">
+                        Special Offers &darr;
+                    </a>
+                </c:if>
+                <c:if test="${!empty product.relatedProducts}">
+                    <a class='top_link' id="related_product_link" href='#related_products'>
+                        Recommended Products &darr;
+                    </a>
+                </c:if>
+
+                <c:set var="freebie" value="${hk:showFreebie(product)}"/>
+                <c:if test="${freebie != null}">
+                    <div class="freebie-cntnr">
+
+                        <h6>Offer Available</h6>
+
+                        <div>
+                                ${freebie.name} FREE with selected variants of this product. Offer valid till stocks
+                            last.
+                        </div>
+                    </div>
                 </c:if>
             </div>
-        </shiro:hasAnyRoles>
---%>
-	</div>
-	<c:if test="${!empty subscriptionProduct}">
-		<div class="jqmWindow" style="display:none;" id="subscriptionWindow"></div>
+        </div>
 
-		<script type="text/javascript">
-			$(document).ready(function () {
-				$('#subscriptionWindow').jqm({trigger:'.addSubscriptionButton', ajax:'@href', ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
-				$('.addSubscriptionButton').mouseover(function () {
-					var top = $(this).offset().top - $('#subscription-tooltip').outerHeight() - 20;
-					var left = $(this).offset().left - $('#subscription-tooltip').outerWidth() / 2 + $(this).outerWidth() / 2;
+    </div>
 
-					$('#subscription-tooltip').css({
-						'top':top,
-						'left':left
-					});
-					$('#subscription-tooltip').fadeIn();
-				});
-				var timer;
-				$('.addSubscriptionButton').mouseleave(function () {
-					timer = setTimeout(function () {
-						$('#subscription-tooltip').fadeOut();
-					}, 200);
-				});
-				$('.hk-tooltip').mouseover(function () {
-					clearTimeout(timer);
-				});
-				$('.hk-tooltip').mouseleave(function () {
-					$('#subscription-tooltip').fadeOut();
-				});
-			});
+    <c:if test="${pa.topCategoryUrlSlug == 'sports-nutrition' || pa.topCategoryUrlSlug == 'health-nutrition'
+    || pa.topCategoryUrlSlug == 'diabetes' || pa.topCategoryUrlSlug == 'health-devices'}">
+        <div style="float:right;margin-top:0px;">
+            <img src="${pageContext.request.contextPath}/images/logo/authenticity-logo.png" alt="Authenticity Logo">
+        </div>
+    </c:if>
+</div>
 
-		</script>
-		<div class="hk-tooltip" style="display: none;" id="subscription-tooltip">
-			Subscribe and save <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount180Days}"
-			                                     maxFractionDigits="2"/> to <fmt:formatNumber
-				value="${subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37; extra.
-			Save money and time.
-			<br/><br/>
-			<s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre"
-			        target="_blank">(click here) </s:link> to know more..
-			<div class="pointer">
-				<div class="inner-pointer"></div>
-			</div>
-		</div>
-	</c:if>
-	<input type="hidden" id="productReferrerId" value="${pa.productReferrerId}"/>
-	<input type="hidden" id="productPosition" value="${pa.productPosition}"/>
-	<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-		<div>
-			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
-			        class="popup">
-				Edit Overview
-				<s:param name="productId" value="${product.id}"/>
-			</s:link>
-		</div>
-	</shiro:hasPermission>
-	<c:if test="${hk:isNotBlank(product.overview)}">
-		<p class="overview">
-				${product.overview}
-		</p>
-	</c:if>
+<c:if test="${!empty subscriptionProduct}">
+    <div class="jqmWindow" style="display:none;" id="subscriptionWindow"></div>
 
-	<div class="configOptionsDiv" style="display:none;">
-		<select name="configOptionValueMap" id="configOptionValueMap" multiple="multiple">
-			<c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption"
-			           varStatus="configOptionCtr">
-				<c:forEach items="${configOption.variantConfigValues}" var="configValue" varStatus="configValueCtr">
-					<option value="${configOption.id}" valueId="${configValue.id}"></option>
-				</c:forEach>
-			</c:forEach>
-			<option value="-999" valueId="-999" selected="selected"></option>
-		</select>
-	</div>
-	<c:set var="ENG" value="ENG"/>
-	<s:form partial="true" beanclass="com.hk.web.action.core.cart.AddToCartAction" method="get">
-		<c:if test="${hk:isCollectionContainsObject(product.categories, stethoscope)}">
-			<c:if test="${hk:isEngravingProvidedForProduct(product.productVariants[0])}">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#subscriptionWindow').jqm({trigger:'.addSubscriptionButton', ajax:'@href', ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
+            $('.addSubscriptionButton').mouseover(function () {
+                var top = $(this).offset().top - $('#subscription-tooltip').outerHeight() - 20;
+                var left = $(this).offset().left - $('#subscription-tooltip').outerWidth() / 2 + $(this).outerWidth() / 2;
 
-				<c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption">
-					<c:if test="${configOption.additionalParam eq ENG}">
-						<input type="hidden" id="stethoscopeConfigOption" value="${configOption.id}"/>
-						<c:forEach items="${configOption.variantConfigValues}" var="configValue">
-							<input type="hidden" id="stethoscopeConfigValue" value="${configValue.id}"/>
-						</c:forEach>
-					</c:if>
-				</c:forEach>
+                $('#subscription-tooltip').css({
+                    'top':top,
+                    'left':left
+                });
+                $('#subscription-tooltip').fadeIn();
+            });
+            var timer;
+            $('.addSubscriptionButton').mouseleave(function () {
+                timer = setTimeout(function () {
+                    $('#subscription-tooltip').fadeOut();
+                }, 200);
+            });
+            $('.hk-tooltip').mouseover(function () {
+                clearTimeout(timer);
+            });
+            $('.hk-tooltip').mouseleave(function () {
+                $('#subscription-tooltip').fadeOut();
+            });
+        });
 
-				<input type="hidden" id="engravingPrice" value="${hk:getEngravingPrice(product.productVariants[0])}"/>
-				<br>
-				<strong>Do you want to Engrave: </strong>
-				<s:checkbox name="engravingRequired" id="checkBoxEngraving" checked="false"/> (at an additional cost of
-				Rs <fmt:formatNumber value="${hk:getEngravingPrice(product.productVariants[0])}"
-				                     maxFractionDigits="0"/> )
-				<div class="engraveDiv" style="display:none;">
-					<br><strong>Specify name to be Engraved:</strong>
-					<s:text name="nameToBeEngraved" id="engrave" style="width:140px" placeholder='Max 15 characters'
-					        maxlength="15"/>
-				</div>
-			</c:if>
-		</c:if>
-	</s:form>
+    </script>
+    <div class="hk-tooltip" style="display: none;" id="subscription-tooltip">
+        Subscribe and save <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount180Days}"
+                                             maxFractionDigits="2"/> to <fmt:formatNumber
+            value="${subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37; extra.
+        Save money and time.
+        <br/><br/>
+        <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre"
+                target="_blank">(click here) </s:link> to know more..
+        <div class="pointer">
+            <div class="inner-pointer"></div>
+        </div>
+    </div>
+</c:if>
+<input type="hidden" id="productReferrerId" value="${pa.productReferrerId}"/>
+<input type="hidden" id="productPosition" value="${pa.productPosition}"/>
+<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+    <div>
+        <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
+                class="popup">
+            Edit Overview
+            <s:param name="productId" value="${product.id}"/>
+        </s:link>
+    </div>
+</shiro:hasPermission>
+<c:if test="${hk:isNotBlank(product.overview)}">
+    <p class="overview">
+            ${product.overview}
+    </p>
+</c:if>
+
+<div class="configOptionsDiv" style="display:none;">
+    <select name="configOptionValueMap" id="configOptionValueMap" multiple="multiple">
+        <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption"
+                   varStatus="configOptionCtr">
+            <c:forEach items="${configOption.variantConfigValues}" var="configValue" varStatus="configValueCtr">
+                <option value="${configOption.id}" valueId="${configValue.id}"></option>
+            </c:forEach>
+        </c:forEach>
+        <option value="-999" valueId="-999" selected="selected"></option>
+    </select>
+</div>
+<c:set var="ENG" value="ENG"/>
+<s:form partial="true" beanclass="com.hk.web.action.core.cart.AddToCartAction" method="get">
+    <c:if test="${hk:isCollectionContainsObject(product.categories, stethoscope)}">
+        <c:if test="${hk:isEngravingProvidedForProduct(product.productVariants[0])}">
+
+            <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption">
+                <c:if test="${configOption.additionalParam eq ENG}">
+                    <input type="hidden" id="stethoscopeConfigOption" value="${configOption.id}"/>
+                    <c:forEach items="${configOption.variantConfigValues}" var="configValue">
+                        <input type="hidden" id="stethoscopeConfigValue" value="${configValue.id}"/>
+                    </c:forEach>
+                </c:if>
+            </c:forEach>
+
+            <input type="hidden" id="engravingPrice" value="${hk:getEngravingPrice(product.productVariants[0])}"/>
+            <br>
+            <strong>Do you want to Engrave: </strong>
+            <s:checkbox name="engravingRequired" id="checkBoxEngraving" checked="false"/> (at an additional cost of
+            Rs <fmt:formatNumber value="${hk:getEngravingPrice(product.productVariants[0])}"
+                                 maxFractionDigits="0"/> )
+            <div class="engraveDiv" style="display:none;">
+                <br><strong>Specify name to be Engraved:</strong>
+                <s:text name="nameToBeEngraved" id="engrave" style="width:140px" placeholder='Max 15 characters'
+                        maxlength="15"/>
+            </div>
+        </c:if>
+    </c:if>
+</s:form>
 
 </s:layout-component>
 

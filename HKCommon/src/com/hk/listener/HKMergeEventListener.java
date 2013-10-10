@@ -62,13 +62,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
         JSONResponseBuilder newJsonBuilder = new JSONResponseBuilder();
 
-        Double newMarkedPrice = savedProductVariant.getMarkedPrice();
-        Double oldMarkedPrice = (Double)oldProductVariantJsonBuilder.getParam("marked_price");
-        
-        if(newMarkedPrice.equals(oldMarkedPrice)){
-            
-            
-        }
+       
 
         newJsonBuilder.addField("id", savedProductVariant.getId());
         newJsonBuilder.addField("hk_price", savedProductVariant.getHkPrice());

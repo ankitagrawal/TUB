@@ -3218,15 +3218,14 @@ label{
 }
 
 .btn {
+    font-family: 'Open Sans';
     display: inline-block;
     *display: inline;
     text-transform: uppercase;
     /* IE7 inline-block hack */
-
     *zoom: 1;
     padding: 0;
     margin-bottom: 0;
-
     line-height: inherit;
     text-align: center;
     vertical-align: middle;
@@ -3242,12 +3241,9 @@ label{
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffffff', endColorstr = '#ffe6e6e6', GradientType = 0);
     border-color: transparent;
-
     *background-color: transparent;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-
     -webkit-border-radius: none;
     -moz-border-radius: none;
     border-radius: 0;
@@ -3255,7 +3251,6 @@ label{
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-
     border: 1px solid #111;
     color: #222;
     display: block;

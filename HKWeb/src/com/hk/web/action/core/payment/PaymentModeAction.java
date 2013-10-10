@@ -26,38 +26,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @HttpCache(allow = false)
 public class PaymentModeAction extends BaseAction {
 
-    List<Issuer> bankIssuers;
-    List<Issuer> cardIssuers;
-    Map<String, String> codFailureMap = new HashMap<String, String>();
-    private PricingDto pricingDto;
-    private boolean showFailureMessage = false;
-    private String paymentFailureGatewayOrderId;
+    List<Issuer>                bankIssuers;
+    List<Issuer>                cardIssuers;
+    List<Issuer>                debitCardIssuers;
+
+    Map<String, String>         codFailureMap      = new HashMap<String, String>();
+    private PricingDto          pricingDto;
+    private boolean             showFailureMessage = false;
+    private String              paymentFailureGatewayOrderId;
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
 
     @Autowired
-    OrderManager orderManager;
+    OrderManager                orderManager;
     @Autowired
-    private AdminOrderService adminOrderService;
+    private AdminOrderService   adminOrderService;
     @Autowired
-    PricingEngine pricingEngine;
+    PricingEngine               pricingEngine;
     @Autowired
-	private OrderService orderService;
+    private OrderService        orderService;
 
-    Order order;
+    Order                       order;
 
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
         Set<Role> userRoles = user.getRoles();
-        if(userRoles!=null && userRoles.size()>0 && userRoles.contains(EnumRole.B2B_USER.toRole())){
-        	order.setB2bOrder(Boolean.TRUE);
-        	orderService.save(order);
+        if (userRoles != null && userRoles.size() > 0 && userRoles.contains(EnumRole.B2B_USER.toRole())) {
+            order.setB2bOrder(Boolean.TRUE);
+            orderService.save(order);
         }
         if (order.getCartLineItems() == null || order.getCartLineItems().isEmpty()) {
             addRedirectAlertMessage(new SimpleMessage("There are no items in your cart, Please select at least 1 item"));
@@ -67,14 +69,18 @@ public class PaymentModeAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
             return new RedirectResolution(SelectAddressAction.class);
         }
-        pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed()), order.getAddress());
+        pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed()),
+                order.getAddress());
         codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
         bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
         cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
-        if(isHybridRelease()){
-          return new ForwardResolution("/pages/paymentModeBeta.jsp");
+        debitCardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Debit.getId(), true);
+
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/paymentModeBeta.jsp");
+        } else {
+            return new ForwardResolution("/pages/paymentMode.jsp");
         }
-        return new ForwardResolution("/pages/paymentMode.jsp");
     }
 
     public List<Issuer> getBankIssuers() {
@@ -101,7 +107,6 @@ public class PaymentModeAction extends BaseAction {
         this.order = order;
     }
 
-
     public Map<String, String> getCodFailureMap() {
         return codFailureMap;
     }
@@ -124,5 +129,13 @@ public class PaymentModeAction extends BaseAction {
 
     public void setPaymentFailureGatewayOrderId(String paymentFailureGatewayOrderId) {
         this.paymentFailureGatewayOrderId = paymentFailureGatewayOrderId;
+    }
+
+    public List<Issuer> getDebitCardIssuers() {
+        return debitCardIssuers;
+    }
+
+    public void setDebitCardIssuers(List<Issuer> debitCardIssuers) {
+        this.debitCardIssuers = debitCardIssuers;
     }
 }

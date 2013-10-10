@@ -38,8 +38,15 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
             <#list order.lineItems as lineItem>
                 <tr>
 
-                    <td>${lineItem.sku.productVariant.variantName}
-
+                    <td><#if productLineItem.productVariant.variantName??>
+                    ${productLineItem.productVariant.variantName}
+                    <#else>
+                    ${productLineItem.productVariant.product.name}
+                    </#if>
+                      <br/>
+                      <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
+                    ${productOption.name} ${productOption.value}
+                    </#list></em>
                     </td>
                     <td>
                     ${lineItem.qty}

@@ -1,5 +1,26 @@
 package com.hk.impl.service.inventory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
@@ -19,768 +40,765 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.request.VariantStockSyncRequest;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
+import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
+import com.hk.web.AppConstants;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
 
-  @Autowired
-  ProductVariantService productVariantService;
-  @Autowired
-  ProductService productService;
-  @Autowired
-  WarehouseService warehouseService;
-  @Autowired
-  BaseDao baseDao;
-  @Autowired
-  UpdatePvPriceDao updatePvPriceDao;
-  @Autowired
-  SkuItemDao skuItemDao;
-  @Autowired
-  SkuService skuService;
-  @Autowired
-  SkuItemLineItemService skuItemLineItemService;
-  @Autowired
-  LineItemDao lineItemDao;
-  @Autowired
-  CartLineItemDao cartLineItemDao;
+    @Autowired
+    ProductVariantService             productVariantService;
+    @Autowired
+    ProductService                    productService;
+    @Autowired
+    WarehouseService                  warehouseService;
+    @Autowired
+    BaseDao                           baseDao;
+    @Autowired
+    UpdatePvPriceDao                  updatePvPriceDao;
+    @Autowired
+    SkuItemDao                        skuItemDao;
+    @Autowired
+    SkuService                        skuService;
+    @Autowired
+    SkuItemLineItemService            skuItemLineItemService;
+    @Autowired
+    LineItemDao                       lineItemDao;
+    @Autowired
+    CartLineItemDao                   cartLineItemDao;
 
-  ShippingOrderService shippingOrderService;
-/*  @Autowired
-  AdminOrderService adminOrderService;*/
+    ShippingOrderService              shippingOrderService;
 
-  private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
+    @Autowired
+    private HybridStoreVariantService hybridStoreVariantService;
+    /*
+     * @Autowired AdminOrderService adminOrderService;
+     */
 
+    private Logger                    logger             = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
-  private static final String bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty" +
-      " from cart_line_item as a inner join base_order as b on a.order_id = b.id" +
-      " where a.product_variant_id = :pvId " +
-      " and b.order_status_id in (:statusIds) " +
-      " group by a.marked_price";
+    private static final String       bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty"
+                                                                 + " from cart_line_item as a inner join base_order as b on a.order_id = b.id"
+                                                                 + " where a.product_variant_id = :pvId " + " and b.order_status_id in (:statusIds) " + " group by a.marked_price";
 
-  private Map<Double, Long> getBookedInventoryQty(ProductVariant productVariant) {
-    String sql = bookedInventorySql;
-    SQLQuery query = baseDao.createSqlQuery(sql);
-    query.addScalar("mrp", Hibernate.DOUBLE);
-    query.addScalar("qty", Hibernate.LONG);
+    private Map<Double, Long> getBookedInventoryQty(ProductVariant productVariant) {
+        String sql = bookedInventorySql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
 
-    query.setParameter("pvId", productVariant.getId());
-    query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.Placed.getId()));
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.Placed.getId()));
 
-    Map<Double, Long> map = new LinkedHashMap<Double, Long>();
-    @SuppressWarnings("unchecked")
-    List<Object[]> list = query.list();
-    if (list != null) {
-      for (Object[] data : list) {
-        map.put((Double) data[0], (Long) data[1]);
-      }
-    }
-    return map;
-  }
-
-
-  private static final String inProcessInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty, a.sku_id as skuId" +
-      " from line_item as a inner join shipping_order as b on a.shipping_order_id = b.id" +
-      " inner join base_order as c on b.base_order_id = c.id" +
-      " inner join sku as e on a.sku_id = e.id" +
-      " where e.product_variant_id = :pvId" +
-      " and e.warehouse_id in (:whIds)" +
-      " and c.order_status_id in (:statusIds)" +
-      " and b.shipping_order_status_id in (:sosIds)" +
-      " group by a.marked_price, a.sku_id";
-
-  private List<SkuInfo> getInProcessInventory(ProductVariant productVariant, List<Warehouse> whs) {
-    String sql = inProcessInventorySql;
-    SQLQuery query = baseDao.createSqlQuery(sql);
-    query.addScalar("mrp", Hibernate.DOUBLE);
-    query.addScalar("qty", Hibernate.LONG);
-    query.addScalar("skuId", Hibernate.LONG);
-
-    query.setParameter("pvId", productVariant.getId());
-    query.setParameterList("whIds", toWarehouseIds(whs));
-    query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
-    query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
-
-    query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
-
-    @SuppressWarnings("unchecked")
-    List<SkuInfo> list = query.list();
-    return list;
-  }
-
-  private List<SkuInfo> getPostActionQueueInventory(ProductVariant productVariant, List<Warehouse> whs) {
-    String sql = inProcessInventorySql;
-    SQLQuery query = baseDao.createSqlQuery(sql);
-    query.addScalar("mrp", Hibernate.DOUBLE);
-    query.addScalar("qty", Hibernate.LONG);
-    query.addScalar("skuId", Hibernate.LONG);
-
-    query.setParameter("pvId", productVariant.getId());
-    query.setParameterList("whIds", toWarehouseIds(whs));
-    query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
-    query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventoryInProcessingQueue()));
-
-    query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
-
-    @SuppressWarnings("unchecked")
-    List<SkuInfo> list = query.list();
-    return list;
-  }
-
-
-  private static final String netUnCheckedOutInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
-      " count(a.id) as qty, b.create_date as checkinDate" +
-      " from sku_item as a" +
-      " inner join sku_group as b on a.sku_group_id = b.id" +
-      " inner join sku as c on b.sku_id = c.id" +
-      " where c.product_variant_id = :pvId" +
-      " and c.warehouse_id in (:whIds)" +
-      " and (b.status != :reviewStatus or b.status is null)" +
-      " and a.sku_item_status_id in (:itemStatus)" +
-      " and b.mrp is not null" +
-      " group by b.id" +
-      " order by checkinDate asc";
-
-  public Collection<SkuInfo> getUnCheckedOutInventory(ProductVariant productVariant, List<Warehouse> whs) {
-    String sql = netUnCheckedOutInInvSql;
-    SQLQuery query = baseDao.createSqlQuery(sql);
-
-    query.addScalar("skuId", Hibernate.LONG);
-    query.addScalar("mrp", Hibernate.DOUBLE);
-    query.addScalar("qty", Hibernate.LONG);
-    query.addScalar("costPrice", Hibernate.DOUBLE);
-    query.addScalar("checkinDate", Hibernate.DATE);
-
-    query.setParameter("pvId", productVariant.getId());
-    query.setParameterList("whIds", toWarehouseIds(whs));
-    query.setParameterList("itemStatus", Arrays.asList(EnumSkuItemStatus.Checked_IN.getId(), EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId()));
-    query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
-
-    query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
-
-    @SuppressWarnings("unchecked")
-    List<SkuInfo> list = query.list();
-
-    LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
-    for (SkuInfo skuInfo : list) {
-      SkuInfo info = getLast(skuList);
-      if (info != null && skuInfo.getSkuId() == info.getSkuId() && skuInfo.getMrp() == info.getMrp()) {
-        info.setQty(info.getQty() + skuInfo.getQty());
-        info.setUnbookedQty(info.getQty());
-      } else {
-        skuInfo.setUnbookedQty(skuInfo.getQty());
-        skuList.add(skuInfo);
-      }
-    }
-    return skuList;
-  }
-
-  private static final String checkedInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " +
-      " count(a.id) as qty, b.create_date as checkinDate" +
-      " from sku_item as a" +
-      " inner join sku_group as b on a.sku_group_id = b.id" +
-      " inner join sku as c on b.sku_id = c.id" +
-      " where c.product_variant_id = :pvId" +
-      " and c.warehouse_id in (:whIds)" +
-      " and (b.status != :reviewStatus or b.status is null)" +
-      " and a.sku_item_status_id = :itemStatus" +
-      " and b.mrp is not null" +
-      " group by b.id" +
-      " order by checkinDate asc";
-
-  @Override
-  public Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
-    String sql = checkedInInvSql;
-    SQLQuery query = baseDao.createSqlQuery(sql);
-
-    query.addScalar("skuId", Hibernate.LONG);
-    query.addScalar("mrp", Hibernate.DOUBLE);
-    query.addScalar("qty", Hibernate.LONG);
-    query.addScalar("costPrice", Hibernate.DOUBLE);
-    query.addScalar("checkinDate", Hibernate.DATE);
-
-    query.setParameter("pvId", productVariant.getId());
-    query.setParameterList("whIds", toWarehouseIds(whs));
-    query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
-    query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
-
-    query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
-
-    @SuppressWarnings("unchecked")
-    List<SkuInfo> list = query.list();
-
-    LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
-    for (SkuInfo skuInfo : list) {
-      SkuInfo info = getLast(skuList);
-      if (info != null && skuInfo.getSkuId() == info.getSkuId() && skuInfo.getMrp() == info.getMrp()) {
-        info.setQty(info.getQty() + skuInfo.getQty());
-        info.setUnbookedQty(info.getQty());
-      } else {
-        skuInfo.setUnbookedQty(skuInfo.getQty());
-        skuList.add(skuInfo);
-      }
-    }
-    return skuList;
-  }
-
-  private List<Long> toWarehouseIds(List<Warehouse> whs) {
-    List<Long> list = new ArrayList<Long>();
-    for (Warehouse wh : whs) {
-      list.add(wh.getId());
-    }
-
-    return list;
-  }
-
-  private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
-    Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
-
-    Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
-
-    List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
-    if (inProcessList != null) {
-      for (SkuInfo inProcessInfo : inProcessList) {
-        List<SkuInfo> infos = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
-        long leftQty = inProcessInfo.getQty();
-        for (SkuInfo skuInfo : infos) {
-          long qty = skuInfo.getQty() - leftQty;
-          if (qty < 0) {
-            leftQty = -qty;
-            skuInfo.setQty(0);
-            skuInfo.setUnbookedQty(0);
-          } else {
-            leftQty = 0;
-            skuInfo.setQty(qty);
-            skuInfo.setUnbookedQty(qty);
-          }
+        Map<Double, Long> map = new LinkedHashMap<Double, Long>();
+        @SuppressWarnings("unchecked")
+        List<Object[]> list = query.list();
+        if (list != null) {
+            for (Object[] data : list) {
+                map.put((Double) data[0], (Long) data[1]);
+            }
         }
-      }
+        return map;
     }
 
-    List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
-    Map<Double, List<InventoryInfo>> mrpMap = new LinkedHashMap<Double, List<InventoryInfo>>();
+    private static final String inProcessInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty, a.sku_id as skuId"
+                                                              + " from line_item as a inner join shipping_order as b on a.shipping_order_id = b.id"
+                                                              + " inner join base_order as c on b.base_order_id = c.id" + " inner join sku as e on a.sku_id = e.id"
+                                                              + " where e.product_variant_id = :pvId" + " and e.warehouse_id in (:whIds)"
+                                                              + " and c.order_status_id in (:statusIds)" + " and b.shipping_order_status_id in (:sosIds)"
+                                                              + " group by a.marked_price, a.sku_id";
 
-    for (SkuInfo skuInfo : checkedInInvList) {
-      InventoryInfo info = getLast(invList);
-      if (info != null && skuInfo.getMrp() == info.getMrp()) {
-        info.setQty(info.getQty() + skuInfo.getQty());
-      } else {
-        info = new InventoryInfo();
-        info.setMrp(skuInfo.getMrp());
-        info.setQty(skuInfo.getQty());
-        invList.add(info);
+    private List<SkuInfo> getInProcessInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        String sql = inProcessInventorySql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
+        query.addScalar("skuId", Hibernate.LONG);
 
-        List<InventoryInfo> infos = mrpMap.get(skuInfo.getMrp());
-        if (infos == null) {
-          infos = new ArrayList<InventoryInfo>();
-          mrpMap.put(Double.valueOf(skuInfo.getMrp()), infos);
-        }
-        infos.add(info);
-      }
-      info.addSkuInfo(skuInfo);
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("whIds", toWarehouseIds(whs));
+        query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
+        query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
+
+        query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
+
+        @SuppressWarnings("unchecked")
+        List<SkuInfo> list = query.list();
+        return list;
     }
 
-    for (Map.Entry<Double, List<InventoryInfo>> entry : mrpMap.entrySet()) {
-      Double mrp = entry.getKey();
-      Long bookedQty = bookedQtyMap.get(mrp);
+    private List<SkuInfo> getPostActionQueueInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        String sql = inProcessInventorySql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
+        query.addScalar("skuId", Hibernate.LONG);
 
-      if (bookedQty != null) {
-        long leftQty = bookedQty;
-        for (InventoryInfo inventoryInfo : entry.getValue()) {
-          long netInveQty = 0l;
-          for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-            long qty = skuInfo.getQty() - leftQty;
-            if (qty < 0) {
-              leftQty = -qty;
-              skuInfo.setQty(0);
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("whIds", toWarehouseIds(whs));
+        query.setParameterList("statusIds", Arrays.asList(EnumOrderStatus.InProcess.getId(), EnumOrderStatus.OnHold.getId()));
+        query.setParameterList("sosIds", EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventoryInProcessingQueue()));
+
+        query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
+
+        @SuppressWarnings("unchecked")
+        List<SkuInfo> list = query.list();
+        return list;
+    }
+
+    private static final String netUnCheckedOutInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " + " count(a.id) as qty, b.create_date as checkinDate"
+                                                                + " from sku_item as a" + " inner join sku_group as b on a.sku_group_id = b.id"
+                                                                + " inner join sku as c on b.sku_id = c.id" + " where c.product_variant_id = :pvId"
+                                                                + " and c.warehouse_id in (:whIds)" + " and (b.status != :reviewStatus or b.status is null)"
+                                                                + " and a.sku_item_status_id in (:itemStatus)" + " and b.mrp is not null" + " group by b.id"
+                                                                + " order by checkinDate asc";
+
+    public Collection<SkuInfo> getUnCheckedOutInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        String sql = netUnCheckedOutInInvSql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
+
+        query.addScalar("skuId", Hibernate.LONG);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
+        query.addScalar("costPrice", Hibernate.DOUBLE);
+        query.addScalar("checkinDate", Hibernate.DATE);
+
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("whIds", toWarehouseIds(whs));
+        query.setParameterList("itemStatus", Arrays.asList(EnumSkuItemStatus.Checked_IN.getId(), EnumSkuItemStatus.TEMP_BOOKED.getId(), EnumSkuItemStatus.BOOKED.getId()));
+        query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
+
+        query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
+
+        @SuppressWarnings("unchecked")
+        List<SkuInfo> list = query.list();
+
+        LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
+        for (SkuInfo skuInfo : list) {
+            SkuInfo info = getLast(skuList);
+            if (info != null && skuInfo.getSkuId() == info.getSkuId() && skuInfo.getMrp() == info.getMrp()) {
+                info.setQty(info.getQty() + skuInfo.getQty());
+                info.setUnbookedQty(info.getQty());
             } else {
-              leftQty = 0;
-              skuInfo.setQty(qty);
+                skuInfo.setUnbookedQty(skuInfo.getQty());
+                skuList.add(skuInfo);
             }
-            netInveQty += skuInfo.getQty();
-          }
-          inventoryInfo.setQty(netInveQty);
         }
-      }
+        return skuList;
     }
-    return invList;
-  }
 
+    private static final String checkedInInvSql = "select c.id as skuId, b.mrp as mrp, b.cost_price as costPrice, " + " count(a.id) as qty, b.create_date as checkinDate"
+                                                        + " from sku_item as a" + " inner join sku_group as b on a.sku_group_id = b.id" + " inner join sku as c on b.sku_id = c.id"
+                                                        + " where c.product_variant_id = :pvId" + " and c.warehouse_id in (:whIds)"
+                                                        + " and (b.status != :reviewStatus or b.status is null)" + " and a.sku_item_status_id = :itemStatus"
+                                                        + " and b.mrp is not null" + " group by b.id" + " order by checkinDate asc";
 
-  private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list, long skuId, double mrp) {
-    List<SkuInfo> infos = new ArrayList<SkuInfo>();
-    for (SkuInfo info : list) {
-      if (info.getSkuId() == skuId && info.getMrp() == mrp) {
-        infos.add(info);
-      }
-    }
-    return infos;
-  }
+    @Override
+    public Collection<SkuInfo> getCheckedInInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        String sql = checkedInInvSql;
+        SQLQuery query = baseDao.createSqlQuery(sql);
 
-  @Override
-  public Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant) {
-    return getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses());
-  }
+        query.addScalar("skuId", Hibernate.LONG);
+        query.addScalar("mrp", Hibernate.DOUBLE);
+        query.addScalar("qty", Hibernate.LONG);
+        query.addScalar("costPrice", Hibernate.DOUBLE);
+        query.addScalar("checkinDate", Hibernate.DATE);
 
-  @Override
-  public Collection<InventoryInfo> getAvailableInventory(List<Sku> skus) {
-    List<Warehouse> whs = new ArrayList<Warehouse>();
-    for (Sku sku : skus) {
-      whs.add(sku.getWarehouse());
-    }
-    return getAvailableInventory(skus.get(0).getProductVariant(), whs);
-  }
+        query.setParameter("pvId", productVariant.getId());
+        query.setParameterList("whIds", toWarehouseIds(whs));
+        query.setParameter("itemStatus", EnumSkuItemStatus.Checked_IN.getId());
+        query.setParameter("reviewStatus", EnumSkuGroupStatus.UNDER_REVIEW.name());
 
-  @Override
-  public Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter) {
-    List<SkuInfo> skus = new ArrayList<SkuInfo>();
+        query.setResultTransformer(Transformers.aliasToBean(SkuInfo.class));
 
-    Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
-    boolean invAdded = false;
-    for (InventoryInfo inventoryInfo : infos) {
-      if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
-        for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-          if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
-            Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
-            if (filter.getWarehouseId() == null
-                || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
-              skus.add(skuInfo);
-              invAdded = true;
+        @SuppressWarnings("unchecked")
+        List<SkuInfo> list = query.list();
+
+        LinkedList<SkuInfo> skuList = new LinkedList<SkuInfo>();
+        for (SkuInfo skuInfo : list) {
+            SkuInfo info = getLast(skuList);
+            if (info != null && skuInfo.getSkuId() == info.getSkuId() && skuInfo.getMrp() == info.getMrp()) {
+                info.setQty(info.getQty() + skuInfo.getQty());
+                info.setUnbookedQty(info.getQty());
+            } else {
+                skuInfo.setUnbookedQty(skuInfo.getQty());
+                skuList.add(skuInfo);
             }
-          }
         }
-      }
-      if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
-    }
-    return skus;
-  }
-
-  @Override
-  public Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem) {
-    List<SkuInfo> skus = new ArrayList<SkuInfo>();
-    SkuItem tempBookedSkuItem = null;
-    List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
-    if (skuItemCLIs != null && skuItemCLIs.size() > 0) {
-      tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
+        return skuList;
     }
 
-    Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
-    boolean invAdded = false;
-    boolean newSkuInfoFlag = false;
-    boolean updateSkuInfoFlag = false;
-    //
-    for (InventoryInfo inventoryInfo : infos) {
-      if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
-        for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-          if (tempBookedSkuItem != null && skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()) {
-            skuInfo.setUnbookedQty(skuInfo.getUnbookedQty() + cartLineItem.getQty());
-            updateSkuInfoFlag = true;
-            break;
-          }
+    private List<Long> toWarehouseIds(List<Warehouse> whs) {
+        List<Long> list = new ArrayList<Long>();
+        for (Warehouse wh : whs) {
+            list.add(wh.getId());
         }
-        if (!updateSkuInfoFlag && tempBookedSkuItem != null) {
-          SkuInfo newSkuInfo = new SkuInfo();
-          newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
-          newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
-          newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
-          newSkuInfo.setUnbookedQty(cartLineItem.getQty());
-          newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
-          if (tempBookedSkuItem.getSkuGroup().getQty() != null) {
-            newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
-          }
-          inventoryInfo.getSkuInfoList().add(newSkuInfo);
-          newSkuInfoFlag = true;
-          break;
-        }
-      }
+
+        return list;
     }
 
-    if (!updateSkuInfoFlag && !newSkuInfoFlag && tempBookedSkuItem != null) {
-      InventoryInfo newInventoryInfo = new InventoryInfo();
-      List<SkuInfo> skuInfoList = new ArrayList<SkuInfo>();
-      SkuInfo newSkuInfo = new SkuInfo();
-      newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
-      newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
-      newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
-      newSkuInfo.setUnbookedQty(cartLineItem.getQty());
-      newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
-      if (tempBookedSkuItem.getSkuGroup().getQty() != null) {
-        newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
-      }
+    private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
+        Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 
-      skuInfoList.add(newSkuInfo);
-      newInventoryInfo.setMrp(newSkuInfo.getMrp());
-      newInventoryInfo.setQty(newSkuInfo.getUnbookedQty());
-      newInventoryInfo.getSkuInfoList().add(newSkuInfo);
-      infos.add(newInventoryInfo);
-    }
+        Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
 
-    for (InventoryInfo inventoryInfo : infos) {
-      if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
-        for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
-          if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
-            Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
-            if (filter.getWarehouseId() == null
-                || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
-              skus.add(skuInfo);
-              invAdded = true;
-            }
-          }
-        }
-      }
-      if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded) break;
-    }
-    return skus;
-  }
-
-  private static <T> T removeFirst(List<T> list) {
-    if (list == null || list.size() == 0) return null;
-    if (list instanceof LinkedList) {
-      try {
-        return ((LinkedList<T>) list).removeFirst();
-      } catch (Exception e) {
-
-      }
-    }
-    return list.remove(0);
-  }
-
-  private static <T> T getLast(List<T> list) {
-    if (list == null || list.size() == 0) return null;
-    if (list instanceof LinkedList) {
-      try {
-        return ((LinkedList<T>) list).getLast();
-      } catch (Exception e) {
-
-      }
-    }
-    return list.get(list.size() - 1);
-  }
-
-
-  public void updateVariantInfo(ProductVariant productVariant, Set<InventoryHealthService.SkuInfo> skuInfos) {
-    double newHkPrice = 0d;
-    if (skuInfos == null || skuInfos.isEmpty()) {
-      SkuInfo skuInfo = new SkuInfo();
-      skuInfo.setSkuId(0l);
-      skuInfo.setCostPrice(productVariant.getCostPrice());
-      skuInfo.setMrp(productVariant.getMarkedPrice());
-      skuInfo.setQty(0l);
-      skuInfo.setUnbookedQty(0l);
-      skuInfos.add(skuInfo);
-    }
-    Iterator<InventoryHealthService.SkuInfo> iterator = skuInfos.iterator();
-    InventoryHealthService.SkuInfo selectedInfo = iterator.next();
-    Long maxQty = selectedInfo.getQty();
-    for (InventoryHealthService.SkuInfo info : skuInfos) {
-      if (maxQty.compareTo(info.getQty()) < 0) {
-        maxQty = info.getQty();
-        selectedInfo = info;
-      }
-    }
-
-    if (selectedInfo.getMrp() != 0d && !productVariant.getMarkedPrice().equals(Double.valueOf(selectedInfo.getMrp()))) {
-      UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
-      if (updatePvPrice == null) {
-        updatePvPrice = new UpdatePvPrice();
-      }
-      updatePvPrice.setProductVariant(productVariant);
-      updatePvPrice.setOldCostPrice(productVariant.getCostPrice());
-      updatePvPrice.setNewCostPrice(selectedInfo.getCostPrice());
-      updatePvPrice.setOldMrp(productVariant.getMarkedPrice());
-      updatePvPrice.setNewMrp(selectedInfo.getMrp());
-      updatePvPrice.setOldHkprice(productVariant.getHkPrice());
-      newHkPrice = selectedInfo.getMrp() * (1 - productVariant.getDiscountPercent());
-      updatePvPrice.setNewHkprice(newHkPrice);
-      updatePvPrice.setTxnDate(new Date());
-      updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
-      baseDao.save(updatePvPrice);
-    }
-    // get Net quantity for product variant
-    List<Sku> variantSkus = skuService.getSKUsForProductVariant(productVariant);
-    long netQty = skuItemDao.getInventoryCount(variantSkus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
-    productVariant.setNetQty(netQty);
-
-    productVariant.setMrpQty(maxQty);
-    productVariant.setMarkedPrice(selectedInfo.getMrp());
-    productVariant.setCostPrice(selectedInfo.getCostPrice());
-    if (newHkPrice != 0d) {
-      productVariant.setHkPrice(newHkPrice);
-    }
-    if (!productVariant.getDeleted() && productVariant.getMrpQty() > 0) {
-      productVariant.setOutOfStock(false);
-    } else {
-      productVariant.setOutOfStock(true);
-    }
-    long skuId = selectedInfo.getSkuId();
-    if (skuId != 0) {
-      Sku sku = getBaseDao().get(Sku.class, skuId);
-      productVariant.setWarehouse(sku.getWarehouse());
-    }
-    getBaseDao().save(productVariant);
-    Product product = productVariant.getProduct();
-    List<ProductVariant> inStockVariants = product.getInStockVariants();
-    if (inStockVariants != null && inStockVariants.isEmpty()) {
-      product.setOutOfStock(true);
-    } else {
-      product.setOutOfStock(false);
-    }
-
-    boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-    if (!updateStockStatus) {
-      productVariant.setOutOfStock(false);
-      product.setOutOfStock(false);
-      getBaseDao().save(productVariant);
-    }
-    getBaseDao().save(product);
-  }
-
-
-  // Call this method from just  action  java
-  public void tempBookSkuLineItemForOrder(Order order) {
-    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
-    Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-    for (CartLineItem cartLineItem : cartLineItems) {
-      if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
-        if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
-          ProductVariant productVariant = cartLineItem.getProductVariant();
-
-          // check if product variant inventory is 0 thats the case of drop ship ,jit  or other regular items then avoid entry in sicli
-
-//                    List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-          List<Sku> skus = new ArrayList<Sku>();
-          Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-          skus.add(sku);
-          Long availableUnBookedInventory = skuItemDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
-
-          if (availableUnBookedInventory > 0) {
-            // picking the  sku for current MRP available at max qty on product variant
-//            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-
-            long qtyToBeSet = cartLineItem.getQty();
-            if (availableUnBookedInventory >= qtyToBeSet) {
-              Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-
-              for (int i = 0; i < qtyToBeSet; i++) {
-                List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
-
-                if (skuItemList != null && skuItemList.size() > 0) {
-                  SkuItem skuItem = skuItemList.get(0);
-                  skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-                  skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-                  skuItem = (SkuItem) getBaseDao().save(skuItem);
-                  // inventoryHealthCheck call
-                  inventoryHealthCheck(productVariant);
-
-                  skuItemsToBeBooked.add(skuItem);
+        List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
+        if (inProcessList != null) {
+            for (SkuInfo inProcessInfo : inProcessList) {
+                List<SkuInfo> infos = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
+                long leftQty = inProcessInfo.getQty();
+                for (SkuInfo skuInfo : infos) {
+                    long qty = skuInfo.getQty() - leftQty;
+                    if (qty < 0) {
+                        leftQty = -qty;
+                        skuInfo.setQty(0);
+                        skuInfo.setUnbookedQty(0);
+                    } else {
+                        leftQty = 0;
+                        skuInfo.setQty(qty);
+                        skuInfo.setUnbookedQty(qty);
+                    }
                 }
-              }
-              // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-              List<SkuItemCLI> skuItemCLIList = inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-              cartLineItem.setSkuItemCLIs(skuItemCLIList);
             }
-          }
         }
-      }
+
+        List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
+        Map<Double, List<InventoryInfo>> mrpMap = new LinkedHashMap<Double, List<InventoryInfo>>();
+
+        for (SkuInfo skuInfo : checkedInInvList) {
+            InventoryInfo info = getLast(invList);
+            if (info != null && skuInfo.getMrp() == info.getMrp()) {
+                info.setQty(info.getQty() + skuInfo.getQty());
+            } else {
+                info = new InventoryInfo();
+                info.setMrp(skuInfo.getMrp());
+                info.setQty(skuInfo.getQty());
+                invList.add(info);
+
+                List<InventoryInfo> infos = mrpMap.get(skuInfo.getMrp());
+                if (infos == null) {
+                    infos = new ArrayList<InventoryInfo>();
+                    mrpMap.put(Double.valueOf(skuInfo.getMrp()), infos);
+                }
+                infos.add(info);
+            }
+            info.addSkuInfo(skuInfo);
+        }
+
+        for (Map.Entry<Double, List<InventoryInfo>> entry : mrpMap.entrySet()) {
+            Double mrp = entry.getKey();
+            Long bookedQty = bookedQtyMap.get(mrp);
+
+            if (bookedQty != null) {
+                long leftQty = bookedQty;
+                for (InventoryInfo inventoryInfo : entry.getValue()) {
+                    long netInveQty = 0l;
+                    for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                        long qty = skuInfo.getQty() - leftQty;
+                        if (qty < 0) {
+                            leftQty = -qty;
+                            skuInfo.setQty(0);
+                        } else {
+                            leftQty = 0;
+                            skuInfo.setQty(qty);
+                        }
+                        netInveQty += skuInfo.getQty();
+                    }
+                    inventoryInfo.setQty(netInveQty);
+                }
+            }
+        }
+        return invList;
     }
-    baseDao.save(order);
-  }
 
+    private List<SkuInfo> searchBySkuIdAndMrp(Collection<SkuInfo> list, long skuId, double mrp) {
+        List<SkuInfo> infos = new ArrayList<SkuInfo>();
+        for (SkuInfo info : list) {
+            if (info.getSkuId() == skuId && info.getMrp() == mrp) {
+                infos.add(info);
+            }
+        }
+        return infos;
+    }
 
-  public void inventoryHealthCheck(ProductVariant productVariant) {
-    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
-    Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
+    @Override
+    public Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant) {
+        return getAvailableInventory(productVariant, warehouseService.getServiceableWarehouses());
+    }
 
-    if (availableUnbookedInventory > 0) {
-      Collection<InventoryHealthService.SkuInfo> availableCheckedInInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
+    @Override
+    public Collection<InventoryInfo> getAvailableInventory(List<Sku> skus) {
+        List<Warehouse> whs = new ArrayList<Warehouse>();
+        for (Sku sku : skus) {
+            whs.add(sku.getWarehouse());
+        }
+        return getAvailableInventory(skus.get(0).getProductVariant(), whs);
+    }
 
-      List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-      if (!skus.isEmpty()) {
-        Set<SkuInfo> availableUnBookedInvnList = new HashSet<SkuInfo>();
-        Set<SkuInfo> differentMrpCheckedinBatch = new HashSet<SkuInfo>();
-        Iterator it = availableCheckedInInvnList.iterator();
-        SkuInfo sk = (SkuInfo) it.next();
-        availableUnBookedInvnList.add(sk);
-        for (SkuInfo skuInfo : availableCheckedInInvnList) {
-          if (sk.getMrp() == skuInfo.getMrp() && sk.getSkuId() != skuInfo.getSkuId()) {
-            availableUnBookedInvnList.add(skuInfo);
-          } else {
-            differentMrpCheckedinBatch.add(skuInfo);
-          }
+    @Override
+    public Collection<SkuInfo> getAvailableSkus(ProductVariant variant, SkuFilter filter) {
+        List<SkuInfo> skus = new ArrayList<SkuInfo>();
+
+        Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
+        boolean invAdded = false;
+        for (InventoryInfo inventoryInfo : infos) {
+            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                    if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
+                        Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+                        if (filter.getWarehouseId() == null || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
+                            skus.add(skuInfo);
+                            invAdded = true;
+                        }
+                    }
+                }
+            }
+            if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded)
+                break;
+        }
+        return skus;
+    }
+
+    @Override
+    public Collection<SkuInfo> getAvailableSkusForSplitter(ProductVariant variant, SkuFilter filter, CartLineItem cartLineItem) {
+        List<SkuInfo> skus = new ArrayList<SkuInfo>();
+        SkuItem tempBookedSkuItem = null;
+        List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
+        if (skuItemCLIs != null && skuItemCLIs.size() > 0) {
+            tempBookedSkuItem = skuItemCLIs.get(0).getSkuItem();
         }
 
-        differentMrpCheckedinBatch.remove(sk);
-        Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
-        Iterator itetaror = differentMrpCheckedinBatch.iterator();
-        if (differentMrpCheckedinBatch.size() > 1) {
-          SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
-
-          if (differentCheckedInBatchFirstElement != null) {
-            for (SkuInfo info : availableUnBookedInvnList) {
-              if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
-                availableUnBookedInvnListToUpdate.add(info);
-              }
+        Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
+        boolean invAdded = false;
+        boolean newSkuInfoFlag = false;
+        boolean updateSkuInfoFlag = false;
+        //
+        for (InventoryInfo inventoryInfo : infos) {
+            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                    if (tempBookedSkuItem != null && skuInfo.getSkuId() == tempBookedSkuItem.getSkuGroup().getSku().getId().longValue()) {
+                        skuInfo.setUnbookedQty(skuInfo.getUnbookedQty() + cartLineItem.getQty());
+                        updateSkuInfoFlag = true;
+                        break;
+                    }
+                }
+                if (!updateSkuInfoFlag && tempBookedSkuItem != null) {
+                    SkuInfo newSkuInfo = new SkuInfo();
+                    newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
+                    newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
+                    newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
+                    newSkuInfo.setUnbookedQty(cartLineItem.getQty());
+                    newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
+                    if (tempBookedSkuItem.getSkuGroup().getQty() != null) {
+                        newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+                    }
+                    inventoryInfo.getSkuInfoList().add(newSkuInfo);
+                    newSkuInfoFlag = true;
+                    break;
+                }
             }
-          } else {
-            availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
-          }
+        }
+
+        if (!updateSkuInfoFlag && !newSkuInfoFlag && tempBookedSkuItem != null) {
+            InventoryInfo newInventoryInfo = new InventoryInfo();
+            List<SkuInfo> skuInfoList = new ArrayList<SkuInfo>();
+            SkuInfo newSkuInfo = new SkuInfo();
+            newSkuInfo.setSkuId(tempBookedSkuItem.getSkuGroup().getSku().getId());
+            newSkuInfo.setMrp(tempBookedSkuItem.getSkuGroup().getMrp());
+            newSkuInfo.setCostPrice(tempBookedSkuItem.getSkuGroup().getCostPrice());
+            newSkuInfo.setUnbookedQty(cartLineItem.getQty());
+            newSkuInfo.setCheckinDate(tempBookedSkuItem.getSkuGroup().getCreateDate());
+            if (tempBookedSkuItem.getSkuGroup().getQty() != null) {
+                newSkuInfo.setQty(tempBookedSkuItem.getSkuGroup().getQty());
+            }
+
+            skuInfoList.add(newSkuInfo);
+            newInventoryInfo.setMrp(newSkuInfo.getMrp());
+            newInventoryInfo.setQty(newSkuInfo.getUnbookedQty());
+            newInventoryInfo.getSkuInfoList().add(newSkuInfo);
+            infos.add(newInventoryInfo);
+        }
+
+        for (InventoryInfo inventoryInfo : infos) {
+            if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
+                for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+                    if (skuInfo.getUnbookedQty() >= filter.getMinQty()) {
+                        Sku sku = baseDao.get(Sku.class, skuInfo.getSkuId());
+                        if (filter.getWarehouseId() == null || filter.getWarehouseId().equals(sku.getWarehouse().getId())) {
+                            skus.add(skuInfo);
+                            invAdded = true;
+                        }
+                    }
+                }
+            }
+            if ((filter.getFetchType() != null && filter.getFetchType() == FetchType.FIRST_ORDER) && invAdded)
+                break;
+        }
+        return skus;
+    }
+
+    private static <T> T removeFirst(List<T> list) {
+        if (list == null || list.size() == 0)
+            return null;
+        if (list instanceof LinkedList) {
+            try {
+                return ((LinkedList<T>) list).removeFirst();
+            } catch (Exception e) {
+
+            }
+        }
+        return list.remove(0);
+    }
+
+    private static <T> T getLast(List<T> list) {
+        if (list == null || list.size() == 0)
+            return null;
+        if (list instanceof LinkedList) {
+            try {
+                return ((LinkedList<T>) list).getLast();
+            } catch (Exception e) {
+
+            }
+        }
+        return list.get(list.size() - 1);
+    }
+
+    public void updateVariantInfo(ProductVariant productVariant, Set<InventoryHealthService.SkuInfo> skuInfos) {
+        double newHkPrice = 0d;
+        if (skuInfos == null || skuInfos.isEmpty()) {
+            SkuInfo skuInfo = new SkuInfo();
+            skuInfo.setSkuId(0l);
+            skuInfo.setCostPrice(productVariant.getCostPrice());
+            skuInfo.setMrp(productVariant.getMarkedPrice());
+            skuInfo.setQty(0l);
+            skuInfo.setUnbookedQty(0l);
+            skuInfos.add(skuInfo);
+        }
+        Iterator<InventoryHealthService.SkuInfo> iterator = skuInfos.iterator();
+        InventoryHealthService.SkuInfo selectedInfo = iterator.next();
+        Long maxQty = selectedInfo.getQty();
+        for (InventoryHealthService.SkuInfo info : skuInfos) {
+            if (maxQty.compareTo(info.getQty()) < 0) {
+                maxQty = info.getQty();
+                selectedInfo = info;
+            }
+        }
+
+        if (selectedInfo.getMrp() != 0d && !productVariant.getMarkedPrice().equals(Double.valueOf(selectedInfo.getMrp()))) {
+            UpdatePvPrice updatePvPrice = updatePvPriceDao.getPVForPriceUpdate(productVariant, EnumUpdatePVPriceStatus.Pending.getId());
+            if (updatePvPrice == null) {
+                updatePvPrice = new UpdatePvPrice();
+            }
+            updatePvPrice.setProductVariant(productVariant);
+            updatePvPrice.setOldCostPrice(productVariant.getCostPrice());
+            updatePvPrice.setNewCostPrice(selectedInfo.getCostPrice());
+            updatePvPrice.setOldMrp(productVariant.getMarkedPrice());
+            updatePvPrice.setNewMrp(selectedInfo.getMrp());
+            updatePvPrice.setOldHkprice(productVariant.getHkPrice());
+            newHkPrice = selectedInfo.getMrp() * (1 - productVariant.getDiscountPercent());
+            updatePvPrice.setNewHkprice(newHkPrice);
+            updatePvPrice.setTxnDate(new Date());
+            updatePvPrice.setStatus(EnumUpdatePVPriceStatus.Pending.getId());
+            baseDao.save(updatePvPrice);
+        }
+        // get Net quantity for product variant
+        List<Sku> variantSkus = skuService.getSKUsForProductVariant(productVariant);
+        long netQty = skuItemDao.getInventoryCount(variantSkus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
+        productVariant.setNetQty(netQty);
+
+        productVariant.setMrpQty(maxQty);
+        productVariant.setMarkedPrice(selectedInfo.getMrp());
+        productVariant.setCostPrice(selectedInfo.getCostPrice());
+        if (newHkPrice != 0d) {
+            productVariant.setHkPrice(newHkPrice);
+        }
+        if (!productVariant.getDeleted() && productVariant.getMrpQty() > 0) {
+            productVariant.setOutOfStock(false);
         } else {
-          availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
+            productVariant.setOutOfStock(true);
+        }
+        long skuId = selectedInfo.getSkuId();
+        if (skuId != 0) {
+            Sku sku = getBaseDao().get(Sku.class, skuId);
+            productVariant.setWarehouse(sku.getWarehouse());
+        }
+        getBaseDao().save(productVariant);
+        Product product = productVariant.getProduct();
+        List<ProductVariant> inStockVariants = product.getInStockVariants();
+        if (inStockVariants != null && inStockVariants.isEmpty()) {
+            product.setOutOfStock(true);
+        } else {
+            product.setOutOfStock(false);
         }
 
-        if (availableUnBookedInvnListToUpdate.size() > 0) {
-          updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
+        boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+        if (!updateStockStatus) {
+            productVariant.setOutOfStock(false);
+            product.setOutOfStock(false);
+            getBaseDao().save(productVariant);
         }
-      }
-    } else {
-      Product product = productVariant.getProduct();
-      boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
-      if (!updateStockStatus) {
-        productVariant.setOutOfStock(false);
-      }
-      else {
-        productVariant.setOutOfStock(true);
-        productVariant.setNetQty(0L);
-        productVariant.setMrpQty(0L);
-
-      }
-
-      getBaseDao().save(productVariant);
-
-      List<ProductVariant> inStockVariants = product.getInStockVariants();
-      if (inStockVariants != null && inStockVariants.isEmpty()) {
-        product.setOutOfStock(true);
-      } else {
-        product.setOutOfStock(false);
-      }
-      getBaseDao().save(product);
+        getBaseDao().save(product);
     }
 
-  }
+    // Call this method from just action java
+    public void tempBookSkuLineItemForOrder(Order order) {
+        InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
+        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+        for (CartLineItem cartLineItem : cartLineItems) {
+            if (!cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
+                if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
+                    ProductVariant productVariant = cartLineItem.getProductVariant();
 
-  public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
-    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
-    Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
-    if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
+                    // check if product variant inventory is 0 thats the case of drop ship ,jit or other regular items
+                    // then avoid entry in sicli
 
-      Iterator it = availableUnBookedInvnList.iterator();
-      SkuInfo newSkuInfo = (SkuInfo) it.next();
-      Long remainingQty = newSkuInfo.getQty();
-      Double newMrp = newSkuInfo.getMrp();
-      it.remove();
-      long skuId = newSkuInfo.getSkuId();
-      Sku sku = getBaseDao().get(Sku.class, skuId);
-      productVariant.setWarehouse(sku.getWarehouse());
-      getBaseDao().save(productVariant);
+                    // List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+                    List<Sku> skus = new ArrayList<Sku>();
+                    Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+                    skus.add(sku);
+                    Long availableUnBookedInventory = skuItemDao.getInventoryCount(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()));
 
-      List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
-      Set<CartLineItem> clisInProcessing = new LinkedHashSet<CartLineItem>(cartLineItemsInProcessing);
-      if (clisInProcessing.size() > 0){
-        logger.debug("List of cartLineItems in processing queue for  product variant " +productVariant.getId() + " sicli which not created is " + cartLineItemsInProcessing.size());
-        remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, newSkuInfo.getQty(), true);
-        logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in processing queue" + remainingQty);
-      }
+                    if (availableUnBookedInventory > 0) {
+                        // picking the sku for current MRP available at max qty on product variant
+                        // Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
 
-      if (remainingQty > 0){
-        List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
-        logger.debug("List of cartLineItems in action awaiting for product variant " + productVariant.getId() +" sicli which not created is " + cartLineItems.size());
-        Set<CartLineItem> clis = new LinkedHashSet<CartLineItem>(cartLineItems);
-        if (clis.size() > 0) {
-          logger.debug("going to book inventory for Variant :" + productVariant.getId() + " and in action queue " + cartLineItems.size());
-          remainingQty = tempBookSkuLineItemForPendingOrder(clis,remainingQty , false);
-          logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in action queue" + remainingQty);
+                        long qtyToBeSet = cartLineItem.getQty();
+                        if (availableUnBookedInventory >= qtyToBeSet) {
+                            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+
+                            for (int i = 0; i < qtyToBeSet; i++) {
+                                List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null,
+                                        cartLineItem.getMarkedPrice());
+
+                                if (skuItemList != null && skuItemList.size() > 0) {
+                                    SkuItem skuItem = skuItemList.get(0);
+                                    skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                                    skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                                    skuItem = (SkuItem) getBaseDao().save(skuItem);
+                                    // inventoryHealthCheck call
+                                    inventoryHealthCheck(productVariant);
+
+                                    skuItemsToBeBooked.add(skuItem);
+                                }
+                            }
+                            // Call method to make new entries in SKUItemCLI only those for which inventory availa
+                            List<SkuItemCLI> skuItemCLIList = inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+                            cartLineItem.setSkuItemCLIs(skuItemCLIList);
+                        }
+                    }
+                }
+            }
         }
-      }
-
-      /*newSkuInfo.setQty(remainingQty);
-      Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
-      newBatchSkuInfo.add(newSkuInfo);
-      updateVariantInfo(productVariant, newBatchSkuInfo);*/
+        baseDao.save(order);
     }
-  }
 
-  public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
-    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
-    List<ShippingOrder> lifeCycleActivityLoggedForSO = new ArrayList<ShippingOrder>();
-    for (CartLineItem cartLineItem : cartLineItems) {
-//      if (lineItemDao.getLineItem(cartLineItem) != null) {
+    public void inventoryHealthCheck(ProductVariant productVariant) {
+        InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
+        Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
 
-        ProductVariant productVariant = cartLineItem.getProductVariant();
-        // picking the  sku for current MRP available at max qty on product variant
-        Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
-        long qtyToBeSet = cartLineItem.getQty();
-        Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
-        if (maxQty >= qtyToBeSet) {
-          for (int i = 0; i < qtyToBeSet; i++) {
-            List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
-            if (skuItemList != null && skuItemList.size() > 0) {
-              SkuItem skuItem = skuItemList.get(0);
-              skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-              skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
-              // todo Pvi entries
-              skuItem = (SkuItem) getBaseDao().save(skuItem);
-              // inventoryHealthCheck call
-//                        inventoryHealthCheck(productVariant);
+        if (availableUnbookedInventory > 0) {
+            Collection<InventoryHealthService.SkuInfo> availableCheckedInInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
 
-              // todo UpdatePrice and Mrp qyt
-              skuItemsToBeBooked.add(skuItem);
+            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+            if (!skus.isEmpty()) {
+                Set<SkuInfo> availableUnBookedInvnList = new HashSet<SkuInfo>();
+                Set<SkuInfo> differentMrpCheckedinBatch = new HashSet<SkuInfo>();
+                Iterator it = availableCheckedInInvnList.iterator();
+                SkuInfo sk = (SkuInfo) it.next();
+                availableUnBookedInvnList.add(sk);
+                for (SkuInfo skuInfo : availableCheckedInInvnList) {
+                    if (sk.getMrp() == skuInfo.getMrp() && sk.getSkuId() != skuInfo.getSkuId()) {
+                        availableUnBookedInvnList.add(skuInfo);
+                    } else {
+                        differentMrpCheckedinBatch.add(skuInfo);
+                    }
+                }
+
+                differentMrpCheckedinBatch.remove(sk);
+                Set<SkuInfo> availableUnBookedInvnListToUpdate = new HashSet<SkuInfo>();
+                Iterator itetaror = differentMrpCheckedinBatch.iterator();
+                if (differentMrpCheckedinBatch.size() > 1) {
+                    SkuInfo differentCheckedInBatchFirstElement = (SkuInfo) itetaror.next();
+
+                    if (differentCheckedInBatchFirstElement != null) {
+                        for (SkuInfo info : availableUnBookedInvnList) {
+                            if (info.getCheckinDate().compareTo(differentCheckedInBatchFirstElement.getCheckinDate()) <= 0) {
+                                availableUnBookedInvnListToUpdate.add(info);
+                            }
+                        }
+                    } else {
+                        availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
+                    }
+                } else {
+                    availableUnBookedInvnListToUpdate.addAll(availableUnBookedInvnList);
+                }
+
+                if (availableUnBookedInvnListToUpdate.size() > 0) {
+                    updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
+                    updateVariantInfoOnEdge(productVariant);
+
+                }
             }
-          }
-          // Call method to make new entries in SKUItemCLI  only those for which inventory availa
-          logger.debug("calling saveSICLI line 881 from InventoryHealthServiceImpl");
-          inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
-          if (siliToBeCreated) {
-            logger.debug("calling createNewSkuItemLineItem from InventoryHealthServiceImpl");
-            skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
-            ShippingOrder shippingOrder = lineItemDao.getLineItem(cartLineItem).getShippingOrder();
-            if(!lifeCycleActivityLoggedForSO.contains(shippingOrder)){
-              getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Sku Items booked after check in of: "+cartLineItem.getProductVariant().getId());
-              lifeCycleActivityLoggedForSO.add(shippingOrder);
+        } else {
+            Product product = productVariant.getProduct();
+            boolean updateStockStatus = !(product.isJit() || product.isDropShipping() || product.isService());
+            if (!updateStockStatus) {
+                productVariant.setOutOfStock(false);
+            } else {
+                productVariant.setOutOfStock(true);
+                productVariant.setNetQty(0L);
+                productVariant.setMrpQty(0L);
+
             }
-          }
-          maxQty = maxQty - qtyToBeSet;
+
+            getBaseDao().save(productVariant);
+            updateVariantInfoOnEdge(productVariant);
+
+            List<ProductVariant> inStockVariants = product.getInStockVariants();
+            if (inStockVariants != null && inStockVariants.isEmpty()) {
+                product.setOutOfStock(true);
+            } else {
+                product.setOutOfStock(false);
+            }
+            getBaseDao().save(product);
         }
-      }
 
-    return maxQty;
-  }
+    }
 
+    private void updateVariantInfoOnEdge(ProductVariant productVariant) {
+        /*if (AppConstants.isHybridRelease) {*/
+            VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
+            variantStockSyncRequest.setOldVariantId(productVariant.getId());
+            variantStockSyncRequest.setCostPrice(productVariant.getCostPrice());
+            variantStockSyncRequest.setMrp(productVariant.getMarkedPrice());
+            variantStockSyncRequest.setOos(productVariant.isOutOfStock());
 
-  public BaseDao getBaseDao() {
-    return baseDao;
-  }
+            getHybridStoreVariantService().syncStockOnEdge(variantStockSyncRequest);
+        /*}*/
+    }
 
-  public void setBaseDao(BaseDao baseDao) {
-    this.baseDao = baseDao;
-  }
+    public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
+        InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
+        Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
+        if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
 
-  public ShippingOrderService getShippingOrderService() {
-    return ServiceLocatorFactory.getService(ShippingOrderService.class);
-  }
+            Iterator it = availableUnBookedInvnList.iterator();
+            SkuInfo newSkuInfo = (SkuInfo) it.next();
+            Long remainingQty = newSkuInfo.getQty();
+            Double newMrp = newSkuInfo.getMrp();
+            it.remove();
+            long skuId = newSkuInfo.getSkuId();
+            Sku sku = getBaseDao().get(Sku.class, skuId);
+            productVariant.setWarehouse(sku.getWarehouse());
+            getBaseDao().save(productVariant);
 
-/*  public AdminOrderService getAdminOrderService() {
-    return adminOrderService;
-  }*/
+            List<CartLineItem> cartLineItemsInProcessing = inventoryManageService.getClisForOrderInProcessingState(productVariant, newSkuInfo.getSkuId(), newMrp);
+            Set<CartLineItem> clisInProcessing = new LinkedHashSet<CartLineItem>(cartLineItemsInProcessing);
+            if (clisInProcessing.size() > 0) {
+                logger.debug("List of cartLineItems in processing queue for  product variant " + productVariant.getId() + " sicli which not created is "
+                        + cartLineItemsInProcessing.size());
+                remainingQty = tempBookSkuLineItemForPendingOrder(clisInProcessing, newSkuInfo.getQty(), true);
+                logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in processing queue" + remainingQty);
+            }
+
+            if (remainingQty > 0) {
+                List<CartLineItem> cartLineItems = cartLineItemDao.getClisForInPlacedOrder(productVariant, newMrp);
+                logger.debug("List of cartLineItems in action awaiting for product variant " + productVariant.getId() + " sicli which not created is " + cartLineItems.size());
+                Set<CartLineItem> clis = new LinkedHashSet<CartLineItem>(cartLineItems);
+                if (clis.size() > 0) {
+                    logger.debug("going to book inventory for Variant :" + productVariant.getId() + " and in action queue " + cartLineItems.size());
+                    remainingQty = tempBookSkuLineItemForPendingOrder(clis, remainingQty, false);
+                    logger.debug("Remaining qty left after temp booking for Variant :" + productVariant.getId() + " and in action queue" + remainingQty);
+                }
+            }
+
+            /*
+             * newSkuInfo.setQty(remainingQty); Set<SkuInfo> newBatchSkuInfo = new HashSet<SkuInfo>();
+             * newBatchSkuInfo.add(newSkuInfo); updateVariantInfo(productVariant, newBatchSkuInfo);
+             */
+        }
+    }
+
+    public Long tempBookSkuLineItemForPendingOrder(Set<CartLineItem> cartLineItems, Long maxQty, boolean siliToBeCreated) {
+        InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
+        List<ShippingOrder> lifeCycleActivityLoggedForSO = new ArrayList<ShippingOrder>();
+        for (CartLineItem cartLineItem : cartLineItems) {
+            // if (lineItemDao.getLineItem(cartLineItem) != null) {
+
+            ProductVariant productVariant = cartLineItem.getProductVariant();
+            // picking the sku for current MRP available at max qty on product variant
+            Sku sku = skuService.getSKU(productVariant, productVariant.getWarehouse());
+            long qtyToBeSet = cartLineItem.getQty();
+            Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
+            if (maxQty >= qtyToBeSet) {
+                for (int i = 0; i < qtyToBeSet; i++) {
+                    List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+                    if (skuItemList != null && skuItemList.size() > 0) {
+                        SkuItem skuItem = skuItemList.get(0);
+                        skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+                        skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+                        // todo Pvi entries
+                        skuItem = (SkuItem) getBaseDao().save(skuItem);
+                        // inventoryHealthCheck call
+                        // inventoryHealthCheck(productVariant);
+
+                        // todo UpdatePrice and Mrp qyt
+                        skuItemsToBeBooked.add(skuItem);
+                    }
+                }
+                // Call method to make new entries in SKUItemCLI only those for which inventory availa
+                logger.debug("calling saveSICLI line 881 from InventoryHealthServiceImpl");
+                inventoryManageService.saveSkuItemCLI(skuItemsToBeBooked, cartLineItem);
+                if (siliToBeCreated) {
+                    logger.debug("calling createNewSkuItemLineItem from InventoryHealthServiceImpl");
+                    skuItemLineItemService.createNewSkuItemLineItem(lineItemDao.getLineItem(cartLineItem));
+                    ShippingOrder shippingOrder = lineItemDao.getLineItem(cartLineItem).getShippingOrder();
+                    if (!lifeCycleActivityLoggedForSO.contains(shippingOrder)) {
+                        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
+                                "Sku Items booked after check in of: " + cartLineItem.getProductVariant().getId());
+                        lifeCycleActivityLoggedForSO.add(shippingOrder);
+                    }
+                }
+                maxQty = maxQty - qtyToBeSet;
+            }
+        }
+
+        return maxQty;
+    }
+
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
+
+    public ShippingOrderService getShippingOrderService() {
+        return ServiceLocatorFactory.getService(ShippingOrderService.class);
+    }
+
+    public HybridStoreVariantService getHybridStoreVariantService() {
+        return hybridStoreVariantService;
+    }
+
+    /*
+     * public AdminOrderService getAdminOrderService() { return adminOrderService; }
+     */
+
 }
