@@ -53,6 +53,7 @@ public class OrderResource {
     public HKAPIBaseDTO createOrderInHK(@HeaderParam(HKAPITokenTypes.APP_TOKEN) String appToken,HKAPIOrderDTO hkapiOrderDTO) {
 
         return getHkapiOrderService().createOrderInHK(appToken, hkapiOrderDTO);
+
     }
 
     @GET
