@@ -21,6 +21,8 @@
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
+<c:set var="neftMode" value="<%=EnumPaymentMode.NEFT.getId()%>"/>
+
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 
@@ -50,25 +52,25 @@
 </s:layout-component>
 
 
-  <c:if test="${actionBean.payment.paymentMode.id != paymentModeCOD}">
-    <s:layout-component name="heading">
-      <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
-      <div>
-        <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
-          <c:choose>
-            <c:when test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
-              <img src="${pageContext.request.contextPath}/images/banners/hkplus-15off-banner.jpg"
-                   alt="HealthKartPlus 15% Off"/>
-            </c:when>
-            <c:otherwise>
-              <img src="${pageContext.request.contextPath}/images/banners/hkplus-app.jpg" alt="HealthKartPlus App"/>
-            </c:otherwise>
-          </c:choose>
-        </a>
-      </div>
-    </s:layout-component>
+<c:if test="${actionBean.payment.paymentMode.id != paymentModeCOD}">
+  <s:layout-component name="heading">
+    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
+    <div>
+      <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+        <c:choose>
+          <c:when test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+            <img src="${pageContext.request.contextPath}/images/banners/hkplus-15off-banner.jpg"
+                 alt="HealthKartPlus 15% Off"/>
+          </c:when>
+          <c:otherwise>
+            <img src="${pageContext.request.contextPath}/images/banners/hkplus-app.jpg" alt="HealthKartPlus App"/>
+          </c:otherwise>
+        </c:choose>
+      </a>
+    </div>
+  </s:layout-component>
 
-  </c:if>
+</c:if>
 
 
 <s:layout-component name="left_col">
@@ -356,15 +358,16 @@
 
     <p class="mrgn-b-10"><span class="fnt-caps" style="font-size: 0.9em;">status:</span>
       <c:choose>
-        <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
+      <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
       <c:choose>
       <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
-        <span class="prc-ofr" style="color: #ffb000;"> Verification Pending</span></p>
-        <p class="mrgn-b-10"><span class="fnt-caps">order id:</span> ${actionBean.payment.order.gatewayOrderId} </p>
-      </c:when>
-       <c:otherwise>
-        <span class="prc-ofr" style="color:#ffb000 ;">Authorization Pending</span></p>
-        <p class="mrgn-b-10"><span class="fnt-caps">order id:</span> ${actionBean.payment.order.gatewayOrderId}</p>
+      <span class="prc-ofr" style="color: #ffb000;"> Verification Pending</span></p>
+
+    <p class="mrgn-b-10"><span class="fnt-caps">order id:</span> ${actionBean.payment.order.gatewayOrderId} </p>
+    </c:when>
+    <c:otherwise>
+      <span class="prc-ofr" style="color:#ffb000 ;">Authorization Pending</span></p>
+      <p class="mrgn-b-10"><span class="fnt-caps">order id:</span> ${actionBean.payment.order.gatewayOrderId}</p>
     </c:otherwise>
     </c:choose>
     </c:when>
@@ -376,7 +379,6 @@
       </p>
     </c:otherwise>
     </c:choose>
-
 
 
     <p class="mrgn-b-10"><span class="fnt-caps"
@@ -393,7 +395,8 @@
       </p>
     </c:if>
 
-    <p class="mrgn-b-10"><span class="fnt-caps" style="font-size: 0.9em;">you ${actionBean.payment.paymentMode.id eq paymentModeCOD ? 'pay': 'paid'}:</span>
+    <p class="mrgn-b-10"><span class="fnt-caps"
+                               style="font-size: 0.9em;">you ${actionBean.payment.paymentMode.id eq paymentModeCOD or actionBean.payment.paymentMode.id eq neftMode ? 'pay': 'paid'}:</span>
         <span class="youPayValue" style="color: #090;float: none;">
           <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
         </span>
@@ -413,9 +416,17 @@
 
             <%--message for cod ver Pending--%>
             <p>
-              Please verify your order by giving us a missed call on <span style="color: #0091d7;">0124-4616414 </span> from ${actionBean.payment.contactNumber} which you have given as  Cash On Delivery number
+              Please verify your order by giving us a missed call on <span style="color: #0091d7;">0124-4616414 </span>
+              from ${actionBean.payment.contactNumber} which you have given as Cash On Delivery number
             </p>
 
+          </c:when>
+          <c:when test="${actionBean.payment.paymentMode.id == neftMode}">
+            <p class="fnt-caps mrgn-b-10" style="font-weight: 700;">important information:</p>
+            <%--message for NEFT pending --%>
+            <p>
+              Your order will be processed after we receive your NEFT transfer confirmation.
+            </p>
           </c:when>
           <c:otherwise>
             <p class="fnt-caps mrgn-b-10" style="font-weight: 700;">important information:</p>
@@ -430,8 +441,10 @@
       <%--your order confirm ka message--%>
       <c:otherwise>
         <p class="fnt-caps mrgn-b-10" style="font-weight: 700;">important information:</p>
+
         <p>
-          Your order is confirmed. We will soon send you a confirmation mail. The estimated dispatch days for each product are mentioned below. </p>
+          Your order is confirmed. We will soon send you a confirmation mail. The estimated dispatch days for each
+          product are mentioned below. </p>
       </c:otherwise>
     </c:choose>
       <%--
@@ -652,46 +665,36 @@
                      orderDate="${actionBean.payment.paymentDate}"/>
   </div>
 
-  <c:choose>
-    <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
-      <%--your cod ka message--%>
-      <h1 class="youPaid" style="border-bottom: 1px solid #ddd;width: 100%;">
-                          <span class="youPay">
-                            Pay on delivery:
-                          </span>
-        <strong>
-                            <span id="summaryGrandTotalPayable" class="youPayValue">
+    <%--your cod ka message--%>
+  <h1 class="youPaid" style="border-bottom: 1px solid #ddd;width: 100%;">
+    <c:choose>
+      <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
+        <span class="youPay fnt-light fnt-bold">
+        Pay on delivery:
+        </span>
+      </c:when>
+      <c:when test="${actionBean.payment.paymentMode.id == neftMode}">
+        <span class="youPay fnt-light fnt-bold">
+        YOU PAY:
+        </span>
+      </c:when>
+      <%--your non cod ka message--%>
+      <c:otherwise>
+        <span class="youPay fnt-light fnt-bold">
+        YOU PAID:
+        </span>
+      </c:otherwise>
+    </c:choose>
+    <strong>
+      <span id="summaryGrandTotalPayable" class="youPayValue" style="color:#090;">
                               <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency"
                                                 currencySymbol="Rs. "/>
                             </span>
-        </strong>
-
-        <div class='newShippingHandling'>
-          (inclusive of discounts, shipping, handling and taxes.)
-        </div>
-      </h1>
-
-    </c:when>
-    <%--your non cod ka message--%>
-    <c:otherwise>
-      <h1 class="youPaid" style="border-bottom: 1px solid #ddd;width: 100%;">
-                          <span class="youPay fnt-light fnt-bold">
-                            YOU PAID:
-                          </span>
-        <strong>
-                            <span id="summaryGrandTotalPayable" class="youPayValue" style="color: #090">
-                              <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency"
-                                                currencySymbol="Rs. "/>
-                            </span>
-        </strong>
-
-        <div class='newShippingHandling'>
-          (inclusive of discounts, shipping, handling and taxes.)
-        </div>
-      </h1>
-
-    </c:otherwise>
-  </c:choose>
+    </strong>
+    <div class='newShippingHandling'>
+      (inclusive of discounts, shipping, handling and taxes.)
+    </div>
+  </h1>
   <s:link class="btn btn-blue" href="/" title='go to healthkart home'>
     GO BACK TO HOME Page
   </s:link>
