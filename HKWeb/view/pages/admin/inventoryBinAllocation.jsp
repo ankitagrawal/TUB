@@ -44,29 +44,36 @@ $(document).ready(function () {
 		      },
 		          function(res) {
 		            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-		            	$("#responseLabel").html('<h4>' + res.message + '</h4>');
+		            	$("#responseLabel").html('<h4>' + res.message + '</h4>'+'<br>');
+		            	$("#responseLabel").css("background-color", "#00FF00");
 		            	$("#firstLocation").focus();
-		            	window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
+		            	setTimeout(function(){
+		            		 window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
+		            		},4000);
 		            }else {
-		            	$("#responseLabel").html('<h4>' + res.message + '</h4>'+". Reloading in 3 seconds");
+		            	$("#responseLabel").html('<h4>' + res.message + '</h4>'+'<br>'+". Reloading in 5 seconds...");
 		            	$("#responseLabel").css("background-color", "#FF0000");
 		            	 $("#firstLocation").val('');
 		            	 $("#barcode").val('');
 		            	 $("#finalLocation").val('');
 		            	 $("#finalLocation").val('');
-		            	 $("#responseLabel").delay(6000);
-		            	 window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
+		            	 setTimeout(function(){
+		            		 window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
+		            		},5000);
 		            }
 		            });
 		}
 		else{
 			$("#responseLabel").val('');
-			$("#responseLabel").html("One of the input seems to be empty. Try Again");
+			$("#responseLabel").html("One of the input seems to be empty. Reloading the page in 5 seconds....");
 			$("#responseLabel").css("background-color", "#FF0000");
 			 $("#firstLocation").val('');
         	 $("#barcode").val('');
         	 $("#finalLocation").val('');
-        	 window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
+        	 setTimeout(function(){
+        		 window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
+        		},5000);
+        	 //window.location.href = "${pageContext.request.contextPath}/admin/inventory/checkin/InventoryBinAllocation.action";
 		}
 		
 	});
