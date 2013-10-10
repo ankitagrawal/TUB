@@ -37,24 +37,27 @@
 <div class="row">
 	<div class="container">
         <div class="row homePgBanner">
-        	<a href="product.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><a href="http://www.healthkart.com/brand/diabetes/splenda/?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="${pageContext.request.contextPath}/store/splenda/images/buy-now-btn3.png" alt="Buy Now" /></a>
+        	<a href="http://www.healthkart.com/brand/diabetes/splenda/?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="${pageContext.request.contextPath}/store/splenda/images/buy-now-btn3.png" alt="Buy Now" /></a>
      	</div>
         <div class="row">
         	<div class="homePgBx1">
             	<div class="homepgBxsHeadings">100% Taste</div>
                 <div class="homePgBxsData">
                 	SPLENDA&reg; No calorie<br />sweetener* is an excellent<br />option for you to drop those<br />empty calories of sugar<br />without compromising taste.</div>
-                <div class="homePgBxsBtns"><a href="hundred-percent-taste.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="${pageContext.request.contextPath}/store/splenda/images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
+                <div class="homePgBxsBtns">
+                    <a href="http://www.healthkart.com/store/splenda/hundred-percent-taste.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">
+                    <img src="${pageContext.request.contextPath}/store/splenda/images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
               </div>
             <div class="homePgBx2">
             	<div class="homepgBxsHeadings">0% Compromise</div>
                 <div class="homePgBxsData">Substitute SPLENDA&reg; for sugar<br />to knock off calories and add<br />health to your life!</div>
-                <div class="homePgBxsBtns"><a href="zero-percent-compromise.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="${pageContext.request.contextPath}/store/splenda/images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
+                <div class="homePgBxsBtns"><a href="http://www.healthkart.com/store/splenda/zero-percent-compromise.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store">
+                    <img src="${pageContext.request.contextPath}/store/splenda/images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
             </div>
             <div class="homePgBx3">
             	<div class="homepgBxsHeadings">World's No. 1 Sweetener</div>
                 <div class="homePgBxsData">SPLENDA&reg; - <br />World's number 1<br /> low calorie sweetener<br /> is now in India!</div>
-                <div class="homePgBxsBtns"><a href="worlds-number-one-sweetener.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="${pageContext.request.contextPath}/store/splenda/images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
+                <div class="homePgBxsBtns"><a href="http://www.healthkart.com/store/splenda/worlds-number-one-sweetener.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="${pageContext.request.contextPath}/store/splenda/images/know-more-btn1.jpg" alt="Know More" title="Know More" /></a></div>
             </div>
         </div>
         <div class="clr"></div>

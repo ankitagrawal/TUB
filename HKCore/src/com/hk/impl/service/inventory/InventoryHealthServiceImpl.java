@@ -259,7 +259,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 
     for (SkuInfo skuInfo : checkedInInvList) {
-      logger.debug("checkedInInvList skuInfo " + skuInfo.toString());
+      logger.debug("checkedInInvList SkuInfo = " + skuInfo.toString());
     }
 
 
@@ -387,16 +387,15 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
 
-      for (InventoryInfo info : infos) {
-          for (SkuInfo skuInfo : info.getSkuInfoList()) {
-              logger.debug("SkuInfo " + skuInfo.toString());
-          }
+    for (InventoryInfo info : infos) {
+      for (SkuInfo skuInfo : info.getSkuInfoList()) {
+        logger.debug("getAvailableInventory SkuInfo = " + skuInfo.toString());
       }
+    }
 
     boolean invAdded = false;
     boolean newSkuInfoFlag = false;
     boolean updateSkuInfoFlag = false;
-    //
     for (InventoryInfo inventoryInfo : infos) {
       if (filter.getMrp() == null || inventoryInfo.getMrp() == filter.getMrp().doubleValue()) {
         for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {

@@ -32,6 +32,8 @@ public class PaymentModeAction extends BaseAction {
 
     List<Issuer> bankIssuers;
     List<Issuer> cardIssuers;
+    List<Issuer> debitCardIssuers;
+
     Map<String, String> codFailureMap = new HashMap<String, String>();
     private PricingDto pricingDto;
     private boolean showFailureMessage = false;
@@ -71,6 +73,8 @@ public class PaymentModeAction extends BaseAction {
         codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
         bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
         cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
+        debitCardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Debit.getId(), true);
+
         return new ForwardResolution("/pages/paymentMode.jsp");
     }
 
@@ -121,5 +125,13 @@ public class PaymentModeAction extends BaseAction {
 
     public void setPaymentFailureGatewayOrderId(String paymentFailureGatewayOrderId) {
         this.paymentFailureGatewayOrderId = paymentFailureGatewayOrderId;
+    }
+
+    public List<Issuer> getDebitCardIssuers() {
+        return debitCardIssuers;
+    }
+
+    public void setDebitCardIssuers(List<Issuer> debitCardIssuers) {
+        this.debitCardIssuers = debitCardIssuers;
     }
 }
