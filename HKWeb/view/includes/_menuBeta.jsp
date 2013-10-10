@@ -262,6 +262,18 @@
       ;
   })(jQuery);
     $(document).ready(function() {
+
+            //fix height of global menu's sub categories
+            $('.gm-sc-cntnr').css('min-height',$('#dropDownbox1').height() - 5);
+
+            //fix width of global menu's sub categories
+            $.each($('.gm-sc-cntnr'), function(){
+                var self = $(this);
+                var subCatCount = self.find('.grid_4').length; // provide count of how many vertical row are there in sub cat
+                var multiplier = self.find('.grid_4:first').width(); // width of first vertical row
+                var padParam = subCatCount * 32; // used to take into consideration paddings and margins
+                self.width( (subCatCount * multiplier) + padParam);
+            });
       /*Dropdown js */
       $('#dropDownButton').mouseenter(function() {
         //deactivateSubmenu($("#dropDownbox1").find('.maintainHover').parents('.gm-mc'));
