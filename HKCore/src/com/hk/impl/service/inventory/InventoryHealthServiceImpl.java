@@ -255,6 +255,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     return list;
   }
 
+  private InventoryInfo getInventoryInfo(List<InventoryInfo> inventoryInfoList, double mrp){
+    for (InventoryInfo inventoryInfo : inventoryInfoList) {
+      if(inventoryInfo.getMrp() == mrp)
+        return inventoryInfo;
+    }
+    return null;
+  }
+
   private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
     Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 
@@ -266,7 +274,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
     Map<Double, List<InventoryInfo>> mrpMap = new LinkedHashMap<Double, List<InventoryInfo>>();
 
-    for (SkuInfo skuInfo : checkedInInvList) {
+    /*for (SkuInfo skuInfo : checkedInInvList) {
       InventoryInfo info = getLast(invList);
       if (info != null && skuInfo.getMrp() == info.getMrp()) {
         info.setQty(info.getQty() + skuInfo.getQty());
@@ -284,8 +292,34 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         infos.add(info);
       }
       info.addSkuInfo(skuInfo);
+    }*/
+
+    for (SkuInfo skuInfo : checkedInInvList) {
+      InventoryInfo info = getInventoryInfo(invList, skuInfo.getMrp());
+      if (info != null) {
+        info.setQty(info.getQty() + skuInfo.getQty());
+      } else {
+        info = new InventoryInfo();
+        info.setMrp(skuInfo.getMrp());
+        info.setQty(skuInfo.getQty());
+        invList.add(info);
+        mrpMap.put(Double.valueOf(skuInfo.getMrp()), Arrays.asList(info));
+      }
+      info.addSkuInfo(skuInfo);
     }
-    
+
+    for (Map.Entry<Double, List<InventoryInfo>> entry : mrpMap.entrySet()) {
+      logger.debug("mrpMap = " + entry.getKey());
+      for (InventoryInfo inventoryInfo : entry.getValue()) {
+        logger.debug("mrpMap inventoryInfo = " + inventoryInfo.toString());
+        for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+          logger.debug("mrpMap skuInfo = " + skuInfo.toString());
+        }
+      }
+    }
+
+
+    // Logic to reduce unbooked inventory of SKU
     Map<Sku, Map<Double, Long>> skuMrpUnbookedQtyMap = new HashMap<Sku, Map<Double, Long>>();
     for (Map.Entry<Double, List<InventoryInfo>> entry : mrpMap.entrySet()) {
       Double mrp = entry.getKey();
@@ -388,6 +422,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     Collection<InventoryInfo> infos = this.getAvailableInventory(variant);
 
     for (InventoryInfo info : infos) {
+      logger.debug("getAvailableInventory InventoryInfo = " + info.toString());
       for (SkuInfo skuInfo : info.getSkuInfoList()) {
         logger.debug("getAvailableInventory SkuInfo = " + skuInfo.toString());
       }
