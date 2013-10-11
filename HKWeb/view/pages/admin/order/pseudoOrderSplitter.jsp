@@ -74,7 +74,7 @@
                             <th>MRP</th>
                             <th>HK Price</th>
                             <th>Weight</th>
-                            <th>Tax</th>
+                            <th>SKU Details</th>
                         </tr>
                         <c:forEach items="${splitter.order.productCartLineItems}" var="cartLineItem">
                             <%
@@ -87,7 +87,8 @@
                                 <td>
                                     ${cartLineItem.productVariant.id}
                                 </td>
-                                <td>${cartLineItem.productVariant.product.name}: <span class="small gry em">${cartLineItem.productVariant.optionsCommaSeparated}</span> </td>
+                                <td>${cartLineItem.productVariant.product.name}<br/>
+                                    <span class="small gry em">${cartLineItem.productVariant.optionsCommaSeparated}</span> </td>
                                 <td> ${cartLineItem.markedPrice}</td>
                                 <td> ${cartLineItem.productVariant.hkPrice}</td>
                                 <td>${cartLineItem.productVariant.weight}</td>
@@ -97,8 +98,9 @@
                                          Long unitsForSplitting = masterInventoryService.getCheckedInUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice())
                                                  - masterInventoryService.getUnbookedLIUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice()) ;
                                     %>
-                                      <%=sku.getWarehouse().getIdentifier()%> | <%=sku.getTax().getValue()%> | UnitsForSplitting:<%=unitsForSplitting%>
-                                      <br/>
+
+                                     <span style="font-weight:<%=unitsForSplitting > 0 ? "bold" : ""%>"><%=sku.getWarehouse().getIdentifier()%> | <%=sku.getTax().getValue()%> | UnitsForSplitting:<%=unitsForSplitting%></span> 
+                                     <br/>
                                     <%
                                         }
                                     %>
