@@ -54,7 +54,7 @@
                 <table style="border:0px;">
                     <tr>
                         <th>Variant Id</th>
-                        <th style="max-width:300px;">Name</th>
+                        <th>Name</th>
                         <th>MRP</th>
                         <th>Qty</th>
                         <th>Weight</th>
@@ -71,7 +71,7 @@
                             <td>
                                     ${cartLineItem.productVariant.id}
                             </td>
-                            <td>${cartLineItem.productVariant.product.name}<br/>
+                            <td style="max-width:33%;">${cartLineItem.productVariant.product.name}<br/>
                                 <span style="font-size:.8em;">${cartLineItem.productVariant.optionsCommaSeparated}</span>
                             </td>
                             <td> ${cartLineItem.markedPrice}</td>
@@ -115,7 +115,7 @@
                             <td colspan="2">
                                 <c:forEach items="${dummyOrder.cartLineItemList}" var="cartLineItem">
                                     <strong>${cartLineItem.productVariant.product.name}</strong><br/>
-                                    <span style="font-size:.8em">${cartLineItem.productVariant.optionsCommaSeparated}</span>
+                                    <span style="font-size:.8em">${cartLineItem.productVariant.optionsCommaSeparated}</span><br/>
                                 </c:forEach>
 
                             </td>
