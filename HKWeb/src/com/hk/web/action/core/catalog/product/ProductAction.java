@@ -151,7 +151,7 @@ public class ProductAction extends BaseAction {
       if (!product.isDeleted()) {
         if (product.getProductVariants() != null && !product.getProductVariants().isEmpty() && product.getProductVariants().size() > 1) {
           // multiple products
-	        isOutOfStockPage = true;
+            isOutOfStockPage = true;
           for (ProductVariant productVariant: product.getProductVariants()) {
             if (!productVariant.isDeleted() && !productVariant.isOutOfStock()) {
               isOutOfStockPage = false;
@@ -255,19 +255,12 @@ public class ProductAction extends BaseAction {
         }
 
         if (combo == null) {
-            if(isHybridRelease())
-                return new ForwardResolution("/pages/productBeta.jsp");
-            else
-                return new ForwardResolution("/pages/product.jsp");
+            return new ForwardResolution("/pages/product.jsp");
         } else {
             List<SuperSaverImage> superSaverImages = getSuperSaverImageService().getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE);
             String directTo;
             if (superSaverImages == null || superSaverImages.isEmpty()) {
-                if(isHybridRelease())
-                    directTo = "productBeta.jsp";
-                else
-                    directTo = "product.jsp";
-
+                directTo = "product.jsp";
             } else {
                 SuperSaverImage latestSuperSaverImage = superSaverImages.get(superSaverImages.size() - 1);
                 superSaverImageId = latestSuperSaverImage.getId();
