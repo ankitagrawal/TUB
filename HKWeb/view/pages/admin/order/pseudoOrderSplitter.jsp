@@ -94,9 +94,11 @@
                                 <td>
                                     <%
                                         for (Sku sku : skus) {
-                                         Long uncheckedOutUnits = masterInventoryService.getUncheckedOutUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice());
+                                         Long unitsForSplitting = masterInventoryService.getCheckedInUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice())
+                                                 - masterInventoryService.getUnbookedLIUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice()) ;
                                     %>
-                                      <%=sku.getWarehouse().getIdentifier()%> | <%=sku.getTax().getValue()%> | Units:<%=uncheckedOutUnits%>
+                                      <%=sku.getWarehouse().getIdentifier()%> | <%=sku.getTax().getValue()%> | UnitsForSplitting:<%=unitsForSplitting%>
+                                      <br/>
                                     <%
                                         }
                                     %>
