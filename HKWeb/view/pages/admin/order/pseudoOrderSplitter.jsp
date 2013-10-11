@@ -94,48 +94,50 @@
                         </tr>
                     </c:forEach>
                 </table>
-
-
             </div>
 
         </c:if>
         <div class="clear"></div>
         <c:forEach items="${splitter.sortedDummyOrderMaps}" var="dummyOrderEntry" varStatus="combCtr">
-            <strong>Combination# ${combCtr.index+1}</strong> | <strong>(Shipping + Tax) Cost:</strong>${dummyOrderEntry.value}
-            <hr/>
-            <c:forEach items="${dummyOrderEntry.key}" var="dummyOrder">
-                <div style="float: left; margin-right:10px; width:45%">
-                    <table>
-                        <tr>
-                            <th>Warehouse</th>
-                            <th>${dummyOrder.warehouse.identifier}</th>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <c:forEach items="${dummyOrder.cartLineItemList}" var="cartLineItem">
-                                    <strong>${cartLineItem.productVariant.product.name}</strong><br/>
-                                    <span style="font-size:.8em">${cartLineItem.productVariant.optionsCommaSeparated}</span><br/>
-                                </c:forEach>
+            <div>
+                <strong>Combination# ${combCtr.index+1}</strong> | <strong>(Shipping + Tax)
+                Cost:</strong>${dummyOrderEntry.value}
+                <hr/>
+                <c:forEach items="${dummyOrderEntry.key}" var="dummyOrder">
+                    <div style="float: left; margin-right:10px; width:45%">
+                        <table>
+                            <tr>
+                                <th>Warehouse</th>
+                                <th>${dummyOrder.warehouse.identifier}</th>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <c:forEach items="${dummyOrder.cartLineItemList}" var="cartLineItem">
+                                        <strong>${cartLineItem.productVariant.product.name}</strong><br/>
+                                        <span style="font-size:.8em">${cartLineItem.productVariant.optionsCommaSeparated}</span><br/>
+                                    </c:forEach>
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Tax Incurred</td>
-                            <td>${dummyOrder.taxIncurred}</td>
-                        </tr>
-                        <tr>
-                            <td>Courier</td>
-                            <td>${dummyOrder.dummySO.courier}</td>
-                        </tr>
-                        <tr>
-                            <td>Shipping Cost</td>
-                            <td>${dummyOrder.dummySO.shipmentCost}</td>
-                        </tr>
-                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tax Incurred</td>
+                                <td>${dummyOrder.taxIncurred}</td>
+                            </tr>
+                            <tr>
+                                <td>Courier</td>
+                                <td>${dummyOrder.dummySO.courier}</td>
+                            </tr>
+                            <tr>
+                                <td>Shipping Cost</td>
+                                <td>${dummyOrder.dummySO.shipmentCost}</td>
+                            </tr>
+                        </table>
 
-                </div>
-            </c:forEach>
-            <br/>
+                    </div>
+                </c:forEach>
+                <br/>
+            </div>
+            <div class="clear"></div>
         </c:forEach>
     </s:layout-component>
 </s:layout-render>
