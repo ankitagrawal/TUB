@@ -21,7 +21,8 @@
 
                 <div class='login'>
                     <s:form beanclass="com.hk.web.action.core.user.SignupAction" name="signup">
-                        <input type="hidden" id="signupEmail" name="signupEmail" value=""/>
+                      <input type="hidden" name="redirectUrl" value="${param['redirectUrl']}" />
+                      <input type="hidden" id="signupEmail" name="signupEmail" value=""/>
                     </s:form>
                     <s:form beanclass="com.hk.web.action.core.auth.LoginAction" name="signin">
                         <s:errors/>
@@ -57,7 +58,7 @@
                             </div>
                         </fieldset>
                         <s:hidden name="redirectUrl"
-                                  value="${actionBean.redirectUrl!=null?actionBean.redirectUrl:param[redirectParam]}"/>
+                                  value="${param['redirectUrl']}"/>
                         <s:hidden name="source"/>
                     </s:form>
                 </div>
