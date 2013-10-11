@@ -60,56 +60,88 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
                 <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
                     <div style="padding:5px;width:80%;position: relative;float: left;word-wrap:break-word;">
-                            ${storeVariantBasic.name} <br/>
+                            ${storeVariantBasic.name}
+                                <c:if test="${hk:equalsIgnoreCase(invoiceLineItem.productVariant.product.primaryCategory.name,'eye') and hk:equalsIgnoreCase(invoiceLineItem.productVariant.product.secondaryCategory.name,'lenses')}">
+                                    <table style="display: inline-block; font-size: 11px;margin: 7px 0;">
+                                        <c:forEach items="${invoiceLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
+                                            <tr>
+                                                <c:if test="${hk:showOptionOnUI(productOption.name)}">
+                                                    <td style="text-align: left;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;">${productOption.name}</td>
+                                                    <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;">
+                                                        <c:if test="${fn:startsWith(productOption.value, '-')}">
+                                                            ${productOption.value}
+                                                        </c:if>
+                                                        <c:if test="${!fn:startsWith(productOption.value, '-')}">
+                                                            &nbsp;${productOption.value}
+                                                        </c:if>
+                                                    </td>
+                                                </c:if>
+                                            </tr>
+                                        </c:forEach>
+                                        <c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">
+                                            <tr>
+                                                <td style="text-align: left;  padding: 0.3em 2em; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>
+                                                <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0;background: #fff;">
+                                                    <c:if test="${fn:startsWith(extraOption.value, '-')}">
+                                                        ${extraOption.value}
+                                                    </c:if>
+                                                    <c:if test="${!fn:startsWith(extraOption.value, '-')}">
+                                                        &nbsp;${extraOption.value}
+                                                    </c:if>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                        <c:set var="TH" value="TH"/>
+                                        <c:set var="THBF" value="THBF"/>
+                                        <c:set var="CO" value="CO"/>
+                                        <c:set var="COBF" value="COBF"/>
+                                        <c:if test="${not empty invoiceLineItem.cartLineItemConfig.cartLineItemConfigValues}">
+                                            <tr>
+                                                <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${invoiceLineItem.productVariant.product.name}</td>
+                                                <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
+                                                    Rs. ${invoiceLineItem.productVariant.hkPrice}</td>
+                                            </tr>
+                                            <c:forEach items="${invoiceLineItem.cartLineItemConfig.cartLineItemConfigValues}" var="configValue">
+                                                <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
+                                                <tr>
+                                                    <c:set var="addParam" value="${variantConfigOption.additionalParam}"/>
+                                                    <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${variantConfigOption.displayName}
+                                                        : ${configValue.value}
+                                                        <c:if test="${(addParam ne TH) or (addParam ne THBF) or (addParam ne CO) or (addParam ne COBF) }">
+                                                            <c:if
+                                                                    test="${fn:startsWith(variantConfigOption.name, 'R')==true}">
+                                                                (R)
+                                                            </c:if>
+                                                            <c:if
+                                                                    test="${fn:startsWith(variantConfigOption.name, 'L')==true}">
+                                                                (L)
+                                                            </c:if>
+                                                        </c:if>
+                                                    </td>
+                                                    <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
+                                                            <%--<c:set var="addParam" value="${variantConfigOption.additionalParam}"/>--%>
+                                                        <c:choose>
+                                                            <c:when test="${configValue.additionalPrice eq 0}">
+                                                                included
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                +Rs. ${configValue.additionalPrice}
+                                                                <%--<c:if test="${(addParam eq TH) or (addParam eq THBF) or (addParam eq CO) or (addParam eq COBF) }">--%>
+                                                                <%--/Eye--%>
+                                                                <%--</c:if>--%>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </c:if>
+
+                                    </table>
+                                </c:if>
+
                             <%--${invoiceLineItem.productVariant.variantName}--%>
                     </div>
                     <div align="left" style="text-align:center;width:12%;padding: 5px;position: relative;float: left;">${invoiceLineItem.qty}</div>
-                        <c:set var="TH" value="TH"/>
-                        <c:set var="THBF" value="THBF"/>
-                        <c:set var="CO" value="CO"/>
-                        <c:set var="COBF" value="COBF"/>
-                    <c:if test="${not empty invoiceLineItem.cartLineItemConfig.cartLineItemConfigValues}">
-                        <table>
-                            <tr>
-                                <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${storeVariantBasic.name}</td>
-                                <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
-                                    Rs. ${invoiceLineItem.productVariant.hkPrice}</td>
-                            </tr>
-                            <c:forEach items="${invoiceLineItem.cartLineItemConfig.cartLineItemConfigValues}"
-                                       var="configValue">
-                                <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
-                                <tr>
-                                    <c:set var="addParam" value="${variantConfigOption.additionalParam}"/>
-                                    <td style="text-align: left; padding:5px; border: 1px solid #f0f0f0;background: #fafafa;">${variantConfigOption.displayName}
-                                        : ${configValue.value}
-                                        <c:if test="${(addParam ne TH) or (addParam ne THBF) or (addParam ne CO) or (addParam ne COBF) }">
-                                            <c:if
-                                                    test="${fn:startsWith(variantConfigOption.name, 'R')==true}">
-                                                (R)
-                                            </c:if>
-                                            <c:if
-                                                    test="${fn:startsWith(variantConfigOption.name, 'L')==true}">
-                                                (L)
-                                            </c:if>
-                                        </c:if>
-                                    </td>
-                                    <td style="text-align: left; padding:3px;border: 1px solid #f0f0f0;background: #fff;">
-                                        <c:choose>
-                                            <c:when test="${configValue.additionalPrice eq 0 }">
-                                                included
-                                            </c:when>
-                                            <c:otherwise>
-                                                +Rs. ${configValue.additionalPrice}
-                                                <%--<c:if test="${(addParam eq TH) or (addParam eq THBF) or (addParam eq CO) or (addParam eq COBF) }">--%>
-                                                <%--/Eye--%>
-                                                <%--</c:if>--%>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                    </c:if>
                 </div>
 
                     <%--HTML code for dispatch date--%>
