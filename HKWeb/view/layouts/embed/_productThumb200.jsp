@@ -66,11 +66,11 @@
 						<img style="max-height:180px;max-width:180px;" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 					</s:link>
-					<shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
+					<%--<shiro:hasAnyRoles name="<%=RoleConstants.CATEGORY_MANAGER%>">
 						Missing Image - <a
 							href="${pageContext.request.contextPath}/rest/api/product/resizeImage/${product.id}/m/bt"
 							target="_blank">Click here</a>
-					</shiro:hasAnyRoles>
+					</shiro:hasAnyRoles>--%>
                     <c:if test="${fn:length(productVO.freebieDesc) > 3}">
                                   <div class="hk-offer">Offer</div>
                               </c:if>

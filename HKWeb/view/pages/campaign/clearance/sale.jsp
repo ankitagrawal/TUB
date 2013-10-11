@@ -82,9 +82,9 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1220'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT920'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT922'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1254'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT125'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2656'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2657'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT3169'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT782'/>

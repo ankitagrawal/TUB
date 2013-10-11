@@ -98,7 +98,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
 
                         <br/>
 
-                        If you have any questions, you can chat online with our Customer Care or call them at
+                        If you have any questions, you can call our Customer Care at
                         0124-4616444 . We will send another email once your order ships.<br/>
                         <br/>
 

@@ -4,6 +4,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 
 import java.util.Date;
@@ -61,5 +62,7 @@ public interface AdminShippingOrderService {
   public void adjustPurchaseOrderForSplittedShippingOrder(ShippingOrder order1, ShippingOrder order2);
 
   public Boolean updateSOForB2BOrders(ShippingOrder shippingOrder);
+
+  public Object getActionProcessingElement(ShippingOrder localShippingOrder,Set<LineItem> toBeProcessedItems, Integer actionTypeConstant);
 
 }

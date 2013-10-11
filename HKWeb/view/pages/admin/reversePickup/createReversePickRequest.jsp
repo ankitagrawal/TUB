@@ -8,10 +8,11 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.domain.courier.Courier" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.constants.reversePickup.EnumReversePickupType" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.reversePickup.ReversePickupAction" var="rev"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup Booking Screen">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create Update Booking Screen">
 
 
 <s:layout-component name="htmlHead">
@@ -22,24 +23,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-//            $('.saveButton').click(function (e) {
-//                e.preventDefault();
-//
-//                $('input.checkedbox:checked').each(function () {
-//                    var row = $(this).parents('tr.check');
-//                    var dataAvailable = false;
-//                    var selectVal = $(row).find('.reason-entered-select').val();
-//                    var areaVal = $(row).find('.reason-entered-area').val();
-//                    if (selectVal == null || selectVal == "") {
-//                        if (areaVal == null || areaVal == "") {
-//                            alert('Select customer reason or enter comment');
-//                            return false;
-//                        }
-//                    }
-//                });
-//                $('.mainform').submit();
-//
-//            });
 
             var courierName = $('.selected-courier-name').val();
             if (courierName == '-1') {
@@ -61,17 +44,14 @@
                 var courierName = $(this).val();
                 $('.courier-name').val(courierName);
             });
+            $('.mainform').submit(function(){
+                if($('[name="reversePickupOrder.reversePickupType.id"]').val()==='-1'){
+                    alert('Please select Booking Type');
+                    $('[name="reversePickupOrder.reversePickupType.id"]').focus();
+                    return false;
+                };
 
-//            $('.startDate').live("change", function () {
-//                var entrDate = $(this).val();
-//                var currDate = $.datepicker.format('yyyy-MM-dd HH:mm', new Date());
-//                if (entrDate.before(currDate)) {
-//                    alert('Pickup Time should Be greater Than current time');
-//                    return false;
-//                }
-//                return true;
-//            });
-
+            });
         });
 
     </script>
@@ -145,12 +125,12 @@
     <c:choose>
         <c:when test="${rev.reversePickupOrder != null}">
             <div class="heading">
-                <p>Edit Reverse Pickup No. ${rev.reversePickupOrder.reversePickupId}</p>
+                <p>Edit Booking No. ${rev.reversePickupOrder.reversePickupId}</p>
             </div>
         </c:when>
         <c:otherwise>
             <div class="heading">
-                <p>Reverse Pickup Booking Screen</p>
+                <p>Booking Screen</p>
             </div>
         </c:otherwise>
     </c:choose>
@@ -211,7 +191,7 @@
                     </td>
                     <td>
                         <s:select name="rpLineItems[${index}].actionTaken"
-                                  value="${savedRpLineItem.actionTaken}">
+                                  value="${savedRpLineItem.actionTaken.id}">
                             <s:option value="">--Select-- </s:option>
                             <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
                                        var="actionTaken">
@@ -232,14 +212,9 @@
                         </s:select>
                     </td>--%>
                     <td>
-                        <c:forEach items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
-                                   var="customerActionStatusenum">
-                            <c:if test="${savedRpLineItem.customerActionStatus == customerActionStatusenum.id}">
-                                ${customerActionStatusenum.name}
-                            </c:if>
-                        </c:forEach>
+                       ${savedRpLineItem.customerActionStatus.primary}
                         <s:hidden name="rpLineItems[${index}].customerActionStatus"
-                                  value="${savedRpLineItem.customerActionStatus}"/>
+                                  value="${savedRpLineItem.customerActionStatus.id}"/>
 
                     </td>
                     <td>
@@ -273,12 +248,7 @@
                             ${disabledRpLineItem.customerReasonForReturn.classification.primary}
                     </td>
                     <td>
-                        <c:forEach items="<%=EnumReverseAction.getAllReversePickAction()%>"
-                                   var="actionTaken">
-                            <c:if test="${disabledRpLineItem.actionTaken == actionTaken.id}">
-                                ${actionTaken.name}
-                            </c:if>
-                        </c:forEach>
+                            ${disabledRpLineItem.actionTaken.primary}
                     </td>
                     <%--<td>
                         <c:forEach
@@ -290,13 +260,7 @@
                         </c:forEach>
                     </td>--%>
                     <td>
-                        <c:forEach items="<%=EnumReverseAction.getAllCustomerActionStatus()%>"
-                                   var="customerActionStatusenum">
-                            <c:if test="${disabledRpLineItem.customerActionStatus == customerActionStatusenum.id}">
-                                ${customerActionStatusenum.name}
-                            </c:if>
-                        </c:forEach>
-
+                         ${disabledRpLineItem.customerActionStatus.primary}
                     </td>
                     <td> ${disabledRpLineItem.customerComment} </td>
                 </tr>
@@ -356,6 +320,20 @@
 
     </c:forEach>
 </table>
+
+<div class="clear" style="margin: 1em auto"></div>
+
+<div class="font courier-detail">
+    <div style="float: left">
+        <label> Booking Type </label>
+        <s:select name="reversePickupOrder.reversePickupType.id" value="${rev.reversePickupOrder.reversePickupType.id}">
+            <s:option value="-1">--Select-- </s:option>
+            <c:forEach items="<%=EnumReversePickupType.getAllRPTypeList()%>" var="reversePickupType">
+                <s:option value="${reversePickupType.id}">${reversePickupType.name}</s:option>
+            </c:forEach>
+        </s:select>
+    </div>
+</div>
 
 <shiro:hasPermission name="<%=PermissionConstants.SCHEDULE_REVERSE_PICKUP%>">
 

@@ -1,8 +1,12 @@
 package com.hk.web.action.admin.courier;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import com.akube.framework.util.DateUtils;
+import com.hk.domain.courier.Shipment;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -38,11 +42,14 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
     private EnumShippingOrderStatus enumSoUpdatedStatusId;
     private String currentStatus;
     ShippingOrder shippingOrder;
+    private Date statusDate;
 
     private static Logger logger = LoggerFactory.getLogger(ShippingOrderStatusChangeAction.class);
 
     List<EnumShippingOrderStatus> SOMapping = new ArrayList<EnumShippingOrderStatus>();
     ShippingOrderStatusMapping shippingOrderStatusMapping= new ShippingOrderStatusMapping();
+
+    private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
@@ -50,7 +57,8 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
     ShippingOrderService shippingOrderService;
     
     @Autowired
-	AdminShippingOrderService adminShippingOrderService;
+	  AdminShippingOrderService adminShippingOrderService;
+
 
     @DefaultHandler
     public Resolution pre() {
@@ -69,23 +77,43 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
                  addRedirectAlertMessage(new SimpleMessage("SO is not in applicable status!!!!"));
                  return new RedirectResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
                 }
+           shippingOrderList.add(shippingOrder);
            SOMapping = shippingOrderStatusMapping.getShippingOrderStatusMap().get(shippingOrder.getShippingOrderStatus().getName());
            return new ForwardResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
     }
+
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SOSTATUS}, authActionBean = AdminPermissionAction.class)
     public Resolution saveStatus(){
-        if(shippingOrder!=null){
-           currentStatus=shippingOrder.getShippingOrderStatus().getName();
-           if(enumSoUpdatedStatusId == EnumShippingOrderStatus.SO_Delivered) {
-        	   adminShippingOrderService.markShippingOrderAsDelivered(shippingOrderService.find(shippingOrder.getId()));
-           } else {
-        	   shippingOrder.setOrderStatus(enumSoUpdatedStatusId.asShippingOrderStatus());
-        	   getBaseDao().save(shippingOrder);
-        	   shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null,"Current Status-->"+currentStatus +" New Status-->"+enumSoUpdatedStatusId.getName());
-           }
+      if(shippingOrder!=null && statusDate !=null &&  statusDate.after(DateUtils.getEndOfPreviousDay(shippingOrder.getShipment().getShipDate())) && statusDate.before(DateUtils.getEndOfDay(new Date())) ){
+        currentStatus=shippingOrder.getShippingOrderStatus().getName();
+        Shipment shippingOrderShipment = shippingOrder.getShipment();
+        switch (enumSoUpdatedStatusId) {
+          case SO_Delivered:
+            shippingOrderShipment.setDeliveryDate(statusDate);
+            break;
+          case SO_RTO:
+            shippingOrderShipment.setRtoDate(statusDate);
+            break;
+          case RTO_Initiated:
+            shippingOrderShipment.setRtoInitiatedDate(statusDate);
+            break;
+          case SO_Lost:
+            shippingOrderShipment.setLostDate(statusDate);
+            break;
         }
+        shippingOrder.setOrderStatus(enumSoUpdatedStatusId.asShippingOrderStatus());
+        getBaseDao().save(shippingOrderShipment);
+        getBaseDao().save(shippingOrder);
+          shippingOrderService.logShippingOrderActivity(shippingOrder,
+              EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null,
+              "Current Status-->" + currentStatus + " New Status-->" + enumSoUpdatedStatusId.getName());
+        shippingOrderList.add(shippingOrder);
         addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully!!!"));
-        return new RedirectResolution(ShippingOrderStatusChangeAction.class);
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("Please enter status change date which " +
+            "must be between shipping date and today."));
+      }
+      return new RedirectResolution(ShippingOrderStatusChangeAction.class);
     }
 
     public String getGatewayOrderId() {
@@ -127,4 +155,25 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
         this.currentStatus = currentStatus;
     }
 
+	/**
+	 * @return the statusDate
+	 */
+	public Date getStatusDate() {
+		return statusDate;
+	}
+
+	/**
+	 * @param statusDate the statusDate to set
+	 */
+	public void setStatusDate(Date statusDate) {
+		this.statusDate = statusDate;
+	}
+
+  public List<ShippingOrder> getShippingOrderList() {
+    return shippingOrderList;
+  }
+
+  public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+    this.shippingOrderList = shippingOrderList;
+  }
 }

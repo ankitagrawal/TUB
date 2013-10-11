@@ -76,6 +76,11 @@
         <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">
             Seek Payment
         </s:link></h3>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.crm.MasterResolutionAction" event="pre">
+            CRM Master Screen
+        </s:link></h3>
+
 
     <h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
@@ -112,6 +117,11 @@
         <h3><s:link
                 beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction"> Add/Assign Roles and Permissions </s:link></h3>
     </shiro:hasRole>
+
+    <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
+    </shiro:hasPermission>
 <%--
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
@@ -128,9 +138,11 @@
     <h2>Warehouse</h2>
     <c:if test="${whAction.setWarehouse != null}">
     <h3><s:link
-            beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation</s:link></h3>
+            beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation(Per Sku Item)</s:link></h3>
+            
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction" event="uploadBinAllocationFile">Upload Bin Allocation File</s:link></h3>
 
-        <%--<h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>--%>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
@@ -163,7 +175,6 @@
                 beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction"
                 event="downloadWHInventorySnapshot">WH Inventory Excel
         </s:link></h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchPVIInfoAction">Search PVI Info</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
@@ -178,6 +189,9 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction"
             event="searchReplacementOrders">Search Replacement Order</s:link></h3>
+            
+     <h3><s:link
+            beanclass="com.hk.web.action.admin.inventory.UniqueBarcodeAction">Make Unique Barcodes</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -231,8 +245,7 @@
         </h3>
 
         <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
-            <h3><s:link
-                beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction">Reverse Pickup List</s:link></h3>
+
 
             <h3><s:link
                     beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction">RPWarehouse Checkin</s:link></h3>
@@ -313,8 +326,6 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
-
-    <h3><s:link beanclass="com.hk.web.action.report.BinAllocationReport">Generate Bin Allocation Report</s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.hkbridge.UserCallResponseSummaryAction"
                 event="pre">COD/Payment Failure Order Summary</s:link></h3>

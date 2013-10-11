@@ -25,9 +25,10 @@ public class PaymentModeActionFactory {
         } else if (EnumGateway.EBS.getId().equals(gateway.getId())) {
             return EbsSendReceiveAction.class;
         } else if (EnumGateway.CITRUS.getId().equals(gateway.getId()) && EnumIssuerType.Bank.getId().equals(issuerType)) {
-//            return CitrusGatewaySendReceiveAction.class;
              return CitrusNetbankingSendReceiveAction.class;
         } else if (EnumGateway.CITRUS.getId().equals(gateway.getId()) && EnumIssuerType.Card.getId().equals(issuerType)) {
+            return CitrusCreditDebitSendReceiveAction.class;
+        } else if (EnumGateway.CITRUS.getId().equals(gateway.getId()) && EnumIssuerType.Debit.getId().equals(issuerType)) {
             return CitrusCreditDebitSendReceiveAction.class;
         } else if (EnumGateway.ICICI.getId().equals(gateway.getId())) {
             return IciciGatewaySendReceiveAction.class;

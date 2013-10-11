@@ -79,7 +79,6 @@
 
   <c:if test="${hk:equalsIgnoreCase(primaryCategory, 'sports-nutrition') || hk:equalsIgnoreCase(primaryCategory, 'health-nutrition')}">
     <%-- Nutrition account new remarketing tag --%>
-    <span>kanikani</span>
     <s:layout-render name="/layouts/embed/_remarketingCodeAdwords.jsp" id="980691662"/>
   </c:if>
 

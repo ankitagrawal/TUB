@@ -26,12 +26,14 @@
     Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
 		boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
+    String orderConfirmRoute = (String) ServiceLocatorFactory.getProperty(Keys.Env.codRoute);
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
 <c:set var="codCharges" value="<%=codCharges%>"/>
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>"/>
 <c:set var="prePaidPaymentType" value="<%=EnumPaymentType.PrePaid.getId()%>"/>
+<c:set var="orderConfirmRoute" value="<%=orderConfirmRoute%>"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp"
                  pageTitle="Payment Options">
@@ -147,7 +149,8 @@
 <div class='outer'>
 <div class='left_controls tabs'>
     <ul>
-        <li class='selected' id="tab1">Credit/Debit Cards</li>
+        <li class='selected' id="tab1">Credit Cards</li>
+        <li id="tab9">Debit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
             <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
@@ -160,6 +163,7 @@
 	            </c:if>
             </c:if>
         </shiro:lacksRole>
+
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <li id="tab6">Counter Cash</li>
         </shiro:hasRole>
@@ -182,6 +186,34 @@
             </td>
 
         </tr>
+        <%--check for paypal, give it an id so that js can work--%>
+    </c:forEach>
+    </table>
+    <div style="float: right; width: 90%;"><s:submit
+            name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
+            disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
+    </div>
+</s:form></div>
+<div id="tabs_content9" class="tab_content"><s:form
+        beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
+    <s:hidden name="order" value="${orderSummary.order.id}" />
+
+    <table><c:forEach items="${paymentModeBean.debitCardIssuers}" var="cardIssuer">
+
+            <tr>
+                <td style="padding: 4px;"><s:radio name="issuer" value="${cardIssuer.id}"
+                                                   id="${cardIssuer.name}"/></td>
+                <td style="padding: 4px;"><img src="<hk:vhostImage/>${hk:readIssuerImageIcon(cardIssuer.imageIcon, cardIssuer.name)}"
+                                               height="30px" alt="gateway image">
+                </td>
+                <td style="padding: 4px;">${cardIssuer.name}<br/>
+                    <label style="font-size: .9em;font-weight: bold;color: #000000;">${cardIssuer.tagLine}</label>
+                </td>
+
+            </tr>
+
+
+
         <%--check for paypal, give it an id so that js can work--%>
     </c:forEach>
     </table>
@@ -281,10 +313,7 @@
                     </div>
                     <h4 class="codContact">Contact Details</h4>
 
-                    <p>Please verify the name and contact number of the person
-                        who would receive this order. <br/>  <br/>
-                        You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
-                        your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+
                     <s:form
                             beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
                             method="post">
@@ -296,13 +325,26 @@
                                     value="${orderSummary.order.address.name}"/>
                         </div>
                         <div>
-                            <div class="label newLabel" style="width: 100px !important;">Contact Phone</div>
+                            <div class="label newLabel" style="width: 100px !important;">Mobile Number</div>
                             <s:text class="signUpInputNew2" name="codContactPhone"
                                     value="${orderSummary.order.address.phone}" id="phoneNo"/>
                         </div>
 
-                        <div class="buttons" style="font-size: 1.3em;"><br/>
-                            <br/>
+                        <p style="margin-left: 100px"><strong class="orangeBold">Please ensure that you enter the correct mobile number</strong></p>
+                        <c:choose>
+                            <c:when test="${orderConfirmRoute == 'smsCountry'}">
+                                <p style="font-weight: 500">
+                                    After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+                                    You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.
+                                    Once verified, your order will go into processing.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <p>You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                                    your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <div class="buttons" style="font-size: 1.3em;">
                             <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="PLACE ORDER"
                                       class="positive phoneValidation placeOrderButtonNew"/></div>
                         <br/>
@@ -314,7 +356,7 @@
 
                         <h4>Terms and Conditions for Cash on Delivery</h4>
 
-                        <p>Please note that COD orders will not be confirmed and shipped from our end untill we manually confirm the order on the phone number provided by you.<br/>
+                        <p>Please note that COD order will be processed and shipped only after verification. <br/>
                             Also please ensure that the above person is available at the given location at all times.
                         </p>
                     </s:form>
@@ -457,11 +499,18 @@
 
         });
           $("#tab1").click(function(){
+             // alert("test");
               $("#CODOption").hide();
               $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
         $('#tab1').trigger('click');
+        $("#tab9").click(function(){
+            // alert("test");
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
+            $("input:radio:checked").attr('checked', false);
+        });
         $("#tab5").click(function(){
             $("#CODOption").hide();
             $("#nonCODOption").show();
@@ -475,10 +524,6 @@
         $("#tab4").click(function(){
             $("#CODOption").show();
             $("#nonCODOption").hide();
-        });
-        $("#tab2").click(function(){
-            $("#CODOption").hide();
-            $("#nonCODOption").show();
         });
         $("#tab6").click(function(){
             $("#CODOption").hide();

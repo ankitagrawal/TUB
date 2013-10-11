@@ -155,9 +155,6 @@
       <br>
       <br>
   </div>
-  <%--<c:if test="${applicableLineItemStatus == lineItemStatusId_PrePrinting}">--%>
-  <%--<div style="display:inline;float:right;"><s:submit name="doBatchPrintingPrintJobCart" value="Do Batch Printing, Print Job Cart"/></div>--%>
-  <%--</c:if>--%>
 </s:form>
 <script type="text/javascript">
   $("select[name='shippingOrderStatus']").change(function() {

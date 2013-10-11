@@ -29,6 +29,7 @@ import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.pos.DiscountConstants;
 import com.hk.constants.reversePickup.EnumReversePickupStatus;
+import com.hk.constants.reversePickup.EnumReversePickupType;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -57,6 +58,8 @@ import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupStatus;
+import com.hk.domain.reversePickupOrder.ReversePickupType;
 import com.hk.domain.review.Mail;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
@@ -543,7 +546,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<EnumUserCodCalling> getUserCodCallStatus() {
-        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO, EnumUserCodCalling.PENDING_WITH_HEALTHKART, EnumUserCodCalling.PENDING_WITH_CUSTOMER);
     }
 
     public List<Reason> getCustomerReasonForReversePickup() {
@@ -558,12 +561,17 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return courierService.getCouriers(null, null, null, EnumCourierOperations.REVERSE_PICKUP.getId());
     }
 
-    public List<EnumReversePickupStatus> getAllReversePickUpStatus() {
-        return Arrays.asList(EnumReversePickupStatus.RPU_Initiated, EnumReversePickupStatus.RPU_Picked, EnumReversePickupStatus.RPU_Received, EnumReversePickupStatus.RPU_QC_Checked_In);
+    public List<ReversePickupStatus> getAllReversePickUpStatus() {
+        return EnumReversePickupStatus.getSearchRPStatusList();
+    }
+
+    @Override
+    public List<ReversePickupType> getAllReversePickUpType() {
+        return EnumReversePickupType.getAllRPTypeList();
     }
 
 
-		public List<Category> getCategoriesForPOS() {
+    public List<Category> getCategoriesForPOS() {
 				List<Category> posCategoryList = new ArrayList<Category>();
 				String categoryNames = CategoryConstants.HEALTH_DEVICES + "," + CategoryConstants.SPORTS_NUTRITION + "," + CategoryConstants.HEALTH_NUTRITION + "," + CategoryConstants.SPORTS;
 

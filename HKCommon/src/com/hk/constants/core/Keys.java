@@ -124,6 +124,8 @@ public class Keys {
         public static final String fedExMeterNo                    = "fedExMeterNo";
         public static final String fedExAccountNoGGN               = "fedExAccountNoGGN";
 
+        public static final String codRoute                      = "codRoute";
+
         /*To be removed later on. just a safety mehchanism to route calls to outside hk*/
         public static final String maxCODCallCount                  = "maxCODCallCount";
 
