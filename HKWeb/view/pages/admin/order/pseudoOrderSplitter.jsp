@@ -101,8 +101,7 @@
         </c:if>
         <div class="clear"></div>
         <c:forEach items="${splitter.sortedDummyOrderMaps}" var="dummyOrderEntry" varStatus="combCtr">
-            <strong>Combination# ${combCtr.index+1}</strong> | <strong>Shipping Plus Tax
-            Cost:</strong>${dummyOrderEntry.value}
+            <strong>Combination# ${combCtr.index+1}</strong> | <strong>(Shipping + Tax) Cost:</strong>${dummyOrderEntry.value}
             <hr/>
             <c:forEach items="${dummyOrderEntry.key}" var="dummyOrder">
                 <div style="float: left; margin-right:10px; width:45%">
