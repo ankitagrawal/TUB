@@ -89,6 +89,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             product.setJit(variantSavedSyncRequest.isJit());
             product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
             product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
+            product.setDeleted(variantSavedSyncRequest.isDeleted());
 
             if (variantSavedSyncRequest.isJit()) {
                 productVariant.setMarkedPrice(variantSavedSyncRequest.getMrp());
