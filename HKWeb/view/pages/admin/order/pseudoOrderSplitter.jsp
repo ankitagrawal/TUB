@@ -88,7 +88,7 @@
                                     ${cartLineItem.productVariant.id}
                                 </td>
                                 <td>${cartLineItem.productVariant.product.name}<br/>
-                                    <span class="small gry em">${cartLineItem.productVariant.optionsCommaSeparated}</span> </td>
+                                    <span style="font-size:.8em;">${cartLineItem.productVariant.optionsCommaSeparated}</span> </td>
                                 <td> ${cartLineItem.markedPrice}</td>
                                 <td> ${cartLineItem.productVariant.hkPrice}</td>
                                 <td>${cartLineItem.productVariant.weight}</td>
