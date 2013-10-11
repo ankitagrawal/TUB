@@ -43,7 +43,7 @@
     </s:layout-component>
     <s:layout-component name="content">
         <div>
-            <div style="float: left; width:60%">
+            <div style="float: left; width:90%">
                 <s:form beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction">
                     <fieldset class="top_label">
                         <legend> Enter Details</legend>
