@@ -1,10 +1,10 @@
-<%@ page import="java.util.List" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.pact.service.inventory.SkuService" %>
+<%@ page import="com.hk.admin.pact.service.inventory.MasterInventoryService" %>
 <%@ page import="com.hk.domain.order.CartLineItem" %>
 <%@ page import="com.hk.domain.sku.Sku" %>
-<%@ page import="com.hk.admin.pact.service.inventory.MasterInventoryService" %>
+<%@ page import="com.hk.pact.service.inventory.SkuService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.List" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Order Splitter">
 
@@ -24,195 +24,167 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
         <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-
-        <style type="text/css">
-            .text {
-                margin-left: 100px;
-                margin-top: 20px;
-            }
-
-            .label {
-                margin-top: 20px;
-                float: left;
-                margin-left: 10px;
-                width: 150px;
-            }
-
-        </style>
-
     </s:layout-component>
     <s:layout-component name="content">
-        <div>
-            <div style="float: left; width:90%">
-                <s:form beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction">
-                    <fieldset class="top_label">
-                        <legend> Enter Details</legend>
-                        <s:label name="gatewayOrderId" class="label">Gateway Order Id</s:label>
-                        <s:text name="gatewayOrderId" style="width:200px" class="text"/>
+        <div style="float: left; width:90%">
+            <s:form beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction">
+                <fieldset class="top_label">
+                    <legend> Enter Details</legend>
+                    <s:label name="gatewayOrderId" class="label">Gateway Order Id</s:label>
+                    <s:text name="gatewayOrderId" style="width:200px" class="text"/>
 
-                        <div class="clear"></div>
-                        <div style="margin-top:15px;"></div>
-                        <s:submit name="splitOrderPractically" value="Split Order Practically" style="float:left"/>
-                        <s:submit name="splitOrderIdeally" value="Split Order Ideally" style="float:left"/>
-                        <s:submit name="splitViaNewSplitter" value="Split Order Via New Splitter" style="float:left"/>
-                    </fieldset>
-                </s:form>
+                    <div class="clear"></div>
+                    <div style="margin-top:15px;"></div>
+                    <s:submit name="splitOrderPractically" value="Split Order Practically"
+                              style="float:left;padding:3px;font-size:.9em;"/>
+                    <s:submit name="splitOrderIdeally" value="Split Order Ideally"
+                              style="float:left;padding:3px;font-size:.9em;"/>
+                    <s:submit name="splitViaNewSplitter" value="Split Order Via New Splitter"
+                              style="float:left;padding:3px;font-size:.9em;"/>
+                </fieldset>
+            </s:form>
+        </div>
+
+        <div class="clear"></div>
+
+        <c:if test="${splitter.order != null}">
+            <div class="box" style="width:100%">
+                <strong>Order Details </strong> - Order Amount: ${splitter.order.amount} |
+                IsCod: ${splitter.order.COD} | Pincode: ${splitter.order.address.pincode.pincode}
+                <table style="border:0px;">
+                    <tr>
+                        <th>Variant Id</th>
+                        <th>Name</th>
+                        <th>MRP</th>
+                        <th>Qty</th>
+                        <th>Weight</th>
+                        <th>SKU Details</th>
+                    </tr>
+                    <c:forEach items="${splitter.order.productCartLineItems}" var="cartLineItem">
+                        <%
+                            CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("cartLineItem");
+                            //List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+                            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
+                            pageContext.setAttribute("skus", skus);
+                        %>
+                        <tr>
+                            <td>
+                                    ${cartLineItem.productVariant.id}
+                            </td>
+                            <td>${cartLineItem.productVariant.product.name}<br/>
+                                <span style="font-size:.8em;">${cartLineItem.productVariant.optionsCommaSeparated}</span>
+                            </td>
+                            <td> ${cartLineItem.markedPrice}</td>
+                            <td> ${cartLineItem.qty}</td>
+                            <td>${cartLineItem.productVariant.weight}</td>
+                            <td>
+                                <%
+                                    for (Sku sku : skus) {
+                                        Long unitsForSplitting = masterInventoryService.getCheckedInUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice())
+                                                - masterInventoryService.getUnbookedLIUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice());
+                                %>
+
+                                <span style="font-weight:<%=unitsForSplitting > 0 ? "bold" : ""%>"><%=sku.getWarehouse().getIdentifier()%> | <%=sku.getTax().getValue()%> | UnitsForSplitting:<%=unitsForSplitting%></span>
+                                <br/>
+                                <%
+                                    }
+                                %>
+
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+
+
             </div>
 
-            <div class="clear"></div>
-
-            <c:if test="${splitter.order != null}">
-                <div class="box" style="width:100%">
-                    <STRONG>Order Details</STRONG>
-                    <div class="clear"></div>
-                    Order Amount: ${splitter.order.amount}  &nbsp; &nbsp; IsCod: ${splitter.order.COD} &nbsp; &nbsp; Pincode: ${splitter.order.address.pincode.pincode}
-                    <div class="clear"></div>
-                    <table style="border:0px;">
+        </c:if>
+        <div class="clear"></div>
+        <c:forEach items="${splitter.sortedDummyOrderMaps}" var="dummyOrderEntry" varStatus="combCtr">
+            <strong>Combination# ${combCtr.index+1}</strong> | <strong>Shipping Plus Tax
+            Cost:</strong>${dummyOrderEntry.value}
+            <hr/>
+            <c:forEach items="${dummyOrderEntry.key}" var="dummyOrder">
+                <div style="float: left; margin-right:10px; width:45%">
+                    <table>
                         <tr>
-                            <th>Variant Id</th>
-                            <th>Name</th>
-                            <th>MRP</th>
-                            <th>HK Price</th>
-                            <th>Weight</th>
-                            <th>SKU Details</th>
+                            <th>Warehouse</th>
+                            <th>${dummyOrder.warehouse.identifier}</th>
                         </tr>
-                        <c:forEach items="${splitter.order.productCartLineItems}" var="cartLineItem">
-                            <%
-                                CartLineItem cartLineItem= (CartLineItem) pageContext.getAttribute("cartLineItem");
-                                //List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
-	                            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
-                                pageContext.setAttribute("skus", skus);
-                            %>
-                            <tr>
-                                <td>
-                                    ${cartLineItem.productVariant.id}
-                                </td>
-                                <td>${cartLineItem.productVariant.product.name}<br/>
-                                    <span style="font-size:.8em;">${cartLineItem.productVariant.optionsCommaSeparated}</span> </td>
-                                <td> ${cartLineItem.markedPrice}</td>
-                                <td> ${cartLineItem.productVariant.hkPrice}</td>
-                                <td>${cartLineItem.productVariant.weight}</td>
-                                <td>
-                                    <%
-                                        for (Sku sku : skus) {
-                                         Long unitsForSplitting = masterInventoryService.getCheckedInUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice())
-                                                 - masterInventoryService.getUnbookedLIUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice()) ;
-                                    %>
+                        <tr>
+                            <td colspan="2">
+                                <c:forEach items="${dummyOrder.cartLineItemList}" var="cartLineItem">
+                                    ${cartLineItem.productVariant.product.name}<br/>
+                                    <span style="font-size:.8em">${cartLineItem.productVariant.optionsCommaSeparated}</span>
+                                </c:forEach>
 
-                                     <span style="font-weight:<%=unitsForSplitting > 0 ? "bold" : ""%>"><%=sku.getWarehouse().getIdentifier()%> | <%=sku.getTax().getValue()%> | UnitsForSplitting:<%=unitsForSplitting%></span> 
-                                     <br/>
-                                    <%
-                                        }
-                                    %>
-
-                                </td>
-                            </tr>
-                        </c:forEach>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tax Incurred</td>
+                            <td>${dummyOrder.taxIncurred}</td>
+                        </tr>
+                        <tr>
+                            <td>Courier</td>
+                            <td>${dummyOrder.dummySO.courier}</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping Cost</td>
+                            <td>${dummyOrder.dummySO.shipmentCost}</td>
+                        </tr>
                     </table>
 
-
                 </div>
-
-            </c:if>
-            <div class="clear"></div>
-            <div style="margin-top:40px;"></div>
-            <div style="float: left; width:100%">
-
-                Corresponding Shipping Orders
-
-                <c:forEach items="${splitter.sortedDummyOrderMaps}" var="dummyOrderEntry">
-                    <div class="clear"></div>
-
-                    <div class="row" style="margin-left:20px; width: 100%;">
-                        <label class="valueLabel bolderValue">Shipping Plus Tax Cost:</label>
-                        <label class="nameLabel bolderValue">${dummyOrderEntry.value}</label>
-                    </div>
-
-                    <div class="clear"></div>
-                    <div style="margin-left:20px; width: 100%;">
-                        <c:forEach items="${dummyOrderEntry.key}" var="dummyOrder">
-                            <div style="float: right; margin-left: 10px; margin-right: 10px; width: 40%; height: 200px; padding: 15px">
-                                <fieldset>
-                                    <div>
-                                        <div class="clear"></div>
-                                        <div class="row">
-                                            <label class="valueLabel">Warehouse</label>
-                                            <label class="nameLabel bolderValue">${dummyOrder.warehouse.identifier}</label>
-                                        </div>
-                                        <div class="clear"></div>
-
-                                        <c:forEach items="${dummyOrder.cartLineItemList}" var="cartLineItem">
-                                            <div class="itemsRow">
-                                                <label class="boldValue items">${cartLineItem.productVariant.product.name}: <span class="small gry em">${cartLineItem.productVariant.optionsCommaSeparated}</span></label>
-                                            </div>
-                                        </c:forEach>
-
-
-                                        <div class="clear"></div>
-                                        <div class="row">
-                                            <label class="valueLabel">Tax Incurred:</label>
-                                            <label class="nameLabel">${dummyOrder.taxIncurred}</label>
-                                        </div>
-                                        <div class="clear"></div>
-                                        <div class="row">
-                                            <label class="valueLabel">Courier:</label>
-                                            <label class="nameLabel">${dummyOrder.dummySO.courier.name}</label>
-                                        </div>
-
-                                        <div class="clear"></div>
-                                        <div class="row">
-                                            <label class="valueLabel">Shipment Cost :</label>
-                                            <label class="nameLabel">${dummyOrder.dummySO.shipmentCost}</label>
-                                        </div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div class="clear"></div>
-                                </fieldset>
-                            </div>
-                        </c:forEach>
-                    </div>
-                    <div class="clear"></div>
-                </c:forEach>
-            </div>
-        </div>
+            </c:forEach>
+            <br/>
+        </c:forEach>
     </s:layout-component>
 </s:layout-render>
 <style type="text/css">
-    .nameLabel {
-        margin-top: 10px;
+    table {
+        border-collapse: collapse;
+        width: 100%
     }
 
-    .valueLabel {
-        float: left;
-        margin-left: 10px;
-        width: 200px;
+    table tr td {
+        padding: 5px;
+        border: 1px solid #CCC;
     }
 
-    .items{
-        float: left;
-        margin-left: 10px;
-        margin-top: 5px;
+    table tr th {
+        padding: 5px;
+        border: 1px solid #CCC;
+        text-align: left;
     }
 
-    .itemsRow {
-        margin-top: 10px;
+    h2t {
+        margin: 0;
+        padding: 0;
     }
 
-    .row {
-        margin-top: 20px;
+    h1 {
+        margin: 0;
+        padding: 0;
     }
 
-    .bolderValue{
-        font-weight: 900;
+    table.header tr td {
+        border: none;
+        vertical-align: top
     }
 
-    .boldValue{
-        font-weight: 500;
+    .clear {
+        clear: both;
+        display: block;
+        overflow: hidden;
+        visibility: hidden;
+        width: 0;
+        height: 0
     }
 
-    .box{
-        padding:10px;
-        border:2px solid gray;
-        margin:10px;
+    .messages {
+        color: red;
+        font: 10px;
+
     }
+
 </style>
