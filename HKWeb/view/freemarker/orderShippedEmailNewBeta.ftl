@@ -44,13 +44,13 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                 <tr>
 
                     <td>
-                        <#if productLineItem.productVariant.variantName??>
-                        ${productLineItem.productVariant.variantName}
+                        <#if lineItem.sku.productVariant.variantName??>
+                        ${lineItem.sku.productVariant.variantName}
                         <#else>
-                        ${productLineItem.productVariant.product.name}
+                        ${lineItem.sku.productVariant.product.name}
                         </#if>
                         <br/>
-                        <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
+                        <em style="font-size:0.9em; color:#666"><#list lineItem.sku.productVariant.productOptions as productOption>
                     ${productOption.name} ${productOption.value}
                     </#list></em>
                     </td>
@@ -104,13 +104,13 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                     <#list shippingOrder.lineItems as lineItem>
                         <tr>
-                            <td><#if lineItem.productVariant.variantName??>
-                            ${lineItem.productVariant.variantName}
+                            <td><#if lineItem.sku.productVariant.variantName??>
+                            ${lineItem.sku.productVariant.variantName}
                             <#else>
-                            ${lineItem.productVariant.product.name}
+                            ${lineItem.sku.productVariant.product.name}
                             </#if>
                                 <br/>
-                                <em style="font-size:0.9em; color:#666"><#list lineItem.productVariant.productOptions as productOption>
+                                <em style="font-size:0.9em; color:#666"><#list lineItem.sku.productVariant.productOptions as productOption>
                     ${productOption.name} ${productOption.value}
                     </#list></em>
                             </td>
