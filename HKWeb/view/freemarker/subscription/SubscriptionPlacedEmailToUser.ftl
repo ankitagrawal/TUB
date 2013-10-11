@@ -4,7 +4,7 @@ Your Subscription with Id ${subscription.id} is placed.
     <title>Your Subscription with Id ${subscription.id} is placed. </title>
 </head>
 <body>
-<p style="margin-bottom:1em">Hi ${subscription.user.name}!,</p>
+<p style="margin-bottom:1em">Hi ${subscription.user.name},</p>
 
 <p style="margin-bottom:1em">
     Thanks for subscribing with us. We will give you a call whenever your shipment is due and then process your subscription.

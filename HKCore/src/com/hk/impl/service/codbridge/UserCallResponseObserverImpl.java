@@ -1,6 +1,7 @@
 package com.hk.impl.service.codbridge;
 
 
+import com.google.gson.Gson;
 import com.hk.constants.core.Keys;
 import com.hk.hkjunction.observers.OrderObserver;
 import com.hk.hkjunction.observers.OrderResponse;
@@ -20,6 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.TextMessage;
 
 
 /**
@@ -31,7 +35,7 @@ import javax.annotation.PostConstruct;
  */
 
 @Service
-public class UserCallResponseObserverImpl extends OrderObserver implements com.hk.pact.service.codbridge.UserCallResponseObserver{
+public class UserCallResponseObserverImpl implements javax.jms.MessageListener/*,com.hk.pact.service.codbridge.UserCallResponseObserver*/{
     private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserverImpl.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
@@ -48,8 +52,27 @@ public class UserCallResponseObserverImpl extends OrderObserver implements com.h
 
     }
 
-    public void subscribe(){
-       producerFactory.register(this);
+
+
+    /*public void subscribe(){
+       //producerFactory.register(this);
+    }*/
+
+    @Override
+    public void onMessage(Message message) {
+
+        if (message instanceof TextMessage) {
+            try {
+                String messageText = ((TextMessage) message).getText();
+                logger.debug("recieved message in Order Observer: " + messageText);
+                //OrderResponseObserver codObserver = beanFactory.getBean(OrderResponseObserver.class);
+                OrderResponse orderResponse = new Gson().fromJson(messageText, OrderResponse.class);
+                onResponse(orderResponse);
+            }
+            catch (JMSException ex) {
+                logger.error("JMS Exception ", ex);
+            }
+        }
     }
 
     @Transactional

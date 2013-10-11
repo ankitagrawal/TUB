@@ -264,8 +264,10 @@
                     <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+            <a href="${pageContext.request.contextPath}/parenting/moms-maternity?pre=&pageNo=1">
+                <img src="<hk:vhostImage/>/images/banners/Maternity-Care.jpg" alt="Free shipping and COD"
                                      class="small_banner"/>
+            </a>
             </c:when>
 
             <c:when test="${categoryBean.category.name eq beauty}">

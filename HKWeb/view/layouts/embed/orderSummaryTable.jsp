@@ -20,7 +20,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 %>
 
     <c:if test="${pricingDto.grandTotalPayable > 0.00}">
-    <div class='totals newTotals2'>
+    <div class='totals newTotals2' style="margin-top: 40px !important;">
         <div class='left' style="width: 42%;left: 0px;">
 
 
