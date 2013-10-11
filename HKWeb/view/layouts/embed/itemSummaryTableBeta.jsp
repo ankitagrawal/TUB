@@ -60,7 +60,14 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
                 <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
                     <div style="padding:5px;width:80%;position: relative;float: left;word-wrap:break-word;">
-                            ${storeVariantBasic.name}
+                        <c:choose>
+                            <c:when test="${not empty storeVariantBasic.name and storeVariantBasic.name!= null}">
+                                ${storeVariantBasic.name}
+                            </c:when>
+                            <c:otherwise>
+                                ${invoiceLineItem.productVariant.product.name}
+                            </c:otherwise>
+                        </c:choose>
                                 <c:if test="${hk:equalsIgnoreCase(invoiceLineItem.productVariant.product.primaryCategory.name,'eye') and hk:equalsIgnoreCase(invoiceLineItem.productVariant.product.secondaryCategory.name,'lenses')}">
                                     <table style="display: inline-block; font-size: 11px;margin: 7px 0;">
                                         <c:forEach items="${invoiceLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
@@ -255,7 +262,15 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
                 <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
                     <div style="padding:5px;width:80%;position: relative;float: left;word-wrap:break-word">
-                                    ${storeVariantBasic.name} <br/>
+                        <c:choose>
+                            <c:when test="${not empty storeVariantBasic.name and storeVariantBasic.name!= null}">
+                                ${storeVariantBasic.name}
+                            </c:when>
+                            <c:otherwise>
+                                ${invoiceLineItem.productVariant.product.name}
+                            </c:otherwise>
+                        </c:choose>
+                        <br/>
                                     <%--${invoiceLineItem.productVariant.variantName}--%>
                     </div>
                     <div align="left" style="text-align:center;width:12%;padding: 5px;position: relative;float: left;">${invoiceLineItem.qty}</div>

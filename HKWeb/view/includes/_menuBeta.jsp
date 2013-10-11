@@ -344,7 +344,7 @@
         // Show the submenu
         $submenu.css({
           display: "block",
-          top: 0,
+          top: -5,
           left: width - 3
 
         });
@@ -580,6 +580,10 @@
 
 #dropDownbox1 {
     position: absolute;
+}
+
+#dropDownbox1 .gm.gl {
+    margin-top: 5px;
 }
 
 .flyout-submenu {
