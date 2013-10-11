@@ -26,12 +26,14 @@
     Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
 		boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
+    String orderConfirmRoute = (String) ServiceLocatorFactory.getProperty(Keys.Env.codRoute);
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
 <c:set var="codCharges" value="<%=codCharges%>"/>
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>"/>
 <c:set var="prePaidPaymentType" value="<%=EnumPaymentType.PrePaid.getId()%>"/>
+<c:set var="orderConfirmRoute" value="<%=orderConfirmRoute%>"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp"
                  pageTitle="Payment Options">
@@ -311,10 +313,7 @@
                     </div>
                     <h4 class="codContact">Contact Details</h4>
 
-                    <p>Please verify the name and contact number of the person
-                        who would receive this order. <br/>  <br/>
-                        You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
-                        your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+
                     <s:form
                             beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
                             method="post">
@@ -326,13 +325,26 @@
                                     value="${orderSummary.order.address.name}"/>
                         </div>
                         <div>
-                            <div class="label newLabel" style="width: 100px !important;">Contact Phone</div>
+                            <div class="label newLabel" style="width: 100px !important;">Mobile Number</div>
                             <s:text class="signUpInputNew2" name="codContactPhone"
                                     value="${orderSummary.order.address.phone}" id="phoneNo"/>
                         </div>
 
-                        <div class="buttons" style="font-size: 1.3em;"><br/>
-                            <br/>
+                        <p style="margin-left: 100px"><strong class="orangeBold">Please ensure that you enter the correct mobile number</strong></p>
+                        <c:choose>
+                            <c:when test="${orderConfirmRoute == 'smsCountry'}">
+                                <p style="font-weight: 500">
+                                    After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+                                    You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.
+                                    Once verified, your order will go into processing.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <p>You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                                    your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <div class="buttons" style="font-size: 1.3em;">
                             <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="PLACE ORDER"
                                       class="positive phoneValidation placeOrderButtonNew"/></div>
                         <br/>
@@ -344,7 +356,7 @@
 
                         <h4>Terms and Conditions for Cash on Delivery</h4>
 
-                        <p>Please note that COD orders will not be confirmed and shipped from our end untill we manually confirm the order on the phone number provided by you.<br/>
+                        <p>Please note that COD order will be processed and shipped only after verification. <br/>
                             Also please ensure that the above person is available at the given location at all times.
                         </p>
                     </s:form>

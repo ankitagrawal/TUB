@@ -3,16 +3,16 @@
 
 <!-- This xml will contain the common bean configurations -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jms="http://www.springframework.org/schema/jms"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-3.0.xsd 
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd 
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
 
 	<context:annotation-config />
 	<context:component-scan base-package="com.hk" />
@@ -118,9 +118,27 @@
 	<util:properties id="hkEnvProps"
 		location="/WEB-INF/environment.properties" />
 
+    <bean id="connectionFactory"
+          class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+
+
     <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
         <constructor-arg name="address" value="localhost">
         </constructor-arg>
     </bean>
+
+    <!-- A POJO that implements the JMS message listener -->
+    <bean id="userCodResponseListener" class="com.hk.impl.service.codbridge.UserCallResponseObserverImpl" />
+
+    <!-- A JMS namespace aware Spring configuration for the message listener container -->
+    <jms:listener-container
+            container-type="default"
+            connection-factory="connectionFactory"
+            acknowledge="auto"
+            cache="consumer">
+        <jms:listener destination="order.cod.response" ref="userCodResponseListener"/>
+    </jms:listener-container>
 
 </beans>
