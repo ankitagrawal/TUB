@@ -3,11 +3,14 @@
 <%@ page import="com.hk.pact.service.inventory.SkuService" %>
 <%@ page import="com.hk.domain.order.CartLineItem" %>
 <%@ page import="com.hk.domain.sku.Sku" %>
+<%@ page import="com.hk.admin.pact.service.inventory.MasterInventoryService" %>
+<%@ page import="java.util.Arrays" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Order Splitter">
 
     <%
         SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
+        MasterInventoryService masterInventoryService = ServiceLocatorFactory.getService(MasterInventoryService.class);
     %>
 
     <s:useActionBean beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction" var="splitter"/>
@@ -88,7 +91,17 @@
                                 <td> ${cartLineItem.markedPrice}</td>
                                 <td> ${cartLineItem.productVariant.hkPrice}</td>
                                 <td>${cartLineItem.productVariant.weight}</td>
-                                <td><c:forEach items="${skus}" var="sku">${sku.warehouse.identifier}:${sku.tax.value}<br></c:forEach></td>
+                                <td>
+                                    <%
+                                        for (Sku sku : skus) {
+                                         Long uncheckedOutUnits = masterInventoryService.getUncheckedOutUnits(Arrays.asList(sku), cartLineItem.getMarkedPrice());
+                                    %>
+                                      <%=sku.getWarehouse().getIdentifier()%> | <%=sku.getTax().getValue()%> | Units:<%=uncheckedOutUnits%>
+                                    <%
+                                        }
+                                    %>
+
+                                </td>
                             </tr>
                         </c:forEach>
                     </table>

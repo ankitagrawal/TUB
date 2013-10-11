@@ -13,7 +13,7 @@
         if (productVariant != null) {
             pageContext.setAttribute("productVariant", productVariant);
             MasterInventoryService masterInventoryService = ServiceLocatorFactory.getService(MasterInventoryService.class);
-            Double mrp = null;
+            Double mrp = null;                      
             if (request.getParameter("mrp") != null) {
                 mrp = Double.valueOf((String) request.getParameter("mrp"));
             }
