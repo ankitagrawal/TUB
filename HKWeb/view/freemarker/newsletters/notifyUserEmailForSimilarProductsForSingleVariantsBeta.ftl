@@ -7,7 +7,7 @@ Talking 'bout the one that got away!
 
 <body style="margin:0; padding:0; font-family:Verdana, Geneva, sans-serif; background-color:#FFFFFF;">
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-<#include "/freemarker/headerBeta.ftl">
+<#include "../headerBeta.ftl">
     <tbody style="font-size:13px; line-height:1.75em;">
 
     <tr>
