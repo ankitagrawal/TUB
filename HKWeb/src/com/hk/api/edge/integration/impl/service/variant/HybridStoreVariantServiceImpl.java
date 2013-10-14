@@ -82,13 +82,20 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
         if (productVariant != null) {
             productVariant.setHkPrice(Double.valueOf(((Integer) variantSavedSyncRequest.getOfferPrice()).toString()));
             productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
-
+            productVariant.setDeleted(variantSavedSyncRequest.isDeleted());
 
             Product product = getProductService().getProductById(variantSavedSyncRequest.getOldProductId());
             product.setCodAllowed(variantSavedSyncRequest.isCodAllowed());
             product.setJit(variantSavedSyncRequest.isJit());
             product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
             product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
+
+            boolean isProductDeleted = true;
+            for (ProductVariant productVariantTemp : product.getProductVariants()) {
+                isProductDeleted = isProductDeleted && productVariantTemp.isDeleted();
+            }
+
+            product.setDeleted(isProductDeleted);
 
             if (variantSavedSyncRequest.isJit()) {
                 productVariant.setMarkedPrice(variantSavedSyncRequest.getMrp());

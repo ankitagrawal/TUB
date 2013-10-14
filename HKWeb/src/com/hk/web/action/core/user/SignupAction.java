@@ -102,15 +102,15 @@ public class SignupAction extends BaseAction {
         signupDate = GAUtil.formatDate(currentDate);
 
         if (!StringUtils.isBlank(redirectUrl)) {
-            return new RedirectResolution(redirectUrl, false);
+            return new RedirectResolution(redirectUrl, false).addParameter("signup", "true");
         }
 
         if (!StringUtils.isBlank(source) && source.equals(LoginAction.SOURCE_CHECKOUT)) {
-            return new RedirectResolution(SelectAddressAction.class);
+            return new RedirectResolution(SelectAddressAction.class).addParameter("signup", "true");
         }
 
         // return new RedirectResolution(WelcomeAction.class);
-        return new RedirectResolution(HomeAction.class);
+        return new RedirectResolution(HomeAction.class).addParameter("signup", "true");
     }
 
     public void setEmail(String email) {
