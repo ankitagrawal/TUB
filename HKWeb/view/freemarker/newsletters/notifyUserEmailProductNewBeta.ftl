@@ -7,7 +7,7 @@ You requested to be notified when ${product.name} was back in stock
 
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
 <table width="530" border="0" align="center" cellpadding="0" cellspacing="0">
-<#include "../headerBeta.ftl">
+<#include "headerBeta.ftl">
     <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
         <td colspan="2" style="padding-top: 15px"><a href="http://www.healthkart.com"><img
@@ -46,7 +46,7 @@ You requested to be notified when ${product.name} was back in stock
         </td>
     </tr>
     </tbody>
-<#include "../footerBeta.ftl" >
+<#include "footerBeta.ftl" >
 </table>
 </body>
 </html>
