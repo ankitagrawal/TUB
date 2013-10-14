@@ -69,7 +69,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
         </td>
     </tr>
     </tbody>
-<#include "/freemarker/footerBeta.ftl">
+<#include "../footerBeta.ftl">
 
 </table>
 </body>

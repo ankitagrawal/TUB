@@ -90,7 +90,7 @@ Talking 'bout the one that got away!
         </td>
     </tr>
     </tbody>
-<#include "/freemarker/footerBeta.ftl">
+<#include "../footerBeta.ftl">
 </table>
 </body>
 </html>

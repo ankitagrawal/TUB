@@ -46,7 +46,7 @@ You requested to be notified when ${product.name} was back in stock
         </td>
     </tr>
     </tbody>
-<#include "/freemarker/footerBeta.ftl" >
+<#include "../footerBeta.ftl" >
 </table>
 </body>
 </html>
