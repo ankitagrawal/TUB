@@ -1354,4 +1354,15 @@
             ${hk:showFreebie(${product})}
         </example>
     </function>
+    <function>
+        <description>
+            returns if Freebie offer should be shown
+        </description>
+        <name>isAutoConfirmedCod</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isAutoConfirmedCod(com.hk.domain.order.Order,com.hk.constants.order.EnumOrderStatus)</function-signature>
+        <example>
+            ${hk:isAutoConfirmedCod(${order}, ${enumOrderStatus})}
+        </example>
+    </function>
 </taglib>
