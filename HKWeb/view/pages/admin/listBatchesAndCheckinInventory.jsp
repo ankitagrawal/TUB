@@ -111,6 +111,12 @@
         <s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction" style="font-size:1.2em">
           <-- Back to Search Sku Batches</s:link>
       </div>
+
+      <div>
+          <a href="${pageContext.request.contextPath}/pages/admin/pvSkuDetails.jsp?variantId=${ica.productVariant.id}" target="_blank">
+              SKU Details of ${ica.productVariant.id}
+          </a>
+      </div>
       <br/>
 
       <c:if test="${!empty ica.allSkuGroups}">

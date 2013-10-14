@@ -2,16 +2,18 @@ package com.hk.impl.dao.sku;
 
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
-import com.hk.domain.sku.SkuItemStatus;
+import com.hk.domain.sku.*;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -75,6 +77,41 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
       }
     }
     return false;
+  }
+
+  public Long getUnbookedCLICount(ProductVariant productVariant) {
+    String query = "select sum(c.qty) from CartLineItem c " +
+        "where  c.productVariant = :productVariant and c.order.orderStatus.id in (:orderStatusIds) and c.skuItemCLIs.size <= 0 ";
+    Long cliQty = (Long) getSession().createQuery(query)
+        .setParameterList("orderStatusIds", Arrays.asList(EnumOrderStatus.Placed.getId()))
+        .setParameter("productVariant", productVariant).uniqueResult();
+
+    return cliQty != null ? cliQty : 0L;
+  }
+
+  public Long getUnbookedLICount(List<Sku> skuList, Double mrp) {
+    Long liQty = 0L;
+    if(skuList != null && !skuList.isEmpty()){
+    List<Long> statuses = new ArrayList<Long>();
+    statuses.addAll(EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory()));
+
+    String query2 = " select sum(li.qty) from LineItem li inner join li.shippingOrder as so " +
+        "where li.sku in (:skuList) and so.shippingOrderStatus.id in (:shippingOrderStatusIds) and li.skuItemLineItems.size <= 0 ";
+      if(mrp != null){
+      query2 += "and li.markedPrice = :mrp ";
+      }
+
+      Query query = getSession().createQuery(query2)
+          .setParameterList("shippingOrderStatusIds", statuses)
+          .setParameterList("skuList", skuList);
+      if (mrp != null) {
+        query = query.setParameter("mrp", mrp);
+      }
+
+      liQty = (Long) query.uniqueResult();
+
+    }
+    return liQty != null ? liQty : 0L;
   }
 
 
