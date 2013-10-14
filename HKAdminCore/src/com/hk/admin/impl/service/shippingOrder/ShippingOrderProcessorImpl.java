@@ -21,6 +21,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
@@ -163,6 +164,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         }
         List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
         if (!enumBuckets.isEmpty()) {
+
           reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
         }
         if (shippingOrder.getShipment() == null) {
@@ -220,7 +222,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           // todo auto escalation code need to be changed
           shippingOrderService.validateShippingOrder(shippingOrder);
           shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
-          if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
+          if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled) ) {
             return false;
           } else {
             for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -603,8 +605,20 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           EnumReason.INV_FOUND_DIFF_WAREHOUSE.asReason(), comment.toString());
 
     }
+     boolean validationRequired = false;
+      for (LineItem  lineItem : cancelledSO.getLineItems()){
+         if (lineItem.getSkuItemLineItems().size() > 0){
+            validationRequired = true;
+             break;
+         }
+      }
 
-     cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+      if (validationRequired ){
+        cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+      }else {
+        cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+      }
+
      shippingOrderService.save(cancelledSO);
 
     /*
