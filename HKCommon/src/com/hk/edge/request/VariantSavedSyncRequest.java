@@ -9,6 +9,7 @@ public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
 
     private boolean codAllowed;
     private boolean jit;
+    private boolean deleted;
 
     public double getMrp() {
         return mrp;
@@ -56,6 +57,14 @@ public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
 
     public void setOldProductId(String oldProductId) {
         this.oldProductId = oldProductId;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
 }
