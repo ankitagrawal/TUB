@@ -87,7 +87,7 @@ public class StockTransferServiceImpl implements StockTransferService {
 		if (skuItemLineItem != null) {
 			LineItem item = skuItemLineItem.getLineItem();
 			skuList.add(item.getSku());
-			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice(), false);
 			SkuItemCLI cli = skuItemLineItem.getSkuItemCLI();
 			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0 && !availableUnbookedSkuItems.get(0).equals(skuItem)) {
 				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
@@ -112,7 +112,7 @@ public class StockTransferServiceImpl implements StockTransferService {
 		if (skuItemLineItem == null && skuItemCLI != null) {
 			CartLineItem cartLineItem = skuItemCLI.getCartLineItem();
 			skuList.add(skuItemCLI.getSkuItem().getSkuGroup().getSku());
-			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+			List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
 			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
 				SkuItem skuItemToBeSet = availableUnbookedSkuItems.get(0);
 				skuItemToBeSet.setSkuItemStatus(skuItemCLI.getSkuItem().getSkuItemStatus());
