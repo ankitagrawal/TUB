@@ -148,7 +148,7 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public Long getAvailableUnbookedInventory(Sku sku, Double mrp) {
-      List<SkuItem> skuItems = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), mrp);
+      List<SkuItem> skuItems = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), mrp, false);
       if(!skuItems.isEmpty()){
           return Long.valueOf(skuItems.size());
       }
