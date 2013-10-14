@@ -25,9 +25,6 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 @Repository
 public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements ShippingOrderLifecycleDao {
 
-    @Autowired
-    BaseDao baseDao;
-
     public Date getActivityDateForShippingOrder(ShippingOrder shippingOrder, List<EnumShippingOrderLifecycleActivity> shippingOrderLifecycleActivites) {
         List<Long> lifecycleActivityIds = EnumShippingOrderLifecycleActivity.getSOLifecycleActivityIDs(shippingOrderLifecycleActivites);
         return (Date) getSession().createQuery(
@@ -62,7 +59,7 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
                 "max(create_dt) FROM shipping_order_lifecycle where shipping_order_lifecycle_activity_id=" + EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.getId() +
                 " group by shipping_order_id  ) final where final.sol_awb REGEXP '^[A-Z,0-9]*[0-9]$' " +
                 "and final.sol_awb is not null and final.shipping_order_id =:shippingOrderId";
-        SQLQuery query = baseDao.createSqlQuery(queryAwb);
+        SQLQuery query = this.createSqlQuery(queryAwb);
         query.addScalar("solcAwb", Hibernate.STRING);
         query.setParameter("shippingOrderId", shippingOrder.getId());
         List<String> awbList = query.list();
