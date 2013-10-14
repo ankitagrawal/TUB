@@ -855,7 +855,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
             for (int i = 0; i < qtyToBeSet; i++) {
-              List<SkuItem> skuItemList = skuItemDao.getSkuItems(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+              List<SkuItem> skuItemList = skuItemDao.getSkuItems(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice(), false);
 
               if (skuItemList != null && skuItemList.size() > 0) {
                 SkuItem skuItem = skuItemList.get(0);
@@ -1155,7 +1155,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
 
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
@@ -1243,7 +1243,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     // it means no entry
 
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
@@ -1260,7 +1260,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         if (sicliAlreadyCreated) {
           skuItem = skuItemCLI.getSkuItem();
         } else {
-          skuItem = (SkuItem) skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice()).get(0);
+          skuItem = (SkuItem) skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false).get(0);
         }
         skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
         baseDao.save(skuItem);
@@ -1517,7 +1517,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       return false;
     }
 
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
@@ -1565,7 +1565,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     Long countOfAvailableUnBookedSkuItemsInBright = 0L;
     Long countOfAvailableUnBookedSkuItemsInAqua = 0L;
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0){
       countOfAvailableUnBookedSkuItemsInAqua = (long)checkAvailableUnbookedSkuItemsInAqua.size();

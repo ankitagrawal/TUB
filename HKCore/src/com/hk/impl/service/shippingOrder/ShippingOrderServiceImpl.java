@@ -291,7 +291,7 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
         Long qty = item.getQty();
         List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
         List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
-        List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+        List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice(), false);
         logger.debug("Available Unbooked Inventory For Sku - " + item.getSku() + " at MRP - " + item.getMarkedPrice() + " is "
             + checkAvailableUnbookedSkuItems.size());
         if (checkAvailableUnbookedSkuItems.size() >= qty) {
@@ -300,7 +300,7 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
             SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
             SkuItemCLI skuItemCLI = new SkuItemCLI();
             // get available skuitems warehouse at given mrp
-            List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+            List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice(), false);
             if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
               SkuItem skuItem = availableUnbookedSkuItems.get(0);
               // Book the sku item first
@@ -358,7 +358,7 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
           if (!skuItemLineItem.getSkuItem().getSkuGroup().getMrp().equals(item.getMarkedPrice())
               || !skuItemStatus.contains(skuItemLineItem.getSkuItem().getSkuItemStatus())) {
             // get sku items of the given warehouse at mrp
-            List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+            List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice(), false);
             if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
               SkuItem skuItem = skuItemLineItem.getSkuItem();
               skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());

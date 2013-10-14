@@ -200,7 +200,8 @@
 <s:layout-component name="urlFragment">${pa.menuNodeUrlFragment}</s:layout-component>
 
 <s:layout-component name="topBanner">
-	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />
+	<%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />--%>
+    <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" />
 	<div class="clear"></div>
 	<c:if test="${product.service}">
 		<s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
@@ -314,9 +315,17 @@
 <h2 class='prod_title' itemprop="name">
         ${product.name}
 </h2>
+<c:if test="${pa.topCategoryUrlSlug == 'sports-nutrition' || pa.topCategoryUrlSlug == 'health-nutrition'
+    || pa.topCategoryUrlSlug == 'diabetes' || pa.topCategoryUrlSlug == 'health-devices'}">
+    <div style="float:right;margin-top:0px;">
+        <a href="${pageContext.request.contextPath}/pages/authenticity/authenticity.jsp?pid=${product.id}" target="_blank">
+        <img src="${pageContext.request.contextPath}/images/logo/authenticity-logo.png" alt="Authenticity Logo">
+        </a>
+    </div>
+</c:if>
 
 <div class='infos' style="border-bottom:0px;">
-    <div style="float:left;">
+    <div>
         <div>
             <c:if test="${hk:isNotBlank(product.brand)}">
           <span class='title'>
@@ -420,13 +429,6 @@
         </div>
 
     </div>
-
-    <c:if test="${pa.topCategoryUrlSlug == 'sports-nutrition' || pa.topCategoryUrlSlug == 'health-nutrition'
-    || pa.topCategoryUrlSlug == 'diabetes' || pa.topCategoryUrlSlug == 'health-devices'}">
-        <div style="float:right;margin-top:0px;">
-            <img src="${pageContext.request.contextPath}/images/logo/authenticity-logo.png" alt="Authenticity Logo">
-        </div>
-    </c:if>
 </div>
 
 <c:if test="${!empty subscriptionProduct}">

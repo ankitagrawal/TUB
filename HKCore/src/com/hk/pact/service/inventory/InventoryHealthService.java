@@ -150,7 +150,17 @@ public interface InventoryHealthService {
       this.costPrice = costPrice;
     }
 
-
+      @Override
+      public String toString() {
+          return "SkuInfo{" +
+                  "skuId=" + skuId +
+                  ", mrp=" + mrp +
+                  ", costPrice=" + costPrice +
+                  ", qty=" + qty +
+                  ", unbookedQty=" + unbookedQty +
+                  ", checkinDate=" + checkinDate +
+                  '}';
+      }
   }
 
   public static class SkuFilter {

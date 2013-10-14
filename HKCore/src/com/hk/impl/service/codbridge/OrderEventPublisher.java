@@ -49,8 +49,8 @@ public class OrderEventPublisher {
 
   @Autowired
   ProducerFactory producerFactory;
-  @Autowired
-  UserCallResponseObserver userCallResponseObserver;
+  /*@Autowired
+  UserCallResponseObserver userCallResponseObserver;*/
   @Autowired
   OrderService orderService;
   @Autowired

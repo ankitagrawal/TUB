@@ -13,17 +13,25 @@
       </a>
     </li>
 
-    <li>
-      <a href="${pageContext.request.contextPath}/pages/affiliate/affiliateTnC.jsp" title="Affiliate Terms & Conditions"> 
-        <span id="tncLinkAffiliate">Affiliate Terms & Conditions</span>
-      </a>
-    </li>
-
-    <li>
+        <li>
       <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp" title="Returns & Cancellations">
         <span id="rncLink">Returns & Cancellations</span>
       </a>
     </li>
+
+    <li>
+      <a href="${pageContext.request.contextPath}/pages/shippingPolicy.jsp" title="Shipping Policy">
+        <span id="shippingP">Shipping Policy</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="${pageContext.request.contextPath}/pages/affiliate/affiliateTnC.jsp" title="Affiliate Terms & Conditions">
+        <span id="tncLinkAffiliate">Affiliate Terms & Conditions</span>
+      </a>
+    </li>
+
+
 
   </ul>
 </div>

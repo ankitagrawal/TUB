@@ -345,7 +345,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
     List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
     if (skuItemLineItems != null && skuItemLineItems.size() > 0) {
-      availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), lineItem.getMarkedPrice());
+      availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), Arrays.asList(EnumSkuItemOwner.SELF.getId()), lineItem.getMarkedPrice(), false);
       if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() >= lineItem.getQty()) {
         for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
           SkuItem toBeFreedSkuItem = skuItemLineItem.getSkuItem();
@@ -576,7 +576,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     Long aquaInventoryCount = invMap.get("aquaInventory");
     if (aquaInventoryCount >= cartLineItem.getQty()) {
       logger.debug("Aqua inventory count in swapping For Bright Booking for cartlineItem Id  : " + cartLineItem.getId() + " for variant :" + cartLineItem.getProductVariant().getId() + " is " + aquaInventoryCount + "for Marked price : " + item.getMarkedPrice());
-      List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+      List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice(), false);
       if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
 
         boolean incorrectMrpItem = false;
@@ -1063,7 +1063,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
     if (aquaInventoryCount >= cartLineItem.getQty()) {
       logger.debug("Aqua inventory count in swapping For Aqua Booking for cartlineItem Id  : " + cartLineItem.getId() + " for variant :" + cartLineItem.getProductVariant().getId() + " is :" + aquaInventoryCount + "for Marked price : " + item.getMarkedPrice());
-      List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice());
+      List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, item.getMarkedPrice(), false);
       if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
 
         for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
