@@ -216,12 +216,12 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
           skuList.add(lineItem.getSku());
           skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 
-          //get available sku items of the given warehouse at given mrp
-          List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
-          if (availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0) {
-            logger.debug("about to return false from createNewSkuItemLineItem for normal case");
-            return false;
-          }
+					//get available sku items of the given warehouse at given mrp
+					List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
+					if (availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0) {
+						logger.debug("about to return false from createNewSkuItemLineItem for normal case");
+						return false;
+					}
 
           //Free existing skuitem on skuItemCLI
           SkuItem oldItem = skuItemCLI.getSkuItem();
@@ -410,6 +410,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     }
     for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext(); ) {
       SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+			baseDao.refresh(skuItemCLI);
+			List<SkuItemLineItem> silis = skuItemCLI.getSkuItemLineItems();
+			if (silis != null && silis.size() > 0) {
+				skuItemCLI.setSkuItemLineItems(null);
+				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+				baseDao.deleteAll(silis);
+			}
       baseDao.delete(skuItemCLI);
       iterator.remove();
     }
@@ -539,6 +546,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
 				baseDao.deleteAll(silis);
 			}
+			baseDao.delete(skuItemCLI);
+			iterator.remove();
 		}
     getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null, "Inventory freed for SO.");
 		return true;

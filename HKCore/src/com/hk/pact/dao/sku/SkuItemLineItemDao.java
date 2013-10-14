@@ -6,6 +6,7 @@ import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.BaseDao;
 
 
@@ -36,6 +37,10 @@ public interface SkuItemLineItemDao extends BaseDao {
   public List<SkuItemLineItem> getSkuItemLIsTemp(SkuItem skuItem);
 
   public boolean sicliAlreadyExists(CartLineItem cartLineItem);
+  
+  public Long getUnbookedCLICount(ProductVariant productVariant);
+  
+  public Long getUnbookedLICount(List<Sku> skuList, Double mrp);
   
   //================Methods For Foreign Table=========================
 
