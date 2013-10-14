@@ -160,16 +160,20 @@ Pass an attribute called pricingDto to render a table with pricing details
                             </div>
                         </c:when>
                         <c:otherwise>
+                          <c:if test="${invoiceLineItem.markedPrice * invoiceLineItem.qty != invoiceLineItem.hkPrice * invoiceLineItem.qty}">
                             <div class="cut">
-                                <div class="num lineItemSubTotalMrp arialGrayBold"
-                                     style="position: relative;margin-bottom: 7px;"> Rs
-                                    <fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
-                                                      pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                              <div class="num lineItemSubTotalMrp arialGrayBold"
+                                   style="position: relative;margin-bottom: 7px;"> Rs
+                                <fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
+                                                  pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                             </div>
+
+                          </c:if>
                             <div style="position: relative;">
-                  <span class="lineItemSubTotalMrp fnt-sz16" style="color: #090">Rs <fmt:formatNumber
-                          value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
-                          pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
+                                <span class="lineItemSubTotalMrp fnt-sz16" style="color: #090">Rs <fmt:formatNumber
+                                        value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
+                                        pattern="<%=FormatUtils.currencyFormatPattern%>"/>
+                                </span>
                             </div>
                         </c:otherwise>
                     </c:choose>
@@ -212,11 +216,16 @@ Pass an attribute called pricingDto to render a table with pricing details
                     <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} days</div></div>
                     <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 21%;right: 5px;">
 
+                      <c:if test="${invoiceLineItem.comboInstance.combo.markedPrice * hk:getComboCount(invoiceLineItem) != invoiceLineItem.comboInstance.combo.hkPrice * hk:getComboCount(invoiceLineItem)}">
                         <div class="cut">
-                            <div class="num lineItemSubTotalMrp arialGrayBold" style="position: relative;margin-bottom: 7px;">  Rs
-                                <fmt:formatNumber value="${invoiceLineItem.comboInstance.combo.markedPrice * hk:getComboCount(invoiceLineItem)}"
-                                                  pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                          <div class="num lineItemSubTotalMrp arialGrayBold" style="position: relative;margin-bottom: 7px;">  Rs
+                            <fmt:formatNumber value="${invoiceLineItem.comboInstance.combo.markedPrice * hk:getComboCount(invoiceLineItem)}"
+                                              pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                         </div>
+
+                      </c:if>
+
+
                         <div style="position: relative;">
             <span class="lineItemSubTotalMrp fnt-sz16" style="color: #090">Rs <fmt:formatNumber
                     value="${invoiceLineItem.comboInstance.combo.hkPrice * hk:getComboCount(invoiceLineItem)}"
@@ -267,12 +276,16 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
                 <div class='price' style="position: relative;text-align: center;float: left;padding: 5px;width: 21%;right: 5px;">
 
+                  <c:if test="${invoiceLineItem.markedPrice * invoiceLineItem.qty != invoiceLineItem.hkPrice * invoiceLineItem.qty}">
                     <div class="cut">
-                        <div class="num lineItemSubTotalMrp arialGrayBold"
-                             style="position: relative;margin-bottom: 7px;"> Rs<fmt:formatNumber
-                                value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
-                                pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                      <div class="num lineItemSubTotalMrp arialGrayBold"
+                           style="position: relative;margin-bottom: 7px;"> Rs
+                        <fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
+                                          pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                     </div>
+
+                  </c:if>
+
                 </div>
                 <div style="position: relative;">
             <span class="lineItemSubTotalMrp fnt-sz16" style="color: #090">Rs <fmt:formatNumber
