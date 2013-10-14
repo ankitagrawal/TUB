@@ -46,7 +46,7 @@
 
               </div>
               </fieldset>
-            <s:hidden name="redirectUrl" value="${actionBean.redirectUrl!=null?actionBean.redirectUrl:param[redirectParam]}"/>
+            <s:hidden name="redirectUrl" value="${param['redirectUrl']!=null?param['redirectUrl']:param[redirectParam]}" />
             <s:hidden name="source"/>
           </s:form>
         </div>
