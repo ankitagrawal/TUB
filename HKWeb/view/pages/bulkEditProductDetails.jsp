@@ -71,7 +71,7 @@
     </th>
   </c:if>
 
-  <c:if test="${bep.toBeEditedOptions.options}['productCodAllowed']}">
+  <c:if test="${bep.toBeEditedOptions.options['productCodAllowed']}">
     <th>
       Is COD Allowed
     </th>

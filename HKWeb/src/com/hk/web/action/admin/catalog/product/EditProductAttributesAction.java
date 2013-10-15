@@ -60,6 +60,9 @@ public class EditProductAttributesAction extends BaseAction {
     List<String> options;
     List<String> extraOptions;
     Manufacturer manufacturer;
+
+    private boolean combo;
+
     @Autowired
     MenuHelper menuHelper;
     @Autowired
@@ -191,7 +194,7 @@ public class EditProductAttributesAction extends BaseAction {
         List<ProductVariant> productVariants = product.getProductVariants();
 
         if (productVariants != null && productVariants.size() > 0) {
-	          /*for (ProductVariant productVariant : productVariants) {
+            /*for (ProductVariant productVariant : productVariants) {
                 getInventoryService().checkInventoryHealth(productVariant);
             }*/
 
@@ -205,6 +208,8 @@ public class EditProductAttributesAction extends BaseAction {
     public Resolution editProductDetails() {
         logger.debug("product id " + product);
         categories = xslGenerator.getCategories(product);
+
+        combo = product instanceof Combo;
         return new ForwardResolution("/pages/editProductDetails.jsp");
     }
 
@@ -630,5 +635,14 @@ public class EditProductAttributesAction extends BaseAction {
 
     public ComboService getComboService() {
         return comboService;
+    }
+
+
+    public boolean isCombo() {
+        return combo;
+    }
+
+    public void setCombo(boolean combo) {
+        this.combo = combo;
     }
 }
