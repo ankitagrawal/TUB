@@ -82,11 +82,11 @@ public class LoginAction extends BaseAction {
         // session
 
         if (!StringUtils.isBlank(redirectUrl)) {
-            return new RedirectResolution(redirectUrl, false);
+            return new RedirectResolution(redirectUrl, false).addParameter("login","true");
         }
 
         if (isHybridRelease()) {
-            return new RedirectResolution(HomeAction.class);
+            return new RedirectResolution(HomeAction.class).addParameter("login","true");
         } else {
 
             if (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN))
@@ -96,9 +96,9 @@ public class LoginAction extends BaseAction {
                     || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.WH_MANAGER))
                     || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.TICKETADMIN))
                     || userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CUSTOMER_SUPPORT)))
-                return new RedirectResolution(AdminHomeAction.class);
+                return new RedirectResolution(AdminHomeAction.class).addParameter("login","true");
             else
-                return new RedirectResolution(HomeAction.class);
+                return new RedirectResolution(HomeAction.class).addParameter("login","true");
         }
     }
 

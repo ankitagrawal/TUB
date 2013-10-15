@@ -29,10 +29,16 @@
     pageContext.setAttribute("userId", null);
   }
 
-  String originalUrlHeader = (String) request.getAttribute("javax.servlet.forward.request_uri");
-  if (originalUrlHeader == null) {
-    originalUrlHeader = request.getRequestURI();
+  String requestUrI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+  if(requestUrI == null){
+    requestUrI = request.getRequestURI();
   }
+  String queryString = request.getQueryString();
+  StringBuilder stringBuilder = new StringBuilder(requestUrI);
+  if(queryString!=null){
+    stringBuilder.append("?").append(queryString);
+  }
+  String originalUrlHeader = stringBuilder.toString();
 
   pageContext.setAttribute("tempUser", RoleConstants.TEMP_USER);
   pageContext.setAttribute("b2bUser", RoleConstants.B2B_USER);
@@ -210,11 +216,15 @@
                     </c:if>
                     <c:if test="${hk:collectionContains(userRoles, tempUser)}">
                         <div class="fnt-caps">Account</div>
-                        <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="fnt-sz10" > Sign in</s:link> <span class="icn icn-dwn-arrow"></span>
+                        <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="fnt-sz10" > Sign in
+                        <s:param name="redirectUrl" value="<%=originalUrlHeader%>" />
+                        </s:link> <span class="icn icn-dwn-arrow"></span>
                     </c:if>
                     <shiro:guest>
                         <div class="fnt-caps" >Account</div>
-                        <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="fnt-sz10"> Sign in</s:link> <span class="icn icn-dwn-arrow"></span>
+                        <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="fnt-sz10"> Sign in
+                          <s:param name="redirectUrl" value="<%=originalUrlHeader%>" />
+                        </s:link> <span class="icn icn-dwn-arrow"></span>
                     </shiro:guest>
 
                 </div>
@@ -236,7 +246,9 @@
                     <!--li>Orders</li>
                     <li>Rewards</li-->
                     <c:if test="${hk:collectionContainsAnyCollectionItem(userRoles, hkRoles)}">
-                        <s:link beanclass="com.hk.web.action.core.auth.LogoutAction"><li class="brdr-t">LOG OUT</li></s:link>
+                        <s:link beanclass="com.hk.web.action.core.auth.LogoutAction"><li class="brdr-t">LOG OUT</li>
+                        <s:param name="redirectUrl" value="/" />
+                        </s:link>
                     </c:if>
                 </ul>
 
