@@ -7157,8 +7157,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 /* footer css begins */
 #footer {
-
-    margin: 50px auto 20px auto;
+    /*margin: 50px auto 20px auto;*/
     width: 960px;
 }
 
@@ -8031,11 +8030,30 @@ input[type="text"]:focus, input[type="password"]:focus{
 
 /* error 404 and 500 pages css begins */
 
+.err-404-cntnr, .err-500-cntnr{
+    display: table;
+    content: "";
+    margin-left: -20px;
+}
+
+.left-500-msg, .left-404-msg{
+    float: left;
+    margin-left: 20px;
+    width: 460px;
+}
+
+.right-500-msg, .right-404-msg{
+    float: left;
+    width: 400px;
+    margin-left: 80px;
+}
+
 .left-404-msg .msg1{
     font-size: 50px;
     font-style: italic;
     color: #969696;
     margin-left: 30px;
+    margin-bottom: 45px;
 }
 
 .left-500-msg .msg1{
@@ -8043,6 +8061,7 @@ input[type="text"]:focus, input[type="password"]:focus{
     font-style: italic;
     color: #969696;
     margin-left: 10px;
+    margin-bottom: 45px;
 }
 
 .left-404-msg .msg2,.left-500-msg .msg2{

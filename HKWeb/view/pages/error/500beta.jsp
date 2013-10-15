@@ -2,9 +2,9 @@
 <s:layout-render name="/layouts/errorTemplate.jsp" pageTitle="Error 500 | Healthkart">
     <s:layout-component name="content">
         <div class="container clearfix">
-            <div class="row mrgn-bt-70">
+            <div class="err-500-cntnr mrgn-bt-70">
                 <div class="left-500-msg">
-                    <div class="msg1">error</div><br/><br/>
+                    <div class="msg1">error</div>
                     <div class="msg2">500</div>
                 </div>
                 <div class="right-500-msg mrgn-t-30">

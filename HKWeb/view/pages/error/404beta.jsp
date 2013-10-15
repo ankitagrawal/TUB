@@ -2,9 +2,9 @@
 <s:layout-render name="/layouts/errorTemplate.jsp" pageTitle="Error 404 | Healthkart">
     <s:layout-component name="content">
         <div class="container clearfix">
-            <div class="row mrgn-bt-50">
+            <div class="err-404-cntnr mrgn-bt-50">
                 <div class="left-404-msg">
-                    <div class="msg1">error</div><br/><br/>
+                    <div class="msg1">error</div>
                     <div class="msg2">404</div>
                 </div>
                 <div class="right-404-msg mrgn-t-20">
