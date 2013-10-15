@@ -1,4 +1,4 @@
-<%@ include file="/includes/_taglibInclude.jsp" %>
+<%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/errorTemplate.jsp" pageTitle="Error 404 | Healthkart">
     <s:layout-component name="content">
         <div class="container clearfix">
@@ -7,7 +7,7 @@
                     <div class="msg1">error</div>
                     <div class="msg2">404</div>
                 </div>
-                <div class="right-404-msg mrgn-t-20">
+                <div class="span7 offset1 right-404-msg mrgn-t-20">
                     <p>This page is like Santa.</p>
                     <p>Doesn't exist.</p>
                     <p>Sorry :(</p>

@@ -1,4 +1,4 @@
-<%@ include file="/includes/_taglibInclude.jsp" %>
+<%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/errorTemplate.jsp" pageTitle="Error 500 | Healthkart">
     <s:layout-component name="content">
         <div class="container clearfix">
@@ -7,7 +7,7 @@
                     <div class="msg1">error</div>
                     <div class="msg2">500</div>
                 </div>
-                <div class="right-500-msg mrgn-t-30">
+                <div class="span7 offset1 right-500-msg mrgn-t-30">
                     <p>Something is Broken.</p>
                     <p>Sorry :(</p>
                 </div>
