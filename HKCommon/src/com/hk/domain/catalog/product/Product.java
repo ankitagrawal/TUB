@@ -184,6 +184,7 @@ public class Product  implements java.io.Serializable {
 
     @Transient
     private String               productURL;
+    private String               comboURL;
 
     /*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private Set<SuperSaverImage> superSaverImages = new HashSet<SuperSaverImage>(0);*/
@@ -603,9 +604,27 @@ public class Product  implements java.io.Serializable {
         return productURL;
     }
 
+
     public void setProductURL(String productURL) {
         this.productURL = productURL;
     }
+
+    public String getComboURL() {
+        /**
+         * comboURL is a Transient Variable should be set in accordance with ProductReferrer from where the product is loaded.
+         * In some cases products are loaded by productIds where tracking is not being done.
+         * In case comboURL is null returning the relative URL
+         */
+        if (comboURL == null){
+            comboURL = "/combo/" + getSlug() + "/" + getId();
+        }
+        return comboURL;
+    }
+
+    public void setComboURL(String comboURL) {
+        this.comboURL = comboURL;
+    }
+
 
     public List<SimilarProduct> getSimilarProducts() {
         return similarProducts;

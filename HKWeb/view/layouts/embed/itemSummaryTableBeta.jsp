@@ -44,23 +44,29 @@ Pass an attribute called pricingDto to render a table with pricing details
                 test="${invoiceLineItem.comboInstance == null && invoiceLineItem.productVariant.paymentType.name != 'Postpaid'}">
             <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
                 <div class='img48' style="vertical-align:top;position: relative;float: left;width: 8%;margin-left: 10px;border: 1px solid #ccc;padding: 3px;">
-                        <%--<c:choose>--%>
-                            <%--<c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">--%>
-                                <%--<hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"--%>
-                                                 <%--size="<%=EnumImageSize.TinySize%>"/>--%>
-                            <%--</c:when>--%>
-                            <%--<c:otherwise>--%>
-                                <%--<img class="prod48"--%>
-                                     <%--src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${invoiceLineItem.productVariant.product.id}.jpg"--%>
-                                     <%--alt="${invoiceLineItem.productVariant.product.name}"/>--%>
-                            <%--</c:otherwise>--%>
-                        <%--</c:choose>--%>
-                    <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
-                         alt="${storeVariantBasic.name}"/>
+                  <c:choose>
+                            <c:when test="${storeVariantBasic.primaryImage.mlink!=null}">
+                              <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
+                                   alt="${storeVariantBasic.name!=null?storeVariantBasic.name : invoiceLineItem.productVariant.product.name}"/>
+                            </c:when>
+                            <c:otherwise>
+                              <c:choose>
+                              <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
+                              <hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"
+                              size="<%=EnumImageSize.TinySize%>"/>
+                              </c:when>
+                              <c:otherwise>
+                              <img class="prod48"
+                              src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${invoiceLineItem.productVariant.product.id}.jpg"
+                              alt="${invoiceLineItem.productVariant.product.name}"/>
+                              </c:otherwise>
+                              </c:choose>
+                            </c:otherwise>
+                          </c:choose>
                 </div>
                 <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
                     <div style="padding:5px;width:80%;position: relative;float: left;word-wrap:break-word;">
-                            ${storeVariantBasic.name}
+                            ${storeVariantBasic.name!=null?storeVariantBasic.name : invoiceLineItem.productVariant.product.name}
                                 <c:if test="${hk:equalsIgnoreCase(invoiceLineItem.productVariant.product.primaryCategory.name,'eye') and hk:equalsIgnoreCase(invoiceLineItem.productVariant.product.secondaryCategory.name,'lenses')}">
                                     <table style="display: inline-block; font-size: 11px;margin: 7px 0;">
                                         <c:forEach items="${invoiceLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
@@ -204,7 +210,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                     </div>
                     <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
                         <div style="padding:5px;width:80%;position: relative;float: left;">
-                                    ${invoiceLineItem.comboInstance.combo.name}<br/>
+                        ${invoiceLineItem.comboInstance.combo.name}<br/>
                                     <c:forEach items="${invoiceLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
                                       <span style="font-size:10px;">${comboVariant.qty} x </span>
                                       <span style="font-size:10px;word-wrap:break-word;">${comboVariant.productVariant.product.name} - ${comboVariant.productVariant.optionsCommaSeparated}</span>
@@ -248,23 +254,32 @@ Pass an attribute called pricingDto to render a table with pricing details
         <c:if test="${invoiceLineItem.productVariant.paymentType.name == 'Postpaid'}">
             <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
                 <div class='img48' style="vertical-align:top;position: relative;float: left;width: 8%;margin-left: 10px;border: 1px solid #ccc;padding: 3px;">
-                        <%--<c:choose>
-                            <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
-                                <hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"
-                                                 size="<%=EnumImageSize.TinySize%>"/>
-                            </c:when>
-                            <c:otherwise>
-                                <img class="prod48"
-                                     src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${invoiceLineItem.productVariant.product.id}.jpg"
-                                     alt="${storeVariantBasic.name}"/>
-                            </c:otherwise>
-                        </c:choose>--%>
-                    <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
-                         alt="${storeVariantBasic.name}"/>
+
+                  <c:choose>
+                    <c:when test="${storeVariantBasic.primaryImage.mlink!=null}">
+                      <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
+                           alt="${storeVariantBasic.name!=null?storeVariantBasic.name : invoiceLineItem.productVariant.product.name}"/>
+                    </c:when>
+                    <c:otherwise>
+                      <c:choose>
+                        <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
+                          <hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"
+                                           size="<%=EnumImageSize.TinySize%>"/>
+                        </c:when>
+                        <c:otherwise>
+                          <img class="prod48"
+                               src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${invoiceLineItem.productVariant.product.id}.jpg"
+                               alt="${invoiceLineItem.productVariant.product.name}"/>
+                        </c:otherwise>
+                      </c:choose>
+                    </c:otherwise>
+                  </c:choose>
+
                 </div>
                 <div class='name' style="position: relative;float: left;width: 42%;font-size: 14px;">
                     <div style="padding:5px;width:80%;position: relative;float: left;word-wrap:break-word">
-                                    ${storeVariantBasic.name} <br/>
+                        ${storeVariantBasic.name!=null?storeVariantBasic.name : invoiceLineItem.productVariant.product.name}
+                                     <br/>
                                     <%--${invoiceLineItem.productVariant.variantName}--%>
                     </div>
                     <div align="left" style="text-align:center;width:12%;padding: 5px;position: relative;float: left;">${invoiceLineItem.qty}</div>
