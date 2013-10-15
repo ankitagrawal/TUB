@@ -536,10 +536,11 @@
         width: 100%;
         margin: 0;
         padding: 0;
-        background: #000000;
-        opacity: .15;
-        filter: alpha(opacity = 15);
-        -moz-opacity: .15;
+        background: #fff;
+        opacity: .7;
+        filter: alpha(opacity = 7);
+        -moz-opacity: .7;
+        border: 1px solid #CCC;
         z-index: 101;
         display: none;
     }
@@ -558,17 +559,18 @@
         /*font-family: Verdana;*/
         font-size: 10pt;
         color: #333;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+        border: 1px solid #CCC;
+        padding:10px;
+        padding-top:0px ;
     }
 
     .web_dialog_title {
-    /*border-bottom: solid 2px #336699;*/
-    /*background-color: #336699;*/
-        font-size: 16px;
+        /*border-bottom: solid 2px #336699;*/
+        /*background-color: #336699;*/
+        color: #1B3188;
+        font-size: 1.5em;
+        line-height: 1.8em;
         padding: 5px;
-        background-color: #f2f7fb;
-        color: White;
-        font-weight: 600;
     }
 
     .web_dialog_title a {
