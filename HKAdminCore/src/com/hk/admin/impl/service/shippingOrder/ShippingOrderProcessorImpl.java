@@ -22,6 +22,7 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.store.EnumStore;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.helper.ShippingOrderHelper;
@@ -146,13 +147,15 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     List<Reason> reasons = new ArrayList<Reason>();
     if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
 
-      if(firewall && shippingOrder.getBaseOrder().getStore().getId()==3){
-          reasons.add(EnumReason.FITNESSPRO_ORDER_SHIPMENT_NOT_CREATED.asReason());
-          return false;
-      }
-      if(firewall && SOFirewall.isAmountMismatch(payment.getOrder())){
-        reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
-      }
+        if (firewall) {
+            if (shippingOrder.getBaseOrder().getStore().getId().equals(EnumStore.FITNESSPRO.getId())) {
+                reasons.add(EnumReason.FITNESSPRO_ORDER_SHIPMENT_NOT_CREATED.asReason());
+            }
+            if (SOFirewall.isAmountMismatch(payment.getOrder())) {
+                reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
+            }
+        }
+
       if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
         if(shippingOrder.isServiceOrder()){
           return true;
@@ -162,7 +165,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         }
         // finding line items with inventory mismatch
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
-        if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
+        if (shippingOrder == null || shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())) {
           return false;
         }
         List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
