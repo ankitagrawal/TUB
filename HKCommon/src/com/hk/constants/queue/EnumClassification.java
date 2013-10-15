@@ -59,7 +59,7 @@ public enum EnumClassification {
     Approved(2020l,"Approved", "Approval"),
     Force_Approval(2030l,"Force Approval", "Approval"),
     ReconciledGeneric(2040l,"Reconciled","Approval"),
-    SO_NOT_CREATED_FOR_FITNESS_PRO(2150l,"SO Shipment Not Created","No Shipment from Fitness Pro")
+    SO_NOT_CREATED_FOR_FITNESS_PRO(2150l,"SO Could not be Auto-escalated","SO could not be Auto-escalated from Fitness Pro")
     ;
 
 
