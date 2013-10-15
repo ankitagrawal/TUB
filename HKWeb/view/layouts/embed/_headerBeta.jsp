@@ -63,8 +63,8 @@
   <div class='topBar container_24'>
       <div class="fnt-sz10 fnt-light" style="text-align:right">
 
-          <a href="${pageContext.request.contextPath}/beta/hk/FAQ.action?reftag=return">14 day return policy</a>&nbsp;
-          <a href="" target="_blank">Contact Us</a>&nbsp;
+          <a href="${pageContext.request.contextPath}/beta/hk/FAQ.action?reftag=return" target="_blank">14 day return policy</a>&nbsp;
+          <a href="${pageContext.request.contextPath}/beta/hk/ContactUs.action" target="_blank">Contact Us</a>&nbsp;
           <a href="http://www.healthkartplus.com" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/></a>&nbsp;&nbsp;
           <a href="http://www.healthkart.com/resources" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/></a>
       </div>
