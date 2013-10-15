@@ -1,4 +1,5 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page isErrorPage="true" %>
 <s:layout-render name="/layouts/errorTemplate.jsp" pageTitle="Error 404 | Healthkart">
     <s:layout-component name="content">
         <div class="container clearfix">
