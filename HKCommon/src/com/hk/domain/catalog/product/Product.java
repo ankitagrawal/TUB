@@ -184,6 +184,7 @@ public class Product  implements java.io.Serializable {
 
     @Transient
     private String               productURL;
+    @Transient
     private String               comboURL;
 
     /*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
