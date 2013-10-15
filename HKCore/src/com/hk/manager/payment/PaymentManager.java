@@ -76,6 +76,8 @@ public class PaymentManager {
     private int maxCODCallCount;
     @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
     private Long defaultGateway;
+    @Value("#{hkEnvProps['" + Keys.Env.codRoute + "']}")
+    private String codRoute;
 
     @Autowired
     private PaymentDao paymentDao;
@@ -322,7 +324,14 @@ public class PaymentManager {
         if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
             //for some orders userCodCall object is not created, a  check to create one
             try{
-                UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                UserCodCall userCodCall = null;
+                if (codRoute != null && codRoute.equalsIgnoreCase("smsCountry")) {
+                    userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_CUSTOMER);
+                    userCodCall.setSource("SMSCountry");
+                } else {
+                    userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+                }
+
                 orderService.saveUserCodCall(userCodCall);
             } catch (Exception e){
                 logger.info("User Cod Call already exists for " + order.getId());

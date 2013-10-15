@@ -546,7 +546,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<EnumUserCodCalling> getUserCodCallStatus() {
-        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO, EnumUserCodCalling.PENDING_WITH_HEALTHKART);
+        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO, EnumUserCodCalling.PENDING_WITH_HEALTHKART, EnumUserCodCalling.PENDING_WITH_CUSTOMER);
     }
 
     public List<Reason> getCustomerReasonForReversePickup() {
