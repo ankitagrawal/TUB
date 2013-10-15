@@ -14258,4 +14258,10 @@
             <column name="source" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="20130926-03">
+        <sql>
+            insert into classification values(2150,'SO Shipment Not Created','No Shipment from Fitness Pro');
+            insert into reason (id,primary_classification,type,classification_id) values(1710,'No Shipment from Fitness Pro','SO Shipment Not Created',2150);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -285,7 +285,7 @@
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
                                            event="autoEscalateShippingOrder" class="autoEscalate">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
-                <s:param name="firewall" value="<%=Boolean.TRUE%>"/>
+                <s:param name="firewall" value="<%=Boolean.FALSE%>"/>
                 Auto Escalate SO
             </s:link>)
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
