@@ -313,15 +313,12 @@
     <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
         <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
             <tr>
-                <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+                <td colspan="2" class="web_dialog_title">Oops! We are sorry.</td>
                 <td class="web_dialog_title align_right">
                         <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
                 </td>
             </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-            </tr>
+
             <tr>
                 <td colspan="3" style="padding-left: 15px;">
                     <b>The following items cannot be delivered at your pincode. </b>
@@ -390,7 +387,7 @@
             <tr>
                 <td colspan="2" style="text-align: center;">
                     <s:link beanclass="com.hk.web.action.core.cart.CartAction" event="removeGroundShippedItem"
-                            class=" button_green"
+                            class=" button_green btn btn-blue"
                             style="width: 220px; height: 16px; align_right ">Remove and Proceed
                         <s:param name="order" value="${orderSummary.order}"/>
                     </s:link>
@@ -407,7 +404,7 @@
 
     <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
         <tr>
-            <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+            <td colspan="2" class="web_dialog_title">Oops! We are sorry.</td>
             <td class="web_dialog_title align_right">
                 <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
             </td>
@@ -421,10 +418,7 @@
                 <b>The following items have been removed due to insufficient inventory</b>
             </td>
         </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
+
         <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
 
             <c:set var="storeVariantBasic"
@@ -512,11 +506,11 @@
             <td colspan="2" style="text-align: center;">
 
                 <c:if test="${fn:length(orderSummary.order.cartLineItems)>0}">
-                <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                <a class="button_green btn btn-blue" style="width:120px; height: 18px;">Continue</a>
             </td>
             <td>
                 </c:if>
-                <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+                <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green btn btn-blue"
                         style="width: 160px; height: 18px;">Back to Shopping
                 </s:link>
             </td>

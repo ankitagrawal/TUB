@@ -634,15 +634,12 @@
 
   <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
     <tr>
-      <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+      <td colspan="2" class="web_dialog_title">Oops! We are sorry.</td>
       <td class="web_dialog_title align_right">
         <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
       </td>
     </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
+
     <tr>
       <td colspan="3" style="padding-left: 15px;">
         <b>The following items have been removed due to insufficient inventory</b>
@@ -654,7 +651,7 @@
     </tr>
     <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
       <tr>
-        <div class='product' style="border-bottom-style: solid;">
+        <div class='product' >
           <td style="padding-left: 15px;">
             <div class='img48'
                  style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
@@ -735,13 +732,12 @@
     </tr>
     <tr>
       <td colspan="2" style="text-align: center;">
-
         <c:if test="${fn:length(orderSummary.order.cartLineItems) > 0}">
-        <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+        <a class="button_green btn btn-blue" style="width:120px; height: 18px;">Continue</a>
       </td>
       <td>
         </c:if>
-        <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+        <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green btn btn-blue"
                 style="width: 160px; height: 18px;">Back to Shopping
         </s:link>
       </td>
@@ -757,51 +753,50 @@
     width: 115px !important;
   }
   .web_dialog_overlay {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background: #000000;
-    opacity: .15;
-    filter: alpha(opacity = 15);
-    -moz-opacity: .15;
-    z-index: 101;
-    display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      opacity: .7;
+      filter: alpha(opacity = 7);
+      -moz-opacity: .7;
+      border: 1px solid #CCC;
+      z-index: 101;
+      display: none;
   }
 
   .web_dialog {
-    display: none;
-    position: fixed;
-    width: 450px;
-    /*height: 400px;*/
-    top: 50%;
-    left: 50%;
-    margin-left: -265px;
-    margin-top: -180px;
-    /*background-color: #ffffff;*/
-    background-color: white;
-    /*border: 2px solid #336699;*/
-    padding: 0px;
-    z-index: 102;
-    /*font-family: Verdana;*/
-    font-size: 10pt;
-    color: #333;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+      display: none;
+      position: fixed;
+      width: 450px; /*height: 400px;*/
+      top: 50%;
+      left: 50%;
+      margin-left: -265px;
+      margin-top: -180px; /*background-color: #ffffff;*/
+      background-color: white; /*border: 2px solid #336699;*/
+      padding: 0px;
+      z-index: 102;
+      /*font-family: Verdana;*/
+      font-size: 10pt;
+      color: #333;
+      border: 1px solid #CCC;
+      padding:10px;
+      padding-top:0px ;
   }
 
   .web_dialog_title {
-    /*border-bottom: solid 2px #336699;*/
-    /*background-color: #336699;*/
-    font-size: 16px;
-    font-weight: 600;
-    padding: 5px;
-    background-color: #f2f7fb;
-    color: White;
+      /*border-bottom: solid 2px #336699;*/
+      /*background-color: #336699;*/
+      color: #1B3188;
+      font-size: 1.5em;
+      line-height: 1.8em;
+      padding: 5px;
   }
 
   .web_dialog_title a {

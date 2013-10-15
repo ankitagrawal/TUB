@@ -383,21 +383,33 @@ function _updateTotals(responseData) {
 
         <a href="${storeVariantBasic.url}"
            style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;border: 1px solid #ccc;padding: 3px;margin-left: 10px;">
-            <%--<c:choose>
+
+          <c:choose>
+            <c:when test="${storeVariantBasic.primaryImage.mlink!=null}">
+              <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
+                   alt="${storeVariantBasic.name!=null?storeVariantBasic.name : cartLineItem.productVariant.product.name}"/>
+            </c:when>
+            <c:otherwise>
+              <c:choose>
                 <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
-                    <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
-                                     size="<%=EnumImageSize.TinySize%>"/>
+                  <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
+                                   size="<%=EnumImageSize.TinySize%>"/>
                 </c:when>
                 <c:otherwise>
-                    <img class="prod48"
-                         src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
-                         alt="${cartLineItem.productVariant.variantName}"/>
+                  <img class="prod48"
+                       src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                       alt="${cartLineItem.productVariant.product.name}"/>
                 </c:otherwise>
-            </c:choose>--%>
-            <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}" alt="${storeVariantBasic.name}"/>
+              </c:choose>
+            </c:otherwise>
+          </c:choose>
+
         </a>
         <div class="name" style="word-wrap:break-word;width: 190px;position: relative;float: left;margin: 5px 5px 0 0;" :>
-            <a href="${storeVariantBasic.url}">${storeVariantBasic.name} </a>
+            <a href="${storeVariantBasic.url}">
+                ${storeVariantBasic.name!=null?storeVariantBasic.name : cartLineItem.productVariant.product.name}
+
+            </a>
             <c:if test="${hk:equalsIgnoreCase(cartLineItem.productVariant.product.primaryCategory.name,'eye') and hk:equalsIgnoreCase(cartLineItem.productVariant.product.secondaryCategory.name,'lenses')}">
                 <table style="display: inline-block; font-size: 11px;margin: 7px 0;">
                     <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
@@ -578,7 +590,7 @@ function _updateTotals(responseData) {
     <div class="lineItemRow product">
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-        <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}"
+        <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.comboURL}"
            style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;border: 1px solid #ccc;padding: 3px;margin-left: 10px;">
             <c:choose>
                 <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
@@ -594,7 +606,7 @@ function _updateTotals(responseData) {
         </a>
 
         <div class="name" style="word-wrap:break-word;width: 190px;position: relative;float: left;margin: 5px 5px 0 0;">
-            <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
+            <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.comboURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
             <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
             ${comboVariant.qty} x
@@ -970,18 +982,26 @@ function _updateTotals(responseData) {
                                     </c:if>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:choose>
+
+                                  <c:choose>
+                                    <c:when test="${storeVariantBasic.primaryImage.mlink!=null}">
+                                      <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
+                                           alt="${storeVariantBasic.name!=null?storeVariantBasic.name : cartLineItem.productVariant.product.name}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                      <c:choose>
                                         <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
-                                            <hk:productImage
-                                                    imageId="${cartLineItem.productVariant.product.mainImageId}"
-                                                    size="<%=EnumImageSize.TinySize%>"/>
+                                          <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
+                                                           size="<%=EnumImageSize.TinySize%>"/>
                                         </c:when>
                                         <c:otherwise>
-                                            <img class="prod48"
-                                                 src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
-                                                 alt="${storeVariantBasic.name}"/>
+                                          <img class="prod48"
+                                               src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                                               alt="${cartLineItem.productVariant.product.name}"/>
                                         </c:otherwise>
-                                    </c:choose>
+                                      </c:choose>
+                                    </c:otherwise>
+                                  </c:choose>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -1000,7 +1020,7 @@ function _updateTotals(responseData) {
                                                 </c:if>
                                             </c:when>
                                             <c:otherwise>
-                                                ${storeVariantBasic.name}
+                                              ${storeVariantBasic.name!=null?storeVariantBasic.name : cartLineItem.productVariant.product.name}
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
