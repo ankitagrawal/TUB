@@ -4,13 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +15,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.domain.TempToken;
 import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -38,13 +34,14 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.UserSessionService;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.service.ServiceLocatorFactory;
@@ -56,37 +53,39 @@ import com.shiro.PrincipalImpl;
 public class UserManager {
 
     // private static final int MAX_UNVERIFIED_DAYS = 15;
-    private static final int ACTIVATION_LINK_EXPIRY_DAYS = 100;
+    private static final int    ACTIVATION_LINK_EXPIRY_DAYS = 100;
 
-    private static Logger logger = LoggerFactory.getLogger(UserManager.class);
-
-    @Autowired
-    private UserService      userService;
+    private static Logger       logger                      = LoggerFactory.getLogger(UserManager.class);
 
     @Autowired
-    private RoleService      roleService;
+    private UserService         userService;
     @Autowired
-    private EmailManager     emailManager;
-    @Autowired
-    private LinkManager      linkManager;
+    private UserSessionService  userSessionService;
 
     @Autowired
-    private TempTokenDao     tempTokenDao;
+    private RoleService         roleService;
     @Autowired
-    private CartLineItemDao  cartLineItemDao;
+    private EmailManager        emailManager;
     @Autowired
-    private OrderDao         orderDao;
+    private LinkManager         linkManager;
+
     @Autowired
-    private OfferInstanceDao offerInstanceDao;
+    private TempTokenDao        tempTokenDao;
     @Autowired
-    private AddressService       addressDao;
+    private CartLineItemDao     cartLineItemDao;
+    @Autowired
+    private OrderDao            orderDao;
+    @Autowired
+    private OfferInstanceDao    offerInstanceDao;
+    @Autowired
+    private AddressService      addressDao;
     @Autowired
     private SubscriptionService subscriptionService;
-	@Autowired
-    private BaseDao baseDao;
+    @Autowired
+    private BaseDao             baseDao;
 
-    //Please do not add @Autowired has been taken care of in getter .
-    private OrderManager     orderManager;
+    // Please do not add @Autowired has been taken care of in getter .
+    private OrderManager        orderManager;
 
     public UserLoginDto login(String email, String password, boolean rememberMe) throws HealthkartLoginException {
         /**
@@ -114,6 +113,7 @@ public class UserManager {
             throw new HealthkartLoginException(e);
         }
 
+        getUserSessionService().onLoginUser();
         /*
          * Here we are checking whether user has verified his email account or not. If user has not yet verified even
          * after MAX_UNVERIFIED_DAYS limit exceed then we will change the user's role to ITV_DEACTIVATED
@@ -127,12 +127,12 @@ public class UserManager {
             // save user to save the last login date and roles change etc if any.
             getUserService().save(user);
 
-	        //Set UserId in Traffic Tracking
-	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-	        if (trafficTracking != null) {
-		        trafficTracking.setUserId(user.getId());
-		        getBaseDao().save(trafficTracking);
-	        }
+            // Set UserId in Traffic Tracking
+            TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+            if (trafficTracking != null) {
+                trafficTracking.setUserId(user.getId());
+                getBaseDao().save(trafficTracking);
+            }
         }
         /**
          * Now to transfer any data created by a temp user.
@@ -186,13 +186,13 @@ public class UserManager {
                 user = new User();
             }
 
-	        //Set UserId in Traffic Tracking
-	        TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
-	        if (trafficTracking != null) {
-		        trafficTracking.setUserId(user.getId());
-		        getBaseDao().save(trafficTracking);
-	        }
-	        
+            // Set UserId in Traffic Tracking
+            TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+            if (trafficTracking != null) {
+                trafficTracking.setUserId(user.getId());
+                getBaseDao().save(trafficTracking);
+            }
+
         } else {
             user = new User();
         }
@@ -231,6 +231,7 @@ public class UserManager {
         usernamePasswordToken.setRememberMe(true);
 
         SecurityUtils.getSubject().login(usernamePasswordToken);
+        getUserSessionService().onLoginUser();
 
         user.setPassword(password); // is required by the email template.
 
@@ -269,13 +270,13 @@ public class UserManager {
         user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
         user = getUserService().save(user);
 
-        //ADD In Cookie  -there is no need to put this in a cookie
-        /*Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
-        cookie.setPath("/");
-        cookie.setMaxAge(30 * 24 * 60 * 60);
-        HttpServletResponse httpResponse = WebContext.getResponse();
-        httpResponse.addCookie(cookie);
-        logger.debug("Added Cookie for New Temp User="+user.getUserHash());*/
+        // ADD In Cookie -there is no need to put this in a cookie
+        /*
+         * Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
+         * cookie.setPath("/"); cookie.setMaxAge(30 * 24 * 60 * 60); HttpServletResponse httpResponse =
+         * WebContext.getResponse(); httpResponse.addCookie(cookie); logger.debug("Added Cookie for New Temp
+         * User="+user.getUserHash());
+         */
         return user;
     }
 
@@ -286,14 +287,15 @@ public class UserManager {
         Set<CartLineItem> guestLineItems = guestOrder.getCartLineItems();
         for (CartLineItem guestLineItem : guestLineItems) {
             // The variant is not added in user account already
-            CartLineItemMatcher cartLineItemMatcher=new CartLineItemMatcher();
+            CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher();
 
-            if(cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemTypeId(guestLineItem.getLineItemType().getId()).match(loggedOnUserOrder.getCartLineItems())==null){
-                if(guestLineItem.getQty()>0){
+            if (cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemTypeId(guestLineItem.getLineItemType().getId()).match(
+                    loggedOnUserOrder.getCartLineItems()) == null) {
+                if (guestLineItem.getQty() > 0) {
                     guestLineItem.setOrder(loggedOnUserOrder);
                     getCartLineItemDao().save(guestLineItem);
-                    if(guestLineItem.getLineItemType().getId().longValue()==EnumCartLineItemType.Subscription.getId().longValue()){
-                        Subscription subscription=subscriptionService.getSubscriptionFromCartLineItem(guestLineItem);
+                    if (guestLineItem.getLineItemType().getId().longValue() == EnumCartLineItemType.Subscription.getId().longValue()) {
+                        Subscription subscription = subscriptionService.getSubscriptionFromCartLineItem(guestLineItem);
                         subscription.setBaseOrder(loggedOnUserOrder);
                         subscription.setUser(dstUser);
                         subscriptionService.save(subscription);
@@ -443,7 +445,12 @@ public class UserManager {
         this.subscriptionService = subscriptionService;
     }
 
-	public BaseDao getBaseDao() {
-		return baseDao;
-	}
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public UserSessionService getUserSessionService() {
+        return userSessionService;
+    }
+
 }

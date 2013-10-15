@@ -3,6 +3,7 @@ package com.hk.impl.service.codbridge;
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.StringUtils;
 import com.google.gson.Gson;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.domain.order.CartLineItem;
@@ -21,6 +22,7 @@ import com.hk.pact.service.order.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -42,12 +44,15 @@ import java.util.concurrent.Executors;
 @Component
 public class OrderEventPublisher {
 
+    @Value("#{hkEnvProps['" + Keys.Env.codRoute + "']}")
+    private String codRoute;
+
 	private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
 
 	@Autowired
     ProducerFactory producerFactory;
-    @Autowired
-    UserCallResponseObserver userCallResponseObserver;
+    /*@Autowired
+    UserCallResponseObserver userCallResponseObserver;*/
     @Autowired
     OrderService orderService;
     
@@ -132,9 +137,16 @@ public class OrderEventPublisher {
             }
             orderStatusMessage.setName(order.getPayment().getContactName());
             orderStatusMessage.setPhone(customerPhoneNumber);
-            Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
+            Producer producer = null;
+
+            if (codRoute != null && codRoute.equalsIgnoreCase("smsCountry")) {
+                producer = producerFactory.getProducer(ProducerTypeEnum.COD_SMS_PRODUCER);
+            } else {
+                producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
+            }
+
             messagePublished = producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribe();
+            //userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -174,7 +186,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_FAILURE);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
             messagePublished =  producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribe();
+            //userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -187,7 +199,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             boolean messagePublished = producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribe();
+            //userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }

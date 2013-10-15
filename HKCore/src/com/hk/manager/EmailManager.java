@@ -119,6 +119,7 @@ public class EmailManager {
     @Autowired
     private FreeMarkerService   freeMarkerService;
 
+
     @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
     private String              hkAdminEmailsString;
     @Value("#{hkEnvProps['" + Keys.Env.babyAdminEmails + "']}")
@@ -149,7 +150,12 @@ public class EmailManager {
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
+
     private String              logisticsOpsEmails;
+
+    @Value("#{hkEnvProps['" + Keys.Env.codRoute + "']}")
+    private String codRoute;
+
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
      */
@@ -349,8 +355,14 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
         valuesMap.put("pricingDto", new PricingDto(order.getCartLineItems(), order.getAddress()));
+        Template freemarkerTemplate;
 
-        Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderPlacedCodEmail);
+        if (codRoute != null && codRoute.equalsIgnoreCase("smsCountry")) {
+            freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderPlacedCodEmailForSMSCountry);
+        } else {
+            freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderPlacedCodEmail);
+        }
+
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
     }
 
@@ -990,6 +1002,15 @@ public class EmailManager {
         valueMap.put("RequestAmount", gatewayAmount);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.adminPaymentMisMatchMail);
         return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
+    }
+
+    public boolean sendCodConfirmEmailToUser(Order order) {
+        HashMap valueMap = new HashMap();
+        valueMap.put("order", order);
+        PricingDto pricingDto = new PricingDto(order.getCartLineItems(), order.getAddress());
+        valueMap.put("pricingDto", pricingDto);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.codConfirmEmail);
+        return this.emailService.sendHtmlEmail(freemarkerTemplate, valueMap, order.getUser().getEmail(), order.getUser().getName());
     }
 
 //    public boolean sendSoFixedMail(HashMap<String, String> map){

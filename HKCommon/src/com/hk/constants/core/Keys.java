@@ -126,6 +126,7 @@ public class Keys {
 
         /* To be removed later on. just a safety mehchanism to route calls to outside hk */
         public static final String maxCODCallCount                 = "maxCODCallCount";
+        public static final String codRoute                        = "codRoute";
 
         public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls                    = "eyeTryOnXmls";
