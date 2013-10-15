@@ -145,6 +145,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     Payment payment = shippingOrder.getBaseOrder().getPayment();
     List<Reason> reasons = new ArrayList<Reason>();
     if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
+
+      if(shippingOrder.getBaseOrder().getStore().getId()==3){
+          reasons.add(EnumReason.FITNESSPRO_ORDER_SHIPMENT_NOT_CREATED.asReason());
+          return false;
+      }
       if(firewall && SOFirewall.isAmountMismatch(payment.getOrder())){
         reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
       }
