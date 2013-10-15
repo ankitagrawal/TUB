@@ -43,7 +43,8 @@ public class SMSManager {
         valuesMap.put("order", order);
         valuesMap.put("payment", order.getPayment());
         if (order.isCOD()) {
-            return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.codOrderPlacedSMS, valuesMap);
+            return false;
+            //return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.codOrderPlacedSMS, valuesMap);
         } else {
             return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.orderPlacedSMS, valuesMap);
         }

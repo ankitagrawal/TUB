@@ -128,4 +128,17 @@
 	<util:properties id="hkEnvProps"
 		location="/WEB-INF/environment.properties" />
 
+    <!-- A POJO that implements the JMS message listener -->
+    <bean id="userCodResponseListener" class="com.hk.impl.service.codbridge.UserCallResponseObserverImpl" />
+
+    <!-- A JMS namespace aware Spring configuration for the message listener container -->
+    <jms:listener-container
+            container-type="default"
+            connection-factory="connectionFactory"
+            acknowledge="auto"
+            cache="consumer">
+        <jms:listener destination="order.cod.response" ref="userCodResponseListener"/>
+    </jms:listener-container>
+
+
 </beans>

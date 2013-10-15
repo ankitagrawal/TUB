@@ -64,8 +64,9 @@ public class OrderSplitterHelper {
     }
 
     private Double calculateTaxIncurred(List<DummyOrder> dummyOrdersList) {
-        Double taxIncurred = 0D;
+        Double taxIncurredTotal = 0D;
         for (DummyOrder dummyOrder : dummyOrdersList) {
+          Double taxIncurred = 0D;
             for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
                 ProductVariant productVariant = cartLineItem.getProductVariant();
                 Warehouse warehouse = dummyOrder.getWarehouse();
@@ -83,8 +84,9 @@ public class OrderSplitterHelper {
                 }
             }
             dummyOrder.setTaxIncurred(taxIncurred);
+            taxIncurredTotal += taxIncurred;
         }
-        return taxIncurred;
+        return taxIncurredTotal;
     }
 
     private List<DummySO> getSOsForShippingCost(List<DummyOrder> dummyOrderList) {

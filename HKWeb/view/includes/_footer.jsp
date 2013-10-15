@@ -39,6 +39,8 @@
           </li>
           <li><s:link href="/pages/returnAndCancellations.jsp"><span class="txt-white">Return and Cancellations</span></s:link>
           </li>
+          <li><s:link href="/pages/shippingPolicy.jsp"><span class="txt-white">Shipping Policy</span></s:link>
+          </li>
           <li><s:link href="/blog" target="_blank"><span class="txt-white">Blog</span></s:link></li>
           <li><s:link href="/pages/careers.jsp"><span class="txt-white">Careers</span></s:link>
           </li>

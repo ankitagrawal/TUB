@@ -14253,4 +14253,9 @@
     <changeSet author="Ajeet (generated)" id="1380121826284-06">
         <dropTable tableName="bin_has_sku_item"/>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20131004-1">
+        <addColumn tableName="user_cod_call">
+            <column name="source" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

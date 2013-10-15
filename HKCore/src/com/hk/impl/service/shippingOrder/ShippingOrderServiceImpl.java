@@ -1,8 +1,6 @@
 package com.hk.impl.service.shippingOrder;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.discount.EnumRewardPointMode;
-import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -11,7 +9,6 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.shippingOrder.LineItem;
@@ -39,7 +36,6 @@ import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 import com.hk.util.TokenUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -295,7 +291,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 				Long qty = lineItem.getQty();
 				List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
 				List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
-				List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+				List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 				logger.debug("Available Unbooked Inventory For Sku - " + lineItem.getSku() + " at MRP - " + lineItem.getMarkedPrice() + " is "
 						+ checkAvailableUnbookedSkuItems.size());
 				if (checkAvailableUnbookedSkuItems.size() >= qty) {
@@ -304,7 +300,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 						SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
 						SkuItemCLI skuItemCLI = new SkuItemCLI();
 						// get available skuitems warehouse at given mrp
-						List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+						List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 						if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
 							SkuItem skuItem = availableUnbookedSkuItems.get(0);
 							// Book the sku item first
@@ -361,7 +357,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					if (!skuItemLineItem.getSkuItem().getSkuGroup().getMrp().equals(lineItem.getMarkedPrice())
 							|| !skuItemStatus.contains(skuItemLineItem.getSkuItem().getSkuItemStatus())) {
 						// get sku items of the given warehouse at mrp
-						List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+						List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 						if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
 							SkuItem skuItem = skuItemLineItem.getSkuItem();
 							skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());

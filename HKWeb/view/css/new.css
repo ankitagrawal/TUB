@@ -6511,7 +6511,7 @@ color: #e62580;
     font-weight: bold;
     border-radius: 4px;
     position: relative;
-    top: 14px;
+    top: 40px;
     border: 1px solid #ddd;
     padding-top: 7px;
     background: #ddd;
@@ -6559,7 +6559,7 @@ color: #e62580;
 .orderIdText{
     font-size: 1em;
     margin-top: 20px;
-    padding-bottom: 10px;
+    padding: 10px;
     width: 100%;
     left: 15px;
     position: relative;
@@ -6567,10 +6567,8 @@ color: #e62580;
 }
 
 .congratsText{
-    position: relative;
-    float: left;
     width: 100%;
-    padding-bottom: 10px;
+    padding: 10px;
     left: 15px;
     margin-bottom: 15px;
     margin-top: 45px;
@@ -6734,6 +6732,20 @@ color: #e62580;
     position: relative;
     float: left;
 }
+
+.icnTriangle:before {
+    content: '';
+    display: block;
+    position: relative;
+    left: 390px;
+    width: 0;
+    height: 0;
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #ce731a;
+    border-style: solid;
+    border-width: 0 18px 20px;
+}
+
+
 .leftCOD{
     position: relative;
     float: left;

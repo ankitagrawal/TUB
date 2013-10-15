@@ -228,10 +228,12 @@
                     <img src="<hk:vhostImage/>/images/banners/ginni-banner.jpg" alt="self-defence"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">
-                    <img src="<hk:vhostImage/>/images/banners/Omron-HD.jpg" alt="Omron"
-                         class="small_banner"/>
-                </a>
+                <%--<a href="${pageContext.request.contextPath}/product/omron-bp-monitor-upper-arm-hem-7203/HB005?camp=7200">--%>
+                    <%--<img src="<hk:vhostImage/>/images/banners/Omron-HD.jpg" alt="Omron"--%>
+                         <%--class="small_banner"/>--%>
+                <%--</a>--%>
+            <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
+                 class="small_banner"/>
             </c:when>
 
             <c:when test="${categoryBean.category.name eq eye}">
@@ -281,12 +283,16 @@
                 </a>
             </c:when>
             <c:when test="${categoryBean.category.name eq diabetes}">
-                <a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">
-                    <img src="<hk:vhostImage/>/images/banners/Contour-super-saver-pack.jpg" alt="14 Days Return Policy"
+                <%--<a href="${pageContext.request.contextPath}/product/contour-super-saver-pack/DM019?ContourPack14Aug">--%>
+                    <%--<img src="<hk:vhostImage/>/images/banners/Contour-super-saver-pack.jpg" alt="14 Days Return Policy"--%>
+                         <%--class="small_banner"/>--%>
+                <%--</a>--%>
+                <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                    <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                          class="small_banner"/>
                 </a>
-                <a href="${pageContext.request.contextPath}/product/quanto-diab/HNUT46?camp=qunat">
-                    <img src="<hk:vhostImage/>/images/banners/quanto-diab.jpg" alt="diabetes"
+                <a href="${pageContext.request.contextPath}/diabetes/diabetic-food?brand=Splenda">
+                    <img src="<hk:vhostImage/>/images/banners/splenda_static-banner.jpg" alt="diabetes"
                          class="small_banner"/>
                 </a>
             </c:when>
