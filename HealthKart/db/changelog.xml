@@ -14073,13 +14073,30 @@
             INSERT INTO `supplier_transaction_type` (`id`, `name`) VALUES (NULL, 'CREATE'), (NULL, 'PURC'), (NULL, 'BP'), (NULL, 'PRT');
         </sql>
     </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377614620135-2">
+        <addColumn tableName="pincode">
+            <column name="last_mile_cost" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377614620135-3">
+        <addColumn tableName="pincode">
+            <column name="nearest_hub_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377797848313-3">
+        <addForeignKeyConstraint baseColumnNames="nearest_hub_id" baseTableName="pincode" constraintName="fk_nearest_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378101837752-1">
+        <addColumn tableName="courier_pricing_engine">
+            <column name="valid_upto" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
     <changeSet author="Vidur (generated)" id="06-09-2013(1)">
         <createIndex indexName="line_item_UNIQUE" tableName="wh_report_line_item" unique="true">
             <column name="line_item_id"/>
         </createIndex>
-    </changeSet>
-    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-2">
-        <sql>update hk_reach_pricing_engine set valid_from = '2013-09-01 00:00:00'</sql>
     </changeSet>
     <changeSet author="Rajesh" id="20130913-01">
         <sql>
@@ -14211,7 +14228,23 @@
             <column name="source" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Ankit Chhabra (generated)" id="1381764329041-1">
+    <changeSet author="Ajeet (written)" id="20131015-01">
+        <sql>
+            CREATE TABLE hk_reach_pricing_engine_bkup LIKE hk_reach_pricing_engine;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-02">
+        <sql>
+            INSERT hk_reach_pricing_engine_bkup SELECT * FROM hk_reach_pricing_engine;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-03">
+        <sql>
+            DROP TABLE hk_reach_pricing_engine;
+        </sql>
+    </changeSet>
+
+    <changeSet author="Ankit Chhabra (generated)" id="1381819047671-1">
         <createTable tableName="hk_reach_pricing_engine">
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -14228,26 +14261,21 @@
             <column name="update_time" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
-    <changeSet author="Ankit Chhabra (generated)" id="1381764329041-3">
-        <addColumn tableName="pincode">
-            <column name="last_mile_cost" type="DECIMAL(8,2)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit Chabra (generated)" id="1381764329041-4">
-        <addColumn tableName="pincode">
-            <column name="nearest_hub_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit Chabra (generated)" id="1381764329041-5">
-        <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="valid_upto" tableName="courier_pricing_engine"/>
-    </changeSet>
-    <changeSet author="Ankit Chabra (generated)" id="1381764329041-6">
+    <changeSet author="Ankit Chhabra (generated)" id="1381819047671-2">
         <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_hub_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ankit Chabra (generated)" id="1381764329041-7">
-        <addForeignKeyConstraint baseColumnNames="nearest_hub_id" baseTableName="pincode" constraintName="fk_nearest_hub" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    <changeSet author="Ankit Chabra (generated)" id="1381819047671-3">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_warehouse_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ankit Chhabra (generated)" id="1381764329041-8">
-        <sql>update hk_reach_pricing_engine set valid_from = '2013-09-01 00:00:00'</sql>
+    <changeSet author="Ajeet (written)" id="20131015-04">
+        <sql>
+            SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+            INSERT hk_reach_pricing_engine SELECT * FROM hk_reach_pricing_engine_bkup;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-05">
+        <sql>
+            DROP TABLE hk_reach_pricing_engine_bkup;
+        </sql>
     </changeSet>
 </databaseChangeLog>
