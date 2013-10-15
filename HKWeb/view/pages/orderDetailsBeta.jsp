@@ -239,7 +239,7 @@
           </tbody>
       </table>
       <div align="center">
-        <s:submit name="addToCart" value="Place Order"
+        <s:submit name="addToCart" value="Re-Order"
                   class="addToCartButton btn btn-blue"/>
       </div>
     </s:form>

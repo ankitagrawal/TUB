@@ -2817,6 +2817,16 @@ label{
     margin-top: 30px;
 }
 
+.mrgn-bt-50 {
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+
+.mrgn-bt-70 {
+    margin-bottom: 70px;
+    margin-top: 70px;
+}
+
 .mrgn-lr-5 {
     margin-right: 5px;
     margin-left: 5px;
@@ -2948,6 +2958,13 @@ label{
     display: inline-block;
     width: 32px;
     height: 30px;
+}
+
+.strip-404, .strip-500 {
+    display: inline-block;
+    width: 935px;
+    height: 4px;
+    background: url(../images/strip.png) no-repeat top;
 }
 
 .go-to-top {
@@ -4316,3 +4333,43 @@ input[type="text"]:focus, input[type="password"]:focus{
 }
 
 /* display box css ends */
+
+
+/* error 404 and 500 pages css begins */
+
+.left-404-msg .msg1{
+    font-size: 50px;
+    font-style: italic;
+    color: #969696;
+    margin-left: 30px;
+}
+
+.left-500-msg .msg1{
+    font-size: 50px;
+    font-style: italic;
+    color: #969696;
+    margin-left: 10px;
+}
+
+.left-404-msg .msg2,.left-500-msg .msg2{
+    text-align: right;
+    font-size: 220px;
+    font-style: italic;
+    color: #969696;
+}
+
+.right-404-msg p, .right-500-msg p{
+    font-size: 30px;
+    line-height: 40px;
+}
+
+.menu-404, .menu-500{
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.menu-404 span, .menu-500 span{
+    display: inline-block;
+}
+
+/* error 404 and 500 pages css ends */
