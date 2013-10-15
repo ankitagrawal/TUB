@@ -1,7 +1,7 @@
-package com.hk.api.edge.http;
+package com.hk.util.http;
 
-import com.hk.api.edge.constants.EnvConstants;
-import com.hk.api.edge.integration.pact.service.LoadPropertyService;
+import com.hk.constants.edge.EnvConstants;
+import com.hk.pact.service.LoadPropertyService;
 import com.hk.service.ServiceLocatorFactory;
 
 public class URIBuilderHelper {

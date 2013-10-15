@@ -1,4 +1,4 @@
-package com.hk.api.edge.constants;
+package com.hk.constants.edge;
 
 public class MessageConstants {
     public static final String BLANK_CAT_PREFIXES               = "cat prefixes cannot be blank, need to specify at least one";

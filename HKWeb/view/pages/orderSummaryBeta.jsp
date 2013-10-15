@@ -194,9 +194,14 @@
           <%--</div>--%>
 
         </div>
-        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 40px;border: none;margin-top: 20px;float: right;">
+        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 40px;border: none;float: right;">
 
+          <div class=' newTextHeading ' style="float: left;border:none;padding-bottom:5px;width: 100%;margin-bottom: 20px;">
 
+            <s:link class="btn btn-gray" beanclass="com.hk.web.action.core.cart.CartAction" title='Go To CART PAGE'>
+             EDIT YOUR CART
+            </s:link>
+            </div>
             <div class='title newTextHeading ' style="float: left;padding-bottom:5px;width: 100%;">
                 <h4 class="arialBlackBold" style="display: inline-block;">
                     SHIPPING DETAILS

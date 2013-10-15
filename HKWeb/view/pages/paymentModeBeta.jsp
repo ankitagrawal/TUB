@@ -101,7 +101,7 @@
       beanclass="com.hk.web.action.core.payment.FreeCheckoutConfirmAction"
       method="post">
     <div class="buttons"><s:submit name="confirm"
-                                   value="Confirm Order" class="butt"
+                                   value="Confirm Order" class="btn btn-blue"
                                    disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
     </div>
   </s:form>
@@ -285,12 +285,11 @@
           </div>
           <h4 class="codContact fnt-bold">Contact Details</h4>
 
-          <p class="mrgn-b-20 cont-lft">Please verify the name and contact number of the person
-            who would receive this order. <br/> <br/>
-            You will receive an automated call on your contact phone. Please take the call and respond as per
-            instructions to verify
-            your order instantly. In case you miss the call, our agent will call you again to verify. Once verified,
-            your order will go into processing.</p>
+          <p class="mrgn-b-20 cont-lft">
+
+            Please verify the name and contact number of the person
+            who would receive this order. <br/>
+            </p>
           <s:form
               beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
               method="post">
@@ -310,7 +309,10 @@
               <s:text class="signUpInputNew2" name="codContactPhone"
                       value="${orderSummary.order.address.phone}" id="phoneNo"/>
             </div>
-
+            <p style="margin-left: 130px;margin-top: 10px;color: #009AEC;"><strong >Please ensure that you enter the correct mobile number</strong></p>
+            <p style="font-weight: 500; border: 1px solid #009AEC; color: #009AEC; padding: 5px; margin-top: 20px;">
+              After placing your order, Please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+              </p>
             <div class="buttons" style="font-size: 1.3em;"><br/>
               <br/>
               <s:submit name="pre" value="PLACE ORDER" style="margin-left: 8px;"

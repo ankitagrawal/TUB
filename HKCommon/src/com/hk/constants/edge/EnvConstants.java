@@ -1,6 +1,6 @@
-package com.hk.api.edge.constants;
+package com.hk.constants.edge;
 
-import com.hk.api.edge.integration.pact.service.LoadPropertyService;
+import com.hk.pact.service.LoadPropertyService;
 import com.hk.service.ServiceLocatorFactory;
 
 public class EnvConstants {

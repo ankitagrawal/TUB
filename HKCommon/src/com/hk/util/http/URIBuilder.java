@@ -1,4 +1,4 @@
-package com.hk.api.edge.http;
+package com.hk.util.http;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -9,9 +9,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hk.api.edge.constants.EnvConstants;
-import com.hk.api.edge.constants.RequestConstants;
-import com.hk.api.edge.constants.StoreConstants;
+import com.hk.constants.edge.EnvConstants;
+import com.hk.constants.edge.RequestConstants;
+import com.hk.constants.edge.StoreConstants;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.hk.api.edge.http;
+package com.hk.util.http;
 
 
 import java.io.BufferedReader;

@@ -1,4 +1,4 @@
-package com.hk.api.edge.integration.pact.service;
+package com.hk.pact.service;
 
 /**
  * @author vaibhav.adlakha

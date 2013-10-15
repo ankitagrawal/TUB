@@ -1,4 +1,4 @@
-package com.hk.api.edge.integration.impl.service;
+package com.hk.impl.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.hk.api.edge.integration.pact.service.LoadPropertyService;
 import com.hk.constants.core.Keys;
+import com.hk.pact.service.LoadPropertyService;
 
 @Service
 public class LoadPropertyServiceImpl implements LoadPropertyService {
