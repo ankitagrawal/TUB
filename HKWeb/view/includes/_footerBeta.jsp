@@ -30,12 +30,14 @@
 
             <div class="ftr-link-cntnr clearfix">
                 <div class="footer-menu">
-                    <h4>Get to Know Us</h4>
+                    <h4>Healthkart</h4>
                     <ul>
                         <li><a href="${pageContext.request.contextPath}/beta/hk/AboutUs.action">About Us</a> </li>
                         <li><a href="${pageContext.request.contextPath}/beta/hk/Careers.action">Careers</a></li>
                         <li><a href="${pageContext.request.contextPath}/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
                         <li><a href="http://www.healthkart.com/resources">Blog</a></li>
+                        <li><a href="${pageContext.request.contextPath}/beta/brand/BrandListing.action">Brand Directory</a></li>
+                        <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction">Loyalty</s:link></li>
                     </ul>
                 </div>
                 <div class="footer-menu">
@@ -49,27 +51,36 @@
                         <li><a href="${pageContext.request.contextPath}/beta/hk/ContactUs.action">Contact Us</a></li>
                     </ul>
                 </div>
+                <c:set var="menuBreakPoint" value="${fn:length(menuAction.menuNodes)/2}"/>
                 <div class="footer-menu">
                     <h4>Categories</h4>
                     <ul>
-                        <c:forEach items="${menuAction.menuNodes}" var="menuNode">
+                        <c:forEach items="${menuAction.menuNodes}" var="menuNode" end="${menuBreakPoint}">
                             <li><a href="${menuNode.url}">${menuNode.name}</a></li>
                         </c:forEach>
                     </ul>
                 </div>
                 <div class="footer-menu">
-                    <%--<h4>Brands</h4>--%>
-                    <%--<ul>--%>
-                        <%--<li><a href="">MuscleBlaze</a></li>--%>
-                        <%--<li><a href="">HealthViva</a></li>--%>
-                        <%--<li><a href="">Optimum Nutrition</a></li>--%>
-                        <%--<li><a href="">Dymatize</a></li>--%>
-                        <%--<li><a href="">Gaspari</a></li>--%>
-                        <%--<li><a href="">Accu-Chek</a></li>--%>
-                        <%--<li><a href="">L'Oreal Paris</a></li>--%>
-                        <%--<li><a href="">Muscletech</a></li>--%>
-                    <%--</ul>--%>
+                    <h4>More categories</h4>
+                    <ul>
+                        <c:forEach items="${menuAction.menuNodes}" var="menuNode" begin="${menuBreakPoint+1}">
+                            <li><a href="${menuNode.url}">${menuNode.name}</a></li>
+                        </c:forEach>
+                    </ul>
                 </div>
+                <%--<div class="footer-menu">
+                    <h4>Brands</h4>
+                    <ul>
+                        <li><a href="">MuscleBlaze</a></li>
+                        <li><a href="">HealthViva</a></li>
+                        <li><a href="">Optimum Nutrition</a></li>
+                        <li><a href="">Dymatize</a></li>
+                        <li><a href="">Gaspari</a></li>
+                        <li><a href="">Accu-Chek</a></li>
+                        <li><a href="">L'Oreal Paris</a></li>
+                        <li><a href="">Muscletech</a></li>
+                    </ul>
+                </div>--%>
 
 
               <div class="subscibe-mail-cntnr">
