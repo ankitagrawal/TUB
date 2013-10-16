@@ -19,7 +19,7 @@ public interface SkuItemDao extends BaseDao {
 
   public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, List<SkuItemStatus> skuItemStatusList, List<SkuItemOwner> skuItemOwners);
 
-  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> skuItemStatusIds, List<Long> skuItemOwners, Double mrp);
+  public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> skuItemStatusIds, List<Long> skuItemOwners, Double mrp, boolean isUnderReview);
 
   public List<PosProductSearchDto> getCheckedInSkuItems(String productVariantId, String primaryCategory, String productName, String brand, String flavor, String size, String color, String form, Long warehouseId);
 
