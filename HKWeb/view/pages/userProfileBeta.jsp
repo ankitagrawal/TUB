@@ -88,12 +88,17 @@
                   <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
                   <s:checkbox name="productVariantList[${ctr.index}].selected" class="lineItemCheckBox"/>
                   <s:hidden name="productVariantList[${ctr.index}].qty" value="1" class="lineItemQty"/>
-                  <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link">
-                    <s:param name="productId" value="${variant.product.id}"/>
-                    <s:param name="productSlug" value="${variant.product.slug}"/>
+                  <a href="${storeVariantBasic.url}" class="prod_link">
                     <%--${variant.product.name}--%>
-                    ${storeVariantBasic.name}
-                  </s:link>
+                    <c:choose>
+                        <c:when test="${not empty storeVariantBasic.name and storeVariantBasic.name != null}">
+                            ${storeVariantBasic.name}
+                        </c:when>
+                        <c:otherwise>
+                            ${variant.product.name}
+                        </c:otherwise>
+                    </c:choose>
+                  </a>
                 </div>
               </div>
             </c:forEach>
