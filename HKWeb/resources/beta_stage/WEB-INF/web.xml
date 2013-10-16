@@ -13,39 +13,22 @@
     <welcome-file-list>
         <welcome-file>/pages/home.jsp</welcome-file>
     </welcome-file-list>
-    
-    <error-page>
-        <error-code>401</error-code>
-        <location>/pages/error/404Beta.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/pages/error/404Beta.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/pages/error/500Beta.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>503</error-code>
-        <location>/pages/error/500Beta.jsp</location>
-    </error-page>
 
     <error-page>
         <error-code>401</error-code>
-        <location>/pages/error/noPage.html</location>
+        <location>/pages/error/404Beta.jsp</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
-        <location>/pages/error/noPage.html</location>
+        <location>/pages/error/404Beta.jsp</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/pages/error/noPage.html</location>
+        <location>/pages/error/500Beta.jsp</location>
     </error-page>
     <error-page>
         <error-code>503</error-code>
-        <location>/pages/error/noPage.html</location>
+        <location>/pages/error/500Beta.jsp</location>
     </error-page>
 
     <!--  Listeners Start -->
@@ -77,7 +60,8 @@
 
     <!--  Listeners End -->
 
-   <!-- <filter>
+<!--
+    <filter>
         <filter-name>httpSchemeFilter</filter-name>
         <filter-class>
             com.hk.web.filter.HttpSchemeFilter
@@ -170,11 +154,11 @@
         </init-param>
         <init-param>
             <param-name>SSL.SecureHost</param-name>
-            <param-value>beta.healthkart.com</param-value>
+            <param-value>www.stagnew.healthkart.com</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.UnsecureHost</param-name>
-            <param-value>beta.healthkart.com</param-value>
+            <param-value>www.stagnew.healthkart.com</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.SessionMode</param-name>
