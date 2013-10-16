@@ -38,7 +38,7 @@
     </s:layout-component>
 
     <s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+      <s:layout-render name="/includes/_menu.jsp" showNewHKLink = "${showNewHKLink}" topCategory="${topCategory}"/>
     </s:layout-component>
 
     <s:layout-component name="topBanner"></s:layout-component>
