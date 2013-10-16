@@ -1201,25 +1201,6 @@ function _updateTotals(responseData) {
     background: white;
 }
 
-.offers-container .offers-label {
-    line-height: 1.6em;
-    display: inline-block;
-    border: 1px solid #c8c8c8;
-    padding-right: 28px;
-    z-index: 1;
-    background-image: url('../images/arrow-down.png');
-    background-repeat: no-repeat;
-    background-position: 97%;
-    font-weight: 600;
-
-}
-
-.offers-container.offers-displayed .offers-label {
-    background-color: white;
-    background-image: url('../images/arrow-up.png');
-    border-bottom-color: transparent;
-}
-
 .offers-container .offers-drop-down {
     padding: 15px 30px;
     text-align: left;
