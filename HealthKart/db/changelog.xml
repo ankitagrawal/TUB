@@ -14258,4 +14258,9 @@
             <column name="source" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Rajesh" id="20131016-01">
+            <sql>
+                insert into reconciliation_type values (230,"Found-Add"),(220,"Near Expiry Substract");
+            </sql>
+    </changeSet>
 </databaseChangeLog>
