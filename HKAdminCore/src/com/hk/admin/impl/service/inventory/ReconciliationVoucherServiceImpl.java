@@ -295,6 +295,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_DAMAGE_LOGISTICS);
         skuItemStatus = EnumSkuItemStatus.Damaged.getSkuItemStatus();
         break;
+      case NearExpirySubstract:
+        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBSTRACT_NEAR_EXPIRY);
+        skuItemStatus = EnumSkuItemStatus.NearExpiry.getSkuItemStatus();
+        break;
+
     }
 
     RvLineItem rvLineItem = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, reconciliationType);
