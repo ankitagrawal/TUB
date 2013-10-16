@@ -19,6 +19,8 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -29,6 +31,8 @@ import org.stripesstuff.plugin.security.Secure;
 @Secure
 @Component
 public class ChequeCashPaymentReceiveAction extends BaseAction {
+
+  private Logger logger = LoggerFactory.getLogger(ChequeCashPaymentReceiveAction.class);
   @Autowired
   private PaymentManager paymentManager;
   @Autowired
@@ -103,6 +107,8 @@ public class ChequeCashPaymentReceiveAction extends BaseAction {
       } catch (HealthkartPaymentGatewayException e) {
         getPaymentManager().error(gatewayOrderId, e);
         resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+      }catch (Exception ex) {
+        logger.error("exception while tempBooking or Splitting during place Order via API for order -->" + order.getId() + ex.getMessage());
       }
     } else {
       addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));

@@ -18,6 +18,8 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CounterCashPaymentReceiveAction extends BaseAction {
+
+  private Logger logger = LoggerFactory.getLogger(CounterCashPaymentReceiveAction.class);
   @Autowired
   private PaymentManager paymentManager;
   @Autowired
@@ -68,6 +72,8 @@ public class CounterCashPaymentReceiveAction extends BaseAction {
       } catch (HealthkartPaymentGatewayException e) {
         getPaymentManager().error(gatewayOrderId, e);
         resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+      } catch (Exception ex) {
+        logger.error("exception while tempBooking or Splitting during place Order via API for order -->" + order.getId() + ex.getMessage());
       }
     } else {
       addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
