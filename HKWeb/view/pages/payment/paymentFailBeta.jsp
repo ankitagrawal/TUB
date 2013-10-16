@@ -8,7 +8,7 @@
   <s:layout-component name="left_col">
     <p><s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction" class="txt-blue fnt-sz14 mrgn-b-5">Please Try Again</s:link></p>
     <ul type="disc" style="margin-left:20px; list-style:disc;line-height: 20px;margin-top: 5px;margin-bottom: 5px;">
-      <li>For any other query read our <a href="/pages/termsAndConditions.jsp" class="txt-blue">Terms &amp; Conditions</a></li>
+      <li>For any other query read our <a href="/beta/hk/TermsConditions.action" class="txt-blue">Terms &amp; Conditions</a></li>
       <li>For any other assistance pertaining to your order contact our customer care at 0124-4616444 or at email: <a
           href="mailto:info@healthkart.com" class="txt-blue">info@healthkart.com</a></li>
     </ul>
