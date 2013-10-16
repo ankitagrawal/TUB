@@ -4,21 +4,18 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hk.pact.service.inventory.InventoryService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hk.api.edge.constants.ServiceEndPoints;
-import com.hk.api.edge.http.HkHttpClient;
-import com.hk.api.edge.http.URIBuilder;
 import com.hk.api.edge.integration.pact.service.variant.HybridStoreVariantServiceFromHKR;
 import com.hk.api.edge.integration.response.variant.ComboHKR;
 import com.hk.api.edge.integration.response.variant.response.ComboResponseFromHKR;
 import com.hk.api.edge.integration.response.variant.response.FreeVariantResponseFromHKR;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.edge.ServiceEndPoints;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -35,6 +32,8 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.taglibs.Functions;
 import com.hk.util.HKImageUtils;
+import com.hk.util.http.HkHttpClient;
+import com.hk.util.http.URIBuilder;
 
 /**
  * @author vaibhav.adlakha

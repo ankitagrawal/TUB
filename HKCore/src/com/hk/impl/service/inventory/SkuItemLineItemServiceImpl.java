@@ -80,7 +80,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 			skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 
 			//get available sku items of the given warehouse at given mrp
-			List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+			List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 			if (availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0
 					|| availableUnbookedSkuItems.size() < lineItem.getQty()) {
 				logger.debug("about to return false from createNewSkuItemLineItem");
@@ -160,7 +160,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 					skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
 
 					//get available sku items of the given warehouse at given mrp
-					List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+					List<SkuItem> availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 					if (availableUnbookedSkuItems == null || availableUnbookedSkuItems.isEmpty() || availableUnbookedSkuItems.size() == 0) {
 						logger.debug("about to return false from createNewSkuItemLineItem for normal case");
 						return false;
@@ -218,7 +218,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
 			sku = getSkuService().getSKU(lineItem.getSku().getProductVariant(), targetWarehouse);
 			skuList.add(sku);
-			availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+			availableUnbookedSkuItems = getSkuItemDao().getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 
 			if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() >= lineItem.getQty()) {
 				List<SkuItemLineItem> skuItemLineItemList = lineItem.getSkuItemLineItems();

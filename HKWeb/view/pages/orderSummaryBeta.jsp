@@ -194,9 +194,14 @@
           <%--</div>--%>
 
         </div>
-        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 40px;border: none;margin-top: 20px;float: right;">
+        <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 40px;border: none;float: right;">
 
+          <div class=' newTextHeading ' style="float: left;border:none;padding-bottom:5px;width: 100%;margin-bottom: 20px;">
 
+            <s:link class="btn btn-gray" beanclass="com.hk.web.action.core.cart.CartAction" title='Go To CART PAGE'>
+             EDIT YOUR CART
+            </s:link>
+            </div>
             <div class='title newTextHeading ' style="float: left;padding-bottom:5px;width: 100%;">
                 <h4 class="arialBlackBold" style="display: inline-block;">
                     SHIPPING DETAILS
@@ -308,15 +313,12 @@
     <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
         <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
             <tr>
-                <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+                <td colspan="2" class="web_dialog_title">Oops! We are sorry.</td>
                 <td class="web_dialog_title align_right">
                         <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
                 </td>
             </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-            </tr>
+
             <tr>
                 <td colspan="3" style="padding-left: 15px;">
                     <b>The following items cannot be delivered at your pincode. </b>
@@ -385,7 +387,7 @@
             <tr>
                 <td colspan="2" style="text-align: center;">
                     <s:link beanclass="com.hk.web.action.core.cart.CartAction" event="removeGroundShippedItem"
-                            class=" button_green"
+                            class=" button_green btn btn-blue"
                             style="width: 220px; height: 16px; align_right ">Remove and Proceed
                         <s:param name="order" value="${orderSummary.order}"/>
                     </s:link>
@@ -402,7 +404,7 @@
 
     <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
         <tr>
-            <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+            <td colspan="2" class="web_dialog_title">Oops! We are sorry.</td>
             <td class="web_dialog_title align_right">
                 <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
             </td>
@@ -416,10 +418,7 @@
                 <b>The following items have been removed due to insufficient inventory</b>
             </td>
         </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
+
         <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
 
             <c:set var="storeVariantBasic"
@@ -507,11 +506,11 @@
             <td colspan="2" style="text-align: center;">
 
                 <c:if test="${fn:length(orderSummary.order.cartLineItems)>0}">
-                <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                <a class="button_green btn btn-blue" style="width:120px; height: 18px;">Continue</a>
             </td>
             <td>
                 </c:if>
-                <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+                <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green btn btn-blue"
                         style="width: 160px; height: 18px;">Back to Shopping
                 </s:link>
             </td>
@@ -531,10 +530,11 @@
         width: 100%;
         margin: 0;
         padding: 0;
-        background: #000000;
-        opacity: .15;
-        filter: alpha(opacity = 15);
-        -moz-opacity: .15;
+        background: #fff;
+        opacity: .7;
+        filter: alpha(opacity = 7);
+        -moz-opacity: .7;
+        border: 1px solid #CCC;
         z-index: 101;
         display: none;
     }
@@ -553,17 +553,18 @@
         /*font-family: Verdana;*/
         font-size: 10pt;
         color: #333;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+        border: 1px solid #CCC;
+        padding:10px;
+        padding-top:0px ;
     }
 
     .web_dialog_title {
-    /*border-bottom: solid 2px #336699;*/
-    /*background-color: #336699;*/
-        font-size: 16px;
+        /*border-bottom: solid 2px #336699;*/
+        /*background-color: #336699;*/
+        color: #1B3188;
+        font-size: 1.5em;
+        line-height: 1.8em;
         padding: 5px;
-        background-color: #f2f7fb;
-        color: White;
-        font-weight: 600;
     }
 
     .web_dialog_title a {

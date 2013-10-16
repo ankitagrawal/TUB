@@ -1,11 +1,24 @@
 package com.hk.api.edge.integration.resource.cart;
 
-import com.hk.api.edge.constants.MessageConstants;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.api.edge.integration.pact.service.cart.HybridCartService;
 import com.hk.api.edge.integration.request.variant.AddProductVariantToCartRequest;
 import com.hk.api.edge.integration.request.variant.AddVariantWithExtraOptions;
 import com.hk.api.edge.integration.response.cart.CartSummaryFromHKR;
 import com.hk.api.edge.integration.response.cart.UpdateCartResponseFromHKR;
+import com.hk.constants.edge.MessageConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.Order;
@@ -21,14 +34,6 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.report.dto.order.ProductLineItemWithExtraOptionsDto;
 import com.hk.util.json.JSONResponseBuilder;
-import net.sourceforge.stripes.validation.SimpleError;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.ws.rs.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Rimal
