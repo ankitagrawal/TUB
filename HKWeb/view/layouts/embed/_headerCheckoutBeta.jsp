@@ -57,9 +57,9 @@
   <div class='topBar container_24'>
       <div class="fnt-sz10 fnt-light" style="text-align:right">
 
-              14 day return policy &nbsp; |
-          Contact Us &nbsp;| Hi
-               ${user.firstName}
+          <a href="${pageContext.request.contextPath}/beta/hk/FAQ.action?reftag=return" target="_blank">14 day return policy</a>&nbsp;
+          <a href="${pageContext.request.contextPath}/beta/hk/ContactUs.action" target="_blank">Contact Us</a>&nbsp;
+          ${user.firstName}
           |&nbsp; <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
                   rel="noFollow">Logout</s:link>
       </div>
