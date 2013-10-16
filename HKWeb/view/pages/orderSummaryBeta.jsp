@@ -2,6 +2,7 @@
 <%@ page import="com.hk.dto.pricing.PricingDto" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="org.joda.time.DateTime" %>
+<%@ page import="java.text.DecimalFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
@@ -75,6 +76,11 @@
 
 <s:layout-component name="steps_content">
 <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
+<%
+  DecimalFormat df = new DecimalFormat("#.0");
+  double redeemPoints = Double.valueOf(df.format(orderSummary.getRedeemableRewardPoints()));
+%>
+<c:set var="redeemPoints" value="<%=redeemPoints%>" />
 <div class='current_step_content step2'>
         <%----%>
     <div class="leftHalf">
@@ -145,8 +151,7 @@
                     <div class="newShippingHandling">
                         (inclusive of shipping, handling and taxes.)
                     </div>
-
-                <c:if test="${orderSummary.redeemableRewardPoints > 0}">
+                <c:if test="${redeemPoints > 0.0}">
                     <div class="right_container rewardPointsRightContainer">
                         <div class="title">
                             <div class="rewardsPointsNew">
