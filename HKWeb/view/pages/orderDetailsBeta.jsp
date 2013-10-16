@@ -43,6 +43,7 @@
             <c:choose>
               <c:when test="${!empty oa.lineItems}">
                 <c:forEach items="${oa.lineItems}" var="lineItem" varStatus="ctr">
+                  <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(lineItem.sku.productVariant.id)}"/>
                   <c:set var="cartLineItem" value="${lineItem.cartLineItem}"/>
                   <c:set var="variant" value="${lineItem.sku.productVariant}"/>
                     <c:if test="${ctr.first}">
@@ -77,9 +78,7 @@
                           <span class="gry" id="message">&nbsp;&nbsp;(Product not available)</span>
                         </c:when>
                         <c:otherwise>
-                          <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" id="productLink">
-                            <s:param name="productId" value="${variant.product.id}"/>
-                            <s:param name="productSlug" value="${variant.product.slug}"/>
+                          <a href="${storeVariantBasic.url}">
                             <strong>
                               <c:choose>
                                 <c:when test="${empty variant.variantName}">
@@ -90,7 +89,7 @@
                                 </c:otherwise>
                               </c:choose>
                             </strong>
-                          </s:link>
+                          </a>
                           <c:if test="${variant.outOfStock}">
                             <span class="gry" id="message">&nbsp;&nbsp;
                                 <c:choose>
@@ -152,6 +151,7 @@
               </c:when>
               <c:otherwise>
                 <c:forEach items="${oa.cartLineItems}" var="cartLineItem" varStatus="ctr">
+                    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
                     <c:if test="${ctr.first}">
                         <tr class="order-tr top-brdr">
                     </c:if>
@@ -197,9 +197,7 @@
                           </strong><span class="gry" id="message">&nbsp;&nbsp;(Product out of stock)</span>
                         </c:when>
                         <c:otherwise>
-                          <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" id="productLink">
-                            <s:param name="productId" value="${variant.product.id}"/>
-                            <s:param name="productSlug" value="${variant.product.slug}"/>
+                          <a href="${storeVariantBasic.url}">
                             <strong>
                                 <c:choose>
                                     <c:when test="${empty cartLineItem.productVariant.variantName}">
@@ -210,7 +208,7 @@
                                     </c:otherwise>
                                 </c:choose>
                             </strong>
-                          </s:link>
+                          </a>
                         </c:otherwise>
                       </c:choose>
                       <span class="gry">
