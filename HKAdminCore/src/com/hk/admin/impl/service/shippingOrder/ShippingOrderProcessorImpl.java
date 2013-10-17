@@ -229,7 +229,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
               for (SkuItemLineItem sili : lineItem.getSkuItemLineItems()) {
                 if (sili.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())) {
                   shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder,
-                      EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,
+                      EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue,
                       EnumReason.InventoryBookedOnBrightBehalf.asReason());
                   return false;
                 }
@@ -607,7 +607,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     }
      boolean validationRequired = false;
       for (LineItem  lineItem : cancelledSO.getLineItems()){
-         if (lineItem.getSkuItemLineItems().size() > 0){
+         if (lineItem.getSkuItemLineItems().size() > 0 ){
             validationRequired = true;
              break;
          }

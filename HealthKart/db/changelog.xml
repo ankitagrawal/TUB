@@ -14389,4 +14389,10 @@
     <changeSet author="Ajeet (generated)" id="1380121826284-06">
         <dropTable tableName="bin_has_sku_item"/>
     </changeSet>
+    <changeSet author="Ankit Agrawal (generated)" id="20130458-037">
+        <sql>
+            INSERT INTO classification VALUES (1025, 'SO Could not be Manually-escalated' , 'Booked on Bright Behalf');
+            INSERT INTO reason VALUES (250, 'Inventory Booked on  Bright Behalf' , NULL, 'SO Could not be Manually-escalated', 1025);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
