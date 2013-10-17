@@ -190,7 +190,7 @@ public class J2EESecurityManager implements SecurityManager {
             PrincipalImpl principalImpl = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
             boolean isAuthenticated = SecurityUtils.getSubject().isAuthenticated();
 
-            if (!isAuthenticated) {
+            if (!isAuthenticated && principalImpl !=null) {
                 isAuthenticated = getUserSessionService().isUserAuthenticated(principalImpl.getId());
             }
             return isAuthenticated;
