@@ -1,6 +1,10 @@
 package com.hk.constants.inventory;
 
 import com.hk.domain.accounting.DebitNoteStatus;
+import com.hk.domain.accounting.DebitNoteType;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Generated
@@ -36,6 +40,11 @@ public enum EnumDebitNoteStatus {
     debiteNoteStatus.setId(this.getId());
     debiteNoteStatus.setName(this.getName());
     return debiteNoteStatus;
+  }
+
+  public static List<DebitNoteStatus> getAllDebitNoteStatus() {
+    return Arrays.asList(Created.asDebitNoteStatus(), CheckedInAsDamageInventory.asDebitNoteStatus(), Reconciled.asDebitNoteStatus(), PaymentSettled.asDebitNoteStatus(),
+        ShippedToSupplier.asDebitNoteStatus(), CLosed.asDebitNoteStatus(), Deleted.asDebitNoteStatus());
   }
 
 }
