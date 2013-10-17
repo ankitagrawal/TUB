@@ -63,7 +63,7 @@
                  alt="HealthKartPlus 15% Off"/>
           </c:when>
           <c:otherwise>
-            <img src="${pageContext.request.contextPath}/images/banners/hkplus-app.jpg" alt="HealthKartPlus App"/>
+            <img src="${pageContext.request.contextPath}/images/banners/hkplus-app2.jpg" alt="HealthKartPlus App"/>
           </c:otherwise>
         </c:choose>
       </a>
