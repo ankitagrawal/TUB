@@ -1391,9 +1391,17 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     // check SkuGroup is already created or not
     SkuGroup skuGroup = skuGroupDao.getForeignSkuGroup(actualSkuGroupId);
+    Date mfgDate = null;
+    Date expDate = null;
+     if (info.getMfgdt() != null){
+       mfgDate =  getFormattedDate(info.getMfgdt());
+     }
+     if (info.getExpdt() != null){
+       expDate =  getFormattedDate(info.getExpdt());
+     }
+
     if (skuGroup == null) {
-      skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(info.getBatch(), getFormattedDate(info.getMfgdt()), getFormattedDate(info.getExpdt()),
-          info.getCp(), info.getMrp(), null, null, null, existingSku);
+      skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(info.getBatch(),mfgDate, expDate,info.getCp(), info.getMrp(), null, null, null, existingSku);
       skuGroup.setForeignSkuGroupId(actualSkuGroupId);
       skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
     }
