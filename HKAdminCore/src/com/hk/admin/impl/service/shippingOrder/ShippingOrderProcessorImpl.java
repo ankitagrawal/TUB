@@ -220,7 +220,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             loggedInUser = getUserService().getAdminUser();
           }
           // todo auto escalation code need to be changed
-          shippingOrderService.validateShippingOrder(shippingOrder);
+          shippingOrderService.validateShippingOrderAB(shippingOrder);
           shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
           if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled) ) {
             return false;
@@ -615,8 +615,18 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
       if (validationRequired ){
         cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+        shippingOrderService.save(cancelledSO);
+        shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+            shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
+            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on validation state  partial booking done  could be fulfilled from Bright end Validate it.");
+         return false;
+
       }else {
         cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+        shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+            shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_Cancelled),
+            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled as No booking done for this order ");
+
       }
 
      shippingOrderService.save(cancelledSO);
@@ -640,9 +650,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     }
 
     */
-    shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-        shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
-              EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on  pre cancel state could be fulfilled from Bright end Validate it.");
 
 
       return true;

@@ -440,7 +440,12 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
           inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
         }
 
+      } else if (item.getSkuItemLineItems().size() != cartLineItem.getQty()){
+        skuItemLineItemService.freeBookingItem(cartLineItem.getId());
+        inventoryService.bookInventory(cartLineItem);
       }
+
+      inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
     }
   }
 
