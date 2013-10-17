@@ -126,7 +126,7 @@
         </div>
     </div>
     <s:layout-component name="scriptComponent">
-       <script type="text/javascript" src="<hk:vhostJs/>/static/beta/js/newCat.js"></script>
+       <script type="text/javascript" src="<hk:vhostJs/>/static/ba/js/newCat.js"></script>
         <script type="text/javascript">
           $(document).ready(function () {
 
