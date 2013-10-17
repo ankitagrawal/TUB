@@ -12,6 +12,7 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationActionType;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.pact.service.payment.PaymentService;
 import org.joda.time.DateTime;
 import com.hk.constants.sku.EnumSkuItemStatus;
@@ -133,6 +134,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Autowired
     PaymentService paymentService;
+    @Autowired
+    OrderEventPublisher orderEventPublisher;
 
     @Override
 	@Transactional
@@ -228,6 +231,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 this.emailManager.sendOrderCancelEmailToUser(order);
             }
             emailManager.sendOrderCancelEmailToAdmin(order);
+
+            // notify HKBridge regarding order-cancellation
+            orderEventPublisher.publishCodStatus(order);
 
             this.logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), cancellationRemark);
         } else {
@@ -561,6 +567,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         orderService.save(order);
         orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
         emailManager.sendCodConfirmEmailToUser(order);
+        orderEventPublisher.publishCodStatus(order);
         getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         return payment;
     }

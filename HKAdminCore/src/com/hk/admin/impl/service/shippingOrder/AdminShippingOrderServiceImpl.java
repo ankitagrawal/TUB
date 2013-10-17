@@ -53,6 +53,7 @@ import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
@@ -141,6 +142,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
     ReversePickupService reversePickupService;
 
+    @Autowired
+    OrderEventPublisher orderEventPublisher;
+
+
   @Autowired
   private PaymentService paymentService;
   @Autowired
@@ -211,7 +216,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             EnumJitShippingOrderMailToCategoryReason.SO_CANCELLED);
 			}
 			getBucketService().popFromActionQueue(shippingOrder);
-		}
+
+            // notify HKBridge regarding order-cancellation
+            orderEventPublisher.publishCodStatus(shippingOrder.getBaseOrder());
+
+        }
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
 			getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
 		}
