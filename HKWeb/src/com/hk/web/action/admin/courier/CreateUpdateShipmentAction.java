@@ -118,9 +118,7 @@ import java.util.List;
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
-        String soLifeCycleAwb = shippingOrderLifecycleService.getAwbByShippingOrderLifeCycle(shippingOrder);
-        String shipmentAwb = shipment.getAwb().getAwbNumber();
-        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus()) && soLifeCycleAwb.equals(shipmentAwb)) {
+        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus())) {
             shipment = shipmentService.save(shipment);
             if (!shippingOrder.isDropShipping()) {
                 shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
@@ -132,7 +130,7 @@ import java.util.List;
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, null, shipment.getAwb().toString());
             addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed or AWB mismatch"));
+            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed"));
         }
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
