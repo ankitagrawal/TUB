@@ -14230,7 +14230,7 @@
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-01">
         <sql>
-            CREATE TABLE hk_reach_pricing_engine_bkup LIKE hk_reach_pricing_engine;
+            CREATE TABLE IF NOT EXISTS hk_reach_pricing_engine_bkup LIKE hk_reach_pricing_engine;
         </sql>
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-02">
@@ -14240,7 +14240,7 @@
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-03">
         <sql>
-            DROP TABLE hk_reach_pricing_engine;
+            DROP TABLE IF EXISTS hk_reach_pricing_engine;
         </sql>
     </changeSet>
 
@@ -14269,13 +14269,12 @@
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-04">
         <sql>
-            SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
             INSERT hk_reach_pricing_engine SELECT * FROM hk_reach_pricing_engine_bkup;
         </sql>
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-05">
         <sql>
-            DROP TABLE hk_reach_pricing_engine_bkup;
+            DROP TABLE IF EXISTS hk_reach_pricing_engine_bkup;
         </sql>
     </changeSet>
 </databaseChangeLog>
