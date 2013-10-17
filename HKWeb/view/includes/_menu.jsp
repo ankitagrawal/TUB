@@ -3,6 +3,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="org.joda.time.DateTimeFieldType" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -13,7 +14,7 @@
     <c:set var="allCategories" value="${allCategories}"/>
  <div class="clear"></div>
  	<c:set var="onNewUI" value="false"/>
-	
+	<shiro:hasRole name="<%=RoleConstants.GOD%>">
 	<c:set var="onNewUI" value="true"/>
 		<c:if test="${showNewHKLink eq true}">
 			<div style="width: 960px; margin: 30px auto 0;"><a
@@ -21,7 +22,7 @@
 				src="<hk:vhostImage/>/images/old-site-strip.png" width="960"
 				height="25" alt="go to new website" /> </a></div>
 		</c:if>
-	
+	</shiro:hasRole>
 
 	<div id="logoBoxContainer" style="cursor:default; width: 960px; margin: ${(showNewHKLink eq true && onNewUI eq true )? '15px' : '35px' } auto 7px;">
 
