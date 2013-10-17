@@ -55,7 +55,7 @@ Side effects include better joints, <br>
 vitality and energy.</h1>
 <span>Get upto 35% Discount, Hurry.</span>
 <div class="cl"></div>
-<div class="down-arrow">Scroll down for explore<br />
+<div class="down-arrow">Scroll down to explore<br />
 <img src="images/down-arrow.png" />
 </div>
 </div>
@@ -136,7 +136,7 @@ Serrata (Std.) </a></div>
 <!--- box03 start--->
 <div id="box03">
 <div class="wraper">
-<h2>bone muscle</h2>
+<h2>bone &amp; muscle</h2>
 <h3>Stronger bones, leaner muscles and a healthier you.</h3>
 
 
@@ -201,7 +201,7 @@ Isoflavones </a></div>
 <!--- box04 start--->
 <div id="box04">
 <div class="wraper">
-<h2>heart blood pressure</h2>
+<h2>heart &amp; blood pressure</h2>
 <h3>A healthier heart and peace of mind.</h3>
 
 <div class="row01">
@@ -338,7 +338,15 @@ Isoflavones </a></div>
 </div>
 <!--- product close--->
 
+  <div class="product"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-carb-shredder/NUT1698"><img src="images/NUT1698.png" alt="Vitamin Shoppe Carb Shredder " /></a><p class="box">It has korean Ginseng extract which is considered beneficial in helping with diabetes treatment</p></div>
+    <div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-carb-shredder/NUT1698">Vitamin Shoppe Carb <br> Shredder</a></div>
 
+    <div class="product-price"><span>Rs 2,399</span> Rs 1,799</div>
+
+    <div class="product-discount">25% OFF</div>
+    <a href="http://www.healthkart.com/product/vitamin-shoppe-carb-shredder/NUT1698"><img class="flot-r" src="images/buy-now.jpg" /></a>
+  </div>
+  <!--- product close--->
 
 
 
@@ -355,7 +363,7 @@ Isoflavones </a></div>
 <!--- box07 start--->
 <div id="box07">
 <div class="wraper">
-<h2>immunity-support</h2>
+<h2>immunity support</h2>
 <h3>Your body can take so much more if your immunity is up to it.</h3>
 
 <div class="row01">
@@ -389,13 +397,13 @@ Isoflavones </a></div>
 </div>
 <!--- product close--->
 
-<div class="product"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-vitamin-c-with-rose-hips/NUT1109"><img src="images/NUT1109.png" alt="Vitamin Shoppe Vitamin C With Rose Hips " /></a><p class="box">Helps in formation of collagen, maintaining healthy bones and blood vessels</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-vitamin-c-with-rose-hips/NUT1109">Vitamin Shoppe Vitamin C With Rose Hips </a></div>
+<div class="product"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-vitamin-c-with-rose-hips/NUT1109"><img src="images/NUT1109.png" alt="Vitamin Shoppe Vitamin C With Rose Hips " /></a><p class="box">Helps in formation of collagen, maintaining healthy bones and blood vessels</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-vitamin-c-with-rose-hips/NUT1109">Vitamin Shoppe Vitamin C With Rose Hips </a></div>
 
 <div class="product-price"><span>Rs 1,299</span> Rs 909</div>
 
 <div class="product-discount">30% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-vitamin-c-with-rose-hips/NUT1109"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-vitamin-c-with-rose-hips/NUT1109"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 </div>
@@ -422,13 +430,13 @@ Isoflavones </a></div>
 </div>
 <!--- product close--->
 
-<div class="product margin53"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-reishi-mushroom/NUT1088"><img src="images/NUT1088.png" alt="Vitamin Shoppe Reishi Mushroom" /></a><p class="box">Boosts your immune system against viral infections, asthma and bronchitis, high blood pressure, kidney and liver disease</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-reishi-mushroom/NUT1088">Vitamin Shoppe Reishi Mushroom</a></div>
+<div class="product margin53"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-reishi-mushroom/NUT1088"><img src="images/NUT1088.png" alt="Vitamin Shoppe Reishi Mushroom" /></a><p class="box">Boosts your immune system against viral infections, asthma and bronchitis, high blood pressure, kidney and liver disease</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-reishi-mushroom/NUT1088">Vitamin Shoppe Reishi Mushroom</a></div>
 
 <div class="product-price"><span>Rs 1,699</span> Rs 1,189</div>
 
 <div class="product-discount">30% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-reishi-mushroom/NUT1088"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-reishi-mushroom/NUT1088"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 
@@ -478,13 +486,13 @@ Isoflavones </a></div>
 </div>
 <!--- product close--->
 
-<div class="product margin53"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-vitamin-b-2-100mg-riboflavin/NUT1007"><img src="images/NUT1007.png" alt="Vitamin Shoppe Vitamin B-2 100mg (Riboflavin)" /></a><p class="box">Helps your body use up essential nutrients during exercises, use of birth-control pills and use of antibiotics</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-vitamin-b-2-100mg-riboflavin/NUT1007">Vitamin Shoppe Vitamin B-2 100mg (Riboflavin)</a></div>
+<div class="product margin53"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-vitamin-b-2-100mg-riboflavin/NUT1007"><img src="images/NUT1007.png" alt="Vitamin Shoppe Vitamin B-2 100mg (Riboflavin)" /></a><p class="box">Helps your body use up essential nutrients during exercises, use of birth-control pills and use of antibiotics</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-vitamin-b-2-100mg-riboflavin/NUT1007">Vitamin Shoppe Vitamin B-2 100mg (Riboflavin)</a></div>
 
 <div class="product-price"><span>Rs 1,199</span> Rs 839</div>
 
 <div class="product-discount">30% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-vitamin-b-2-100mg-riboflavin/NUT1007"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-vitamin-b-2-100mg-riboflavin/NUT1007"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 
@@ -526,13 +534,13 @@ Seven Pack</a></div>
 </div>
 <!--- product close--->
 
-<div class="product margin53"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-melatonin-sustained-release/NUT1122"><img src="images/NUT1122.png" alt="Vitamin Shoppe Melatonin (Sustained Release) " /></a><p class="box">Fights insomnia. Helps you sleep well and relaxed</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-melatonin-sustained-release/NUT1122">Vitamin Shoppe Melatonin (Sustained Release) </a></div>
+<div class="product margin53"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-melatonin-sustained-release/NUT1122"><img src="images/NUT1122.png" alt="Vitamin Shoppe Melatonin (Sustained Release) " /></a><p class="box">Fights insomnia. Helps you sleep well and relaxed</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-melatonin-sustained-release/NUT1122">Vitamin Shoppe Melatonin (Sustained Release) </a></div>
 
 <div class="product-price"><span>Rs 599</span> Rs 450</div>
 
 <div class="product-discount">25% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-melatonin-sustained-release/NUT1122"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-melatonin-sustained-release/NUT1122"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 
@@ -546,56 +554,56 @@ Seven Pack</a></div>
 </div>
 <!--- product close--->
 
-<div class="product"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-l-glutamine-4500mg/NUT1682"><img src="images/NUT1682.png" alt="Vitamin Shoppe L-Glutamine 4500Mg " /></a><p class="box">The amino acid acts as the building block of protein in your body. Glutamine is never enough for a healthy body</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-l-glutamine-4500mg/NUT1682">Vitamin Shoppe L-Glutamine 4500Mg </a></div>
+<div class="product"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-l-glutamine-4500mg/NUT1682"><img src="images/NUT1682.png" alt="Vitamin Shoppe L-Glutamine 4500Mg " /></a><p class="box">The amino acid acts as the building block of protein in your body. Glutamine is never enough for a healthy body</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-l-glutamine-4500mg/NUT1682">Vitamin Shoppe L-Glutamine 4500Mg </a></div>
 
 <div class="product-price"><span>Rs 999</span> Rs 750</div>
 
 <div class="product-discount">25% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-l-glutamine-4500mg/NUT1682"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-l-glutamine-4500mg/NUT1682"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 </div>
 
 <div class="row01">
-<div class="product margin53"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-paba-500mg/NUT1675"><img src="images/NUT1675.png" alt="Vitamin Shoppe Paba 500Mg " /></a><p class="box">Combats skin problems, infertility in women and, anemia. Keeps you and your hair healthy</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-paba-500mg/NUT1675">Vitamin Shoppe Paba <br>
+<div class="product margin53"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-paba-500mg/NUT1675"><img src="images/NUT1675.png" alt="Vitamin Shoppe Paba 500Mg " /></a><p class="box">Combats skin problems, infertility in women and, anemia. Keeps you and your hair healthy</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-paba-500mg/NUT1675">Vitamin Shoppe Paba <br>
   500Mg </a></div>
 
 <div class="product-price"><span>Rs 1,199</span> Rs 899</div>
 
 <div class="product-discount">25% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-paba-500mg/NUT1675"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-paba-500mg/NUT1675"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 
-<div class="product margin53"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-one-daily-without-iron/NUT1733"><img src="images/NUT1733.png" alt="Vitamin Shoppe One Daily Without Iron " /></a><p class="box">Fortifies you against Anemia by improving the haemoglobin in your blood cells</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-one-daily-without-iron/NUT1733">Vitamin Shoppe One Daily Without Iron </a></div>
+<div class="product margin53"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-one-daily-without-iron/NUT1733"><img src="images/NUT1733.png" alt="Vitamin Shoppe One Daily Without Iron " /></a><p class="box">Fortifies you against Anemia by improving the haemoglobin in your blood cells</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-one-daily-without-iron/NUT1733">Vitamin Shoppe One Daily Without Iron </a></div>
 
 <div class="product-price"><span>Rs 1,299</span> Rs 909</div>
 
 <div class="product-discount">30% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-one-daily-without-iron/NUT1733"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-one-daily-without-iron/NUT1733"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 
-<div class="product margin53"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-red-yeast-rice-1200-mg/NUT1705"><img src="images/NUT1705.png" alt="Vitamin Shoppe Red Yeast Rice 1200 mg " /></a><p class="box">Traditional remedy for lowering the cholesterol levels in your body. Fights obesity too</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-red-yeast-rice-1200-mg/NUT1705">Vitamin Shoppe Red Yeast Rice 1200 mg </a></div>
+<div class="product margin53"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-red-yeast-rice-1200-mg/NUT1705"><img src="images/NUT1705.png" alt="Vitamin Shoppe Red Yeast Rice 1200 mg " /></a><p class="box">Traditional remedy for lowering the cholesterol levels in your body. Fights obesity too</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-red-yeast-rice-1200-mg/NUT1705">Vitamin Shoppe Red Yeast Rice 1200 mg </a></div>
 
 <div class="product-price"><span>Rs 1,399</span> Rs 979</div>
 
 <div class="product-discount">30% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-red-yeast-rice-1200-mg/NUT1705"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-red-yeast-rice-1200-mg/NUT1705"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 
-<div class="product"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-liver-support-w-milk-thistle/NUT1066"><img src="images/NUT1066.png" alt="Vitamin Shoppe Liver Support W/Milk Thistle " /></a><p class="box">Helps in repair and regeneration of liver</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-liver-support-w-milk-thistle/NUT1066">Vitamin Shoppe Liver Support W/Milk Thistle </a></div>
+<div class="product"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-liver-support-w-milk-thistle/NUT1066"><img src="images/NUT1066.png" alt="Vitamin Shoppe Liver Support W/Milk Thistle " /></a><p class="box">Helps in repair and regeneration of liver</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-liver-support-w-milk-thistle/NUT1066">Vitamin Shoppe Liver Support W/Milk Thistle </a></div>
 
 <div class="product-price"><span>Rs 1,499</span> Rs 1,049</div>
 
 <div class="product-discount">30% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-liver-support-w-milk-thistle/NUT1066"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-liver-support-w-milk-thistle/NUT1066"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 </div>
@@ -612,13 +620,13 @@ Seven Pack</a></div>
 </div>
 <!--- product close--->
 
-<div class="product margin53"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-no-flush-niacin-500mg/NUT1056"><img src="images/NUT1056.png" alt="Vitamin Shoppe No Flush Niacin 500mg " /></a><p class="box">Helps in metabolism of fats and the maintenance of a glowing and healthy skin</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-no-flush-niacin-500mg/NUT1056">Vitamin Shoppe No Flush Niacin 500mg </a></div>
+<div class="product margin53"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-no-flush-niacin-500mg/NUT1056"><img src="images/NUT1056.png" alt="Vitamin Shoppe No Flush Niacin 500mg " /></a><p class="box">Helps in metabolism of fats and the maintenance of a glowing and healthy skin</p></div>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-no-flush-niacin-500mg/NUT1056">Vitamin Shoppe No Flush Niacin 500mg </a></div>
 
 <div class="product-price"><span>Rs 1,999</span> Rs 1,399</div>
 
 <div class="product-discount">30% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-no-flush-niacin-500mg/NUT1056"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-no-flush-niacin-500mg/NUT1056"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 
@@ -676,15 +684,15 @@ Pycnogenol</a></div>
 </div>
 <!--- product close--->
 
-<div class="product"><div class="outer"> <a href="www.healthkart.com/product/vitamin-shoppe-horny-goat-weed/NUT1108"><img src="images/NUT1108.png" alt="Vitamin Shoppe Horny Goat weed " /></a>
+<div class="product"><div class="outer"> <a href="http://www.healthkart.com/product/vitamin-shoppe-horny-goat-weed/NUT1108"><img src="images/NUT1108.png" alt="Vitamin Shoppe Horny Goat weed " /></a>
 <p class="box">Exactly what the name suggests, gives you the endurance of a mountain goat!</p></div>
-<div class="product-name"><a href="www.healthkart.com/product/vitamin-shoppe-horny-goat-weed/NUT1108">Vitamin Shoppe Horny Goat<br>
+<div class="product-name"><a href="http://www.healthkart.com/product/vitamin-shoppe-horny-goat-weed/NUT1108">Vitamin Shoppe Horny Goat<br>
   weed </a></div>
 
 <div class="product-price"><span>Rs 1,599</span> Rs 1,199</div>
 
 <div class="product-discount">25% OFF</div>
-<a href="www.healthkart.com/product/vitamin-shoppe-horny-goat-weed/NUT1108"><img class="flot-r" src="images/buy-now.jpg" /></a>
+<a href="http://www.healthkart.com/product/vitamin-shoppe-horny-goat-weed/NUT1108"><img class="flot-r" src="images/buy-now.jpg" /></a>
 </div>
 <!--- product close--->
 </div>

@@ -381,7 +381,7 @@ function _updateTotals(responseData) {
     <div class="lineItemRow product" style="border: 1px solid #ddd;border-width: 0px 0px 1px 0px;">
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-        <a href="${storeVariantBasic.url}"
+      <a href="${storeVariantBasic.url!=null?storeVariantBasic.url : cartLineItem.productVariant.product.productURL}"
            style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;border: 1px solid #ccc;padding: 3px;margin-left: 10px;">
 
           <c:choose>
@@ -406,7 +406,8 @@ function _updateTotals(responseData) {
 
         </a>
         <div class="name" style="word-wrap:break-word;width: 190px;position: relative;float: left;margin: 5px 5px 0 0;" :>
-            <a href="${storeVariantBasic.url}">
+            <a href="${storeVariantBasic.url!=null?storeVariantBasic.url : cartLineItem.productVariant.product.productURL}">
+
                 ${storeVariantBasic.name!=null?storeVariantBasic.name : cartLineItem.productVariant.product.name}
 
             </a>
@@ -1199,25 +1200,6 @@ function _updateTotals(responseData) {
 
 .offers-container.offers-displayed {
     background: white;
-}
-
-.offers-container .offers-label {
-    line-height: 1.6em;
-    display: inline-block;
-    border: 1px solid #c8c8c8;
-    padding-right: 28px;
-    z-index: 1;
-    background-image: url('../images/arrow-down.png');
-    background-repeat: no-repeat;
-    background-position: 97%;
-    font-weight: 600;
-
-}
-
-.offers-container.offers-displayed .offers-label {
-    background-color: white;
-    background-image: url('../images/arrow-up.png');
-    border-bottom-color: transparent;
 }
 
 .offers-container .offers-drop-down {

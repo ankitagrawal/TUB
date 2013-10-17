@@ -55,7 +55,7 @@
 
 <link href="<hk:vhostCss/>/css/newBeta.css?v=1.1" rel="stylesheet" type="text/css" />
 <link href="<hk:vhostCss/>/css/styleBeta.css" rel="stylesheet" type="text/css" />
-<link href="<hk:vhostCss/>/static/beta/css/960.24.css" rel="stylesheet" type="text/css" />
+<link href="<hk:vhostCss/>/static/ba/css/960.24.css" rel="stylesheet" type="text/css" />
 <!--[if IE 8]>
     <link href="<hk:vhostCss/>/css/ie8.css" rel="stylesheet" type="text/css" />
 <![endif]-->
