@@ -4262,7 +4262,7 @@ a.popup:hover {
     position: absolute;
     right: 10px;
     top: 10px;
-    background: url(images/ajax-loader.gif);
+    background: url('../images/ajax-loader.gif');
     width: 43px;
     height: 11px;
     text-indent: -9999em;
