@@ -23,7 +23,7 @@
 		</c:if>
 	</shiro:hasRole>
 
-	<div id="logoBoxContainer" style="cursor:default; width: 960px; margin: ${(showNewHKLink eq true && onNewUI eq true )? '15px' : '35px' } auto 7px;">
+	
 
     <div class='logoBox' style="float:left;">
       <s:link href="/" title='go to healthkart home'>
