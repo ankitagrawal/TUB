@@ -406,7 +406,7 @@ function _updateTotals(responseData) {
 
         </a>
         <div class="name" style="word-wrap:break-word;width: 190px;position: relative;float: left;margin: 5px 5px 0 0;" :>
-            <a href="${storeVariantBasic.url!=null?storeVariantBasic.url : cartLineItem.productVariant.product.productURL}"
+            <a href="${storeVariantBasic.url!=null?storeVariantBasic.url : cartLineItem.productVariant.product.productURL}">
 
                 ${storeVariantBasic.name!=null?storeVariantBasic.name : cartLineItem.productVariant.product.name}
 
