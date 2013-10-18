@@ -538,8 +538,8 @@ public class ReportManager {
         setCellValue(row, 24, ReportConstants.HEIGHT);
         setCellValue(row, 25, ReportConstants.PIECES);
         setCellValue(row, 26, ReportConstants.AREA_CUSTOMER_CODE);
-//        setCellValue(row, 27, ReportConstants.HAND_OVER_DATE);
-//        setCellValue(row, 28, ReportConstants.HAND_OVER_TIME);
+        setCellValue(row, 27, ReportConstants.HAND_OVER_DATE);
+        setCellValue(row, 28, ReportConstants.HAND_OVER_TIME);
         int rowCounter = 1;
         Page orderPage = null;
 
@@ -672,14 +672,16 @@ public class ReportManager {
             setCellValue(row, 23, breadth);
             setCellValue(row, 24, height);
             setCellValue(row, 25, "1");
-            if (shipment != null && shipment.getShipDate() != null) {
-                setCellValue(row,27, shipment.getShipDate().getDate());
-                setCellValue(row,28,shipment.getShipDate().getTime());
-            }
-            else{
-                setCellValue(row,27,"NA");
-                setCellValue(row,28,"NA");
-            }
+            setCellValue(row,27,"NA");
+            setCellValue(row,28,"NA");
+//            if (shipment != null && shipment.getShipDate() != null) {
+//                setCellValue(row,27, shipment.getShipDate().getDate());
+//                setCellValue(row,28,shipment.getShipDate().getTime());
+//            }
+//            else{
+//                setCellValue(row,27,"NA");
+//                setCellValue(row,28,"NA");
+//            }
 
         }
         wb.write(out);
