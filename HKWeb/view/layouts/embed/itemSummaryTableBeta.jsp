@@ -7,7 +7,7 @@
 Pass an attribute called pricingDto to render a table with pricing details
 --%>
 <%--<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>--%>
-<s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" var="orderSummary"/>
+<%--<s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" var="orderSummary"/>--%>
 <s:layout-definition>
 <%
     PricingDto pricingDto = (PricingDto) pageContext.getAttribute("pricingDto");
