@@ -538,8 +538,8 @@ public class ReportManager {
         setCellValue(row, 24, ReportConstants.HEIGHT);
         setCellValue(row, 25, ReportConstants.PIECES);
         setCellValue(row, 26, ReportConstants.AREA_CUSTOMER_CODE);
-        setCellValue(row, 27, ReportConstants.HAND_OVER_DATE);
-        setCellValue(row, 28, ReportConstants.HAND_OVER_TIME);
+//        setCellValue(row, 27, ReportConstants.HAND_OVER_DATE);
+//        setCellValue(row, 28, ReportConstants.HAND_OVER_TIME);
         int rowCounter = 1;
         Page orderPage = null;
 
