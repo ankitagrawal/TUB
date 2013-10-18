@@ -705,7 +705,9 @@ function _updateTotals(responseData) {
         <div style="width:48%;overflow:hidden;display:inline-block;float: right;margin-bottom: 10px;">
             <s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
                 <s:hidden name="order" value="${cartAction.order}"/>
-                <s:submit name="checkout" value="PLACE ORDER" class="btn btn-blue" style="font-family: 'Open Sans';font-size: 0.9em;"/>
+                <shiro:hasRole name="<%=RoleConstants.GOD%>">
+                	<s:submit name="checkout" value="PLACE ORDER" class="btn btn-blue" style="font-family: 'Open Sans';font-size: 0.9em;"/>
+                </shiro:hasRole>
             </s:form>
 
         </div>
