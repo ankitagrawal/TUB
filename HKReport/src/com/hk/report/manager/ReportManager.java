@@ -676,7 +676,7 @@ public class ReportManager {
 //            setCellValue(row,28,"NA");
             if (shipment != null && shipment.getShipDate() != null) {
                 setCellValue(row,27, shipment.getShipDate().getDate());
-                setCellValue(row,28,ReportConstants.HAND_OVER_TIME);
+                setCellValue(row,28,1650);
             }
             else{
                 setCellValue(row,27,"NA");
