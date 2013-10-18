@@ -763,6 +763,11 @@ public class Functions {
         return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
     }
 
+    public static String getDisplayNameForHkdeliveryTrackingRemarks(String remarks) {
+        CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
+        return courierStatusUpdateHelper.getHkDeliveryStatusRemarksForUser(remarks);
+    }
+
     public static Long getPoLineItemQty(GrnLineItem grnLineItem) {
         GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
         return grnLineItemService.getPoLineItemQty(grnLineItem);

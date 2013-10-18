@@ -59,4 +59,13 @@ public class HKDeliveryConstants {
     public static final String CUST_HOLD_WRONG_DELIVERY = "Customer Refuse - Wrong delivery";
 	public static final String CUST_HOLD_DELAY_DELIVERY = "Customer Refuse - Delay Delivery";
 	public static final String CUST_HOLD_NOT_INTERESTED = "Customer Refuse - Not interested";
+
+    public static final String CUST_HOLD_WRONG_ADDRESS_DISPLAY = "Customer address not complete";
+    public static final String CUST_HOLD_HOUSE_LOCKED_DISPLAY = "Customer house locked";
+    public static final String CUST_HOLD_UNCONTACTABLE_DISPLAY = "We were not able to contact you";
+    public static final String CUST_HOLD_PAYMENT_NOT_READY_DISPLAY = "Payment not ready";
+    public static final String CUST_HOLD_FUTURE_DELIVERY_DISPLAY = "You requested for a future delivery date";
+    public static final String CUST_HOLD_WRONG_DELIVERY_DISPLAY = "Customer Refuse - Wrong delivery";
+    public static final String CUST_HOLD_DELAY_DELIVERY_DISPLAY = "Customer Refuse - Delay Delivery";
+    public static final String CUST_HOLD_NOT_INTERESTED_DISPLAY = "Customer Refuse - Not interested";
 }
