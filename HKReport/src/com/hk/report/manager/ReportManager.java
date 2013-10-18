@@ -676,6 +676,10 @@ public class ReportManager {
                 setCellValue(row,27, shipment.getShipDate().getDate());
                 setCellValue(row,28,shipment.getShipDate().getTime());
             }
+            else{
+                setCellValue(row,27,"NA");
+                setCellValue(row,28,"NA");
+            }
 
         }
         wb.write(out);
