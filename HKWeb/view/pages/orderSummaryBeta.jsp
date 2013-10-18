@@ -76,7 +76,7 @@
 </s:layout-component>
 
 <s:layout-component name="steps_content">
-<s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" var="orderSummary"/>
 <%
   DecimalFormat df = new DecimalFormat("#.0");
   double redeemPoints = Double.valueOf(df.format(orderSummary.getRedeemableRewardPoints()));
