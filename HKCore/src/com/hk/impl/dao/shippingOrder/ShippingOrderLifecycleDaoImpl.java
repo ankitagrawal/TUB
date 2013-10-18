@@ -56,8 +56,8 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
     public String getAwbByShippingOrderLifeCycle(ShippingOrder shippingOrder) {
         Long shippingOrderId = shippingOrder.getId();
         String queryAwb = "select final.sol_awb as solcAwb from ( select shipping_order_id , left(substr(comments,locate('=''', comments)+2),length(substr(comments,locate('=''', comments)+2))-2) as sol_awb," +
-                "max(create_dt) FROM shipping_order_lifecycle where shipping_order_lifecycle_activity_id=" + EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.getId() +
-                " group by shipping_order_id  ) final where final.sol_awb REGEXP '^[A-Z,0-9]*[0-9]$' " +
+                "max(create_dt) FROM shipping_order_lifecycle where shipping_order_lifecycle_activity_id in(" + EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.getId() +","+EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY.getId()+
+                ") group by shipping_order_id  ) final where final.sol_awb REGEXP '^[A-Z,0-9]*[0-9]$' " +
                 "and final.sol_awb is not null and final.shipping_order_id =:shippingOrderId";
         SQLQuery query = this.createSqlQuery(queryAwb);
         query.addScalar("solcAwb", Hibernate.STRING);
