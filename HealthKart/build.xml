@@ -27,7 +27,7 @@
 		<ant dir="${project.report.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
-        <ant dir="${project.api.dir}" target="clean" inheritall="false"/>
+		<ant dir="${project.api.dir}" target="clean" inheritall="false" />
 
 		<!--
 		
@@ -47,20 +47,19 @@
 		<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.common.dir}/resources/${project.env}/spring" />
 		</copy>
-		<copy file="environmentLocator.properties"
-		          tofile="${project.dist.dir}/WEB-INF/classes/environmentLocator.properties"/>
+		<copy file="environmentLocator.properties" tofile="${project.dist.dir}/WEB-INF/classes/environmentLocator.properties" />
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_SERVER" value="${DB_SERVER}" />
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_PORT" value="${DB_PORT}" />
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_NAME" value="${DB_NAME}" />
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_USERID" value="${DB_USERID}" />
 		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_PASSWD" value="${DB_PASSWD}" />
 
-        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_SERVER" value="${DB_SERVER}" />
-        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_PORT" value="${DB_PORT}" />
-        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_NAME" value="${DB_NAME}" />
-        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_USERID" value="${DB_USERID}" />
-        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_PASSWD" value="${DB_PASSWD}" />
-        <replace file="${project.dist.dir}/WEB-INF/environment.properties" token="PROJECT_ENV" value="${project.env}" />
+		<replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_SERVER" value="${DB_SERVER}" />
+		<replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_PORT" value="${DB_PORT}" />
+		<replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_NAME" value="${DB_NAME}" />
+		<replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_USERID" value="${DB_USERID}" />
+		<replace file="${project.dist.dir}/WEB-INF/environment.properties" token="DB_PASSWD" value="${DB_PASSWD}" />
+		<replace file="${project.dist.dir}/WEB-INF/environment.properties" token="PROJECT_ENV" value="${project.env}" />
 
 		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/StripesResources.properties" />
@@ -155,28 +154,28 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-        <copy todir="${project.dist.dir}/WEB-INF/lib">
-            <fileset dir="${lib.icici.root}">
-                <include name="*.jar" />
-            </fileset>
-        </copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.icici.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/lib">
 			<fileset dir="${lib.xml.root}">
 				<include name="*.jar" />
 			</fileset>
 		</copy>
 
-        <copy todir="${project.dist.dir}/WEB-INF/lib">
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
 			<fileset dir="${lib.fedex.root}">
 				<include name="*.jar" />
 			</fileset>
 		</copy>
 
-        <copy todir="${project.dist.dir}/WEB-INF/lib">
-            <fileset dir="${lib.axis.root}">
-                <include name="*.jar" />
-            </fileset>
-        </copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.axis.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
 		<copy file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt" tofile="${project.dist.dir}/robots.txt" failonerror="false" overwrite="true" />
 	</target>
 
@@ -186,7 +185,7 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.core.dir}/dist/hk-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
-        <copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.api.dir}/dist/hk-api.jar" />
+		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.api.dir}/dist/hk-api.jar" />
 	</target>
 
 	<target name="collect-web" depends="compress">
@@ -238,9 +237,9 @@
 			<property name="build.env" value="${build.env}" />
 		</ant>
 
-        <ant dir="${project.api.dir}" target="build" inheritall="false">
-            <property name="build.env" value="${build.env}" />
-        </ant>
+		<ant dir="${project.api.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
 	</target>
 
 
@@ -255,12 +254,12 @@
 		<ant dir="${project.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.report.dir}" target="prepare" inheritall="false" />
-        <ant dir="${project.api.dir}" target="prepare" inheritall="false" />
+		<ant dir="${project.api.dir}" target="prepare" inheritall="false" />
 		<!--<ant dir="${project.web.dir}" target="prepare" inheritall="false" />-->
 		<tstamp />
 	</target>
 
-    <!-- YUI Compressor to Compress CSS and JS files -->
+	<!-- YUI Compressor to Compress CSS and JS files -->
 
 	<!-- defines temp output directory -->
 	<property name="temp.dir" value="temp" />
@@ -279,8 +278,8 @@
 	<taskdef name="yui-compressor" classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
 		<classpath refid="yui.classpath" />
 	</taskdef>
-    
-    <!-- targets -->
+
+	<!-- targets -->
 	<target name="concat">
 
 		<!-- concatenates all compressed JS files into one -->
@@ -295,23 +294,7 @@
 
 	</target>
 
-	<target name="compress-js">
 
-		<!-- compresses each JavaScript and CSS file -->
-		<!-- and saved as {original_name}-min.{extension} -->
-		<echo>${project.web.dir}/${project.minify.css.path}</echo>
-		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.js.path}" todir="${temp.dir}"/>
-
-	</target>
-
-	<target name="compress-css">
-
-		<!-- compresses each JavaScript and CSS file -->
-		<!-- and saved as {original_name}-min.{extension} -->
-		<echo>${project.web.dir}/${project.minify.css.path}</echo>
-		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.css.path}" todir="${temp.dir}" />
-
-	</target>
 
 	<!-- deletes the temporary directory and all its contents -->
 	<target name="temp-clean">
@@ -325,6 +308,65 @@
 		<delete file="${final_css}" />
 	</target>
 
-	<target name="compress" depends="comp-start,compress-js,compress-css,concat,temp-clean" />
+	<target name="compress" depends="comp-start,compress-js-css,concat,temp-clean" />
+	<target name="compress-js-css" depends="compress-js,compress-css" />
+
+	<!-- compresses each JavaScript and CSS file -->
+	<!-- and saved as {original_name}-min.{extension} -->
+	<target name="compress-js" depends="-compress.init, -prod, -beta_prod,-beta_stage,-else" />
+
+	<!-- compresses each JavaScript and CSS file -->
+	<!-- and saved as {original_name}-min.{extension} -->
+	<target name="compress-css" depends="-compress.init, -prod, -beta_prod,-beta_stage,-else" />
+
+	<target name="-compress.init">
+		<condition property="do.prod">
+			<equals arg1="${project.env}" arg2="prod" />
+		</condition>
+		<condition property="do.beta_prod">
+			<equals arg1="${project.env}" arg2="beta_prod" />
+		</condition>
+		<condition property="do.beta_stage">
+			<equals arg1="${project.env}" arg2="beta_stage" />
+		</condition>
+		<condition property="do.else">
+			<not>
+				<or>
+					<equals arg1="${project.env}" arg2="beta_prod" />
+					<equals arg1="${project.env}" arg2="prod" />
+					<equals arg1="${project.env}" arg2="beta_stage" />
+				</or>
+			</not>
+		</condition>
+	</target>
+
+	<target name="-beta_prod" if="do.beta_prod">
+		<echo>${project.web.dir}/${project.minify.js.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.js.path}" todir="${temp.dir}" />
+		<echo>${project.web.dir}/${project.minify.css.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.css.path}" todir="${temp.dir}" />
+	</target>
+
+	<target name="-prod" if="do.prod">
+		<echo>${project.web.dir}/${project.minify.js.old.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.js.old.path}" todir="${temp.dir}" />
+		<echo>${project.web.dir}/${project.minify.css.old.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.css.old.path}" todir="${temp.dir}" />
+	</target>
+
+	<target name="-beta_stage" if="do.beta_stage">
+		<echo>${project.web.dir}/${project.minify.js.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.js.path}" todir="${temp.dir}" />
+		<echo>${project.web.dir}/${project.minify.css.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.css.path}" todir="${temp.dir}" />
+	</target>
+
+	<target name="-else" if="do.else">
+		<echo>${project.web.dir}/${project.minify.js.old.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.js.old.path}" todir="${temp.dir}" />
+		<echo>${project.web.dir}/${project.minify.css.old.path}</echo>
+		<yui-compressor warn="false" munge="true" preserveallsemicolons="false" fromdir="${project.web.dir}/${project.minify.css.old.path}" todir="${temp.dir}" />
+	</target>
+
 
 </project>
