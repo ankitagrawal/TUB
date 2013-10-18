@@ -129,7 +129,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
         /*check at least one of rp is checkedIn*/
         boolean validCheckin = false;
         for (RpLineItem rpLineItem : reversePickupOrderFromDb.getRpLineItems()) {
-            if (!rpLineItem.getWarehouseReceivedCondition().equals(null) && !rpLineItem.getWarehouseReceivedCondition().equals("")) {
+            if (rpLineItem.getWarehouseReceivedCondition() != null) {
                 validCheckin = true;
                 break;
             }
