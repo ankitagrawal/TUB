@@ -51,6 +51,8 @@ public class EmailServiceImpl implements EmailService {
     private String hkLogo;
     @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
     private boolean hybridRelease;
+    @Value("#{hkEnvProps['" + Keys.Env.FOOTER_LOGO_PATH + "']}")
+    private String footerLogo;
     /* private ExecutorService emailExecutorService = Executors.newFixedThreadPool(EMAIL_THREAD_POOL_COUNT); */
 
     /*
@@ -140,6 +142,7 @@ public class EmailServiceImpl implements EmailService {
         if (isHybridRelease()) {
             Map values = (HashMap) templateValues;
             values.put("hkLogo", hkLogo);
+            values.put("footerLogo", footerLogo);
             templateValues = values;
         }
         Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
