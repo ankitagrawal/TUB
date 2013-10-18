@@ -538,6 +538,8 @@ public class ReportManager {
         setCellValue(row, 24, ReportConstants.HEIGHT);
         setCellValue(row, 25, ReportConstants.PIECES);
         setCellValue(row, 26, ReportConstants.AREA_CUSTOMER_CODE);
+        setCellValue(row, 27, ReportConstants.HAND_OVER_DATE);
+        setCellValue(row, 28, ReportConstants.HAND_OVER_TIME);
         int rowCounter = 1;
         Page orderPage = null;
 
@@ -567,21 +569,33 @@ public class ReportManager {
             if (shipment != null && shipment.getAwb() != null) {
                 setCellValue(row, 0, shipment.getAwb().getAwbNumber());
             }
+
             if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
                 setCellValue(row, 1, "COD");
                 setCellValue(row, 15, order.getAmount());
                 if (warehouse.getId().equals(WarehouseService.GGN_BRIGHT_WH_ID)) {
-                    setCellValue(row, 16, ReportConstants.Ggn_Cod_Vendor_Code);
+                    setCellValue(row, 26, ReportConstants.Ggn_Cod_Area_Customer_Code);
+                    setCellValue(row,16,ReportConstants.Ggn_Vendor_Code);
                 } else if (warehouse.getId().equals(WarehouseService.MUM_BRIGHT_WH_ID)) {
-                    setCellValue(row, 16, ReportConstants.Mumbai_Cod_Vendor_Code);
+                    setCellValue(row, 26, ReportConstants.Mumbai_Cod_Area_Customer_Code);
+                    setCellValue(row,16,ReportConstants.Mumbai_Vendor_Code);
+                }else if (warehouse.getId().equals(WarehouseService.DEL_KAPASHERA_BRIGHT_WH_ID)) {
+                    setCellValue(row, 26, ReportConstants.Delhi_Kapp_Cod_Area_Customer_Code);
+                    setCellValue(row,16,ReportConstants.Delhi_Kapp_Vendor_Code);
                 }
+
             } else {
                 setCellValue(row, 15, 0.0);
                 setCellValue(row, 1, "Non-COD");
                 if (warehouse.getId().equals(WarehouseService.GGN_BRIGHT_WH_ID)) {
-                    setCellValue(row, 16, ReportConstants.Ggn_Prepaid_Vendor_Code);
+                    setCellValue(row, 26, ReportConstants.Ggn_Prepaid_Area_Customer_Code);
+                    setCellValue(row,16,ReportConstants.Ggn_Vendor_Code);
                 } else if (warehouse.getId().equals(WarehouseService.MUM_BRIGHT_WH_ID)) {
-                    setCellValue(row, 16, ReportConstants.Mumbai_Prepaid_Vendor_Code);
+                    setCellValue(row, 26, ReportConstants.Mumbai_Prepaid_Area_Customer_Code);
+                    setCellValue(row,16,ReportConstants.Mumbai_Vendor_Code);
+                } else if(warehouse.getId().equals(WarehouseService.DEL_KAPASHERA_BRIGHT_WH_ID)){
+                    setCellValue(row,26,ReportConstants.Delhi_Kapp_Prepaid_Area_Customer_Code);
+                    setCellValue(row,16,ReportConstants.Delhi_Kapp_Vendor_Code);
                 }
 
             }
@@ -658,8 +672,10 @@ public class ReportManager {
             setCellValue(row, 23, breadth);
             setCellValue(row, 24, height);
             setCellValue(row, 25, "1");
-            setCellValue(row, 26, "NA");
-
+            if (shipment != null && shipment.getShipDate() != null) {
+                setCellValue(row,27, shipment.getShipDate().getDate());
+                setCellValue(row,28,shipment.getShipDate().getTime());
+            }
 
         }
         wb.write(out);

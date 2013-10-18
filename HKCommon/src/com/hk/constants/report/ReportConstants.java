@@ -92,7 +92,7 @@ public class ReportConstants {
     public static final String CONSIGNEE_PINCODE = "CONSIGNEE PINCODE";
     public static final String CONSIGNEE_PHONE_NUMBER = "CONSIGNEE PHONE NUMBER";
     public static final String CONSIGNEE_MOBILE = "CONSIGNEE MOBILE";
-    public static final String PRODUCT = "PRODUCT";
+    public static final String PRODUCT = "PRODUCT /SKU CODE";
     public static final String WEIGHT = "WEIGHT";
     public static final String PIECE = "PIECE";
     public static final String DECLARED_VALUE = "DECLARED_VALUE";
@@ -173,7 +173,7 @@ public class ReportConstants {
     public static final String BARCODE = "BARCODE";
     public static final String TYPE = "TYPE";
     public static final String AIR_WAY_BILL = "AIR WAY BILL";
-    public static final String SENDER  = "SENDER";
+    public static final String SENDER  = "SENDER/ STORE_NUMBER";
     public static final String REFERENCE_NUMBER = "REFERENCE NUMBER";
     public static final String ATTENTION = "ATTENTION";
     public static final String ADDRESS_1 = "ADDRESS1";
@@ -195,8 +195,15 @@ public class ReportConstants {
     public static final String HEIGHT = "HEIGHT(Cms)";
     public static final String PIECES = "PIECES";
     public static final String AREA_CUSTOMER_CODE = "AREA CUSTOMER CODE";
-    public static final String Ggn_Cod_Vendor_Code = "373925";
-    public static final String Ggn_Prepaid_Vendor_Code = "373914";
-    public static final String Mumbai_Cod_Vendor_Code = "608322";
-    public static final String Mumbai_Prepaid_Vendor_Code = "608333";
+    public static final String Ggn_Cod_Area_Customer_Code = "GGN373925";
+    public static final String Ggn_Prepaid_Area_Customer_Code = "GGN373914";
+    public static final String Mumbai_Cod_Area_Customer_Code = "BOM608322";
+    public static final String Mumbai_Prepaid_Area_Customer_Code = "BOM608333";
+    public static final String Delhi_Kapp_Cod_Area_Customer_Code = "DEL247435";
+    public static final String Delhi_Kapp_Prepaid_Area_Customer_Code = "DEL247446";
+    public static final String Ggn_Vendor_Code = "GGNWHE";
+    public static final String Mumbai_Vendor_Code = "BOMWHE";
+    public static final String Delhi_Kapp_Vendor_Code = "DELWHE";
+    public static final String HAND_OVER_DATE = "HANDOVER DATE";
+    public static final String HAND_OVER_TIME= "HAND OVER TIME";
 }
