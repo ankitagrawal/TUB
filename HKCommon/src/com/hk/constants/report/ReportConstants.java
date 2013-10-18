@@ -205,5 +205,5 @@ public class ReportConstants {
     public static final String Mumbai_Vendor_Code = "BOMWHE";
     public static final String Delhi_Kapp_Vendor_Code = "DELWHE";
     public static final String HAND_OVER_DATE = "HANDOVER DATE";
-    public static final String HAND_OVER_TIME= "HAND OVER TIME";
+    public static final String HAND_OVER_TIME= "1650";
 }
