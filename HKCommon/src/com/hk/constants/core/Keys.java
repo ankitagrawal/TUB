@@ -145,6 +145,7 @@ public class Keys {
 
         public static final String fedExAccountNoMUM               = "fedExAccountNoMUM";
         public static final String HK_LOGO_PATH                    = "hkLogoPath";
+        public static final String FOOTER_LOGO_PATH                = "footerLogo";
         public static final String USER_EMAIL_LINK_TO_BETA         = "userEmailLinkToBeta";
 
     }

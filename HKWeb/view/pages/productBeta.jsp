@@ -98,7 +98,7 @@
 		}
 	</style>
 
-	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
+	<link href="<hk:vhostCss/>/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jcarousel.min.js"></script>
 

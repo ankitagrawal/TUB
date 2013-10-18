@@ -29,7 +29,7 @@
 </tr>
 <tr>
     <td colspan="2" valign="top" align="center" style="padding-top: 10px;"><img
-            src="http://catalog.healthkart.com:8080/beta/assets/images/all-heart.jpg"
+            src="${footerLogo}"
             border="0"
             alt="ESTD 2011 ALL HEART"></td>
 </tr>
