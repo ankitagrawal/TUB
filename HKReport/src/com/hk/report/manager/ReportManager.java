@@ -504,7 +504,7 @@ public class ReportManager {
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 30);
 
-        int totalColumnNo = 27;
+        int totalColumnNo = 29;
 
         Cell cell;
         for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
@@ -672,16 +672,16 @@ public class ReportManager {
             setCellValue(row, 23, breadth);
             setCellValue(row, 24, height);
             setCellValue(row, 25, "1");
-            setCellValue(row,27,"NA");
-            setCellValue(row,28,"NA");
-//            if (shipment != null && shipment.getShipDate() != null) {
-//                setCellValue(row,27, shipment.getShipDate().getDate());
-//                setCellValue(row,28,shipment.getShipDate().getTime());
-//            }
-//            else{
-//                setCellValue(row,27,"NA");
-//                setCellValue(row,28,"NA");
-//            }
+//            setCellValue(row,27,"NA");
+//            setCellValue(row,28,"NA");
+            if (shipment != null && shipment.getShipDate() != null) {
+                setCellValue(row,27, shipment.getShipDate().getDate());
+                setCellValue(row,28,shipment.getShipDate().getTime());
+            }
+            else{
+                setCellValue(row,27,"NA");
+                setCellValue(row,28,"NA");
+            }
 
         }
         wb.write(out);
