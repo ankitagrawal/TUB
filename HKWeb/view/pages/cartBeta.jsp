@@ -985,6 +985,7 @@ function _updateTotals(responseData) {
                                 <c:otherwise>
 
                                   <c:choose>
+                                    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
                                     <c:when test="${storeVariantBasic.primaryImage.mlink!=null}">
                                       <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"
                                            alt="${storeVariantBasic.name!=null?storeVariantBasic.name : cartLineItem.productVariant.product.name}"/>
