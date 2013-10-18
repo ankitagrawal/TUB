@@ -93,4 +93,13 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
   	return (List<Warehouse>)getSession().createQuery(sql).setParameter("tin", tin).list();
   }
 
+
+  public Warehouse getWarehouse(String fulfilmentCenterCode){
+    DetachedCriteria criteria = DetachedCriteria.forClass(Warehouse.class);
+    criteria.add(Restrictions.eq("fulfilmentCenterCode", fulfilmentCenterCode));
+    List<Warehouse> whs = findByCriteria(criteria);
+    return whs != null && !whs.isEmpty() ? whs.get(0) : null;
+
+  }
+
 }

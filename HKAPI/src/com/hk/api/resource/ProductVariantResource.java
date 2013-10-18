@@ -137,9 +137,9 @@ public class ProductVariantResource {
 
 
     @GET
-    @Path("/skuInfo/{variantId}/{tinPrefix}")
+    @Path("/skuInfo/{variantId}/{fcCode}")
     @Produces("application/json")
-    public String getSKUInfo(@PathParam("variantId") String variantId, @PathParam("tinPrefix") String tinPrefix) {
+    public String getSKUInfo(@PathParam("variantId") String variantId, @PathParam("fcCode") String fcCode) {
         if (StringUtils.isBlank(variantId)) {
             return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
         }
@@ -150,8 +150,8 @@ public class ProductVariantResource {
             return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant does not exist").build();
         }
 
-        List<Warehouse> whList = getWarehouseService().findWarehouses(tinPrefix);
-        Sku aquaSku = getSkuService().getSKU(productVariant,whList.get(0)) ;
+        Warehouse warehouse = getWarehouseService().getWarehouse(fcCode);
+        Sku aquaSku = getSkuService().getSKU(productVariant,warehouse) ;
 
         return new JSONResponseBuilder().addField("variantId", variantId).addField("warehouseId", aquaSku.getId()).build();
 

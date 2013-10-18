@@ -712,11 +712,8 @@ public class OrderServiceImpl implements OrderService {
                 logger.debug("Update booking on Bright after splitting");
                 Long   warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
                 Warehouse warehouse = warehouseService.getWarehouseById(warehousIdForAqua);
-                List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(warehouse.getTinPrefix());
-                warehouses.remove(lineItem.getSku().getWarehouse());
-                Long  warehouseIdForBright = warehouses.get(0).getId();
 
-                List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem,warehouseIdForBright);
+                List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem,warehouse.getFulfilmentCenterCode());
                 List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
                 skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
 
@@ -787,7 +784,7 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 	}
 
-	public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, Long warehouseId) {
+  public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, String  fulfilmentCenterCode) {
     logger.debug(" Going to book inventory at Bright for lineItem --" + lineItem.getId());
     List<HKAPIForeignBookingResponseInfo> infos = null;
     List<HKAPIForeignBookingResponseInfo> infos1 = new ArrayList<HKAPIForeignBookingResponseInfo>();
@@ -797,11 +794,12 @@ public class OrderServiceImpl implements OrderService {
         HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
         hkapiBookingInfo.setMrp(lineItem.getSku().getProductVariant().getMarkedPrice());
         hkapiBookingInfo.setPvId(lineItem.getSku().getProductVariant().getId());
-        hkapiBookingInfo.setWhId(warehouseId);
+       // hkapiBookingInfo.setWhId(warehouseId);
         hkapiBookingInfo.setSoId(lineItem.getShippingOrder().getId());
         hkapiBookingInfo.setBoId(lineItem.getCartLineItem().getId());
         hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
         hkapiBookingInfo.setFsiCLIId(foreignSkuItemCLI.getId());
+        hkapiBookingInfo.setFcCode(fulfilmentCenterCode);
 
         Gson gson = new Gson();
         String json = gson.toJson(Arrays.asList(hkapiBookingInfo));

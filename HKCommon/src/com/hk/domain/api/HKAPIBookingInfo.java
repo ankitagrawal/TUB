@@ -19,6 +19,7 @@ public class HKAPIBookingInfo {
   private String boDate;
   private Long unitNum;
   private Long fsiCLIId;
+  private String fcCode;
 
   public Double getMrp() {
     return mrp;
@@ -98,5 +99,13 @@ public class HKAPIBookingInfo {
 
   public void setBoDate(String boDate) {
     this.boDate = boDate;
+  }
+
+  public String getFcCode() {
+    return fcCode;
+  }
+
+  public void setFcCode(String fcCode) {
+    this.fcCode = fcCode;
   }
 }

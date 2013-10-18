@@ -18,6 +18,7 @@ public class HKApiSkuResponse {
     Double hkPrice;
     boolean outOfStock;
     Long netQty;
+    String fcCode;
 
     public String getVariantId() {
         return variantId;
@@ -91,4 +92,12 @@ public class HKApiSkuResponse {
     public void setCostPrice(Double costPrice) {
         this.costPrice = costPrice;
     }
+
+    public String getFcCode() {
+     return fcCode;
+    }
+
+    public void setFcCode(String fcCode) {
+     this.fcCode = fcCode;
+   }
 }

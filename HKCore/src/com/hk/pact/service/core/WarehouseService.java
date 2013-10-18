@@ -68,4 +68,6 @@ public interface WarehouseService {
 
   public Warehouse getAquaDefaultWarehouse();
 
+  public Warehouse getWarehouse(String fulfilmentCenterCode);
+
 }

@@ -38,13 +38,13 @@ public interface InventoryHealthService {
 
   public Map<String,Long> getInventoryCountOfAB (CartLineItem cartLineItem, Warehouse targetWarehouse);
 
-  public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem,Long warehouseId);
+  public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem,String fulfilmentCenterCode);
 
   public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId);
 
   public void populateSICLI(CartLineItem cartLineItem);
 
-  public void createSicliAndSiliAndTempBookingForBright(CartLineItem cartLineItem, Long warehouseIdForBright);
+  public void createSicliAndSiliAndTempBookingForBright(CartLineItem cartLineItem, String fulfilmentCenterCode);
 
  public Boolean bookInventoryForReplacementOrder(LineItem lineItem);
 

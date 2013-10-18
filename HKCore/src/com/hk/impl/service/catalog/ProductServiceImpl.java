@@ -20,6 +20,7 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.review.ReviewService;
@@ -75,6 +76,9 @@ public class ProductServiceImpl implements ProductService {
 
     // @Autowired
     private UserService               userService;
+  
+     @Autowired
+   private WarehouseService         warehouseService;
 
     private static Logger             logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
@@ -757,7 +761,8 @@ public class ProductServiceImpl implements ProductService {
             productVariant.setMrpQty(hKApiSkuResponse.getQty());
             productVariant.setNetQty(hKApiSkuResponse.getNetQty());
             productVariant.setHkPrice(hKApiSkuResponse.getHkPrice());
-            Warehouse warehouse = baseDao.get(Warehouse.class, hKApiSkuResponse.getWarehouseId());
+            Warehouse warehouse = warehouseService.getWarehouse(hKApiSkuResponse.getFcCode());
+//            Warehouse warehouse = baseDao.get(Warehouse.class, hKApiSkuResponse.getWarehouseId());
             productVariant.setWarehouse(warehouse);
             productVariant = (ProductVariant) baseDao.save(productVariant);
             Product product = productVariant.getProduct();

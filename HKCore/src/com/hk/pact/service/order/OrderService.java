@@ -86,7 +86,7 @@ public interface OrderService {
 
   public  boolean bookedOnBright(CartLineItem cartLineItem);
 
-  public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, Long warehouseId);
+  public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, String  fulfilmentCenterCode);
 
 }
 

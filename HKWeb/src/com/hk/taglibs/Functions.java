@@ -341,8 +341,7 @@ public class Functions {
     InventoryHealthService inventoryHealthService = ServiceLocatorFactory.getService(InventoryHealthService.class);
     if (o instanceof Sku) {
       Sku sku = (Sku) o;
-      String tinPrefix = sku.getWarehouse().getTinPrefix();
-      Long unbookedBrtQty = inventoryHealthService.getUnbookedInventoryOfBrightForMrp(sku.getProductVariant(),tinPrefix,null);
+      Long unbookedBrtQty = inventoryHealthService.getUnbookedInventoryOfBrightForMrp(sku.getProductVariant(),sku.getWarehouse().getFulfilmentCenterCode(),null);
       return unbookedBrtQty;
     } else {
 

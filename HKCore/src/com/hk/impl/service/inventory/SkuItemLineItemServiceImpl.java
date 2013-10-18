@@ -308,9 +308,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   public boolean isWarehouseBeFlippable(ShippingOrder shippingOrder, Warehouse targetWarehouse) {
     SkuItemLineItemService skuItemLineItemService = ServiceLocatorFactory.getService(SkuItemLineItemService.class);
 
-    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(targetWarehouse.getTinPrefix());
-    warehouses.remove(targetWarehouse);
-    Long warehouseIdForBright = warehouses.get(0).getId();
+//    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(targetWarehouse.getTinPrefix());
+//    warehouses.remove(targetWarehouse);
+//    Long warehouseIdForBright = warehouses.get(0).getId();
     for (LineItem lineItem : shippingOrder.getLineItems()) {
 
       CartLineItem cartLineItem = lineItem.getCartLineItem();
@@ -327,7 +327,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 //        createNewSkuItemLineItem(lineItem);
          createNewSkuItemLineItemForFlipping(cartLineItem);
       } else if (invMap.get("brtInventory") >= lineItem.getQty()) {
-        getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(lineItem.getCartLineItem(), warehouseIdForBright);
+        getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(lineItem.getCartLineItem(), targetWarehouse.getFulfilmentCenterCode());
 
       } else if (!productType) {
         return false;
@@ -551,10 +551,8 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     List<Sku> skuList = Arrays.asList(item.getSku());
     Warehouse aquaWarehouse = item.getSku().getWarehouse();
     String tinPrefix = aquaWarehouse.getTinPrefix();
-    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
-    warehouses.remove(aquaWarehouse);
     Long warehousIdForAqua = aquaWarehouse.getId();
-    Long wareHouseIdForBright = warehouses.get(0).getId();
+
     List<Long> skuStatusIdList = Arrays.asList(EnumSkuItemStatus.Checked_IN.getId());
     List<Long> skuItemOwnerList = Arrays.asList(EnumSkuItemOwner.SELF.getId());
     List<SkuItemLineItem> skuItemLineItems = item.getSkuItemLineItems();
@@ -602,7 +600,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         }
         if (incorrectMrpItem) {
           freeBookingInventoryAtBright(cartLineItem);
-          getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(cartLineItem, wareHouseIdForBright);
+          getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(cartLineItem, aquaWarehouse.getFulfilmentCenterCode());
         }
       } else {
         return false;
@@ -1044,9 +1042,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
     Warehouse aquaWarehouse = item.getSku().getWarehouse();
     String tinPrefix = aquaWarehouse.getTinPrefix();
-    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
-    warehouses.remove(aquaWarehouse);
-    Long wareHouseIdForBright = warehouses.get(0).getId();
+//    List<Warehouse> warehouses = warehouseService.findWarehousesByPrefix(tinPrefix);
+//    warehouses.remove(aquaWarehouse);
+//    Long wareHouseIdForBright = warehouses.get(0).getId();
 
     Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(cartLineItem, null);
     Long aquaInventoryCount = invMap.get("aquaInventory");
@@ -1094,7 +1092,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
         }
         if (incorrectMrp) {
           freeBookingInventoryAtAqua(cartLineItem);
-          getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(cartLineItem, wareHouseIdForBright);
+          getInventoryHealthService().createSicliAndSiliAndTempBookingForBright(cartLineItem, aquaWarehouse.getFulfilmentCenterCode());
         }
       } else {
         return false;
