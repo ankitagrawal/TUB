@@ -80,6 +80,9 @@ public class Warehouse implements java.io.Serializable {
   @Column(name = "active", nullable = false)
   private boolean active;
 
+  @Column(name="fulfilment_center_code")
+  private String fulfilmentCenterCode;
+
 
   @Override
   public boolean equals(Object o) {
@@ -242,6 +245,13 @@ public class Warehouse implements java.io.Serializable {
     return tin != null && tin.length() > 2 ? tin.substring(0,2) : null;
   }
 
+  public String getFulfilmentCenterCode() {
+    return fulfilmentCenterCode;
+  }
+
+  public void setFulfilmentCenterCode(String fulfilmentCenterCode) {
+    this.fulfilmentCenterCode = fulfilmentCenterCode;
+  }
 }
 
 
