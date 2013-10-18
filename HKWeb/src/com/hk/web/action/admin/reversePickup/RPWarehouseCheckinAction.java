@@ -128,12 +128,17 @@ public class RPWarehouseCheckinAction extends BaseAction {
         ReversePickupOrder reversePickupOrderFromDb = reversePickupService.getByReversePickupId(reversePickupId);
         /*check at least one of rp is checkedIn*/
         boolean validCheckin = false;
+        int count=0;
         for (RpLineItem rpLineItem : reversePickupOrderFromDb.getRpLineItems()) {
-            if (rpLineItem.getWarehouseReceivedCondition() != null) {
+            if (rpLineItem.getWarehouseReceivedCondition().getId() != null) {
                 validCheckin = true;
                 break;
             }
         }
+//        if(count ==0){
+//            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
+//                    .addParameter("errorMessage", "Kindly save atleast one row");
+//        }
         if (!validCheckin) {
             return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
                     .addParameter("errorMessage", "Select and Save  at least one Row");
