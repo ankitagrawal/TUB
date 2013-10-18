@@ -117,7 +117,7 @@ public class SkuGroupServiceImpl implements SkuGroupService {
   public List<SkuItem> getCheckedInSkuItems(Sku sku) {
     return skuItemDao.getSkuItems(Arrays.asList(sku),
         EnumSkuItemStatus.getCheckedInPlusBookedStatus(),
-        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null);
+        Arrays.asList(EnumSkuItemOwner.SELF.getId()), null, false);
   }
 
   public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn) {
@@ -125,7 +125,7 @@ public class SkuGroupServiceImpl implements SkuGroupService {
   }
 
   public List<SkuItem> getSkuItems(List<Sku> skuList, List<Long> statusIds, List<Long> skuItemOwners, Double mrp) {
-    return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners, mrp);
+    return skuItemDao.getSkuItems(skuList, statusIds, skuItemOwners, mrp, false);
   }
 
 }
