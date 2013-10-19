@@ -3,6 +3,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="org.joda.time.DateTimeFieldType" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -12,7 +13,18 @@
     <c:set var="topCategoryUrl" value="/${topCategory}"/>
     <c:set var="allCategories" value="${allCategories}"/>
  <div class="clear"></div>
-  <div id="logoBoxContainer" style="cursor:default; width: 960px; margin: 35px auto 7px;">
+ 	<c:set var="onNewUI" value="false"/>
+	<shiro:hasRole name="<%=RoleConstants.GOD%>">
+	<c:set var="onNewUI" value="true"/>
+		<c:if test="${showNewHKLink eq true}">
+			<div style="width: 960px; margin: 30px auto 0;"><a
+				href="http://beta.healthkart.com" title="go to new website" target="_blank"> <img
+				src="<hk:vhostImage/>/images/old-site-strip.png" width="960"
+				height="25" alt="go to new website" /> </a></div>
+		</c:if>
+	</shiro:hasRole>
+
+	<div id="logoBoxContainer" style="cursor:default; width: 960px; margin: ${(showNewHKLink eq true && onNewUI eq true )? '15px' : '35px' } auto 7px;">
 
     <div class='logoBox' style="float:left;">
       <s:link href="/" title='go to healthkart home'>
@@ -44,11 +56,11 @@
   </script>
 
 	<%
-     // Custom code to check offer/message validity
-    Date startDate = new Date(new DateTime(2013, 10, 01, 19, 59, 59, 59).getMillis());
-    Date endDate = new Date(new DateTime(2013, 10, 02, 23, 59, 59, 59).getMillis());
-    boolean isValid = startDate.before(new Date()) && endDate.after(new Date());
-		if (isValid) {
+	    // Custom code to check offer/message validity
+	    Date startDate = new Date(new DateTime(2013, 10, 01, 19, 59, 59, 59).getMillis());
+	    Date endDate = new Date(new DateTime(2013, 10, 02, 23, 59, 59, 59).getMillis());
+	    boolean isValid = startDate.before(new Date()) && endDate.after(new Date());
+	    if (isValid) {
 	%>
     <div class="siteNotice" style="width:960px; margin-left:auto; margin-right:auto;">
         <%--<div style="height: 44px; padding-top: 6px; font-size: 1em; color: black; background-color: white; border: solid 4px #4484c4;">
@@ -63,7 +75,7 @@
            <strong>Customer support will be unavailable on 2nd October 2013</strong>
         </div>
 	<%
-		}
+	    }
 	%>
 
     <div class='menuBar' id="top">
