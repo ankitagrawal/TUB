@@ -35,4 +35,16 @@ public class VariantPricingSyncRequest {
         this.discount = discount;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(oldVariantId).append(oldVariantId).append(":").append(offerPrice).append(":").append(discount);
+        
+        return strBuilder.toString();
+    
+    }
+    
+    
+    
+
 }

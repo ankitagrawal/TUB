@@ -114,7 +114,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     @Override
     @Transactional
     public void syncPricingFromEdge(VariantPricingSyncRequest variantPricingSyncRequest) {
-        logger.error("variant pricing sync request recived for " + variantPricingSyncRequest.getOldVariantId());
+        logger.error("variant pricing sync request recived for " + variantPricingSyncRequest.toString() );
         ProductVariant productVariant = getProductVariantService().getVariantById(variantPricingSyncRequest.getOldVariantId());
 
         if (productVariant != null) {
@@ -122,7 +122,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             productVariant.setDiscountPercent(variantPricingSyncRequest.getDiscount());
             getBaseDao().save(productVariant);
         }
-        logger.error("variant pricing sync request completed for " + variantPricingSyncRequest.getOldVariantId());
+        logger.error("variant pricing sync request completed for " + variantPricingSyncRequest.toString());
     }
 
     @Override
