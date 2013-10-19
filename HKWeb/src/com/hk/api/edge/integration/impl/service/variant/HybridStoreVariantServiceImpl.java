@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.taglibs.Functions;
 import com.hk.util.HKImageUtils;
 import com.hk.util.http.HkHttpClient;
@@ -40,6 +43,8 @@ import com.hk.util.http.URIBuilder;
  */
 @Service
 public class HybridStoreVariantServiceImpl implements HybridStoreVariantService, HybridStoreVariantServiceFromHKR {
+    
+    private static Logger logger = LoggerFactory.getLogger(HybridStoreVariantServiceImpl.class);
 
     private static final String   BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
     private static final String   VARIANT_STOCK              = "variant/stock/";
@@ -109,6 +114,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     @Override
     @Transactional
     public void syncPricingFromEdge(VariantPricingSyncRequest variantPricingSyncRequest) {
+        logger.error("variant pricing sync request recived for " + variantPricingSyncRequest.getOldVariantId());
         ProductVariant productVariant = getProductVariantService().getVariantById(variantPricingSyncRequest.getOldVariantId());
 
         if (productVariant != null) {
@@ -116,7 +122,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             productVariant.setDiscountPercent(variantPricingSyncRequest.getDiscount());
             getBaseDao().save(productVariant);
         }
-
+        logger.error("variant pricing sync request completed for " + variantPricingSyncRequest.getOldVariantId());
     }
 
     @Override
