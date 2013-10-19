@@ -7,9 +7,9 @@ package com.hk.edge.request;
  */
 public class VariantPricingSyncRequest {
 
-    private String oldVariantId;
-    private int    offerPrice;
-    private double discount;
+    protected String oldVariantId;
+    protected int    offerPrice;
+    protected double discount;
 
     public String getOldVariantId() {
         return oldVariantId;

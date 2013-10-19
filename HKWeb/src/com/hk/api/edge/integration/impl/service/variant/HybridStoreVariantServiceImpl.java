@@ -81,6 +81,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     @Override
     @Transactional
     public void syncVariantSaveFromEdge(VariantSavedSyncRequest variantSavedSyncRequest) {
+        logger.error("variant save sync request recived for " + variantSavedSyncRequest.toString() );
         ProductVariant productVariant = getProductVariantService().getVariantById(variantSavedSyncRequest.getOldVariantId());
 
         if (productVariant != null) {
@@ -109,6 +110,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             getBaseDao().save(productVariant);
         }
 
+        logger.error("variant save sync request finished for " + variantSavedSyncRequest.toString() );
     }
 
     @Override

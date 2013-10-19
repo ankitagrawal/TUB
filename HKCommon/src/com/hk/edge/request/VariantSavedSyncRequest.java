@@ -66,5 +66,16 @@ public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+    
+    @Override
+    public String toString() {
+      StringBuilder strBuilder = new StringBuilder();
+      strBuilder.append(oldVariantId).append(oldVariantId).append(" op: ").append(offerPrice).append("dis :").append(discount);
+      strBuilder.append("mrp :").append(mrp).append("oldPRoductId: " ).append(oldProductId).append("minD: ").append(minDispatchDays);
+      strBuilder.append("maxD:").append(maxDispatchDays);
+
+      return strBuilder.toString();
+
+    }
 
 }
