@@ -38,7 +38,7 @@ public class VariantPricingSyncRequest {
     @Override
     public String toString() {
         StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append(oldVariantId).append(oldVariantId).append(":").append(offerPrice).append(":").append(discount);
+        strBuilder.append(oldVariantId).append(" offer price: ").append(offerPrice).append(" discount : ").append(discount);
         
         return strBuilder.toString();
     

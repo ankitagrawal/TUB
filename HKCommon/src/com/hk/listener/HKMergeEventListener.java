@@ -57,7 +57,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
         JSONResponseBuilder oldProductVariantJsonBuilder = getOriginalProductVariantById(productVariantId);
 
-        String oldProductVariantJson = oldProductVariantJsonBuilder.toString();
+        String oldProductVariantJson = oldProductVariantJsonBuilder.build();
         User loggedUser = getUserService().getLoggedInUser();
 
         JSONResponseBuilder newJsonBuilder = new JSONResponseBuilder();
