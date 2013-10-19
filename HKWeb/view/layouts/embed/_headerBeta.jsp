@@ -61,16 +61,18 @@
   %>
 
   <div class='topBar container_24'>
-      <div class="fnt-sz10 fnt-light" style="text-align:right">
+      <div class="fnt-sz10 fnt-light" style="">
 
           <a href="${pageContext.request.contextPath}/beta/hk/FAQ.action?reftag=return" target="_blank">14 day return policy</a>&nbsp;
           <a href="${pageContext.request.contextPath}/beta/hk/ContactUs.action" target="_blank">Contact Us</a>&nbsp;
-          <a href="http://www.healthkartplus.com" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/></a>&nbsp;&nbsp;
-          <a href="http://www.healthkart.com/resources" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/></a>
+          <a href="http://www.healthkartplus.com" class="cont-rht" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/></a>&nbsp;&nbsp;
+          <a href="http://www.healthkart.com/resources" class="cont-rht" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/></a>
       </div>
+      <div style="text-align:center">
       <s:link href="/" title='go to healthkart home'>
-      <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart" style="position:absolute;top:-2px;"/><br>
+      <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart" style="position:relative;top:-10px;"/><br>
       </s:link>
+      </div>
     <div class='topBarContent' style="position: absolute;right:0px;">
 
       <!--div class="message">
