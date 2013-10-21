@@ -61,7 +61,7 @@ public class VariantStockSyncRequest {
     public String toString() {
       StringBuilder strBuilder = new StringBuilder();
       strBuilder.append(oldVariantId).append(oldVariantId).append(" op: ");
-      strBuilder.append(" mrp :").append(mrp).append(" oldPRoductId: " );
+      strBuilder.append(" mrp :").append(mrp).append(" oldPRoductId: " ).append(" oos ").append(oos);
       
 
       return strBuilder.toString();
