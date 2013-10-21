@@ -93,12 +93,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   @Autowired
   CartLineItemDao cartLineItemDao;
   @Autowired
-  SkuItemLineItemDao skuItemLineItemDao;
-  @Autowired
   SkuGroupDao skuGroupDao;
   
   ShippingOrderService shippingOrderService;
 
+  private SkuItemLineItemDao skuItemLineItemDao;
 
   private Logger logger = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
@@ -282,36 +281,28 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     return list;
   }
+  
+  private InventoryInfo getInventoryInfo(List<InventoryInfo> inventoryInfoList, double mrp){
+    for (InventoryInfo inventoryInfo : inventoryInfoList) {
+      if(inventoryInfo.getMrp() == mrp)
+        return inventoryInfo;
+    }
+    return null;
+  }
+
 
   private Collection<InventoryInfo> getAvailableInventory(ProductVariant productVariant, List<Warehouse> whs) {
     Collection<SkuInfo> checkedInInvList = getCheckedInInventory(productVariant, whs);
 
-    Map<Double, Long> bookedQtyMap = getBookedInventoryQty(productVariant);
-
-    List<SkuInfo> inProcessList = getInProcessInventory(productVariant, whs);
-    if (inProcessList != null) {
-      for (SkuInfo inProcessInfo : inProcessList) {
-        List<SkuInfo> infos = searchBySkuIdAndMrp(checkedInInvList, inProcessInfo.getSkuId(), inProcessInfo.getMrp());
-        long leftQty = inProcessInfo.getQty();
-        for (SkuInfo skuInfo : infos) {
-          long qty = skuInfo.getQty() - leftQty;
-          if (qty < 0) {
-            leftQty = -qty;
-            skuInfo.setQty(0);
-            skuInfo.setUnbookedQty(0);
-          } else {
-            leftQty = 0;
-            skuInfo.setQty(qty);
-            skuInfo.setUnbookedQty(qty);
-          }
-        }
-      }
+    for (SkuInfo skuInfo : checkedInInvList) {
+      logger.debug("checkedInInvList SkuInfo = " + skuInfo.toString());
     }
+
 
     List<InventoryInfo> invList = new LinkedList<InventoryInfo>();
     Map<Double, List<InventoryInfo>> mrpMap = new LinkedHashMap<Double, List<InventoryInfo>>();
 
-    for (SkuInfo skuInfo : checkedInInvList) {
+    /*for (SkuInfo skuInfo : checkedInInvList) {
       InventoryInfo info = getLast(invList);
       if (info != null && skuInfo.getMrp() == info.getMrp()) {
         info.setQty(info.getQty() + skuInfo.getQty());
@@ -329,17 +320,57 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         infos.add(info);
       }
       info.addSkuInfo(skuInfo);
+    }*/
+
+    for (SkuInfo skuInfo : checkedInInvList) {
+      InventoryInfo info = getInventoryInfo(invList, skuInfo.getMrp());
+      if (info != null) {
+        info.setQty(info.getQty() + skuInfo.getQty());
+      } else {
+        info = new InventoryInfo();
+        info.setMrp(skuInfo.getMrp());
+        info.setQty(skuInfo.getQty());
+        invList.add(info);
+        mrpMap.put(Double.valueOf(skuInfo.getMrp()), Arrays.asList(info));
+      }
+      info.addSkuInfo(skuInfo);
     }
 
     for (Map.Entry<Double, List<InventoryInfo>> entry : mrpMap.entrySet()) {
-      Double mrp = entry.getKey();
-      Long bookedQty = bookedQtyMap.get(mrp);
+      logger.debug("mrpMap = " + entry.getKey());
+      for (InventoryInfo inventoryInfo : entry.getValue()) {
+        logger.debug("mrpMap inventoryInfo = " + inventoryInfo.toString());
+        for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+          logger.debug("mrpMap skuInfo = " + skuInfo.toString());
+        }
+      }
+    }
 
-      if (bookedQty != null) {
-        long leftQty = bookedQty;
+
+    // Logic to reduce unbooked inventory of SKU
+    Map<Sku, Map<Double, Long>> skuMrpUnbookedQtyMap = new HashMap<Sku, Map<Double, Long>>();
+    for (Map.Entry<Double, List<InventoryInfo>> entry : mrpMap.entrySet()) {
+      Double mrp = entry.getKey();
         for (InventoryInfo inventoryInfo : entry.getValue()) {
           long netInveQty = 0l;
           for (SkuInfo skuInfo : inventoryInfo.getSkuInfoList()) {
+            Sku sku = getBaseDao().get(Sku.class, skuInfo.getSkuId());
+            Map<Double, Long> mrpUnbookedQtyMap = skuMrpUnbookedQtyMap.get(sku);
+            if (mrpUnbookedQtyMap == null) {
+              mrpUnbookedQtyMap = new HashMap<Double, Long>();
+              Long unbookedQty = mrpUnbookedQtyMap.get(mrp);
+              if (unbookedQty == null) {
+                unbookedQty = getSkuItemLineItemDao().getUnbookedLICount(Arrays.asList(sku), mrp);
+                logger.debug("Unbooked Qty for SKU=" + sku.getId() + ";mrp=" + mrp + "; qty=" + unbookedQty);
+                mrpUnbookedQtyMap.put(mrp, unbookedQty);
+              }
+              skuMrpUnbookedQtyMap.put(sku, mrpUnbookedQtyMap);
+            }
+            long leftQty = 0l;
+            if (skuMrpUnbookedQtyMap.get(sku) != null && skuMrpUnbookedQtyMap.get(sku).get(mrp) != null){
+              leftQty = skuMrpUnbookedQtyMap.get(sku).get(mrp);
+              logger.debug("Left Unbooked Qty for SKU=" + sku.getId() + ";mrp=" + mrp + "; qty=" + leftQty);
+            }
             long qty = skuInfo.getQty() - leftQty;
             if (qty < 0) {
               leftQty = -qty;
@@ -348,11 +379,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
               leftQty = 0;
               skuInfo.setQty(qty);
             }
+            skuMrpUnbookedQtyMap.get(sku).put(mrp, leftQty);
+
             netInveQty += skuInfo.getQty();
           }
           inventoryInfo.setQty(netInveQty);
         }
-      }
     }
     return invList;
   }
@@ -626,7 +658,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           Warehouse warehouse =  warehouseService.getWarehouseById(warehouseIdAtPV);
           Sku sku =  skuService.getSKU(productVariant, warehouse);
           List<Sku> skus = Arrays.asList(sku);
-          List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skus,  Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()),  Arrays.asList(EnumSkuItemOwner.SELF.getId()), cartLineItem.getMarkedPrice());
+          List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skus,  Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()),  Arrays.asList(EnumSkuItemOwner.SELF.getId()), cartLineItem.getMarkedPrice(),false);
 
           if (checkAvailableUnbookedSkuItemsInAqua.size() >= cartLineItem.getQty()){
             logger.debug("Temp Booking On Aqua Side");
@@ -827,7 +859,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
             for (int i = 0; i < qtyToBeSet; i++) {
-              List<SkuItem> skuItemList = skuItemDao.getSkuItems(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+              List<SkuItem> skuItemList = skuItemDao.getSkuItems(skus, Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice(), false);
 
               if (skuItemList != null && skuItemList.size() > 0) {
                 SkuItem skuItem = skuItemList.get(0);
@@ -1068,7 +1100,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
         if (maxQty >= qtyToBeSet) {
           for (int i = 0; i < qtyToBeSet; i++) {
-            List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+            List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice(), false);
             if (skuItemList != null && skuItemList.size() > 0) {
               SkuItem skuItem = skuItemList.get(0);
               skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
@@ -1123,7 +1155,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
 
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
@@ -1207,7 +1239,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     // it means no entry
 
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
@@ -1224,7 +1256,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         if (sicliAlreadyCreated) {
           skuItem = skuItemCLI.getSkuItem();
         } else {
-          skuItem = (SkuItem) skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice()).get(0);
+          skuItem = (SkuItem) skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false).get(0);
         }
         skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
         baseDao.save(skuItem);
@@ -1479,7 +1511,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       return false;
     }
 
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
@@ -1527,7 +1559,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     Long countOfAvailableUnBookedSkuItemsInBright = 0L;
     Long countOfAvailableUnBookedSkuItemsInAqua = 0L;
-    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice());
+    List<SkuItem> checkAvailableUnbookedSkuItemsInAqua = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
 
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0){
       countOfAvailableUnBookedSkuItemsInAqua = (long)checkAvailableUnbookedSkuItemsInAqua.size();
@@ -1560,6 +1592,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
  public ShippingOrderService getShippingOrderService() {
     return ServiceLocatorFactory.getService(ShippingOrderService.class);
+  }
+  
+  public SkuItemLineItemDao getSkuItemLineItemDao() {
+    if(skuItemLineItemDao == null){
+      skuItemLineItemDao = ServiceLocatorFactory.getService(SkuItemLineItemDao.class);
+    }
+    return skuItemLineItemDao;
   }
 
 }

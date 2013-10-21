@@ -14389,10 +14389,27 @@
     <changeSet author="Ajeet (generated)" id="1380121826284-06">
         <dropTable tableName="bin_has_sku_item"/>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20131004-1">
+        <addColumn tableName="user_cod_call">
+            <column name="source" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Ankit Agrawal (generated)" id="20130458-037">
         <sql>
             INSERT INTO classification VALUES (1025, 'SO Could not be Manually-escalated' , 'Booked on Bright Behalf');
             INSERT INTO reason VALUES (250, 'Inventory Booked on  Bright Behalf' , NULL, 'SO Could not be Manually-escalated', 1025);
+        </sql>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377076644550-5">
+        <addColumn tableName="warehouse">
+            <column name="fulfilment_center_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Agrawal (generated)" id="20131021-0808">
+        <sql>
+            UPDATE warehouse SET fulfilment_center_code = 'GGN-AB' WHERE id = 10;
+            UPDATE warehouse SET fulfilment_center_code = 'MUM-AB' WHERE id = 20;
+            UPDATE warehouse SET fulfilment_center_code = 'DEL-AB' WHERE id = 402;
         </sql>
     </changeSet>
 </databaseChangeLog>
