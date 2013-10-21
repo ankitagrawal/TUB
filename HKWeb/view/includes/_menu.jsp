@@ -14,7 +14,7 @@
     <c:set var="allCategories" value="${allCategories}"/>
  <div class="clear"></div>
  	<c:set var="onNewUI" value="false"/>
-	<shiro:hasRole name="<%=RoleConstants.GOD%>">
+	<shiro:hasRole name="<%=RoleConstants.HK_EMPLOYEE%>">
 	<c:set var="onNewUI" value="true"/>
 		<c:if test="${showNewHKLink eq true}">
 			<div style="width: 960px; margin: 30px auto 0;"><a
