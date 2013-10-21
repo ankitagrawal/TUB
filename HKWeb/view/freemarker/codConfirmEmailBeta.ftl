@@ -1,7 +1,7 @@
-Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending.
+Cash-on-Delivery Order Id ${order.gatewayOrderId} confirmed.
 <html>
 <head>
-    <title>Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending.</title>
+    <title>Cash-on-Delivery Order Id ${order.gatewayOrderId} confirmed.</title>
 </head>
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
 <#--<#include "header.ftl">-->
@@ -10,37 +10,21 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     <tbody style="font-size:13px; line-height:1.75em;">
 
     <tr>
-        <td colspan="2" style="margin-bottom:1em; padding-top: 15px; padding-bottom: 15px">Hi ${order.user.name}!,</td>
+        <td colspan="2" style="margin-bottom:1em;padding-bottom: 10px;padding-top: 10px ">Hi ${order.user.name},</td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">
-            <p style="padding-top: 10px"> Thanks for placing an order with us. Please verify your order by giving us a
-                missed call on <span style="color: #0091d7;">0124-4616414 </span>
-                from ${order.payment.contactNumber} which you have given as Cash On Delivery number.
-
-                In case you are unable to make this call, we will give you a call to confirm your order. Please note
-                that COD</p>
-
-            <p style="padding-top: 10px"> orders will not be confirmed and shipped from our end until we manually
-                confirm the
-                order
-                on
-                the phone number provided.
-                Thanks</p>
-
-            <p style="padding-top: 10px"> for your patience.</p>
+        <td colspan="2" style="margin-bottom:1em;padding-top: 10px">
+            Thanks for confirming your order. We have received the order and will process the order soon.
+            Thanks for your patience.
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="padding-top:10px;margin-bottom:1em; padding-bottom: 10px">Here are your order details for
-            the order
-            <strong> ${order.gatewayOrderId}</strong>
-            placed
+        <td style="margin-bottom:1em;padding-bottom: 10px;padding-top: 10px">Here are your order details
+            <strong> ${order.gatewayOrderId}</strong> placed
             on<strong> ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")} </strong></td>
     </tr>
-
     <tr>
-        <td colspan="2" style="margin-bottom: 1em">
+        <td colspan="2" style="padding-top: 10px;padding-bottom: 10px">
             <h3>Order Details</h3>
         <#--<h5>No of shipping addresses - ${pricingDto.shippingLineCount}</h5>-->
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
@@ -53,7 +37,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
-                    <td style="margin-bottom: 1em">
+                    <td>
                         <#if productLineItem.productVariant.variantName??>
                         ${productLineItem.productVariant.variantName}
                         <#else>
@@ -82,9 +66,8 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
 
-
     <tr>
-        <td colspan="2" style="padding-top:15px;margin-bottom: 1em">
+        <td colspan="2" style="padding-top: 15px">
             <h3>Order Summary</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -129,8 +112,9 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
 
+
     <tr>
-        <td colspan="2" style="padding-top:15px; margin-bottom: 1em">
+        <td colspan="2" style="padding-top: 15px">
             <h3>Other Details</h3>
             <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                 <tr>
@@ -159,11 +143,12 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="padding-top:15px;margin-bottom: 1em">
-            <h3>Shipping Address & Customer details</h3></td>
+        <td colspan="2" style="padding-top: 15px">
+            <h3>Shipping Address & Customer details</h3>
+        </td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">
+        <td colspan="2" style="margin-bottom:1em;padding-top:10px ">
         ${order.address.name}<br/>
         ${order.address.line1}<br/>
         <#if order.address.line2??>
@@ -175,16 +160,12 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</td>
-    </tr>
-
-    <#--<#include "orderNote.ftl">-->
-    <tr>
-        <td style="padding-bottom:10px;padding-top: 10px; margin-bottom:1em"><strong>HealthKart.com</strong></td>
+        <td colspan="2" style="margin-bottom:1em;padding-top: 10px">We will send you an email as soon as your order is
+            shipped.
+        </td>
     </tr>
     </tbody>
 <#include "footerBeta.ftl">
 </table>
-
 </body>
 </html>
