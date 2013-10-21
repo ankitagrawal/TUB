@@ -73,6 +73,8 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
 
     @Override
     public void syncStockOnEdge(VariantStockSyncRequest variantStockSyncRequest) {
+        
+        logger.error("variant stock sync request sending " + variantStockSyncRequest.toString() );
         URIBuilder builder = new URIBuilder().fromURI(ServiceEndPoints.SYNC + VARIANT_STOCK);
 
         HkHttpClient.executePostForObject(builder.getWebServiceUrl(), variantStockSyncRequest.getParameters(), null);

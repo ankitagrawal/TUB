@@ -56,5 +56,16 @@ public class VariantStockSyncRequest {
 
         return params;
     }
+    
+    @Override
+    public String toString() {
+      StringBuilder strBuilder = new StringBuilder();
+      strBuilder.append(oldVariantId).append(oldVariantId).append(" op: ");
+      strBuilder.append(" mrp :").append(mrp).append(" oldPRoductId: " );
+      
+
+      return strBuilder.toString();
+
+    }
 
 }
