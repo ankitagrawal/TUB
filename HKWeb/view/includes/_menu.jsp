@@ -14,17 +14,17 @@
     <c:set var="allCategories" value="${allCategories}"/>
  <div class="clear"></div>
  	<c:set var="onNewUI" value="false"/>
-	<shiro:hasRole name="<%=RoleConstants.HK_USER%>">
-	<c:set var="onNewUI" value="true"/>
+	<!--<shiro:hasRole name="<%=RoleConstants.HK_USER%>">
+	--><c:set var="onNewUI" value="true"/>
 		<c:if test="${showNewHKLink eq true}">
 			<div style="width: 960px; margin: 30px auto 0;"><a
 				href="http://beta.healthkart.com" title="go to new website"> <img
 				src="<hk:vhostImage/>/images/old-site-strip.png" width="960"
 				height="25" alt="go to new website" /> </a></div>
 		</c:if>
-	</shiro:hasRole>
+	<!--</shiro:hasRole>
 
-	<div id="logoBoxContainer" style="cursor:default; width: 960px; margin: ${(showNewHKLink eq true && onNewUI eq true )? '15px' : '35px' } auto 7px;">
+	--><div id="logoBoxContainer" style="cursor:default; width: 960px; margin: ${(showNewHKLink eq true && onNewUI eq true )? '15px' : '35px' } auto 7px;">
 
     <div class='logoBox' style="float:left;">
       <s:link href="/" title='go to healthkart home'>

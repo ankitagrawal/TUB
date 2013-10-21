@@ -185,11 +185,11 @@
   </c:forEach>
   </table>
   <div style="float: right;width: 99%;margin-top: 40px;">
-  <shiro:hasRole name="<%=RoleConstants.HK_USER%>">
-    <s:submit name="proceed" value="Make Payment" class="button makePayment  btn btn-blue"
+  <!--<shiro:hasRole name="<%=RoleConstants.HK_USER%>">
+    --><s:submit name="proceed" value="Make Payment" class="button makePayment  btn btn-blue"
               disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
-              </shiro:hasRole>
-  </div>
+              <!--</shiro:hasRole>
+  --></div>
 </s:form></div>
 
 <div id="tabs_content3" class="tab_content" style="display: none;">
