@@ -185,7 +185,7 @@
   </c:forEach>
   </table>
   <div style="float: right;width: 99%;margin-top: 40px;">
-  <shiro:hasRole name="<%=RoleConstants.GOD%>">
+  <shiro:hasRole name="<%=RoleConstants.HK_EMPLOYEE%>">
     <s:submit name="proceed" value="Make Payment" class="button makePayment  btn btn-blue"
               disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
               </shiro:hasRole>
