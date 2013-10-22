@@ -2,7 +2,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-render name="/layouts/categoryBlankLanding.jsp"
-                 pageTitle="Careers at HealthKart">
+                 pageTitle="Careers">
 
 <s:layout-component name="htmlHead">
   <style type="text/css">

@@ -26,7 +26,7 @@ import com.hk.pact.service.core.AddressService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
 
-@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @Component
 @HttpCache(allow = false)
 public class SelectAddressAction extends BaseAction {
@@ -34,30 +34,30 @@ public class SelectAddressAction extends BaseAction {
     //private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);
 
     @Autowired
-    AddressService       addressDao;
+    AddressService addressDao;
     @Autowired
-    OrderManager          orderManager;
+    OrderManager orderManager;
     @Autowired
-    OrderDao              orderDao;
+    OrderDao orderDao;
     @Autowired
-    private UserService   userService;
+    private UserService userService;
     @Autowired
-    private RoleService   roleService;
+    private RoleService roleService;
 
     private List<Address> addresses = new ArrayList<Address>(1);
 
     //@Validate(required = true, on = "remove")
-    Address               deleteAddress;
+    Address deleteAddress;
 
     //@Validate(converter = EmailTypeConverter.class)
-    private String        email;
+    private String email;
 
-	 // @Validate(required = true)
+    // @Validate(required = true)
     private Order order;
 
     private boolean printAlert;
 
-	  //@ValidationMethod(on = "checkout")
+    //@ValidationMethod(on = "checkout")
     public void validate() {
         Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
         User user = getUserService().getUserById(getPrincipal().getId());
@@ -82,8 +82,10 @@ public class SelectAddressAction extends BaseAction {
                 selectedAddress = addresses.get(0);
             }
         }
-
-        return new ForwardResolution("/pages/addressBook.jsp").addParameter("printAlert",printAlert);
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/addressBookBeta.jsp").addParameter("printAlert", printAlert);
+        }
+        return new ForwardResolution("/pages/addressBook.jsp").addParameter("printAlert", printAlert);
 
     }
 
@@ -110,7 +112,7 @@ public class SelectAddressAction extends BaseAction {
         return new RedirectResolution(SelectAddressAction.class);
     }
 
-//    @Validate(on = "checkout", required = true)
+    //    @Validate(on = "checkout", required = true)
     Address selectedAddress;
 
     public Resolution checkout() {
@@ -160,15 +162,15 @@ public class SelectAddressAction extends BaseAction {
         this.email = email;
     }
 
-	public Order getOrder() {
-		return order;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-	public UserService getUserService() {
+    public UserService getUserService() {
         return userService;
     }
 
@@ -184,15 +186,15 @@ public class SelectAddressAction extends BaseAction {
         this.roleService = roleService;
     }
 
-  public boolean isPrintAlert() {
-    return printAlert;
-  }
+    public boolean isPrintAlert() {
+        return printAlert;
+    }
 
-  public boolean getPrint(){
-    return printAlert;
-  }
+    public boolean getPrint() {
+        return printAlert;
+    }
 
-  public void setPrintAlert(boolean printAlert) {
-    this.printAlert = printAlert;
-  }
+    public void setPrintAlert(boolean printAlert) {
+        this.printAlert = printAlert;
+    }
 }

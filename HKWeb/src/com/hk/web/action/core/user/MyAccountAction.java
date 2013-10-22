@@ -71,8 +71,10 @@ public class MyAccountAction extends BaseAction {
       }
       b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
     }
-
-    return new ForwardResolution("/pages/userProfile.jsp");
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/userProfileBeta.jsp");
+      }
+      return new ForwardResolution("/pages/userProfile.jsp");
   }
 
   public User getUser() {
@@ -109,19 +111,29 @@ public class MyAccountAction extends BaseAction {
 
   public Resolution editBasicInformation() {
     logger.debug("Editing basic information for " + user.getName());
-    return new ForwardResolution("/pages/editBasicInformation.jsp");
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/editBasicInformationBeta.jsp");
+      }
+      return new ForwardResolution("/pages/editBasicInformation.jsp");
   }
 
   public Resolution saveBasicInformation() {
     if (user.getName().length() > 80) {
       logger.debug("new user name entered exceeded the allowed limit");
       addRedirectAlertMessage(new SimpleMessage("Please enter a valid name!"));
-      return new ForwardResolution("/pages/editBasicInformation.jsp");
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/editBasicInformationBeta.jsp");
+        }
+        return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     if (!BaseUtils.isValidEmail(user.getEmail())) {
       logger.info("email id  " + user.getEmail() + " invalid!");
       addRedirectAlertMessage(new SimpleMessage("PLEASE ENTER A VALID EMAIL ID!"));
-      return new ForwardResolution("/pages/editBasicInformation.jsp");
+
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/editBasicInformationBeta.jsp");
+        }
+        return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     user = userDao.save(user);
     Role b2bRole = RoleCache.getInstance().getRoleByName(EnumRole.B2B_USER).getRole();
@@ -129,12 +141,19 @@ public class MyAccountAction extends BaseAction {
       b2bUserDetailsDao.save(b2bUserDetails);
     }
 
-    addRedirectAlertMessage(new SimpleMessage("Your basic information has been updated"));
+    addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                  "Your basic information has been updated" +
+                                                "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                              "</div>"));
     return new RedirectResolution(MyAccountAction.class);
   }
 
     public Resolution subscribeForEmails() {
         user = getUserService().getUserById(getPrincipal().getId());
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/emailSubscriptionsBeta.jsp");
+        }
         return new ForwardResolution("/pages/emailSubscriptions.jsp");
     }
 
@@ -147,7 +166,10 @@ public class MyAccountAction extends BaseAction {
 
   public Resolution editPassword() {
     logger.debug("Editing password for " + user.getName());
-    return new ForwardResolution("/pages/editPassword.jsp");
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/editPasswordBeta.jsp");
+      }
+      return new ForwardResolution("/pages/editPassword.jsp");
   }
 
   public Resolution changePassword() {
@@ -157,7 +179,11 @@ public class MyAccountAction extends BaseAction {
       user.setPassword(newPassword);
       user.setPasswordChecksum(BaseUtils.passwordEncrypt(newPassword));
       userDao.save(user);
-      addRedirectAlertMessage(new SimpleMessage("Password has been updated successfully."));
+      addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                  "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                    "Password has been updated successfully" +
+                                                  "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                                "</div>"));
       return new RedirectResolution(MyAccountAction.class);
     } else
       addValidationError("Error message", new SimpleError("Invalid old password"));
