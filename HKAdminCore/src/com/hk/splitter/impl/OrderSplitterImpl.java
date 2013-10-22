@@ -171,9 +171,6 @@ public class OrderSplitterImpl implements OrderSplitter {
   }
 
     public Set<ShippingOrder> createCombinations(Set<ShippingOrder> shippingOrders, Order order, Collection<LineItemClassification> lineItemClassifications) {
-        List<DummyOrder> bestShips = null;
-        long bestCost = Long.MAX_VALUE;
-
         for (LineItemClassification lic : lineItemClassifications) {
             if (lic.getClassification() == Classification.SERVICE) {
                 Collection<LineItemBucket> lineItemBuckets = lic.getLineItemBuckets();
@@ -182,11 +179,13 @@ public class OrderSplitterImpl implements OrderSplitter {
                 }
             } else {
                 Collection<UniqueWhCombination> whCombinations = lic.generatePerfactCombinations();
+                List<DummyOrder> bestShips = null;
+                long bestCost = Long.MAX_VALUE;
                 for (UniqueWhCombination uniqueWhCombination : whCombinations) {
                     List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
                     long cost = calculateCost(order, dummyOrders);
                     // here negative value being sent as invalid value
-                    if (cost > 0 && cost <= bestCost) { //a less than equal to check to pick combination for a higher warehouse id
+                    if (cost > 0 && cost < bestCost) {
                         bestCost = cost;
                         bestShips = dummyOrders;
                     }
@@ -201,7 +200,6 @@ public class OrderSplitterImpl implements OrderSplitter {
                 }
             }
         }
-
         return shippingOrders;
     }
 
