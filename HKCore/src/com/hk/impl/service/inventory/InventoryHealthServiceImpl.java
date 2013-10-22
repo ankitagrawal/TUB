@@ -583,7 +583,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
                             for (int i = 0; i < qtyToBeSet; i++) {
                                 List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null,
-                                        cartLineItem.getMarkedPrice());
+                                        cartLineItem.getMarkedPrice(),false);
 
                                 if (skuItemList != null && skuItemList.size() > 0) {
                                     SkuItem skuItem = skuItemList.get(0);
@@ -747,7 +747,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
             if (maxQty >= qtyToBeSet) {
                 for (int i = 0; i < qtyToBeSet; i++) {
-                    List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice());
+                    List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null, cartLineItem.getMarkedPrice(),false);
                     if (skuItemList != null && skuItemList.size() > 0) {
                         SkuItem skuItem = skuItemList.get(0);
                         skuItem.setSkuItemStatus(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
