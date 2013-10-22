@@ -83,7 +83,7 @@ public class OrderSplitterImpl implements OrderSplitter {
     Collection<LineItemClassification> lineItemClassifications = feedData(order);
 //    dummyOrderCostingMap = createCombinations(shippingOrders, order, lineItemClassifications);
 //    shippingOrders = decideBestFit(shippingOrders, order, dummyOrderCostingMap);
-      shippingOrders = createCombinations(shippingOrders, order, lineItemClassifications);
+      shippingOrders = createCombinations(order, lineItemClassifications);
 
     logger.info("Total time to split order[" + order.getId() + "] " + "Shipping Orders Size [" + shippingOrders.size() + "] " + (System.currentTimeMillis() - startTime));
     return shippingOrders;
@@ -170,12 +170,13 @@ public class OrderSplitterImpl implements OrderSplitter {
     return dummyOrderCostingMap;
   }
 
-    public Set<ShippingOrder> createCombinations(Set<ShippingOrder> shippingOrders, Order order, Collection<LineItemClassification> lineItemClassifications) {
+    public Set<ShippingOrder> createCombinations(Order order, Collection<LineItemClassification> lineItemClassifications) {
+        Set<ShippingOrder> newShippingOrders = new HashSet<ShippingOrder>();
         for (LineItemClassification lic : lineItemClassifications) {
             if (lic.getClassification() == Classification.SERVICE) {
                 Collection<LineItemBucket> lineItemBuckets = lic.getLineItemBuckets();
                 for (LineItemBucket lineItemBucket : lineItemBuckets) {
-                    shippingOrders.add(getOrderService().createSOForService(lineItemBucket.getLineItem()));
+                    newShippingOrders.add(getOrderService().createSOForService(lineItemBucket.getLineItem()));
                 }
             } else {
                 Collection<UniqueWhCombination> whCombinations = lic.generatePerfactCombinations();
@@ -196,11 +197,11 @@ public class OrderSplitterImpl implements OrderSplitter {
                 }
 
                 if(bestShips != null) {
-                    shippingOrders.addAll(createDaywiseShippingOrders(order, bestShips));
+                    newShippingOrders.addAll(createDaywiseShippingOrders(order, bestShips));
                 }
             }
         }
-        return shippingOrders;
+        return newShippingOrders;
     }
 
 
