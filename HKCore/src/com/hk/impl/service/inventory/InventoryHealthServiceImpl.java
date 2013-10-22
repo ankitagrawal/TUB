@@ -702,7 +702,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       if (fsicli.getSkuItemId() != null) {
         if (skuGroup == null) {
           logger.debug("  going to Create New Sku group for  cartLineItem -- " + cartLineItem.getId() + " and warehouse id --" + wh.getId());
-          skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
+          skuGroup = getSkuItemLineItemDao().createSkuGroupWithoutBarcode(fsicli.getFsgBatchNumber(), fsicli.getFsgMfgDate(), fsicli.getFsgExpiryDate(),
               fsicli.getFsgCostPrice(), fsicli.getFsgMrp(), null, null, null, sku);
           skuGroup.setForeignSkuGroupId(foreignSkuGroupId);
           skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
@@ -1429,7 +1429,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
      }
 
     if (skuGroup == null) {
-      skuGroup = skuItemLineItemDao.createSkuGroupWithoutBarcode(info.getBatch(),mfgDate, expDate,info.getCp(), info.getMrp(), null, null, null, existingSku);
+      skuGroup = getSkuItemLineItemDao().createSkuGroupWithoutBarcode(info.getBatch(),mfgDate, expDate,info.getCp(), info.getMrp(), null, null, null, existingSku);
       skuGroup.setForeignSkuGroupId(actualSkuGroupId);
       skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
     }
