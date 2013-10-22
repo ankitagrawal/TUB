@@ -151,6 +151,9 @@ public class Keys {
         public static final String fedExPasswordMUM = "fedExPasswordMUM";
         public static final String fedExMeterNoMUM = "fedExMeterNoMUM";
         public static final String fedExAccountNoMUM = "fedExAccountNoMUM";
+        public static final String fedExPasswordGGN = "fedExPasswordGGN";
+        public static final String fedExMeterNoGGN = "fedExMeterNoGGN";
+        public static final String fedExAuthKeyGGN = "fedExAuthKeyGGN";
 
 
   }
