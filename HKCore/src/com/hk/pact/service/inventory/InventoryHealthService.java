@@ -52,6 +52,8 @@ public interface InventoryHealthService {
 
   public Long getUnbookedInventoryOfBrightForMrp(ProductVariant productVariant, String tinPrefix, Double mrp);
 
+  public Long getUnbookedInventoryOfBright(ProductVariant productVariant);
+
   public static class InventoryInfo {
     private Collection<SkuInfo> skuList = new ArrayList<SkuInfo>();
     private double mrp;

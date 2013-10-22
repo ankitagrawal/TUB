@@ -34,6 +34,7 @@ import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
@@ -103,6 +104,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
   @Autowired
   private ProductVariantService           productVariantService;
+
+  @Autowired
+  private InventoryHealthService inventoryHealthService;
 
   @Autowired
   private PaymentService paymentService;
@@ -541,7 +545,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     for (LineItem lineItem : shippingOrder.getLineItems()) {
       Long netQty = adminInventoryService.getNetInventoryAtServiceableWarehouses(lineItem.getSku().getProductVariant());
       Long bookedQty = adminInventoryService.getBookedInventory(lineItem.getSku().getProductVariant(), null);
-      if (!((netQty - bookedQty) >= lineItem.getQty())){
+      if (!((netQty - bookedQty) >= lineItem.getQty())) {
         ProductVariant itemVariant = lineItem.getSku().getProductVariant();
         if (itemVariant.getProduct().isJit()) {
           outOfStockJitItems.add(lineItem);
@@ -560,7 +564,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         return false;
       } else {
         // only split jit items but do not cancel those items and escalate rest of the order if possible
-        Map<String,ShippingOrder> splittedOrdersForJit = new HashMap<String, ShippingOrder>();
+        Map<String, ShippingOrder> splittedOrdersForJit = new HashMap<String, ShippingOrder>();
         List<String> msgs = new ArrayList<String>();
         this.autoSplitSO(shippingOrder, outOfStockJitItems, splittedOrdersForJit, msgs);
         shippingOrder = splittedOrdersForJit.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
@@ -577,7 +581,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     } else if (outOfStockLineItems.isEmpty()) {
       // nothing to cancel
       comment.append("Inventory for the variant ");
-      for (LineItem item : shippingOrder.getLineItems() ) {
+      for (LineItem item : shippingOrder.getLineItems()) {
         comment.append(item.getCartLineItem().getProductVariant().getId() + " ");
       }
       comment.append("found in another warehouse.");
@@ -587,16 +591,16 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
       return false;
     } else {
-      Map<String,ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
-      List<String>  messages = new ArrayList<String>();
+      Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
+      List<String> messages = new ArrayList<String>();
       // split and cancel only the unfulfilled line items
       this.autoSplitSO(shippingOrder, outOfStockLineItems, splittedOrders, messages);
       cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
       shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
-      
+
       // log the items which can be fulfilled by other warehouses.
       comment.append("Inventory for the variant ");
-      for (LineItem item :shippingOrder.getLineItems() ) {
+      for (LineItem item : shippingOrder.getLineItems()) {
         comment.append(item.getCartLineItem().getProductVariant().getId() + " ");
       }
       comment.append("found in another warehouse.");
@@ -605,32 +609,48 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           EnumReason.INV_FOUND_DIFF_WAREHOUSE.asReason(), comment.toString());
 
     }
-     boolean validationRequired = false;
-      for (LineItem  lineItem : cancelledSO.getLineItems()){
-         if (lineItem.getSkuItemLineItems().size() > 0 ){
-            validationRequired = true;
-             break;
-         }
+    boolean validationRequired = false;
+    for (LineItem lineItem : cancelledSO.getLineItems()) {
+      if (lineItem.getSkuItemLineItems().size() > 0) {
+        validationRequired = true;
+        break;
+      }
+    }
+
+    if (validationRequired) {
+      cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+      shippingOrderService.save(cancelledSO);
+      shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+          shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
+          EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on validation state  partial booking done  could be fulfilled from Bright end Validate it.");
+      return false;
+
+    } else {
+      boolean invPresent = false;
+      Long ABqty = 0L;
+      for (LineItem lineItem : cancelledSO.getLineItems()) {
+        ProductVariant productVariant = lineItem.getSku().getProductVariant();
+        Long unBoookedInventoryOfBright = inventoryHealthService.getUnbookedInventoryOfBright(productVariant);
+        Long unBookedInventoryOfAqua = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku(), null);
+        ABqty = unBoookedInventoryOfBright + unBookedInventoryOfAqua;
+        if (ABqty >= lineItem.getQty()) {
+          cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+          shippingOrderService.save(cancelledSO);
+          shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+              shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
+              EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on validation state  total AB inventory of variant --" + productVariant.getId() + "-- Quantity is :" + ABqty + "is greater than ordered qty" + lineItem.getQty());
+          return false;
+        }
       }
 
-      if (validationRequired ){
-        cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
-        shippingOrderService.save(cancelledSO);
-        shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-            shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
-            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on validation state  partial booking done  could be fulfilled from Bright end Validate it.");
-         return false;
+      cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+      shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+          shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_Cancelled),
+          EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled as No booking done for this order ");
 
-      }else {
-        cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
-        shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-            shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_Cancelled),
-            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled as No booking done for this order ");
 
-      }
-
-     shippingOrderService.save(cancelledSO);
-
+      shippingOrderService.save(cancelledSO);
+    }
     /*
 
       Payment payment = cancelledSO.getBaseOrder().getPayment();
@@ -652,7 +672,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     */
 
 
-      return true;
+    return true;
   }
 
 	/* Setters and getters begin*/
@@ -816,6 +836,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 		this.shipmentService = shipmentService;
 	}
 
+  public InventoryHealthService getInventoryHealthService() {
+    return inventoryHealthService;
+  }
 
-
+  public void setInventoryHealthService(InventoryHealthService inventoryHealthService) {
+    this.inventoryHealthService = inventoryHealthService;
+  }
 }
