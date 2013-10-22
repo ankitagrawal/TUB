@@ -36,7 +36,9 @@ public class CustomerOrderHistoryAction extends BasePaginatedAction {
       orderPage = orderService.listOrdersForUser(user, getPageNo(), getPerPage());
       orderList = orderPage.getList();
     }
-
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/customerOrderHistoryBeta.jsp");
+      }
     return new ForwardResolution("/pages/customerOrderHistory.jsp");
   }
 

@@ -1,5 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.hk.constants.core.Keys" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%
+String hybridReleaseStr = (String) ServiceLocatorFactory.getProperty(Keys.Env.hybridRelease);
+boolean hybridRelease = Boolean.parseBoolean(hybridReleaseStr);
+pageContext.setAttribute("hybridRelease", hybridRelease);
+%>
 <s:layout-definition>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
@@ -21,7 +28,8 @@
     <jsp:include page="/includes/_static_css.jsp"/>
     <jsp:include page="/includes/_static_js.jsp"/>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
-    <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+
+      <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
 
     <s:layout-component name="analytics">
       <s:layout-render name="/layouts/embed/_analytics.jsp" topCategory="${topCategory}" allCategories="${topCategory}" brand="" isProd="<%=false%>"/>
@@ -34,11 +42,26 @@
   <div id="container" class="container_24">
 
     <s:layout-component name="header">
-      <s:layout-render name="/layouts/embed/_header.jsp"/>
+    <c:choose>
+       <c:when test="${hybridRelease eq true}">
+           <s:layout-render name="/layouts/embed/_headerBeta.jsp"/>
+       </c:when>
+       <c:otherwise>
+           <s:layout-render name="/layouts/embed/_header.jsp"/>
+       </c:otherwise>
+    </c:choose>
     </s:layout-component>
 
     <s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+    <c:choose>
+       <c:when test="${hybridRelease eq true}">
+           <s:layout-render name="/includes/_menuBeta.jsp"/>
+       </c:when>
+       <c:otherwise>
+           <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+       </c:otherwise>
+    </c:choose>
+      
     </s:layout-component>
 
     <s:layout-component name="topBanner"></s:layout-component>
@@ -51,10 +74,16 @@
       <div class="floatfix"></div>
     </div>
 
-    <s:layout-render name="/includes/_footer.jsp"/>
+    <c:choose>
+       <c:when test="${hybridRelease eq true}">
+           <s:layout-render name="/includes/_footerBeta.jsp"/>
+       </c:when>
+       <c:otherwise>
+           <s:layout-render name="/includes/_footer.jsp"/>
+       </c:otherwise>
+    </c:choose>
 
   </div>
-
   </body>
   </html>
 </s:layout-definition>

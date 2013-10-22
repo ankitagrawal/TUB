@@ -23,6 +23,10 @@ public class RewardPointTxnStatementAction extends BaseAction {
     public Resolution pre() {
         user = getPrincipalUser();
         redeemablePoint = rewardPointService.getTotalRedeemablePoints(user);
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/rewardPointTxnStatementBeta.jsp");
+        }
+
         return new ForwardResolution("/pages/rewardPointTxnStatement.jsp");
     }
 

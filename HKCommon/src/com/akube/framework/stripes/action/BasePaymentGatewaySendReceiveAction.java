@@ -36,6 +36,9 @@ public abstract class BasePaymentGatewaySendReceiveAction<T extends PaymentGatew
         BasePaymentGatewayWrapper.TransactionData data = BasePaymentGatewayWrapper.decodeTransactionDataParam(encodedData);
         PaymentGatewayWrapper paymentGatewayWrapper = getPaymentGatewayWrapperFromTransactionData(data);
         getContext().getRequest().setAttribute("PaymentGatewayWrapper", paymentGatewayWrapper);
+        if(isHybridRelease()){
+            return new ForwardResolution("/gatewayProcessBeta.jsp");
+        }
         return new ForwardResolution("/gatewayProcess.jsp");
 
     }

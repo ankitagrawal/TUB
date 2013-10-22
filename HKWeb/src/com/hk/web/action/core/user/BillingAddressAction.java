@@ -68,6 +68,9 @@ public class BillingAddressAction extends BaseAction {
             return new RedirectResolution(SelectAddressAction.class);
         }
         billingAddresses = addressDao.getVisibleBillingAddress(user);
+        if(isHybridRelease()){
+            return new ForwardResolution("/pages/billingAddressBookBeta.jsp");
+        }
         return new ForwardResolution("/pages/billingAddressBook.jsp");
     }
 

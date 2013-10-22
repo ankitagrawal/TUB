@@ -29,7 +29,10 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.request.VariantStockSyncRequest;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -64,7 +67,7 @@ import java.util.Date;
 import java.util.Map.Entry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import com.hk.web.AppConstants;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -92,6 +95,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   LineItemDao lineItemDao;
   @Autowired
   CartLineItemDao cartLineItemDao;
+
+	@Autowired
+    private HybridStoreVariantService hybridStoreVariantService;
   @Autowired
   SkuGroupDao skuGroupDao;
   
@@ -1034,7 +1040,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
       if (!updateStockStatus) {
         productVariant.setOutOfStock(false);
       }
-
+	  updateVariantInfoOnEdge(productVariant);
       List<ProductVariant> inStockVariants = product.getInStockVariants();
       if (inStockVariants != null && inStockVariants.isEmpty()) {
         product.setOutOfStock(true);
@@ -1045,10 +1051,22 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
   }
 
-  public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
-    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
-    Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
-    if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
+    private void updateVariantInfoOnEdge(ProductVariant productVariant) {
+        /*if (AppConstants.isHybridRelease) {*/
+            VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
+            variantStockSyncRequest.setOldVariantId(productVariant.getId());
+            variantStockSyncRequest.setCostPrice(productVariant.getCostPrice());
+            variantStockSyncRequest.setMrp(productVariant.getMarkedPrice());
+            variantStockSyncRequest.setOos(productVariant.isOutOfStock());
+
+            getHybridStoreVariantService().syncStockOnEdge(variantStockSyncRequest);
+        /*}*/
+    }
+
+    public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {
+        InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
+        Collection<InventoryHealthService.SkuInfo> availableUnBookedInvnList = getCheckedInInventory(productVariant, warehouseService.getServiceableWarehouses());
+        if (availableUnBookedInvnList != null && !availableUnBookedInvnList.isEmpty()) {
 
       Iterator it = availableUnBookedInvnList.iterator();
       SkuInfo newSkuInfo = (SkuInfo) it.next();
@@ -1600,5 +1618,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     return skuItemLineItemDao;
   }
+  
+  public HybridStoreVariantService getHybridStoreVariantService() {
+        return hybridStoreVariantService;
+    }
 
 }
