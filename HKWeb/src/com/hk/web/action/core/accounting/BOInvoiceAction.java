@@ -58,7 +58,11 @@ public class BOInvoiceAction extends BaseAction {
     pricingDto = new PricingDto(order.getCartLineItems(), order.getAddress());
     coupon = referrerProgramManager.getOrCreateRefferrerCoupon(order.getUser());
     barcodePath = barcodeGenerator.getBarcodePath(order.getGatewayOrderId(),1.0f, 150, false);
-    return new ForwardResolution("/pages/invoice.jsp");
+      if (isHybridRelease()) {
+          return new ForwardResolution("/pages/invoiceBeta.jsp");
+      }
+      else
+          return new ForwardResolution("/pages/invoice.jsp");
   }
 
   public PricingDto getPricingDto() {

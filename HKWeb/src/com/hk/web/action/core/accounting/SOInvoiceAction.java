@@ -177,11 +177,12 @@ public class SOInvoiceAction extends BaseAction {
 			if(printZone){
 				zone = shippingOrder.getShipment().getZone().getName();
 			}
-
-
-			return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
+            if(isHybridRelease())
+                return new ForwardResolution("/pages/shippingOrderInvoiceBeta.jsp");
+            else
+			    return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
 		} else {
-			addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
+			addRedirectAlertMessage(new SimpleMessage("Given shipping order does not exist"));
 			return new ForwardResolution("pages/admin/adminHome.jsp");
 		}
 	}

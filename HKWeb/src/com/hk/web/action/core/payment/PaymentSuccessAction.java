@@ -105,7 +105,9 @@ public class PaymentSuccessAction extends BaseAction {
     if (karmaProfile != null) {
       loyaltyPointsEarned = karmaProfile.getKarmaPoints();
     }
-
+    if(isHybridRelease()){
+      return new ForwardResolution("/pages/payment/paymentSuccessBeta.jsp");
+    }
     return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
   }
 
