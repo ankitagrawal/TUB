@@ -2,6 +2,29 @@ package com.hk.domain.catalog.product;
 
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 import com.akube.framework.gson.JsonSkip;
 import com.google.gson.annotations.Expose;
 import com.hk.constants.core.EnumRole;
@@ -10,9 +33,10 @@ import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.warehouse.Warehouse;
-
-import javax.persistence.*;
-import java.util.*;
+import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.response.variant.StoreVariantBasicResponse;
+import com.hk.service.ServiceLocatorFactory;
+import com.hk.web.AppConstants;
 
 @SuppressWarnings("serial")
 @Entity
@@ -85,8 +109,8 @@ public class ProductVariant implements java.io.Serializable {
     private Double                    orderRanking;
 
     @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "warehouse_id")
-	private Warehouse warehouse;
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse                 warehouse;
 
     @Transient
     private Long                      qty;
@@ -120,7 +144,7 @@ public class ProductVariant implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "box_size_id")
-    private BoxSize estimatedBoxSize;
+    private BoxSize                   estimatedBoxSize;
 
     @Column(name = "upc")
     private String                    upc;                                                       // Universal Product
@@ -196,12 +220,12 @@ public class ProductVariant implements java.io.Serializable {
     @Transient
     @Expose
     private String                    optionsAuditString;
-    
+
     @Column(name = "mrp_qty")
-    private Long mrpQty;
-    
+    private Long                      mrpQty;
+
     @Column(name = "net_qty")
-    private Long netQty;
+    private Long                      netQty;
 
     public List<ProductImage> getProductImages() {
         return productImages;
@@ -244,6 +268,15 @@ public class ProductVariant implements java.io.Serializable {
     }
 
     public String getVariantName() {
+        if (AppConstants.isHybridRelease) {
+            HybridStoreVariantService storeVariantService = ServiceLocatorFactory.getService(HybridStoreVariantService.class);
+            StoreVariantBasicResponse storeVariantBasicApiResponse = storeVariantService.getStoreVariantBasicDetailsFromEdge(this.id);
+            if (storeVariantBasicApiResponse != null) {
+                return storeVariantBasicApiResponse.getName();
+            }
+            return variantName;
+        }
+
         return variantName;
     }
 
@@ -524,7 +557,7 @@ public class ProductVariant implements java.io.Serializable {
 
     /**
      * For reading in jsp EL
-     *
+     * 
      * @return
      */
     public Boolean getOutOfStock() {
@@ -541,7 +574,7 @@ public class ProductVariant implements java.io.Serializable {
 
     /**
      * For reading in jsp EL
-     *
+     * 
      * @return
      */
     public Boolean getDeleted() {
@@ -735,22 +768,22 @@ public class ProductVariant implements java.io.Serializable {
     public void setOptionsAuditString(String optionsAuditString) {
         this.optionsAuditString = optionsAuditString;
     }
-    
+
     public Long getMrpQty() {
-		return mrpQty;
-	}
-    
+        return mrpQty;
+    }
+
     public void setMrpQty(Long mrpQty) {
-		this.mrpQty = mrpQty;
-	}
-    
+        this.mrpQty = mrpQty;
+    }
+
     public Long getNetQty() {
-		return netQty;
-	}
-    
+        return netQty;
+    }
+
     public void setNetQty(Long netQty) {
-		this.netQty = netQty;
-	}
+        this.netQty = netQty;
+    }
 
     public BoxSize getEstimatedBoxSize() {
         return estimatedBoxSize;
@@ -767,7 +800,6 @@ public class ProductVariant implements java.io.Serializable {
     public void setCommission(Double commission) {
         this.commission = commission;
     }
-
 
     public Warehouse getWarehouse() {
         return warehouse;
