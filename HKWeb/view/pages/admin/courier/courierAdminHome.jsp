@@ -68,6 +68,11 @@
       </s:link>
     </h3>
   </c:if>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.shippingOrder.DropShipChangeAction">
+          Change SO DropShip
+        </s:link>
+      </h3>
 
 </div>
 
