@@ -1246,6 +1246,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     if (countOfAvailableUnBookedSkuItemsInAqua >= cartLineItem.getQty()) {
        if (!sicliAlreadyCreated ) {
          cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+         sicliAlreadyCreated = true;
        }
 
       getBaseDao().refresh(cartLineItem);
