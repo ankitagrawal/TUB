@@ -609,20 +609,34 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           EnumReason.INV_FOUND_DIFF_WAREHOUSE.asReason(), comment.toString());
 
     }
-    boolean validationRequired = false;
+    boolean lineItemsCreated = false;
+    boolean bookedAtBright = false;
     for (LineItem lineItem : cancelledSO.getLineItems()) {
       if (lineItem.getSkuItemLineItems().size() > 0) {
-        validationRequired = true;
-        break;
+        lineItemsCreated = true;
+         for (SkuItemLineItem skuItemLineItem :lineItem.getSkuItemLineItems()){
+             if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
+               bookedAtBright = true;
+             }
+         }
       }
     }
 
-    if (validationRequired) {
-      cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+    if (lineItemsCreated) {
+       if (bookedAtBright) {
+         cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
+         shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+             shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
+             EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on validation state  partial booking done  could be fulfilled from Bright end Validate it.");
+
+       }else {
+         cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
+         shippingOrderService.logShippingOrderActivity(cancelledSO, user,
+             shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue),
+             EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on Action Awaiting either moved back or partial booking done at aqua end.");
+       }
+
       shippingOrderService.save(cancelledSO);
-      shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-          shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
-          EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on validation state  partial booking done  could be fulfilled from Bright end Validate it.");
       return false;
 
     } else {
