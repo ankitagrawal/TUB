@@ -1256,7 +1256,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         if (sicliAlreadyCreated) {
           skuItem = skuItemCLI.getSkuItem();
         } else {
-          skuItem = (SkuItem) skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false).get(0);
+         List<SkuItem> skuItems =  skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, cartLineItem.getMarkedPrice(), false);
+          if (skuItems != null && skuItems.size()> 0){
+            skuItem = skuItems.get(0);
+          }else{
+            logger.debug("No skuItem found for the variant during Replacement:" + cartLineItem.getProductVariant().getId());
+            return false;
+          }
         }
         skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
         baseDao.save(skuItem);
