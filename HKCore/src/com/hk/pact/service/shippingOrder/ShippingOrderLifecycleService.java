@@ -2,6 +2,7 @@ package com.hk.pact.service.shippingOrder;
 
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LifecycleReason;
@@ -25,5 +26,5 @@ public interface ShippingOrderLifecycleService {
 
     public List<Reason> getReasonByType(String type);
 
-
+    public String getAwbByShippingOrderLifeCycle(ShippingOrder shippingOrder);
 }
