@@ -59,13 +59,22 @@ public class VerifyUserAction extends BaseAction {
 
         if (tempToken == null) {
             outcome = outcome_invalidLink;
+
+            if (isHybridRelease()) {
+                return new ForwardResolution("/pages/verifyUserBeta.jsp");
+            }
             return new ForwardResolution("/pages/verifyUser.jsp");
+
         }
 
         if (!tempToken.isValid()) {
             tempTokenDao.expire(tempToken);
             outcome = outcome_linkExpired;
+            if (isHybridRelease()) {
+                return new ForwardResolution("/pages/verifyUserBeta.jsp");
+            }
             return new ForwardResolution("/pages/verifyUser.jsp");
+
         }
 
         user = tempToken.getUser();
@@ -97,6 +106,10 @@ public class VerifyUserAction extends BaseAction {
             outcome = outcome_alreadyVerified;
         }
 
+        //return new ForwardResolution("/pages/verifyUser.jsp");
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/verifyUserBeta.jsp");
+        }
         return new ForwardResolution("/pages/verifyUser.jsp");
     }
 

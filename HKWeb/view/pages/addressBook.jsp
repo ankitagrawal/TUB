@@ -155,7 +155,6 @@
                             form.find("input[type='text'][name='address.line2']").val(street2);
                         }
                         form.find("input[type='text'][name='address.city']").val(city);
-                        //          form.find("input[type='text'][name='address.state']").val(state);
                         form.find("[name='address.state']").val(state.toUpperCase());
                         form.find("input[type='text'][name='address.pincode']").val(pin);
                         form.find("input[type='text'][name='address.phone']").val(phone);
