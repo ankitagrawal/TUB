@@ -9,31 +9,31 @@
 <body>
 <div id="wrapper">
   <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-<a href="index.jsp"><img src="images/diwali-sale.jpg" alt="Diwali Sale" /></a>
+<img src="images/diwali-sale.jpg" alt="Diwali Sale" />
 
 
-<%@include file="menu.jsp" %>
+<%@include file="menu-ds.jsp" %>
 
 
 <!--- banner start -->
 
-<div class="box1"> <a href="#"><img class="float-l" src="images/banner-1.jpg" /></a>
+<div class="box1"> <a href="health-devices.jsp"><img class="float-l" src="images/banner-1.jpg" /></a>
 
-<div class="box-tr"> <a href="#"><img class="float-l" src="images/banner-2.jpg" /></a>
-  <a href="#"><img class="margin-l15" src="images/banner-3.jpg" /></a>
-<a href="#"><img class="margin-t15" src="images/banner-4.jpg" /></a>
+<div class="box-tr"> <a href="health-nut.jsp"><img class="float-l" src="images/banner-2.jpg" /></a>
+  <a href="eye.jsp"><img class="margin-l15" src="images/banner-3.jpg" /></a>
+<a href="personal-care.jsp"><img class="margin-t15" src="images/banner-4.jpg" /></a>
 </div>
 <div class="cl"></div>
-<div class="margin-t15"> <a href="#"><img class="float-l" src="images/banner-5.jpg" /></a>
-  <a href="#"><img class="float-l margin-l15" src="images/banner-6.jpg" /></a>
+<div class="margin-t15"> <a href="diabetes.jsp"><img class="float-l" src="images/banner-5.jpg" /></a>
+  <a href="home-living.jsp"><img class="float-l margin-l15" src="images/banner-6.jpg" /></a>
 </div>
 
 <div class="box-bl">
-  <a href="#"><img class="float-l" src="images/banner-7.jpg" /></a>
-    <a href="#"><img class="margin-l15" src="images/banner-8.jpg" />  </a>
-      <a href="#"><img class="margin-t15" src="images/banner-9.jpg" />  </a>
+  <a href="sports-nut.jsp"><img class="float-l" src="images/banner-7.jpg" /></a>
+    <a href="sports-fitness.jsp"><img class="margin-t15 float-l" src="images/banner-8.jpg" />  </a>
+      <a href="parenting.jsp"><img class="margin-t15 float-r" src="images/banner-9.jpg" />  </a>
 </div>
-  <a href="#"><img class="margin-l15 margin-t15" src="images/banner-10.jpg" />  </a>
+  <a href="beauty.jsp"><img class="margin-l15 margin-t15" src="images/banner-10.jpg" />  </a>
 
 </div>
 
