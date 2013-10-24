@@ -94,7 +94,6 @@ public enum EnumRole {
                 EnumRole.COD_BLOCKED.getRoleName(),
                 EnumRole.CUSTOMER_SUPPORT.getRoleName(),
                 EnumRole.CUSTOMER_SUPPORT_L2.getRoleName(),
-                EnumRole.PAYMENT_MANAGER.getRoleName(),
                 EnumRole.SPLITTER.getRoleName(),
                 EnumRole.REWARD_POINT_MANAGER_L1.getRoleName(),
                 EnumRole.REWARD_POINT_MANAGER_L2.getRoleName(),
@@ -106,7 +105,8 @@ public enum EnumRole {
                 EnumRole.TEMP_USER.getRoleName(),
                 EnumRole.UNSUBSCRIBED_USER.getRoleName(),
                 EnumRole.HK_USER.getRoleName(),
-                EnumRole.HK_IHO_USER.getRoleName());
+                EnumRole.HK_IHO_USER.getRoleName(),
+                EnumRole.NEFT_DEPOSIT.getRoleName());
     }
 
     public static List<String> listOpsRoles() {
