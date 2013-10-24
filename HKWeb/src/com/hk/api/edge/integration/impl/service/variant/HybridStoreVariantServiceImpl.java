@@ -109,6 +109,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
 
                 if (variantSavedSyncRequest.isJit()) {
                     productVariant.setMarkedPrice(variantSavedSyncRequest.getMrp());
+                    productVariant.setCostPrice(variantSavedSyncRequest.getCostPrice());
                 }
 
                 getBaseDao().save(product);
