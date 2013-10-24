@@ -68,12 +68,13 @@
       </s:link>
     </h3>
   </c:if>
+    <shiro:hasPermission name="<%=PermissionConstants.EDIT_DROP_SHIP%>">
     <h3>
         <s:link beanclass="com.hk.web.action.admin.shippingOrder.DropShipChangeAction">
           Change SO DropShip
         </s:link>
       </h3>
-
+   </shiro:hasPermission>
 </div>
 
 
