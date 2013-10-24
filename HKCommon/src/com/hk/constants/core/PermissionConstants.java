@@ -200,4 +200,6 @@ public class PermissionConstants {
   public static final String EDIT_DROP_SHIP = "EDIT_DROP_SHIP";
     public static final String MARK_RP_APPEASEMENT = "MARK_RP_APPEASEMENT";
 
+    public static final String MANAGE_REVERSE_ORDER = "MANAGE_REVERSE_ORDER";
+
 }
