@@ -1,8 +1,10 @@
 package com.akube.framework.shiro.manager;
 
+import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.subject.support.DefaultWebSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.shiro.realm.HibernateSecurityRealm;
@@ -32,5 +34,7 @@ public class ShiroSecurityManager extends DefaultWebSecurityManager {
     public HibernateSecurityRealm getHibernateSecurityRealm() {
         return hibernateSecurityRealm;
     }
+    
+   
 
 }

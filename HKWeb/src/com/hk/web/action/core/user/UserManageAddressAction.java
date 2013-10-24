@@ -25,171 +25,197 @@ import com.hk.pact.service.core.AddressService;
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED, RoleConstants.ADMIN})
 @HttpCache(allow = false)
 public class UserManageAddressAction extends BaseAction {
-  // private static Logger logger = Logger.getLogger(UserManageAddressAction.class);
+    // private static Logger logger = Logger.getLogger(UserManageAddressAction.class);
 
-  Address address;
-  List<Address> addresses;
-  String mainAddressId;
-  Boolean selected;
-  Affiliate affiliate;
-  User user;
-  private Long countryId;
+    Address address;
+    List<Address> addresses;
+    String mainAddressId;
+    Boolean selected;
+    Affiliate affiliate;
+    User user;
+    private Long countryId;
 
-  @ValidateNestedProperties({
-      @Validate(field = "name", required = true, on = "saveAddress"),
-      @Validate(field = "line1", required = true, on = "saveAddress"),
-      @Validate(field = "city", required = true, on = "saveAddress"),
-      @Validate(field = "state", required = true, on = "saveAddress"),
-      @Validate(field = "pincode", required = true, on = "saveAddress"),
-      @Validate(field = "phone", required = true, on = "saveAddress")})
-  @Autowired
-  AffiliateDao affiliateDao;
-  @Autowired
-  AffiliateManager affiliateManager;
-  @Autowired
-  UserDao userDao;
-  @Autowired
-  AddressService addressDao;
-  @Autowired
-  UserService userService;
+    @ValidateNestedProperties({
+            @Validate(field = "name", required = true, on = "saveAddress"),
+            @Validate(field = "line1", required = true, on = "saveAddress"),
+            @Validate(field = "city", required = true, on = "saveAddress"),
+            @Validate(field = "state", required = true, on = "saveAddress"),
+            @Validate(field = "pincode", required = true, on = "saveAddress"),
+            @Validate(field = "phone", required = true, on = "saveAddress")})
+    @Autowired
+    AffiliateDao affiliateDao;
+    @Autowired
+    AffiliateManager affiliateManager;
+    @Autowired
+    UserDao userDao;
+    @Autowired
+    AddressService addressDao;
+    @Autowired
+    UserService userService;
 
-  @DefaultHandler
-  @DontValidate
-  public Resolution showAddressBook() {
-    if (user == null) {
-      user = getUserService().getUserById(getPrincipal().getId());
-    } else {
-      userDao.refresh(user);
-    }
-    addresses = addressDao.getVisibleAddresses(user);
-    affiliate = affiliateDao.getAffilateByUser(user);
-    return new ForwardResolution("/pages/manageUserAddresses.jsp");
-  }
-
-  public Resolution editUserAddresses() {
-    if (getPrincipal() != null) {
-      user = getUserService().getUserById(getPrincipal().getId());
-      affiliate = affiliateDao.getAffilateByUser(user);
-    }
-    return new ForwardResolution("/pages/editUserAddresses.jsp");
-
-  }
-
-  public Resolution saveAddress() {
-    user = userService.getLoggedInUser();
-    if (user != null) {
-      if(address.getPincode()==null){
-         addRedirectAlertMessage(new SimpleMessage("<style=\"color:red;font-size:14px; font-weight:bold;\"> We don't Service to this Pincode, please enter again or Contact to Customer Care!!!</style>"));
-         return new ForwardResolution("/pages/editUserAddresses.jsp").addParameter("address",address.getId());
-      }
-      address.setUser(user);
-      Country country = addressDao.getCountry(countryId);
-      address.setCountry(country);
-      address = addressDao.save(address);
-    }
-    addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
-    return showAddressBook();
-  }
-
-  public Resolution manageAddresses() {
-    if (getPrincipal() != null) {
-      user = getUserService().getUserById(getPrincipal().getId());
-      affiliate = affiliateDao.getAffilateByUser(user);
-      addresses = addressDao.getVisibleAddresses(user);
-      if (affiliate != null) {
-        mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : "";
-      }
-    }
-    if (addresses.size() > 0) {
-      return new ForwardResolution("/pages/manageUserAddresses.jsp");
-    } else {
-      return new ForwardResolution("/pages/editUserAddresses.jsp");
-    }
-  }
-
-  public Resolution remove() {
-    if (getPrincipal() != null) {
-      user = getUserService().getUserById(getPrincipal().getId());
-      affiliate = affiliateDao.getAffilateByUser(user);
-      if (affiliate != null && affiliate.getMainAddressId() != null) {
-        if (affiliate.getMainAddressId().equals(address.getId())) {
-          addRedirectAlertMessage(new SimpleMessage("The address cannot be deleted as it is set as your default address!"));
-          return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
+    @DefaultHandler
+    @DontValidate
+    public Resolution showAddressBook() {
+        if (user == null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+        } else {
+            userDao.refresh(user);
         }
-      }
+        addresses = addressDao.getVisibleAddresses(user);
+        affiliate = affiliateDao.getAffilateByUser(user);
+
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/manageUserAddressesBeta.jsp");
+        }
+        return new ForwardResolution("/pages/manageUserAddresses.jsp");
     }
-    address.setDeleted(true);
-    addressDao.save(address);
-    addRedirectAlertMessage(new LocalizableMessage("/SelectAddress.action.address.deleted"));
-    return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
-  }
 
-  // for affiliates only
-  public Resolution setAsDefaultAddress() {
-    if (getPrincipal() != null) {
-      user = getUserService().getUserById(getPrincipal().getId());
-      affiliate = affiliateDao.getAffilateByUser(user);
-      affiliate.setMainAddressId(address.getId());
-      mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : "";
-      affiliateDao.save(affiliate);
-      addRedirectAlertMessage(new SimpleMessage("Default Set."));
+    public Resolution editUserAddresses() {
+        if (getPrincipal() != null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+            affiliate = affiliateDao.getAffilateByUser(user);
+        }
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/editUserAddressesBeta.jsp");
+        }
+        return new ForwardResolution("/pages/editUserAddresses.jsp");
+
     }
-    return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
-  }
 
-  public Address getAddress() {
-    return address;
-  }
+    public Resolution saveAddress() {
+        user = userService.getLoggedInUser();
+        if (user != null) {
+            if (address.getPincode() == null) {
+                addRedirectAlertMessage(new SimpleMessage("<style=\"color:red;font-size:14px; font-weight:bold;\"> We don't Service to this Pincode, please enter again or Contact to Customer Care!!!</style>"));
 
-  public void setAddress(Address address) {
-    this.address = address;
-  }
+                if (isHybridRelease()) {
+                    return new ForwardResolution("/pages/editUserAddressesBeta.jsp");
+                }
+                return new ForwardResolution("/pages/editUserAddresses.jsp").addParameter("address", address.getId());
+            }
+            address.setUser(user);
+            Country country = addressDao.getCountry(countryId);
+            address.setCountry(country);
+            address = addressDao.save(address);
+        }
+        addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                    "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                        "Your changes have been saved." +
+                                                    "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                                  "</div>"));
+        return showAddressBook();
+    }
 
-  public List<Address> getAddresses() {
-    return addresses;
-  }
+    public Resolution manageAddresses() {
+        if (getPrincipal() != null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+            affiliate = affiliateDao.getAffilateByUser(user);
+            addresses = addressDao.getVisibleAddresses(user);
+            if (affiliate != null) {
+                mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : "";
+            }
+        }
+        if (addresses.size() > 0) {
 
-  public void setAddresses(List<Address> addresses) {
-    this.addresses = addresses;
-  }
+            if (isHybridRelease()) {
+                return new ForwardResolution("/pages/manageUserAddressesBeta.jsp");
+            }
+            return new ForwardResolution("/pages/manageUserAddresses.jsp");
+        } else {
+            if (isHybridRelease()) {
+                return new ForwardResolution("/pages/editUserAddressesBeta.jsp");
+            }
+            return new ForwardResolution("/pages/editUserAddresses.jsp");
+        }
+    }
 
-  public String getMainAddressId() {
-    return mainAddressId;
-  }
+    public Resolution remove() {
+        if (getPrincipal() != null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+            affiliate = affiliateDao.getAffilateByUser(user);
+            if (affiliate != null && affiliate.getMainAddressId() != null) {
+                if (affiliate.getMainAddressId().equals(address.getId())) {
+                    addRedirectAlertMessage(new SimpleMessage("The address cannot be deleted as it is set as your default address!"));
+                    return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
+                }
+            }
+        }
+        address.setDeleted(true);
+        addressDao.save(address);
+        addRedirectAlertMessage(new SimpleMessage("<div class=\"alert-cntnr\">" +
+                                                            "<span class=\"icn-success mrgn-r-10\"></span>" +
+                                                                "Address has been successfully deleted" +
+                                                            "<span class=\"icn icn-close2 remove-success\"></span>" +
+                                                        "</div>"));
+        return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
+    }
 
-  public void setMainAddressId(String mainAddressId) {
-    this.mainAddressId = mainAddressId;
-  }
+    // for affiliates only
+    public Resolution setAsDefaultAddress() {
+        if (getPrincipal() != null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+            affiliate = affiliateDao.getAffilateByUser(user);
+            affiliate.setMainAddressId(address.getId());
+            mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : "";
+            affiliateDao.save(affiliate);
+            addRedirectAlertMessage(new SimpleMessage("Default Set."));
+        }
+        return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
+    }
 
-  public Boolean isSelected() {
-    return selected;
-  }
+    public Address getAddress() {
+        return address;
+    }
 
-  public void setSelected(Boolean selected) {
-    this.selected = selected;
-  }
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-  public Affiliate getAffiliate() {
-    return affiliate;
-  }
+    public List<Address> getAddresses() {
+        return addresses;
+    }
 
-  public void setAffiliate(Affiliate affiliate) {
-    this.affiliate = affiliate;
-  }
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
 
-  public User getUser() {
-    return user;
-  }
+    public String getMainAddressId() {
+        return mainAddressId;
+    }
 
-  public void setUser(User user) {
-    this.user = user;
-  }
+    public void setMainAddressId(String mainAddressId) {
+        this.mainAddressId = mainAddressId;
+    }
 
-  public Long getCountryId() {
-    return countryId;
-  }
+    public Boolean isSelected() {
+        return selected;
+    }
 
-  public void setCountryId(Long countryId) {
-    this.countryId = countryId;
-  }
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
+
+    public Affiliate getAffiliate() {
+        return affiliate;
+    }
+
+    public void setAffiliate(Affiliate affiliate) {
+        this.affiliate = affiliate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
 }

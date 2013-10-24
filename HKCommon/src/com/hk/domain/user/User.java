@@ -4,6 +4,7 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.coupon.Coupon;
@@ -536,5 +537,16 @@ public class User {
 
     public void setBuckets(List<Bucket> buckets) {
         this.buckets = buckets;
+    }
+
+    public Integer getOrderCount(){
+      int orderCount = 0;
+      //TODO: implement this correctly Lazy init exception
+      /*for(Order order : this.orders){
+         if(order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())){
+           orderCount++;
+         }
+      }*/
+      return orderCount;
     }
 }

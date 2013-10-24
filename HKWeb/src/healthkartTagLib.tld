@@ -1354,4 +1354,17 @@
             ${hk:showFreebie(${product})}
         </example>
     </function>
+
+    <function>
+        <description>
+            returns store variant basic details on basis of product variant id, if hybrid release is true
+        </description>
+        <name>getStoreVariantBasicDetails</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.edge.response.variant.StoreVariantBasicResponse getStoreVariantBasicDetails(java.lang.String)
+        </function-signature>
+        <example>
+            ${hk:getStoreVariantBasicDetails(${productVariantId})}
+        </example>
+    </function>
 </taglib>
