@@ -87,7 +87,7 @@ public class PseudoOrderSplitAction extends BaseAction {
         if (order != null) {
             try {
                 lineItemClassifications = orderSplitter.feedData(order);
-                sortedDummyOrderMaps = orderSplitter.createCombinations(null,order,lineItemClassifications);
+              sortedDummyOrderMaps = orderSplitter.createDummyCombinations(null,order,lineItemClassifications);
             } catch (NoSkuException e) {
                 logger.error("Sku could not be found" + e.getMessage());
             } catch (OrderSplitException e) {
