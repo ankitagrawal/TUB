@@ -58,8 +58,8 @@ public enum EnumClassification {
     Pending_Approval(2010l,"Pending Approval", "Approval"),
     Approved(2020l,"Approved", "Approval"),
     Force_Approval(2030l,"Force Approval", "Approval"),
-    ReconciledGeneric(2040l,"Reconciled","Approval")
-
+    ReconciledGeneric(2040l,"Reconciled","Approval"),
+    SO_NOT_CREATED_FOR_FITNESS_PRO(2150l,"SO Could not be Auto-escalated","Due to Fitness Pro")
     ;
 
 
