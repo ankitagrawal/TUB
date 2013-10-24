@@ -17,7 +17,8 @@ public enum  EnumReasonType {
     Reconciliation(430L,"Reconciliation"),
     Reverse_Pickup_Warehouse(440L,"Warehouse QA For Reverse pickup"),
     SO_NOT_CANCELLED(450L,"SO Could not be cancelled automatically."),
-    REFUND(460L,"Refund initiated manually")
+    REFUND(460L,"Refund initiated manually"),
+    ShipmentNotCreatedFromFitnessPro(470L,"SO could not be Auto-escalated from Fitness Pro")
     ;
 
     private String name;

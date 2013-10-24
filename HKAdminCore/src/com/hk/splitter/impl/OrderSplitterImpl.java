@@ -144,6 +144,7 @@ public class OrderSplitterImpl implements OrderSplitter {
   }
 
 
+    //this is just a dummy method which is only called by pseudo splitter
   public Map<List<DummyOrder>, Long> createDummyCombinations(Set<ShippingOrder> shippingOrders, Order order, Collection<LineItemClassification> lineItemClassifications) {
     Map<List<DummyOrder>, Long> dummyOrderCostingMap = new HashMap<List<DummyOrder>, Long>();
 
@@ -170,6 +171,7 @@ public class OrderSplitterImpl implements OrderSplitter {
     return dummyOrderCostingMap;
   }
 
+    //production auto split uses this method --> correct one
     public Set<ShippingOrder> createCombinations(Order order, Collection<LineItemClassification> lineItemClassifications) {
         Set<ShippingOrder> newShippingOrders = new HashSet<ShippingOrder>();
         for (LineItemClassification lic : lineItemClassifications) {
@@ -204,7 +206,7 @@ public class OrderSplitterImpl implements OrderSplitter {
         return newShippingOrders;
     }
 
-
+  //unused
   private Set<ShippingOrder> decideBestFit(Set<ShippingOrder> shippingOrders, Order order, Map<List<DummyOrder>, Long> dummyOrderCostingMap) throws OrderSplitException {
 
     List<DummyOrder> bestShips = null;
