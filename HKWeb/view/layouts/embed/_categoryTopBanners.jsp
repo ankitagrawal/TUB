@@ -65,19 +65,19 @@
     <c:if test="${hk:collectionContains(topCategoryNameList, 'sports-nutrition')}">
         <jsp:include page="/categoryBanners/nutriCallback.jsp"/>
     </c:if>
-    <c:if test="${hk:collectionContains(topCategoryNameList, 'sports')}">
-        <jsp:include page="/categoryBanners/sportsDiscount.jsp"/>
-    </c:if>
-    <%--<c:choose>--%>
-        <%--<c:when test="${categories!=null and fn:contains(fitnessCategories, categories)}">--%>
-            <%--<jsp:include page="/categoryBanners/fitness-equipment.jsp"/>--%>
-        <%--</c:when>--%>
-        <%--<c:otherwise>--%>
-            <%--<c:if test="${hk:collectionContains(topCategoryNameList, 'sports')}">--%>
-                <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
-            <%--</c:if>--%>
-        <%--</c:otherwise>--%>
-    <%--</c:choose>--%>
+    <%--<c:if test="${hk:collectionContains(topCategoryNameList, 'sports')}">--%>
+        <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
+    <%--</c:if>--%>
+    <c:choose>
+        <c:when test="${categories!=null and fn:contains(fitnessCategories, categories)}">
+            <jsp:include page="/categoryBanners/fitness-equipment.jsp"/>
+        </c:when>
+        <c:otherwise>
+            <c:if test="${hk:collectionContains(topCategoryNameList, 'sports')}">
+                <jsp:include page="/categoryBanners/sportsDiscount.jsp"/>
+            </c:if>
+        </c:otherwise>
+    </c:choose>
 
     <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
         <jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
