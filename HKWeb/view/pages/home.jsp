@@ -26,7 +26,7 @@
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India"
                  topCategory="home"
-                 allCategories="home"  showNewHKLink ="true"
+                 allCategories="home"  showNewHKLink ="false"
     >
 
 <s:layout-component name="htmlHead">

@@ -75,6 +75,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
     UserService userService;
 
     @DefaultHandler
+    @Secure(hasAnyPermissions = {PermissionConstants.MANAGE_REVERSE_ORDER}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         if (warehouseId == null) {
             if (userService.getWarehouseForLoggedInUser() != null) {
