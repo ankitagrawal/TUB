@@ -226,7 +226,7 @@ public class EditProductAttributesAction extends BaseAction {
                     }
                 }
 
-                if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
+                if (productVariant.getMarkedPrice() != null && Math.floor(productVariant.getMarkedPrice()) < Math.floor(productVariant.getHkPrice(null))) {
                     addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
                     return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
                 }
