@@ -119,7 +119,9 @@ import java.util.List;
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
         String soLifeCycleAwb = shippingOrderLifecycleService.getAwbByShippingOrderLifeCycle(shippingOrder);
+        logger.debug("soLifeCycleAwb " + soLifeCycleAwb);
         String shipmentAwb = shipment.getAwb().getAwbNumber();
+      logger.debug("shipmentAwb " + shipmentAwb);
         if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus()) && soLifeCycleAwb.equals(shipmentAwb)) {
             shipment = shipmentService.save(shipment);
             if (!shippingOrder.isDropShipping()) {
