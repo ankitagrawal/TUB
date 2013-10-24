@@ -236,10 +236,10 @@
       <h3>
         <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
-      <h3><s:link
+   <%--   <h3><s:link
           beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
 
-        <h3>
+        <h3>--%>
             <s:link
                     beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
         </h3>
