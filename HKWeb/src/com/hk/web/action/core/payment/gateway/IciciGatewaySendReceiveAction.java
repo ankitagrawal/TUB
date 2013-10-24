@@ -108,11 +108,17 @@ public class IciciGatewaySendReceiveAction extends BasePaymentGatewaySendReceive
                 validatedData = IciciPaymentGatewayWrapper.validateEncryptedData(data, propertyFilePath);
             } catch (Exception e) {
                 logger.info("Payment failed while decrypting data in icici backend");
-                return new ForwardResolution("/pages/payment/paymentFail.jsp");
+                if(isHybridRelease())
+                    return new ForwardResolution("/pages/payment/paymentFailBeta.jsp");
+                else
+                    return new ForwardResolution("/pages/payment/paymentFail.jsp");
             }
         }else{
             logger.info("Received Empty response from Icici Gateway");
-            return new ForwardResolution("/pages/payment/paymentFail.jsp");
+            if(isHybridRelease())
+                return new ForwardResolution("/pages/payment/paymentFailBeta.jsp");
+            else
+                return new ForwardResolution("/pages/payment/paymentFail.jsp");
         }
 
         Map<String, String> paramMap = IciciPaymentGatewayWrapper.parseResponse(validatedData, responseMethod);

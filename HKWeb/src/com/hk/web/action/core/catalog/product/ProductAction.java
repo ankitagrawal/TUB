@@ -151,7 +151,7 @@ public class ProductAction extends BaseAction {
       if (!product.isDeleted()) {
         if (product.getProductVariants() != null && !product.getProductVariants().isEmpty() && product.getProductVariants().size() > 1) {
           // multiple products
-	        isOutOfStockPage = true;
+            isOutOfStockPage = true;
           for (ProductVariant productVariant: product.getProductVariants()) {
             if (!productVariant.isDeleted() && !productVariant.isOutOfStock()) {
               isOutOfStockPage = false;

@@ -16,9 +16,11 @@ import net.sourceforge.stripes.validation.ValidationErrors;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.controller.BreadcrumbInterceptor;
+import com.hk.constants.core.Keys;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.RoleService;
@@ -40,6 +42,9 @@ public class BaseAction implements ActionBean {
 
     @Autowired
     private BaseDao           baseDao;
+
+    @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
+    private boolean           hybridRelease;
 
     public ActionBeanContext getContext() {
         return context;
@@ -105,7 +110,7 @@ public class BaseAction implements ActionBean {
         return getContext().getRequest().isSecure();
     }
 
-    protected String getRemoteHostAddr(){
+    protected String getRemoteHostAddr() {
         return getContext().getRequest().getRemoteHost();
     }
 
@@ -131,6 +136,10 @@ public class BaseAction implements ActionBean {
 
     public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    public boolean isHybridRelease() {
+        return hybridRelease;
     }
 
 }
