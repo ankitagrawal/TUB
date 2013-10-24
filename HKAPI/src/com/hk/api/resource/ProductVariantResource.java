@@ -162,6 +162,7 @@ public class ProductVariantResource {
   @Path("/updateFreezedInventory/")
   @Produces("application/json")
   public String updateFreezedInventory(List<HKAPIForeignBookingResponseInfo> hKAPIForeignBookingResponseInfos) {
+  	logger.debug("Inside free inventory on Aqua");
     Boolean inventoryUpdated = Boolean.FALSE;
     Gson gson = new Gson();
     Long baseOrderId = null;
