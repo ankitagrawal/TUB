@@ -37,6 +37,7 @@
     <div class="box-product">
 
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AYUCR4'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV011'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV009'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='3M001'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HP004'/>
@@ -58,6 +59,7 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WRSTS002'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV022'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FRE01'/>
+
 
     </div>
       <!--- box-product close -->
