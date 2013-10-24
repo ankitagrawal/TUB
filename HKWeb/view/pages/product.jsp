@@ -200,8 +200,8 @@
 <s:layout-component name="urlFragment">${pa.menuNodeUrlFragment}</s:layout-component>
 
 <s:layout-component name="topBanner">
-	<%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />--%>
-    <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" />
+	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />
+    <%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" />--%>
 	<div class="clear"></div>
 	<c:if test="${product.service}">
 		<s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
