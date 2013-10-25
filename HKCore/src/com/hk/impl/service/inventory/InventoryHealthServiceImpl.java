@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.order.EnumUnitProcessedStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -28,6 +29,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
+import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
@@ -36,6 +38,7 @@ import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
@@ -43,6 +46,7 @@ import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
@@ -94,6 +98,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   CartLineItemDao cartLineItemDao;
   @Autowired
   SkuGroupDao skuGroupDao;
+  @Autowired
+  UserService userService;
+  @Autowired
+  private OrderLoggingService orderLoggingService;
+  
   
   ShippingOrderService shippingOrderService;
 
@@ -753,92 +762,101 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
   @Transactional
-  public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, String fulfilmentCenterCode) {
-    ProductVariant productVariant = cartLineItem.getProductVariant();
-    logger.debug("Going to temp  book inv on Bright Side for product Variant : " + productVariant.getId());
-    productVariant = productVariantService.getVariantById(productVariant.getId());
+	public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, String fulfilmentCenterCode) {
+		ProductVariant productVariant = cartLineItem.getProductVariant();
+		logger.debug("Going to temp  book inv on Bright Side for product Variant : " + productVariant.getId());
+		productVariant = productVariantService.getVariantById(productVariant.getId());
 
-    // now make a API call to booked inventory at Bright
-    Long fsicliId = null;
+		// now make a API call to booked inventory at Bright
+		Long fsicliId = null;
+		User loggedOnUser = userService.getLoggedInUser();
+		logger.debug("Going to populate FSICLI  during temp booking  cartlineItem Id : " + cartLineItem.getId());
+		List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
+		logger.debug("  FSICLI has been populated during temp booking  cartlineItem Id : " + cartLineItem.getId());
 
-    logger.debug("Going to populate FSICLI  during temp booking  cartlineItem Id : " + cartLineItem.getId());
-    List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
-    logger.debug("  FSICLI has been populated during temp booking  cartlineItem Id : " + cartLineItem.getId());
+		List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
+		for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLis) {
+			HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
+			// hkapiBookingInfo.setWhId(warehouseIdAtOrderPlacement);
+			hkapiBookingInfo.setUnitNum(foreignSkuItemCLI.getUnitNum());
+			hkapiBookingInfo.setBoDate(cartLineItem.getOrder().getPayment().getPaymentDate().toString());
+			hkapiBookingInfo.setPvId(foreignSkuItemCLI.getProductVariant().getId());
+			hkapiBookingInfo.setBoId(cartLineItem.getOrder().getId());
+			hkapiBookingInfo.setFsiCLIId(foreignSkuItemCLI.getId());
+			hkapiBookingInfo.setUnitNum(foreignSkuItemCLI.getUnitNum());
+			hkapiBookingInfo.setCliId(cartLineItem.getId());
+			hkapiBookingInfo.setSoId(null);
+			hkapiBookingInfo.setMrp(foreignSkuItemCLI.getAquaMrp());
+			hkapiBookingInfo.setFcCode(fulfilmentCenterCode);
+			hkapiBookingInfos.add(hkapiBookingInfo);
+			fsicliId = foreignSkuItemCLI.getId();
 
-    List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
-    for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLis) {
-      HKAPIBookingInfo hkapiBookingInfo = new HKAPIBookingInfo();
-     // hkapiBookingInfo.setWhId(warehouseIdAtOrderPlacement);
-      hkapiBookingInfo.setUnitNum(foreignSkuItemCLI.getUnitNum());
-      hkapiBookingInfo.setBoDate(cartLineItem.getOrder().getPayment().getPaymentDate().toString());
-      hkapiBookingInfo.setPvId(foreignSkuItemCLI.getProductVariant().getId());
-      hkapiBookingInfo.setBoId(cartLineItem.getOrder().getId());
-      hkapiBookingInfo.setFsiCLIId(foreignSkuItemCLI.getId());
-      hkapiBookingInfo.setUnitNum(foreignSkuItemCLI.getUnitNum());
-      hkapiBookingInfo.setCliId(cartLineItem.getId());
-      hkapiBookingInfo.setSoId(null);
-      hkapiBookingInfo.setMrp(foreignSkuItemCLI.getAquaMrp());
-      hkapiBookingInfo.setFcCode(fulfilmentCenterCode);
-      hkapiBookingInfos.add(hkapiBookingInfo);
-      fsicliId = foreignSkuItemCLI.getId();
+		}
+		List<HKAPIForeignBookingResponseInfo> infos = null;
+		for (HKAPIBookingInfo hkapiBookingInfo : hkapiBookingInfos) {
 
-    }
-    List<HKAPIForeignBookingResponseInfo> infos = null;
-    for (HKAPIBookingInfo hkapiBookingInfo : hkapiBookingInfos) {
+			try {
+				Gson gson = new Gson();
+				String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
+				logger.debug("json to be sent on Bright for Inv Temp Booking - " + json);
+				String url = brightlifecareRestUrl + "product/variant/" + "tempBookInventoryOnBright/";
+				ClientRequest request = new ClientRequest(url);
+				request.body("application/json", json);
+				ClientResponse response = request.post();
+				int status = response.getStatus();
+				if (status == 200) {
+					logger.debug(" Status  got from Bright   for Inv Temp Booking - " + status);
+					String data = (String) response.getEntity(String.class);
+					Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
+					}.getType();
+					infos = new Gson().fromJson(data, listType);
+					orderLoggingService.logOrderActivity(cartLineItem.getOrder(), loggedOnUser,
+							EnumOrderLifecycleActivity.ABCommunicationTempBookingSuccess.asOrderLifecycleActivity(),
+							"Inventory successfully temp booked on Bright for variant:- " + cartLineItem.getProductVariant());
+				} else {
+					logger.debug(" Failed response got from Bright  for Inv Temp Booking  hence going to delete fsicli- " + status);
+					ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+					cartLineItem = (CartLineItem) foreignSkuItemCLI.getCartLineItem();
+					cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+					getBaseDao().save(cartLineItem);
+					getBaseDao().delete(foreignSkuItemCLI);
+					logger.debug(" Deleted FSICLi for failed temp booking at Bright ");
+					orderLoggingService.logOrderActivity(cartLineItem.getOrder(), loggedOnUser,
+							EnumOrderLifecycleActivity.ABCommunicationTempBookingFailure.asOrderLifecycleActivity(),
+							"Failed to Temp Book Inventory on Bright" + cartLineItem.getProductVariant());
+				}
+			} catch (Exception e) {
+				logger.error("Exception while booking Bright Inventory against BO# so removing the entry from fsicli id " + cartLineItem.getOrder().getId()
+						+ e.getMessage());
+				ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+				cartLineItem = (CartLineItem) foreignSkuItemCLI.getCartLineItem();
+				cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+				getBaseDao().save(cartLineItem);
+				getBaseDao().delete(foreignSkuItemCLI);
+				logger.debug(" Deleted FSICLi for failed temp booking at Bright  due to exception occur");
+				orderLoggingService.logOrderActivity(cartLineItem.getOrder(), loggedOnUser,
+						EnumOrderLifecycleActivity.ABCommunicationTempBookingFailure.asOrderLifecycleActivity(), "Exception while temp booking Bright Inventory"
+								+ cartLineItem.getProductVariant());
+			}
+			if (infos == null || infos.size() <= 0) {
+				logger.debug(" Going to delete  FSICLi for  temp booking at Bright as infos got is null");
+				ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+				cartLineItem = (CartLineItem) foreignSkuItemCLI.getCartLineItem();
+				cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
+				getBaseDao().save(cartLineItem);
+				getBaseDao().delete(foreignSkuItemCLI);
+				logger.debug(" Deleted FSICLi for failed temp booking at Bright  due to null infos");
+			} else if (infos != null && infos.size() > 0) {
+				updateForeignSICLITable(infos);
+			}
 
-      try {
-        Gson gson = new Gson();
-        String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
-        logger.debug("json to be sent on Bright for Inv Temp Booking - " + json);
-        String url = brightlifecareRestUrl + "product/variant/" + "tempBookInventoryOnBright/";
-        ClientRequest request = new ClientRequest(url);
-        request.body("application/json", json);
-        ClientResponse response = request.post();
-        int status = response.getStatus();
-        if (status == 200) {
-          logger.debug(" Status  got from Bright   for Inv Temp Booking - " + status);
-          String data = (String) response.getEntity(String.class);
-          Type listType = new TypeToken<List<HKAPIForeignBookingResponseInfo>>() {
-          }.getType();
-          infos = new Gson().fromJson(data, listType);
-        }else {
-          logger.debug(" Failed response got from Bright  for Inv Temp Booking  hence going to delete fsicli- " + status );
-          ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-          cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-          cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
-          getBaseDao().save(cartLineItem);
-          getBaseDao().delete(foreignSkuItemCLI);
-          logger.debug(" Deleted FSICLi for failed temp booking at Bright ");
-
-        }
-      } catch (Exception e) {
-        logger.error("Exception while booking Bright Inventory against BO# so removing the entry from fsicli id " + cartLineItem.getOrder().getId() + e.getMessage());
-        ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-        cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
-        getBaseDao().save(cartLineItem);
-        getBaseDao().delete(foreignSkuItemCLI);
-        logger.debug(" Deleted FSICLi for failed temp booking at Bright  due to exception occur");
-      }
-      if (infos == null || infos.size() <= 0){
-        logger.debug(" Going to delete  FSICLi for  temp booking at Bright as infos got is null");
-        ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
-        cartLineItem =(CartLineItem) foreignSkuItemCLI.getCartLineItem();
-        cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
-        getBaseDao().save(cartLineItem);
-        getBaseDao().delete(foreignSkuItemCLI);
-        logger.debug(" Deleted FSICLi for failed temp booking at Bright  due to null infos");
-      } else if (infos != null && infos.size() > 0) {
-        updateForeignSICLITable(infos);
-      }
-
-    }
-    cartLineItem = (CartLineItem) getBaseDao().save(cartLineItem);
-    if (infos != null && infos.size() > 0) {
-      cartLineItem = (CartLineItem) createSkuGroupAndItem(cartLineItem, fulfilmentCenterCode);
-    }
-    return cartLineItem;
-  }
+		}
+		cartLineItem = (CartLineItem) getBaseDao().save(cartLineItem);
+		if (infos != null && infos.size() > 0) {
+			cartLineItem = (CartLineItem) createSkuGroupAndItem(cartLineItem, fulfilmentCenterCode);
+		}
+		return cartLineItem;
+	}
 
 @Transactional
  public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId){

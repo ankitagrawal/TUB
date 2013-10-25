@@ -79,6 +79,8 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_COULD_NOT_BE_CANCELLED_AUTO(1060l,"SO could not be cancelled automatically."),
   RPU_STATUS_CHANGED(1200l,"RPU Status Changed"),
   POST_SHIPPED_RECONCILIATION(1070l,"SO Reconciled post shipped"),
+  ABCommunicationBookingSuccess(2000L, "Booking On Bright - Successful"),
+  ABCommunicationBookingFailure(2001L, "Booking On Bright - Failed")
   ;
 
   private String name;
