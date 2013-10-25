@@ -106,7 +106,6 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AVRA39'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM47'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WDFR35'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WDFR38'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR18'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAADI63'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DIWLI06'/>
