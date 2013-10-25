@@ -165,7 +165,6 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         // finding line items with inventory mismatch
         logger.debug("Going to call autoProcessInventoryMismatch for shippping Order --" + shippingOrder.getId() );
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
-        logger.debug("Got Response autoProcessInventoryMismatch for shippping Order --" + shippingOrder.getId() );
         if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
           logger.debug("going to cancel --" + shippingOrder.getId() );
           return false;
