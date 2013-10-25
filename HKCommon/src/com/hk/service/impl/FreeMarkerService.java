@@ -44,7 +44,8 @@ public class FreeMarkerService {
         || templatePath.equals("/orderPlacedPaymentPendingEmail.ftl") || templatePath.equals("/orderShippedEmailNew.ftl") || templatePath.equals("/orderCancelEmailUserNew.ftl") ||
         templatePath.equals("/partialOrderCancelEmailUser.ftl") || templatePath.equals("/orderDeliveredEmail.ftl") || templatePath.equals("/feedbackEmailNew.ftl") ||
         templatePath.equals("/paymentFailEmail.ftl") || templatePath.equals("/orderCancelEmailUserLoyalty.ftl") || templatePath.equals("/notifyUserEmailProductNew.ftl") ||
-        templatePath.equals("/notifyUserEmailForSimilarProductsForSingleVariants.ftl") || templatePath.equals("/referralRewardPointEmail.ftl") || templatePath.equals("/cashBackRewardPointEmail.ftl") || templatePath.equals("/discountCouponEmail.ftl") ||
+        templatePath.equals("/newsletters/notifyEmailForSimilarProductsForMultipleVariants.ftl") || templatePath.equals("/newsletters/notifyUserEmailForSimilarProductsForSingleVariants.ftl") || templatePath.equals("/referralRewardPointEmail.ftl")
+        || templatePath.equals("/cashBackRewardPointEmail.ftl") || templatePath.equals("/discountCouponEmail.ftl") ||
         templatePath.equals("/codConfirmEmail.ftl")) {
       String ftlName = templatePath.split("\\.")[0];
       templatePath = ftlName + "Beta" + ".ftl";

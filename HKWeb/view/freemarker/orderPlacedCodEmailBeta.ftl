@@ -54,8 +54,8 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
                     <td style="margin-bottom: 1em">
-                        <#if productLineItem.productVariant.variantName??>
-                        ${productLineItem.productVariant.variantName}
+                        <#if productLineItem.productVariant.variantNameFromHKEdge??>
+                        ${productLineItem.productVariant.variantNameFromHKEdge}
                         <#else>
                         ${productLineItem.productVariant.product.name}
                         </#if>
