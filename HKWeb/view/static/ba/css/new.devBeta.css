@@ -281,7 +281,13 @@ img.prod48 {
     font-style: italic;
     margin-top: 0px;
 }
+.hk-breadcrumb-cntnr{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9em;
 
+}
 /* line 206, ../sass/_base.scss */
 a img {
     border: 0;

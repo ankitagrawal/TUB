@@ -24,20 +24,29 @@ import java.util.List;
 @Service
 public class FedExAwbServiceImpl implements ThirdPartyAwbService {
 
-  @Value("#{hkEnvProps['" + Keys.Env.fedExAuthKey + "']}")
-  private String                fedExAuthKey;
+  @Value("#{hkEnvProps['" + Keys.Env.fedExServerUrl + "']}")
+  private String                fedExServerUrl;
+
+  @Value("#{hkEnvProps['" + Keys.Env.fedExAuthKeyGGN + "']}")
+  private String fedExAuthKeyGGN;
+
+  @Value("#{hkEnvProps['" + Keys.Env.fedExMeterNoGGN + "']}")
+  private String fedExMeterNoGGN;
+
+  @Value("#{hkEnvProps['" + Keys.Env.fedExPasswordGGN + "']}")
+  private String fedExPasswordGGN;
 
   @Value("#{hkEnvProps['" + Keys.Env.fedExAccountNoGGN + "']}")
   private String fedExAccountNoGGN;
 
-  @Value("#{hkEnvProps['" + Keys.Env.fedExMeterNo + "']}")
-  private String                fedExMeterNo;
+  @Value("#{hkEnvProps['" + Keys.Env.fedExAuthKeyMUM + "']}")
+  private String fedExAuthKeyMUM;
 
-  @Value("#{hkEnvProps['" + Keys.Env.fedExPassword + "']}")
-  private String                fedExPassword;
+  @Value("#{hkEnvProps['" + Keys.Env.fedExMeterNoMUM + "']}")
+  private String fedExMeterNoMUM;
 
-  @Value("#{hkEnvProps['" + Keys.Env.fedExServerUrl + "']}")
-  private String                fedExServerUrl;
+  @Value("#{hkEnvProps['" + Keys.Env.fedExPasswordMUM + "']}")
+  private String fedExPasswordMUM;
 
   @Value("#{hkEnvProps['" + Keys.Env.fedExAccountNoMUM + "']}")
   private String fedExAccountNoMUM;
@@ -49,13 +58,12 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
 
   @Override
   public ThirdPartyAwbDetails getThirdPartyAwbDetails(ShippingOrder shippingOrder, Double weightInKg) {
-    String fedExAccount = null;
+    FedExCourierUtil fedExCourierUtil = null;
     if (EnumWarehouseIdentifier.GGN_Bright_Warehouse.getName().equals(shippingOrder.getWarehouse().getIdentifier())) {
-      fedExAccount = fedExAccountNoGGN;
+      fedExCourierUtil = new FedExCourierUtil(fedExAuthKeyGGN, fedExAccountNoGGN, fedExMeterNoGGN, fedExPasswordGGN, fedExServerUrl);
     } else {
-      fedExAccount = fedExAccountNoMUM;
+      fedExCourierUtil = new FedExCourierUtil(fedExAuthKeyMUM, fedExAccountNoMUM, fedExMeterNoMUM, fedExPasswordMUM, fedExServerUrl);
     }
-    FedExCourierUtil fedExCourierUtil = new FedExCourierUtil(fedExAuthKey, fedExAccount, fedExMeterNo, fedExPassword, fedExServerUrl);
     return fedExCourierUtil.newFedExShipment(shippingOrder, weightInKg);
   }
 
@@ -100,8 +108,8 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
 
   @Override
   public boolean deleteThirdPartyAwb(String awbNumber){
-    FedExShipmentDeleteUtil fedExShipmentDeleteUtil = new FedExShipmentDeleteUtil(fedExAuthKey, fedExAccountNoGGN,
-        fedExMeterNo, fedExPassword, fedExServerUrl);
+    FedExShipmentDeleteUtil fedExShipmentDeleteUtil = new FedExShipmentDeleteUtil(fedExAuthKeyGGN, fedExAccountNoGGN,
+        fedExMeterNoGGN, fedExPasswordGGN, fedExServerUrl);
     return fedExShipmentDeleteUtil.deleteShipment(awbNumber);
   }
 	/*

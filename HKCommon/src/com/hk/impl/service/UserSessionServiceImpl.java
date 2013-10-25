@@ -49,9 +49,11 @@ public class UserSessionServiceImpl implements UserSessionService {
     public void onLogoutUser() {
         PrincipalImpl loggedInPrincipalImpl = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
 
-        URIBuilder builder = new URIBuilder().fromURI(ServiceEndPoints.USER_SESSION + LOGOUT + StoreConstants.DEFAULT_STORE_ID_STR + URIBuilder.URL_TOKEN_SEP
-                + loggedInPrincipalImpl.getId().toString());
-        HkHttpClient.executeGet(builder.getWebServiceUrl());
+        if (loggedInPrincipalImpl != null && loggedInPrincipalImpl.getId() != null) {
+            URIBuilder builder = new URIBuilder().fromURI(ServiceEndPoints.USER_SESSION + LOGOUT + StoreConstants.DEFAULT_STORE_ID_STR + URIBuilder.URL_TOKEN_SEP
+                    + loggedInPrincipalImpl.getId().toString());
+            HkHttpClient.executeGet(builder.getWebServiceUrl());
+        }
 
     }
 

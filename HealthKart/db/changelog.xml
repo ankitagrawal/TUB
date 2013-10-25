@@ -14258,4 +14258,10 @@
             <column name="source" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="RD(generated)" id="20131015-01">
+        <sql>
+            insert  into classification values(2150,'SO Could not be Auto-escalated','Due to Fitness Pro');
+            insert  into reason (id,primary_classification,type,classification_id) values(1710,'SO could not be Auto-escalated from Fitness Pro','SO Could not be Auto-escalated',2150);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
