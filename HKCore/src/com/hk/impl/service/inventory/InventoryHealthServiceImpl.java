@@ -59,6 +59,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.pact.dao.sku.SkuItemLineItemDao
 
+
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
 
@@ -620,7 +621,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
                             for (int i = 0; i < qtyToBeSet; i++) {
-                                List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null,                             cartLineItem.getMarkedPrice(), false);
+                                List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null,
+                                        cartLineItem.getMarkedPrice(), false);
 
                                 if (skuItemList != null && skuItemList.size() > 0) {
                                     SkuItem skuItem = skuItemList.get(0);
@@ -829,6 +831,5 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     public HybridStoreVariantService getHybridStoreVariantService() {
         return hybridStoreVariantService;
     }
-
 
 }
