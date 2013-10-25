@@ -289,7 +289,7 @@ public class BusyPopulateRtoData {
     public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
       int s_no = 0;
       sql.eachRow("""
-                      select li.id, li.sku_id, li.qty, li.marked_price, li.hk_price, li.discount_on_hk_price, li.reward_point_discount,
+                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, li.discount_on_hk_price, li.reward_point_discount,
                       t.value as tax_value,li.order_level_discount, li.cost_price
                       from line_item li
                       inner join tax t on li.tax_id = t.id
