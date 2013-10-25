@@ -77,11 +77,11 @@ public class BusyPopulateRtoData {
 									inner join warehouse w on w.id = so.warehouse_id
 
 									where so.shipping_order_status_id in (200, 220, 230, 250, 260,270,280)
-									and (ship.return_date >=${lastUpdateDate}
+									/*and (ship.return_date >=${lastUpdateDate}
 									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
-									and ship.return_date is not null
-                                    and ifnull(ship.return_date pvi.txn_date)>= {lastUpdateDate}
-                                    and ifnull(ship.return_date pvi.txn_date) > '2011-11-08 19:59:36'
+									and ship.return_date is not null*/
+                                    and ifnull(ship.return_date, pvi.txn_date)>= {lastUpdateDate}
+                                    and ifnull(ship.return_date, pvi.txn_date) > '2011-11-08 19:59:36'
 									GROUP BY so.id
 									ORDER BY pvi.txn_date ASC
                  """) {
