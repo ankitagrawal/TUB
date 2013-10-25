@@ -1,35 +1,27 @@
 package com.hk.web.filter;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.domain.user.User;
 import com.hk.domain.analytics.TrafficTracking;
-import com.hk.pact.dao.marketing.CampaignTrackingDao;
+import com.hk.domain.user.User;
 import com.hk.pact.dao.analytics.TrafficTrackingDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.OrderSourceFinder;
 import com.shiro.PrincipalImpl;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA. User: Pratham Date: Nov 18, 2011 Time: 3:42:11 PM To change this template use File |
@@ -107,7 +99,8 @@ public class CampaignTrackingFilter implements Filter {
 		        //Check if it is a crawler or a bot
 		        if (userAgent != null && !userAgent.equals("")
 				        && !userAgent.toLowerCase().contains("bot") && !userAgent.toLowerCase().contains("spider")
-				        && !userAgent.toLowerCase().contains("price") && !userAgent.toLowerCase().contains("monit/4.10.1") ) {
+				        && !userAgent.toLowerCase().contains("price") && !userAgent.toLowerCase().contains("monit/4.10.1")
+				        && !userAgent.toLowerCase().contains("monit/5.1.1") ) {
 			        TrafficTracking trafficTracking = trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
 			        if (trafficTracking != null && trafficTracking.getId() != null) {
 				        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);

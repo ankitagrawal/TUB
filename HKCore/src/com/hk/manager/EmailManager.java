@@ -150,7 +150,8 @@ public class EmailManager {
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
-	private String              logisticsOpsEmails;
+
+    private String              logisticsOpsEmails;
 
     @Value("#{hkEnvProps['" + Keys.Env.codRoute + "']}")
     private String codRoute;

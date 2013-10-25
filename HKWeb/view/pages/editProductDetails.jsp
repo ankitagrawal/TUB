@@ -32,24 +32,74 @@
           <li><label>Categories</label><s:text style="width:200px" name="categories" value="${pa.categories}"/></li>
           <li><label>Sorting</label><s:text name="product.orderRanking"/></li>
           <li><label>Brand</label><s:text name="brand" value="${pa.product.brand}" style="width: 300px;"/></li>
-          <li><label>Primary Category</label><s:text name="primaryCategory" value="${pa.product.primaryCategory.displayName}"
+            <li><label>Primary Category</label><s:text name="primaryCategory" value="${pa.product.primaryCategory.displayName}"
                                                      style="width: 300px;" placeholder="Home Devices"/></li>
           <li><label>Secondary Category</label><s:text name="secondaryCategory" value="${pa.product.secondaryCategory.displayName}"
                                                      style="width: 300px;"/></li>
-          <li><label>Min Days</label><s:text name="product.minDays"/></li>
-          <li><label>Max Days</label><s:text name="product.maxDays"/></li>
-          <li><label>Is Deleted</label><s:checkbox name="product.deleted"/></li>
+            <li>
+                <label>Min Days</label>
+                <c:choose>
+                    <c:when test="${pa.combo}">
+                        <s:text name="product.minDays"/>
+                    </c:when>
+                    <c:otherwise>
+                        ${pa.product.minDays}
+                    </c:otherwise>
+                </c:choose>
+            </li>
+            <li>
+                <label>Max Days</label>
+                <c:choose>
+                    <c:when test="${pa.combo}">
+                        <s:text name="product.maxDays"/>
+                    </c:when>
+                    <c:otherwise>
+                        ${pa.product.maxDays}
+                    </c:otherwise>
+                </c:choose>
+            </li>
+            <li>
+                <label>Is Deleted</label>
+                <c:choose>
+                    <c:when test="${pa.combo}">
+                        <s:checkbox name="product.deleted"/>
+                    </c:when>
+                    <c:otherwise>
+                        ${pa.product.deleted}
+                    </c:otherwise>
+                </c:choose>
+            </li>
           <li><label>Is Out Of Stock</label><s:checkbox name="product.outOfStock"/></li>
           <li><label>Is Service</label><s:checkbox name="product.service"/></li>
           <li><label>Color Product</label><s:checkbox name="product.productHaveColorOptions"/></li>
           <li><label>Is Google Ad Disallowed</label><s:checkbox name="product.googleAdDisallowed"/></li>
           <li><label>Is Amazon Product</label><s:checkbox name="product.amazonProduct"/></li>
           <li><label>Is Hidden</label><s:checkbox name="product.hidden"/></li>
-          <li><label>Is JIT</label><s:checkbox name="product.jit"/></li>
+            <li>
+                <label>Is JIT</label>
+                <c:choose>
+                    <c:when test="${pa.combo}">
+                        <s:checkbox name="product.jit"/>
+                    </c:when>
+                    <c:otherwise>
+                        ${pa.product.jit}
+                    </c:otherwise>
+                </c:choose>
+            </li>
           <li><label>Is Drop Shipping</label><s:checkbox class="dropShip" name="product.dropShipping"/></li>
             <%--//todo ankit, please add the same in bulk edit, take rimals help      --  need to discuss--%>
            <li ><label>Is Ground Shipping</label><s:checkbox class="groundship" name="product.groundShipping"/></li>
-          <li><label>Is COD Allowed</label><s:checkbox name="product.codAllowed"/></li>
+            <li>
+                <label>Is COD Allowed</label>
+                <c:choose>
+                    <c:when test="${pa.combo}">
+                        <s:checkbox name="product.codAllowed"/>
+                    </c:when>
+                    <c:otherwise>
+                        ${pa.product.codAllowed}
+                    </c:otherwise>
+                </c:choose>
+            </li>
             <li><label>Is Installable</label><s:checkbox name="product.installable"/></li>
           <li>
 

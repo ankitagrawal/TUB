@@ -71,7 +71,7 @@
     </th>
   </c:if>
 
-  <c:if test="${bep.toBeEditedOptions.options}['productCodAllowed']}">
+  <c:if test="${bep.toBeEditedOptions.options['productCodAllowed']}">
     <th>
       Is COD Allowed
     </th>
@@ -199,7 +199,7 @@
 
 <c:if test="${bep.toBeEditedOptions.options['productCodAllowed']}">
   <td width="60px" align="right" class="productCodAllowed">
-    <s:select name="products[${ctr.index}].codAllowed" class="productCodAllowedDropDown">
+    <%--<s:select name="products[${ctr.index}].codAllowed" class="productCodAllowedDropDown">
       <s:option value="${product.codAllowed}" selected="true">${product.codAllowed}</s:option>
       <c:choose>
         <c:when test="${product.codAllowed == true}">
@@ -209,13 +209,14 @@
           <s:option value="1" class="true">true</s:option>
         </c:otherwise>
       </c:choose>
-    </s:select>
+    </s:select>--%>
+      ${product.codAllowed}
   </td>
 </c:if>
 
   <%--<c:if test="${bep.toBeEditedOptions.options['productDeleted']}">--%>
 <td width="60px" align="right" class="productDeleted">
-  <s:select name="products[${ctr.index}].deleted" class="productDeletedDropDown">
+  <%--<s:select name="products[${ctr.index}].deleted" class="productDeletedDropDown">
     <s:option value="${product.deleted}" selected="true">${product.deleted}</s:option>
     <c:choose>
       <c:when test="${product.deleted == true}">
@@ -225,7 +226,8 @@
         <s:option value="1" class="true">true</s:option>
       </c:otherwise>
     </c:choose>
-  </s:select>
+  </s:select>--%>
+    ${product.deleted}
 </td>
   <%--</c:if>--%>
 
@@ -245,13 +247,15 @@
 
 <c:if test="${bep.toBeEditedOptions.options['productMinDays']}">
   <td valign="top">
-    <s:text name="products[${ctr.index}].minDays" style="width:70px"/>
+    ${product.minDays}
+    <%--<s:text name="products[${ctr.index}].minDays" style="width:70px"/>--%>
   </td>
 </c:if>
 
 <c:if test="${bep.toBeEditedOptions.options['productMaxDays']}">
   <td valign="top">
-    <s:text name="products[${ctr.index}].maxDays" style="width:70px"/>
+      ${product.maxDays}
+    <%--<s:text name="products[${ctr.index}].maxDays" style="width:70px"/>--%>
   </td>
 </c:if>
 
@@ -281,7 +285,8 @@
 
 <c:if test="${bep.toBeEditedOptions.options['productJit']}">
   <td width="60px" valign="top">
-    <s:checkbox name="products[${ctr.index}].jit"/>
+      ${product.jit}
+    <%--<s:checkbox name="products[${ctr.index}].jit"/>--%>
   </td>
 </c:if>
 
@@ -487,28 +492,32 @@
   <c:when
       test="${bep.toBeEditedOptions.options['productVariantHKPrice']}">
     <td width="50px" align="right">
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
+        ${variant.hkPrice}
+      <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
               style="width:50px"
-              class="hkPrice"/>
+              class="hkPrice"/>--%>
     </td>
 
     <td width="50px" align="center">
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
-              class="discountPercent" size="5" style="width:50px; border: 0;" readonly="readonly"/>
+        ${variant.discountPercent}
+      <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
+              class="discountPercent" size="5" style="width:50px; border: 0;" readonly="readonly"/>--%>
     </td>
   </c:when>
 
   <c:when
       test="${bep.toBeEditedOptions.options['productVariantDiscount']}">
     <td width="50px" align="right">
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
+         ${variant.hkPrice}
+      <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
               style="width:50px; border: 0;"
-              class="hkPrice" readonly="readonly"/>
+              class="hkPrice" readonly="readonly"/>--%>
     </td>
 
     <td width="50px" align="center">
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
-              class="discountPercent" size="5" style="width:50px"/>
+         ${variant.discountPercent}
+      <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
+              class="discountPercent" size="5" style="width:50px"/>--%>
     </td>
   </c:when>
 
@@ -574,7 +583,8 @@
 
 <c:if test="${bep.toBeEditedOptions.options['productVariantDeleted']}">
   <td width="60px" align="right">
-    <s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].deleted"/>
+       ${variant.deleted}
+    <%--<s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].deleted"/>--%>
   </td>
 </c:if>
 
@@ -718,13 +728,13 @@
           $('.errors').append("<br/> Please enter secondary category for: " + productId);
         }
       });
-      $('.productBrand').each(function () {
+      /*$('.productBrand').each(function () {
         if ($(this).val().trim() === "") {
           ctr = 1;
           var productId = $(this).parents('.productRow').find('.productId').val();
           $('.errors').append("<br/> Please enter brand for: " + productId);
         }
-      });
+      });*/
       $('.productSupplierTin').each(function () {
         var isDeleted = $(this).parents('.productRow').find('.productDeletedDropDown').val();
         if ($(this).val().trim() === "" && isDeleted == 'false') {
