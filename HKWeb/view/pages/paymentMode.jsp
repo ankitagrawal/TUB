@@ -160,6 +160,7 @@
 	            <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
 	              <li id="tab5">Cheque / Bank Deposit</li>
 	            </shiro:hasRole>
+                <c:set var="NEFT" value="true" />
                 <shiro:hasRole name="<%=RoleConstants.NEFT_DEPOSIT%>">
                     <li id="tab5">NEFT Deposit</li>
                     <c:set var="NEFT" value="false"/>
