@@ -109,7 +109,7 @@ public class HybridCartResource {
             }
 
 //            Long itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size()) + 1L + order.getExclusivelyComboCartLineItems().size();
-
+             getHybridCartService().loadOrderFromDB(order);
             Long itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size()) + order.getExclusivelyComboCartLineItems().size();
 
             StoreVariantBasicResponse storeVariantBasicApiResponse = getHybridStoreVariantService().getStoreVariantBasicDetailsFromEdge(
@@ -173,6 +173,7 @@ public class HybridCartResource {
             userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
           }
           //Long itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size()) + 1L + order.getExclusivelyComboCartLineItems().size();
+          getHybridCartService().loadOrderFromDB(order);
           Long itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size())  + order.getExclusivelyComboCartLineItems().size();
           CartSummaryFromHKR cartSummaryFromHKR = new CartSummaryFromHKR();
           cartSummaryFromHKR.setItemsInCart(Integer.valueOf(itemsInCart.toString()));

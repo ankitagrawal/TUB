@@ -43,6 +43,15 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='UNI002'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT035'/>
 
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA67'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA65'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA66'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT689'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT033'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT034'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SWT036'/>
+
+
     </div>
       <!--- box-product close -->
 
