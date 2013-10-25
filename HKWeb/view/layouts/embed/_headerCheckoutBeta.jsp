@@ -55,17 +55,19 @@
   %>
 
   <div class='topBar container_24'>
-      <div class="fnt-sz10 fnt-light" style="text-align:right">
+      <div class="fnt-sz10 fnt-light" style="">
 
           <a href="${pageContext.request.contextPath}/beta/hk/FAQ.action?reftag=return" target="_blank">14 day return policy</a>&nbsp;
           <a href="${pageContext.request.contextPath}/beta/hk/ContactUs.action" target="_blank">Contact Us</a>&nbsp;
-          ${user.firstName}
+          <span class="cont-rht"><span >${user.firstName}</span>
           |&nbsp; <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
-                  rel="noFollow">Logout</s:link>
+                  rel="noFollow">Logout</s:link></span>
       </div>
+      <div style="text-align:center">
       <s:link href="/" title='go to healthkart home'>
-      <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart" style="position:absolute;top:-2px;"/><br>
+      <img src="<hk:vhostImage/>/images/logo/HK-Logo.png" class="pad-r-10" alt="Healthkart" style="position:relative;top:-10px"/><br>
       </s:link>
+      </div>
 
     <div class='topBarContent' style="position: absolute;right:0px;">
 

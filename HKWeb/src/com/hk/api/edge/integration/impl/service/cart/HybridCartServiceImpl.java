@@ -8,8 +8,10 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.store.EnumStore;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.web.action.admin.order.split.SplitBaseOrderAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ public class HybridCartServiceImpl implements HybridCartService {
     private UserService userService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private BaseDao baseDao;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -57,6 +61,10 @@ public class HybridCartServiceImpl implements HybridCartService {
         return cartSummaryFromHKR;
     }
 
+  public void loadOrderFromDB(Order order){
+       getBaseDao().refresh(order);
+  }
+
     public UserService getUserService() {
         return userService;
     }
@@ -65,4 +73,7 @@ public class HybridCartServiceImpl implements HybridCartService {
         return orderService;
     }
 
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
 }
