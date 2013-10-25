@@ -166,7 +166,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         logger.debug("Going to call autoProcessInventoryMismatch for shippping Order --" + shippingOrder.getId() );
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
         if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
-          logger.debug("going to cancel --" + shippingOrder.getId() );
+          logger.debug("Got shipping order null or with cancelled status");
           return false;
         }
         List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
