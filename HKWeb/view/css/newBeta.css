@@ -2269,7 +2269,13 @@ h2.prod_title {
     font-size: 10px;
     font-weight: normal;
 }
+.hk-breadcrumb-cntnr{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9em;
 
+}
 /* line 973, ../sass/main.scss */
 .catalog .product_box h2 {
     margin: 5px 0;
