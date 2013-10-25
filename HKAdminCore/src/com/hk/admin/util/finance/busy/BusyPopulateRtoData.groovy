@@ -61,7 +61,10 @@ public class BusyPopulateRtoData {
 									c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
 									so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
 									from line_item li
-									inner join shipping_order so on li.shipping_order_id=so.id
+                                    left join (select line_item_id, pvi.txn_date, count(pvi.id) qty
+                                    from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
+                                    on li.id=pvi.id
+                                    inner join shipping_order so on li.shipping_order_id=so.id
 									inner join base_order bo on so.base_order_id = bo.id
 									left join payment p ON bo.payment_id = p.id
 									left join payment_mode pm ON pm.id = p.payment_mode_id
@@ -77,8 +80,10 @@ public class BusyPopulateRtoData {
 									and (ship.return_date >=${lastUpdateDate}
 									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
 									and ship.return_date is not null
+                                    and ifnull(ship.return_date pvi.txn_date)>= {lastUpdateDate}
+                                    and ifnull(ship.return_date pvi.txn_date) > '2011-11-08 19:59:36'
 									GROUP BY so.id
-									ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
+									ORDER BY pvi.txn_date ASC
                  """) {
       accountingInvoice ->
 
@@ -288,7 +293,15 @@ public class BusyPopulateRtoData {
                       t.value as tax_value,li.order_level_discount, li.cost_price
                       from line_item li
                       inner join tax t on li.tax_id = t.id
+                      join shipping_order so on li.shipping_order_id=so.id
+                      left join shipment ship on so.shipment_id=ship.id
+                      left join (select line_item_id, pvi.txn_date, count(pvi.id) qty
+                      from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
+                      on li.id=pvi.line_item_id
                       where li.shipping_order_id = ${shipping_order_id}
+                      and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
+                      group by li.id
+
                    """) {
         invoiceItems ->
 
@@ -333,8 +346,12 @@ public class BusyPopulateRtoData {
                     select sum(shipping_charge) as shipping_charge, sum(cod_charge) as cod_charge, sum(reward_point_discount)  as reward_points
                     from line_item li
                     inner join tax t on li.tax_id = t.id
+                    left join (select line_item_id, pvi.txn_date, count(pvi.id) qty
+                    from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
+                    on li.id=pvi.id
                     where li.shipping_order_id = ${shipping_order_id}
-                    group by shipping_order_id
+                    and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
+                    group by li.shipping_order_id
                  """) {
       footerItems ->
 
