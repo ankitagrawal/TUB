@@ -352,10 +352,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
-                if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                    shouldUpdate = false;
-                    break;
+            if (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())) {
+                if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+                    if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                        shouldUpdate = false;
+                        break;
+                    }
                 }
             }
         }

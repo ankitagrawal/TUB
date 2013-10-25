@@ -3,7 +3,7 @@ package com.hk.api.edge.integration.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hk.api.edge.constants.StoreConstants;
+import com.hk.constants.edge.StoreConstants;
 import com.hk.domain.core.JSONObject;
 
 /**

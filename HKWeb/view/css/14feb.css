@@ -67,8 +67,7 @@ h1,h2,h3,h4,h5,h6 {
 /* Reset CSS Start */
 
 
-body {
-	background:#FFF;
+/*body {
 	font-family: 'robotoregular';
 	color:#000;
 	}
@@ -86,10 +85,10 @@ body {
 	width:960px;
 	}
 
-.logo { margin:0 auto;
+/*.logo { margin:0 auto;
 		text-align:center;
 		padding:30px 0 40px 0;
-		}
+		}  */
 
 .main-banner {
 	margin-bottom:30px;}
@@ -147,7 +146,7 @@ body {
 
 .container01 img, .container02 img{
 	margin:10px;
-	float:left;}
+	float:left;} */
 
 
 

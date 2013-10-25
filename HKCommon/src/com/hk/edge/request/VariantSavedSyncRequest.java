@@ -4,6 +4,7 @@ public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
 
     private String  oldProductId;
     private double  mrp;            // synced only in case of jit
+    private double  costPrice;      // synced only in case of jit
     private long    minDispatchDays;
     private long    maxDispatchDays;
 
@@ -65,6 +66,25 @@ public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public double getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(oldVariantId).append(oldVariantId).append(" op: ").append(offerPrice).append(" dis :").append(discount);
+        strBuilder.append(" mrp :").append(mrp).append(" cp: ").append(costPrice).append(" oldPRoductId: ").append(oldProductId).append(" minD: ").append(minDispatchDays);
+        strBuilder.append(" maxD:").append(maxDispatchDays);
+
+        return strBuilder.toString();
+
     }
 
 }

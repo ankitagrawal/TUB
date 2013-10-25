@@ -1,6 +1,7 @@
 package com.hk.impl.service.shippingOrder;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
@@ -42,6 +43,10 @@ public class ShippingOrderLifecycleServiceImpl implements ShippingOrderLifecycle
     @Override
     public List<Reason> getReasonByType(String type) {
         return shippingOrderLifecycleDao.getReasonsByType(type);
+    }
+
+    public String getAwbByShippingOrderLifeCycle(ShippingOrder shippingOrder){
+        return shippingOrderLifecycleDao.getAwbByShippingOrderLifeCycle(shippingOrder);
     }
 
 

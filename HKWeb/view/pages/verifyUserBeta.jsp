@@ -15,18 +15,15 @@
             <h1>Account Verification </h1>
     </s:layout-component>
     <s:layout-component name="rhsContent">
-
+    <div>
         <c:if test="${verifyUserBean.outcome == outcome_alreadyVerified}">
             <div class="alert-cntnr">
-            <span class="icn-success "></span>
-
-            <div class="alert-messages txt-cntr">
-
-                <div>
-                    Your account is already active.
+                <span class="icn-success "></span>
+                <div class="alert-messages txt-cntr">
+                    <div>
+                        Your account is already active.
+                    </div>
                 </div>
-                <span class="icn icn-close2 remove-success"></span>
-
             </div>
         </c:if>
         <c:if test="${verifyUserBean.outcome == outcome_invalidLink}">
@@ -36,7 +33,7 @@
                 <div>
                     Invalid Link.
                 </div>
-                <span class="icn icn-close2 remove-error"></span>
+
 
 
             </div>
@@ -45,12 +42,9 @@
         <c:if test="${verifyUserBean.outcome == outcome_linkExpired}">
             <div class="err-cntnr">
                 <span class="icn-warning-small"></span>
-
                 <div>
-                    The activation link has expired.
-
+                    Your activation link has expired. Please visit your account section to resend the activation e-mail
                 </div>
-                <span class="icn icn-close2 remove-error"></span>
             </div>
 
             <shiro:hasRole name="<%=RoleConstants.HK_USER%>">
@@ -60,7 +54,7 @@
                     <div>
                         <p>Your account has already been activated!</p>
                     </div>
-                    <span class="icn icn-close2 remove-error"></span>
+
                 </div>
             </shiro:hasRole>
 
@@ -75,37 +69,38 @@
         </c:if>
         <c:if test="${verifyUserBean.outcome == outcome_success}">
             <div class="alert-cntnr">
-            <span class="icn-success "></span>
+                <span class="icn-success "></span>
 
-            <div class="alert-messages txt-cntr ">
+                <div class="alert-messages txt-cntr ">
 
-                <div>
-                    Thanks! Your account has now been activated.
+                    <div>
+                        Thanks! Your account has now been activated.
+                    </div>
+
+
                 </div>
-                <span class="icn icn-close2 remove-success"></span>
-
             </div>
             <br/>
 
-            <div class="button" align="left"><s:link
+            <div class="btn btn-gray" style="display:inline-block" align="left"><s:link
                     beanclass="com.hk.web.action.core.cart.CartAction">PROCEED TO CART</s:link></div>
         </c:if>
-
-        <div class="button " align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
-            Start Shopping
+        <br><br>
+        <div class="btn btn-gray " style="display:inline-block" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
+            &laquo; Go to home
         </s:link></div>
 
 
-        <shiro:notAuthenticated>
+        <%--<shiro:notAuthenticated>
 
-            <div class="button" align="left"><s:link beanclass="com.hk.web.action.core.auth.LoginAction" event="pre">
+            <div class="btn btn-gray" align="left"><s:link beanclass="com.hk.web.action.core.auth.LoginAction" event="pre">
                 Login
             </s:link></div>
         </shiro:notAuthenticated>
+--%>
+        <div style=""></div>
 
-        <div style="height:250px"></div>
-
-
+    </div>
     </s:layout-component>
 
 </s:layout-render>

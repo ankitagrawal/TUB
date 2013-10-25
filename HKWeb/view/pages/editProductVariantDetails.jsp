@@ -94,7 +94,8 @@
                                     class="markedPrice"/>
                         </td>
                         <td>
-                            <s:text name="productVariants[${ctr.index}].hkPrice" style="width:100px;" class="hkPrice"/>
+                            ${productVariant.hkPrice}
+                            <%--<s:text name="productVariants[${ctr.index}].hkPrice" style="width:100px;" class="hkPrice"/>--%>
                         </td>
                         <td>
                             <s:text name="productVariants[${ctr.index}].b2bPrice" style="width:100px;"
@@ -141,7 +142,8 @@
                             </td>
                         </c:if>
                         <td>
-                            <s:checkbox name="productVariants[${ctr.index}].deleted"/>
+                            ${productVariant.deleted}
+                            <%--<s:checkbox name="productVariants[${ctr.index}].deleted"/>--%>
                         </td>
                         <td>
                             <s:checkbox name="productVariants[${ctr.index}].clearanceSale" class="clearanceSale"/>

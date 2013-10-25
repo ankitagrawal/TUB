@@ -101,7 +101,7 @@
       beanclass="com.hk.web.action.core.payment.FreeCheckoutConfirmAction"
       method="post">
     <div class="buttons"><s:submit name="confirm"
-                                   value="Confirm Order" class="butt"
+                                   value="Confirm Order" class="btn btn-blue"
                                    disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
     </div>
   </s:form>
@@ -185,9 +185,9 @@
   </c:forEach>
   </table>
   <div style="float: right;width: 99%;margin-top: 40px;">
-    <s:submit name="proceed" value="Make Payment" class="button makePayment  btn btn-blue"
+  <s:submit name="proceed" value="Make Payment" class="button makePayment  btn btn-blue"
               disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
-  </div>
+     </div>
 </s:form></div>
 
 <div id="tabs_content3" class="tab_content" style="display: none;">
@@ -285,12 +285,11 @@
           </div>
           <h4 class="codContact fnt-bold">Contact Details</h4>
 
-          <p class="mrgn-b-20 cont-lft">Please verify the name and contact number of the person
-            who would receive this order. <br/> <br/>
-            You will receive an automated call on your contact phone. Please take the call and respond as per
-            instructions to verify
-            your order instantly. In case you miss the call, our agent will call you again to verify. Once verified,
-            your order will go into processing.</p>
+          <p class="mrgn-b-20 cont-lft">
+
+            Please verify the name and contact number of the person
+            who would receive this order. <br/>
+            </p>
           <s:form
               beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
               method="post">
@@ -310,7 +309,10 @@
               <s:text class="signUpInputNew2" name="codContactPhone"
                       value="${orderSummary.order.address.phone}" id="phoneNo"/>
             </div>
-
+            <p style="margin-left: 130px;margin-top: 10px;color: #009AEC;"><strong >Please ensure that you enter the correct mobile number</strong></p>
+            <p style="font-weight: 500; border: 1px solid #009AEC; color: #009AEC; padding: 5px; margin-top: 20px;">
+              After placing your order, Please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+              </p>
             <div class="buttons" style="font-size: 1.3em;"><br/>
               <br/>
               <s:submit name="pre" value="PLACE ORDER" style="margin-left: 8px;"
@@ -632,15 +634,12 @@
 
   <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
     <tr>
-      <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+      <td colspan="2" class="web_dialog_title">Oops! We are sorry.</td>
       <td class="web_dialog_title align_right">
         <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
       </td>
     </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
+
     <tr>
       <td colspan="3" style="padding-left: 15px;">
         <b>The following items have been removed due to insufficient inventory</b>
@@ -652,7 +651,7 @@
     </tr>
     <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
       <tr>
-        <div class='product' style="border-bottom-style: solid;">
+        <div class='product' >
           <td style="padding-left: 15px;">
             <div class='img48'
                  style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
@@ -733,13 +732,12 @@
     </tr>
     <tr>
       <td colspan="2" style="text-align: center;">
-
         <c:if test="${fn:length(orderSummary.order.cartLineItems) > 0}">
-        <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+        <a class="button_green btn btn-blue" style="width:120px; height: 18px;">Continue</a>
       </td>
       <td>
         </c:if>
-        <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+        <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green btn btn-blue"
                 style="width: 160px; height: 18px;">Back to Shopping
         </s:link>
       </td>
@@ -755,51 +753,50 @@
     width: 115px !important;
   }
   .web_dialog_overlay {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background: #000000;
-    opacity: .15;
-    filter: alpha(opacity = 15);
-    -moz-opacity: .15;
-    z-index: 101;
-    display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      opacity: .7;
+      filter: alpha(opacity = 7);
+      -moz-opacity: .7;
+      border: 1px solid #CCC;
+      z-index: 101;
+      display: none;
   }
 
   .web_dialog {
-    display: none;
-    position: fixed;
-    width: 450px;
-    /*height: 400px;*/
-    top: 50%;
-    left: 50%;
-    margin-left: -265px;
-    margin-top: -180px;
-    /*background-color: #ffffff;*/
-    background-color: white;
-    /*border: 2px solid #336699;*/
-    padding: 0px;
-    z-index: 102;
-    /*font-family: Verdana;*/
-    font-size: 10pt;
-    color: #333;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+      display: none;
+      position: fixed;
+      width: 450px; /*height: 400px;*/
+      top: 50%;
+      left: 50%;
+      margin-left: -265px;
+      margin-top: -180px; /*background-color: #ffffff;*/
+      background-color: white; /*border: 2px solid #336699;*/
+      padding: 0px;
+      z-index: 102;
+      /*font-family: Verdana;*/
+      font-size: 10pt;
+      color: #333;
+      border: 1px solid #CCC;
+      padding:10px;
+      padding-top:0px ;
   }
 
   .web_dialog_title {
-    /*border-bottom: solid 2px #336699;*/
-    /*background-color: #336699;*/
-    font-size: 16px;
-    font-weight: 600;
-    padding: 5px;
-    background-color: #f2f7fb;
-    color: White;
+      /*border-bottom: solid 2px #336699;*/
+      /*background-color: #336699;*/
+      color: #1B3188;
+      font-size: 1.5em;
+      line-height: 1.8em;
+      padding: 5px;
   }
 
   .web_dialog_title a {
