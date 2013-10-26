@@ -671,7 +671,7 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
-
+        logger.debug("Number of shipping order created is --" + shippingOrders.size());
         if (shippingOrders != null && shippingOrders.size() > 0) {
             if (!shippingOrderAlreadyExists) {
                 // save order with InProcess status since shipping orders have been created
