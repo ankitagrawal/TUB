@@ -728,8 +728,10 @@ public class OrderServiceImpl implements OrderService {
             }
           }
             // auto escalate shipping orders if possible
+             getBaseDao().refresh(order);
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
+              logger.debug("Shipping Orders size --" + shippingOrders.size());
+                for (ShippingOrder shippingOrder : order.getShippingOrders()) {
                 	shippingOrderProcessor.autoEscalateShippingOrder(shippingOrder, true);
                 }
             }

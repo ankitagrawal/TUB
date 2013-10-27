@@ -95,6 +95,8 @@ public class SplitBaseOrderAction extends BaseAction {
 					try {
 						ShippingOrder shippingOrder = adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
 						if (shippingOrder != null) {
+              baseOrder.getShippingOrders().add(shippingOrder);
+              getBaseDao().save(baseOrder);
 							orderLoggingService.logOrderActivity(baseOrder, userService.getLoggedInUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderManualSplit), null);
                             getOrderService().splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());
 						}

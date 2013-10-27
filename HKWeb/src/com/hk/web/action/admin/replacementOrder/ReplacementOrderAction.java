@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,9 @@ public class ReplacementOrderAction extends BaseAction {
 	@Autowired
 	private ReverseOrderService reverseOrderService;
 
+  @Autowired
+  InventoryHealthService inventoryHealthService;
+
 
 	private ReplacementOrder replacementOrder;
 
@@ -131,7 +135,9 @@ public class ReplacementOrderAction extends BaseAction {
 			if (lineItem.getRQty() > 0) {
 				valid_item_flag++;
 			}
-			if (lineItem.getRQty() != 0 && lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
+
+     Long countOfAvailableUnBookedSkuItemsInBright = inventoryHealthService.getUnbookedInventoryOfBrightForMrp(lineItem.getSku().getProductVariant(), lineItem.getSku().getWarehouse().getFulfilmentCenterCode(), lineItem.getMarkedPrice());
+			if (lineItem.getRQty() != 0 && (lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())|| lineItem.getRQty() > countOfAvailableUnBookedSkuItemsInBright )) {
 				addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " out of stock."));
 				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}
