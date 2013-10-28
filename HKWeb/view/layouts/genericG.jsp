@@ -58,7 +58,7 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
            <s:layout-render name="/includes/_menuBeta.jsp"/>
        </c:when>
        <c:otherwise>
-           <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+            <s:layout-render name="/includes/_menu.jsp" showNewHKLink = "${showNewHKLink}" topCategory="${topCategory}"/>
        </c:otherwise>
     </c:choose>
       

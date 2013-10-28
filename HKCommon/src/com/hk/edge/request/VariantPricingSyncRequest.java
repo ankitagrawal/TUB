@@ -7,9 +7,9 @@ package com.hk.edge.request;
  */
 public class VariantPricingSyncRequest {
 
-    private String oldVariantId;
-    private int    offerPrice;
-    private double discount;
+    protected String oldVariantId;
+    protected int    offerPrice;
+    protected double discount;
 
     public String getOldVariantId() {
         return oldVariantId;
@@ -34,5 +34,17 @@ public class VariantPricingSyncRequest {
     public void setDiscount(double discount) {
         this.discount = discount;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(oldVariantId).append(" offer price: ").append(offerPrice).append(" discount : ").append(discount);
+        
+        return strBuilder.toString();
+    
+    }
+    
+    
+    
 
 }

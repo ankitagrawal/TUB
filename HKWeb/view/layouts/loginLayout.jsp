@@ -40,7 +40,7 @@
       <s:layout-render name="/layouts/embed/_header.jsp" attachRedirectParam="false"/>
     </s:layout-component>
 	<s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" showNewHKLink = "false"/>
     </s:layout-component>
     <div class="main_container">
       <s:layout-component name="checkoutStep"/>

@@ -44,59 +44,60 @@ import java.util.Set;
 @Component
 @SuppressWarnings("unused")
 public class PaymentManager {
-    private static Logger logger = LoggerFactory.getLogger(PaymentManager.class);
+    private static Logger          logger     = LoggerFactory.getLogger(PaymentManager.class);
 
-    private final Double codCharges = 0D;
+    private final Double           codCharges = 0D;
 
     @Autowired
-    private OrderManager orderManager;
+    private OrderManager           orderManager;
     @Autowired
-    private UserManager userManager;
+    private UserManager            userManager;
     @Autowired
-    private OrderService orderService;
+    private OrderService           orderService;
     @Autowired
-    private RewardPointService rewardPointService;
+    private RewardPointService     rewardPointService;
     @Autowired
     private ReferrerProgramManager referrerProgramManager;
     @Autowired
-    private InventoryService inventoryService;
+    private InventoryService       inventoryService;
     @Autowired
-    private PaymentService paymentService;
+    private PaymentService         paymentService;
     @Autowired
-    SMSManager smsManager;
+    SMSManager                     smsManager;
     @Autowired
-    OrderEventPublisher orderEventPublisher;
+    OrderEventPublisher            orderEventPublisher;
     @Autowired
-    EmailManager emailManager;
+    EmailManager                   emailManager;
     @Autowired
-    InventoryHealthService inventoryHealthService;
+    InventoryHealthService         inventoryHealthService;
+
+    @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
+    private boolean                hybridRelease;
 
     @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
-    private Double cashBackLimit;
+    private Double                 cashBackLimit;
     @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
-    private int maxCODCallCount;
+    private int                    maxCODCallCount;
     @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
-    private Long defaultGateway;
+    private Long                   defaultGateway;
     @Value("#{hkEnvProps['" + Keys.Env.codRoute + "']}")
-    private String codRoute;
+    private String                 codRoute;
 
     @Autowired
-    private PaymentDao paymentDao;
+    private PaymentDao             paymentDao;
     @Autowired
-    private PaymentStatusDao paymentStatusDao;
+    private PaymentStatusDao       paymentStatusDao;
 
     // TODO: rewrite
 
     /**
      * This method will throw an {@link com.hk.exception.HealthkartPaymentGatewayException} if the payment request
      * cannot be verified
-     *
-     *
+     * 
      * @param gatewayOrderId
      * @param amount
      * @param merchantParam
      * @throws com.hk.exception.HealthkartPaymentGatewayException
-     *
      */
     public Payment verifyPayment(String gatewayOrderId, Double amount, String merchantParam) throws HealthkartPaymentGatewayException {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
@@ -136,7 +137,7 @@ public class PaymentManager {
             // a payment is either successful or the payment is awaiting authorization means that this is a double
             // payment.
             logger.info("Seems like a double payment attempt. (or a page refresh)");
-//            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.DOUBLE_PAYMENT);
+            // throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.DOUBLE_PAYMENT);
         }
         return payment;
     }
@@ -146,7 +147,8 @@ public class PaymentManager {
      * @param paymentMode
      * @param remoteAddr
      * @param gateway
-     * @param issuer         @return
+     * @param issuer
+     * @return
      * @param billingAddress
      */
     public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
@@ -156,7 +158,7 @@ public class PaymentManager {
         payment.setPaymentMode(paymentMode);
         payment.setIp(remoteAddr);
 
-        if(EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())){
+        if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
             payment.setGateway(gateway);
             payment.setIssuer(issuer);
         }
@@ -166,7 +168,12 @@ public class PaymentManager {
         // these two fields must be generated
         // gateway order id is the order id passed to the payment gateway. this can be
         // a string made up of our order id, the payment id, or a random string (unique)
-        payment.setGatewayOrderId(getUniqueGatewayOrderId(order));
+
+        if (hybridRelease) {
+            payment.setGatewayOrderId(getUniqueHybridGatewayOrderId(order));
+        } else {
+            payment.setGatewayOrderId(getUniqueGatewayOrderId(order));
+        }
 
         // checksum is based on the items in the cart. this must be generated again when
         // the payment gateway callback returns control back to us. This is used to make sure that
@@ -180,18 +187,29 @@ public class PaymentManager {
     }
 
     public static String getUniqueGatewayOrderId(Order order) {
+
         return TokenUtils.generateGatewayOrderId(order);
         /*
-                   * Set<Payment> payments = order.getPayments(); if(payments != null){ for (Payment payment : payments) {
-                   * if(payment.getGatewayOrderId().equals(gatewayOrderId)){ return TokenUtils.generateGatewayOrderId(order); } } }
-                   * return gatewayOrderId;
-                   */
+         * Set<Payment> payments = order.getPayments(); if(payments != null){ for (Payment payment : payments) {
+         * if(payment.getGatewayOrderId().equals(gatewayOrderId)){ return TokenUtils.generateGatewayOrderId(order); } } }
+         * return gatewayOrderId;
+         */
+    }
+
+    public static String getUniqueHybridGatewayOrderId(Order order) {
+
+        return TokenUtils.generateHybridGatewayOrderId(order);
+        /*
+         * Set<Payment> payments = order.getPayments(); if(payments != null){ for (Payment payment : payments) {
+         * if(payment.getGatewayOrderId().equals(gatewayOrderId)){ return TokenUtils.generateGatewayOrderId(order); } } }
+         * return gatewayOrderId;
+         */
     }
 
     /**
      * Calculates the order checksum based on the line items. It should be roughly unique for different carts. Roughly
      * unique will do.
-     *
+     * 
      * @param order
      * @return
      */
@@ -253,8 +271,7 @@ public class PaymentManager {
         return success(gatewayOrderId, gatewayReferenceId, null, null, null);
     }
 
-    public Order authPending(String gatewayOrderId, String codContactName, String codContactPhone,
-                             String bankName, String bankBranch, String backCity, String chequeNumber) {
+    public Order authPending(String gatewayOrderId, String codContactName, String codContactPhone, String bankName, String bankBranch, String backCity, String chequeNumber) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         Order order = null;
         if (payment != null) {
@@ -296,7 +313,7 @@ public class PaymentManager {
     public Order processOrder(Payment payment) {
         payment = paymentDao.save(payment);
         Order order = getOrderManager().orderPaymentReceieved(payment);
-        /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
+        /* Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
         notifyPaymentSuccess(order);
         return order;
     }
@@ -320,11 +337,11 @@ public class PaymentManager {
     }
 
     @Transactional
-    private void createUserCodCall(Order order){
+    private void createUserCodCall(Order order) {
         Payment payment = order.getPayment();
-        if(payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
-            //for some orders userCodCall object is not created, a  check to create one
-            try{
+        if (payment.isCODPayment() && payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
+            // for some orders userCodCall object is not created, a check to create one
+            try {
                 UserCodCall userCodCall = null;
                 if (codRoute != null && codRoute.equalsIgnoreCase("smsCountry")) {
                     userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_CUSTOMER);
@@ -334,7 +351,7 @@ public class PaymentManager {
                 }
 
                 orderService.saveUserCodCall(userCodCall);
-            } catch (Exception e){
+            } catch (Exception e) {
                 logger.info("User Cod Call already exists for " + order.getId());
             }
         }
@@ -344,7 +361,7 @@ public class PaymentManager {
         Order order = payment.getOrder();
         if (shouldCodCall) {
             if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
-                /* Make JMS Call For COD Confirmation Only Once*/
+                /* Make JMS Call For COD Confirmation Only Once */
                 Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
                 if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
                     try {
@@ -452,8 +469,8 @@ public class PaymentManager {
     public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
-            if (!(payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())
-                    || payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId()))) {
+            if (!(payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId()) || payment.getPaymentStatus().getId().equals(
+                    EnumPaymentStatus.SUCCESS.getId()))) {
                 initiatePaymentFailureCall(payment.getOrder());
                 payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
                 payment.setGatewayReferenceId(gatewayReferenceId);
@@ -468,8 +485,8 @@ public class PaymentManager {
     public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e, String responseMessage) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
-            if (!(payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())
-                    || payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId()))) {
+            if (!(payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId()) || payment.getPaymentStatus().getId().equals(
+                    EnumPaymentStatus.SUCCESS.getId()))) {
                 initiatePaymentFailureCall(payment.getOrder());
                 payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
                 payment.setGatewayReferenceId(gatewayReferenceId);
@@ -497,7 +514,8 @@ public class PaymentManager {
                     }
                     orderEventPublisher.publishPaymentFailureEvent(order);
                 } catch (DataIntegrityViolationException dataInt) {
-                    logger.error("Exception in  inserting  Duplicate UserCodCall by publishing payment faliure: " + dataInt.getMessage() + " on time :: " + BaseUtils.getCurrentTimestamp());
+                    logger.error("Exception in  inserting  Duplicate UserCodCall by publishing payment faliure: " + dataInt.getMessage() + " on time :: "
+                            + BaseUtils.getCurrentTimestamp());
                 } catch (Exception ex) {
                     logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                 }
@@ -508,7 +526,6 @@ public class PaymentManager {
 
     }
 
-
     public void notifyPaymentSuccess(Order order) {
         try {
             orderEventPublisher.publishPaymentSuccessEvent(order);
@@ -517,13 +534,11 @@ public class PaymentManager {
         }
     }
 
-    /*public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){
-        HkPaymentService hkPaymentService = null;
-        if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){
-            hkPaymentService = ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
-        }
-        return hkPaymentService;
-    }*/
+    /*
+     * public HkPaymentService getHkPaymentServiceByGateway(Gateway gateway){ HkPaymentService hkPaymentService = null;
+     * if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){ hkPaymentService =
+     * ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class); } return hkPaymentService; }
+     */
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus) {
         return oldStatus.getId().equals(changedStatus.getId());

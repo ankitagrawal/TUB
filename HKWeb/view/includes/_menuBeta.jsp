@@ -60,14 +60,14 @@
   </div>
   </li>
   </c:forEach>
-  <li class="gm-mc brdr-t">
-      <%--<a href="javascript:void(0)" class="gm-mc-nm">Packs</a>--%>
-      <%--<span style="">&raquo;</span>--%>
-  <%--</li>--%>
-  <%--<li class="gm-mc">--%>
+  <%--<li class="gm-mc brdr-t">
+      &lt;%&ndash;<a href="javascript:void(0)" class="gm-mc-nm">Packs</a>&ndash;%&gt;
+      &lt;%&ndash;<span style="">&raquo;</span>&ndash;%&gt;
+  &lt;%&ndash;</li>&ndash;%&gt;
+  &lt;%&ndash;<li class="gm-mc">&ndash;%&gt;
       <a href="${pageContext.request.contextPath}/beta/brand/BrandListing.action" class="gm-mc-nm">Brands</a>
       <span style="">&raquo;</span>
-  </li>
+  </li>--%>
   </ul>
   <%--<div class="seperator"></div>
 <div class="dropDownitem">Separated link</div>--%>
@@ -344,7 +344,7 @@
         // Show the submenu
         $submenu.css({
           display: "block",
-          top: 0,
+          top: -5,
           left: width - 3
 
         });
@@ -354,7 +354,7 @@
 
         //Fix vertical line height
 
-        $submenu.find('.grid_4').each(function(){getMaxHeight($(this))});
+          $submenu.find('.grid_4').each(function(){getMaxHeight($(this))});
       //  maxHeight = 'auto';
         if(maxHeight>100){
             $submenu.find('.grid_4').height(maxHeight);
@@ -400,13 +400,11 @@
         box-shadow: 0px 0px 25px #ccc;
         border: 1px solid #c8c8c8;
         border-top: none;
-
         width: 218px;
     }
 
     .gm h1, .gm h2, .gm h3 {
         color: #aaa;
-
         padding: 0px 20px 0px 19px;
     }
 
@@ -549,7 +547,7 @@
     }
 
 .flyout-menu{
-    width:218px;
+    width:220px;
 }
 .flyout-menu .menu-hdr {
     z-index: 10;
@@ -582,6 +580,10 @@
 
 #dropDownbox1 {
     position: absolute;
+}
+
+#dropDownbox1 .gm.gl {
+    margin-top: 5px;
 }
 
 .flyout-submenu {

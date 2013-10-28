@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.api.edge.integration.pact.service.LoadPropertyService;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.HkApiUserCache;
 import com.hk.cache.RoleCache;
@@ -21,6 +20,7 @@ import com.hk.cache.vo.CategoryVO;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.catalog.category.Category;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.LoadPropertyService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.web.AppConstants;
 

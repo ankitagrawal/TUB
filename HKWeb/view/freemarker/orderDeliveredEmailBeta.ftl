@@ -113,13 +113,13 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
                 <#list shippingOrder.lineItems as lineItem>
                     <tr>
 
-                        <td><#if lineItem.productVariant.variantName??>
-                        ${lineItem.productVariant.variantName}
+                        <td><#if lineItem.sku.productVariant.variantName??>
+                        ${lineItem.sku.productVariant.variantName}
                         <#else>
-                        ${lineItem.productVariant.product.name}
+                        ${lineItem.sku.productVariant.product.name}
                         </#if>
                           <br/>
-                          <em style="font-size:0.9em; color:#666"><#list lineItem.productVariant.productOptions as productOption>
+                          <em style="font-size:0.9em; color:#666"><#list lineItem.sku.productVariant.productOptions as productOption>
                     ${productOption.name} ${productOption.value}
                     </#list></em>
 
