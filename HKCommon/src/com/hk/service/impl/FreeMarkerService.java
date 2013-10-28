@@ -36,8 +36,8 @@ public class FreeMarkerService {
    * This method takes a template's path, searches the corresponding template in the freemarker directory,
    * and then returns a freemarker template object for the template file found.
    *
-   * @param templatePath                                       C:\Projects\HKRejuvenate\HKWeb\view\freemarker\newsletters\notifyUserEmailProductNewBeta.ftl
-   *                                                           C:\Projects\HKRejuvenate\HKWeb\view\freemarker\orderPlacedCodEmailBeta.ftl
+   * @param templatePath
+   *
    * @return
    */
   public Template getCampaignTemplate(String templatePath) {
