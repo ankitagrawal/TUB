@@ -190,12 +190,14 @@ public class OrderSplitterImpl implements OrderSplitter {
           List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
           long cost = calculateCost(order, dummyOrders);
           // here negative value being sent as invalid value
+
+          logger.debug(" cost got for Shippping order is --" + cost);
           if (cost > 0 && cost < bestCost) {
             bestCost = cost;
             bestShips = dummyOrders;
           }
         }
-
+        logger.debug("Best cost got for Shippping order is --" + bestCost);
         if(bestCost == Long.MAX_VALUE) {
           throw new OrderSplitException("Order is not good for split.", order);
         }
@@ -216,17 +218,17 @@ public class OrderSplitterImpl implements OrderSplitter {
 
     for (Map.Entry<List<DummyOrder>, Long> dummyOrderCostingMapEntry : dummyOrderCostingMap.entrySet()) {
 
-      Long cost = dummyOrderCostingMapEntry.getValue();
+     Long cost = dummyOrderCostingMapEntry.getValue();
       List<DummyOrder> dummyOrders = dummyOrderCostingMapEntry.getKey();
 
-      // here negative value being sent as invalid value
+             // here negative value being sent as invalid value
       if (cost > 0 && cost < bestCost) { //Note: <= to pick combination for a higher warehouse id (KPHD) - reverted
         bestCost = cost;
         bestShips = dummyOrders;
       }
 
     }
-
+     logger.debug("Bsest cost got for shipping order in decide best fit  " + bestCost);
     if (bestCost == Long.MAX_VALUE) {
       throw new OrderSplitException("Order is not good for split.", order);
     }

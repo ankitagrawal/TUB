@@ -35,6 +35,7 @@ import com.hk.domain.reversePickupOrder.RpLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
@@ -125,6 +126,9 @@ public class MasterResolutionAction extends BaseAction {
     @Autowired
     ShippingOrderService shippingOrderService;
 
+    @Autowired
+  InventoryHealthService inventoryHealthService;
+
 
     Map<String, Map<List<LineItem>, Double>> ledgerLineItemAmountMap = new HashMap<String, Map<List<LineItem>, Double>>();
 
@@ -204,8 +208,9 @@ public class MasterResolutionAction extends BaseAction {
 
         for (LineItem lineItem : lineItems) {
             String productName = lineItem.getCartLineItem().getProductVariant().getProduct().getName();
+          Long countOfAvailableUnBookedSkuItemsInBright = inventoryHealthService.getUnbookedInventoryOfBrightForMrp(lineItem.getSku().getProductVariant(), lineItem.getSku().getWarehouse().getFulfilmentCenterCode(), lineItem.getMarkedPrice());
 //            lineItem.setRQty(lineItem.getQty());
-            if (lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())) {
+            if (lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant()) &&  lineItem.getRQty() > countOfAvailableUnBookedSkuItemsInBright ) {
                 addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + productName + " out of stock."));
                 return new ForwardResolution(MasterResolutionAction.class, "pre");
             }
