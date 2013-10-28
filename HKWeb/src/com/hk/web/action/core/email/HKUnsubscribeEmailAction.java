@@ -34,7 +34,12 @@ public class HKUnsubscribeEmailAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("We have received your request. " +
                     "We will unsubscribe you from all future emails within next 30 minutes."));
         }
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/unsubscribeEmailBeta.jsp");
+
+        }
         return new ForwardResolution("/pages/unsubscribeEmail.jsp");
+
     }
 
 }
