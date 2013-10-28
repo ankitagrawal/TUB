@@ -38,8 +38,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
             <#list order.lineItems as lineItem>
                 <tr>
 
-                    <td><#if productLineItem.productVariant.variantName??>
-                    ${productLineItem.productVariant.variantName}
+                    <td><#if productLineItem.productVariant.variantNameFromHKEdge??>
+                    ${productLineItem.productVariant.variantNameFromHKEdge}
                     <#else>
                     ${productLineItem.productVariant.product.name}
                     </#if>
