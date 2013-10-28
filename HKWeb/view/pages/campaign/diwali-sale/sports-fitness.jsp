@@ -28,8 +28,10 @@
   <s:layout-component name="content">
 
     <div id="wrapper">
-    <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-    <img src="images/sports-fitness.jpg"/>
+      <div class="logo"><a href="http://www.healthkart.com/"><img src="images/hk-logo.png"/></a></div>
+      <div class="cl"></div>
+      <a href="index.jsp"><img class="banner-ds" src="images/banner-ds.jpg"/></a>
+      <a href="http://www.healthkart.com/sports"><img src="images/sports-fitness.jpg"/> </a>
 
 
     <%@include file="menu-ds.jsp" %>
