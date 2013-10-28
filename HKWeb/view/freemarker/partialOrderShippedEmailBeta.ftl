@@ -38,13 +38,13 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
             <#list order.lineItems as lineItem>
                 <tr>
 
-                    <td><#if productLineItem.productVariant.variantNameFromHKEdge??>
-                    ${productLineItem.productVariant.variantNameFromHKEdge}
+                    <td><#if lineItem.productVariant.variantNameFromHKEdge??>
+                    ${lineItem.productVariant.variantNameFromHKEdge}
                     <#else>
-                    ${productLineItem.productVariant.product.name}
+                    ${lineItem.productVariant.product.name}
                     </#if>
-                      <br/>
-                      <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
+                        <br/>
+                        <em style="font-size:0.9em; color:#666"><#list lineItem.productVariant.productOptions as productOption>
                     ${productOption.name} ${productOption.value}
                     </#list></em>
                     </td>
@@ -124,8 +124,12 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                 <#list shippingOrder.lineItems as lineItem>
                     <tr>
-                        <td>${lineItem.sku.productVariant.variantName}
-
+                        <td>
+                            <#if lineItem.productVariant.variantNameFromHKEdge??>
+                        ${lineItem.productVariant.variantNameFromHKEdge}
+                        <#else>
+                            ${lineItem.productVariant.product.name}
+                            </#if>
                         </td>
                         <td>
                         ${lineItem.qty}
