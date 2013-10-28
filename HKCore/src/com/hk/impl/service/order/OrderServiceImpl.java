@@ -66,6 +66,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.util.*;
 
 @Service
@@ -794,4 +795,10 @@ public class OrderServiceImpl implements OrderService {
         return isBOCancelable;
     }
 
+  public int getOrderCountByUser(Long userId){
+     if(userId == null){
+       throw new InvalidParameterException("INVALID USER ID");
+     }
+    return getOrderDao().getOrderCountByUser(userId);
+  }
 }

@@ -124,27 +124,39 @@ public class Keys {
         public static final String fedExMeterNo                    = "fedExMeterNo";
         public static final String fedExAccountNoGGN               = "fedExAccountNoGGN";
 
-        public static final String codRoute                      = "codRoute";
+        /* To be removed later on. just a safety mehchanism to route calls to outside hk */
+        public static final String maxCODCallCount                 = "maxCODCallCount";
+        public static final String codRoute                        = "codRoute";
 
-        /*To be removed later on. just a safety mehchanism to route calls to outside hk*/
-        public static final String maxCODCallCount                  = "maxCODCallCount";
+        public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
+        public static final String eyeTryOnXmls                    = "eyeTryOnXmls";
 
-        public static final String hkApiAccessKey = "healthkartAPIAccessKey";
-        public static final String eyeTryOnXmls = "eyeTryOnXmls";
+        public static final String maxReturnPolicyDays             = "maxReturnPolicyDays";
 
-		    public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
+        public static final String hkBridgeRestUrl                 = "hkBridgeRestUrl";
+        public static final String userEmailLinksRedirected        = "userEmailLinksRedirected";
 
-        public static final String hkBridgeRestUrl = "hkBridgeRestUrl";
-        public static final String userEmailLinksRedirected = "userEmailLinksRedirected";
+        public static final String vanillaForumUrl                 = "vanillaForumUrl";
 
-        public static final String vanillaForumUrl = "vanillaForumUrl";
-        
-        public static final String aquaBrightSeparatedFor = "aquaBrightSeparatedFor";
-        public static final String aquaBrightSeparateDate = "aquaBrightSeparateDate";
+        public static final String aquaBrightSeparatedFor          = "aquaBrightSeparatedFor";
+        public static final String aquaBrightSeparateDate          = "aquaBrightSeparateDate";
 
-      public static final String fedExAccountNoMUM = "fedExAccountNoMUM";
+        public static final String hybridRelease                   = "hybridRelease";
 
-    }
+        public static final String HK_LOGO_PATH                    = "hkLogoPath";
+        public static final String FOOTER_LOGO_PATH                = "footerLogo";
+        public static final String USER_EMAIL_LINK_TO_BETA         = "userEmailLinkToBeta";
+
+        public static final String fedExAuthKeyMUM = "fedExAuthKeyMUM";
+        public static final String fedExPasswordMUM = "fedExPasswordMUM";
+        public static final String fedExMeterNoMUM = "fedExMeterNoMUM";
+        public static final String fedExAccountNoMUM = "fedExAccountNoMUM";
+        public static final String fedExPasswordGGN = "fedExPasswordGGN";
+        public static final String fedExMeterNoGGN = "fedExMeterNoGGN";
+        public static final String fedExAuthKeyGGN = "fedExAuthKeyGGN";
+
+
+  }
 
     /*
      * public static class App { public static final String contextPath = "contextPath"; public static final String

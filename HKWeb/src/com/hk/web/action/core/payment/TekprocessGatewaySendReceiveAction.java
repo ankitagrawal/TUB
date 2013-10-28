@@ -74,7 +74,10 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 
         if(msg == null || StringUtils.isEmpty(msg)){
             logger.info("Received Empty response from TekProcess Gateway, redirecting to failure page");
-            return new ForwardResolution("/pages/payment/paymentFail.jsp");
+            if(isHybridRelease())
+                return new ForwardResolution("/pages/payment/paymentFailBeta.jsp");
+            else
+                return new ForwardResolution("/pages/payment/paymentFail.jsp");
         }
 
 		String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/tekprocess.live.properties";

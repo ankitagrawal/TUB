@@ -7,5 +7,7 @@ import java.io.Serializable;
  * Date: Sep 16, 2008
  */
 public interface Principal extends Serializable {
+    
+     
   public Long getId();
 }

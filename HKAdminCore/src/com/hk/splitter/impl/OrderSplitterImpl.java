@@ -81,8 +81,9 @@ public class OrderSplitterImpl implements OrderSplitter {
     long startTime = System.currentTimeMillis();
 
     Collection<LineItemClassification> lineItemClassifications = feedData(order);
-    dummyOrderCostingMap = createCombinations(shippingOrders, order, lineItemClassifications);
-    shippingOrders = decideBestFit(shippingOrders, order, dummyOrderCostingMap);
+//    dummyOrderCostingMap = createCombinations(shippingOrders, order, lineItemClassifications);
+//    shippingOrders = decideBestFit(shippingOrders, order, dummyOrderCostingMap);
+      shippingOrders = createCombinations(order, lineItemClassifications);
 
     logger.info("Total time to split order[" + order.getId() + "] " + "Shipping Orders Size [" + shippingOrders.size() + "] " + (System.currentTimeMillis() - startTime));
     return shippingOrders;
@@ -143,7 +144,8 @@ public class OrderSplitterImpl implements OrderSplitter {
   }
 
 
-  public Map<List<DummyOrder>, Long> createCombinations(Set<ShippingOrder> shippingOrders, Order order, Collection<LineItemClassification> lineItemClassifications) {
+    //this is just a dummy method which is only called by pseudo splitter
+  public Map<List<DummyOrder>, Long> createDummyCombinations(Set<ShippingOrder> shippingOrders, Order order, Collection<LineItemClassification> lineItemClassifications) {
     Map<List<DummyOrder>, Long> dummyOrderCostingMap = new HashMap<List<DummyOrder>, Long>();
 
     for (LineItemClassification lic : lineItemClassifications) {
@@ -169,7 +171,42 @@ public class OrderSplitterImpl implements OrderSplitter {
     return dummyOrderCostingMap;
   }
 
+    //production auto split uses this method --> correct one
+    public Set<ShippingOrder> createCombinations(Order order, Collection<LineItemClassification> lineItemClassifications) {
+        Set<ShippingOrder> newShippingOrders = new HashSet<ShippingOrder>();
+        for (LineItemClassification lic : lineItemClassifications) {
+            if (lic.getClassification() == Classification.SERVICE) {
+                Collection<LineItemBucket> lineItemBuckets = lic.getLineItemBuckets();
+                for (LineItemBucket lineItemBucket : lineItemBuckets) {
+                    newShippingOrders.add(getOrderService().createSOForService(lineItemBucket.getLineItem()));
+                }
+            } else {
+                Collection<UniqueWhCombination> whCombinations = lic.generatePerfactCombinations();
+                List<DummyOrder> bestShips = null;
+                long bestCost = Long.MAX_VALUE;
+                for (UniqueWhCombination uniqueWhCombination : whCombinations) {
+                    List<DummyOrder> dummyOrders = createDummyOrders(order, uniqueWhCombination);
+                    long cost = calculateCost(order, dummyOrders);
+                    // here negative value being sent as invalid value
+                    if (cost > 0 && cost < bestCost) {
+                        bestCost = cost;
+                        bestShips = dummyOrders;
+                    }
+                }
 
+                if(bestCost == Long.MAX_VALUE) {
+                    throw new OrderSplitException("Order is not good for split.", order);
+                }
+
+                if(bestShips != null) {
+                    newShippingOrders.addAll(createDaywiseShippingOrders(order, bestShips));
+                }
+            }
+        }
+        return newShippingOrders;
+    }
+
+  //unused
   private Set<ShippingOrder> decideBestFit(Set<ShippingOrder> shippingOrders, Order order, Map<List<DummyOrder>, Long> dummyOrderCostingMap) throws OrderSplitException {
 
     List<DummyOrder> bestShips = null;

@@ -38,7 +38,10 @@ public class FeedbackAction extends BaseAction {
             Feedback feedback = getFeedbackService().getOrCreateFeedbackForOrder(order);
             getFeedbackService().updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
         }
-        return new ForwardResolution("/pages/static/feedback.jsp");
+        if(isHybridRelease())
+            return new ForwardResolution("/pages/static/feedbackBeta.jsp");
+        else
+            return new ForwardResolution("/pages/static/feedback.jsp");
     }
 
     public Resolution save() {
@@ -46,14 +49,23 @@ public class FeedbackAction extends BaseAction {
         if (order != null) {
             Feedback feedback = getFeedbackService().getOrCreateFeedbackForOrder(order);
             getFeedbackService().updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
-            return new ForwardResolution("/pages/static/feedbackCapture.jsp");
+            if(isHybridRelease())
+                return new ForwardResolution("/pages/static/feedbackCaptureBeta.jsp");
+            else
+                return new ForwardResolution("/pages/static/feedbackCapture.jsp");
         } else if (user != null) {
             getFeedbackService().createFeedbackForUser(user, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
-            return new ForwardResolution("/pages/static/feedbackCapture.jsp");
+            if(isHybridRelease())
+                return new ForwardResolution("/pages/static/feedbackCaptureBeta.jsp");
+            else
+                return new ForwardResolution("/pages/static/feedbackCapture.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Login to the site to give your feedback."));
         }
-        return new ForwardResolution("/pages/static/feedback.jsp");
+        if(isHybridRelease())
+            return new ForwardResolution("/pages/static/feedbackBeta.jsp");
+        else
+            return new ForwardResolution("/pages/static/feedback.jsp");
     }
 
     public Long getWebsiteExperienceFeedback() {
