@@ -46,7 +46,7 @@ public class FreeMarkerService {
         templatePath.equals("/partialOrderCancelEmailUser.ftl") || templatePath.equals("/orderDeliveredEmail.ftl") || templatePath.equals("/feedbackEmailNew.ftl") ||
         templatePath.equals("/paymentFailEmail.ftl") || templatePath.equals("/orderCancelEmailUserLoyalty.ftl") || templatePath.equals("/newsletters//notifyUserEmailProductNew.ftl") ||
         templatePath.equals("/newsletters//notifyEmailForSimilarProductsForMultipleVariants.ftl") || templatePath.equals("/newsletters//notifyUserEmailForSimilarProductsForSingleVariants.ftl") || templatePath.equals("/referralRewardPointEmail.ftl")
-        || templatePath.equals("/cashBackRewardPointEmail.ftl") || templatePath.equals("/discountCouponEmail.ftl") ||
+        || templatePath.equals("/cashBackRewardPointEmail.ftl") || templatePath.equals("/discountCouponEmail.ftl") ||templatePath.equals("/partialOrderShippedEmail.ftl")||
         templatePath.equals("/codConfirmEmail.ftl")) {
       String ftlName = templatePath.split("\\.")[0];
       templatePath = ftlName + "Beta" + ".ftl";
