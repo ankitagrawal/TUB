@@ -38,14 +38,7 @@
 </div>
 
 <!--footer start-->
-<div class="cl"></div>
-
-<div class="footer-cs">
-<p>© 2013 healthkart.com</p>
-<a href="https://twitter.com/healthkart"><img src="images/twitter-img.jpg" /></a>
-<a href="https://www.facebook.com/healthkart"><img src="images/fb-img.jpg" /></a>
-
-</div>
+  <%@include file="footer-ds.jsp" %>
 
 </div>
 </body>
