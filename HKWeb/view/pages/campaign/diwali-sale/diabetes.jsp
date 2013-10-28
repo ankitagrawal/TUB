@@ -29,7 +29,7 @@
 
     <div id="wrapper">
     <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-    <img src="images/diabetes.jpg"/>
+      <a href="http://www.healthkart.com/diabetes"><img src="images/diabetes.jpg"/> </a>
 
 
     <%@include file="menu-ds.jsp" %>

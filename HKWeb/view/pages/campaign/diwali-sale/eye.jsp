@@ -29,7 +29,7 @@
 
     <div id="wrapper">
     <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-    <img src="images/eye.jpg"/>
+      <a href="http://www.healthkart.com/eye"><img src="images/eye.jpg"/>      </a>
 
 
     <%@include file="menu-ds.jsp" %>

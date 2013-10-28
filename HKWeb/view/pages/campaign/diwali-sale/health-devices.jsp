@@ -29,7 +29,7 @@
 
     <div id="wrapper">
     <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-    <img src="images/HD.jpg"/>
+      <a href="http://www.healthkart.com/health-devices"><img src="images/HD.jpg"/> </a>
 
 
     <%@include file="menu-ds.jsp" %>
@@ -67,7 +67,7 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RSTR009'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQNX013'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV003'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRAJ002'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SUN006'/>
 
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU075'/>

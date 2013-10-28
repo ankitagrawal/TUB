@@ -29,7 +29,7 @@
 
     <div id="wrapper">
     <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-    <img src="images/sports-nutrition.jpg"/>
+      <a href="http://www.healthkart.com/sports-nutrition"><img src="images/sports-nutrition.jpg"/> </a>
 
 
     <%@include file="menu-ds.jsp" %>
@@ -79,7 +79,6 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2142'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1287'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1604'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1600'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1263'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1368'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1271'/>
