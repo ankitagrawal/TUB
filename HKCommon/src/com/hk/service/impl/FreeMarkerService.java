@@ -43,7 +43,7 @@ public class FreeMarkerService {
     if (isHybridRelease() || templatePath.equals("/orderPlacedCodEmail.ftl") || templatePath.equals("/orderShippedEmailNew.ftl") || templatePath.equals("/orderPlacedAuthorizedCodEmail.ftl")
         || templatePath.equals("/orderPlacedPaymentPendingEmail.ftl") || templatePath.equals("/orderShippedEmailNew.ftl") || templatePath.equals("/orderCancelEmailUserNew.ftl") ||
         templatePath.equals("/partialOrderCancelEmailUser.ftl") || templatePath.equals("/orderDeliveredEmail.ftl") || templatePath.equals("/feedbackEmailNew.ftl") ||
-        templatePath.equals("/paymentFailEmail.ftl") || templatePath.equals("/orderCancelEmailUserLoyalty.ftl") || templatePath.equals("/notifyUserEmailProductNew.ftl") ||
+        templatePath.equals("/paymentFailEmail.ftl") || templatePath.equals("/orderCancelEmailUserLoyalty.ftl") || templatePath.equals("/newsletters/notifyUserEmailProductNew.ftl") ||
         templatePath.equals("/newsletters/notifyEmailForSimilarProductsForMultipleVariants.ftl") || templatePath.equals("/newsletters/notifyUserEmailForSimilarProductsForSingleVariants.ftl") || templatePath.equals("/referralRewardPointEmail.ftl")
         || templatePath.equals("/cashBackRewardPointEmail.ftl") || templatePath.equals("/discountCouponEmail.ftl") ||
         templatePath.equals("/codConfirmEmail.ftl")) {
