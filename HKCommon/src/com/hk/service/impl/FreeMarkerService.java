@@ -36,15 +36,16 @@ public class FreeMarkerService {
    * This method takes a template's path, searches the corresponding template in the freemarker directory,
    * and then returns a freemarker template object for the template file found.
    *
-   * @param templatePath
+   * @param templatePath                                       C:\Projects\HKRejuvenate\HKWeb\view\freemarker\newsletters\notifyUserEmailProductNewBeta.ftl
+   *                                                           C:\Projects\HKRejuvenate\HKWeb\view\freemarker\orderPlacedCodEmailBeta.ftl
    * @return
    */
   public Template getCampaignTemplate(String templatePath) {
     if (isHybridRelease() || templatePath.equals("/orderPlacedCodEmail.ftl") || templatePath.equals("/orderShippedEmailNew.ftl") || templatePath.equals("/orderPlacedAuthorizedCodEmail.ftl")
         || templatePath.equals("/orderPlacedPaymentPendingEmail.ftl") || templatePath.equals("/orderShippedEmailNew.ftl") || templatePath.equals("/orderCancelEmailUserNew.ftl") ||
         templatePath.equals("/partialOrderCancelEmailUser.ftl") || templatePath.equals("/orderDeliveredEmail.ftl") || templatePath.equals("/feedbackEmailNew.ftl") ||
-        templatePath.equals("/paymentFailEmail.ftl") || templatePath.equals("/orderCancelEmailUserLoyalty.ftl") || templatePath.equals("/newsletters/notifyUserEmailProductNew.ftl") ||
-        templatePath.equals("/newsletters/notifyEmailForSimilarProductsForMultipleVariants.ftl") || templatePath.equals("/newsletters/notifyUserEmailForSimilarProductsForSingleVariants.ftl") || templatePath.equals("/referralRewardPointEmail.ftl")
+        templatePath.equals("/paymentFailEmail.ftl") || templatePath.equals("/orderCancelEmailUserLoyalty.ftl") || templatePath.equals("/newsletters//notifyUserEmailProductNew.ftl") ||
+        templatePath.equals("/newsletters//notifyEmailForSimilarProductsForMultipleVariants.ftl") || templatePath.equals("/newsletters//notifyUserEmailForSimilarProductsForSingleVariants.ftl") || templatePath.equals("/referralRewardPointEmail.ftl")
         || templatePath.equals("/cashBackRewardPointEmail.ftl") || templatePath.equals("/discountCouponEmail.ftl") ||
         templatePath.equals("/codConfirmEmail.ftl")) {
       String ftlName = templatePath.split("\\.")[0];
