@@ -142,8 +142,10 @@ public class Keys {
         public static final String aquaBrightSeparatedFor = "aquaBrightSeparatedFor";
         public static final String aquaBrightSeparateDate = "aquaBrightSeparateDate";
 
+		public static final String hybridRelease                   = "hybridRelease";
       public static final String fedExAccountNoMUM = "fedExAccountNoMUM";
       public static final String brightlifecareRestUrl           = "brightlifecareRestUrl";
+	  public static final String HK_LOGO_PATH                    = "hkLogoPath";
       
 
     }

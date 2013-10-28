@@ -53,6 +53,8 @@ import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
+import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.response.variant.StoreVariantBasicResponse;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
@@ -89,6 +91,7 @@ import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
 import com.hk.util.OrderUtil;
 import com.hk.util.ProductUtil;
+import com.hk.web.AppConstants;
 import net.sourceforge.stripes.util.CryptoUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -982,6 +985,13 @@ public class Functions {
         return null;
     }
 
+    public static StoreVariantBasicResponse getStoreVariantBasicDetails(String oldVariantId) {
+        if (AppConstants.isHybridRelease) {
+            HybridStoreVariantService hybridStoreVariantService = ServiceLocatorFactory.getService(HybridStoreVariantService.class);
+            return hybridStoreVariantService.getStoreVariantBasicDetailsFromEdge(oldVariantId);
+        }
 
+        throw new UnsupportedOperationException();
+    }
 
 }
