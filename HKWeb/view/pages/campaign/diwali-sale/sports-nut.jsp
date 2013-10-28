@@ -28,8 +28,10 @@
   <s:layout-component name="content">
 
     <div id="wrapper">
-    <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-    <img src="images/sports-nutrition.jpg"/>
+      <div class="logo"><a href="http://www.healthkart.com/"><img src="images/hk-logo.png"/></a></div>
+      <div class="cl"></div>
+      <a href="index.jsp"><img class="banner-ds" src="images/banner-ds.jpg"/></a>
+      <a href="http://www.healthkart.com/sports-nutrition"><img src="images/sports-nutrition.jpg"/> </a>
 
 
     <%@include file="menu-ds.jsp" %>
@@ -79,7 +81,6 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2142'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1287'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1604'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1600'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1263'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1368'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1271'/>
@@ -118,15 +119,7 @@
     </div>
       <!--- box-product close -->
 
-      <div class="cl"></div>
-      <div class="footer-ny">
-        <p>© 2013 healthkart.com</p>
-        <a href="https://twitter.com/healthkart"><img
-            src="${pageContext.request.contextPath}/images/14feb/twitter-img.jpg"/></a>
-        <a href="https://www.facebook.com/healthkart"><img
-            src="${pageContext.request.contextPath}/images/14feb/fb-img.jpg"/></a>
-
-      </div>
+      <%@include file="footer-ds.jsp" %>
 
     </div>
       <!--- wrapper close -->
