@@ -63,8 +63,7 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT3005'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1513'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1043'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HNUT235'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1117'/>
+          <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1117'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1114'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT954'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT411'/>
@@ -78,15 +77,7 @@
     </div>
       <!--- box-product close -->
 
-      <div class="cl"></div>
-      <div class="footer-ny">
-        <p>© 2013 healthkart.com</p>
-        <a href="https://twitter.com/healthkart"><img
-            src="${pageContext.request.contextPath}/images/14feb/twitter-img.jpg"/></a>
-        <a href="https://www.facebook.com/healthkart"><img
-            src="${pageContext.request.contextPath}/images/14feb/fb-img.jpg"/></a>
-
-      </div>
+      <%@include file="footer-ds.jsp" %>
 
     </div>
       <!--- wrapper close -->
