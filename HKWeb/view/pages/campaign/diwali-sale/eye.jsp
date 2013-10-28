@@ -28,7 +28,9 @@
   <s:layout-component name="content">
 
     <div id="wrapper">
-    <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
+      <div class="logo"><a href="http://www.healthkart.com/"><img src="images/hk-logo.png"/></a></div>
+      <div class="cl"></div>
+      <a href="index.jsp"><img class="banner-ds" src="images/banner-ds.jpg"/></a>
       <a href="http://www.healthkart.com/eye"><img src="images/eye.jpg"/>      </a>
 
 

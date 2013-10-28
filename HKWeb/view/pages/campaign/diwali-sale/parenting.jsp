@@ -28,24 +28,27 @@
   <s:layout-component name="content">
 
     <div id="wrapper">
-    <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
+      <div class="logo"><a href="http://www.healthkart.com/"><img src="images/hk-logo.png"/></a></div>
+      <div class="cl"></div>
+      <a href="index.jsp"><img class="banner-ds" src="images/banner-ds.jpg"/></a>
       <a href="http://www.healthkart.com/parenting"> <img src="images/parenting.jpg"/>    </a>
 
 
     <%@include file="menu-ds.jsp" %>
 
     <div class="box-product">
-
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BAB0416'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BAB0417'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BAB0418'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2405'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2409'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB380'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2338'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB292'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB293'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BAB0416'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BAB0417'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1812'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BAB0418'/>
+
 
     </div>
       <!--- box-product close -->
