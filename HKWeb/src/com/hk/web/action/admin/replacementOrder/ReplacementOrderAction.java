@@ -137,7 +137,7 @@ public class ReplacementOrderAction extends BaseAction {
 			}
 
      Long countOfAvailableUnBookedSkuItemsInBright = inventoryHealthService.getUnbookedInventoryOfBrightForMrp(lineItem.getSku().getProductVariant(), lineItem.getSku().getWarehouse().getFulfilmentCenterCode(), lineItem.getMarkedPrice());
-			if (lineItem.getRQty() != 0 && (lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant())|| lineItem.getRQty() > countOfAvailableUnBookedSkuItemsInBright )) {
+			if (lineItem.getRQty() != 0 && (lineItem.getRQty() > inventoryService.getAllowedStepUpInventory(lineItem.getSku().getProductVariant()) && lineItem.getRQty() > countOfAvailableUnBookedSkuItemsInBright )) {
 				addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " out of stock."));
 				return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
 			}
