@@ -50,7 +50,7 @@
         <s:hidden name="productReviews[${ctr.index}]" value="${review.id}"/>
         <tr>
           <td>${ctr.count}</td>
-          <td>${review.product}</td>
+          <td>${review.product} - ${review.product.name}</td>
           <td>${review.postedBy.name}</td>
           <td>${review.reviewDate}</td>
           <td>

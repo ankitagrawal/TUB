@@ -41,7 +41,7 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV021'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV020'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSB039'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSB008'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSB038'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSB042'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSB001'/>
@@ -69,7 +69,7 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV003'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRAJ002'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SUN006'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SUN006'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU075'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FRSTA016'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BIOMRCA004'/>
