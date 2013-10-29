@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
       sent = sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
 
     } catch (Exception e) {
-      logger.error("Exception while sending Email", e.getStackTrace());
+      logger.error("Exception while sending Email"+ e.getStackTrace(), e.getStackTrace());
     }
     return sent;
   }
