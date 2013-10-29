@@ -11732,22 +11732,22 @@
             ALTER TABLE user_cod_call ADD UNIQUE(order_id);
         </sql>
     </changeSet>
-    <!--<changeSet author="Ankit (generated)" id="1359711888969-1">-->
-        <!--<addColumn tableName="rv_line_item">-->
-            <!--<column name="sku_group_id" type="INT"/>-->
-        <!--</addColumn>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Ankit (generated)" id="1360921695034-1">-->
-        <!--<addColumn tableName="cycle_count_item">-->
-            <!--<column name="sku_item_id" type="INT"/>-->
-        <!--</addColumn>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Ankit (generated)" id="1360921695034-2">-->
-        <!--<dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Ankit (generated)" id="1360921695034-3">-->
-        <!--<addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>-->
-    <!--</changeSet>-->
+    <changeSet author="Ankit (generated)" id="1359711888969-1">
+        <addColumn tableName="rv_line_item">
+            <column name="sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-1">
+        <addColumn tableName="cycle_count_item">
+            <column name="sku_item_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-3">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="Ankur (generated)" id="1358841573903-1">
         <createTable tableName="mail">
             <column autoIncrement="true" name="id" type="INT">
@@ -14073,6 +14073,22 @@
             INSERT INTO `supplier_transaction_type` (`id`, `name`) VALUES (NULL, 'CREATE'), (NULL, 'PURC'), (NULL, 'BP'), (NULL, 'PRT');
         </sql>
     </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377614620135-1">
+        <createTable tableName="hk_reach_pricing_engine">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="inter_city_cost" type="DECIMAL(8,2)"/>
+            <column name="fixed_cost" type="DECIMAL(8,2)"/>
+            <column name="update_time" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1377614620135-2">
         <addColumn tableName="pincode">
             <column name="last_mile_cost" type="DECIMAL(8,2)"/>
@@ -14082,6 +14098,12 @@
         <addColumn tableName="pincode">
             <column name="nearest_hub_id" type="INT"/>
         </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1377797848313-1">
+        <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_hub_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chabra (generated)" id="1377797848313-2">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_warehouse_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Ankit Chhabra (generated)" id="1377797848313-3">
         <addForeignKeyConstraint baseColumnNames="nearest_hub_id" baseTableName="pincode" constraintName="fk_nearest_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
@@ -14097,6 +14119,14 @@
         <createIndex indexName="line_item_UNIQUE" tableName="wh_report_line_item" unique="true">
             <column name="line_item_id"/>
         </createIndex>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-1">
+        <addColumn tableName="hk_reach_pricing_engine">
+            <column name="valid_from" type="TIMESTAMP" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1378726821885-2">
+        <sql>update hk_reach_pricing_engine set valid_from = '2013-09-01 00:00:00'</sql>
     </changeSet>
     <changeSet author="Rajesh" id="20130913-01">
         <sql>
@@ -14275,7 +14305,7 @@
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-04">
         <sql>
-            INSERT hk_reach_pricing_engine SELECT * FROM hk_reach_pricing_engine_bkup;
+            INSERT into hk_reach_pricing_engine SELECT * FROM hk_reach_pricing_engine_bkup;
         </sql>
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-05">
