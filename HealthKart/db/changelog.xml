@@ -12992,6 +12992,24 @@
             <column name="physical_invoice_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Rahul-Dixit (generated)" id="20131029-1">
+        <sql>
+            INSERT IGNORE INTO `role` (`name`) VALUES
+            ('ACTION_QUEUE'),('ADMIN'),('ASSIGN_USER_BASKET'),('B2B_ROLE'),('B2B_USER'),('BASIC_ROLES'),('CATEGORY_MANAGER'),('CATEGORY_MANAGER_L1'),('CATEGORY_MANAGER_L2'),
+            ('CODBLOCKED'),('COUPON_BLOCKED'),('CREATE_JIT_PO'),('CS_Counselling'),('CS_INBOUND'),('CS_OUTBOUND'),('CUSTOMER_SUPPORT'),('CUSTOMER_SUPPORT_L2'),('CUSTOMER_SUPPORT_L3'),
+            ('CUSTOMER_SUPPORT_REVERSE_PICKUP'),('Debit_Note_Management'),('DELIVERY_QUEUE'),('DEVELOPER'),('EFFORTBPO'),('FINANCE'),('FINANCE_ADMIN'),('FITNESSPRO_USER'),
+            ('GOD'),('HKBLOCKED'),('HKDEACTIVE'),('HKDELETE'),('HKUNVERIFIED'),('HK_AFFILIATE'),('HK_AFFILIATE_MANAGER'),('HK_AFFILIATE_UNVERIFIED'),('HK_DELIVERY_ADMIN'),
+            ('HK_DELIVERY_GUY'),('HK_DELIVERY_HUB_MANAGER'),('HK_EMPLOYEE'),('HK_IHO_USER'),('HK_LOYALTY_USER'),('HK_USER'),('HR'),('MANAGE_CATEGORY_PAGE'),('MARKETING'),
+            ('MASTER_BUG_RESOLVER'),('NOTIFY_ME_BULK_EMAIL'),('OFFLINE_PAYMENT_APPROVER'),('OPS_MANAGER'),('OPS_MANAGER_CDCA_UPDATE'),('OPS_MANAGER_CDCA_VIEW'),('OPS_MANAGER_COURIER_PRICING_UPDATE'),
+            ('OPS_MANAGER_COURIER_PRICING_VIEW'),('OPS_MANAGER_L1'),('OPS_MANAGER_L2'),('OPS_MANAGER_L3'),('OPS_MANAGER_MPA'),('OPS_MANAGER_PCM_UPDATE'),('OPS_MANAGER_PCM_VIEW'),
+            ('OPS_MANAGER_REVERSE_PICKUP'),('OPS_MANAGER_SRS_CHANGE_AWB'),('OPS_MANAGER_SRS_CHANGE_SOSTATUS'),('OPS_MANAGER_SRS_RESOLVE_COURIER_CHANGE'),('OPS_MANAGER_SRS_RESOLVE_CREATE_AWB'),
+            ('OPS_MANAGER_SRS_RESOLVE_SERVICE_TYPE'),('PAYMENT_AUTHORIZER'),('PAYMENT_MANAGER'),('PAYMENT_REFUNDS'),('PO_APPROVER'),('PO_MANAGEMENT'),('RECONCILIATION'),
+            ('REPORT_ADMIN'),('REWARD_POINT_MANAGER_L1'),('REWARD_POINT_MANAGER_L2'),('ROCKSTAR'),('ROLE_MANAGER'),('RPU_ADMIN'),('RPU_APPROVER'),('RPU_CREATE'),
+            ('RPU_RECONCILE'),('RPU_UPDATE'),('RPU_VIEW'),('SERVICE_QUEUE'),('SHIPPING_COST_MODERATOR'),('SITE_CONTENT_MANAGER'),('SPLITTER'),('STORE_MANAGER'),('SUPPLIER'),
+            ('TEMP_USER'),('TICKETADMIN'),('UNSUBSCRIBED_USER'),('UPDATE_CATALOG_INFO'),('VIEW_CATALOG_INFO'),('WH_EMPLOYEE'),('WH_Employee_Inventory'),('WH_Employee_Inward'),
+            ('WH_Employee_Outward'),('WH_EMPLOYEE_REVERSE_PICKUP'),('WH_MANAGER'),('WH_MANAGER_L1'),('WH_Queue_Manager');
+        </sql>
+    </changeSet>
     <changeSet author="Shilpa (written)" id="1367842551660-2">
       <sql>
         insert into permission(name)  values  ("RECEIVE_CONSIGNMENTS"),("EDIT_RUNSHEET"),("VIEW_CONSIGNMENTS"),("VIEW_PAYMENT_HISTORY"),("TRACK_CONSIGNMENTS"),("CREATE_PAYMENT_RECONCILATION"),("ADD_EDIT_HUB"),("ADD_REMOVE_AGENT"),("CONSIGNMENT_TRACKING_REPORT"),("VIEW_NDR"),("EDIT_NDR")  on duplicate key update name = values(name);
@@ -14312,5 +14330,18 @@
         <sql>
             DROP TABLE IF EXISTS hk_reach_pricing_engine_bkup;
         </sql>
+    </changeSet>
+    <changeSet author="Rahul Dixit" id="20131025-2">
+        <sql>
+            insert into classification(id,`PRIMARY`,`SECONDARY`) values(-1,'Default','Default');
+        </sql>
+    </changeSet>
+    <changeSet author="Rahul Dixit" id="1382619763572-6">
+        <sql>
+            update reason set classification_id =-1 where classification_id=0;
+        </sql>
+    </changeSet>
+    <changeSet author="Rahul Dixit (generated)" id="1382969568358-5">
+        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason"  constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification"  referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
