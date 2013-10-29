@@ -14323,7 +14323,7 @@
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-04">
         <sql>
-            INSERT into hk_reach_pricing_engine SELECT * FROM hk_reach_pricing_engine_bkup;
+            INSERT INTO hk_reach_pricing_engine SELECT * FROM hk_reach_pricing_engine_bkup;
         </sql>
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-05">
@@ -14336,12 +14336,12 @@
             insert into classification(id,`PRIMARY`,`SECONDARY`) values(-1,'Default','Default');
         </sql>
     </changeSet>
-    <changeSet author="Rahul Dixit" id="1382619763572-6">
+    <changeSet author="Rahul Dixit" id="20131029-2">
         <sql>
             update reason set classification_id =-1 where classification_id=0;
         </sql>
     </changeSet>
-    <changeSet author="Rahul Dixit (generated)" id="1382969568358-5">
+    <changeSet author="Rahul Dixit (generated)" id="20131029-3">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason"  constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification"  referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
