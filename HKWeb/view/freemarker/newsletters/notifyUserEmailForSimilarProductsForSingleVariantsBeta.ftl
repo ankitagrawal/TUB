@@ -16,7 +16,7 @@ Talking 'bout the one that got away!
                 border="0" alt="HealthKart"/></td>
     </tr>
     <tr>
-        <td align="left" valign="top"
+        <td colspan="2" align="left" valign="top"
             style="font-family:Verdana, Geneva, sans-serif; font-size:21px; line-height:25px; color:#646464;">
             Talking 'bout
             the one<br/>
@@ -51,7 +51,7 @@ Talking 'bout the one that got away!
 
 
     <tr>
-        <td valign="top">
+        <td colspan="2" valign="top">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <#list  similarProductList as  similarProduct>
                 <tr>
