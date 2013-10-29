@@ -52,38 +52,34 @@ public class BusyPopulateRtoData {
     sql.eachRow("""
 
 									select so.id as shipping_order_id,
-									ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
-									so.accounting_invoice_number as vch_no,
-									u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
-									pay_gate.name as payment_gateway_name,
-									a.line1 as address_1, a.line2 as address_2, a.city, a.state,
-									w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
-									c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-									so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
-									from line_item li
-                                    left join (select line_item_id, pvi.txn_date, count(pvi.id) qty
+                                    ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
+                                    so.accounting_invoice_number as vch_no,
+                                    u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
+                                    pay_gate.name as payment_gateway_name,
+                                    a.line1 as address_1, a.line2 as address_2, a.city, a.state,
+                                    w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
+                                    c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number
+                                    from line_item li
+                                    join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
                                     from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
-                                    on li.id=pvi.id
+                                    on li.id=pvi.line_item_id
                                     inner join shipping_order so on li.shipping_order_id=so.id
-									inner join base_order bo on so.base_order_id = bo.id
-									left join payment p ON bo.payment_id = p.id
-									left join payment_mode pm ON pm.id = p.payment_mode_id
-									inner join user u on bo.user_id = u.id
-									inner join address a ON bo.address_id = a.id
-									left join shipment ship on ship.id = so.shipment_id
-									left join awb aw on ship.awb_id=aw.id
-									left join courier c on aw.courier_id = c.id
-									left join gateway pay_gate on p.gateway_id = pay_gate.id
-									inner join warehouse w on w.id = so.warehouse_id
-
-									where so.shipping_order_status_id in (200, 220, 230, 250, 260,270,280)
-									/*and (ship.return_date >=${lastUpdateDate}
-									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
-									and ship.return_date is not null*/
+                                    inner join base_order bo on so.base_order_id = bo.id
+                                    left join payment p ON bo.payment_id = p.id
+                                    left join payment_mode pm ON pm.id = p.payment_mode_id
+                                    inner join user u on bo.user_id = u.id
+                                    inner join address a ON bo.address_id = a.id
+                                    left join shipment ship on ship.id = so.shipment_id
+                                    left join awb aw on ship.awb_id=aw.id
+                                    left join courier c on aw.courier_id = c.id
+                                    left join gateway pay_gate on p.gateway_id = pay_gate.id
+                                    inner join warehouse w on w.id = so.warehouse_id
+                                    where so.shipping_order_status_id between 180 and 280
                                     and ifnull(ship.return_date, pvi.txn_date)>= {lastUpdateDate}
                                     and ifnull(ship.return_date, pvi.txn_date) > '2011-11-08 19:59:36'
-									GROUP BY so.id
-									ORDER BY pvi.txn_date ASC
+                                    GROUP BY so.id
+                                    ORDER BY pvi.txn_date ASC
                  """) {
       accountingInvoice ->
 
@@ -289,14 +285,17 @@ public class BusyPopulateRtoData {
     public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
       int s_no = 0;
       sql.eachRow("""
-                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, li.discount_on_hk_price, li.reward_point_discount,
-                      t.value as tax_value,li.order_level_discount, li.cost_price
+                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, pvi.qty*li.discount_on_hk_price/li.qty, pvi.qty*li.reward_point_discount/li.qty,
+                      t.value as tax_value,pvi.qty*li.order_level_discount/li.qty, li.cost_price
+
                       from line_item li
                       inner join tax t on li.tax_id = t.id
                       join shipping_order so on li.shipping_order_id=so.id
+
                       left join shipment ship on so.shipment_id=ship.id
-                      left join (select line_item_id, pvi.txn_date, count(pvi.id) qty
+                      left join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
                       from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
+
                       on li.id=pvi.line_item_id
                       where li.shipping_order_id = ${shipping_order_id}
                       and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
@@ -346,9 +345,14 @@ public class BusyPopulateRtoData {
                     select sum(shipping_charge) as shipping_charge, sum(cod_charge) as cod_charge, sum(reward_point_discount)  as reward_points
                     from line_item li
                     inner join tax t on li.tax_id = t.id
-                    left join (select line_item_id, pvi.txn_date, count(pvi.id) qty
+
+                    left join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+
                     from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
-                    on li.id=pvi.id
+
+                    on li.id=pvi.line_item_id
+                    join shipping_order so on li.shipping_order_id=so.id
+                    left join shipment ship on so.shipment_id=ship.id
                     where li.shipping_order_id = ${shipping_order_id}
                     and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
                     group by li.shipping_order_id
