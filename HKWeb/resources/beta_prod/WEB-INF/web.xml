@@ -154,11 +154,11 @@
         </init-param>
         <init-param>
             <param-name>SSL.SecureHost</param-name>
-            <param-value>beta.healthkart.com</param-value>
+            <param-value>www.healthkart.com</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.UnsecureHost</param-name>
-            <param-value>beta.healthkart.com</param-value>
+            <param-value>www.healthkart.com</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.SessionMode</param-name>
