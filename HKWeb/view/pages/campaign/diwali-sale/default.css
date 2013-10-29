@@ -72,6 +72,9 @@ body {
 	text-align:center;
 	padding:18px 0 15px 0;}
 
+.banner-ds {
+ padding-bottom: 10px;
+}
 
 .menu {
 	text-align:center;
@@ -98,7 +101,7 @@ body {
 	margin-top:15px;}
 
 .box-tr {
-	margin-left:15px;
+	margin-left:14px;
 	width:635px;
 	float:left;}
 	
@@ -143,7 +146,7 @@ body {
 
 
 
-.footer-cs{
+.footer-ny{
 	display:block;
 	border-top:1px dashed #999999;
 	font-size:12px;
@@ -155,10 +158,10 @@ body {
 	}
 
 
-.footer-cs p{
+.footer-ny p{
 		float:left;}
 
-.footer-cs img{
+.footer-ny img{
 		float:right;
 		margin-right:8px;}
 

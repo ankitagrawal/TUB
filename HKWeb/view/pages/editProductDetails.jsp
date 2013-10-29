@@ -60,16 +60,27 @@
             </li>
             <li>
                 <label>Is Deleted</label>
-                <c:choose>
-                    <c:when test="${pa.combo}">
+                <%--<c:choose>
+                    <c:when test="${pa.combo}">--%>
                         <s:checkbox name="product.deleted"/>
-                    </c:when>
+                    <%--</c:when>
                     <c:otherwise>
                         ${pa.product.deleted}
                     </c:otherwise>
-                </c:choose>
+                </c:choose>--%>
             </li>
-          <li><label>Is Out Of Stock</label><s:checkbox name="product.outOfStock"/></li>
+            <li>
+                <label>Is Out Of Stock</label>
+                <c:choose>
+                    <c:when test="${pa.combo or pa.product.jit}">
+                        <s:checkbox name="product.outOfStock"/>
+                    </c:when>
+                    <c:otherwise>
+                        ${pa.product.outOfStock}
+                    </c:otherwise>
+                </c:choose>
+                    <%--<s:checkbox name="product.outOfStock"/>--%>
+            </li>
           <li><label>Is Service</label><s:checkbox name="product.service"/></li>
           <li><label>Color Product</label><s:checkbox name="product.productHaveColorOptions"/></li>
           <li><label>Is Google Ad Disallowed</label><s:checkbox name="product.googleAdDisallowed"/></li>
