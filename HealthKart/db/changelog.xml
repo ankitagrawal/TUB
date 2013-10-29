@@ -14341,7 +14341,7 @@
             update reason set classification_id =-1 where classification_id=0;
         </sql>
     </changeSet>
-    <changeSet author="Rahul Dixit (generated)" id="20131029-3">
-        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason"  constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification"  referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1366966901739-5">
+        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
