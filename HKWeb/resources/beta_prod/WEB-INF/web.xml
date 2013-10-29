@@ -16,19 +16,19 @@
     
     <error-page>
         <error-code>401</error-code>
-        <location>/pages/error/404Beta.jsp</location>
+        <location>/pages/error/404.jsp</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
-        <location>/pages/error/404Beta.jsp</location>
+        <location>/pages/error/404.jsp</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/pages/error/500Beta.jsp</location>
+        <location>/pages/error/500.jsp</location>
     </error-page>
     <error-page>
         <error-code>503</error-code>
-        <location>/pages/error/500Beta.jsp</location>
+        <location>/pages/error/500.jsp</location>
     </error-page>
 
     
@@ -154,11 +154,11 @@
         </init-param>
         <init-param>
             <param-name>SSL.SecureHost</param-name>
-            <param-value>beta.healthkart.com</param-value>
+            <param-value>www.healthkart.com</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.UnsecureHost</param-name>
-            <param-value>beta.healthkart.com</param-value>
+            <param-value>www.healthkart.com</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.SessionMode</param-name>
