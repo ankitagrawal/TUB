@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -30,6 +31,21 @@
     <s:layout-component name="htmlHead"/>
   </head>
   <body id="${bodyId}">
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   primaryCategory="${primaryCategory}"
+                   secondaryCategory="${secondaryCategory}"
+                   tertiaryCategory="${tertiaryCategory}"
+                   brand="${brand}"
+                   pageType="<%=TagConstants.PageType.STORE_VARIANT%>"
+                   variantId="${variantId}"
+                   productId="${productId}"
+                   variantOfferPrice="${variantOfferPrice}"
+                   variantMrp="${variantMrp}"
+                   variantDiscount="${variantDiscount}"
+                   variantName="${variantName}"
+                   oldVariantId="${oldVariantId}"
+                   oos="${oos}"
+      />
   <div class="jqmWindow" id="discountCouponModal"></div>
   <s:layout-component name="modal"/>
 

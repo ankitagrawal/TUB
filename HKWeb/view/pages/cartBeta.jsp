@@ -17,7 +17,7 @@
     boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 %>
-<s:layout-render name="/layouts/cartLayoutBeta.jsp" pageTitle="Shopping Cart">
+<s:layout-render name="/layouts/cartLayoutBeta.jsp" pageTitle="Shopping Cart" cartAction="${cartAction}">
 
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
 

@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -33,6 +34,10 @@
 
   </head>
   <body id="${bodyId}">
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="<%=TagConstants.PageType.CATEGORY%>"
+                   primaryCategory="${topCategory}"
+      />
   <div class="jqmWindow" id="discountCouponModal"></div>
   <s:layout-component name="modal"/>
 

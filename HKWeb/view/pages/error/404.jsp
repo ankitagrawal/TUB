@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/catalogLayout.jsp" pageTitle="HealthKart.com - India's premier e-healthstore for all consumer healthcare needs">
+<s:layout-render name="/layouts/errorLayout.jsp" pageTitle="Error 404 : Page not found" errorCode="404">
 
 
   <s:layout-component name="catalog">
