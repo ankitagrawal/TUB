@@ -136,8 +136,8 @@ public class EmailServiceImpl implements EmailService {
         template.getName().equals("partialOrderCancelEmailUserBeta.ftl") || template.getName().equals("orderDeliveredEmailBeta.ftl") || template.getName().equals("feedbackEmailNewBeta.ftl") ||
         template.getName().equals("paymentFailEmailBeta.ftl") || template.getName().equals("orderCancelEmailUserLoyaltyBeta.ftl") || template.getName().equals("notifyUserEmailProductNewBeta.ftl") ||
         template.getName().equals("notifyUserEmailForSimilarProductsForSingleVariantsBeta.ftl") || template.getName().equals("cashBackRewardPointEmailBeta.ftl") || template.getName().equals("referralRewardPointEmailBeta.ftl") ||
-        template.getName().equals("discountCouponEmailBeta.ftl")||template.getName().equals("codConfirmEmailBeta.ftl")||template.getName().equals("notifyEmailForSimilarProductsForMultipleVariantsBeta.ftl")
-        ||template.getName().equals("partialOrderShippedEmailBeta.ftl")) {
+        template.getName().equals("discountCouponEmailBeta.ftl") || template.getName().equals("codConfirmEmailBeta.ftl") || template.getName().equals("notifyEmailForSimilarProductsForMultipleVariantsBeta.ftl")
+        || template.getName().equals("partialOrderShippedEmailBeta.ftl") || template.getName().equals("orderPlacedCodEmailForSMSCountryBeta.ftl")) {
       Map values = (HashMap) templateValues;
       values.put("hkLogo", hkLogo);
       values.put("footerLogo", footerLogo);
