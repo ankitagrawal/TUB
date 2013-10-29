@@ -176,7 +176,7 @@ public class ComboBetaAction extends BaseAction {
 
         if (!isUserHkEmployee && product.isDeleted() != null && product.isDeleted() == true) {
             WebContext.getResponse().setStatus(404); // redirection
-            return new ForwardResolution("/pages/error/noPage.html");
+            return new ForwardResolution("/pages/error/404.html");
         }
 
         List<Product> relatedProducts = product.getRelatedProducts();

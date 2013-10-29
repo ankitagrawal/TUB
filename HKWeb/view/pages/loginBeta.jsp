@@ -68,6 +68,7 @@
     <s:layout-component name="endScripts">
         <script type="text/javascript">
             $(document).ready(function () {
+              $('#loginName').focus();
                 $('[name=createNew]').click(function (event) {
                     var doSubmit;
                     var trgtForm = $('form[name=signup]');
