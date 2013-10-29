@@ -132,7 +132,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired OrderSplitter orderSplitter;
 
     @Autowired ShippingOrderProcessor shippingOrderProcessor;
-
+    
     @Transactional
     public Order save(Order order) {
         return getOrderDao().save(order);
@@ -786,6 +786,7 @@ public class OrderServiceImpl implements OrderService {
 
   public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, String  fulfilmentCenterCode) {
     logger.debug(" Going to book inventory at Bright for lineItem --" + lineItem.getId());
+    User loggedOnUser = userService.getLoggedInUser();
     List<HKAPIForeignBookingResponseInfo> infos = null;
     List<HKAPIForeignBookingResponseInfo> infos1 = new ArrayList<HKAPIForeignBookingResponseInfo>();
     try {
@@ -816,10 +817,26 @@ public class OrderServiceImpl implements OrderService {
           }.getType();
           infos = new Gson().fromJson(data, listType);
           infos1.add(infos.get(0));
+          orderLoggingService.logOrderActivity(lineItem.getCartLineItem().getOrder(), loggedOnUser,
+							EnumOrderLifecycleActivity.ABCommunicationTempBookingSuccess.asOrderLifecycleActivity(),
+							"Inventory successfully temp booked on Bright for variant:- " + lineItem.getCartLineItem().getProductVariant());
+          shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.ABCommunicationBookingSuccess, null,
+  						"Inventory successfully booked on Bright for variant:- "
+  								+ lineItem.getSku().getProductVariant());
+        }
+        else{
+        	orderLoggingService.logOrderActivity(lineItem.getCartLineItem().getOrder(), loggedOnUser, EnumOrderLifecycleActivity.ABCommunicationTempBookingFailure.asOrderLifecycleActivity(), "Failed to Temp Book Inventory on Bright"
+							+ lineItem.getCartLineItem().getProductVariant());
+        	shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.ABCommunicationBookingFailure, null,
+  						"Failed to Book Inventory on Bright fpr variant:-"+ lineItem.getSku().getProductVariant());
         }
       }
     } catch (Exception e) {
+    	shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.ABCommunicationBookingSuccess, null,
+					"Exception while booking/updating Bright Inventory"
+							+ lineItem.getSku().getProductVariant());
       logger.error("Exception while booking/updating Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId(), e);
+      
     }
     logger.debug(" Infos got from bright for booking inv for lineItem" + lineItem.getId() + " infos --" + infos1);
     return infos1;

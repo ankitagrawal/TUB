@@ -64,6 +64,8 @@ public enum EnumOrderLifecycleActivity {
   NoActionAtReconciliation(1050L, "No action taken at reconciliation(refund/reward)"),
   /*REFUND_RO(1060L, "Refund in replacement order or reverse pickup")
   */
+  ABCommunicationTempBookingSuccess(2000L, "Temp Booking On Bright - Successful"),
+  ABCommunicationTempBookingFailure(2001L, "Temp Booking On Bright - Failed")
   ;
 
   private String name;
