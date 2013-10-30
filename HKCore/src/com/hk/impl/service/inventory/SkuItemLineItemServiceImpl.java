@@ -323,7 +323,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       skuItemLineItemService.freeBookingItem(cartLineItem.getId());
       Map<String, Long> invMap = getInventoryHealthService().getInventoryCountOfAB(lineItem.getCartLineItem(), targetWarehouse);
       if (invMap.get("aquaInventory") >= lineItem.getQty()) {
-        cartLineItem = (CartLineItem)getInventoryHealthService().tempBookAquaInventory(cartLineItem, targetWarehouse.getId());
+        cartLineItem = (CartLineItem)getInventoryHealthService().tempBookAquaInventory(cartLineItem, targetWarehouse.getId(), null);
 //        createNewSkuItemLineItem(lineItem);
          createNewSkuItemLineItemForFlipping(cartLineItem);
       } else if (invMap.get("brtInventory") >= lineItem.getQty()) {
@@ -587,7 +587,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
          freeBookingInventoryAtBright(cartLineItem);
         }
         if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
-          cartLineItem = getInventoryHealthService().tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+          cartLineItem = getInventoryHealthService().tempBookAquaInventory(cartLineItem, warehousIdForAqua, null);
         }
         if (item.getSkuItemLineItems() == null || item.getSkuItemLineItems().size() < 1) {
           createNewSkuItemLineItem(item);
