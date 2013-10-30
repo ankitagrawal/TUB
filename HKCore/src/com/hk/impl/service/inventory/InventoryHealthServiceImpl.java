@@ -57,7 +57,7 @@ import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.pact.dao.sku.SkuItemLineItemDao
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 
 
 @Service
