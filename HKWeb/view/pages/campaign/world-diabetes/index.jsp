@@ -98,11 +98,12 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA40'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA55'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA48'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA20'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DM019'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA47'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA37'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA07'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DIA20'/>
       <div class="cl"></div>
 
 
