@@ -793,14 +793,12 @@
         </c:if>
     </c:if>
     <c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusCheckedOut}">
-        <c:set var="a" value="<%=RoleConstants.ADMIN%>" />
-        <c:set var="b" value="<%=RoleConstants.OUTWARD_VALIDATE_SO%>" />
-        <shiro:hasAnyRoles name="<%=RoleConstants.OUTWARD_VALIDATE_SO%>">
-          <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" target="_blank" event="validateSO">
-            <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-            [Validate SO]
-          </s:link>
-        </shiro:hasAnyRoles>
+        <shiro:hasPermission name="<%=PermissionConstants.OUTWARD_VALIDATE_SO%>">
+            <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" target="_blank" event="validateSO">
+                <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                [Validate SO]
+            </s:link>
+        </shiro:hasPermission>
     </c:if>
 </td>
 <c:if test="${isServiceQueue== true}">
