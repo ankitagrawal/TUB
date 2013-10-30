@@ -793,7 +793,9 @@
         </c:if>
     </c:if>
     <c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusCheckedOut}">
-        <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%> || <%=RoleConstants.OUTWARD_VALIDATE_SO%>">
+        <c:set var="a" value="<%=RoleConstants.ADMIN%>" />
+        <c:set var="b" value="<%=RoleConstants.OUTWARD_VALIDATE_SO%>" />
+        <shiro:hasAnyRoles name="${a || b}">
           <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderValidatorAction" target="_blank" event="validateSO">
             <s:param name="shippingOrder" value="${shippingOrder.id}"/>
             [Validate SO]
