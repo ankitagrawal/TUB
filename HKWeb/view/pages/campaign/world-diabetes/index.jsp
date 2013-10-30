@@ -65,6 +65,11 @@
 
 
       <div class="heading-wd">Weight Management</div>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV021'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV020'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQNX015'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OMRN008'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OMRN013'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HW004'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OMRN011'/>
