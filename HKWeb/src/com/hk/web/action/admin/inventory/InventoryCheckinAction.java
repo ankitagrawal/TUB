@@ -421,7 +421,7 @@ public class InventoryCheckinAction extends BaseAction {
 			}
 			Long foreignShippingOrderId = skuItem.getForeignSkuItemCLI().getForeignShippingOrderId();
 			if (foreignShippingOrderId != null && foreignShippingOrderId.toString().equals(grn.getInvoiceNumber())) {
-				adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, grnLineItem, null, null, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF,
+				adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, grnLineItem, null, null, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF,
 						getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), 1l, loggedOnUser);
 				skuGroupService.updateBookingAfterCheckin(skuItem, skuItem.getSkuGroup());
 
