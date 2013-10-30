@@ -14264,7 +14264,7 @@
             insert  into reason (id,primary_classification,type,classification_id) values(1710,'SO could not be Auto-escalated from Fitness Pro','SO Could not be Auto-escalated',2150);
         </sql>
     </changeSet>
-    <changeSet author="RD(generated)" id="20131015-01">
+    <changeSet author="RD(generated)" id="20131030-01">
         <sql>
             insert into permission values ('OUTWARD_VALIDATE_SO');
         </sql>
