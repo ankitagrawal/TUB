@@ -93,7 +93,7 @@ public class AdminEmailManager {
     public static final String PURCHASE_REPORTING_EMAIL = "purchase.reporting@healthkart.com";
     public static final String WAREHOUSE_PURCHASE_EMAIL = "warehouse.purchase@healthkart.com";
 
-    public static final String WAREHOUSE_JIT_EMAIL = "ops.jit@healthkart.com";
+    public static final String WAREHOUSE_JIT_EMAIL = "rahul.dixit@healthkart.com";
     private Set<String> hkReportAdminEmails = null;
     private Set<String> marketingAdminEmails = null;
 
@@ -1137,13 +1137,13 @@ public class AdminEmailManager {
 
 		String fromPurchaseEmail = "purchase@healthkart.com";
 		Set<String> categoryAdmins = new HashSet<String>();
-		if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
-			Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
-
+        Product product = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct();
+        if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+			Category category = product.getPrimaryCategory();
             categoryAdmins = emailManager.categoryAdmins(category);
 		}
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        if(purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().isJit() || purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().isDropShipping()){
+        if(product.isJit() || product.isDropShipping()){
             categoryAdmins.add(WAREHOUSE_JIT_EMAIL);
         }
         else{
