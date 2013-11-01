@@ -28,8 +28,10 @@
   <s:layout-component name="content">
 
     <div id="wrapper">
-    <div class="logo"><a href="index.jsp"><img src="images/hk-logo.png"/></a></div>
-    <img src="images/Personalcare.jpg"/>
+      <div class="logo"><a href="http://www.healthkart.com/"><img src="images/hk-logo.png"/></a></div>
+      <div class="cl"></div>
+      <a href="index.jsp"><img class="banner-ds" src="images/banner-ds.jpg"/></a>
+      <a href="http://www.healthkart.com/personal-care"><img src="images/Personalcare.jpg"/>  </a>
 
 
     <%@include file="menu-ds.jsp" %>
@@ -37,18 +39,21 @@
     <div class="box-product">
 
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AYUCR4'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV009'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV011'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOS001'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV008'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV004'/>
+      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV022'/>
+
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='3M001'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HP004'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF006'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ROM006'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV011'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF005'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOS001'/>
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CERSUP004'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BCKRST001'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV008'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV004'/>
+
+
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON013'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JUNO001'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RD001'/>
@@ -56,21 +61,13 @@
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR011'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF020'/>
       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WRSTS002'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV022'/>
-      <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FRE01'/>
+
+
 
     </div>
       <!--- box-product close -->
 
-      <div class="cl"></div>
-      <div class="footer-ny">
-        <p>© 2013 healthkart.com</p>
-        <a href="https://twitter.com/healthkart"><img
-            src="${pageContext.request.contextPath}/images/14feb/twitter-img.jpg"/></a>
-        <a href="https://www.facebook.com/healthkart"><img
-            src="${pageContext.request.contextPath}/images/14feb/fb-img.jpg"/></a>
-
-      </div>
+      <%@include file="footer-ds.jsp" %>
 
     </div>
       <!--- wrapper close -->

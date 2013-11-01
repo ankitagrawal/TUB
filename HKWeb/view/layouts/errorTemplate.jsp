@@ -36,6 +36,9 @@
   </head>
   <body>
   <div id="container" class="container_24">
+    <s:layout-component name="analytics">
+      <s:layout-render name="/layouts/embed/_analytics.jsp"/>
+    </s:layout-component>
     <s:layout-component name="header">
       <div id="header">
         <s:layout-render name="/layouts/errorHeader.jsp"/>
