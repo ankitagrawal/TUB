@@ -30,6 +30,7 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,8 @@ public class ReversePickupServiceImpl implements ReversePickupService {
     private SkuItemDao skuItemDao;
     @Autowired
     private ShippingOrderService shippingOrderService;
+    @Autowired
+    SkuItemLineItemService skuItemLineItemService;
 
     @Transactional
     public ReversePickupOrder saveReversePickupOrder(ReversePickupOrder reversePickupOrder) {
@@ -233,6 +236,7 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                 String comments = "Inventory checked in : " + rpLineItem.getWarehouseReceivedCondition().getClassification().getPrimary() + " for Product " + productVariant.getProduct().getName() + "<br/>" +
                         productVariant.getOptionsCommaSeparated();
                 shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
+                skuItemLineItemService.freeInventoryForRTOCheckIn(shippingOrder);
             } else {
                 throw new ReversePickupException("The Barcode entered doesn't match any of the items OR item not in correct status   ", productVariant);
             }
