@@ -14,6 +14,7 @@
 <%
   Double cashBackPercentage = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
   Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
+  String orderConfirmRoute = (String) ServiceLocatorFactory.getProperty(Keys.Env.codRoute);
 %>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentModeCOD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -22,6 +23,7 @@
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 <c:set var="neftMode" value="<%=EnumPaymentMode.NEFT.getId()%>"/>
+<c:set var="orderConfirmRoute" value="<%=orderConfirmRoute%>"/>
 
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
