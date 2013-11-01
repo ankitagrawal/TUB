@@ -160,9 +160,18 @@
 	            <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
 	              <li id="tab5">Cheque / Bank Deposit</li>
 	            </shiro:hasRole>
-	            <c:if test="${orderSummary.pricingDto.grandTotalPayable > 20000}">
+                <c:set var="NEFT" value="true" />
+                <shiro:hasRole name="<%=RoleConstants.NEFT_DEPOSIT%>">
+                    <li id="tab5">NEFT Deposit</li>
+                    <c:set var="NEFT" value="false"/>
+                </shiro:hasRole>
+                <c:if test="${orderSummary.pricingDto.grandTotalPayable > 20000 and NEFT eq true}">
+                    <li id="tab5">NEFT Deposit</li>
+                </c:if>
+
+	          <%--  <c:if test="${orderSummary.pricingDto.grandTotalPayable > 20000}">
                 <li id="tab5">NEFT Deposit</li>
-	            </c:if>
+	            </c:if>--%>
             </c:if>
         </shiro:lacksRole>
 
