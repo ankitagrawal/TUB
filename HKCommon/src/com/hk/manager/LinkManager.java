@@ -100,16 +100,15 @@ public class LinkManager {
     return getUrlFromResolution(redirectResolution);
   }
 
+  //Here i am adding only code for New Catalog, need to make it in different way
   public String getReviewPageLink(HashMap params) {
-    if (isHybridRelease()) {
       Map<String, String> hkWebParams = new HashMap<String, String>();
       hkWebParams.put("reviewCrud","");
       hkWebParams.put("productVariantId",params.get("productVariant").toString());
       RedirectResolution redirectResolution = new RedirectResolution("/beta/review/StoreVariantReview.action").addParameters(hkWebParams);
-      return userEmailLinkToBeta + redirectResolution.getUrl(Locale.getDefault());
-    }
-    RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/ProductReview.action").addParameters(params);
-    return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
+      return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
+//    RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/ProductReview.action").addParameters(params);
+//    return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
   }
 
   public String getUnsubscribeLink(User user) {
