@@ -48,7 +48,6 @@ import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
-import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
@@ -58,6 +57,8 @@ import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
+
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -772,6 +773,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
             if (maxQty >= qtyToBeSet) {
                 for (int i = 0; i < qtyToBeSet; i++) {
+
                     List<SkuItem> skuItemList = skuItemDao.getSkuItems(Arrays.asList(sku), Arrays.asList(EnumSkuItemStatus.Checked_IN.getId()), null,
                             cartLineItem.getMarkedPrice(), false);
                     if (skuItemList != null && skuItemList.size() > 0) {
