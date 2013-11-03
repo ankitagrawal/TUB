@@ -22,6 +22,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.Address;
@@ -112,7 +113,10 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         order.setUserComments(hkapiOrderDTO.getHkapiOrderDetailsDTO().getUserComments());
         order.setScore(0L);
         order.setStore(storeService.getStoreById(hkapiOrderDTO.getStoreId()));
-
+         HKAPIPaymentDTO hkApiPaymentDTO = hkapiOrderDTO.getHkapiPaymentDTO();
+        if(hkApiPaymentDTO.getGatewayOrderId()!=null){
+            order.setGatewayOrderId(hkApiPaymentDTO.getGatewayOrderId());
+        }
         //create cart line items
         cartLineItems = addCartLineItems(hkapiOrderDTO.getHkapiOrderDetailsDTO(), order);
 
@@ -120,7 +124,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         Address address = createAddress(hkapiOrderDTO.getHkapiAddressDTO(), hkUser);
 
        // create a payment
-        Payment payment = createPayment(order,cartLineItems, hkapiOrderDTO.getHkapiPaymentDTO());
+        Payment payment = createPayment(order,cartLineItems, hkApiPaymentDTO);
 
         if (cartLineItems.size() > 0) {
             order = automatedOrderService.placeOrder(order,cartLineItems, address, payment,hkUser.getStore(), false);
@@ -163,9 +167,28 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
               Gateway gateway= basedao.get(Gateway.class, hkapiPaymentDTO.getGatewayId()) ;
             if(gateway!=null){
                 payment.setGateway(gateway);
-                payment=paymentService.save(payment);
             }
         }
+        if(hkapiPaymentDTO.getGatewayOrderId()!=null){
+         payment.setGatewayOrderId(hkapiPaymentDTO.getGatewayOrderId());
+        }
+        if(hkapiPaymentDTO.getAuthIdCode()!=null){
+            payment.setAuthIdCode(hkapiPaymentDTO.getAuthIdCode());
+        }
+        if(hkapiPaymentDTO.getPaymentChecksum()!=null){
+            payment.setPaymentChecksum(hkapiPaymentDTO.getPaymentChecksum());
+        }
+        if(hkapiPaymentDTO.getResponseMessage()!=null){
+            payment.setResponseMessage(hkapiPaymentDTO.getResponseMessage());
+        }
+        if(hkapiPaymentDTO.getIssuerId()!=null){
+            Issuer issuer= basedao.get(Issuer.class, hkapiPaymentDTO.getIssuerId()) ;
+            if(issuer!=null){
+                payment.setIssuer(issuer);
+            }
+        }
+        payment=paymentService.save(payment);
+
         return  payment;
     }
 
