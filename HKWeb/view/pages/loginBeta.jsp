@@ -73,7 +73,8 @@
         function goToSignUp(){
           var doSubmit;
           var trgtForm = $('form[name=signup]');
-          /*var emailid = $('#loginName').val();
+          
+          var emailid = $('#loginName').val();
           var errorMsg = '<div class="errorContainer">Please fix the following errors:</div><ol class="errorList"><li class="errorMessage">Email is a required field</li></ol>';
           event.preventDefault();
           console.log(emailid);
@@ -87,13 +88,13 @@
             $('.errorContainer').remove();
             $('.errorList').remove();
             doSubmit = true;
-          }*/
-          /*
+          }
+          
           if (doSubmit != false) {
             $('#signupEmail').val(emailid);
             trgtForm.submit();
-          }*/
-          trgtForm.submit();
+          }
+          //trgtForm.submit();
         }
 
         $('[name=createNew]').click(function (event) {
@@ -116,8 +117,8 @@
         }
 
         $('#typeNew').click(function () {
-          goToSignUp();
-          //newView();
+          //goToSignUp();
+          newView();
         });
         $('#typeExist').click(function () {
           oldView();
