@@ -116,8 +116,8 @@
         }
 
         $('#typeNew').click(function () {
-          goToSignUp();
-          //newView();
+          //goToSignUp();
+          newView();
         });
         $('#typeExist').click(function () {
           oldView();
