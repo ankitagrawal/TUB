@@ -14217,6 +14217,142 @@
             alter table payment MODIFY transaction_type VARCHAR(100);
         </sql>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1377517287151-6">
+    <createTable tableName="foreign_si_cli">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="cart_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_sku_group_id" type="INT"/>
+            <column name="foreign_sku_item_id" type="INT"/>
+            <column name="foreign_barcode" type="VARCHAR(45)"/>
+            <column name="fsg_batch_number" type="VARCHAR(45)"/>
+            <column name="fsg_mrp" type="DOUBLE"/>
+            <column name="aqua_mrp" type="DOUBLE"/>
+            <column name="fsg_mfg_dt" type="DATETIME"/>
+            <column name="fsg_expiry_dt" type="DATETIME"/>
+            <column name="fsg_cost_price" type="DOUBLE"/>
+            <column name="unit_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="foreign_base_order_id" type="INT"/>
+            <column name="foreign_shipping_order_id" type="INT"/>
+            <column name="processed_status" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="counter" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377517435520-4">
+        <addColumn tableName="sku_item">
+            <column name="foreign_si_cli_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377517435520-24">
+        <addForeignKeyConstraint baseColumnNames="cart_line_item_id" baseTableName="foreign_si_cli"  constraintName="fk_foreign_si_cli_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cart_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377517435520-25">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="foreign_si_cli"  constraintName="fk_foreign_si_cli_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377517435520-28">
+        <addForeignKeyConstraint baseColumnNames="foreign_si_cli_id" baseTableName="sku_item"  constraintName="fk_sku_item_foreign_si_cli1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="foreign_si_cli" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377517435520-29">
+        <sql>
+            alter table foreign_si_cli modify update_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369376937240-1">
+        <createTable tableName="inventory_barcode_map">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="po_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="Active" name="status" remarks="Active&#10;Inactive&#10;Deleted" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1369376937240-2">
+        <createTable tableName="inventory_barcode_map_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="inventory_barcode_map_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_group_barcode" type="VARCHAR(45)"/>
+            <column name="sku_item_barcode" type="VARCHAR(45)"/>
+            <column name="variant_id" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="cost_price" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.00" name="mrp" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="batch_number" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mfg_date" type="DATE"/>
+            <column name="exp_date" type="DATE"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="txn_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1369376937240-4">
+        <addForeignKeyConstraint baseColumnNames="po_id" baseTableName="inventory_barcode_map" constraintName="fk_inventory_barcode_map_purchase_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369376937240-5">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="inventory_barcode_map" constraintName="fk_inventory_barcode_map_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369376937240-6">
+        <addForeignKeyConstraint baseColumnNames="inventory_barcode_map_id" baseTableName="inventory_barcode_map_item" constraintName="fk_inventory_bracode_temp_inventory_barcode_map1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="inventory_barcode_map" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369386589992-1">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="barcode" tableName="sku_item"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369386589992-3">
+        <createIndex indexName="barcode_UNIQUE" tableName="sku_item" unique="true">
+            <column name="barcode"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1369398983560-1">
+        <addColumn tableName="sku_group">
+            <column name="foreign_sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Nihal (generated)" id="1379656965839-4">
         <addColumn tableName="sku_item">
             <column name="bin_id" type="INT"/>
@@ -14257,6 +14393,24 @@
         <addColumn tableName="user_cod_call">
             <column name="source" type="VARCHAR(45)"/>
         </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Agrawal (generated)" id="20130458-037">
+        <sql>
+            INSERT INTO classification VALUES (1025, 'SO Could not be Manually-escalated' , 'Booked on Bright Behalf');
+            INSERT INTO reason VALUES (250, 'Inventory Booked on  Bright Behalf' , NULL, 'SO Could not be Manually-escalated', 1025);
+        </sql>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377076644550-5">
+        <addColumn tableName="warehouse">
+            <column name="fulfilment_center_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Agrawal (generated)" id="20131021-0808">
+        <sql>
+            UPDATE warehouse SET fulfilment_center_code = 'GGN-AB' WHERE id = 10;
+            UPDATE warehouse SET fulfilment_center_code = 'MUM-AB' WHERE id = 20;
+            UPDATE warehouse SET fulfilment_center_code = 'DEL-AB' WHERE id = 402;
+        </sql>
     </changeSet>
     <changeSet author="RD(generated)" id="20131015-01">
         <sql>
