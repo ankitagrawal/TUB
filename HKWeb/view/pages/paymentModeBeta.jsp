@@ -55,7 +55,7 @@
       <span class="icn-warning-large"></span>
     </div>
     <div class="warning-txt-cntnr">
-      <h2>YOUR PAYMENT WAS NOT SUCESSFUL</h2>
+      <h2>YOUR PAYMENT WAS NOT SUCCESSFUL</h2>
 
       <p>The reason for this might be a network error or a communication error between the bank and the payment
         gateway. There also might be a good possibility that you entered incorrect information with your present
