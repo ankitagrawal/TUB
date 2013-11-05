@@ -67,17 +67,17 @@
     </div>
   </s:layout-component>
   <s:layout-component name="endScripts">
-    <script type="text/javascript">
+    <script type="text/javascript"><!--
       $(document).ready(function () {
         $('#loginName').focus();
-        function goToSignUp(){
+        function goToSignUp(event){
           var doSubmit;
           var trgtForm = $('form[name=signup]');
           
           var emailid = $('#loginName').val();
           var errorMsg = '<div class="errorContainer">Please fix the following errors:</div><ol class="errorList"><li class="errorMessage">Email is a required field</li></ol>';
           event.preventDefault();
-          console.log(emailid);
+          //console.log(emailid);
           if (emailid == null || $.trim(emailid) == '') {
             $('.errorContainer').remove();
             $('.errorList').remove();
@@ -98,15 +98,13 @@
         }
 
         $('[name=createNew]').click(function (event) {
-          goToSignUp();
+          goToSignUp(event);
         });
         function newView() {
           $('[name=password]').attr("disabled", "disabled");
           $('[name=createNew]').show();
           $('[name=login]').hide();
           $('[name=forgot-link-cntnr]').hide();
-
-
         }
 
         function oldView() {
@@ -127,6 +125,6 @@
 
 
       });
-    </script>
+    --></script>
   </s:layout-component>
 </s:layout-render>
