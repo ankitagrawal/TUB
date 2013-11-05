@@ -38,13 +38,13 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
             <#list order.lineItems as lineItem>
                 <tr>
 
-                    <td><#if productLineItem.productVariant.variantName??>
-                    ${productLineItem.productVariant.variantName}
+                    <td><#if lineItem.sku.productVariant.variantNameFromHKEdge??>
+                    ${lineItem.sku.productVariant.variantNameFromHKEdge}
                     <#else>
-                    ${productLineItem.productVariant.product.name}
+                    ${lineItem.sku.productVariant.product.name}
                     </#if>
-                      <br/>
-                      <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
+                        <br/>
+                        <em style="font-size:0.9em; color:#666"><#list lineItem.sku.productVariant.productOptions as productOption>
                     ${productOption.name} ${productOption.value}
                     </#list></em>
                     </td>
@@ -88,8 +88,12 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                     <#list shippingOrder.lineItems as lineItem>
                         <tr>
-                            <td>${lineItem.sku.productVariant.variantName}
-
+                            <td>
+                                <#if lineItem.sku.productVariant.variantNameFromHKEdge??>
+                            ${lineItem.sku.productVariant.variantNameFromHKEdge}
+                            <#else>
+                                ${lineItem.sku.productVariant.product.name}
+                                </#if>
                             </td>
                             <td>
                             ${lineItem.qty}
@@ -124,8 +128,12 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                 <#list shippingOrder.lineItems as lineItem>
                     <tr>
-                        <td>${lineItem.sku.productVariant.variantName}
-
+                        <td>
+                            <#if lineItem.sku.productVariant.variantNameFromHKEdge??>
+                        ${lineItem.sku.productVariant.variantNameFromHKEdge}
+                        <#else>
+                            ${lineItem.sku.productVariant.product.name}
+                            </#if>
                         </td>
                         <td>
                         ${lineItem.qty}

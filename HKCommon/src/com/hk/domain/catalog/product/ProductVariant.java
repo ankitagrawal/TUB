@@ -259,6 +259,15 @@ public class ProductVariant implements java.io.Serializable {
         return variantName;
     }
 
+  public String getVariantNameFromHKEdge() {
+      HybridStoreVariantService storeVariantService = ServiceLocatorFactory.getService(HybridStoreVariantService.class);
+      StoreVariantBasicResponse storeVariantBasicApiResponse = storeVariantService.getStoreVariantBasicDetailsFromEdge(this.id);
+      if (storeVariantBasicApiResponse != null) {
+        return storeVariantBasicApiResponse.getName();
+      }
+      return variantName;
+  }
+
     public void setVariantName(String variantName) {
         this.variantName = variantName;
     }

@@ -1,8 +1,2 @@
 User-agent: *
-Allow: /
-Disallow: /Cart.action
-Disallow: /Login.action
-Disallow: /action/invite/
-Disallow: /brand/all/
-Disallow: /core/
-Sitemap: http://www.healthkart.com/sitemap.xml
+Disallow: /
