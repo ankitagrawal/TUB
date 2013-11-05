@@ -113,8 +113,8 @@ Your order ${order.gatewayOrderId} has been delivered. Please share some feedbac
                 <#list shippingOrder.lineItems as lineItem>
                     <tr>
 
-                        <td><#if lineItem.sku.productVariant.variantName??>
-                        ${lineItem.sku.productVariant.variantName}
+                        <td><#if lineItem.sku.productVariant.variantNameFromHKEdge??>
+                        ${lineItem.sku.productVariant.variantNameFromHKEdge}
                         <#else>
                         ${lineItem.sku.productVariant.product.name}
                         </#if>

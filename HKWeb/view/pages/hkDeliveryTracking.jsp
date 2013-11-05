@@ -12,6 +12,7 @@
     <s:layout-component name="rhsContent">
 	    <c:set var="customer" value="<%=HKDeliveryConstants.DELIVERY_HUB%>" />
 	    <c:set var="warehouse" value="<%=HKDeliveryConstants.HEALTHKART_HUB%>" />
+        <c:set var="userStatusCustomerHold" value="<%=HKDeliveryConstants.USER_STATUS_CUSTOMERHOLD%>" />
 
         <div class="hkDeliveryWorksheetBox">
                 <fieldset class="right_label">
@@ -73,7 +74,15 @@
 						</c:choose>
 	                </td>
                     <td class="column">
-                    ${hk:getDisplayNameForHkdeliveryTracking(consignmentTrackingList.consignmentLifecycleStatus.status)}</td>
+                        <c:choose>
+                            <c:when test="${hk:getDisplayNameForHkdeliveryTracking(consignmentTrackingList.consignmentLifecycleStatus.status) == userStatusCustomerHold }">
+                                ${hk:getDisplayNameForHkdeliveryTrackingRemarks(consignmentTrackingList.remarks)}
+                            </c:when>
+                            <c:otherwise>
+                                ${hk:getDisplayNameForHkdeliveryTracking(consignmentTrackingList.consignmentLifecycleStatus.status)}
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

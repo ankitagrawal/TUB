@@ -9,6 +9,7 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -26,12 +27,15 @@
   Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
   boolean isSecure = WebContext.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
+  String orderConfirmRoute = (String) ServiceLocatorFactory.getProperty(Keys.Env.codRoute);
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
 <c:set var="codCharges" value="<%=codCharges%>"/>
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>"/>
 <c:set var="prePaidPaymentType" value="<%=EnumPaymentType.PrePaid.getId()%>"/>
+<c:set var="orderConfirmRoute" value="<%=orderConfirmRoute%>"/>
+<c:set var="deliveredOrderStatus" value="<%=EnumOrderStatus.Delivered%>"/>
 
 <s:layout-render name="/layouts/checkoutLayoutBeta.jsp"
                  pageTitle="Payment Options">
@@ -294,6 +298,7 @@
               beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
               method="post">
             <s:hidden name="order" value="${orderSummary.order}"/>
+            <c:set var="order" value="${orderSummary.order}"/>
 
             <div style="margin-bottom: 15px;">
               <div class="label newLabel"
@@ -309,10 +314,35 @@
               <s:text class="signUpInputNew2" name="codContactPhone"
                       value="${orderSummary.order.address.phone}" id="phoneNo"/>
             </div>
+
+
             <p style="margin-left: 130px;margin-top: 10px;color: #009AEC;"><strong >Please ensure that you enter the correct mobile number</strong></p>
-            <p style="font-weight: 500; border: 1px solid #009AEC; color: #009AEC; padding: 5px; margin-top: 20px;">
-              After placing your order, Please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
-              </p>
+
+            <c:if test="${not hk:isAutoConfirmedCod(order, deliveredOrderStatus)}">
+              <c:choose>
+
+                <c:when test="${orderConfirmRoute == 'smsCountry'}">
+                  <p style="font-weight: 500; border: 1px solid #009AEC; color: #009AEC; padding: 5px; margin-top: 20px;">
+                    After placing your order, Please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+                  </p>
+                </c:when>
+                <c:otherwise>
+                  <p>
+                    Your order is confirmed. We will soon send you a confirmation mail. The estimated dispatch days for each
+                    product are mentioned below.
+
+                   <%-- You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                    your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.--%>
+
+                  </p>
+                </c:otherwise>
+              </c:choose>
+            </c:if>
+
+
+
+
+
             <div class="buttons" style="font-size: 1.3em;"><br/>
               <br/>
               <s:submit name="pre" value="PLACE ORDER" style="margin-left: 8px;"
