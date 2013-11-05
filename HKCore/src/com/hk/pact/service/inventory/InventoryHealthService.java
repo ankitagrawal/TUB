@@ -38,9 +38,9 @@ public interface InventoryHealthService {
 
   public Map<String,Long> getInventoryCountOfAB (CartLineItem cartLineItem, Warehouse targetWarehouse);
 
-  public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem,String fulfilmentCenterCode);
+  public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem,String fulfilmentCenterCode,Long qtyToBeSet);
 
-  public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId);
+  public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId, Long qtyToBeSet);
 
   public void populateSICLI(CartLineItem cartLineItem);
 

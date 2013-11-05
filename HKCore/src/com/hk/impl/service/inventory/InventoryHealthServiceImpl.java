@@ -677,14 +677,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
           if (checkAvailableUnbookedSkuItemsInAqua.size() >= cartLineItem.getQty()){
             logger.debug("Temp Booking On Aqua Side");
-            cartLineItem = tempBookAquaInventory(cartLineItem,warehouseIdAtPV);
+            cartLineItem = tempBookAquaInventory(cartLineItem,warehouseIdAtPV,null);
           } else {
             //book inventory on Bright
             if (isBookingRequireAtBright(cartLineItem)) {
               logger.debug("Going to temp book inventory at bright for Non-JIT product Variant : " + cartLineItem.getProductVariant().getId());
               getBaseDao().refresh(cartLineItem);
               if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
-              cartLineItem = tempBookBrightInventory(cartLineItem,productVariant.getWarehouse().getFulfilmentCenterCode());
+              cartLineItem = tempBookBrightInventory(cartLineItem,productVariant.getWarehouse().getFulfilmentCenterCode(), null);
               populateSICLI(cartLineItem);
               }
             }
@@ -768,7 +768,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
   @Transactional
-	public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, String fulfilmentCenterCode) {
+	public CartLineItem tempBookBrightInventory(CartLineItem cartLineItem, String fulfilmentCenterCode ,  Long qtyToBeSet) {
 		ProductVariant productVariant = cartLineItem.getProductVariant();
 		logger.debug("Going to temp  book inv on Bright Side for product Variant : " + productVariant.getId());
 		productVariant = productVariantService.getVariantById(productVariant.getId());
@@ -777,7 +777,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 		Long fsicliId = null;
 		User loggedOnUser = userService.getLoggedInUser();
 		logger.debug("Going to populate FSICLI  during temp booking  cartlineItem Id : " + cartLineItem.getId());
-		List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem);
+		List<ForeignSkuItemCLI> foreignSkuItemCLis = populateForeignSICLITable(cartLineItem ,qtyToBeSet );
 		logger.debug("  FSICLI has been populated during temp booking  cartlineItem Id : " + cartLineItem.getId());
 
 		List<HKAPIBookingInfo> hkapiBookingInfos = new ArrayList<HKAPIBookingInfo>();
@@ -865,7 +865,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 	}
 
 @Transactional
- public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId){
+ public CartLineItem tempBookAquaInventory (CartLineItem cartLineItem, Long warehouseId, Long qtyToBeSet  ){
    InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
     if (!skuItemLineItemService.sicliAlreadyExists(cartLineItem)) {
       ProductVariant productVariant = cartLineItem.getProductVariant();
@@ -878,7 +878,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
         if (availableUnBookedInventory > 0) {
           // picking the  sku for current MRP available at max qty on product variant
-          long qtyToBeSet = cartLineItem.getQty();
+          if (qtyToBeSet == null){
+             qtyToBeSet = cartLineItem.getQty();
+          }
+
           if (availableUnBookedInventory >= qtyToBeSet) {
             Set<SkuItem> skuItemsToBeBooked = new HashSet<SkuItem>();
 
@@ -926,9 +929,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
   }
 
 
-  private List<ForeignSkuItemCLI> populateForeignSICLITable(CartLineItem cartLineItem) {
+  private List<ForeignSkuItemCLI> populateForeignSICLITable(CartLineItem cartLineItem ,Long qtyToBeSet) {
     List<ForeignSkuItemCLI> foreignSkuItemCLIs = new ArrayList<ForeignSkuItemCLI>();
-    for (int i = 1; i <= cartLineItem.getQty(); i++) {
+    if (qtyToBeSet == null){
+      qtyToBeSet = cartLineItem.getQty();
+    }
+    for (int i = 1; i <= qtyToBeSet; i++) {
       ForeignSkuItemCLI foreignSkuItemCLI = new ForeignSkuItemCLI();
       foreignSkuItemCLI.setAquaMrp(cartLineItem.getMarkedPrice());
       foreignSkuItemCLI.setCartLineItem(cartLineItem);
@@ -1195,9 +1201,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
-    if (countOfAvailableUnBookedSkuItemsInAqua >= cartLineItem.getQty()) {
+    if (countOfAvailableUnBookedSkuItemsInAqua >= lineItem.getRQty()) {
       if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
-        cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+        cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua, lineItem.getRQty());
       }
       if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1){
         List<SkuItemCLI> skuItemCLIs = cartLineItem.getSkuItemCLIs();
@@ -1220,13 +1226,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     } else {
       // Bright call
         countOfAvailableUnBookedSkuItemsInBright = getUnbookedInventoryOfBrightForMrp(cartLineItem.getProductVariant(), aquaWarehouse.getFulfilmentCenterCode(), cartLineItem.getMarkedPrice());
-      if (countOfAvailableUnBookedSkuItemsInBright >= cartLineItem.getQty()) {
+      if (countOfAvailableUnBookedSkuItemsInBright >= lineItem.getRQty()) {
               // Bright inventory booking required
         OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
        // createSicliAndSiliAndTempBookingForBright(cartLineItem,warehouseIdForBright);
         if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
           if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
-            cartLineItem = tempBookBrightInventory(cartLineItem, aquaWarehouse.getFulfilmentCenterCode());
+            cartLineItem = tempBookBrightInventory(cartLineItem, aquaWarehouse.getFulfilmentCenterCode(),lineItem.getRQty());
             populateSICLI(cartLineItem);
           }
 
@@ -1279,9 +1285,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     if (checkAvailableUnbookedSkuItemsInAqua != null && checkAvailableUnbookedSkuItemsInAqua.size() > 0) {
       countOfAvailableUnBookedSkuItemsInAqua = (long) checkAvailableUnbookedSkuItemsInAqua.size();
     }
-    if (countOfAvailableUnBookedSkuItemsInAqua >= cartLineItem.getQty()) {
+    if (countOfAvailableUnBookedSkuItemsInAqua >= lineItem.getQty()) {
        if (!sicliAlreadyCreated ) {
-         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+         cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua,lineItem.getQty());
          sicliAlreadyCreated = true;
        }
 
@@ -1317,7 +1323,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     } else {
       // Bright call
       countOfAvailableUnBookedSkuItemsInBright = getUnbookedInventoryOfBrightForMrp(cartLineItem.getProductVariant(), aquaWarehouse.getFulfilmentCenterCode(), cartLineItem.getMarkedPrice());
-      if (countOfAvailableUnBookedSkuItemsInBright >= cartLineItem.getQty()) {
+      if (countOfAvailableUnBookedSkuItemsInBright >= lineItem.getQty()) {
         // Bright inventory booking required
         OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
         // createSicliAndSiliAndTempBookingForBright(cartLineItem,warehouseIdForBright);
@@ -1326,7 +1332,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
           skuItemLineItemService.freeFsiclis(infos, false);
         }
           if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
-            cartLineItem = tempBookBrightInventory(cartLineItem, aquaWarehouse.getFulfilmentCenterCode());
+            cartLineItem = tempBookBrightInventory(cartLineItem, aquaWarehouse.getFulfilmentCenterCode(), lineItem.getQty());
             populateSICLI(cartLineItem);
           }
           if (orderService.bookedOnBright(cartLineItem) && (lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1)) {
@@ -1486,12 +1492,20 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         SkuItem bookedSkuItemFordifferentOrder = skuItemLineItemService.getSkuItem(fsicliBookedForDifferentOrder.getId());
         String tempBarcode = bookedSkuItemFordifferentOrder.getBarcode();
         bookedSkuItemFordifferentOrder.setBarcode(existingSkuItem.getBarcode());
+
+        fsicliBookedForDifferentOrder.setSkuItemId(existingFscli.getSkuItemId());
+        fsicliBookedForDifferentOrder.setForeignBarcode(existingSkuItem.getBarcode());
+        fsicliBookedForDifferentOrder.setForeignSkuGroupId(existingFscli.getForeignSkuGroupId());
+
         String tempBarcodeId = existingSkuItem.getBarcode() + existingSkuItem.getId();
         existingSkuItem.setBarcode(tempBarcodeId);
         existingSkuItem = (SkuItem)  getBaseDao().save(existingSkuItem);
         bookedSkuItemFordifferentOrder = (SkuItem) getBaseDao().save(bookedSkuItemFordifferentOrder);
+        getBaseDao().save(fsicliBookedForDifferentOrder);
         existingSkuItem.setBarcode(tempBarcode);
         existingSkuItem.setSkuGroup(skuGroup);
+
+
 
       } else {
         existingSkuItem.setBarcode(info.getBarcode());
@@ -1560,7 +1574,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
     if (countOfAvailableUnBookedSkuItemsInAqua >= cartLineItem.getQty()) {
       if(cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
-       cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua);
+       cartLineItem = tempBookAquaInventory(cartLineItem, warehousIdForAqua, null);
       }
       if(lineItem.getSkuItemLineItems() == null || lineItem.getSkuItemLineItems().size() < 1){
          skuItemLineItemService.createNewSkuItemLineItem(lineItem);
@@ -1619,7 +1633,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
      OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
      if (cartLineItem.getForeignSkuItemCLIs() == null || cartLineItem.getForeignSkuItemCLIs().size() < 1) {
        if (cartLineItem.getSkuItemCLIs() == null || cartLineItem.getSkuItemCLIs().size() < 1) {
-         cartLineItem = tempBookBrightInventory(cartLineItem, fulfilmentCenterCode);
+         cartLineItem = tempBookBrightInventory(cartLineItem, fulfilmentCenterCode, null);
          populateSICLI(cartLineItem);
        }
        LineItem lineItem = lineItemDao.getLineItem(cartLineItem);
