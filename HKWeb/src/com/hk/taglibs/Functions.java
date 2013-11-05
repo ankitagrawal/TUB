@@ -19,6 +19,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
@@ -766,6 +767,11 @@ public class Functions {
         return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
     }
 
+    public static String getDisplayNameForHkdeliveryTrackingRemarks(String remarks) {
+        CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
+        return courierStatusUpdateHelper.getHkDeliveryStatusRemarksForUser(remarks);
+    }
+
     public static Long getPoLineItemQty(GrnLineItem grnLineItem) {
         GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
         return grnLineItemService.getPoLineItemQty(grnLineItem);
@@ -969,6 +975,11 @@ public class Functions {
             }
         }
         return null;
+    }
+
+    public static boolean isAutoConfirmedCod(Order order, EnumOrderStatus enumOrderStatus) {
+        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.getCountOfOrdersByStatus(order.getUser(), enumOrderStatus) >= 2;
     }
 
     public static StoreVariantBasicResponse getStoreVariantBasicDetails(String oldVariantId) {

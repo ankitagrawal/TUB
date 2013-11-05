@@ -43,8 +43,8 @@ import com.hk.util.http.URIBuilder;
  */
 @Service
 public class HybridStoreVariantServiceImpl implements HybridStoreVariantService, HybridStoreVariantServiceFromHKR {
-    
-    private static Logger logger = LoggerFactory.getLogger(HybridStoreVariantServiceImpl.class);
+
+    private static Logger         logger                     = LoggerFactory.getLogger(HybridStoreVariantServiceImpl.class);
 
     private static final String   BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
     private static final String   VARIANT_STOCK              = "variant/stock/";
@@ -73,6 +73,8 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
 
     @Override
     public void syncStockOnEdge(VariantStockSyncRequest variantStockSyncRequest) {
+
+        logger.error("variant stock sync request sending " + variantStockSyncRequest.toString());
         URIBuilder builder = new URIBuilder().fromURI(ServiceEndPoints.SYNC + VARIANT_STOCK);
 
         HkHttpClient.executePostForObject(builder.getWebServiceUrl(), variantStockSyncRequest.getParameters(), null);
@@ -81,42 +83,49 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     @Override
     @Transactional
     public void syncVariantSaveFromEdge(VariantSavedSyncRequest variantSavedSyncRequest) {
-        logger.error("variant save sync request recived for " + variantSavedSyncRequest.toString() );
+        logger.error("variant save sync request recived for " + variantSavedSyncRequest.toString());
         ProductVariant productVariant = getProductVariantService().getVariantById(variantSavedSyncRequest.getOldVariantId());
 
-        if (productVariant != null) {
-            productVariant.setHkPrice(Double.valueOf(((Integer) variantSavedSyncRequest.getOfferPrice()).toString()));
-            productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
-            productVariant.setDeleted(variantSavedSyncRequest.isDeleted());
+        try {
+            if (productVariant != null) {
+                productVariant.setHkPrice(Double.valueOf(((Integer) variantSavedSyncRequest.getOfferPrice()).toString()));
+                productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
+                productVariant.setDeleted(variantSavedSyncRequest.isDeleted());
 
-            Product product = getProductService().getProductById(variantSavedSyncRequest.getOldProductId());
-            product.setCodAllowed(variantSavedSyncRequest.isCodAllowed());
-            product.setJit(variantSavedSyncRequest.isJit());
-            product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
-            product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
+                getBaseDao().save(productVariant);
 
-            boolean isProductDeleted = true;
-            for (ProductVariant productVariantTemp : product.getProductVariants()) {
-                isProductDeleted = isProductDeleted && productVariantTemp.isDeleted();
+                Product product = getProductService().getProductById(variantSavedSyncRequest.getOldProductId());
+                product.setCodAllowed(variantSavedSyncRequest.isCodAllowed());
+                product.setJit(variantSavedSyncRequest.isJit());
+                product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
+                product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
+
+                boolean isProductDeleted = true;
+                for (ProductVariant productVariantTemp : product.getProductVariants()) {
+                    isProductDeleted = isProductDeleted && productVariantTemp.isDeleted();
+                }
+
+                product.setDeleted(isProductDeleted);
+
+                if (variantSavedSyncRequest.isJit()) {
+                    productVariant.setMarkedPrice(variantSavedSyncRequest.getMrp());
+                    productVariant.setCostPrice(variantSavedSyncRequest.getCostPrice());
+                }
+
+                getBaseDao().save(product);
+
             }
-
-            product.setDeleted(isProductDeleted);
-
-            if (variantSavedSyncRequest.isJit()) {
-                productVariant.setMarkedPrice(variantSavedSyncRequest.getMrp());
-            }
-
-            getBaseDao().save(product);
-            getBaseDao().save(productVariant);
+        } catch (Throwable t) {
+            logger.error("Error syncing save from edge", t);
         }
 
-        logger.error("variant save sync request finished for " + variantSavedSyncRequest.toString() );
+        logger.error("variant save sync request finished for " + variantSavedSyncRequest.toString());
     }
 
     @Override
     @Transactional
     public void syncPricingFromEdge(VariantPricingSyncRequest variantPricingSyncRequest) {
-        logger.error("variant pricing sync request recived for " + variantPricingSyncRequest.toString() );
+        logger.error("variant pricing sync request recived for " + variantPricingSyncRequest.toString());
         ProductVariant productVariant = getProductVariantService().getVariantById(variantPricingSyncRequest.getOldVariantId());
 
         if (productVariant != null) {
