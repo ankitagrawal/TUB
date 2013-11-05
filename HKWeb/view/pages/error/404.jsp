@@ -1,37 +1,19 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/errorLayout.jsp" pageTitle="Error 404 : Page not found" errorCode="404">
-
-
-  <s:layout-component name="catalog">
-
-    
-    <div class='catalog_filters'>
-      <div class='box'>
-        <h5 class='heading1'>
-          Product Categories
-        </h5>
-        <s:useActionBean beanclass="com.hk.web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
-        <ul>
-          <c:forEach items="${menuAction.menuNodes}" var="topMenuNode" varStatus="idx">
-            <li><a href="${pageContext.request.contextPath}${topMenuNode.url}">${topMenuNode.name}</a></li>
-          </c:forEach>
-        </ul>
-      </div>
-    </div>
-
-    <div class='catalog'>
-      <h1>The page you tried was not found.</h1>
-
-      <p>
-        You may have typed the address incorrectly or you may have used
-        an outdated link.
-        <br>
-        If you found a broken link from another site or from our site,
-        please <a href="mailto:info@healthkart.com">email us</a>.
-      </p>
-    </div>
-
-  </s:layout-component>
-
+<%@ page isErrorPage="true" %>
+<s:layout-render name="/layouts/errorTemplate.jsp" pageTitle="Error 404 | Healthkart">
+    <s:layout-component name="content">
+        <div class="container clearfix">
+            <div class="err-404-cntnr mrgn-bt-50">
+                <div class="left-404-msg">
+                    <div class="msg1">error</div>
+                    <div class="msg2">404</div>
+                </div>
+                <div class="span7 offset1 right-404-msg mrgn-t-20">
+                    <p>This page is like Santa.</p>
+                    <p>Doesn't exist.</p>
+                    <p>Sorry :(</p>
+                </div>
+            </div>
+        </div>
+    </s:layout-component>
 </s:layout-render>

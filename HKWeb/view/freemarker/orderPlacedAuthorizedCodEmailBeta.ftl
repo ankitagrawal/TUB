@@ -37,8 +37,8 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
 
             <#list pricingDto.productLineItems as productLineItem>
             <tr>
-            <td><#if productLineItem.productVariant.variantName??>
-            ${productLineItem.productVariant.variantName}
+            <td><#if productLineItem.productVariant.variantNameFromHKEdge??>
+            ${productLineItem.productVariant.variantNameFromHKEdge}
             <#else>
             ${productLineItem.productVariant.product.name}
             </#if>

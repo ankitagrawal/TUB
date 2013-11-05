@@ -194,6 +194,8 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
   public int getOrderCountByUser(Long userId){
       String sql = "select count(*) from base_order where user_id = " + userId + " and order_status_id = " + EnumOrderStatus.Delivered.getId();
-      return executeNativeSql(sql);
+      return countByNativeSql(sql);
+      
+      
   }
 }
