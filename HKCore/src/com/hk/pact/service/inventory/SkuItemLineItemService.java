@@ -83,4 +83,8 @@ public interface SkuItemLineItemService {
   public Boolean createNewSkuItemLineItemForFlipping(CartLineItem cartLineItem);
 
   public List<SkuItem> freeFsiclis(List<HKAPIForeignBookingResponseInfo> infos , Boolean isSkuItemsToBeDeleted);
+  
+  public Boolean freeInventoryForLineItem(LineItem lineItem);
+
+  public void createFreshBookingAfterMarkedReview(LineItem lineItem);
 }
