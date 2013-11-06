@@ -5,7 +5,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" />
+    <link rel="shortcut icon" href="/assets/images/favicon.ico?v=3" />
     <title>
       <c:choose>
         <c:when test="${hk:isNotBlank(pageTitle)}">
