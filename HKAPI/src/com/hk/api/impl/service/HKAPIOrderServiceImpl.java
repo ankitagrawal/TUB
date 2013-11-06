@@ -175,8 +175,8 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         if(hkapiPaymentDTO.getAuthIdCode()!=null){
             payment.setAuthIdCode(hkapiPaymentDTO.getAuthIdCode());
         }
-        if(hkapiPaymentDTO.getPaymentChecksum()!=null){
-            payment.setPaymentChecksum(hkapiPaymentDTO.getPaymentChecksum());
+        if(hkapiPaymentDTO.getRrn()!=null){
+            payment.setRrn(hkapiPaymentDTO.getRrn());
         }
         if(hkapiPaymentDTO.getResponseMessage()!=null){
             payment.setResponseMessage(hkapiPaymentDTO.getResponseMessage());
@@ -186,6 +186,9 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
             if(issuer!=null){
                 payment.setIssuer(issuer);
             }
+        }
+        if(hkapiPaymentDTO.getGatewayReferenceId()!=null){
+            payment.setGatewayReferenceId(hkapiPaymentDTO.getGatewayReferenceId());
         }
         payment=paymentService.save(payment);
 

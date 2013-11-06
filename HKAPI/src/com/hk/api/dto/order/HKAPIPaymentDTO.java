@@ -15,6 +15,26 @@ public class HKAPIPaymentDTO {
     private String paymentChecksum;
     private String authIdCode;
     private Long issuerId;
+    private String rrn;
+    private String gatewayReferenceId;
+
+    public String getRrn() {
+        return rrn;
+    }
+
+    public void setRrn(String rrn) {
+        this.rrn = rrn;
+    }
+
+    public String getGatewayReferenceId() {
+        return gatewayReferenceId;
+    }
+
+    public void setGatewayReferenceId(String gatewayReferenceId) {
+        this.gatewayReferenceId = gatewayReferenceId;
+    }
+
+
 
     public Long getIssuerId() {
         return issuerId;
