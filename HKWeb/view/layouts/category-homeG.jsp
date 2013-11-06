@@ -41,7 +41,7 @@
       <s:layout-render name="/layouts/embed/_header.jsp"/>
     </s:layout-component>
     <s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" allCategories="${topCategory}" showNewHKLink = "false"/>
     </s:layout-component>
     <s:layout-component name="breadcrumbs">
       <%--<s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbUrlFragment="${.urlFragment}"/>--%>

@@ -1,11 +1,15 @@
 package com.hk.impl.dao.shippingOrder;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.pact.dao.BaseDao;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -15,6 +19,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
+
 
 @Repository
 public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements ShippingOrderLifecycleDao {
@@ -45,5 +50,23 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
     public List<Reason> getReasonsByType(String type) {
         String queryString = "from Reason r where r.type=:type";
         return findByNamedParams(queryString, new String[]{"type"}, new Object[]{type});
+    }
+
+    public String getAwbByShippingOrderLifeCycle(ShippingOrder shippingOrder) {
+      Map<Long,String> soCommentMap  = new HashMap<Long,String>();
+      String commentIdentifer="awbNumber='";
+      List<ShippingOrderLifecycle> shippingOrderLifecycles = shippingOrder.getShippingOrderLifecycles();
+      for (ShippingOrderLifecycle shippingOrderLifecycle : shippingOrderLifecycles) {
+        if (shippingOrderLifecycle.getShippingOrderLifeCycleActivity().getId().equals(EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.getId()) ||
+            shippingOrderLifecycle.getShippingOrderLifeCycleActivity().getId().equals(EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY.getId())) {
+          if(shippingOrderLifecycle.getComments().contains(commentIdentifer)){
+          soCommentMap.put(shippingOrderLifecycle.getId(),shippingOrderLifecycle.getComments());
+          }
+        }
+      }
+      String comments= soCommentMap.get(Collections.max(soCommentMap.keySet()));
+       //comments= codAirAwb{courier=500, awbNumber='HK00178749'}
+      String[] awbSpilt=comments.split(commentIdentifer);
+      return awbSpilt[1].substring(0, awbSpilt[1].length()-2);
     }
 }

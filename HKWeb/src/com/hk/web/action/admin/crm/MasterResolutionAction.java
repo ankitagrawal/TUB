@@ -235,7 +235,7 @@ public class MasterResolutionAction extends BaseAction {
 
         if (basePayment.getPaymentMode().getId().equals(EnumPaymentMode.ONLINE_PAYMENT.getId()) && gateway != null && refundAmount > 0 && refundReason != null && refundComments != null && !refundComments.isEmpty()) {
             if (EnumGateway.getManualRefundGateways().contains(gateway.getId())) {
-                adminEmailManager.sendManualRefundTaskToAdmin(shippingOrder.getAmount(), paymentGatewayOrderId, gateway.getName());
+                adminEmailManager.sendManualRefundTaskToAdmin(refundAmount, paymentGatewayOrderId, gateway.getName());
                 shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser,
                 		EnumShippingOrderLifecycleActivity.Reconciliation.asShippingOrderLifecycleActivity(),
                 		EnumReason.ManualRefundInitiated.asReason(), comment);

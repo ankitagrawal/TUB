@@ -14,26 +14,31 @@ import com.hk.pact.dao.email.EmailRecepientDao;
 
 @Component
 public class UnsubscribeEmailAction extends BaseAction {
-  @Autowired
-   EmailRecepientDao emailRecepientDao;
+    @Autowired
+    EmailRecepientDao emailRecepientDao;
 
-  @Validate(required = true)
-  private String unsubscribeToken;
+    @Validate(required = true)
+    private String unsubscribeToken;
 
-  public Resolution pre() {
-    EmailRecepient emailRecepient = emailRecepientDao.findByUnsubscribeToken(unsubscribeToken);
-    if(emailRecepient == null) {
-      addRedirectAlertMessage(new SimpleMessage("Invalid email."));
-          }else{
-      emailRecepient.setSubscribed(false);
-      emailRecepientDao.save(emailRecepient);
-      addRedirectAlertMessage(new SimpleMessage("You have been unsubscribed successfully."));
+    public Resolution pre() {
+        EmailRecepient emailRecepient = emailRecepientDao.findByUnsubscribeToken(unsubscribeToken);
+        if (emailRecepient == null) {
+            addRedirectAlertMessage(new SimpleMessage("Invalid email."));
+        } else {
+            emailRecepient.setSubscribed(false);
+            emailRecepientDao.save(emailRecepient);
+            addRedirectAlertMessage(new SimpleMessage("You have been unsubscribed successfully."));
+        }
+        if (isHybridRelease()) {
+            return new ForwardResolution("/pages/unsubscribeEmailBeta.jsp");
+
+        }
+        return new ForwardResolution("/pages/unsubscribeEmail.jsp");
+
     }
-    return new ForwardResolution("/pages/unsubscribeEmail.jsp");
-  }
 
-  public void setUnsubscribeToken(String unsubscribeToken) {
-    this.unsubscribeToken = unsubscribeToken;
-  }
+    public void setUnsubscribeToken(String unsubscribeToken) {
+        this.unsubscribeToken = unsubscribeToken;
+    }
 }
 

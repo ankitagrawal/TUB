@@ -20,17 +20,19 @@ import com.shiro.PrincipalImpl;
 public class RememberMeFilter implements Filter {
 
     private DefaultWebSecurityManager securityManager;
-    private SecurityUtils securityUtils;
+    private SecurityUtils             securityUtils;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         securityManager = (DefaultWebSecurityManager) ServiceLocatorFactory.getService("SecurityManager");
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
         if (getSecurityUtils().getSubject().isRemembered()) {
             @SuppressWarnings("unused")
             PrincipalImpl principal = (PrincipalImpl) securityUtils.getSubject().getPrincipal();
         }
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

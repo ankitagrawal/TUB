@@ -1,0 +1,105 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+
+/* Reset CSS Start */
+
+img, a, img a, img a:hover, a:hover {border:none;}
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {
+	margin:0;
+	padding:0;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+
+
+ol,ul {
+	list-style:none;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-size:100%;
+	font-weight:normal;
+}
+
+a {
+	text-decoration:none;}
+
+
+/* Reset CSS Start */
+
+
+body {
+	font-family: 'robotoregular';
+	color:#000;
+	font-size:13px;
+
+	}
+
+
+
+.cl {clear:both;}
+
+.float-l {
+	float:left;}
+
+.float-r {
+	float:right;}
+
+#wrapper {
+	margin:0 auto;
+	width:960px;
+	border-top:8px solid #f2f2f2;
+	}
+.logo {
+	text-align:center;
+	padding:18px 0 15px 0;}
+
+
+.heading-wd {
+   width: 930px;
+    font-size:20px;
+    background: url("images/circle.jpg") no-repeat left;
+    border-bottom:1px dashed #4384f1;
+    padding: 10px 0 10px 30px;
+    display: block;
+    margin-top: 40px;
+    color: #4384f1;
+    text-transform: uppercase;
+}
+
+
+
+
+
+.footer-ny{
+	display:block;
+	border-top:1px dashed #999999;
+	font-size:12px;
+	color:#999;
+	margin:20px 0 10px 0;
+	padding:10px 0;
+	height:36px;
+	width:100%;
+	}
+
+
+.footer-ny p{
+		float:left;}
+
+.footer-ny img{
+		float:right;
+		margin-right:8px;}
+
+
+
+
+
+
+
+
+	
