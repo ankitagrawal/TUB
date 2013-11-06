@@ -34,6 +34,7 @@
             border-left: 1px solid red;
             border-right: 1px solid red;
             background: #fff;
+            margin-bottom: 15px;
         }
         .err-icn {
             float: right;
