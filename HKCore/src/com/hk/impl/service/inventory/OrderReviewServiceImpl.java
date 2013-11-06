@@ -51,6 +51,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 	@Override
 	@Transactional
 	public void fixLineItem(LineItem lineItem) throws CouldNotFixException {
+		skuItemLineItemService.freeInventoryForLineItem(lineItem);
 		ProductVariant variant = productVariantService.getVariantById(lineItem.getCartLineItem().getProductVariant().getId());
 		
 		SkuFilter filter = new SkuFilter();
@@ -94,7 +95,7 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		}
 		
 //		inventoryHealthService.checkInventoryHealth(variant);
-		skuItemLineItemService.freeInventoryForLineItem(lineItem);
+		
 		skuItemLineItemService.createFreshBookingAfterMarkedReview(lineItem);
     inventoryHealthService.inventoryHealthCheck(variant);
 	}
