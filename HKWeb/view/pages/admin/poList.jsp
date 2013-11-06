@@ -2,6 +2,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
@@ -66,6 +67,28 @@
             </c:otherwise>
           </c:choose></td>
       </tr>
+          <tr>
+              <td>
+                  <label>Po Start Date: </label>
+              </td>
+              <td>
+                  <s:text class="date_input startDate"  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+              </td>
+              <td>
+                  <label>Po End Date:</label>
+              </td>
+              <td>
+                 <s:text class="date_input endDate"   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"  name="endDate"/>
+              </td>
+              <td>Po Type:</td>
+              <td>
+                  <s:select name="poType">
+                      <s:option value="">-All-</s:option>
+                      <s:option value="JIT">JIT</s:option>
+                      <s:option value="DROP SHIP">DROP SHIP</s:option>
+                  </s:select>
+              </td>
+          </tr>
       <tr>
       <td><label>Extra Inventory Created</label><s:checkbox name="extraInventoryCreated"/></td>
       <td colspan="3"><s:submit name="pre" value="Search"/>
