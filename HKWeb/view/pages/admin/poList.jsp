@@ -69,24 +69,18 @@
       </tr>
           <tr>
               <td>
-                  <label>Po Start Date: </label>
+                  <label>Po Start Date: </label>  <s:text class="date_input startDate"  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
               </td>
               <td>
-                  <s:text class="date_input startDate"  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+                  <label>Po End Date:</label>   <s:text class="date_input endDate"   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"  name="endDate"/>
               </td>
-              <td>
-                  <label>Po End Date:</label>
-              </td>
-              <td>
-                 <s:text class="date_input endDate"   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"  name="endDate"/>
-              </td>
-              <td>Po Type:</td>
-              <td>
+              <td><label>Po Type: </label>
                   <s:select name="poType">
                       <s:option value="">-All-</s:option>
-                      <s:option value="JIT">JIT</s:option>
-                      <s:option value="DROP SHIP">DROP SHIP</s:option>
+                      <s:option value="jit">JIT</s:option>
+                      <s:option value="drop ship">DROP SHIP</s:option>
                   </s:select>
+
               </td>
           </tr>
       <tr>

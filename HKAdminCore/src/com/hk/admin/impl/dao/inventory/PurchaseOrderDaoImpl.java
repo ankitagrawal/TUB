@@ -90,7 +90,11 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
         purchaseOrderCriteria.add(Restrictions.eq("isExtraInventoryCreated",extraInventoryCreated));
       }
       if(StringUtils.isNotBlank(poType)){
-            purchaseOrderCriteria.add(Restrictions.eq("purchaseOrder.purchaseOrderType.name",poType));
+          if (supplierCriteria == null) {
+              supplierCriteria = purchaseOrderCriteria.createCriteria("purchaseOrderType");
+          }
+          supplierCriteria.add(Restrictions.like("name", "%" + poType + "%"));
+           // purchaseOrderCriteria.add(Restrictions.eq("purchaseOrder.purchaseOrderType.name",poType));
       }
         if(startDate != null && endDate != null){
             purchaseOrderCriteria.add(Restrictions.between("createDate",startDate, endDate));
