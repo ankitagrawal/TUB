@@ -14,6 +14,8 @@ public enum EnumBoxSize {
     M2(35L, "M2", 1520D, 17.6D, 240D, 17D, 17D, 28D),
     L(40L, "L", 2300D, 17.7D, 340D, 20D, 20D, 28D),
     L2(45L, "L2", 3600D, 22.5D, 450D, 26D, 26D, 28D),
+    L3(90L,"L3", 4900D,33.5D,578D,28D,28D,31D),
+    XL2(100L,"XL2", 5400D,33.5D,500D,36D,21D,36D),
     XL(50L, "XL", 4300D, 31.9D, 580D, 16D, 30D, 46D),
     XXL(60L, "XXL", 8500D, 37D, 800D, 30D, 31D, 45D),
     XXXL(70L, "XXXL", 10500D, 57.2D, 1200D, 0D, 0D, 0D),
@@ -61,7 +63,7 @@ public enum EnumBoxSize {
 
     public static List<EnumBoxSize> getAllEnumBoxSize() {
         return Arrays.asList(EnumBoxSize.XS, EnumBoxSize.S, EnumBoxSize.M,
-                EnumBoxSize.M2, EnumBoxSize.L, EnumBoxSize.L2, EnumBoxSize.XL,
+                EnumBoxSize.M2, EnumBoxSize.L, EnumBoxSize.L2,EnumBoxSize.L3,EnumBoxSize.XL2, EnumBoxSize.XL,
                 EnumBoxSize.XXL, EnumBoxSize.XXXL, EnumBoxSize.TAMPER_PROOF,
                 EnumBoxSize.MIGRATE);
     }

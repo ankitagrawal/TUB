@@ -618,7 +618,9 @@ public class OrderManager {
           if (comboInstance != null) {
             toBeRemovedComboInstanceSet.add(comboInstance);
           }
-          lineItem.setQty(0L);
+          if(!product.isJit()){
+              lineItem.setQty(0L);
+          }
           continue;
         }
 
