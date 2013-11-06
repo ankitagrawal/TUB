@@ -78,8 +78,8 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
                 bucketParameters = bucketService.getParamMap(user.getBuckets());
             }
         }
-        return new ForwardResolution(ActionItemResolutionQueueAction.class, "search");
-//                .addParameters(bucketParameters);
+        return new ForwardResolution(ActionItemResolutionQueueAction.class, "search")
+               .addParameters(bucketParameters);
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
