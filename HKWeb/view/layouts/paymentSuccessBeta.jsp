@@ -16,7 +16,7 @@
         <%--<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="purchase"/>--%>
         <%--<!--Tyroo marketing-->--%>
         <%--<s:layout-render name="/layouts/embed/_tyrooMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>--%>
-        <link rel="shortcut icon" href="/assets/images/favicon.ico?v=3" />
+        <link rel="shortcut icon" href="/assets/images/favicon2.ico" />
         <title>
             <c:choose>
                 <c:when test="${hk:isNotBlank(pageTitle)}">
