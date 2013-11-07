@@ -105,7 +105,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                     <#list shippingOrder.lineItems as lineItem>
                         <tr>
                             <td><#if lineItem.sku.productVariant.variantNameFromHKEdge??>
-                            ${lineItem.sku.productVariant.variantNameFromHKedge}
+                            ${lineItem.sku.productVariant.variantNameFromHKEdge}
                             <#else>
                             ${lineItem.sku.productVariant.product.name}
                             </#if>
