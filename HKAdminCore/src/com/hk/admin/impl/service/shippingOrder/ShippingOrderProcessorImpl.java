@@ -324,6 +324,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       isSOProcessable = true;
     }
     if (isSOProcessable || (!isSOProcessable && cancelFlag)) {
+      getShippingOrderDao().refresh(shippingOrder);
       return shippingOrder;
     } else {
       return null;
