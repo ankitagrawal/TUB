@@ -1,11 +1,14 @@
 package com.hk.core.search;
 
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
-import org.apache.commons.lang.StringUtils;
+import com.hk.util.HKCollectionUtils;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,118 +20,105 @@ import org.hibernate.criterion.Restrictions;
 public class UsersSearchCriteria {
 
     // list of variables that might be received
-    private String state;
-    private String city;
-    private String zone;
-    private Long productVariantId;
-    private Long productId;
+    private List<String> states;
+    private List<String> cities;
+    private List<Long> zones;
+    private List<String> productVariantIds;
+    private List<String> productIds;
     private Boolean verified;
+    private boolean atleastOneVariableSet = false;
+
+    private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
 
     public DetachedCriteria getSearchCriteria() {
-        return getTestCriteria();
-//        return getCriteriaFromBaseCriteria();
+        return getCriteriaFromBaseCriteria();
     }
 
-    private DetachedCriteria getTestCriteria() {
-        DetachedCriteria c = DetachedCriteria.forClass(User.class);
-        c.add(Restrictions.eq("id", "97"));
-        return c;
-    }
 
     private DetachedCriteria getCriteriaFromBaseCriteria() {
 
-        DetachedCriteria criteria = DetachedCriteria.forClass(User.class, "u");
-
-        if (productId != null || productVariantId != null) {
-            DetachedCriteria c2 = criteria.createCriteria("baseOrder");
-            DetachedCriteria c3 = c2.createCriteria("cartLineItem");
-            DetachedCriteria c4 = c3.createCriteria("productVariant");
-            DetachedCriteria c5 = c4.createCriteria("product");
-
-            if (productId != null) {
-                c5.add(Restrictions.eq("id", productId));
-            } else if (productVariantId != null) {
-                DetachedCriteria c6 = c5.createCriteria("productVariant");
-                c6.add(Restrictions.eq("id", productVariantId));
-            }
-
+        if (!atleastOneVariableSet) {
+            throw new RuntimeException("No parameter set");
         }
 
-        if (StringUtils.isNotBlank(city)) {
-            DetachedCriteria c2 = criteria.createCriteria("address");
-            c2.add(Restrictions.eq("city", city));
-        }
+        DetachedCriteria criteria = DetachedCriteria.forClass(User.class, "user");
 
-        if (StringUtils.isNotBlank(state)) {
-            DetachedCriteria c2 = criteria.createCriteria("address");
-            c2.add(Restrictions.eq("state", state));
-        }
 
-        if (StringUtils.isNotBlank(zone)) {
-            DetachedCriteria c2 = criteria.createCriteria("address");
-            c2.add(Restrictions.eq("zone", zone));
-        }
-
-		/*if (productId != null || productVariantId != null) {
-            criteria.createAlias("u.orders", "o");
-            criteria.createAlias("o.cartLineItems", "cli");
+        if ((productIds != null && !productIds.isEmpty()) || (productVariantIds != null && !productVariantIds.isEmpty())) {
+            criteria.createAlias("user.orders", "orders");
+            criteria.createAlias("orders.cartLineItems", "cli");
             criteria.createAlias("cli.productVariant", "pv");
-            criteria.createAlias("pv.Product", "p");
+            criteria.createAlias("pv.product", "prod");
 
-
-            String prod_id = null;
-            if (productId != null) {
-                prod_id = productId.toString();
-            } else if (productVariantId != null) {
-                prod_id = getProdId(productVariantId);
+            if (productIds != null && !productIds.isEmpty()) {
+                criteria.add(Restrictions.in("prod.id", productIds));
+            } else if (productVariantIds != null && !productVariantIds.isEmpty()) {
+                criteria.createAlias("prod.productVariants", "pv2");
+                criteria.add(Restrictions.in("pv2.id", productVariantIds));
             }
-            criteria.add(Restrictions.eq("p.id", prod_id));
-        }*/
+        }
+
+        if (HKCollectionUtils.isNotBlank(cities)) {
+            criteria.createAlias("user.addresses", "addr");
+            criteria.add(Restrictions.in("addr.city", cities));
+        }
+
+        if (HKCollectionUtils.isNotBlank(states)) {
+            criteria.createAlias("user.addresses", "addr");
+            criteria.add(Restrictions.in("addr.state", states));
+        }
+
+        if (HKCollectionUtils.isNotBlank(zones)) {
+            criteria.createAlias("user.addresses", "addr");
+            criteria.createAlias("addr.pincode", "pin");
+            criteria.createAlias("pin.zone", "zone");
+            criteria.add(Restrictions.in("zone.id", zones));
+        }
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return criteria;
     }
 
-
-    public UsersSearchCriteria setZone(String zone) {
-        this.zone = zone;
+    public UsersSearchCriteria setZones(List<Long> zones) {
+        this.zones = zones;
+        atleastOneVariableSet = true;
         return this;
     }
 
     public UsersSearchCriteria setVerified(String verified) {
         try {
+            atleastOneVariableSet = true;
             this.verified = Boolean.parseBoolean(verified);
         } catch (Exception e) {
+            atleastOneVariableSet = false;
             this.verified = null;
         }
         return this;
     }
 
-    public UsersSearchCriteria setProductId(String id) {
-        this.productId = Long.parseLong(id);
+    public UsersSearchCriteria setProductIds(List<String> ids) {
+        this.productIds = ids;
+        atleastOneVariableSet = true;
         return this;
     }
 
-    public UsersSearchCriteria setProductVariantId(String id) {
-        this.productVariantId = Long.parseLong(id);
+    public UsersSearchCriteria setProductVariantIds(List<String> ids) {
+        this.productVariantIds = ids;
+        atleastOneVariableSet = true;
         return this;
     }
 
-    public UsersSearchCriteria setCity(String city) {
-        this.city = city;
+    public UsersSearchCriteria setCities(List<String> cities) {
+        this.cities = cities;
+        atleastOneVariableSet = true;
         return this;
     }
 
 
-    public UsersSearchCriteria setState(String state) {
-        this.state = state;
+    public UsersSearchCriteria setStates(List<String> states) {
+        this.states = states;
+        atleastOneVariableSet = true;
         return this;
     }
 
-    private String getProdId(Long productVariantId) {
-        //FIXME get prod from db and not from this approach since it isn't immune to change of mapping between prod and prod variant ids
-        String pv = productVariantId.toString();
-        int index = pv.indexOf('-');
-        pv = pv.substring(0, index);
-        return pv;
-    }
 
 }

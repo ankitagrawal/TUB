@@ -22,36 +22,6 @@ public class UserSearchServiceImpl implements UserSearchService {
     UsersDao usersDao;
 
     @Override
-    public List<User> getUsersByProductId(String productId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<User> getUsersByProductVariantId(String productVariantId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<User> getUsersByZone(String zone) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<User> getUsersByState(String state) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<User> getUsersByCity(String city) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<User> getVerifiedUsers() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public List<User> searchUsers(UsersSearchCriteria criteria) {
         return usersDao.findBySearchCriteria(criteria);
     }

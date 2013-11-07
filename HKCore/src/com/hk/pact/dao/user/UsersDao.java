@@ -16,21 +16,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface UsersDao extends BaseDao {
-
-    /**
-     * @param product product that was ordered
-     * @return Users who have bought any variants of this product
-     */
-    public List<User> findByProductID(Product product);
-
-    /**
-     * @param productVariant product variant that was ordered
-     * @return Users who have bought this or any other variants of this product variant's corresponding product
-     */
-    public List<User> findByProductInvariantID(ProductVariant productVariant);
-
-
     public List<User> findBySearchCriteria(UsersSearchCriteria criteria);
-
-
 }

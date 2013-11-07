@@ -13,11 +13,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface UserSearchService {
-    List<User> getUsersByProductId(String productId);
-    List<User> getUsersByProductVariantId(String productVariantId);
-    List<User> getUsersByZone(String zone);
-    List<User> getUsersByState(String state);
-    List<User> getUsersByCity(String city);
-    List<User> getVerifiedUsers();
     List<User> searchUsers(UsersSearchCriteria criteria);
 }

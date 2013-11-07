@@ -27,13 +27,13 @@ public class Address implements java.io.Serializable {
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "pincode_id", nullable = false)
+    private Pincode pincode;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pincode_id", nullable = false)
-    private Pincode pincode;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "name", nullable = false, length = 150)
     private String name;

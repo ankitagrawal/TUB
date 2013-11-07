@@ -3,18 +3,18 @@ package com.hk.rest.resource;
 import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserSearchService;
+import com.hk.util.HKCollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,61 +33,72 @@ public class UserInformationResource {
     private UsersSearchCriteria criteria;
 
     // variables that can be set
-    private String zone;
-    private String city;
-    private String state;
-    private String productId;
-    private String productVariantId;
+    private List<Long> zones;
+    private List<String> cities;
+    private List<String> states;
+    private List<String> productIds;
+    private List<String> productVariantIds;
     private String verified;
 
     @Autowired
     UserSearchService userSearchService;
 
 
-    @GET
-    @Path("/product/{productId}")
+    @POST
+    @Path("/product")
     @Produces("application/json")
-    public Response getUserEmailsByProduct(@PathParam("productId") String productId) {
-        this.productId = productId;
+    public Response getUsersByProduct(@FormParam("productId") String productId) {
+        List<String> prodIds = getListFromString(productId, ",");
+        this.productIds = prodIds;
         return getUsers();
     }
 
-    @GET
-    @Path("/productVariant/{productVariantId}")
+    @POST
+    @Path("/productVariant")
     @Produces("application/json")
-    public Response getUserEmailsByProductVariant(@PathParam("productVariantId") String productVariantId) {
-        this.productVariantId = productVariantId;
+    public Response getUsersByProductVariants(@FormParam("productVariantId") String productVariantId) {
+        List<String> prodVarIds = getListFromString(productVariantId, ",");
+        this.productVariantIds = prodVarIds;
         return getUsers();
     }
 
-    @GET
-    @Path("/city/{city}")
+    @POST
+    @Path("/city")
     @Produces("application/json")
-    public Response getUserEmailsByCity(@PathParam("city") String city) {
-        this.city = city;
+    public Response getUsersByCity(@FormParam("city") String city) {
+        List<String> allcities = getListFromString(city, ",");
+        this.cities = allcities;
         return getUsers();
     }
 
-    @GET
-    @Path("/zone/{zone}")
+    @POST
+    @Path("/zone")
     @Produces("application/json")
-    public Response getUserEmailsByZone(@PathParam("zone") String zone) {
-        this.zone = zone;
+    public Response getUsersByZone(@FormParam("zone") String zone) {
+        try {
+            zones = new ArrayList<Long>();
+            List<String> allZones = getListFromString(zone, ",");
+            for (String z : allZones) {
+                Long l = Long.parseLong(z);
+                zones.add(l);
+            }
+        } catch (Exception ignore) {}
         return getUsers();
     }
 
-    @GET
-    @Path("/state/{state}")
+    @POST
+    @Path("/state")
     @Produces("application/json")
-    public Response getUserEmailsByState(@PathParam("state") String state) {
-        this.state = state;
+    public Response getUsersByState(@FormParam("state") String state) {
+        List<String> allStates = getListFromString(state, ",");
+        this.states = allStates;
         return getUsers();
     }
 
     @GET
     @Path("/verified")
     @Produces("application/json")
-    public Response getUserEmailsByVerified() {
+    public Response getUsersByVerified() {
         this.verified = "true";
         return getUsers();
     }
@@ -99,18 +110,21 @@ public class UserInformationResource {
         try {
             if (StringUtils.isNotBlank(verified)) {
                 criteria.setVerified(verified);
-            } else if (StringUtils.isNotBlank(productId)) {
-                criteria.setProductId(productId);
-            } else if (StringUtils.isNotBlank(productVariantId)) {
-                criteria.setProductVariantId(productVariantId);
-            } else if (StringUtils.isNotBlank(state)) {
-                criteria.setProductVariantId(productVariantId);
-            } else if (StringUtils.isNotBlank(zone)) {
-                criteria.setZone(zone);
-            } else if (StringUtils.isNotBlank(city)) {
-                criteria.setCity(city);
-            } else if (StringUtils.isNotBlank(state)) {
-                criteria.setState(state);
+            }
+            if (HKCollectionUtils.isNotBlank(productIds)) {
+                criteria.setProductIds(productIds);
+            }
+            if (HKCollectionUtils.isNotBlank(productVariantIds)) {
+                criteria.setProductVariantIds(productVariantIds);
+            }
+            if (HKCollectionUtils.isNotBlank(zones)) {
+                criteria.setZones(zones);
+            }
+            if (HKCollectionUtils.isNotBlank(cities)) {
+                criteria.setCities(cities);
+            }
+            if (HKCollectionUtils.isNotBlank(states)) {
+                criteria.setStates(states);
             }
 
             users = userSearchService.searchUsers(criteria);
@@ -120,6 +134,8 @@ public class UserInformationResource {
                 udto.name = u.getName();
                 udto.email = u.getEmail();
                 udto.login = u.getLogin();
+                udto.subscribedMask = u.getSubscribedMask();
+
                 userDtos.add(udto);
             }
 
@@ -134,9 +150,22 @@ public class UserInformationResource {
         return response;
     }
 
+    private List<String> getListFromString(String s, String delimiter) {
+        List<String> retList = new LinkedList<String>();
+        String[] ss = s.split(delimiter);
+        for (String str : ss) {
+            if (str != null && !str.isEmpty()) {
+                str = str.trim();
+                retList.add(str);
+            }
+        }
+        return retList;
+    }
+
     class UserDto {
         public String email;
         public String name;
         public String login;
+        public Integer subscribedMask;
     }
 }
