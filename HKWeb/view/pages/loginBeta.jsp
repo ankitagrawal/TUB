@@ -56,7 +56,7 @@
           <s:form beanclass="com.hk.web.action.core.user.SignupAction" name="signup">
             <input type="hidden" name="redirectUrl"
                    value="${param['redirectUrl']!=null?param['redirectUrl']:param[redirectParam]}"/>
-            <input type="hidden" id="signupEmail" name="signupEmail" value=""/>
+            <input type="hidden" id="signupEmail" name="signupEmail" value="" />
           </s:form>
           <s:form beanclass="com.hk.web.action.core.auth.LoginAction" name="signin">
             <s:errors/>
@@ -100,7 +100,7 @@
     </div>
   </s:layout-component>
   <s:layout-component name="endScripts">
-    <script type="text/javascript"><!--
+    <script type="text/javascript">
       $(document).ready(function () {
         $('#loginName').focus();
         function goToSignUp(event){
@@ -158,6 +158,6 @@
 
 
       });
-    --></script>
+   </script>
   </s:layout-component>
 </s:layout-render>
