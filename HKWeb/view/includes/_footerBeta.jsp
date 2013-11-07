@@ -166,7 +166,8 @@
 
             $('[name=submitSubscription]').click(function (event) {
               var doSubmit = true;
-              var regexEMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+              var regexEMAIL = /^([A-Za-z0-9_\-\.\+])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
 
               if (!($('[name=subscriptionEmail]').val().length > 0)) {
                 hideErrMsg('[name=subscriptionEmail]');
