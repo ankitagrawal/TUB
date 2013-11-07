@@ -13,6 +13,39 @@
 %>
 <s:layout-render name="/layouts/loginLayoutBeta.jsp" pageTitle="Login to HealthKart.com">
   <s:layout-component name="checkoutStep">
+      <style type="text/css">
+          .errorContainer{
+              color: black;
+              font-weight: 600;
+              padding-left: 10px;
+              padding-top: 5px;
+              border-top: 1px solid red;
+              border-left: 1px solid red;
+              border-right: 1px solid red;
+              background: #fff;
+          }
+          .errorList {
+              color: black;
+              font-weight: 600;
+              padding-left: 10px;
+              padding-top: 5px;
+              border-bottom: 1px solid red;
+              border-left: 1px solid red;
+              border-right: 1px solid red;
+              background: #fff;
+              margin-bottom: 15px;
+          }
+          .err-icn {
+              float: right;
+              position: relative;
+              bottom: 0px;
+              left: 30px;
+          }
+
+          .errorList li{
+              margin-left: 20px;
+          }
+      </style>
     <div class='current_step_content' style="font-size: 14px; margin-top: 15px; padding-top: 0;">
       <div class='right' style="margin: 0 auto;float: none;">
         <h4 class="mrgn-b-20">
