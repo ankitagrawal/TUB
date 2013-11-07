@@ -321,6 +321,18 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
         return new RedirectResolution(ActionAwaitingQueueAction.class);
     }
+    
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+    public Resolution validate() {
+        if (!shippingOrderList.isEmpty()) {
+            for (ShippingOrder shippingOrder : shippingOrderList) {
+            	shippingOrderService.validateShippingOrderAB(shippingOrder);
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please select a SO for validation"));
+        }
+        return new RedirectResolution(ActionAwaitingQueueAction.class);
+    }
 
     public int getPerPageDefault() {
         return defaultPerPage;
