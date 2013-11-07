@@ -229,7 +229,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           // todo auto escalation code need to be changed
           shippingOrderService.validateShippingOrderAB(shippingOrder);
           shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, loggedInUser);
-          if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled) ) {
+          if (shippingOrder == null || shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId()) ) {
             return false;
           } else {
             for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -324,6 +324,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       isSOProcessable = true;
     }
     if (isSOProcessable || (!isSOProcessable && cancelFlag)) {
+      getShippingOrderDao().refresh(shippingOrder);
       return shippingOrder;
     } else {
       return null;
