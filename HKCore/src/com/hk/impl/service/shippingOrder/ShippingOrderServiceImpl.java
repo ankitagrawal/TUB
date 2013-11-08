@@ -464,8 +464,9 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
           || shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_MarkedForPrinting.getId())
         ||  shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
+
         logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
-            "shipping order move back to action awaiting as validate SO ran  ");
+            "shipping order move back to action awaiting as validate SO ran ");
         baseDao.save(shippingOrder);
 
       }
