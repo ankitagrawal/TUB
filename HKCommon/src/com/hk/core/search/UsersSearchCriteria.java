@@ -41,41 +41,69 @@ public class UsersSearchCriteria {
             throw new RuntimeException("No parameter set");
         }
 
-        DetachedCriteria criteria = DetachedCriteria.forClass(User.class, "user");
+        DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
+        boolean orderCriteria = false, cliCriteria = false, pvCriteria = false, prodCriteria = false, addrCriteria = false, pinCriteria = false, zoneCriteria = false, pv2Criteria = false;
 
 
         if ((productIds != null && !productIds.isEmpty()) || (productVariantIds != null && !productVariantIds.isEmpty())) {
-            criteria.createAlias("user.orders", "orders");
-            criteria.createAlias("orders.cartLineItems", "cli");
-            criteria.createAlias("cli.productVariant", "pv");
-            criteria.createAlias("pv.product", "prod");
+            if (!orderCriteria) {
+                userCriteria.createAlias("user.orders", "orders");
+                orderCriteria = true;
+            }
+            if (!cliCriteria) {
+                userCriteria.createAlias("orders.cartLineItems", "cli");
+                cliCriteria = true;
+            }
+            if (!pvCriteria) {
+                userCriteria.createAlias("cli.productVariant", "pv");
+                userCriteria.createAlias("pv.product", "prod");
+                pvCriteria = true;
+            }
 
             if (productIds != null && !productIds.isEmpty()) {
-                criteria.add(Restrictions.in("prod.id", productIds));
+                userCriteria.add(Restrictions.in("prod.id", productIds));
             } else if (productVariantIds != null && !productVariantIds.isEmpty()) {
-                criteria.createAlias("prod.productVariants", "pv2");
-                criteria.add(Restrictions.in("pv2.id", productVariantIds));
+                if (!pv2Criteria) {
+                    userCriteria.createAlias("prod.productVariants", "pv2");
+                    pv2Criteria = true;
+                }
+                userCriteria.add(Restrictions.in("pv2.id", productVariantIds));
             }
         }
 
         if (HKCollectionUtils.isNotBlank(cities)) {
-            criteria.createAlias("user.addresses", "addr");
-            criteria.add(Restrictions.in("addr.city", cities));
+            if (!addrCriteria) {
+                userCriteria.createAlias("user.addresses", "addr");
+                addrCriteria = true;
+            }
+            userCriteria.add(Restrictions.in("addr.city", cities));
         }
 
         if (HKCollectionUtils.isNotBlank(states)) {
-            criteria.createAlias("user.addresses", "addr");
-            criteria.add(Restrictions.in("addr.state", states));
+            if (!addrCriteria) {
+                userCriteria.createAlias("user.addresses", "addr");
+                addrCriteria = true;
+            }
+            userCriteria.add(Restrictions.in("addr.state", states));
         }
 
         if (HKCollectionUtils.isNotBlank(zones)) {
-            criteria.createAlias("user.addresses", "addr");
-            criteria.createAlias("addr.pincode", "pin");
-            criteria.createAlias("pin.zone", "zone");
-            criteria.add(Restrictions.in("zone.id", zones));
+            if (!addrCriteria) {
+                userCriteria.createAlias("user.addresses", "addr");
+                addrCriteria = true;
+            }
+            if (!pinCriteria) {
+                userCriteria.createAlias("addr.pincode", "pin");
+                pinCriteria = true;
+            }
+            if (!zoneCriteria) {
+                userCriteria.createAlias("pin.zone", "zone");
+                zoneCriteria = true;
+            }
+            userCriteria.add(Restrictions.in("zone.id", zones));
         }
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return criteria;
+        userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return userCriteria;
     }
 
     public UsersSearchCriteria setZones(List<Long> zones) {
