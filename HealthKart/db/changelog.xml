@@ -11732,22 +11732,22 @@
             ALTER TABLE user_cod_call ADD UNIQUE(order_id);
         </sql>
     </changeSet>
-    <changeSet author="Ankit (generated)" id="1359711888969-1">
-        <addColumn tableName="rv_line_item">
-            <column name="sku_group_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-1">
-        <addColumn tableName="cycle_count_item">
-            <column name="sku_item_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-2">
-        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-3">
-        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
-    </changeSet>
+    <!--<changeSet author="Ankit (generated)" id="1359711888969-1">-->
+        <!--<addColumn tableName="rv_line_item">-->
+            <!--<column name="sku_group_id" type="INT"/>-->
+        <!--</addColumn>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-1">-->
+        <!--<addColumn tableName="cycle_count_item">-->
+            <!--<column name="sku_item_id" type="INT"/>-->
+        <!--</addColumn>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-2">-->
+        <!--<dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-3">-->
+        <!--<addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>-->
+    <!--</changeSet>-->
     <changeSet author="Ankur (generated)" id="1358841573903-1">
         <createTable tableName="mail">
             <column autoIncrement="true" name="id" type="INT">
@@ -12991,24 +12991,6 @@
         <addColumn tableName="purchase_invoice">
             <column name="physical_invoice_amount" type="DECIMAL(12,2)"/>
         </addColumn>
-    </changeSet>
-    <changeSet author="Rahul-Dixit (generated)" id="20131029-1">
-        <sql>
-            INSERT IGNORE INTO `role` (`name`) VALUES
-            ('ACTION_QUEUE'),('ADMIN'),('ASSIGN_USER_BASKET'),('B2B_ROLE'),('B2B_USER'),('BASIC_ROLES'),('CATEGORY_MANAGER'),('CATEGORY_MANAGER_L1'),('CATEGORY_MANAGER_L2'),
-            ('CODBLOCKED'),('COUPON_BLOCKED'),('CREATE_JIT_PO'),('CS_Counselling'),('CS_INBOUND'),('CS_OUTBOUND'),('CUSTOMER_SUPPORT'),('CUSTOMER_SUPPORT_L2'),('CUSTOMER_SUPPORT_L3'),
-            ('CUSTOMER_SUPPORT_REVERSE_PICKUP'),('Debit_Note_Management'),('DELIVERY_QUEUE'),('DEVELOPER'),('EFFORTBPO'),('FINANCE'),('FINANCE_ADMIN'),('FITNESSPRO_USER'),
-            ('GOD'),('HKBLOCKED'),('HKDEACTIVE'),('HKDELETE'),('HKUNVERIFIED'),('HK_AFFILIATE'),('HK_AFFILIATE_MANAGER'),('HK_AFFILIATE_UNVERIFIED'),('HK_DELIVERY_ADMIN'),
-            ('HK_DELIVERY_GUY'),('HK_DELIVERY_HUB_MANAGER'),('HK_EMPLOYEE'),('HK_IHO_USER'),('HK_LOYALTY_USER'),('HK_USER'),('HR'),('MANAGE_CATEGORY_PAGE'),('MARKETING'),
-            ('MASTER_BUG_RESOLVER'),('NOTIFY_ME_BULK_EMAIL'),('OFFLINE_PAYMENT_APPROVER'),('OPS_MANAGER'),('OPS_MANAGER_CDCA_UPDATE'),('OPS_MANAGER_CDCA_VIEW'),('OPS_MANAGER_COURIER_PRICING_UPDATE'),
-            ('OPS_MANAGER_COURIER_PRICING_VIEW'),('OPS_MANAGER_L1'),('OPS_MANAGER_L2'),('OPS_MANAGER_L3'),('OPS_MANAGER_MPA'),('OPS_MANAGER_PCM_UPDATE'),('OPS_MANAGER_PCM_VIEW'),
-            ('OPS_MANAGER_REVERSE_PICKUP'),('OPS_MANAGER_SRS_CHANGE_AWB'),('OPS_MANAGER_SRS_CHANGE_SOSTATUS'),('OPS_MANAGER_SRS_RESOLVE_COURIER_CHANGE'),('OPS_MANAGER_SRS_RESOLVE_CREATE_AWB'),
-            ('OPS_MANAGER_SRS_RESOLVE_SERVICE_TYPE'),('PAYMENT_AUTHORIZER'),('PAYMENT_MANAGER'),('PAYMENT_REFUNDS'),('PO_APPROVER'),('PO_MANAGEMENT'),('RECONCILIATION'),
-            ('REPORT_ADMIN'),('REWARD_POINT_MANAGER_L1'),('REWARD_POINT_MANAGER_L2'),('ROCKSTAR'),('ROLE_MANAGER'),('RPU_ADMIN'),('RPU_APPROVER'),('RPU_CREATE'),
-            ('RPU_RECONCILE'),('RPU_UPDATE'),('RPU_VIEW'),('SERVICE_QUEUE'),('SHIPPING_COST_MODERATOR'),('SITE_CONTENT_MANAGER'),('SPLITTER'),('STORE_MANAGER'),('SUPPLIER'),
-            ('TEMP_USER'),('TICKETADMIN'),('UNSUBSCRIBED_USER'),('UPDATE_CATALOG_INFO'),('VIEW_CATALOG_INFO'),('WH_EMPLOYEE'),('WH_Employee_Inventory'),('WH_Employee_Inward'),
-            ('WH_Employee_Outward'),('WH_EMPLOYEE_REVERSE_PICKUP'),('WH_MANAGER'),('WH_MANAGER_L1'),('WH_Queue_Manager');
-        </sql>
     </changeSet>
     <changeSet author="Shilpa (written)" id="1367842551660-2">
       <sql>
@@ -14280,6 +14262,29 @@
         <sql>
             insert  into classification values(2150,'SO Could not be Auto-escalated','Due to Fitness Pro');
             insert  into reason (id,primary_classification,type,classification_id) values(1710,'SO could not be Auto-escalated from Fitness Pro','SO Could not be Auto-escalated',2150);
+        </sql>
+    </changeSet>
+    <changeSet author="RD(generated)" id="20131028-01">
+        <sql>
+            INSERT INTO courier_group values(130,'DotZot');
+            INSERT INTO courier_group_has_courier values(130,10);
+            INSERT INTO region_type (id,name,priority) values (330,'Dotzot-Local',33),(340,'Dotzot-Regional',34),(350,'Dotzot-Metro',35),(360,'Dotzot-ROI',36),
+            (370,'Dotzot-ROI-A',37),(380,'Dotzot-ROI-B',38),(390,'Dotzot-Extended',39);
+            INSERT INTO courier_pricing_engine (id, courier_id, warehouse_id, region_type_id, first_base_wt, first_base_cost, second_base_wt, second_base_cost, additional_wt,
+            additional_cost, fuel_surcharge, min_cod_charges, cod_cutoff_amount, variable_cod_charges, valid_upto) VALUES
+            (392, 10, 2, 330, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
+            (393, 10, 2, 340, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
+            (394, 10, 2, 350, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
+            (395, 10, 2, 360, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
+            (396, 10, 2, 370, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
+            (397, 10, 2, 380, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
+            (398, 10, 2, 390, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46');
+
+        </sql>
+    </changeSet>
+    <changeSet author="RD(generated)" id="20131028-02">
+        <sql>
+            INSERT INTO box_size values(90,'L3',33.5,578,4900),(100,'XL2',33.5,500,5400);
         </sql>
     </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-01">
