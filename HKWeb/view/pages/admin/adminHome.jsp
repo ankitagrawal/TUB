@@ -60,7 +60,7 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></h3>
-            
+
    <h3><s:link
             beanclass="com.hk.web.action.admin.shippingOrder.FixedShippingOrderAction">Search Fixed Shipping Orders</s:link></h3>
 
@@ -68,7 +68,7 @@
             beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction">Search Subscriptions</s:link></h3>
 
 	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
-	
+
 	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchB2BUserAction">Search B2B Users</s:link></h3>
 	  <h3><a href="${pageContext.request.contextPath}/pages/admin/b2bPriceUpdate.jsp">Update B2B Price</a></h3>
 
@@ -139,10 +139,12 @@
     <c:if test="${whAction.setWarehouse != null}">
     <h3><s:link
             beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation(Per Sku Item)</s:link></h3>
-            
+
     <h3><s:link
             beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction" event="uploadBinAllocationFile">Upload Bin Allocation File</s:link></h3>
 
+     <h3><s:link
+            beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction">Inventory Audit(Per Sku Item)</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
@@ -189,7 +191,7 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction"
             event="searchReplacementOrders">Search Replacement Order</s:link></h3>
-            
+
      <h3><s:link
             beanclass="com.hk.web.action.admin.inventory.UniqueBarcodeAction">Make Unique Barcodes</s:link></h3>
 </div>
@@ -393,7 +395,7 @@
     <h3>
         <s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction"
                 title="Download AccountingInvoice PDFs">Download AccountingInvoice PDFs</s:link></h3>
-                
+
                 <h3>
         <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 

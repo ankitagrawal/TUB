@@ -14349,4 +14349,31 @@
     <changeSet author="Ajeet (generated)" id="1366966901739-5">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Adminstrator (generated)" id="1383908615237-1">
+        <createTable tableName="sku_item_audit">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="audit_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="audited_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Adminstrator (generated)" id="1383908615237-2">
+        <addForeignKeyConstraint baseColumnNames="audited_by" baseTableName="sku_item_audit" constraintName="fk_sku_item_audit_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Adminstrator (generated)" id="1383908615237-3">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="sku_item_audit" constraintName="fk_sku_item_audit_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    </changeSet>
+     <changeSet author="Adminstrator (generated)" id="1383908615237-4">
+        <createIndex indexName="sku_item_id_UNIQUE" tableName="sku_item_audit" unique="true">
+            <column name="sku_item_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
