@@ -331,6 +331,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select a SO for validation"));
         }
+        addRedirectAlertMessage(new SimpleMessage("Selected Shipping Orders have been validated"));
         return new RedirectResolution(ActionAwaitingQueueAction.class);
     }
 

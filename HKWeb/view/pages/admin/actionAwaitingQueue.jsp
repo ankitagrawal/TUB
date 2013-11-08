@@ -679,8 +679,9 @@
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionQueueBean}"/>
 
+	<div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
     <div class="buttons" style="margin-left: 80%;"><s:submit name="validate" id="validateButton" class="soAction"
-                                                             value="Validate"/></div>
+                                                             value="Validate Shipping Order(s)"/></div>
      <div class="buttons" style="margin-left: 80%;"><s:submit name="escalate" id="escalateButton" class="soAction"
                                                              value="Escalate to packing / DropShip queue"/></div>
 </s:form>
