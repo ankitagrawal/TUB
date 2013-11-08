@@ -169,7 +169,7 @@
       }
 
       function _validateIsInvalidEmail() {
-            regexEMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+            regexEMAIL = /^([A-Za-z0-9_\-\.\+])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
             if (! regexEMAIL.test($('#userEmail').val())) {
                 $('#userEmail').after($('<span class="icn-warning-small err-icn3"></span>'));
                 $('#userEmail').after($('<p class="err-txt4">Email address is not valid</p>'));

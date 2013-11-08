@@ -11,12 +11,12 @@
 	<div class="headerInr">
     	<div class="splendaLogo"><a href="index.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/splenda.png" alt="Splenda" /></a></div>
       <div class="headerRightBar">
-       	  	<div class="socialIconsHeader">
-           	 	<a href="https://www.facebook.com/DiabetesSweetAndSimple/app_326983627416726?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-facebook.jpg" alt="Facebook" /></a>
-                <a href="https://twitter.com/Splendaindia?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="images/icon-twitter.jpg" alt="Twitter" /></a>
-                <a href="#"><img src="images/icon-pinterest.jpg" alt="Pinterest" /></a>
-                <a href="#"><img src="images/icon-blog.jpg" alt="Blog" /></a>
-            </div>
+        <div class="socialIconsHeader">
+          <a href="https://www.facebook.com/DiabetesSweetAndSimple/app_326983627416726?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="${pageContext.request.contextPath}/store/splenda/images/icon-facebook.jpg" alt="Facebook" /></a>
+          <a href="https://twitter.com/Splendaindia?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank"><img src="${pageContext.request.contextPath}/store/splenda/images/icon-twitter.jpg" alt="Twitter" /></a>
+          <a href="https://www.splendaindiablog.com"><img src="${pageContext.request.contextPath}/store/splenda/images/wordpress-icon.jpg" alt="Wordpress" /></a>
+
+        </div>
             <div class="clr"></div>
             <div class="healthkartLogo"><a href="http://www.healthkart.com?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store"><img src="images/healthkart-dot-com.png" alt="HealthKart.com" /></a></div>
         </div>
@@ -85,7 +85,7 @@
 </div>
 
 <div class="footer">	
-	<div class="footerData"><a href="http://www.healthkart.com/pages/termsAndConditions.jsp?utm_source=splenda_store&utm_medium=splenda_store&utm_campaign=splenda_store" target="_blank">Terms & Conditions</a></div>
+	<div class="footerData"><a href="http://www.healthkart.com/beta/hk/TermsConditions.action" target="_blank">Terms & Conditions</a></div>
 
 </div>
 
