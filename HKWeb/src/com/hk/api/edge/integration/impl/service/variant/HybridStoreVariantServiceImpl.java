@@ -92,6 +92,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
                 productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
                 productVariant.setDeleted(variantSavedSyncRequest.isDeleted());
 
+                logger.error("variant save sync request recived 1 " + productVariant.isDeleted());
                 getBaseDao().save(productVariant);
 
                 Product product = getProductService().getProductById(variantSavedSyncRequest.getOldProductId());
@@ -100,6 +101,11 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
                 product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
                 product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
 
+                
+                logger.error("variant save sync request recived 2 " + product.isJit());
+                logger.error("variant save sync request recived 3 " + product.getMaxDays());
+                logger.error("variant save sync request recived 4 " + product.getMinDays());
+                
                 boolean isProductDeleted = true;
                 for (ProductVariant productVariantTemp : product.getProductVariants()) {
                     isProductDeleted = isProductDeleted && productVariantTemp.isDeleted();
@@ -114,6 +120,10 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
 
                 getBaseDao().save(product);
 
+                logger.error("variant save sync request recived 5 " + product.isJit());
+                logger.error("variant save sync request recived 6 " + product.getMaxDays());
+                logger.error("variant save sync request recived 7 " + product.getMinDays());
+                
             }
         } catch (Throwable t) {
             logger.error("Error syncing save from edge", t);
