@@ -274,20 +274,36 @@
                 var padParam = subCatCount * 32; // used to take into consideration paddings and margins
                 self.width( (subCatCount * multiplier) + padParam);
             });
+        $('.gm-mc-nm').click(function(event){
+            var curRef = $(this),
+                    curPrnt = $(this).parents('.gm-mc:first'),
+                    trgt = curPrnt.find('.gm-sc-cntnr');
+            if(trgt.is(':visible')){
+
+            } else {
+                event.preventDefault();
+                curPrnt.trigger('mouseenter');
+            }
+        });
       /*Dropdown js */
-      $('#dropDownButton').mouseenter(function() {
-        //deactivateSubmenu($("#dropDownbox1").find('.maintainHover').parents('.gm-mc'));
-        $("#dropDownbox1").css("display", "block");
-        //$("#dropDownButton").addClass("menu-hdr-hover");
-        $(".icn-dwn-cs2").addClass("icn-dwn-cs-hover");
-      });
-      $('#dropDownButton').mouseleave(function() {
-        $("#dropDownbox1").css("display", "none");
+        $('#dropDownButton').on("mouseenter click",function(event) {
+            //deactivateSubmenu($("#dropDownbox1").find('.maintainHover').parents('.gm-mc'));
+            if(event.type=='click' && $("#dropDownbox1").is(':visible')){
+                $('#dropDownButton').trigger("mouseleave");
+                return;
+            }
+            $("#dropDownbox1").css("display", "block");
+            //$("#dropDownButton").addClass("menu-hdr-hover");
+            $(".icn-dwn-cs2").addClass("icn-dwn-cs-hover");
+        });
 
-        $(".icn-dwn-cs2").removeClass("icn-dwn-cs-hover");
-      });
+        $('#dropDownButton').mouseleave(function() {
+            $("#dropDownbox1").css("display", "none");
+            $(".icn-dwn-cs2").removeClass("icn-dwn-cs-hover");
+        });
 
-      $('#dropDownbox1').hover(function() {
+
+        $('#dropDownbox1').hover(function() {
         $("#dropDownbox1").css("display", "block");
         //$("#dropDownButton").addClass("menu-hdr-hover");
         $(".icn-dwn-cs2").addClass("icn-dwn-cs-hover");
