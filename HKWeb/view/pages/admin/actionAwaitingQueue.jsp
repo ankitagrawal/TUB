@@ -702,7 +702,7 @@
     });
     
     $('#markAll').click(function() {
-        $('.soAction').each(function() {
+        $('.shippingOrderDetailCheckbox').each(function() {
             var shippingOrderDetailCheckbox = $(this);
             var isChecked = shippingOrderDetailCheckbox.attr('checked');
             shippingOrderDetailCheckbox.attr("checked", true);
