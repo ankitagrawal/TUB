@@ -60,7 +60,7 @@
                 <label><b>Scan Location and Item Barcodes</b></label>
                 <br>
 
-                <table align="center" style="border:1px dashed #000;height:300px; width:600px;">
+                <table align="center" style="border:1px dashed #ccc;height:200px; width:600px;">
                     <tr>
                         <td><label>Enter Location: </label></td>
                         <td><s:text name="firstLocation" id="firstLocation"
