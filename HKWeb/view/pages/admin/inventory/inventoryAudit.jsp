@@ -11,10 +11,12 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $("#firstLocation").focus();
+                //$("#firstLocation").focus();
+                $("#barcode").focus();
                 $("#firstLocation").bind('input propertychange', function() {
                     var location = $(this).val();
                     if (location.length > 0) {
+                        $('#finalLocation').val(location);
                         $("#barcode").focus();
                     }
                 });
@@ -22,12 +24,17 @@
                 $("#barcode").bind('input propertychange', function() {
                     var location = $(this).val();
                     if (location.length > 0) {
-                        $("#finalLocation").focus();
+                        //$("#finalLocation").focus();
+                        $(".auditSave").click();
                     }
                 });
 
-                $("#finalLocation").change(function() {
+                $("#finalLocation").bind('input propertychange', function() {
                     $(".auditSave").click();
+                });
+
+                $("#firstLocation").click(function() {
+                    $("#firstLocation").val("");
                 });
             });
         </script>
@@ -46,7 +53,8 @@
                     <tr>
                         <td><label>Enter Location: </label></td>
                         <td><s:text name="firstLocation" id="firstLocation"
-                                    style="font-size:20px; padding:20px;height:25px;width:400px;"/></td>
+                                    style="font-size:12px; padding:5px; height:20px; width:400px;"
+                                    value="${ibaa.firstLocation}"/></td>
                     </tr>
                     <tr>
                         <td><label>Product Barcode: </label></td>
@@ -56,10 +64,11 @@
                     <tr>
                         <td><label>Enter Location Again: </label></td>
                         <td><s:text name="finalLocation" id="finalLocation"
-                                    style="font-size:20px; padding:20px;height:25px;width:400px;"/></td>
+                                    style="font-size:12px; padding:5px; height:20px; width:400px;"
+                                    readonly="readonly" value="${ibaa.firstLocation}"/></td>
                     </tr>
                 </table>
-                <s:submit name="save" value="Save" class="auditSave" style="visibility:hidden" />
+                <s:submit name="save" value="Save" class="auditSave" style="visibility:hidden"/>
             </s:form>
         </div>
     </s:layout-component>

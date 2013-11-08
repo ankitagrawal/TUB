@@ -79,7 +79,7 @@ public class InventoryAuditAction extends BaseAction {
     } else {
       addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Input seems to be wrong. Please Try Again.</strong>"));
     }
-    return new RedirectResolution(InventoryAuditAction.class);
+    return new RedirectResolution(InventoryAuditAction.class).addParameter("firstLocation", firstLocation);
   }
 
 
