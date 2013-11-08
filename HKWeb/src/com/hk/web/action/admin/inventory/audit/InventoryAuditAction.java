@@ -51,11 +51,11 @@ public class InventoryAuditAction extends BaseAction {
   }
 
   public Resolution save() {
-    logger.debug(firstLocation + ":" + barcode + ":" + finalLocation);
+    logger.debug(firstLocation + ":" + barcode + ":" + finalLocation + ":" + warehouse);
     if (firstLocation != null && finalLocation != null && barcode != null && firstLocation.equals(finalLocation)) {
       SkuItem skuItem = skuItemDao.getSkuItemByBarcode(barcode);
       Bin bin = binDao.findByBarCodeAndWarehouse(firstLocation, warehouse);
-      if (skuItem != null && bin != null) {
+      if (skuItem != null && bin != null && skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
         skuItem.setBin(bin);
         skuItem = (SkuItem) getBaseDao().save(skuItem);
         SkuItemAudit sia = new SkuItemAudit();
@@ -67,8 +67,10 @@ public class InventoryAuditAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("<strong style='color:green'>Successfully saved the Bin Allocation.</strong>"));
         } catch (Exception e) {
           //addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Got an exception - " + e.getCause() + "</strong>"));
-          addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode</strong>"));
+          addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode (but location updated)</strong>"));
         }
+      } else if (skuItem != null && bin != null && !skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
+        addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Incorrect Warehouse for SkuItem and Location</strong>"));
       } else if (bin != null && skuItem == null) {
         addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Invalid SkuItem Barcode</strong>"));
       } else if (skuItem != null && bin == null) {
