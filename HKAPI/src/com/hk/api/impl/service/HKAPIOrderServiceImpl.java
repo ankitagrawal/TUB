@@ -169,27 +169,17 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
                 payment.setGateway(gateway);
             }
         }
-        if(hkapiPaymentDTO.getGatewayOrderId()!=null){
-         payment.setGatewayOrderId(hkapiPaymentDTO.getGatewayOrderId());
-        }
-        if(hkapiPaymentDTO.getAuthIdCode()!=null){
-            payment.setAuthIdCode(hkapiPaymentDTO.getAuthIdCode());
-        }
-        if(hkapiPaymentDTO.getRrn()!=null){
-            payment.setRrn(hkapiPaymentDTO.getRrn());
-        }
-        if(hkapiPaymentDTO.getResponseMessage()!=null){
-            payment.setResponseMessage(hkapiPaymentDTO.getResponseMessage());
-        }
         if(hkapiPaymentDTO.getIssuerId()!=null){
             Issuer issuer= basedao.get(Issuer.class, hkapiPaymentDTO.getIssuerId()) ;
             if(issuer!=null){
                 payment.setIssuer(issuer);
             }
         }
-        if(hkapiPaymentDTO.getGatewayReferenceId()!=null){
-            payment.setGatewayReferenceId(hkapiPaymentDTO.getGatewayReferenceId());
-        }
+        payment.setResponseMessage(hkapiPaymentDTO.getResponseMessage());
+        payment.setGatewayOrderId(hkapiPaymentDTO.getGatewayOrderId());
+        payment.setAuthIdCode(hkapiPaymentDTO.getAuthIdCode());
+        payment.setRrn(hkapiPaymentDTO.getRrn());
+        payment.setGatewayReferenceId(hkapiPaymentDTO.getGatewayReferenceId());
         payment=paymentService.save(payment);
 
         return  payment;
