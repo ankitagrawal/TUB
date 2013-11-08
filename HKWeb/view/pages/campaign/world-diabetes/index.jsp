@@ -30,7 +30,7 @@
     <div id="wrapper">
       <div class="logo"><a href="http://www.healthkart.com/"><img src="images/hk-logo.png"/></a></div>
       <div class="cl"></div>
-      <img src="images/wdd-banner.jpg"/>
+      <a href="http://www.healthkart.com/diabetes"><img src="images/wdd-banner.jpg"/>      </a>
       <div class="cl"></div>
 
 
