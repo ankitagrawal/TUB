@@ -45,6 +45,38 @@ public class UserInformationResource {
 
 
     @POST
+    @Path("/all")
+    @Produces("application/json")
+    public Response getUsersByProduct(@FormParam("productIds") String productIds,
+                                      @FormParam("productVariantIds") String productVariantIds,
+                                      @FormParam("cities") String cities,
+                                      @FormParam("zones") String zones,
+                                      @FormParam("states") String states,
+                                      @FormParam("verified") String verified) {
+        List<String> prodIds = getListFromString(productIds, ",");
+        List<String> prodVarIds = getListFromString(productVariantIds, ",");
+        List<String> allcities = getListFromString(cities, ",");
+        List<String> allStates = getListFromString(states, ",");
+        List<String> allZones = getListFromString(zones, ",");
+
+
+        this.productIds = prodIds;
+        this.productVariantIds = prodVarIds;
+        this.cities = allcities;
+        this.states = allStates;
+        this.verified = verified;
+        try {
+            this.zones = new ArrayList<Long>();
+            for (String z : allZones) {
+                Long l = Long.parseLong(z);
+                this.zones.add(l);
+            }
+        } catch (Exception ignore) {
+        }
+        return getUsers();
+    }
+
+   /* @POST
     @Path("/product")
     @Produces("application/json")
     public Response getUsersByProduct(@FormParam("productId") String productId) {
@@ -82,7 +114,8 @@ public class UserInformationResource {
                 Long l = Long.parseLong(z);
                 zones.add(l);
             }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         return getUsers();
     }
 
@@ -102,7 +135,7 @@ public class UserInformationResource {
         this.verified = "true";
         return getUsers();
     }
-
+*/
     private Response getUsers() {
         Response response = null;
         List<User> users = null;
@@ -151,6 +184,8 @@ public class UserInformationResource {
     }
 
     private List<String> getListFromString(String s, String delimiter) {
+        if (s == null) return null;
+        delimiter = (delimiter == null || delimiter.isEmpty()) ? "," : delimiter;
         List<String> retList = new LinkedList<String>();
         String[] ss = s.split(delimiter);
         for (String str : ss) {

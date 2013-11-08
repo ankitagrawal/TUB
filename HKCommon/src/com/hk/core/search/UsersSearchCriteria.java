@@ -18,7 +18,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class UsersSearchCriteria {
-
     // list of variables that might be received
     private List<String> states;
     private List<String> cities;
@@ -42,8 +41,24 @@ public class UsersSearchCriteria {
         }
 
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
-        boolean orderCriteria = false, cliCriteria = false, pvCriteria = false, prodCriteria = false, addrCriteria = false, pinCriteria = false, zoneCriteria = false, pv2Criteria = false;
+        boolean orderCriteria = false,
+                cliCriteria = false,
+                pvCriteria = false,
+                prodCriteria = false,
+                addrCriteria = false,
+                pinCriteria = false,
+                zoneCriteria = false,
+                pv2Criteria = false,
+                rolesCriteria = false;
 
+        if (verified != null) {
+            if (!rolesCriteria) {
+                rolesCriteria = true;
+                userCriteria.createAlias("user.roles", "roles");
+            }
+            String roleName = (verified.booleanValue()) ? "HK_USER" : "HKUNVERIFIED";
+            userCriteria.add(Restrictions.eq("roles.name", roleName));
+        }
 
         if ((productIds != null && !productIds.isEmpty()) || (productVariantIds != null && !productVariantIds.isEmpty())) {
             if (!orderCriteria) {
@@ -56,9 +71,13 @@ public class UsersSearchCriteria {
             }
             if (!pvCriteria) {
                 userCriteria.createAlias("cli.productVariant", "pv");
-                userCriteria.createAlias("pv.product", "prod");
                 pvCriteria = true;
             }
+            if (!prodCriteria) {
+                userCriteria.createAlias("pv.product", "prod");
+                prodCriteria = true;
+            }
+
 
             if (productIds != null && !productIds.isEmpty()) {
                 userCriteria.add(Restrictions.in("prod.id", productIds));
@@ -114,10 +133,9 @@ public class UsersSearchCriteria {
 
     public UsersSearchCriteria setVerified(String verified) {
         try {
-            atleastOneVariableSet = true;
-            this.verified = Boolean.parseBoolean(verified);
+            this.verified = "true".equalsIgnoreCase(verified) ? true : "false".equalsIgnoreCase(verified) ? false : null;
+            atleastOneVariableSet = this.verified == null ? atleastOneVariableSet : true;
         } catch (Exception e) {
-            atleastOneVariableSet = false;
             this.verified = null;
         }
         return this;
@@ -147,6 +165,5 @@ public class UsersSearchCriteria {
         atleastOneVariableSet = true;
         return this;
     }
-
 
 }
