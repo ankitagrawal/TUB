@@ -62,7 +62,7 @@
 
                 <table align="center" style="border:1px dashed #ccc;height:200px; width:600px;">
                     <tr>
-                        <td><label>Enter Location: </label></td>
+                        <td><label>Location Barcode (Open): </label></td>
                         <td><s:text name="firstLocation" id="firstLocation"
                                     style="font-size:12px; padding:5px; height:20px; width:400px;"
                                     value="${ibaa.firstLocation}"/>
@@ -76,7 +76,7 @@
                                     style="font-size:20px; padding:20px;height:25px;width:400px;"/></td>
                     </tr>
                     <tr>
-                        <td><label>Enter Location Again: </label></td>
+                        <td><label>Location Barcode (Close): </label></td>
                         <td><s:text name="finalLocation" id="finalLocation"
                                     style="font-size:12px; padding:5px; height:20px; width:400px;"
                                     readonly="readonly" value="${ibaa.firstLocation}"/></td>
