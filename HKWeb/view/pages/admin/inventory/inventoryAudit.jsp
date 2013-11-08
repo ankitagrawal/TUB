@@ -40,9 +40,14 @@
         </script>
 
         <style type="text/css">
-            strong{
-                font-size:20px;
+            strong {
+                font-size: 20px;
             }
+
+            .alert {
+                text-align: center;
+            }
+
         </style>
     </s:layout-component>
 
