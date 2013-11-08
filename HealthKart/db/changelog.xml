@@ -14264,29 +14264,6 @@
             insert  into reason (id,primary_classification,type,classification_id) values(1710,'SO could not be Auto-escalated from Fitness Pro','SO Could not be Auto-escalated',2150);
         </sql>
     </changeSet>
-    <changeSet author="RD(generated)" id="20131028-01">
-        <sql>
-            INSERT INTO courier_group values(130,'DotZot');
-            INSERT INTO courier_group_has_courier values(130,10);
-            INSERT INTO region_type (id,name,priority) values (330,'Dotzot-Local',33),(340,'Dotzot-Regional',34),(350,'Dotzot-Metro',35),(360,'Dotzot-ROI',36),
-            (370,'Dotzot-ROI-A',37),(380,'Dotzot-ROI-B',38),(390,'Dotzot-Extended',39);
-            INSERT INTO courier_pricing_engine (id, courier_id, warehouse_id, region_type_id, first_base_wt, first_base_cost, second_base_wt, second_base_cost, additional_wt,
-            additional_cost, fuel_surcharge, min_cod_charges, cod_cutoff_amount, variable_cod_charges, valid_upto) VALUES
-            (392, 10, 2, 330, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
-            (393, 10, 2, 340, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
-            (394, 10, 2, 350, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
-            (395, 10, 2, 360, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
-            (396, 10, 2, 370, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
-            (397, 10, 2, 380, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46'),
-            (398, 10, 2, 390, '500.00', '25.00', '0.00', '0.00', '500.00', '20.00', '0.2500', '50.00', '2500.0000', '0.0200', '2013-09-05 13:53:46');
-
-        </sql>
-    </changeSet>
-    <changeSet author="RD(generated)" id="20131028-02">
-        <sql>
-            INSERT INTO box_size values(90,'L3',33.5,578,4900),(100,'XL2',33.5,500,5400);
-        </sql>
-    </changeSet>
     <changeSet author="Ajeet (written)" id="20131015-01">
         <sql>
             CREATE TABLE IF NOT EXISTS hk_reach_pricing_engine_bkup LIKE hk_reach_pricing_engine;
