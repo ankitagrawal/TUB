@@ -291,7 +291,7 @@
                   $(this).removeClass('hdr-drop-cntnr-hover').find('.hdr-drop-down').hide();
               });
 
-      $('.hdr-drop-cntnr').on('click',function(e){
+      $('.hdr-drop-cntnr').bind('click',function(e){
 
           $(this).trigger('mouseenter');
           $('.cart-pop-container').trigger('mouseleave');

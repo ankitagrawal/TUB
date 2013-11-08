@@ -286,7 +286,7 @@
             }
         });
       /*Dropdown js */
-        $('#dropDownButton').on("mouseenter click",function(event) {
+        $('#dropDownButton').bind("mouseenter click",function(event) {
             //deactivateSubmenu($("#dropDownbox1").find('.maintainHover').parents('.gm-mc'));
             if(event.type=='click' && $("#dropDownbox1").is(':visible')){
                 $('#dropDownButton').trigger("mouseleave");
