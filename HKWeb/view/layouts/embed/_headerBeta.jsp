@@ -283,6 +283,7 @@
     </div>
 
   <script>
+      $(document).ready(function(){
       $('.hdr-drop-cntnr').hover(function () {
                   $(this).addClass('hdr-drop-cntnr-hover').find('.hdr-drop-down').show();
               },
@@ -308,7 +309,7 @@
           $('.hdr-drop-cntnr').trigger('mouseleave');
           e.stopPropagation();
       });
-
+      });
       $(document).click(function(){
         $('.cart-pop-container').removeClass('cart-pop-container-hover');
         $('#cartPop').hide();
