@@ -551,5 +551,19 @@ public class CourierStatusUpdateHelper {
 		return (String) responseMap.get(status);
 	}
 
+    @SuppressWarnings("unchecked")
+    public String getHkDeliveryStatusRemarksForUser(String remarks) {
+        Map responseMap = new HashMap<String, String>();
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_WRONG_ADDRESS, HKDeliveryConstants.CUST_HOLD_WRONG_ADDRESS_DISPLAY);
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_HOUSE_LOCKED, HKDeliveryConstants.CUST_HOLD_HOUSE_LOCKED_DISPLAY);
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_UNCONTACTABLE, HKDeliveryConstants.CUST_HOLD_UNCONTACTABLE_DISPLAY);
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_PAYMENT_NOT_READY, HKDeliveryConstants.CUST_HOLD_PAYMENT_NOT_READY_DISPLAY);
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_FUTURE_DELIVERY, HKDeliveryConstants.CUST_HOLD_FUTURE_DELIVERY_DISPLAY);
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_WRONG_DELIVERY, HKDeliveryConstants.CUST_HOLD_WRONG_DELIVERY_DISPLAY);
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_DELAY_DELIVERY, HKDeliveryConstants.CUST_HOLD_DELAY_DELIVERY_DISPLAY);
+        responseMap.put(HKDeliveryConstants.CUST_HOLD_NOT_INTERESTED, HKDeliveryConstants.CUST_HOLD_NOT_INTERESTED_DISPLAY);
+        return (String) responseMap.get(remarks);
+    }
+
 
 }
