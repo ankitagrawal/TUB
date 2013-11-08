@@ -53,22 +53,25 @@
 
 
     <s:layout-component name="content">
-        <div style="margin-top:20px" height="500px" align="center">
+        <div style="margin-top:20px;"  align="center">
             <s:form beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction" autocomplete="off"
                     id="locationMappingForm">
                 <s:hidden name="warehouse" value="${ibaa.warehouse.id }"/>
-                <label><b>SCAN THE BAR CODE HERE</b></label>
+                <label><b>Scan Location and Item Barcodes</b></label>
                 <br>
 
-                <table align="center">
+                <table align="center" style="border:1px dashed #000;height:300px; width:600px;">
                     <tr>
                         <td><label>Enter Location: </label></td>
                         <td><s:text name="firstLocation" id="firstLocation"
                                     style="font-size:12px; padding:5px; height:20px; width:400px;"
-                                    value="${ibaa.firstLocation}"/></td>
+                                    value="${ibaa.firstLocation}"/>
+                            <br>
+                            <span style="color:red;">Click to change BIN</span>
+                        </td>
                     </tr>
                     <tr>
-                        <td><label>Product Barcode: </label></td>
+                        <td><label>Item Barcode: </label></td>
                         <td><s:text name="barcode" id="barcode"
                                     style="font-size:20px; padding:20px;height:25px;width:400px;"/></td>
                     </tr>
