@@ -679,11 +679,14 @@
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionQueueBean}"/>
 
-    <div class="buttons" style="margin-left: 80%;"><s:submit name="escalate" id="escalateButton"
+	<div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
+    <div class="buttons" style="margin-left: 80%;"><s:submit name="validate" id="validateButton" class="soAction"
+                                                             value="Validate Shipping Order(s)"/></div>
+     <div class="buttons" style="margin-left: 80%;"><s:submit name="escalate" id="escalateButton" class="soAction"
                                                              value="Escalate to packing / DropShip queue"/></div>
 </s:form>
 <script type="text/javascript">
-    $('#escalateButton').click(function() {
+    $('.soAction').click(function() {
         $('.shippingOrderDetailCheckbox').each(function() {
             var shippingOrderDetailCheckbox = $(this);
             var isChecked = shippingOrderDetailCheckbox.attr('checked');
@@ -696,6 +699,15 @@
 
     $('.splitBOLink').click(function disableSplitBOLink(){
         $(this).css("display", "none");
+    });
+    
+    $('#markAll').click(function() {
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            shippingOrderDetailCheckbox.attr("checked", true);
+        });
+        return false;
     });
 
     /*$('.lineItemCheckBox').click(function() {
