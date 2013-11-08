@@ -38,6 +38,12 @@
                 });
             });
         </script>
+
+        <style type="text/css">
+            strong{
+                font-size:20px;
+            }
+        </style>
     </s:layout-component>
 
 
@@ -46,8 +52,8 @@
             <s:form beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction" autocomplete="off"
                     id="locationMappingForm">
                 <s:hidden name="warehouse" value="${ibaa.warehouse.id }"/>
-                <label><strong>SCAN THE BAR CODE HERE</strong></label>
-                <br><br>
+                <label><b>SCAN THE BAR CODE HERE</b></label>
+                <br>
 
                 <table align="center">
                     <tr>
