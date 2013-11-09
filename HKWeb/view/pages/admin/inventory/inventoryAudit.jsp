@@ -16,8 +16,8 @@
                 $("#firstLocation").bind('input propertychange', function() {
                     var location = $(this).val();
                     if (location.length > 0) {
-                        $('#finalLocation').val(location);
                         $("#barcode").focus();
+                        //$('#finalLocation').val(location);
                     }
                 });
 
@@ -25,6 +25,7 @@
                     var location = $(this).val();
                     if (location.length > 0) {
                         //$("#finalLocation").focus();
+                        $('#finalLocation').val($("#firstLocation").val());
                         $(".auditSave").click();
                     }
                 });
