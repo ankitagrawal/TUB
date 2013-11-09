@@ -56,18 +56,18 @@ public class InventoryAuditAction extends BaseAction {
       SkuItem skuItem = skuItemDao.getSkuItemByBarcode(barcode);
       Bin bin = binDao.findByBarCodeAndWarehouse(firstLocation, warehouse);
       if (skuItem != null && bin != null && skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
-        skuItem.setBin(bin);
-        skuItem = (SkuItem) getBaseDao().save(skuItem);
         SkuItemAudit sia = new SkuItemAudit();
         sia.setSkuItem(skuItem);
         sia.setUser(getUserService().getLoggedInUser());
         sia.setAuditDate(new Date());
         try {
           getBaseDao().save(sia);
+          skuItem.setBin(bin);
+          skuItem = (SkuItem) getBaseDao().save(skuItem);
           addRedirectAlertMessage(new SimpleMessage("<strong style='color:green'>Successfully saved the Bin Allocation.</strong>"));
         } catch (Exception e) {
           //addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Got an exception - " + e.getCause() + "</strong>"));
-          addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode (but location updated)</strong>"));
+          addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode</strong>"));
         }
       } else if (skuItem != null && bin != null && !skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
         addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Incorrect Warehouse for SkuItem and Location</strong>"));
