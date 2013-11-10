@@ -169,7 +169,7 @@ public class InventoryAuditAction extends BasePaginatedAction {
     HashSet<String> params = new HashSet<String>();
     params.add("brand");
     params.add("variantId");
-    params.add("itemBarcode");
+    params.add("barcode");
     params.add("auditedBy");
     params.add("startDate");
     params.add("endDate");
