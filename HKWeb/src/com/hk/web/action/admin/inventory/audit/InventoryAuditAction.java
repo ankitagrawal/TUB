@@ -51,8 +51,8 @@ public class InventoryAuditAction extends BaseAction {
   }
 
   public Resolution save() {
-    logger.debug(firstLocation + ":" + barcode + ":" + finalLocation + ":" + warehouse);
-    if (firstLocation != null && finalLocation != null && barcode != null && firstLocation.equals(finalLocation)) {
+     logger.debug("Location: "+firstLocation + "; Barcode=" + barcode + "; Warehouse=" + warehouse);
+    if (warehouse != null && firstLocation != null && finalLocation != null && barcode != null && firstLocation.equals(finalLocation)) {
       SkuItem skuItem = skuItemDao.getSkuItemByBarcode(barcode);
       Bin bin = binDao.findByBarCodeAndWarehouse(firstLocation, warehouse);
       if (skuItem != null && bin != null && skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
@@ -62,11 +62,17 @@ public class InventoryAuditAction extends BaseAction {
         sia.setAuditDate(new Date());
         try {
           getBaseDao().save(sia);
-          skuItem.setBin(bin);
-          skuItem = (SkuItem) getBaseDao().save(skuItem);
-          addRedirectAlertMessage(new SimpleMessage("<strong style='color:green'>Successfully saved the Bin Allocation.</strong>"));
+          addRedirectAlertMessage(new SimpleMessage("<strong style='color:green'>Successfully recorded Audit Information.</strong>"));
+          try {
+            skuItem.setBin(bin);
+            skuItem = (SkuItem) getBaseDao().save(skuItem);
+            addRedirectAlertMessage(new SimpleMessage("<strong style='color:green'>Successfully saved the Bin Allocation.</strong>"));
+          } catch (Exception e) {
+            logger.error("Got an exception while saving BIN mapping: "+e);
+            addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Could not update location</strong>"));
+          }
         } catch (Exception e) {
-          //addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Got an exception - " + e.getCause() + "</strong>"));
+          logger.error("Got an exception while saving audt records: "+e);
           addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode</strong>"));
         }
       } else if (skuItem != null && bin != null && !skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
@@ -79,7 +85,8 @@ public class InventoryAuditAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Invalid Location and SKU Item Barcode</strong>"));
       }
     } else {
-      addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Input seems to be wrong. Please Try Again.</strong>"));
+      addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Input seems to be wrong. Please check the values.</strong>"));
+      addRedirectAlertMessage(new SimpleMessage("Input -> "+"Location: "+firstLocation + "; Barcode=" + barcode + "; Warehouse=" + warehouse));
     }
     return new RedirectResolution(InventoryAuditAction.class).addParameter("firstLocation", firstLocation);
   }
