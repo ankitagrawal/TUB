@@ -145,6 +145,8 @@
 
      <h3><s:link
             beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction">Inventory Audit(Per Sku Item)</s:link></h3>
+     <h3><s:link
+            beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction" event="auditList">Inventory Audit List</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
