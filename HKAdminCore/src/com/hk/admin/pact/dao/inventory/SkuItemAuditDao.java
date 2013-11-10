@@ -9,7 +9,7 @@ import java.util.Date;
 
 public interface SkuItemAuditDao extends BaseDao {
 
-  public Page search(String brand, String variantId, String skuItemBarcode, String auditedBy,
+  public Page search(String brand, String variantId, String barcode, String auditedBy,
                      Date startDate, Date endDate, Warehouse warehouse, int pageNo, int perPage);
 
 

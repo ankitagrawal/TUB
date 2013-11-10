@@ -22,25 +22,31 @@ public class SkuItemAuditDaoImpl extends BaseDaoImpl implements SkuItemAuditDao 
   BaseDao baseDao;
 
 
-  public Page search(String brand, String variantId, String skuItemBarcode, String auditedBy,
+  public Page search(String brand, String variantId, String barcode, String auditedBy,
                      Date startDate, Date endDate, Warehouse warehouse, int pageNo, int perPage) {
-    
+
     DetachedCriteria skuItemAuditCriteria = DetachedCriteria.forClass(SkuItemAudit.class);
+    DetachedCriteria skuItemCriteria = null;
+    if (barcode != null || warehouse != null || brand != null || variantId != null)
+      skuItemCriteria = skuItemAuditCriteria.createCriteria("skuItem");
     DetachedCriteria skuCriteria = null;
     if (warehouse != null || brand != null || variantId != null)
-      skuCriteria = skuItemAuditCriteria.createCriteria("skuItem").createCriteria("skuGroup").createCriteria("sku");
+      skuCriteria = skuItemCriteria.createCriteria("skuGroup").createCriteria("sku");
     DetachedCriteria variantCriteria = null;
     if (brand != null || variantId != null)
       variantCriteria = skuCriteria.createCriteria("productVariant");
     DetachedCriteria productCriteria = null;
     if (brand != null)
       productCriteria = variantCriteria.createCriteria("product");
-    
+
     if (brand != null) {
       productCriteria.add(Restrictions.eq("brand", brand));
     }
     if (variantId != null) {
       variantCriteria.add(Restrictions.eq("id", variantId));
+    }
+    if (barcode != null) {
+      skuItemCriteria.add(Restrictions.eq("barcode", barcode));
     }
     if (auditedBy != null) {
       DetachedCriteria userCriteria = skuItemAuditCriteria.createCriteria("user");

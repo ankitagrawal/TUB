@@ -78,7 +78,7 @@
                 <th>Location</th>
                 <th>Warehouse</th>
                 <th>Audit Date</th>
-                <th>Audted By</th>
+                <th>Audited By</th>
             </tr>
             </thead>
             <c:forEach items="${iaaBean.skuItemAuditList}" var="skuItemAudit" varStatus="ctr">
