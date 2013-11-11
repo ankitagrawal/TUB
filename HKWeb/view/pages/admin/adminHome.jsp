@@ -20,7 +20,7 @@
         pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
     %>
     <table>
-        <s:form action='com.hk.web.action.admin.warehouse.TestSQLAction'>
+        <s:form beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" id="selectWHForm">
             <tr>
                 <td>
                     get users from product Ids
@@ -45,6 +45,9 @@
         <tr>
             <td><b>Select a WH: </b></td>
             <td><s:form beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" id="selectWHForm">
+
+
+
                 <s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
                     <s:option value="0">-None-</s:option>
                     <c:forEach items="${whList}" var="wh">

@@ -17,4 +17,5 @@ import java.util.List;
  */
 public interface UsersDao extends BaseDao {
     public List<User> findBySearchCriteria(UsersSearchCriteria criteria);
+    public List<String> findEmailsBySearchCriteria(UsersSearchCriteria criteria);
 }

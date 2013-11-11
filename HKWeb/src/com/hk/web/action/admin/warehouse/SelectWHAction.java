@@ -1,81 +1,113 @@
 package com.hk.web.action.admin.warehouse;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
+import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.service.core.UserSearchServiceImpl;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class SelectWHAction extends BaseAction {
 
-  
-  @Autowired
-  UserDao userDao;
-  @Autowired
-  private UserService userService;
-  private Warehouse setWarehouse;
 
-  @DefaultHandler
-  public Resolution pre() {
-      //TODO #introducing gc as a hit n try solution for server performance
-//    System.gc();
-      return new ForwardResolution("/pages/admin/selectWH.jsp");
-  }
+    @Autowired
+    UserDao userDao;
+    @Autowired
+    private UserService userService;
+    private Warehouse setWarehouse;
+
+    private String params;
+    private int result;
 
 
-    public Resolution testSQL() {
+    public Resolution pre() {
         //TODO #introducing gc as a hit n try solution for server performance
 //    System.gc();
         return new ForwardResolution("/pages/admin/selectWH.jsp");
     }
 
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    @DefaultHandler
+    public Resolution testSQL() {
+
+        UsersSearchCriteria criteria = new UsersSearchCriteria();
+        String prodnames = params;
+        List<String> ids = Arrays.asList(prodnames.split(","));
+
+
+        criteria.setProductIds(ids);
+        try {
+            List<String> ems = new UserSearchServiceImpl().searchUserEmails(criteria);
+            List<User> users = new UserSearchServiceImpl().searchUsers(criteria);
+        } catch (Exception e) {
+        }
+        result = users.size();
+        return new ForwardResolution("/pages/admin/adminHome.jsp");
+    }
+
 
     @Secure(hasAnyRoles = {RoleConstants.WH_MANAGER_L1, RoleConstants.CATEGORY_MANAGER, RoleConstants.ADMIN}, authActionBean = AdminPermissionAction.class)
-  public Resolution bindUserWithWarehouse() {
-    User loggedOnUser = getPrincipalUser();
-    Set<Warehouse> warehouses = new HashSet<Warehouse>();
-    if (setWarehouse != null) {
-      warehouses.add(setWarehouse);
+    public Resolution bindUserWithWarehouse() {
+        User loggedOnUser = getPrincipalUser();
+        Set<Warehouse> warehouses = new HashSet<Warehouse>();
+        if (setWarehouse != null) {
+            warehouses.add(setWarehouse);
+        }
+        loggedOnUser.setWarehouses(warehouses);
+        userService.save(loggedOnUser);
+
+        return new RedirectResolution(AdminHomeAction.class);
     }
-    loggedOnUser.setWarehouses(warehouses);
-    userService.save(loggedOnUser);
 
-    return new RedirectResolution(AdminHomeAction.class);
-  }
+    public Resolution getUserWarehouse() {
 
-  public Resolution getUserWarehouse() {
+        setWarehouse = userService.getWarehouseForLoggedInUser();
+        return new ForwardResolution("/pages/admin/selectWH.jsp");
+    }
 
-    setWarehouse = userService.getWarehouseForLoggedInUser();
-    return new ForwardResolution("/pages/admin/selectWH.jsp");
-  }
+    public Warehouse getSetWarehouse() {
+        return setWarehouse;
+    }
 
-  public Warehouse getSetWarehouse() {
-    return setWarehouse;
-  }
+    public void setSetWarehouse(Warehouse setWarehouse) {
+        this.setWarehouse = setWarehouse;
+    }
 
-  public void setSetWarehouse(Warehouse setWarehouse) {
-    this.setWarehouse = setWarehouse;
-  }
 
-  
-  public void setUserService(UserService userService) {
-    this.userService = userService;
-  }
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
 }

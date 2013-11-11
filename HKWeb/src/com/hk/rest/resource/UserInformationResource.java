@@ -76,66 +76,66 @@ public class UserInformationResource {
         return getUsers();
     }
 
-   /* @POST
-    @Path("/product")
-    @Produces("application/json")
-    public Response getUsersByProduct(@FormParam("productId") String productId) {
-        List<String> prodIds = getListFromString(productId, ",");
-        this.productIds = prodIds;
-        return getUsers();
-    }
+    /* @POST
+     @Path("/product")
+     @Produces("application/json")
+     public Response getUsersByProduct(@FormParam("productId") String productId) {
+         List<String> prodIds = getListFromString(productId, ",");
+         this.productIds = prodIds;
+         return getUsers();
+     }
 
-    @POST
-    @Path("/productVariant")
-    @Produces("application/json")
-    public Response getUsersByProductVariants(@FormParam("productVariantId") String productVariantId) {
-        List<String> prodVarIds = getListFromString(productVariantId, ",");
-        this.productVariantIds = prodVarIds;
-        return getUsers();
-    }
+     @POST
+     @Path("/productVariant")
+     @Produces("application/json")
+     public Response getUsersByProductVariants(@FormParam("productVariantId") String productVariantId) {
+         List<String> prodVarIds = getListFromString(productVariantId, ",");
+         this.productVariantIds = prodVarIds;
+         return getUsers();
+     }
 
-    @POST
-    @Path("/city")
-    @Produces("application/json")
-    public Response getUsersByCity(@FormParam("city") String city) {
-        List<String> allcities = getListFromString(city, ",");
-        this.cities = allcities;
-        return getUsers();
-    }
+     @POST
+     @Path("/city")
+     @Produces("application/json")
+     public Response getUsersByCity(@FormParam("city") String city) {
+         List<String> allcities = getListFromString(city, ",");
+         this.cities = allcities;
+         return getUsers();
+     }
 
-    @POST
-    @Path("/zone")
-    @Produces("application/json")
-    public Response getUsersByZone(@FormParam("zone") String zone) {
-        try {
-            zones = new ArrayList<Long>();
-            List<String> allZones = getListFromString(zone, ",");
-            for (String z : allZones) {
-                Long l = Long.parseLong(z);
-                zones.add(l);
-            }
-        } catch (Exception ignore) {
-        }
-        return getUsers();
-    }
+     @POST
+     @Path("/zone")
+     @Produces("application/json")
+     public Response getUsersByZone(@FormParam("zone") String zone) {
+         try {
+             zones = new ArrayList<Long>();
+             List<String> allZones = getListFromString(zone, ",");
+             for (String z : allZones) {
+                 Long l = Long.parseLong(z);
+                 zones.add(l);
+             }
+         } catch (Exception ignore) {
+         }
+         return getUsers();
+     }
 
-    @POST
-    @Path("/state")
-    @Produces("application/json")
-    public Response getUsersByState(@FormParam("state") String state) {
-        List<String> allStates = getListFromString(state, ",");
-        this.states = allStates;
-        return getUsers();
-    }
+     @POST
+     @Path("/state")
+     @Produces("application/json")
+     public Response getUsersByState(@FormParam("state") String state) {
+         List<String> allStates = getListFromString(state, ",");
+         this.states = allStates;
+         return getUsers();
+     }
 
-    @GET
-    @Path("/verified")
-    @Produces("application/json")
-    public Response getUsersByVerified() {
-        this.verified = "true";
-        return getUsers();
-    }
-*/
+     @GET
+     @Path("/verified")
+     @Produces("application/json")
+     public Response getUsersByVerified() {
+         this.verified = "true";
+         return getUsers();
+     }
+ */
     private Response getUsers() {
         Response response = null;
         List<User> users = null;
@@ -160,17 +160,26 @@ public class UserInformationResource {
                 criteria.setStates(states);
             }
 
-            users = userSearchService.searchUsers(criteria);
+//            users = userSearchService.searchUsers(criteria);
+            List<String> ems = userSearchService.searchUserEmails(criteria);
             List<UserDto> userDtos = new LinkedList<UserDto>();
-            for (User u : users) {
+            for (String s : ems) {
                 UserDto udto = new UserDto();
-                udto.name = u.getName();
-                udto.email = u.getEmail();
-                udto.login = u.getLogin();
-                udto.subscribedMask = u.getSubscribedMask();
-
+                udto.name = "";
+                udto.email = "";
+                udto.login = s;
+                udto.subscribedMask = 0;
                 userDtos.add(udto);
             }
+//            for (User u : users) {
+//                UserDto udto = new UserDto();
+//                udto.name = u.getName();
+//                udto.email = u.getEmail();
+//                udto.login = u.getLogin();
+//                udto.subscribedMask = u.getSubscribedMask();
+//
+//                userDtos.add(udto);
+//            }
 
             final GenericEntity<List<UserDto>> genericEntity = new GenericEntity<List<UserDto>>(userDtos) {
             };

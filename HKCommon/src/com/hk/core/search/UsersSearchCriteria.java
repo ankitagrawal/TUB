@@ -30,12 +30,14 @@ public class UsersSearchCriteria {
 
     private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
 
-    public DetachedCriteria getSearchCriteria() {
-        return getCriteriaFromBaseCriteria();
+    private boolean emailsonly = false;
+
+    public DetachedCriteria getSearchCriteria(boolean emailsonly) {
+        return getCriteriaFromBaseCriteria(emailsonly);
     }
 
 
-    private DetachedCriteria getCriteriaFromBaseCriteria() {
+    private DetachedCriteria getCriteriaFromBaseCriteria(boolean emailsonly) {
 
         if (!atleastOneVariableSet) {
             throw new RuntimeException("No parameter set");
@@ -122,8 +124,11 @@ public class UsersSearchCriteria {
             }
             userCriteria.add(Restrictions.in("zone.id", zones));
         }
-//        userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        userCriteria.setProjection(Projections.distinct(Projections.property("user.login")));
+        if (emailsonly) {
+            userCriteria.setProjection(Projections.distinct(Projections.property("user.login")));
+        } else {
+            userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        }
         return userCriteria;
     }
 
