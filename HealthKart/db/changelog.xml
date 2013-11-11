@@ -14355,7 +14355,7 @@
     </changeSet>
     <changeSet author="Rajesh Kumar" id="20131111-01">
         <sql>
-            INSERT INTO store (id ,name ,prefix ,callback_rest_url) VALUES ('401', 'BANGALORE', 'BGL', NULL);
+            INSERT INTO store (id ,name ,prefix ,callback_rest_url) VALUES ('401', 'BANGALORE', 'BLR', NULL);
         </sql>
     </changeSet>
 </databaseChangeLog>
