@@ -41,6 +41,7 @@ public class SelectWHAction extends BaseAction {
 
     private String params;
     private int result;
+    private Long time;
     private String emails;
 
     public String getEmails() {
@@ -76,6 +77,14 @@ public class SelectWHAction extends BaseAction {
         this.result = result;
     }
 
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
     @DefaultHandler
     public Resolution testSQL() {
         Long startTime = System.currentTimeMillis();
@@ -99,15 +108,18 @@ public class SelectWHAction extends BaseAction {
         if ("1".equals(emails)) {
             result = ems.size();
         } else {
+
             result = users.size();
         }
         Long endTime = System.currentTimeMillis();
+        time = endTime - startTime;
         // write to file
+/*
         String ans = "result size: " + result + " time taken in millis: " + (endTime - startTime);
         try {
             String path = new File(".").getCanonicalPath();
 //            File file = new File("D://temp/queryresults.txt");
-            File file = new File("/usr/local/projects/rejuvenate/HealthKartWork/logs/queryresults.txt");
+            File file = new File("/usr/local/projects/rejuvenate/HealthKartWorkloca/logs/queryresults.txt");
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -118,6 +130,7 @@ public class SelectWHAction extends BaseAction {
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+*/
 
         return new ForwardResolution("/pages/admin/adminHome.jsp");
     }

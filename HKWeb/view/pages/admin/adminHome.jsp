@@ -30,8 +30,9 @@
                 </td>
                 <td>
                     get users emails:1 for emails 0 for entire users
-                </td> <td>
-                    <s:text name="emails" ></s:text>
+                </td>
+                <td>
+                    <s:text name="emails"></s:text>
                 </td>
 
             </tr>
@@ -42,7 +43,10 @@
             </tr>
             <tr>
                 <td>
-                        number of results  ${actionbean.result}
+                    number of results ${whAction.result}
+                </td>
+                <td>
+                    time taken ${whAction.time}
                 </td>
             </tr>
         </s:form>
@@ -50,7 +54,6 @@
         <tr>
             <td><b>Select a WH: </b></td>
             <td><s:form beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" id="selectWHForm">
-
 
 
                 <s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
