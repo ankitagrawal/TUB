@@ -68,12 +68,14 @@ public class SelectWHAction extends BaseAction {
 
 
         criteria.setProductIds(ids);
+        List<String> ems=null;
+        List<User> users=null;
         try {
-            List<String> ems = new UserSearchServiceImpl().searchUserEmails(criteria);
-            List<User> users = new UserSearchServiceImpl().searchUsers(criteria);
+            new UserSearchServiceImpl().searchUserEmails(criteria);
+//            new UserSearchServiceImpl().searchUsers(criteria);
         } catch (Exception e) {
         }
-        result = users.size();
+        result = ems.size();
         return new ForwardResolution("/pages/admin/adminHome.jsp");
     }
 
