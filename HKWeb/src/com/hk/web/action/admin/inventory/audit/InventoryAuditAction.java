@@ -84,7 +84,12 @@ public class InventoryAuditAction extends BasePaginatedAction {
       SkuItem skuItem = skuItemDao.getSkuItemByBarcode(barcode);
       Bin bin = binDao.findByBarCodeAndWarehouse(firstLocation, warehouse);
       if (skuItem != null && bin != null && skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
-        SkuItemAudit sia = new SkuItemAudit();
+        SkuItemAudit sia = getSkuItemAuditDao().getSkuItemAudit(skuItem);
+        if (sia != null) {
+          addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode</strong>"));
+          return new RedirectResolution(InventoryAuditAction.class).addParameter("firstLocation", firstLocation);
+        }
+        sia = new SkuItemAudit();
         sia.setSkuItem(skuItem);
         sia.setUser(getUserService().getLoggedInUser());
         sia.setAuditDate(new Date());
@@ -100,7 +105,7 @@ public class InventoryAuditAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Could not update location</strong>"));
           }
         } catch (Exception e) {
-          logger.error("Got an exception while saving audt records: " + e);
+          logger.error("Got an exception while saving audit records: " + e);
           addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode</strong>"));
         }
       } else if (skuItem != null && bin != null && !skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {

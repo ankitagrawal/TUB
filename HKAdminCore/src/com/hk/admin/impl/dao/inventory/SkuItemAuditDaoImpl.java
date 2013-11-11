@@ -5,6 +5,7 @@ import com.hk.admin.pact.dao.inventory.SkuItemAuditDao;
 import com.hk.domain.inventory.SkuItemAudit;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.sku.SkuItem;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.BaseDao;
 import org.hibernate.criterion.DetachedCriteria;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -64,5 +66,12 @@ public class SkuItemAuditDaoImpl extends BaseDaoImpl implements SkuItemAuditDao 
     return list(skuItemAuditCriteria, pageNo, perPage);
   }
 
-
+  @Override
+  public SkuItemAudit getSkuItemAudit(SkuItem skuItem) {
+    List<SkuItemAudit> skuItemAuditList = (List<SkuItemAudit>) findByNamedParams("from SkuItemAudit sia where sia.skuItem =  :skuItem", new String[]{"skuItem"}, new Object[]{skuItem});
+    if (skuItemAuditList != null && !skuItemAuditList.isEmpty()) {
+      return skuItemAuditList.get(0);
+    }
+    return null;
+  }
 }
