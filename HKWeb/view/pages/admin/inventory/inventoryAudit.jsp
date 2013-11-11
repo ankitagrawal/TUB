@@ -26,13 +26,13 @@
                     if (location.length > 0) {
                         //$("#finalLocation").focus();
                         //$('#finalLocation').val($("#firstLocation").val());
-                        $(".auditSave").click();
+                        //$(".auditSave").click();
                     }
                 });
 
-                $("#finalLocation").bind('input propertychange', function() {
+                /*$("#finalLocation").bind('input propertychange', function() {
                     $(".auditSave").click();
-                });
+                });*/
 
                 $("#firstLocation").click(function() {
                     $("#firstLocation").val("");
