@@ -14353,4 +14353,9 @@
             <column name="sku_item_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Rajesh Kumar" id="20131111-01">
+        <sql>
+            INSERT INTO store (id ,name ,prefix ,callback_rest_url) VALUES ('401', 'BANGALORE', 'BGL', NULL);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
