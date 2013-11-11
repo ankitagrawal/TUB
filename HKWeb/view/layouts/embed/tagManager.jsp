@@ -8,6 +8,9 @@
 <%@ page import="com.hk.domain.order.CartLineItem" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.hk.taglibs.Functions" %>
+<%@ page import="com.hk.edge.response.variant.StoreVariantBasicResponse" %>
+<%@ page import="com.hk.web.action.core.payment.PaymentSuccessAction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="searchString" value="'" />
@@ -26,8 +29,10 @@
     }
     String projectEnvTagManager = (String) ServiceLocatorFactory.getProperty(Keys.Env.projectEnv);
     CartAction cartAction = (CartAction) pageContext.getAttribute("cartAction");
+    PaymentSuccessAction paymentSuccessBean = (PaymentSuccessAction) pageContext.getAttribute("paymentSuccessBean");
     // for autocomplete
     pageContext.setAttribute("cartAction", cartAction);
+    pageContext.setAttribute("paymentSuccessBean", paymentSuccessBean);
   %>
   <script type="text/javascript">
     dataLayer = [{
@@ -39,16 +44,17 @@
       'secondaryCategory':'${fn:replace(secondaryCategory, searchString, replaceString)}',
       'tertiaryCategory':'${fn:replace(tertiaryCategory, searchString, replaceString)}',
       'brand':'${fn:replace(brand, searchString, replaceString)}',
-      'variantId':'${variantId}',
-      'productId':'${productId}',
-      'variantName':'${fn:replace(variantName, searchString, replaceString)}',
-      'oldVariantId':'${oldVariantId}',
+      <c:if test="${hk:isNotBlank(variantId)}">'variantId':'${variantId}',</c:if>
+      <c:if test="${hk:isNotBlank(productId)}">'productId':'${productId}',</c:if>
+      <c:if test="${hk:isNotBlank(variantName)}">'variantName':'${fn:replace(variantName, searchString, replaceString)}',</c:if>
+      <c:if test="${hk:isNotBlank(oldVariantId)}">'oldVariantId':'${oldVariantId}',</c:if>
       'primaryMenu':'${fn:replace(primaryMenu, searchString, replaceString)}',
       'secondaryMenu':'${fn:replace(secondaryMenu, searchString, replaceString)}',
       'tertiaryMenu':'${fn:replace(tertiaryMenu, searchString, replaceString)}',
       'navKey':'${navKey}',
       'oos' : '${oos}',
       'env' : '<%=projectEnvTagManager%>',
+      'codebase' : 'hkr',
       'signup' : '${param["signup"]}',
       'login' : '${param["login"]}',
       'errorCode' : '${errorCode}'
@@ -82,9 +88,10 @@
     if (cartAction != null) {
       List<String> productIdList = new ArrayList<String>();
       List<String> variantIdList = new ArrayList<String>();
-      for (CartLineItem cartLineItem : cartAction.getPricingDto().getProductLineItems()) {
-        productIdList.add("'"+cartLineItem.getProductVariant().getId()+"'");
-        variantIdList.add("'"+cartLineItem.getProductVariant().getProduct().getId()+"'");
+      for (CartLineItem cartLineItem : cartAction.getOrder().getExclusivelyProductCartLineItems()) {
+        StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
+        productIdList.add("'"+storeVariantBasicDetails.getStoreProductId()+"'");
+        variantIdList.add("'"+storeVariantBasicDetails.getId()+"'");
       }
       String cartProductIds = StringUtils.join(productIdList.iterator(), ",");
       String cartVariantIds = StringUtils.join(variantIdList.iterator(), ",");
@@ -94,9 +101,56 @@
       'cartTotal' : '${cartAction.pricingDto.grandTotalPayable}',
       'cartItemCount' : '${cartAction.itemsInCart}',
       'cartShippingTotal' : '${cartAction.pricingDto.shippingTotal}',
-      'cartProductIds' : [<%=cartProductIds%>],
-      'cartVariantIds' : [<%=cartVariantIds%>],
+      'productId' : [<%=cartProductIds%>],
+      'variantId' : [<%=cartVariantIds%>],
       'cartDiscountTotal' : '${cartAction.pricingDto.totalDiscount}'
+    });
+  </script>
+  <%
+    }
+    if (paymentSuccessBean != null) {
+  %>
+  <script type="text/javascript">
+    dataLayer.push({
+      'transactionId' : '${paymentSuccessBean.payment.gatewayOrderId}',
+      'transactionAffiliation' : 'HealthKart.com',
+      'transactionTotal' : ${hk:decimal2(paymentSuccessBean.pricingDto.grandTotal)},
+      'transactionTax' : 0,
+      'transactionShipping' : ${hk:decimal2(paymentSuccessBean.pricingDto.shippingSubTotal - paymentSuccessBean.pricingDto.shippingDiscount)},
+      'transactionCity' : '${hk:convertToLettersNumbersUnderscore(paymentSuccessBean.pricingDto.city)}',
+      'transactionState' : '${hk:convertToLettersNumbersUnderscore(paymentSuccessBean.pricingDto.state)}',
+      'transactionCountry' : 'India',
+      'transactionProducts' : [
+            <c:forEach items="${paymentSuccessBean.pricingDto.aggregateProductLineItems}" var="productLineItem" varStatus="idx">
+            <%
+            CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
+            StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
+            %>
+            {
+              'sku' : '<%=storeVariantBasicDetails.getId()%>',
+              'name' : '<%=storeVariantBasicDetails.getName().replaceAll("'", "\\'").replaceAll("[ ]+", " ").trim()%>',
+              'category' : '<%=storeVariantBasicDetails.getNavKey()%>',
+              'price' : ${hk:decimal2(productLineItem.hkPrice)},
+              'quantity' : ${productLineItem.qty}
+            }
+            <c:if test="${idx.last eq false}">,</c:if>
+            </c:forEach>
+            <c:if test="${paymentSuccessBean.pricingDto.codSubTotal > 0}">
+            , {
+              'sku' : 'COD',
+              'name' : 'COD',
+              'category' : '',
+              'price' : ${paymentSuccessBean.pricingDto.codSubTotal - paymentSuccessBean.pricingDto.codDiscount},
+              'quantity' : 1
+            }
+            </c:if>
+          ],
+      'firstPurchaseDate' : '${paymentSuccessBean.purchaseDate}',
+      'couponCode' : '${paymentSuccessBean.couponCode}',
+      'couponAmount' : '<%=Math.round(paymentSuccessBean.getCouponAmount())%>',
+      'transactionDate' : '${paymentSuccessBean.purchaseDate}',
+      'transactionMode' : '${paymentSuccessBean.paymentMode.name}',
+      'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>'
     });
   </script>
   <%

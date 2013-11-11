@@ -18,6 +18,7 @@ public class TagConstants {
     public static final String LOGIN = "login";
     public static final String COMBO = "combo";
     public static final String REVIEW = "review";
+    public static final String PAYMENT_SUCCESS = "paymentSuccess";
   }
 
   public static class TagVars {
