@@ -1,0 +1,114 @@
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
+<%@ page import="com.akube.framework.util.FormatUtils"%>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ include file="/includes/_taglibInclude.jsp"%>
+<s:useActionBean beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction" event="searchSO" var="shippingOrderUtil" />
+<s:layout-render name="/layouts/defaultAdmin.jsp">
+	<s:layout-component name="htmlHead">
+		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+	</s:layout-component>
+	<s:layout-component name="content">
+		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp" />
+		
+		
+		<strong>Flow Test Orders</strong>
+
+		<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction">
+			<table border="1">
+				
+				<tr>
+					<td>SO Gateway IDs :<br /> <span style="font-size: .9em;">(comma separated values)</span>
+					</td>
+					<td><s:textarea name="gatewayOrderIds" rows="5" cols="30" style="height:50px;" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center" style="text-align: center;"><strong>OR</strong></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label>Start Date : </label>
+					<s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+							name="startDate" /> <label>End Date : </label>
+					<s:text class="date_input endDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+							name="endDate" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center" style="text-align: center;"><s:submit name="searchSO" value="Search SO" /></td>
+				</tr>
+			</table>
+			
+			
+			
+			</s:form>
+			
+			<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction" autocomplete="off">
+    			<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${soUtil}"/>
+    			<s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${soUtil}"/>
+			<div>
+			<c:if test="${fn:length(soUtil.shippingOrders)>0 }">
+			<table border="1">
+			<tr>
+				<th>S.No.</th>
+				<th>SO Id</th>
+				<th>Base Order Id</th>
+				<th>SO Status</th>
+				<th></th>
+			</tr>
+			<c:forEach items="${soUtil.shippingOrders}" var="so"
+                   varStatus="item">
+			<tr>
+			
+				<td>${item.count}.</td>
+				<td>(<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
+             	target="_blank">
+       	 		<s:param name="shippingOrderGatewayId" value="${so.gatewayOrderId}"/>${so.id}
+    				</s:link>)</td>
+				<td><s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+                                            target="_blank">
+                            <s:param name="orderId" value="${so.baseOrder}"/>${so.baseOrder.id}
+                        </s:link></td>
+				<td>${so.orderStatus.name}</td>
+				<td><input type="checkbox" dataId="${so.id}" class="shippingOrderDetailCheckbox"/></td>
+				<s:hidden name="shippingOrderMarked[${item.count-1}]" value="${so.id}"/>
+			</tr>
+			</c:forEach>
+			</table>
+			<div id="hiddenShippingIds"></div>
+			<div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
+			<div class="buttons" style="margin-left: 80%;"><s:submit name="validate" id="validateButton" class="soAction"
+                                                             value="Validate Shipping Order(s)"/></div>
+			</c:if>
+			
+			</div>
+			
+		</s:form>
+		<script type="text/javascript">
+    	$('.soAction').click(function() {
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            if (isChecked) {
+                $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
+            }
+        });
+        return true;
+    	});
+
+    	$('#markAll').click(function() {
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            shippingOrderDetailCheckbox.attr("checked", true);
+        });
+        return false;
+    	});
+
+		</script>
+
+	</s:layout-component>
+
+</s:layout-render>
