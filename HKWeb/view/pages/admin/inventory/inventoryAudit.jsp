@@ -26,7 +26,7 @@
                     if (location.length > 0) {
                         //$("#finalLocation").focus();
                         //$('#finalLocation').val($("#firstLocation").val());
-                        $(".auditSave").click();
+                        //$(".auditSave").click();
                     }
                 });
 
