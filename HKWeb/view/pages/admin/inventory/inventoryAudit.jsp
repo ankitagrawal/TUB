@@ -30,9 +30,9 @@
                     }
                 });
 
-                $("#finalLocation").bind('input propertychange', function() {
+                /*$("#finalLocation").bind('input propertychange', function() {
                     $(".auditSave").click();
-                });
+                });*/
 
                 $("#firstLocation").click(function() {
                     $("#firstLocation").val("");
