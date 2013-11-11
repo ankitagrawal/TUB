@@ -4,6 +4,7 @@ import com.hk.domain.user.User;
 import com.hk.util.HKCollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,7 +122,8 @@ public class UsersSearchCriteria {
             }
             userCriteria.add(Restrictions.in("zone.id", zones));
         }
-        userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//        userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        userCriteria.setProjection(Projections.distinct(Projections.property("user.login")));
         return userCriteria;
     }
 

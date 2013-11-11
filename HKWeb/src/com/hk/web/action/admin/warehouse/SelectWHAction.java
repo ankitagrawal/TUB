@@ -33,12 +33,20 @@ public class SelectWHAction extends BaseAction {
 
   @DefaultHandler
   public Resolution pre() {
-    //TODO #introducing gc as a hit n try solution for server performance
+      //TODO #introducing gc as a hit n try solution for server performance
 //    System.gc();
-    return new ForwardResolution("/pages/admin/selectWH.jsp");
+      return new ForwardResolution("/pages/admin/selectWH.jsp");
   }
 
-  @Secure(hasAnyRoles = {RoleConstants.WH_MANAGER_L1, RoleConstants.CATEGORY_MANAGER, RoleConstants.ADMIN}, authActionBean = AdminPermissionAction.class)
+
+    public Resolution testSQL() {
+        //TODO #introducing gc as a hit n try solution for server performance
+//    System.gc();
+        return new ForwardResolution("/pages/admin/selectWH.jsp");
+    }
+
+
+    @Secure(hasAnyRoles = {RoleConstants.WH_MANAGER_L1, RoleConstants.CATEGORY_MANAGER, RoleConstants.ADMIN}, authActionBean = AdminPermissionAction.class)
   public Resolution bindUserWithWarehouse() {
     User loggedOnUser = getPrincipalUser();
     Set<Warehouse> warehouses = new HashSet<Warehouse>();
