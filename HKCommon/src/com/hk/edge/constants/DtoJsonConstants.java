@@ -25,6 +25,7 @@ public class DtoJsonConstants {
     public static final String INTERNAL_NAME = "i_nm";
     public static final String DISPLAY_ORDER = "do";
     public static final String CAT_PREFIX = "catPre";
+    public static final String STORE_PRODUCT_ID = "sp_id";
     public static final String CAT_PREFIXES = "categories";
     public static final String BRAND_NAME = "brName";
     public static final String BRAND_INT_NAME = "brIntName";

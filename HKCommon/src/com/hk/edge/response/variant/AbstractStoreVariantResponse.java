@@ -10,6 +10,7 @@ public abstract class AbstractStoreVariantResponse extends AbstractBaseResponseF
 
     // basic
     private Long           id;
+    @JsonProperty(DtoJsonConstants.STORE_PRODUCT_ID)
     protected Long         storeProductId;
     @JsonProperty(DtoJsonConstants.CAT_PREFIX)
     protected String       catPrefix;
