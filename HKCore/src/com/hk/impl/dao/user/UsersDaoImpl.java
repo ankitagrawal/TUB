@@ -22,6 +22,7 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 @Repository
 public class UsersDaoImpl extends BaseDaoImpl implements UsersDao {
+
     @Override
     public List<User> findBySearchCriteria(UsersSearchCriteria criteria) {
         DetachedCriteria dc = criteria.getSearchCriteria(false);

@@ -26,7 +26,12 @@
                     get users from product Ids
                 </td>
                 <td>
-                    <s:text name="params"></s:text>
+                    <s:textarea name="params"></s:textarea>
+                </td>
+                <td>
+                    get users emails:1 for emails 0 for entire users
+                </td> <td>
+                    <s:text name="emails" ></s:text>
                 </td>
 
             </tr>
@@ -37,7 +42,7 @@
             </tr>
             <tr>
                 <td>
-                        number of results = ${actionbean.result}
+                        number of results  ${actionbean.result}
                 </td>
             </tr>
         </s:form>
