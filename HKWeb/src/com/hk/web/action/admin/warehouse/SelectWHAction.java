@@ -38,6 +38,7 @@ public class SelectWHAction extends BaseAction {
     private String cities;
     private String states;
     private String categories;
+    private String verified;
 
     public String getPvs() {
         return pvs;
@@ -49,6 +50,14 @@ public class SelectWHAction extends BaseAction {
 
     public String getZones() {
         return zones;
+    }
+
+    public String getVerified() {
+        return verified;
+    }
+
+    public void setVerified(String verified) {
+        this.verified = verified;
     }
 
     public void setZones(String zones) {
@@ -130,6 +139,9 @@ public class SelectWHAction extends BaseAction {
         if (prodnames != null) {
             List<String> ids = Arrays.asList(prodnames.split(","));
             criteria.setProductIds(ids);
+        }
+        if (verified != null) {
+            criteria.setVerified(verified);
         }
         if (pvs != null) {
             List<String> pvids = Arrays.asList(pvs.split(","));

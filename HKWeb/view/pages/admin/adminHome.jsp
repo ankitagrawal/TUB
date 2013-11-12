@@ -29,12 +29,25 @@
                     <s:textarea name="params"></s:textarea>
                 </td>
                 <td>
-                    get projected info: 1 for projected info 0 for entire users
-                </td>
-                <td>
-                    <s:text name="minimum"></s:text>
-                </td>
-
+            </tr>
+            <td>
+                <tr>
+                    <td>
+                        get projected info: 1 for projected info 0 for entire users
+                    </td>
+                    <td>
+                        <s:text name="minimum"></s:text>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        get verified: true, false or leave blank
+                    </td>
+                    <td>
+                        <s:text name="verified"></s:text>
+                    </td>
+                </tr>
+            </td>
             </tr>
             <tr>
                 <td>
