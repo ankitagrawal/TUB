@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
@@ -46,6 +44,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	private List<ShippingOrder> shippingOrderMarked;
 	private Integer defaultPerPage = 20;
 	private Page shippingOrderPage;
+	private ShippingOrderStatus   shippingOrderStatus;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -54,28 +53,32 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 
 	public Resolution searchSO() {
 		shippingOrders = new ArrayList<ShippingOrder>();
-		List<ShippingOrderStatus> shippingOrderStatus = new ArrayList<ShippingOrderStatus>();
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+		List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
+		if(shippingOrderStatus!=null){
+			shippingOrderStatusList.add(shippingOrderStatus);
+		}
+		if (startDate != null && endDate != null){
+			shippingOrderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
+		}
 		if (StringUtils.isNotBlank(gatewayOrderIds)) {
 			String[] orderArray = gatewayOrderIds.split(",");
 			for (String gatewayOrderId : orderArray) {
 				ShippingOrder shippingOrder = ShippingOrderService.findByGatewayOrderId(StringUtils.deleteWhitespace(gatewayOrderId));
+				if(shippingOrder!=null){
 				shippingOrders.add(shippingOrder);
+				}
 			}
-		} else if (startDate != null && endDate != null) {
-			ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-			shippingOrderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
+		} else {
 			shippingOrderSearchCriteria.setSortByDispatchDate(false);
-			shippingOrderStatus.add(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
-			shippingOrderStatus.add(EnumShippingOrderStatus.SO_Ready_For_Validation.asShippingOrderStatus());
-			shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatus);
-
-			shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 1000);
+			shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList );
+			shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 			List<ShippingOrder> shippingOrdersList = shippingOrderPage.getList();
 			for (ShippingOrder shippingOrder : shippingOrdersList) {
 				shippingOrders.add(shippingOrder);
 			}
 		}
-		return new RedirectResolution(ShippingOrderUtilityAction.class).addParameter("shippingOrders", shippingOrders);
+		return new ForwardResolution("/pages/admin/shippingOrder/soValidationAndOtherUtility.jsp");
 	}
 
 	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_ACTION_QUEUE }, authActionBean = AdminPermissionAction.class)
@@ -153,7 +156,17 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 
 	public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
-		// params.add("SkuItemStatus");
+		params.add("shippingOrderStatus");
+		params.add("startDate");
+		params.add("endDate");
 		return params;
+	}
+
+	public ShippingOrderStatus getShippingOrderStatus() {
+		return shippingOrderStatus;
+	}
+
+	public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
+		this.shippingOrderStatus = shippingOrderStatus;
 	}
 }

@@ -46,6 +46,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserAccountInfo;
 import com.hk.domain.warehouse.Warehouse;
@@ -890,6 +891,25 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return  toBeProcessedAmount;
     }
+    
+    public boolean bookedOnBright(ShippingOrder shippingOrder) {
+  		Set<LineItem> lineItems = shippingOrder.getLineItems();
+  		if (lineItems.size() > 0) {
+  			for (LineItem lineItem : lineItems) {
+  				List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
+  				if (skuItemLineItems.size() > 0) {
+  					for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+  						if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())) {
+  							return true;
+  						}
+  					}
+  				} else {
+  					return false;
+  				}
+  			}
+  		}
+  		return false;
+  	}
 
 
     public ShippingOrderService getShippingOrderService() {

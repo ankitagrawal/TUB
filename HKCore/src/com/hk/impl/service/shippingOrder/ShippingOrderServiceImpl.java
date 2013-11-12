@@ -456,6 +456,7 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
 
     }
   }
+  
 
   public UserService getUserService() {
     return userService;

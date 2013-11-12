@@ -64,5 +64,7 @@ public interface AdminShippingOrderService {
   public Boolean updateSOForB2BOrders(ShippingOrder shippingOrder);
 
   public Object getActionProcessingElement(ShippingOrder localShippingOrder,Set<LineItem> toBeProcessedItems, Integer actionTypeConstant);
+  
+  public boolean bookedOnBright(ShippingOrder shippingOrder);
 
 }

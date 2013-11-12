@@ -1,7 +1,9 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
+<%@ taglib prefix="hk" uri="http://healthkart.com/taglibs/hkTagLib" %>
 <%@ page import="com.akube.framework.util.FormatUtils"%>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ include file="/includes/_taglibInclude.jsp"%>
@@ -19,10 +21,10 @@
 		<strong>Flow Test Orders</strong>
 
 		<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction">
+		<div align = "center">
 			<table border="1">
-				
 				<tr>
-					<td>SO Gateway IDs :<br /> <span style="font-size: .9em;">(comma separated values)</span>
+					<td><strong>SO Gateway IDs :</strong><br /> <span style="font-size: .9em;">(comma separated values)</span>
 					</td>
 					<td><s:textarea name="gatewayOrderIds" rows="5" cols="30" style="height:50px;" /></td>
 				</tr>
@@ -30,35 +32,44 @@
 					<td colspan="2" align="center" style="text-align: center;"><strong>OR</strong></td>
 				</tr>
 				<tr>
-					<td colspan="2"><label>Start Date : </label>
+					<td colspan="2"><label><strong>Start Date :</strong> </label>
 					<s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-							name="startDate" /> <label>End Date : </label>
+							name="startDate" /> <label><strong>End Date :</strong></label>
 					<s:text class="date_input endDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
 							name="endDate" /></td>
 				</tr>
 				<tr>
+				<td>
+				<label><strong>SO Status: </strong></label><s:select name="shippingOrderStatus">
+          		<option value="">Any status</option>
+          		<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="shippingOrderStatusList" value="id"
+                                     label="name"/>
+        		</s:select>
+				</td>
+				<td></td>
+				</tr>
+				<tr>
 					<td colspan="2" align="center" style="text-align: center;"><s:submit name="searchSO" value="Search SO" /></td>
 				</tr>
-			</table>
-			
-			
-			
+			</table></div>
 			</s:form>
 			
+			<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shippingOrderUtil}"/>
+    			<s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shippingOrderUtil}"/>
 			<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction" autocomplete="off">
-    			<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${soUtil}"/>
-    			<s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${soUtil}"/>
-			<div>
-			<c:if test="${fn:length(soUtil.shippingOrders)>0 }">
-			<table border="1">
+			<div >
+			<c:if test="${fn:length(shippingOrderUtil.shippingOrders)>0 }">
+			<table border="1" style="width: 100%; float: left;">
 			<tr>
 				<th>S.No.</th>
 				<th>SO Id</th>
 				<th>Base Order Id</th>
 				<th>SO Status</th>
+				<th>Dispatch Date</th>
+				<th>Booked On Bright</th>
 				<th></th>
 			</tr>
-			<c:forEach items="${soUtil.shippingOrders}" var="so"
+			<c:forEach items="${shippingOrderUtil.shippingOrders}" var="so"
                    varStatus="item">
 			<tr>
 			
@@ -72,6 +83,15 @@
                             <s:param name="orderId" value="${so.baseOrder}"/>${so.baseOrder.id}
                         </s:link></td>
 				<td>${so.orderStatus.name}</td>
+				<td>${so.targetDispatchDate }</td>
+				<c:choose>
+				<c:when test="${hk:bookedOnBright(so)}">
+				<td>Yes</td>
+				</c:when>
+				<c:otherwise>
+				<td>No</td>
+				</c:otherwise>
+				</c:choose>
 				<td><input type="checkbox" dataId="${so.id}" class="shippingOrderDetailCheckbox"/></td>
 				<s:hidden name="shippingOrderMarked[${item.count-1}]" value="${so.id}"/>
 			</tr>

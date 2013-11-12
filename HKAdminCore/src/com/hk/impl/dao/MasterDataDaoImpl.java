@@ -586,4 +586,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
 				}
 				return posCategoryList;
 		}
+    
+    public List<ShippingOrderStatus> getShippingOrderStatusList(){
+    	return getBaseDao().getAll(ShippingOrderStatus.class);
+    }
 }
