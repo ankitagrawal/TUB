@@ -38,6 +38,14 @@
             </tr>
             <tr>
                 <td>
+                    get users from product variant Ids
+                </td>
+                <td>
+                    <s:textarea name="pvs"></s:textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     cities
                 </td>
                 <td>

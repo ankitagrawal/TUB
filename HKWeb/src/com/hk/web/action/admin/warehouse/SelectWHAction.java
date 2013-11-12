@@ -30,6 +30,7 @@ public class SelectWHAction extends BaseAction {
     private UserService userService;
     private Warehouse setWarehouse;
 
+    private String pvs;
     private String params;
     private int result;
     private Long time;
@@ -38,6 +39,13 @@ public class SelectWHAction extends BaseAction {
     private String states;
     private String categories;
 
+    public String getPvs() {
+        return pvs;
+    }
+
+    public void setPvs(String pvs) {
+        this.pvs = pvs;
+    }
 
     public String getZones() {
         return zones;
@@ -122,6 +130,10 @@ public class SelectWHAction extends BaseAction {
         if (prodnames != null) {
             List<String> ids = Arrays.asList(prodnames.split(","));
             criteria.setProductIds(ids);
+        }
+        if (pvs != null) {
+            List<String> pvids = Arrays.asList(pvs.split(","));
+            criteria.setProductVariantIds(pvids);
         }
         if (categories != null) {
             List<String> category = Arrays.asList(categories.split(","));
