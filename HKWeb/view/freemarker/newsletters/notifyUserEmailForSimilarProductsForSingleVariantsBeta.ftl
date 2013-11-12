@@ -11,12 +11,12 @@ Talking 'bout the one that got away!
     <tbody style="font-size:13px; line-height:1.75em;">
 
     <tr>
-        <td align="left" valign="top"><img
+        <td colspan="2" style="margin-top: 10px" align="left" valign="top"><img
                 src="http://img.healthkart.com/email/notify_user_emailer_new/images/one-that-got-away.png"
                 border="0" alt="HealthKart"/></td>
     </tr>
     <tr>
-        <td align="left" valign="top"
+        <td colspan="2" align="left" valign="top"
             style="font-family:Verdana, Geneva, sans-serif; font-size:21px; line-height:25px; color:#646464;">
             Talking 'bout
             the one<br/>
@@ -24,12 +24,12 @@ Talking 'bout the one that got away!
         </td>
     </tr>
     <tr>
-        <td valign="top"
+        <td colspan="2" valign="top"
             style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; padding:10px 0px 10px 0px;">
             <em>Waits</em></td>
     </tr>
     <tr>
-        <td align="left" valign="top"
+        <td colspan="2" style="margin-top: 10px" align="left" valign="top"
             style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
             <p>We ran out
                 of <strong> ${product.name}.</strong> Terrible, we know!<br/>
@@ -44,14 +44,14 @@ Talking 'bout the one that got away!
     </tr>
 
     <tr>
-        <td height="25"
+        <td colspan="2" height="25"
             style="border-top:0px; font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
             <p>For Product <strong>${product.name}</strong> , may we suggest</p></td>
     </tr>
 
 
     <tr>
-        <td valign="top">
+        <td colspan="2" valign="top">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <#list  similarProductList as  similarProduct>
                 <tr>

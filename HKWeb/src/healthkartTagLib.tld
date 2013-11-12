@@ -1063,6 +1063,18 @@
 
     <function>
         <description>
+            When the status is On Hold By Customer it displays the remarks in user friendly way
+        </description>
+        <name>getDisplayNameForHkdeliveryTrackingRemarks</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getDisplayNameForHkdeliveryTrackingRemarks(java.lang.String)</function-signature>
+        <example>
+            ${hk:getDisplayNameForHkdeliveryTrackingRemarks(${remarks})}
+        </example>
+    </function>
+
+    <function>
+        <description>
             Returns PO Line Item qty corresponding to the grn Line Item Qty
         </description>
         <name>getPoLineItemQty</name>
@@ -1375,6 +1387,18 @@
         </function-signature>
         <example>
             ${hk:getStoreVariantBasicDetails(${productVariantId})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns store variant basic details on basis of product variant id, if hybrid release is true
+        </description>
+        <name>getStoreVariantBasicDetailsCached</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.edge.response.variant.StoreVariantBasicResponse getStoreVariantBasicDetails(java.lang.String,javax.servlet.jsp.PageContext)
+        </function-signature>
+        <example>
+            ${hk:getStoreVariantBasicDetailsCached(${productVariantId}, pageContext)}
         </example>
     </function>
 </taglib>

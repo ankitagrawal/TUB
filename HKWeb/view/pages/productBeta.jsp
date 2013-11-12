@@ -40,7 +40,18 @@
  <c:set var="product" value="${pa.product}"/>
  <c:set var="seoData" value="${pa.seoData}"/>
  <c:set var="subscriptionProduct" value="${pa.subscriptionProduct}"/>
- <s:layout-render name="/layouts/productLayoutBeta.jsp" pageTitle="${seoData.title}" isOutOfStockPage="${pa.outOfStockPage}">
+ <s:layout-render name="/layouts/productLayoutBeta.jsp" pageTitle="${seoData.title}" isOutOfStockPage="${pa.outOfStockPage}"
+                  primaryCategory="${product.primaryCategory.name}"
+                  secondaryCategory="${product.secondaryCategory.name}"
+                  brand="${product.brand}"
+                  productId="${product.id}"
+                  variantOfferPrice="${product.minimumHKPriceProductVariant.hkPrice}"
+                  variantMrp="${product.minimumHKPriceProductVariant.markedPrice}"
+                  variantDiscount="${product.minimumHKPriceProductVariant.discountPercent}"
+                  variantName="${product.name}"
+                  oldVariantId="${product.minimumHKPriceProductVariant.id}"
+                  oos="${pa.outOfStockPage}"
+     >
 <%--<s:layout-render name="/layouts/default.jsp" pageTitle="${seoData.title}">--%>
 
 

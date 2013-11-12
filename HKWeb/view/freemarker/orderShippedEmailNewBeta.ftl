@@ -44,8 +44,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                 <tr>
 
                     <td>
-                        <#if lineItem.sku.productVariant.variantName??>
-                        ${lineItem.sku.productVariant.variantName}
+                        <#if lineItem.sku.productVariant.variantNameFromHKEdge??>
+                        ${lineItem.sku.productVariant.variantNameFromHKEdge}
                         <#else>
                         ${lineItem.sku.productVariant.product.name}
                         </#if>
@@ -104,8 +104,8 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
                     <#list shippingOrder.lineItems as lineItem>
                         <tr>
-                            <td><#if lineItem.sku.productVariant.variantName??>
-                            ${lineItem.sku.productVariant.variantName}
+                            <td><#if lineItem.sku.productVariant.variantNameFromHKEdge??>
+                            ${lineItem.sku.productVariant.variantNameFromHKEdge}
                             <#else>
                             ${lineItem.sku.productVariant.product.name}
                             </#if>

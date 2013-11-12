@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -26,6 +27,10 @@
     <s:layout-component name="htmlHead"/>
   </head>
   <body id="${bodyId}">
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="<%=TagConstants.PageType.CART%>"
+                   cartAction="${cartAction}"
+      />
   <div id="container">
     <s:layout-component name="modal"/>
     <s:layout-component name="header">

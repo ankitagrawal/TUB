@@ -2,12 +2,13 @@
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" var="pa" event="pre"/>
 <c:set var="product" value="${pa.product}"/>
-<s:layout-render name="/layouts/genericG.jsp" pageTitle="Write a Review for ${pa.product.name}">
+<s:layout-render name="/layouts/genericG.jsp" pageTitle="Write a Review for ${pa.product.name}" pageType="<%=TagConstants.PageType.REVIEW%>">
 
 	<s:layout-component name="htmlHead">
 		<link href="<hk:vhostCss/>/css/new.css?v=1.1" rel="stylesheet" type="text/css"/>

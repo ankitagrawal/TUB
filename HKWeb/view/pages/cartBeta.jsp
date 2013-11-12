@@ -17,7 +17,7 @@
     boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 %>
-<s:layout-render name="/layouts/cartLayoutBeta.jsp" pageTitle="Shopping Cart">
+<s:layout-render name="/layouts/cartLayoutBeta.jsp" pageTitle="Shopping Cart" cartAction="${cartAction}">
 
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
 
@@ -376,7 +376,7 @@ function _updateTotals(responseData) {
     <div class='floatfix'></div>
 </div>
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
-    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
+    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetailsCached(cartLineItem.productVariant.id, pageContext)}"/>
 
     <div class="lineItemRow product" style="border: 1px solid #ddd;border-width: 0px 0px 1px 0px;">
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
@@ -985,7 +985,7 @@ function _updateTotals(responseData) {
                                     </c:if>
                                 </c:when>
                                 <c:otherwise>
-                                  <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
+                                  <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetailsCached(cartLineItem.productVariant.id, pageContext)}"/>
                                   <c:choose>
                                     <c:when test="${storeVariantBasic.primaryImage.mlink!=null}">
                                       <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"

@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -36,6 +37,9 @@
     </style>
   </head>
   <body id="${bodyId}">
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="<%=TagConstants.PageType.OTHER%>"
+      />
   <s:layout-component name="modal"/>
 
   <div id="container">
