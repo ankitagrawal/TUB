@@ -18,7 +18,7 @@
 		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp" />
 		
 		
-		<strong>Flow Test Orders</strong>
+		<div align="center"><label><font size="6px">Validate Shipping Orders</font></label></div><br><br><br>
 
 		<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction">
 		<div align = "center">
