@@ -23,12 +23,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 
     @Override
     public List<User> searchUsers(UsersSearchCriteria criteria) {
-        return usersDao.findBySearchCriteria(criteria);
+        return usersDao.findUserBySearchCriteria(criteria);
     }
 
     @Override
-    public List<String> searchUserEmails(UsersSearchCriteria criteria) {
-        return usersDao.findEmailsBySearchCriteria(criteria);
+    public List<Object[]> searchUserInfo(UsersSearchCriteria criteria) {
+        return usersDao.findUserInfoBySearchCriteria(criteria);
     }
 
 

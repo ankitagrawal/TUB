@@ -5,7 +5,6 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.service.core.UserSearchServiceImpl;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserSearchService;
 import com.hk.pact.service.UserService;
@@ -17,13 +16,8 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 @Component
@@ -39,7 +33,7 @@ public class SelectWHAction extends BaseAction {
     private String params;
     private int result;
     private Long time;
-    private String emails;
+    private String minimum;
     private String cities;
     private String states;
 
@@ -69,12 +63,12 @@ public class SelectWHAction extends BaseAction {
 
     private String zones;
 
-    public String getEmails() {
-        return emails;
+    public String getMinimum() {
+        return minimum;
     }
 
-    public void setEmails(String emails) {
-        this.emails = emails;
+    public void setMinimum(String minimum) {
+        this.minimum = minimum;
     }
 
     @Autowired
@@ -141,18 +135,18 @@ public class SelectWHAction extends BaseAction {
         }
 
 
-        List<String> ems = null;
+        List<Object[]> ems = null;
         List<User> users = null;
         try {
-            if ("1".equals(emails)) {
-                ems = userSearchService.searchUserEmails(criteria);
+            if ("1".equals(minimum)) {
+                ems = userSearchService.searchUserInfo(criteria);
             } else {
                 users = userSearchService.searchUsers(criteria);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if ("1".equals(emails)) {
+        if ("1".equals(minimum)) {
             result = ems.size();
         } else {
 
@@ -160,27 +154,9 @@ public class SelectWHAction extends BaseAction {
         }
         Long endTime = System.currentTimeMillis();
         time = endTime - startTime;
-        // write to file
-/*
-        String ans = "result size: " + result + " time taken in millis: " + (endTime - startTime);
-        try {
-            String path = new File(".").getCanonicalPath();
-//            File file = new File("D://temp/queryresults.txt");
-            File file = new File("/usr/local/projects/rejuvenate/HealthKartWorkloca/logs/queryresults.txt");
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            BufferedWriter br = new BufferedWriter(new FileWriter(file));
-            br.write(ans);
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-*/
-
         return new ForwardResolution("/pages/admin/adminHome.jsp");
     }
+
 
 
     @Secure(hasAnyRoles = {RoleConstants.WH_MANAGER_L1, RoleConstants.CATEGORY_MANAGER, RoleConstants.ADMIN}, authActionBean = AdminPermissionAction.class)

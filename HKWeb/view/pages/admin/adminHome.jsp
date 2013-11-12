@@ -29,10 +29,10 @@
                     <s:textarea name="params"></s:textarea>
                 </td>
                 <td>
-                    get users emails:1 for emails 0 for entire users
+                    get projected info: 1 for projected info 0 for entire users
                 </td>
                 <td>
-                    <s:text name="emails"></s:text>
+                    <s:text name="minimum"></s:text>
                 </td>
 
             </tr>
@@ -70,7 +70,7 @@
                     number of results ${whAction.result}
                 </td>
                 <td>
-                    time taken ${whAction.time}
+                    time taken (ms) ${whAction.time}
                 </td>
             </tr>
         </s:form>

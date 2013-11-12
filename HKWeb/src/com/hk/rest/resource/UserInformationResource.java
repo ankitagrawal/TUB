@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ public class UserInformationResource {
     private List<String> productIds;
     private List<String> productVariantIds;
     private String verified;
+    private int minimum = 0;
 
     @Autowired
     UserSearchService userSearchService;
@@ -52,7 +56,8 @@ public class UserInformationResource {
                                       @FormParam("cities") String cities,
                                       @FormParam("zones") String zones,
                                       @FormParam("states") String states,
-                                      @FormParam("verified") String verified) {
+                                      @FormParam("verified") String verified,
+                                      @FormParam("minimum") String minimum) {
         List<String> prodIds = getListFromString(productIds, ",");
         List<String> prodVarIds = getListFromString(productVariantIds, ",");
         List<String> allcities = getListFromString(cities, ",");
@@ -72,73 +77,19 @@ public class UserInformationResource {
                 this.zones.add(l);
             }
         } catch (Exception ignore) {
+            System.currentTimeMillis();
         }
+        try {
+            this.minimum = Integer.parseInt(minimum);
+        } catch (Exception ignore) {
+            System.currentTimeMillis();
+        }
+
         return getUsers();
     }
 
-    /* @POST
-     @Path("/product")
-     @Produces("application/json")
-     public Response getUsersByProduct(@FormParam("productId") String productId) {
-         List<String> prodIds = getListFromString(productId, ",");
-         this.productIds = prodIds;
-         return getUsers();
-     }
-
-     @POST
-     @Path("/productVariant")
-     @Produces("application/json")
-     public Response getUsersByProductVariants(@FormParam("productVariantId") String productVariantId) {
-         List<String> prodVarIds = getListFromString(productVariantId, ",");
-         this.productVariantIds = prodVarIds;
-         return getUsers();
-     }
-
-     @POST
-     @Path("/city")
-     @Produces("application/json")
-     public Response getUsersByCity(@FormParam("city") String city) {
-         List<String> allcities = getListFromString(city, ",");
-         this.cities = allcities;
-         return getUsers();
-     }
-
-     @POST
-     @Path("/zone")
-     @Produces("application/json")
-     public Response getUsersByZone(@FormParam("zone") String zone) {
-         try {
-             zones = new ArrayList<Long>();
-             List<String> allZones = getListFromString(zone, ",");
-             for (String z : allZones) {
-                 Long l = Long.parseLong(z);
-                 zones.add(l);
-             }
-         } catch (Exception ignore) {
-         }
-         return getUsers();
-     }
-
-     @POST
-     @Path("/state")
-     @Produces("application/json")
-     public Response getUsersByState(@FormParam("state") String state) {
-         List<String> allStates = getListFromString(state, ",");
-         this.states = allStates;
-         return getUsers();
-     }
-
-     @GET
-     @Path("/verified")
-     @Produces("application/json")
-     public Response getUsersByVerified() {
-         this.verified = "true";
-         return getUsers();
-     }
- */
     private Response getUsers() {
         Response response = null;
-        List<User> users = null;
         criteria = new UsersSearchCriteria();
         try {
             if (StringUtils.isNotBlank(verified)) {
@@ -160,26 +111,41 @@ public class UserInformationResource {
                 criteria.setStates(states);
             }
 
-//            users = userSearchService.searchUsers(criteria);
-            List<String> ems = userSearchService.searchUserEmails(criteria);
-            List<UserDto> userDtos = new LinkedList<UserDto>();
-            for (String s : ems) {
-                UserDto udto = new UserDto();
-                udto.name = "";
-                udto.email = "";
-                udto.login = s;
-                udto.subscribedMask = 0;
-                userDtos.add(udto);
+            List<User> users = null;
+            List<Object[]> userInfo = null;
+
+            if (minimum == 1) {
+                userInfo = userSearchService.searchUserInfo(criteria);
+            } else {
+                users = userSearchService.searchUsers(criteria);
             }
-//            for (User u : users) {
-//                UserDto udto = new UserDto();
-//                udto.name = u.getName();
-//                udto.email = u.getEmail();
-//                udto.login = u.getLogin();
-//                udto.subscribedMask = u.getSubscribedMask();
-//
-//                userDtos.add(udto);
-//            }
+
+            List<UserDto> userDtos = new ArrayList<UserDto>();
+            if (userInfo != null) {
+                for (int i = 0; i < userInfo.size(); i++) {
+                    Object[] user = (Object[]) userInfo.get(i);
+                    UserDto udto = new UserDto();
+                    udto.login = (String) user[0];
+                    udto.email = (String) user[1];
+                    udto.name = (String) user[2];
+                    udto.subscribedMask = (Integer) user[3];
+                    udto.unsubscribeToken = (String) user[4];
+                    userDtos.add(udto);
+                }
+            } else if (users != null) {
+                for (int i = 0; i < users.size(); i++) {
+                    User user = (User) users.get(i);
+                    UserDto udto = new UserDto();
+                    udto.name = user.getName();
+                    udto.email = user.getEmail();
+                    udto.login = user.getLogin();
+                    udto.subscribedMask = user.getSubscribedMask();
+                    udto.unsubscribeToken = user.getUnsubscribeToken();
+                    userDtos.add(udto);
+                }
+            } else {
+                throw new Exception("Null Data");
+            }
 
             final GenericEntity<List<UserDto>> genericEntity = new GenericEntity<List<UserDto>>(userDtos) {
             };
@@ -211,5 +177,6 @@ public class UserInformationResource {
         public String name;
         public String login;
         public Integer subscribedMask;
+        public String unsubscribeToken;
     }
 }

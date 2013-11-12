@@ -14,5 +14,5 @@ import java.util.List;
  */
 public interface UserSearchService {
     List<User> searchUsers(UsersSearchCriteria criteria);
-    List<String> searchUserEmails(UsersSearchCriteria criteria);
+    List<Object[]> searchUserInfo(UsersSearchCriteria criteria);
 }

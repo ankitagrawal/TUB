@@ -4,6 +4,7 @@ import com.hk.domain.user.User;
 import com.hk.util.HKCollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -30,14 +31,14 @@ public class UsersSearchCriteria {
 
     private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
 
-    private boolean emailsonly = false;
+    private boolean minInfo = false;
 
-    public DetachedCriteria getSearchCriteria(boolean emailsonly) {
-        return getCriteriaFromBaseCriteria(emailsonly);
+    public DetachedCriteria getSearchCriteria(boolean minInfo) {
+        return getCriteriaFromBaseCriteria(minInfo);
     }
 
 
-    private DetachedCriteria getCriteriaFromBaseCriteria(boolean emailsonly) {
+    private DetachedCriteria getCriteriaFromBaseCriteria(boolean fetchMinimumRequiredData) {
 
         if (!atleastOneVariableSet) {
             throw new RuntimeException("No parameter set");
@@ -124,8 +125,14 @@ public class UsersSearchCriteria {
             }
             userCriteria.add(Restrictions.in("zone.id", zones));
         }
-        if (emailsonly) {
-            userCriteria.setProjection(Projections.distinct(Projections.property("user.login")));
+        if (fetchMinimumRequiredData) {
+            ProjectionList projList = Projections.projectionList();
+            projList.add(Projections.distinct(Projections.property("user.login")));
+            projList.add(Projections.property("user.email"));
+            projList.add(Projections.property("user.name"));
+            projList.add(Projections.property("user.subscribedMask"));
+            projList.add(Projections.property("user.unsubscribeToken"));
+            userCriteria.setProjection(projList);
         } else {
             userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         }

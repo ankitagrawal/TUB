@@ -24,7 +24,7 @@ import java.util.List;
 public class UsersDaoImpl extends BaseDaoImpl implements UsersDao {
 
     @Override
-    public List<User> findBySearchCriteria(UsersSearchCriteria criteria) {
+    public List<User> findUserBySearchCriteria(UsersSearchCriteria criteria) {
         DetachedCriteria dc = criteria.getSearchCriteria(false);
         //List<User> users = getHibernateTemplate().findByCriteria(dc);
         List<User> users = findByCriteria(dc);
@@ -33,11 +33,11 @@ public class UsersDaoImpl extends BaseDaoImpl implements UsersDao {
 
 
     @Override
-    public List<String> findEmailsBySearchCriteria(UsersSearchCriteria criteria){
+    public List<Object[]> findUserInfoBySearchCriteria(UsersSearchCriteria criteria){
         DetachedCriteria dc = criteria.getSearchCriteria(true);
         //List<User> users = getHibernateTemplate().findByCriteria(dc);
-        List<String> emails = findByCriteria(dc);
-        return emails;
+        List<Object[]> info = findByCriteria(dc);
+        return info;
     }
 
 }

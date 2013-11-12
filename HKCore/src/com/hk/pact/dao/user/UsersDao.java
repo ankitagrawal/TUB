@@ -16,6 +16,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface UsersDao extends BaseDao {
-    public List<User> findBySearchCriteria(UsersSearchCriteria criteria);
-    public List<String> findEmailsBySearchCriteria(UsersSearchCriteria criteria);
+    public List<User> findUserBySearchCriteria(UsersSearchCriteria criteria);
+    public List<Object[]> findUserInfoBySearchCriteria(UsersSearchCriteria criteria);
 }
