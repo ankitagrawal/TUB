@@ -38,6 +38,30 @@
             </tr>
             <tr>
                 <td>
+                    cities
+                </td>
+                <td>
+                    <s:textarea name="cities"></s:textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    zones
+                </td>
+                <td>
+                    <s:textarea name="zones"></s:textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    states
+                </td>
+                <td>
+                    <s:textarea name="states"></s:textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <s:submit name="search"></s:submit>
                 </td>
             </tr>

@@ -24,10 +24,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class SelectWHAction extends BaseAction {
@@ -43,6 +40,34 @@ public class SelectWHAction extends BaseAction {
     private int result;
     private Long time;
     private String emails;
+    private String cities;
+    private String states;
+
+    public String getZones() {
+        return zones;
+    }
+
+    public void setZones(String zones) {
+        this.zones = zones;
+    }
+
+    public String getStates() {
+        return states;
+    }
+
+    public void setStates(String states) {
+        this.states = states;
+    }
+
+    public String getCities() {
+        return cities;
+    }
+
+    public void setCities(String cities) {
+        this.cities = cities;
+    }
+
+    private String zones;
 
     public String getEmails() {
         return emails;
@@ -90,10 +115,32 @@ public class SelectWHAction extends BaseAction {
         Long startTime = System.currentTimeMillis();
         UsersSearchCriteria criteria = new UsersSearchCriteria();
         String prodnames = params;
-        List<String> ids = Arrays.asList(prodnames.split(","));
+        if (prodnames != null) {
+            List<String> ids = Arrays.asList(prodnames.split(","));
+            criteria.setProductIds(ids);
+        }
+        if (cities != null) {
+            List<String> city = Arrays.asList(cities.split(","));
+            criteria.setCities(city);
+        }
+        if (states != null) {
+            List<String> state = Arrays.asList(states.split(","));
+            criteria.setStates(state);
+        }
+        if (zones != null) {
+            List<String> zone = Arrays.asList(zones.split(","));
+            List<Long> zonel = new ArrayList<Long>(zone.size());
+            for (String s : zone) {
+                try {
+                    Long l = Long.parseLong(s);
+                    zonel.add(l);
+                } catch (Exception e) {
+                }
+            }
+            criteria.setZones(zonel);
+        }
 
 
-        criteria.setProductIds(ids);
         List<String> ems = null;
         List<User> users = null;
         try {
