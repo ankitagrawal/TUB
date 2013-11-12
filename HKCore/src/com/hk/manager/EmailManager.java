@@ -481,7 +481,7 @@ public class EmailManager {
     public boolean sendProductReviewEmail(User user, ProductVariant productVariant, Mail mail, String testEmailId, long userReviewMailId){
         HashMap valuesMap = new HashMap();
         valuesMap.put("user", user);
-        String productVariantName = productVariant.getProduct().getName() + (productVariant.getVariantName() == null ? "" : productVariant.getVariantName()) ;
+        String productVariantName = productVariant.getVariantNameFromHKEdge()!=null ? productVariant.getVariantNameFromHKEdge() : productVariant.getProduct().getName();
         /*if(productVariant.getVariantName() != null){
             valuesMap.put("product", productVariantName+" "+ productVariant.getVariantName());
         }else
