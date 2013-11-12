@@ -122,6 +122,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
     private Boolean containsJit = null;
+    private Boolean bookedOnBright = null;
     private int codCallStatus;
 
     Map<String, Object> bucketParameters = new HashMap<String, Object>();
@@ -256,6 +257,10 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
         if (codCallStatus != 0) {
             orderSearchCriteria.setUserCodCallStatus(codCallStatus);
+        }
+        
+        if(bookedOnBright!=null){
+        	orderSearchCriteria.setBookedOnBright(bookedOnBright);
         }
 
 
@@ -482,6 +487,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("containsJit");
         params.add("b2bOrder");
         params.add("buckets");
+        params.add("bookedOnBright");
 
         params.add("bucketParameters");
 
@@ -663,7 +669,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         return codCallStatus;
     }
 
-    public void setCodCallStatus(int codCallStatus) {
+    public Boolean getBookedOnBright() {
+			return bookedOnBright;
+		}
+
+		public void setBookedOnBright(Boolean bookedOnBright) {
+			this.bookedOnBright = bookedOnBright;
+		}
+
+		public void setCodCallStatus(int codCallStatus) {
         this.codCallStatus = codCallStatus;
     }
 }

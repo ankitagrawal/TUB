@@ -15,7 +15,6 @@ import com.hk.domain.sku.SkuItemStatus;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -290,9 +289,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
           skuItemLineItemCriteria = lineItemsCriteria.createCriteria("skuItemLineItems");
           skuItemCriteria = skuItemLineItemCriteria.createCriteria("skuItem");
           List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
-          skuItemStatusList.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
-          skuItemStatusList.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
-          skuItemCriteria.add(Restrictions.in("skuItemStatus", skuItemStatusList));
+          skuItemCriteria.add(Restrictions.ne("skuItemStatus", EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus()));
         }
         return criteria;
     }

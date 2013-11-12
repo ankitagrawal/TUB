@@ -18,6 +18,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
@@ -64,6 +65,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private boolean dropShipping = false;
     private boolean containsJitProducts = false;
     private boolean installable = false;
+    
     private Date shippingOrderCreateDate;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
@@ -362,6 +364,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
                 productCriteria = productVariantCriteria.createCriteria("product");
                 productCriteria.add(Restrictions.eq("installable", true));
             }
+         
 
         /*
         * paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
@@ -446,4 +449,5 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 	public void setShippingOrderCreateDate(Date shippingOrderCreateDate) {
 		this.shippingOrderCreateDate = shippingOrderCreateDate;
 	}
+
 }
