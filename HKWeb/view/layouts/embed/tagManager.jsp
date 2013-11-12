@@ -33,6 +33,15 @@
     // for autocomplete
     pageContext.setAttribute("cartAction", cartAction);
     pageContext.setAttribute("paymentSuccessBean", paymentSuccessBean);
+    String ua = request.getHeader("User-Agent");
+    boolean browserCompat = true;
+    if (ua != null) {
+      if (ua.indexOf("MSIE 8.0") != -1 || ua.indexOf("MSIE 7.0") != -1) {
+        browserCompat = false;
+      }
+    } else {
+      browserCompat = false;
+    }
   %>
   <script type="text/javascript">
     dataLayer = [{
@@ -57,7 +66,8 @@
       'codebase' : 'hkr',
       'signup' : '${param["signup"]}',
       'login' : '${param["login"]}',
-      'errorCode' : '${errorCode}'
+      'errorCode' : '${errorCode}',
+      'browserCompat' : '<%=browserCompat%>'
     }];
   </script>
   <%
