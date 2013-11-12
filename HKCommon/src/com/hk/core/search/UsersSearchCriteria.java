@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class UsersSearchCriteria {
     // list of variables that might be received
+    private List<String> categories;
     private List<String> states;
     private List<String> cities;
     private List<Long> zones;
@@ -28,6 +29,7 @@ public class UsersSearchCriteria {
     private List<String> productIds;
     private Boolean verified;
     private boolean atleastOneVariableSet = false;
+    private boolean notOnProduction = true;
 
     private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
 
@@ -45,6 +47,7 @@ public class UsersSearchCriteria {
         }
 
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
+        userCriteria.add(Restrictions.isNotNull("user.email"));
         boolean orderCriteria = false,
                 cliCriteria = false,
                 pvCriteria = false,
@@ -53,7 +56,9 @@ public class UsersSearchCriteria {
                 pinCriteria = false,
                 zoneCriteria = false,
                 pv2Criteria = false,
-                rolesCriteria = false;
+                rolesCriteria = false,
+                baseOrderCategoryCriteria = false,
+                categoryCriteria = false;
 
         if (verified != null) {
             if (!rolesCriteria) {
@@ -62,6 +67,22 @@ public class UsersSearchCriteria {
             }
             String roleName = (verified.booleanValue()) ? "HK_USER" : "HKUNVERIFIED";
             userCriteria.add(Restrictions.eq("roles.name", roleName));
+        }
+
+        if (categories != null && !categories.isEmpty()) {
+            if (!orderCriteria) {
+                userCriteria.createAlias("user.orders", "orders");
+                orderCriteria = true;
+            }
+            if (!baseOrderCategoryCriteria) {
+                userCriteria.createAlias("orders.categories", "boc");
+                baseOrderCategoryCriteria = true;
+            }
+            if (!categoryCriteria) {
+                userCriteria.createAlias("boc.category", "cat");
+                categoryCriteria = true;
+            }
+            userCriteria.add(Restrictions.in("cat.name", categories));
         }
 
         if ((productIds != null && !productIds.isEmpty()) || (productVariantIds != null && !productVariantIds.isEmpty())) {
@@ -127,12 +148,21 @@ public class UsersSearchCriteria {
         }
         if (fetchMinimumRequiredData) {
             ProjectionList projList = Projections.projectionList();
-            projList.add(Projections.distinct(Projections.property("user.login")));
-            projList.add(Projections.property("user.email"));
-            projList.add(Projections.property("user.name"));
-            projList.add(Projections.property("user.subscribedMask"));
-            projList.add(Projections.property("user.unsubscribeToken"));
-            userCriteria.setProjection(projList);
+            if (notOnProduction) {
+                projList.add(Projections.distinct(Projections.property("user.login")));
+                projList.add(Projections.property("user.email"));
+                projList.add(Projections.property("user.name"));
+                projList.add(Projections.property("user.subscribedMask"));
+                projList.add(Projections.property("user.unsubscribeToken"));
+                userCriteria.setProjection(projList);
+            } else {
+                projList.add(Projections.distinct(Projections.property("user.email")));
+                projList.add(Projections.property("user.login"));
+                projList.add(Projections.property("user.name"));
+                projList.add(Projections.property("user.subscribedMask"));
+                projList.add(Projections.property("user.unsubscribeToken"));
+                userCriteria.setProjection(projList);
+            }
         } else {
             userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         }
@@ -176,6 +206,12 @@ public class UsersSearchCriteria {
 
     public UsersSearchCriteria setStates(List<String> states) {
         this.states = states;
+        atleastOneVariableSet = true;
+        return this;
+    }
+
+    public UsersSearchCriteria setCategories(List<String> categories) {
+        this.categories = categories;
         atleastOneVariableSet = true;
         return this;
     }

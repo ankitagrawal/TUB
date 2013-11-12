@@ -41,6 +41,7 @@ public class UserInformationResource {
     private List<String> states;
     private List<String> productIds;
     private List<String> productVariantIds;
+    private List<String> categories;
     private String verified;
     private int minimum = 0;
 
@@ -57,18 +58,21 @@ public class UserInformationResource {
                                       @FormParam("zones") String zones,
                                       @FormParam("states") String states,
                                       @FormParam("verified") String verified,
+                                      @FormParam("categories") String categories,
                                       @FormParam("minimum") String minimum) {
         List<String> prodIds = getListFromString(productIds, ",");
         List<String> prodVarIds = getListFromString(productVariantIds, ",");
         List<String> allcities = getListFromString(cities, ",");
         List<String> allStates = getListFromString(states, ",");
         List<String> allZones = getListFromString(zones, ",");
+        List<String> allCats = getListFromString(categories, ",");
 
 
         this.productIds = prodIds;
         this.productVariantIds = prodVarIds;
         this.cities = allcities;
         this.states = allStates;
+        this.categories = allCats;
         this.verified = verified;
         try {
             this.zones = new ArrayList<Long>();
@@ -77,12 +81,10 @@ public class UserInformationResource {
                 this.zones.add(l);
             }
         } catch (Exception ignore) {
-            System.currentTimeMillis();
         }
         try {
             this.minimum = Integer.parseInt(minimum);
         } catch (Exception ignore) {
-            System.currentTimeMillis();
         }
 
         return getUsers();
@@ -97,6 +99,9 @@ public class UserInformationResource {
             }
             if (HKCollectionUtils.isNotBlank(productIds)) {
                 criteria.setProductIds(productIds);
+            }
+            if (HKCollectionUtils.isNotBlank(categories)) {
+                criteria.setCategories(categories);
             }
             if (HKCollectionUtils.isNotBlank(productVariantIds)) {
                 criteria.setProductVariantIds(productVariantIds);
