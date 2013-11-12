@@ -36,6 +36,8 @@ public class SelectWHAction extends BaseAction {
     private String minimum;
     private String cities;
     private String states;
+    private String categories;
+
 
     public String getZones() {
         return zones;
@@ -43,6 +45,14 @@ public class SelectWHAction extends BaseAction {
 
     public void setZones(String zones) {
         this.zones = zones;
+    }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 
     public String getStates() {
@@ -113,6 +123,10 @@ public class SelectWHAction extends BaseAction {
             List<String> ids = Arrays.asList(prodnames.split(","));
             criteria.setProductIds(ids);
         }
+        if (categories != null) {
+            List<String> category = Arrays.asList(categories.split(","));
+            criteria.setCategories(category);
+        }
         if (cities != null) {
             List<String> city = Arrays.asList(cities.split(","));
             criteria.setCities(city);
@@ -156,7 +170,6 @@ public class SelectWHAction extends BaseAction {
         time = endTime - startTime;
         return new ForwardResolution("/pages/admin/adminHome.jsp");
     }
-
 
 
     @Secure(hasAnyRoles = {RoleConstants.WH_MANAGER_L1, RoleConstants.CATEGORY_MANAGER, RoleConstants.ADMIN}, authActionBean = AdminPermissionAction.class)

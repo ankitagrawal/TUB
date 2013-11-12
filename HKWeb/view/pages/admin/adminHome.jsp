@@ -62,6 +62,14 @@
             </tr>
             <tr>
                 <td>
+                    categories
+                </td>
+                <td>
+                    <s:textarea name="categories"></s:textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <s:submit name="search"></s:submit>
                 </td>
             </tr>
