@@ -99,8 +99,8 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO hkapiOrderDTO) {
         HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
         if(hkapiOrderDTO==null){
-           hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);
-           return hkapiBaseDTO;
+            hkapiBaseDTO.setStatus(HKAPIOperationStatus.ERROR);
+            return hkapiBaseDTO;
         }
         if(!validateAppForOrderPlacement(appToken)){
             return new HKAPIBaseDTO(EnumHKAPIErrorCode.UnauthorizedToPlaceOrder);
@@ -113,7 +113,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         order.setUserComments(hkapiOrderDTO.getHkapiOrderDetailsDTO().getUserComments());
         order.setScore(0L);
         order.setStore(storeService.getStoreById(hkapiOrderDTO.getStoreId()));
-         HKAPIPaymentDTO hkApiPaymentDTO = hkapiOrderDTO.getHkapiPaymentDTO();
+        HKAPIPaymentDTO hkApiPaymentDTO = hkapiOrderDTO.getHkapiPaymentDTO();
         if(hkApiPaymentDTO.getGatewayOrderId()!=null){
             order.setGatewayOrderId(hkApiPaymentDTO.getGatewayOrderId());
         }
@@ -123,7 +123,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         // how to check if address always exists or create a new address everytime?
         Address address = createAddress(hkapiOrderDTO.getHkapiAddressDTO(), hkUser);
 
-       // create a payment
+        // create a payment
         Payment payment = createPayment(order,cartLineItems, hkApiPaymentDTO);
 
         if (cartLineItems.size() > 0) {
@@ -164,7 +164,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         PaymentMode paymentMode = getPaymentModeDao().getPaymentModeById(new Long(hkapiPaymentDTO.getPaymentmodeId()));
         Payment payment= automatedOrderService.createNewPayment(order,orderAmount, paymentMode);
         if(hkapiPaymentDTO.getGatewayId()!=null){
-              Gateway gateway= basedao.get(Gateway.class, hkapiPaymentDTO.getGatewayId()) ;
+            Gateway gateway= basedao.get(Gateway.class, hkapiPaymentDTO.getGatewayId()) ;
             if(gateway!=null){
                 payment.setGateway(gateway);
             }
@@ -175,11 +175,21 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
                 payment.setIssuer(issuer);
             }
         }
-        payment.setResponseMessage(hkapiPaymentDTO.getResponseMessage());
-        payment.setGatewayOrderId(hkapiPaymentDTO.getGatewayOrderId());
-        payment.setAuthIdCode(hkapiPaymentDTO.getAuthIdCode());
-        payment.setRrn(hkapiPaymentDTO.getRrn());
-        payment.setGatewayReferenceId(hkapiPaymentDTO.getGatewayReferenceId());
+        if(hkapiPaymentDTO.getResponseMessage()!=null)  {
+            payment.setResponseMessage(hkapiPaymentDTO.getResponseMessage());
+        }
+        if(hkapiPaymentDTO.getGatewayOrderId()!=null){
+            payment.setGatewayOrderId(hkapiPaymentDTO.getGatewayOrderId());
+        }
+        if(hkapiPaymentDTO.getAuthIdCode()!=null){
+            payment.setAuthIdCode(hkapiPaymentDTO.getAuthIdCode());
+        }
+        if(hkapiPaymentDTO.getRrn()!=null){
+            payment.setRrn(hkapiPaymentDTO.getRrn());
+        }
+        if(hkapiPaymentDTO.getGatewayReferenceId()!=null){
+            payment.setGatewayReferenceId(hkapiPaymentDTO.getGatewayReferenceId());
+        }
         payment=paymentService.save(payment);
 
         return  payment;
@@ -291,7 +301,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
 
         Order hkOrder = automatedOrderService.createNewOrder(hkUser);
         hkOrder.setUserComments(order.getUserComments());
-	    hkOrder.setScore(0L);
+        hkOrder.setScore(0L);
 
         Set<CartLineItem> cartLineItemSet = order.getCartLineItems();
         Set<CartLineItem> hkCartLineItemSet = new HashSet<CartLineItem>();
@@ -304,7 +314,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
 
         Address address = order.getAddress();
         address.setId(null);
-	    address.setUser(hkUser);
+        address.setUser(hkUser);
         address = addressDao.save(address);
 
         Payment payment = order.getPayment();
@@ -316,7 +326,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
 
         payment.setGatewayOrderId(hkOrder.getId().toString() +"-"+ order.getGatewayOrderId().split("-")[1]);
         //payment.setGatewayOrderId(order.getGatewayOrderId());
-	    payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+        payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
         payment = paymentService.save(payment);
         if (cartLineItemSet.size() > 0) {
             hkOrder = automatedOrderService.placeOrder(hkOrder, hkCartLineItemSet, address, payment, order.getStore(), false);
