@@ -26,8 +26,11 @@ public class FreeCheckoutSuccessAction extends BaseAction {
 
 	public Resolution pre() {
 		payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-		return new ForwardResolution("/pages/payment/freeCheckoutSuccess.jsp");
-	}
+        if(isHybridRelease())
+		    return new ForwardResolution("/pages/payment/freeCheckoutSuccessBeta.jsp");
+        else
+            return new ForwardResolution("/pages/payment/freeCheckoutSuccess.jsp");
+    }
 
 	public String getGatewayOrderId() {
 		return gatewayOrderId;

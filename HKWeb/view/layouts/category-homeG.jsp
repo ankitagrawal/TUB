@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -33,6 +34,10 @@
 
   </head>
   <body id="${bodyId}">
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="<%=TagConstants.PageType.CATEGORY%>"
+                   primaryCategory="${topCategory}"
+      />
   <div class="jqmWindow" id="discountCouponModal"></div>
   <s:layout-component name="modal"/>
 
@@ -41,7 +46,7 @@
       <s:layout-render name="/layouts/embed/_header.jsp"/>
     </s:layout-component>
     <s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
+      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" allCategories="${topCategory}" showNewHKLink = "false"/>
     </s:layout-component>
     <s:layout-component name="breadcrumbs">
       <%--<s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbUrlFragment="${.urlFragment}"/>--%>

@@ -19,6 +19,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
@@ -53,6 +54,8 @@ import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
+import com.hk.edge.pact.service.HybridStoreVariantService;
+import com.hk.edge.response.variant.StoreVariantBasicResponse;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
@@ -87,6 +90,7 @@ import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
 import com.hk.util.OrderUtil;
 import com.hk.util.ProductUtil;
+import com.hk.web.AppConstants;
 import net.sourceforge.stripes.util.CryptoUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -99,6 +103,7 @@ import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.jsp.PageContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -326,11 +331,11 @@ public class Functions {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
         if (o instanceof Sku) {
             Sku sku = (Sku) o;
-            List<Long> shippingOrderStatusIds = (List<Long>)c;
+            List<Long> shippingOrderStatusIds = (List<Long>) c;
             return adminInventoryService.getBookedInventory(sku, shippingOrderStatusIds);
         } else {
             ProductVariant productVariant = (ProductVariant) o;
-            List<Long> shippingOrderStatusIds = (List<Long>)c;
+            List<Long> shippingOrderStatusIds = (List<Long>) c;
             return adminInventoryService.getBookedInventory(productVariant, shippingOrderStatusIds);
         }
     }
@@ -763,6 +768,11 @@ public class Functions {
         return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
     }
 
+    public static String getDisplayNameForHkdeliveryTrackingRemarks(String remarks) {
+        CourierStatusUpdateHelper courierStatusUpdateHelper = new CourierStatusUpdateHelper();
+        return courierStatusUpdateHelper.getHkDeliveryStatusRemarksForUser(remarks);
+    }
+
     public static Long getPoLineItemQty(GrnLineItem grnLineItem) {
         GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
         return grnLineItemService.getPoLineItemQty(grnLineItem);
@@ -927,40 +937,39 @@ public class Functions {
     }
 
     public static Long countLineItemQty(ShippingOrder shippingOrder) {
-      long qty=0;
-      if(shippingOrder.getLineItems()!=null && shippingOrder.getLineItems().size()>0)
-      for(LineItem lineItem : shippingOrder.getLineItems())
-      {
-          qty=qty+lineItem.getQty();
-      }
-      return qty;
+        long qty = 0;
+        if (shippingOrder.getLineItems() != null && shippingOrder.getLineItems().size() > 0)
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                qty = qty + lineItem.getQty();
+            }
+        return qty;
     }
 
-    public static Product showFreebie(Product product){
-          if(!(product.isOutOfStock() || product.isDeleted() || product.isHidden())){
-              for (ProductVariant productVariant : product.getProductVariants()) {
-                  if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
-                      ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
-                      if(freeProductVariant != null){
+    public static Product showFreebie(Product product) {
+        if (!(product.isOutOfStock() || product.isDeleted() || product.isHidden())) {
+            for (ProductVariant productVariant : product.getProductVariants()) {
+                if (!(productVariant.isOutOfStock() || productVariant.isDeleted())) {
+                    ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
+                    if (freeProductVariant != null) {
 //                          if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
-                          if(!(freeProductVariant.isOutOfStock())){
-                              return freeProductVariant.getProduct();
-                          }
-                       }
-                  }
-              }
-          }
+                        if (!(freeProductVariant.isOutOfStock())) {
+                            return freeProductVariant.getProduct();
+                        }
+                    }
+                }
+            }
+        }
         return null;
     }
 
-    public static Product showFreebieForVariant(ProductVariant productVariant){
+    public static Product showFreebieForVariant(ProductVariant productVariant) {
         Product product = productVariant.getProduct();
-        if(!(product.isHidden() || product.isDeleted() || product.isOutOfStock())){
-            if(!(productVariant.isOutOfStock() || productVariant.isDeleted())){
+        if (!(product.isHidden() || product.isDeleted() || product.isOutOfStock())) {
+            if (!(productVariant.isOutOfStock() || productVariant.isDeleted())) {
                 ProductVariant freeProductVariant = productVariant.getFreeProductVariant();
-                if(freeProductVariant != null){
+                if (freeProductVariant != null) {
 //                    if(!(freeProductVariant.isDeleted() || freeProductVariant.isOutOfStock())){
-                    if(!(freeProductVariant.isOutOfStock())){
+                    if (!(freeProductVariant.isOutOfStock())) {
                         return freeProductVariant.getProduct();
                     }
                 }
@@ -969,6 +978,40 @@ public class Functions {
         return null;
     }
 
+    public static boolean isAutoConfirmedCod(Order order, EnumOrderStatus enumOrderStatus) {
+        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.getCountOfOrdersByStatus(order.getUser(), enumOrderStatus) >= 2;
+    }
+
+  @Deprecated
+    public static StoreVariantBasicResponse getStoreVariantBasicDetails(String oldVariantId) {
+        if (AppConstants.isHybridRelease) {
+            HybridStoreVariantService hybridStoreVariantService = ServiceLocatorFactory.getService(HybridStoreVariantService.class);
+            return hybridStoreVariantService.getStoreVariantBasicDetailsFromEdge(oldVariantId);
+        }
+
+        throw new UnsupportedOperationException();
+    }
+
+    public static StoreVariantBasicResponse getStoreVariantBasicDetails(String oldVariantId, PageContext pageContext) {
+      Map<String, StoreVariantBasicResponse> oldNewVariantMap = null;
+      if (pageContext.getAttribute("oldNewVariantMap") != null) {
+        oldNewVariantMap = (Map<String, StoreVariantBasicResponse>) pageContext.getAttribute("oldNewVariantMap");
+      } else {
+        oldNewVariantMap = new HashMap<String, StoreVariantBasicResponse>();
+        pageContext.setAttribute("oldNewVariantMap", oldNewVariantMap);
+      }
+
+      StoreVariantBasicResponse storeVariantBasicResponse = null;
+      if (oldNewVariantMap.get(oldVariantId) == null) {
+        storeVariantBasicResponse = getStoreVariantBasicDetails(oldVariantId);
+        oldNewVariantMap.put(oldVariantId, storeVariantBasicResponse);
+      } else {
+        storeVariantBasicResponse = oldNewVariantMap.get(oldVariantId);
+      }
+
+      return storeVariantBasicResponse;
+    }
 
 
 }

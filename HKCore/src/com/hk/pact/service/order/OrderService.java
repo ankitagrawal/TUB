@@ -67,18 +67,20 @@ public interface OrderService {
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
-     public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
+    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
 
-	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
+	  public UserCodCall saveUserCodCall(UserCodCall userCodCall);
 
-	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
+	  public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
 
-	public List<UserCodCall> getAllUserCodCallForToday();
+	  public List<UserCodCall> getAllUserCodCallForToday();
 	
-	public Order findCart(User user, Store store);
+	  public Order findCart(User user, Store store);
 
     public boolean isBOCancelable(Long orderId);
+
+    public int getOrderCountByUser(Long userId);
 }
 

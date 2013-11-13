@@ -352,10 +352,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
-                if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                    shouldUpdate = false;
-                    break;
+            if (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())) {
+                if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+                    if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                        shouldUpdate = false;
+                        break;
+                    }
                 }
             }
         }
@@ -555,13 +557,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         if (user == null) {
             user = userService.getAdminUser();
         }
-        if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
-            payment = paymentManager.verifyCodPayment(order.getPayment());
-            order.setConfirmationDate(new Date());
-            orderService.save(order);
-            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-            getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
-        }
+
+        payment = paymentManager.verifyCodPayment(order.getPayment());
+        order.setConfirmationDate(new Date());
+        orderService.save(order);
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+        emailManager.sendCodConfirmEmailToUser(order);
+        getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         return payment;
     }
 

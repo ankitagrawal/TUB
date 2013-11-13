@@ -42,7 +42,11 @@ public class OrderDetailsAction extends BaseAction {
     } else {
       cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     }
-    return new ForwardResolution("/pages/orderDetails.jsp");
+    if (isHybridRelease()) {
+        return new ForwardResolution("/pages/orderDetailsBeta.jsp");
+    }
+    else
+        return new ForwardResolution("/pages/orderDetails.jsp");
   }
 
   public Order getOrder() {

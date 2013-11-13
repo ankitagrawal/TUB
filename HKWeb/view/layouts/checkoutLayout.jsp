@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -32,6 +33,9 @@
     <script type="text/javascript" src="<hk:vhostJs/>/scripts/field-validation.js"></script>
     <s:layout-component name="htmlHead"/>
   </head>
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="<%=TagConstants.PageType.CHECKOUT_FLOW%>"
+      />
   <body id="${bodyId}">
   <div id="container">
     <s:layout-component name="modal"/>

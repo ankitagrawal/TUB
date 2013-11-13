@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -34,13 +35,16 @@
     <s:layout-component name="htmlHead"/>
   </head>
   <body id="${bodyId}">
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="<%=TagConstants.PageType.LOGIN%>"
+      />
   <s:layout-component name="modal"/>
   <div id="container">
     <s:layout-component name="header">
       <s:layout-render name="/layouts/embed/_header.jsp" attachRedirectParam="false"/>
     </s:layout-component>
 	<s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}"/>
+      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" showNewHKLink = "false"/>
     </s:layout-component>
     <div class="main_container">
       <s:layout-component name="checkoutStep"/>

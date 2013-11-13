@@ -49,7 +49,7 @@ public class EmailTemplateConstants {
 	public static final String awbStatusEmail = "/awbStatusEmail.ftl";
 	public static final String courierShipmentFail = "/courierShipmentFail.ftl";
 	public static final String paymentFailEmail = "/paymentFailEmail.ftl";
-  public static final String callbackRequestEmail = "/callbackRequestEmail.ftl";
+    public static final String callbackRequestEmail = "/callbackRequestEmail.ftl";
 	public static final String codConverterEmail = "/codConverterEmail.ftl";
 	public static final String sixHourlyCategorySalesReport = "/sixHourlyCategorySalesReport.ftl";
 	public static final String courierCollerctionPostUpdationEmail = "/courierCollerctionPostUpdationEmail.ftl";
@@ -79,4 +79,6 @@ public class EmailTemplateConstants {
     public static final String poMailNotSentToSupplier = "/poMailNotSentToSupplier.ftl";
     public static final String partialOrderCancelEmailUser = "/partialOrderCancelEmailUser.ftl";
     public static String manualRefundTaskToAdminMail="/manualRefundTaskToAdminMail.ftl";
+    public static String codConfirmEmail = "/codConfirmEmail.ftl";
+    public static String orderPlacedCodEmailForSMSCountry = "/orderPlacedCodEmailForSMSCountry.ftl";
 }
