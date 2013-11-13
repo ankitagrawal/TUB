@@ -6,232 +6,105 @@ Talking 'bout the one that got away!
 </head>
 
 <body style="margin:0; padding:0; font-family:Verdana, Geneva, sans-serif; background-color:#FFFFFF;">
-<table width="695" border="0" align="center" cellpadding="0" cellspacing="0">
-<tr>
-<td align="center" valign="top">
-<table width="683" border="0" cellspacing="0" cellpadding="0" align="center"
-       style="font-size:13px; font-family:Verdana, Geneva, sans-serif">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+<#include "headerBeta.ftl">
+    <tbody style="font-size:13px; line-height:1.75em;">
     <tr>
-        <td valign="top">&nbsp;</td>
-    </tr>
-    <tr>
-        <td valign="top" align="center"><a href="http://www.healthkart.com" target="_blank"><img
-                src="http://img.healthkart.com/email/notify_user_emailer_new/images/healthkart.jpg"
+        <td align="left" valign="top"><img
+                src="http://img.healthkart.com/email/notify_user_emailer_new/images/one-that-got-away.png"
                 border="0"
-                alt="HealthKart.com"
-                title="HealthKart.com"/></a>
+                alt="HealthKart"/></td>
+    </tr>
+    <tr>
+        <td align="left" valign="top"
+            style="font-family:Verdana, Geneva, sans-serif; font-size:21px; line-height:25px; color:#646464;">
+            Talking 'bout
+            the ones<br/>
+            that got away!
         </td>
     </tr>
     <tr>
-        <td valign="top">&nbsp;</td>
+        <td valign="top"
+            style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; padding:10px 0px 10px 0px;">
+            <em>Waits</em></td>
     </tr>
     <tr>
+        <td align="left" valign="top"
+            style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
+            <p>We ran out
+                of 'product x'. Terrible, we know!<br/>
+                We let you down, so let us pick you up.</p>
 
-        <td valign="top" align="center">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/sports-nutrition" target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/sports-nutrition.jpg"
-                            alt="sports nutrition" border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/health-nutrition" target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/health-nutrition.jpg"
-                            alt="health nutrition" border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/sports" target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/sports-and-fitness.jpg"
-                            alt="sports and fitness" border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/diabetes" target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/diabetes.jpg"
-                            alt="diabetes" border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/health-devices"
-                                                     target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/health-devices.jpg"
-                            alt="health devices" border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http:////www.healthkart.com/home-living"
-                                                     target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/home-and-living.jpg"
-                            alt="home and living" border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/eye" target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/vision.jpg" alt="vision"
-                            border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/personal-care"
-                                                     target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/personal-care.jpg"
-                            alt="personal care" border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/beauty" target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/beauty.jpg" alt="beauty"
-                            border="0"/></a></td>
-                    <td valign="top" align="left"><a href="http://www.healthkart.com/parenting" target="_blank"/><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/parenting.jpg"
-                            alt="parenting" border="0"/></a></td>
-                </tr>
-            </table>
+            <p>How about we introduce you to something similar. Something that will make up for
+                'product x'. If you like
+                them, we suggest you pick them up.</p>
+
+            <p>&nbsp;</p><br/>
         </td>
+    </tr>
 
+
+
+    <#list productNotifyList as  notify>
+    <tr>
+        <td height="25"
+            style="border-top:0px; font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
+            <p>For Product<strong> ${notify.productVariant.product.name}</strong> , may we suggest</p></td>
     </tr>
     <tr>
-        <td valign="top" height="33"></td>
-    </tr>
-    <tr>
-        <td align="center" valign="top">
-            <table width="400" border="0" cellspacing="0" cellpadding="0" align="center"
-                   style="font-size:13px; font-family:Verdana, Geneva, sans-serif">
-                <tr>
-                    <td align="left" valign="top"><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/one-that-got-away.png"
-                            border="0"
-                            alt="HealthKart"/></td>
-                </tr>
-                <tr>
-                    <td height="25"></td>
-                </tr>
-                <tr>
-                    <td align="left" valign="top"
-                        style="font-family:Verdana, Geneva, sans-serif; font-size:21px; line-height:25px; color:#646464;">
-                        Talking 'bout
-                        the ones<br/>
-                        that got away!
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top"
-                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; padding:10px 0px 10px 0px;">
-                        <em>Waits</em></td>
-                </tr>
-                <tr>
-                    <td align="left" valign="top"
-                        style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
-                        <p>We ran out
-                            of 'product x'. Terrible, we know!<br/>
-                            We let you down, so let us pick you up.</p>
 
-                        <p>How about we introduce you to something similar. Something that will make up for
-                            'product x'. If you like
-                            them, we suggest you pick them up.</p>
-
-                        <p>&nbsp;</p><br/>
-                    </td>
-                </tr>
-
-
-
-            <#list productNotifyList as  notify>
-                <tr>
-                    <td height="25"
-                        style="border-top:0px; font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;">
-                        <p>For Product<strong> ${notify.productVariant.product.name}</strong> , may we suggest</p></td>
-                </tr>
-            <tr>
-
-                <#assign  map =  similarProductMap >
-                <#assign similarProductList = map[notify.productVariant.product.id]>
-                <#list  similarProductList as  similarProduct>
-                    <td valign="top">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td align="left" valign="middle"
-                                    style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
-                                ${similarProduct.name}
-                                </td>
-                                <td align="center" valign="middle"
-                                    style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
-                                    <#assign priceMap =  productPriceMap>
-                                    <#assign highestDiscountVariant = priceMap[similarProduct.id]>
-                                    Rs. ${highestDiscountVariant.hkPrice}
-                                </td>
-                                <td align="right" valign="top"
-                                    style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
-
-                                    <table align="center" border="0" cellspacing="0"
-                                           cellpadding="0">
-                                        <tr>
-                                            <td valign="middle"
-                                                style="color:#000; font-family:Verdana, Geneva, sans-serif; font-weight:bold;">
-                                                <a href="www.healthkart.com/product/${similarProduct.slug}/${similarProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${similarProduct.id}-${currentDate}"
-                                                   target="_blank"
-                                                   style="font-weight:bold; color:#646464; padding:2px 10px 4px 10px; text-decoration:none; font-size:12px; display:block; border:1px solid #646464;">Buy
-                                                    Now</a></td>
-                                        </tr>
-                                    </table>
-
-                                </td>
-                            </tr>
-
-                        </table>
-                    </td>
-                </tr>
-
+        <#assign  map =  similarProductMap >
+        <#assign similarProductList = map[notify.productVariant.product.id]>
+        <#list  similarProductList as  similarProduct>
+            <td valign="top">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                        <td height="25"></td>
+                        <td align="left" valign="middle"
+                            style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
+                        ${similarProduct.name}
+                        </td>
+                        <td align="center" valign="middle"
+                            style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
+                            <#assign priceMap =  productPriceMap>
+                            <#assign highestDiscountVariant = priceMap[similarProduct.id]>
+                            Rs. ${highestDiscountVariant.hkPrice}
+                        </td>
+                        <td align="right" valign="top"
+                            style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464; font-weight:bold">
+
+                            <table align="center" border="0" cellspacing="0"
+                                   cellpadding="0">
+                                <tr>
+                                    <td valign="middle"
+                                        style="color:#000; font-family:Verdana, Geneva, sans-serif; font-weight:bold;">
+                                        <a href="www.healthkart.com/product/${similarProduct.slug}/${similarProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${similarProduct.id}-${currentDate}"
+                                           target="_blank"
+                                           style="font-weight:bold; color:#646464; padding:2px 10px 4px 10px; text-decoration:none; font-size:12px; display:block; border:1px solid #646464;">Buy
+                                            Now</a></td>
+                                </tr>
+                            </table>
+
+                        </td>
                     </tr>
-                </#list>
-                <tr>
-                    <td height="25"></td>
-                </tr>
 
-                <tr>
-                    <td height="25" style="border-top:1px dashed #646464;">&nbsp;</td>
-                </tr>
-            </#list>
+                </table>
+            </td>
+        </tr>
 
-            </table>
-        </td>
-    </tr>
+        <tr>
+            <td height="25"></td>
+        </tr>
+        </#list>
     <tr>
-        <td height="33"></td>
+        <td height="25"></td>
     </tr>
-    <tr>
-        <td colspan="3" align="center" valign="top"
-            style="font-family:Verdana, Geneva, sans-serif; font-size:12px; line-height:18px; color:#646464;"><img
-                src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
-                alt="HealthKart"/>&nbsp; <a style="color:#646464">info@healthkart.com</a>
-            | +91 124 4616444 &nbsp;&nbsp;&nbsp;<img
-                    src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
-                    alt="HealthKart"/>&nbsp; <a
-                    href="https://www.facebook.com/healthkart" style="color:#646464; text-decoration:none;">Like us on
-                facebook</a> &nbsp;&nbsp;&nbsp;<img
-                    src="http://img.healthkart.com/email/notify_user_emailer_new/images/built.jpg" border="0"
-                    alt="HealthKart"/>&nbsp; <a
-                    href="https://www.twitter.com/healthkart" style="color:#646464; text-decoration:none;">Tweet about
-                us</a></td>
-    </tr>
-    <tr>
-        <td height="12" valign="top"></td>
-    </tr>
-    <tr>
-        <td align="center" valign="middle"
-            style="border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px">
-            If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to
-            Unsubscribe</a><br/>
-        </td>
-    </tr>
-    <tr>
-        <td height="12" valign="top"></td>
-    </tr>
-    <tr>
-        <td colspan="3" align="center" valign="top"
-            style="font-family:Verdana, Geneva, sans-serif; font-size:11px; line-height:18px; color:#646464;">
-            Parsvanath
-            Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA. © 2011 HealthKart.com. All Rights
-            Reserved.
-        </td>
-    </tr>
-    <tr>
-        <td height="12" valign="top"></td>
-    </tr>
-    <tr>
-        <td valign="top" align="center"><img
-                src="http://img.healthkart.com/email/notify_user_emailer_new/images/all-heart.jpg"
-                border="0"
-                alt="ESTD 2011 ALL HEART"/></td>
-    </tr>
-    <tr>
-        <td valign="top" height="33"></td>
-    </tr>
-</table>
 
-
-</td>
-</tr>
+    <tr>
+        <td height="25" style="border-top:1px dashed #646464;">&nbsp;</td>
+    </tr>
+    </#list>
+    </tbody>
+    <#include "footerBeta.ftl">
 </table>
 </body>
 </html>

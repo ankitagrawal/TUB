@@ -220,13 +220,13 @@ public class EditProductAttributesAction extends BaseAction {
                 logger.debug("variant id " + productVariant.getId());
 
                 if (productVariant.isClearanceSale() == null || !productVariant.isClearanceSale()) {
-                    if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
+                    if (productVariant.getCostPrice() != null && Math.round(productVariant.getCostPrice()) > productVariant.getHkPrice(null)) {
                         addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
                         return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
                     }
                 }
 
-                if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
+                if (productVariant.getMarkedPrice() != null && Math.round(productVariant.getMarkedPrice()) < Math.round(productVariant.getHkPrice(null))) {
                     addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
                     return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
                 }

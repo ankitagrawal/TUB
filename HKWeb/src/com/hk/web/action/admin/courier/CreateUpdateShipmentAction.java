@@ -116,26 +116,30 @@ import java.util.List;
     }
 */
 
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
-    public Resolution updateShipment() {
-        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus())) {
-            shipment = shipmentService.save(shipment);
-            if (!shippingOrder.isDropShipping()) {
-                shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
-            }
-            if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                shipment = shipmentService.calculateAndDistributeShipmentCost(shipment);
-            }
-            shippingOrderService.save(shippingOrder);
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, null, shipment.getAwb().toString());
-            addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed"));
-        }
-        return new RedirectResolution(CreateUpdateShipmentAction.class);
+  @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
+  public Resolution updateShipment() {
+    String soLifeCycleAwb = shippingOrderLifecycleService.getAwbByShippingOrderLifeCycle(shippingOrder);
+    logger.debug("soLifeCycleAwb " + soLifeCycleAwb);
+    String shipmentAwb = shipment.getAwb().getAwbNumber();
+    logger.debug("shipmentAwb " + shipmentAwb);
+    if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus()) && soLifeCycleAwb.equals(shipmentAwb)) {
+      shipment = shipmentService.save(shipment);
+      if (!shippingOrder.isDropShipping()) {
+        shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+      }
+      if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+        shipment = shipmentService.calculateAndDistributeShipmentCost(shipment);
+      }
+      shippingOrderService.save(shippingOrder);
+      shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, null, shipment.getAwb().toString());
+      addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed"));
     }
+    return new RedirectResolution(CreateUpdateShipmentAction.class);
+  }
 
-    public List<ShippingOrder> getShippingOrderList() {
+  public List<ShippingOrder> getShippingOrderList() {
         return shippingOrderList;
     }
 

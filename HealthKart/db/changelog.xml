@@ -14264,4 +14264,93 @@
             insert  into reason (id,primary_classification,type,classification_id) values(1710,'SO could not be Auto-escalated from Fitness Pro','SO Could not be Auto-escalated',2150);
         </sql>
     </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-01">
+        <sql>
+            CREATE TABLE IF NOT EXISTS hk_reach_pricing_engine_bkup LIKE hk_reach_pricing_engine;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-02">
+        <sql>
+            INSERT hk_reach_pricing_engine_bkup SELECT * FROM hk_reach_pricing_engine;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-03">
+        <sql>
+            DROP TABLE IF EXISTS hk_reach_pricing_engine;
+        </sql>
+    </changeSet>
+
+    <changeSet author="Ankit Chhabra (generated)" id="1381819047671-1">
+        <createTable tableName="hk_reach_pricing_engine">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="inter_city_cost" type="DECIMAL(8,2)"/>
+            <column name="fixed_cost" type="DECIMAL(8,2)"/>
+            <column name="valid_from" type="TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1381819047671-2">
+        <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_hub_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chabra (generated)" id="1381819047671-3">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="hk_reach_pricing_engine" constraintName="fk_warehouse_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-04">
+        <sql>
+            INSERT INTO hk_reach_pricing_engine SELECT * FROM hk_reach_pricing_engine_bkup;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20131015-05">
+        <sql>
+            DROP TABLE IF EXISTS hk_reach_pricing_engine_bkup;
+        </sql>
+    </changeSet>
+    <changeSet author="Rahul Dixit" id="20131025-2">
+        <sql>
+            insert into classification(id,`PRIMARY`,`SECONDARY`) values(-1,'Default','Default');
+        </sql>
+    </changeSet>
+    <changeSet author="Rahul Dixit" id="20131029-2">
+        <sql>
+            update reason set classification_id =-1 where classification_id=0;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366966901739-5">
+        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Adminstrator (generated)" id="1383908615237-1">
+        <createTable tableName="sku_item_audit">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="audit_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="audited_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Adminstrator (generated)" id="1383908615237-2">
+        <addForeignKeyConstraint baseColumnNames="audited_by" baseTableName="sku_item_audit" constraintName="fk_sku_item_audit_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Adminstrator (generated)" id="1383908615237-3">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="sku_item_audit" constraintName="fk_sku_item_audit_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    </changeSet>
+     <changeSet author="Adminstrator (generated)" id="1383908615237-4">
+        <createIndex indexName="sku_item_id_UNIQUE" tableName="sku_item_audit" unique="true">
+            <column name="sku_item_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

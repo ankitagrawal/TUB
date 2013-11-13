@@ -135,7 +135,7 @@ public class RPWarehouseCheckinAction extends BaseAction {
             }
         }
         if (!validCheckin) {
-            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId", reversePickupOrder.getReversePickupId())
+            return new RedirectResolution(RPWarehouseCheckinAction.class, "search").addParameter("reversePickupId",reversePickupId )
                     .addParameter("errorMessage", "Select and Save  at least one Row");
         }
         ReversePickupStatus currentStatus = reversePickupOrderFromDb.getReversePickupStatus();

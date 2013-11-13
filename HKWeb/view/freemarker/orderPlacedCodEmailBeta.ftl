@@ -14,10 +14,12 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     </tr>
     <tr>
         <td colspan="2" style="margin-bottom:1em">
-            <p style="padding-top: 10px"> Thanks for placing an order with us. We have received the order and will give
-                you a call shortly to confirm
-                it.
-                Please note that COD</p>
+            <p style="padding-top: 10px"> Thanks for placing an order with us. Please verify your order by giving us a
+                missed call on <span style="color: #0091d7;">0124-4616414 </span>
+                from ${order.payment.contactNumber} which you have given as Cash On Delivery number.
+
+                In case you are unable to make this call, we will give you a call to confirm your order. Please note
+                that COD</p>
 
             <p style="padding-top: 10px"> orders will not be confirmed and shipped from our end until we manually
                 confirm the
@@ -52,13 +54,13 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
             <#list pricingDto.productLineItems as productLineItem>
                 <tr>
                     <td style="margin-bottom: 1em">
-                      <#if productLineItem.productVariant.variantName??>
-                      ${productLineItem.productVariant.variantName}
-                      <#else>
-                      ${productLineItem.productVariant.product.name}
-                      </#if>
-                      <br/>
-                      <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
+                        <#if productLineItem.productVariant.variantNameFromHKEdge??>
+                        ${productLineItem.productVariant.variantNameFromHKEdge}
+                        <#else>
+                        ${productLineItem.productVariant.product.name}
+                        </#if>
+                        <br/>
+                        <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
                     ${productOption.name} ${productOption.value}
                     </#list></em>
                     </td>

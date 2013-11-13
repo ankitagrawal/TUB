@@ -3,9 +3,11 @@ package com.test;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.util.HKDateUtil;
 
 public class Test {
@@ -42,5 +44,19 @@ public class Test {
         }
 
     }
+
+  public static String getAwbByShippingOrderLifeCycle() {
+
+    String commentIdentifer="awbNumber='";
+
+    String comments= "prepaidAirAwb{courier=600, awbNumber='794811946248'}";
+
+         String[] awbSpilt=comments.split(commentIdentifer);
+         String finalAwb=awbSpilt[1].substring(0, awbSpilt[1].length()-2);
+
+    System.out.println(finalAwb);
+
+        return finalAwb;
+     }
 
 }

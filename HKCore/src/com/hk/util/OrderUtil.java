@@ -36,9 +36,10 @@ public class OrderUtil {
         if (shippingOrder != null) {
             Set<ProductVariant> productVariants = new HashSet<ProductVariant>();
             for (LineItem lineItem : shippingOrder.getLineItems()) {
-              if (lineItem.getCartLineItem().getCartLineItemConfig()!=null) {
-                lineItem.getSku().getProductVariant().getProduct().setJit(true);
-              }
+                //todo eyeglasses bug fix
+//              if (lineItem.getCartLineItem().getCartLineItemConfig()!=null) {
+//                lineItem.getSku().getProductVariant().getProduct().setJit(true);
+//              }
               productVariants.add(lineItem.getSku().getProductVariant());
             }
             return getDispatchDaysForVariants(productVariants);
@@ -55,9 +56,9 @@ public class OrderUtil {
             Set<ProductVariant> productVariants = new HashSet<ProductVariant>();
 
             for (CartLineItem cartLineItem : productCartLineItems) {
-              if (cartLineItem.getCartLineItemConfig() != null) {
-                cartLineItem.getProductVariant().getProduct().setJit(true);
-              }
+//              if (cartLineItem.getCartLineItemConfig() != null) {
+//                cartLineItem.getProductVariant().getProduct().setJit(true);
+//              }
                 productVariants.add(cartLineItem.getProductVariant());
             }
 
