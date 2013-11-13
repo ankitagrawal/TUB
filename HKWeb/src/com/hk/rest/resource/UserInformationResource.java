@@ -43,7 +43,9 @@ public class UserInformationResource {
     private List<String> productVariantIds;
     private List<String> categories;
     private String verified;
-    private int minimum = 0;
+    private String userOrderCount;
+    private String equality;
+    private int minimum = 1;
 
     @Autowired
     UserSearchService userSearchService;
@@ -59,6 +61,8 @@ public class UserInformationResource {
                                       @FormParam("states") String states,
                                       @FormParam("verified") String verified,
                                       @FormParam("categories") String categories,
+                                      @FormParam("userOrderCount") String userOrderCount,
+                                      @FormParam("equality") String equality,
                                       @FormParam("minimum") String minimum) {
         List<String> prodIds = getListFromString(productIds, ",");
         List<String> prodVarIds = getListFromString(productVariantIds, ",");
@@ -74,6 +78,8 @@ public class UserInformationResource {
         this.states = allStates;
         this.categories = allCats;
         this.verified = verified;
+        this.userOrderCount = userOrderCount;
+        this.equality = equality;
         try {
             this.zones = new ArrayList<Long>();
             for (String z : allZones) {
@@ -96,6 +102,12 @@ public class UserInformationResource {
         try {
             if (StringUtils.isNotBlank(verified)) {
                 criteria.setVerified(verified);
+            }
+            if (StringUtils.isNotBlank(userOrderCount)) {
+                criteria.setUserOrderCount(userOrderCount);
+            }
+            if (StringUtils.isNotBlank(equality)) {
+                criteria.setEquality(equality);
             }
             if (HKCollectionUtils.isNotBlank(productIds)) {
                 criteria.setProductIds(productIds);

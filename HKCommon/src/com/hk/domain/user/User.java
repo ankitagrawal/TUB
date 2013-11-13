@@ -148,6 +148,10 @@ public class User {
     private List<Order> orders = new ArrayList<Order>();
 
     @JsonSkip
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    private UserReport report;
+
+    @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Subscription> subscriptions;
 
@@ -531,6 +535,14 @@ public class User {
         return id.hashCode();
     }
 
+    public UserReport getReport() {
+        return report;
+    }
+
+    public void setReport(UserReport report) {
+        this.report = report;
+    }
+
     public List<Bucket> getBuckets() {
         return buckets;
     }
@@ -539,14 +551,14 @@ public class User {
         this.buckets = buckets;
     }
 
-    public Integer getOrderCount(){
-      int orderCount = 0;
-      //TODO: implement this correctly Lazy init exception
+    public Integer getOrderCount() {
+        int orderCount = 0;
+        //TODO: implement this correctly Lazy init exception
       /*for(Order order : this.orders){
          if(order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())){
            orderCount++;
          }
       }*/
-      return orderCount;
+        return orderCount;
     }
 }

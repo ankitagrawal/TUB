@@ -3,10 +3,7 @@ package com.hk.core.search;
 import com.hk.domain.user.User;
 import com.hk.util.HKCollectionUtils;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +25,8 @@ public class UsersSearchCriteria {
     private List<String> productVariantIds;
     private List<String> productIds;
     private Boolean verified;
+    private Integer userOrderCount;
+    private String equality = "ge"; // ge (greater than) is the default value for equality
     private boolean atleastOneVariableSet = false;
     private boolean notOnProduction = true;
 
@@ -48,6 +47,7 @@ public class UsersSearchCriteria {
 
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
         userCriteria.add(Restrictions.isNotNull("user.email"));
+
         boolean orderCriteria = false,
                 cliCriteria = false,
                 pvCriteria = false,
@@ -58,8 +58,27 @@ public class UsersSearchCriteria {
                 pv2Criteria = false,
                 rolesCriteria = false,
                 baseOrderCategoryCriteria = false,
-                categoryCriteria = false;
+                categoryCriteria = false,
+                userReportCriteria = false;
 
+
+        /*
+     select u.login,u.email,u.name,ur.number_of_orders_by_user
+from user u, user_report ur
+where u.email is not null
+and u.id=ur.user_id
+and ur.number_of_orders_by_user <=10;
+        */
+
+
+        if (userOrderCount != null) {
+            if (!userReportCriteria) {
+                userCriteria.createAlias("user.report", "report");
+                userReportCriteria = true;
+            }
+            SimpleExpression se = createRestriction(userOrderCount, equality);
+            userCriteria.add(se);
+        }
         if (verified != null) {
             if (!rolesCriteria) {
                 rolesCriteria = true;
@@ -154,19 +173,41 @@ public class UsersSearchCriteria {
                 projList.add(Projections.property("user.name"));
                 projList.add(Projections.property("user.subscribedMask"));
                 projList.add(Projections.property("user.unsubscribeToken"));
-                userCriteria.setProjection(projList);
             } else {
                 projList.add(Projections.distinct(Projections.property("user.email")));
                 projList.add(Projections.property("user.login"));
                 projList.add(Projections.property("user.name"));
                 projList.add(Projections.property("user.subscribedMask"));
                 projList.add(Projections.property("user.unsubscribeToken"));
-                userCriteria.setProjection(projList);
             }
+            userCriteria.setProjection(projList);
         } else {
             userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         }
         return userCriteria;
+    }
+
+    private SimpleExpression createRestriction(Integer userOrderCount, String equality) {
+        String condition = "report.numberOfOrdersByUser";
+        int count = userOrderCount.intValue();
+        SimpleExpression se = null;
+        if ("ge".equalsIgnoreCase(equality)) {
+            se = Restrictions.ge(condition, count);
+        } else if ("gt".equalsIgnoreCase(equality)) {
+
+            se = Restrictions.gt(condition, count);
+        } else if ("eq".equalsIgnoreCase(equality)) {
+
+            se = Restrictions.eq(condition, count);
+        } else if ("le".equalsIgnoreCase(equality)) {
+
+            se = Restrictions.le(condition, count);
+        } else if ("lt".equalsIgnoreCase(equality)) {
+            se = Restrictions.lt(condition, count);
+        } else {
+            throw new RuntimeException("Illegal equality operator");
+        }
+        return se;
     }
 
     public UsersSearchCriteria setZones(List<Long> zones) {
@@ -216,4 +257,22 @@ public class UsersSearchCriteria {
         return this;
     }
 
+    public UsersSearchCriteria setEquality(String equality) {
+        this.equality = equality;
+        atleastOneVariableSet = true;
+        return this;
+    }
+
+    public UsersSearchCriteria setUserOrderCount(String userOrderCount) {
+        try {
+            this.userOrderCount = Integer.parseInt(userOrderCount);
+            atleastOneVariableSet = this.userOrderCount == null ? atleastOneVariableSet : true;
+        } catch (Exception e) {
+            this.userOrderCount = null;
+        }
+        return this;
+    }
 }
+
+
+
