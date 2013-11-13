@@ -432,6 +432,8 @@ public class POAction extends BasePaginatedAction {
         params.add("warehouse");
         params.add("extraInventoryCreated");
         params.add("poType");
+        params.add("startDate");
+        params.add("endDate");
         return params;
     }
 
