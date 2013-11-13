@@ -2,6 +2,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%
 String hybridReleaseStr = (String) ServiceLocatorFactory.getProperty(Keys.Env.hybridRelease);
 boolean hybridRelease = Boolean.parseBoolean(hybridReleaseStr);
@@ -38,6 +39,9 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
     <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
   </head>
   <body id="${bodyId}">
+  <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="${pageType}"
+      />
   <s:layout-component name="modal"/>
   <div id="container" class="container_24">
 

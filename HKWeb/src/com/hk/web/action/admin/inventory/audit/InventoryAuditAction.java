@@ -103,10 +103,12 @@ public class InventoryAuditAction extends BasePaginatedAction {
           } catch (Exception e) {
             logger.error("Got an exception while saving BIN mapping: " + e);
             addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Could not update location</strong>"));
+            addRedirectAlertMessage(new SimpleMessage("Exception -> "+e.getCause()));
           }
         } catch (Exception e) {
           logger.error("Got an exception while saving audit records: " + e);
-          addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Duplicate SKU Item Barcode</strong>"));
+          addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Could not save Audit and Location Records</strong>"));
+          addRedirectAlertMessage(new SimpleMessage("Exception -> "+e.getCause()));
         }
       } else if (skuItem != null && bin != null && !skuItem.getSkuGroup().getSku().getWarehouse().getId().equals(warehouse.getId())) {
         addRedirectAlertMessage(new SimpleMessage("<strong style='color:red'>Incorrect Warehouse for SkuItem and Location</strong>"));
