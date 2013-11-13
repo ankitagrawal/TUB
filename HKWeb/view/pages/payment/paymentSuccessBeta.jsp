@@ -29,7 +29,10 @@
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 
 
-<s:layout-render name="/layouts/paymentSuccessBeta.jsp" pageTitle="Payment Successful">
+<s:layout-render name="/layouts/paymentSuccessBeta.jsp"
+                 pageTitle="Payment Successful"
+                 paymentSuccessBean="${actionBean}"
+    >
 <s:layout-component name="htmlHead">
   <script type="text/javascript">
     $(document).ready(function () {

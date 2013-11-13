@@ -1,10 +1,11 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     <head>
-        <link rel="shortcut icon" href="<hk:vhostImage/>/favicon2.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <title>
             <c:choose>
                 <c:when test="${hk:isNotBlank(pageTitle)}">
@@ -36,6 +37,9 @@
         <s:layout-component name="htmlHead"/>
     </head>
     <body id="${bodyId}">
+    <s:layout-render name="/layouts/embed/tagManager.jsp"
+                   pageType="<%=TagConstants.PageType.LOGIN%>"
+      />
     <s:layout-component name="modal"/>
     <div id="container">
             <%--<s:layout-component name="header">
