@@ -91,7 +91,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("Please select a SO for validation"));
 		}
 		addRedirectAlertMessage(new SimpleMessage("Selected Shipping Orders have been validated"));
-		return new RedirectResolution(ActionAwaitingQueueAction.class);
+		return new RedirectResolution(ShippingOrderUtilityAction.class);
 	}
 
 	public String getGatewayOrderIds() {
