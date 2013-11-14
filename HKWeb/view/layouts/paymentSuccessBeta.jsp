@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -16,7 +17,7 @@
         <%--<s:layout-render name="/layouts/embed/_bladeMarketing.jsp" pageType="purchase"/>--%>
         <%--<!--Tyroo marketing-->--%>
         <%--<s:layout-render name="/layouts/embed/_tyrooMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>--%>
-        <link rel="shortcut icon" href="<hk:vhostImage/>/favicon2.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <title>
             <c:choose>
                 <c:when test="${hk:isNotBlank(pageTitle)}">
@@ -48,6 +49,10 @@
         </style>
     </head>
     <body id="${bodyId}">
+    <s:layout-render name="/layouts/embed/tagManager.jsp"
+                     pageType="<%=TagConstants.PageType.PAYMENT_SUCCESS%>"
+                     paymentSuccessBean="${paymentSuccessBean}"
+        />
     <s:layout-component name="modal"/>
 
     <div id="container">

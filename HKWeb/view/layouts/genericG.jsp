@@ -2,6 +2,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%
 String hybridReleaseStr = (String) ServiceLocatorFactory.getProperty(Keys.Env.hybridRelease);
 boolean hybridRelease = Boolean.parseBoolean(hybridReleaseStr);
