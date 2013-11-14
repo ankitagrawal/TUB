@@ -1036,6 +1036,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
         if (availableUnBookedInvnListToUpdate.size() > 0) {
           updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
+          updateVariantInfoOnEdge(productVariant);
         }
       }
 
