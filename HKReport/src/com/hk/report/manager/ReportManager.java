@@ -586,7 +586,7 @@ public class ReportManager {
 
             } else {
                 setCellValue(row, 15, 0.0);
-                setCellValue(row, 1, "NonCOD");
+                setCellValue(row, 1, "Non-COD");
                 if (warehouse.getId().equals(WarehouseService.GGN_BRIGHT_WH_ID)) {
                     setCellValue(row, 26, ReportConstants.Ggn_Prepaid_Area_Customer_Code);
                     setCellValue(row,16,ReportConstants.Ggn_Vendor_Code);
