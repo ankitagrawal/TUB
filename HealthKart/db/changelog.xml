@@ -14358,4 +14358,7 @@
             insert into permission values ('OUTWARD_VALIDATE_SO');
         </sql>
     </changeSet>
+    <changeSet author="RD (generated)" id="20131114-1">
+        <addAutoIncrement tableName="hk_reach_pricing_engine" columnName="id" columnDataType="int"/>
+    </changeSet>
 </databaseChangeLog>
