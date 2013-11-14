@@ -91,6 +91,20 @@
             </tr>
             <tr>
                 <td>
+                    UserOrderCount
+                </td>
+                <td>
+                    <s:text name="userOrderCount"></s:text>
+                </td>
+                <td>
+                    equality
+                </td>
+                <td>
+                    <s:text name="equality"></s:text>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <s:submit name="search"></s:submit>
                 </td>
             </tr>

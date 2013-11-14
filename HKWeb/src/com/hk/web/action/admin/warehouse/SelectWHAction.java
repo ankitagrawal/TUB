@@ -39,6 +39,24 @@ public class SelectWHAction extends BaseAction {
     private String states;
     private String categories;
     private String verified;
+    private String equality;
+    private String userOrderCount;
+
+    public String getEquality() {
+        return equality;
+    }
+
+    public void setEquality(String equality) {
+        this.equality = equality;
+    }
+
+    public String getUserOrderCount() {
+        return userOrderCount;
+    }
+
+    public void setUserOrderCount(String userOrderCount) {
+        this.userOrderCount = userOrderCount;
+    }
 
     public String getPvs() {
         return pvs;
@@ -139,6 +157,12 @@ public class SelectWHAction extends BaseAction {
         if (prodnames != null) {
             List<String> ids = Arrays.asList(prodnames.split(","));
             criteria.setProductIds(ids);
+        }
+        if (userOrderCount != null) {
+            criteria.setUserOrderCount(userOrderCount);
+        }
+        if (equality != null) {
+            criteria.setEquality(equality);
         }
         if (verified != null) {
             criteria.setVerified(verified);

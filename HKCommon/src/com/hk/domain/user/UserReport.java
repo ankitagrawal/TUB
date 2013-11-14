@@ -1,5 +1,8 @@
 package com.hk.domain.user;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import javax.persistence.*;
 
 /**
@@ -12,14 +15,28 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_report")
 
-public class UserReport {
+public class UserReport implements java.io.Serializable {
+    @GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "user"))
     @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "user_id", unique = true, nullable = false)
+    private Long id;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @PrimaryKeyJoinColumn
     private User user;
 
     @Column(name = "number_of_orders_by_user", nullable = false)
     private Integer numberOfOrdersByUser;
+
+
+    public Integer getNumberOfOrdersByUser() {
+        return numberOfOrdersByUser;
+    }
+
+    public void setNumberOfOrdersByUser(Integer numberOfOrdersByUser) {
+        this.numberOfOrdersByUser = numberOfOrdersByUser;
+    }
 
     public User getUser() {
         return user;
@@ -29,11 +46,12 @@ public class UserReport {
         this.user = user;
     }
 
-    public Integer getNumberOfOrdersByUser() {
-        return numberOfOrdersByUser;
+    public Long getId() {
+        return id;
     }
 
-    public void setNumberOfOrdersByUser(Integer numberOfOrdersByUser) {
-        this.numberOfOrdersByUser = numberOfOrdersByUser;
+    public void setId(Long id) {
+        this.id = id;
     }
+
 }
