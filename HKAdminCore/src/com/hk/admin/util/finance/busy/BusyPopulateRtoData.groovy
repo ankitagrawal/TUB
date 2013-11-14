@@ -30,7 +30,7 @@ public class BusyPopulateRtoData {
     sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
             serverPassword, "com.mysql.jdbc.Driver");
 
-    busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/hk_busy", serverUser,
+    busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
             serverPassword, "com.mysql.jdbc.Driver");
   }
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulateRtoData.class);
