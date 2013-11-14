@@ -7,7 +7,6 @@
         <mapping class="com.hk.domain.user.Role"/>
         <mapping class="com.hk.domain.user.Permission"/>
         <mapping class="com.hk.domain.user.User"/>
-        <mapping class="com.hk.domain.user.UserReport"/>
         <mapping class="com.hk.domain.catalog.product.Product"/>
         <mapping class="com.hk.domain.catalog.product.ProductFeature"/>
         <mapping class="com.hk.domain.catalog.category.Category"/>
