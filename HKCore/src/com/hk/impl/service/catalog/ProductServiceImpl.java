@@ -761,6 +761,10 @@ public class ProductServiceImpl implements ProductService {
             productVariant.setMrpQty(hKApiSkuResponse.getQty());
             productVariant.setNetQty(hKApiSkuResponse.getNetQty());
             productVariant.setHkPrice(hKApiSkuResponse.getHkPrice());
+
+            Double newHkPrice = hKApiSkuResponse.getMrp() * (1 - productVariant.getDiscountPercent());
+            productVariant.setHkPrice(newHkPrice);  
+
             Warehouse warehouse = warehouseService.getWarehouse(hKApiSkuResponse.getFcCode());
 //            Warehouse warehouse = baseDao.get(Warehouse.class, hKApiSkuResponse.getWarehouseId());
             productVariant.setWarehouse(warehouse);
