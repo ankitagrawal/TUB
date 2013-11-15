@@ -201,5 +201,5 @@ public class PermissionConstants {
     public static final String MARK_RP_APPEASEMENT = "MARK_RP_APPEASEMENT";
 
     public static final String MANAGE_REVERSE_ORDER = "MANAGE_REVERSE_ORDER";
-
+    public static final String OUTWARD_VALIDATE_SO = "OUTWARD_VALIDATE_SO";
 }

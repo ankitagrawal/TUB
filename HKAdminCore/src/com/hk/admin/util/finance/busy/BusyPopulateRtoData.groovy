@@ -76,8 +76,7 @@ public class BusyPopulateRtoData {
                                     left join gateway pay_gate on p.gateway_id = pay_gate.id
                                     inner join warehouse w on w.id = so.warehouse_id
                                     where so.shipping_order_status_id between 180 and 280
-                                    and ifnull(ship.return_date, pvi.txn_date)>= {lastUpdateDate}
-                                    and ifnull(ship.return_date, pvi.txn_date) > '2011-11-08 19:59:36'
+                                    and ifnull(ship.return_date, pvi.txn_date) >= ${lastUpdateDate}
                                     GROUP BY so.id
                                     ORDER BY pvi.txn_date ASC
                  """) {
@@ -162,7 +161,11 @@ public class BusyPopulateRtoData {
 	    else{
         sale_type = "VAT TAX INC";
 	    }
+
       account_name = accountingInvoice.account_name;
+      if(account_name.length() > 40){
+          account_name = account_name.substring(0,39);
+      }
 
       if(accountingInvoice.payment_mode_id == 40){
 			debtors  = "COD_"+accountingInvoice.courier_name;
@@ -285,22 +288,20 @@ public class BusyPopulateRtoData {
     public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
       int s_no = 0;
       sql.eachRow("""
-                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, pvi.qty*li.discount_on_hk_price/li.qty, pvi.qty*li.reward_point_discount/li.qty,
-                      t.value as tax_value,pvi.qty*li.order_level_discount/li.qty, li.cost_price
+                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, (pvi.qty)*(li.discount_on_hk_price)/(li.qty) as discount_on_hk_price, (pvi.qty*li.reward_point_discount)/li.qty as reward_point_discount,
+                      t.value as tax_value,(pvi.qty)*(li.order_level_discount)/(li.qty) as order_level_discount, li.cost_price
 
                       from line_item li
                       inner join tax t on li.tax_id = t.id
                       join shipping_order so on li.shipping_order_id=so.id
 
                       left join shipment ship on so.shipment_id=ship.id
-                      left join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+                      join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
                       from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
 
                       on li.id=pvi.line_item_id
                       where li.shipping_order_id = ${shipping_order_id}
-                      and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
                       group by li.id
-
                    """) {
         invoiceItems ->
 
@@ -313,7 +314,7 @@ public class BusyPopulateRtoData {
 
       String unit = "pcs";
       Double mrp = invoiceItems.marked_price;
-      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty);
+      Double discount = (invoiceItems.discount_on_hk_price + invoiceItems.order_level_discount)/qty;
       Double rate = invoiceItems.hk_price - discount;
       Double vat = invoiceItems.tax_value;
       Double amount = rate*qty;
@@ -346,7 +347,7 @@ public class BusyPopulateRtoData {
                     from line_item li
                     inner join tax t on li.tax_id = t.id
 
-                    left join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+                    join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
 
                     from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
 
@@ -354,7 +355,6 @@ public class BusyPopulateRtoData {
                     join shipping_order so on li.shipping_order_id=so.id
                     left join shipment ship on so.shipment_id=ship.id
                     where li.shipping_order_id = ${shipping_order_id}
-                    and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
                     group by li.shipping_order_id
                  """) {
       footerItems ->
