@@ -1029,7 +1029,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     private void updateVariantInfoOnEdge(ProductVariant productVariant) {
         
-        logger.debug("sync edge flag is " + AppConstants.syncEdge);
+        logger.error("sync edge flag is " + AppConstants.syncEdge);
         if (AppConstants.syncEdge) {
             VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
             variantStockSyncRequest.setOldVariantId(productVariant.getId());
