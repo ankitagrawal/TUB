@@ -91,6 +91,14 @@
             </tr>
             <tr>
                 <td>
+                    emails
+                </td>
+                <td>
+                    <s:textarea name="emails"></s:textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     UserOrderCount
                 </td>
                 <td>

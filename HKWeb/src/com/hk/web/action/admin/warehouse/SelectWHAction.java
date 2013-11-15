@@ -41,6 +41,7 @@ public class SelectWHAction extends BaseAction {
     private String verified;
     private String equality;
     private String userOrderCount;
+    private String emails;
 
     public String getEquality() {
         return equality;

@@ -1,10 +1,10 @@
 package com.hk.rest.resource;
 
+import com.akube.framework.util.StringUtils;
 import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserSearchService;
 import com.hk.util.HKCollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,12 +36,14 @@ public class UserInformationResource {
     // variables that can be set
     private List<Long> zones;
     private List<String> cities;
+    private List<String> emails;
     private List<String> states;
     private List<String> productIds;
     private List<String> productVariantIds;
     private List<String> categories;
-    private String verified;
-    private String userOrderCount;
+    private List<Long> storeIds;
+    private Boolean verified;
+    private Integer userOrderCount;
     private String equality;
     private int minimum = 1;
 
@@ -63,35 +63,30 @@ public class UserInformationResource {
                                       @FormParam("categories") String categories,
                                       @FormParam("userOrderCount") String userOrderCount,
                                       @FormParam("equality") String equality,
-                                      @FormParam("minimum") String minimum) {
-        List<String> prodIds = getListFromString(productIds, ",");
-        List<String> prodVarIds = getListFromString(productVariantIds, ",");
-        List<String> allcities = getListFromString(cities, ",");
-        List<String> allStates = getListFromString(states, ",");
-        List<String> allZones = getListFromString(zones, ",");
-        List<String> allCats = getListFromString(categories, ",");
+                                      @FormParam("minimum") String minimum,
+                                      @FormParam("storeIds") String storeIds,
+                                      @FormParam("emails") String emails) {
+        List<String> allProdIds = StringUtils.getListFromString(productIds, ",");
+        List<String> allProdVarIds = StringUtils.getListFromString(productVariantIds, ",");
+        List<String> allCities = StringUtils.getListFromString(cities, ",");
+        List<String> allStates = StringUtils.getListFromString(states, ",");
+        List<String> allZones = StringUtils.getListFromString(zones, ",");
+        List<String> allCategories = StringUtils.getListFromString(categories, ",");
+        List<String> allStores = StringUtils.getListFromString(storeIds, ",");
+        List<String> allEmails = StringUtils.getListFromString(emails, ",");
 
-
-        this.productIds = prodIds;
-        this.productVariantIds = prodVarIds;
-        this.cities = allcities;
+        this.emails = allEmails;
+        this.productIds = allProdIds;
+        this.productVariantIds = allProdVarIds;
+        this.cities = allCities;
         this.states = allStates;
-        this.categories = allCats;
-        this.verified = verified;
-        this.userOrderCount = userOrderCount;
+        this.categories = allCategories;
+        this.verified = setVerified(verified);
+        this.userOrderCount = setUserOrderCount(userOrderCount);
         this.equality = equality;
-        try {
-            this.zones = new ArrayList<Long>();
-            for (String z : allZones) {
-                Long l = Long.parseLong(z);
-                this.zones.add(l);
-            }
-        } catch (Exception ignore) {
-        }
-        try {
-            this.minimum = Integer.parseInt(minimum);
-        } catch (Exception ignore) {
-        }
+        this.zones = setLongVals(allZones);
+        this.storeIds = setLongVals(allStores);
+        this.minimum = setMinimum(minimum);
 
         return getUsers();
     }
@@ -100,17 +95,23 @@ public class UserInformationResource {
         Response response = null;
         criteria = new UsersSearchCriteria();
         try {
-            if (StringUtils.isNotBlank(verified)) {
+            if (verified != null) {
                 criteria.setVerified(verified);
             }
-            if (StringUtils.isNotBlank(userOrderCount)) {
+            if (userOrderCount != null) {
                 criteria.setUserOrderCount(userOrderCount);
             }
-            if (StringUtils.isNotBlank(equality)) {
+            if (org.apache.commons.lang.StringUtils.isNotBlank(equality)) {
                 criteria.setEquality(equality);
+            }
+            if (HKCollectionUtils.isNotBlank(storeIds)) {
+                criteria.setStoreIds(storeIds);
             }
             if (HKCollectionUtils.isNotBlank(productIds)) {
                 criteria.setProductIds(productIds);
+            }
+            if (HKCollectionUtils.isNotBlank(emails)) {
+                criteria.setEmails(emails);
             }
             if (HKCollectionUtils.isNotBlank(categories)) {
                 criteria.setCategories(categories);
@@ -175,19 +176,51 @@ public class UserInformationResource {
         return response;
     }
 
-    private List<String> getListFromString(String s, String delimiter) {
-        if (s == null) return null;
-        delimiter = (delimiter == null || delimiter.isEmpty()) ? "," : delimiter;
-        List<String> retList = new LinkedList<String>();
-        String[] ss = s.split(delimiter);
-        for (String str : ss) {
-            if (str != null && !str.isEmpty()) {
-                str = str.trim();
-                retList.add(str);
+    private int setMinimum(String minimum) {
+        int min = 1;
+        try {
+            min = Integer.parseInt(minimum);
+        } catch (Exception ignore) {
+        }
+        return min;
+    }
+
+    private List<Long> setLongVals(List<String> allVals) {
+        if (allVals == null) {
+            return null;
+        }
+        List<Long> vals = new ArrayList<Long>();
+        for (String z : allVals) {
+            try {
+                Long id = Long.parseLong(z);
+                vals.add(id);
+            } catch (Exception ignore) {
             }
         }
-        return retList;
+
+        return vals;
     }
+
+    private Integer setUserOrderCount(String userOrderCount) {
+        Integer uoc = null;
+        try {
+            uoc = Integer.parseInt(userOrderCount);
+        } catch (Exception e) {
+            uoc = null;
+        }
+        return uoc;
+    }
+
+    private Boolean setVerified(String verified) {
+        Boolean ver = null;
+        try {
+            ver = "true".equalsIgnoreCase(verified) ? true : "false".equalsIgnoreCase(verified) ? false : null;
+        } catch (Exception e) {
+            this.verified = null;
+        }
+        return ver;
+    }
+
 
     class UserDto {
         public String email;

@@ -2,6 +2,7 @@ package com.hk.core.search;
 
 import com.hk.domain.user.User;
 import com.hk.util.HKCollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 public class UsersSearchCriteria {
     // list of variables that might be received
+    private List<String> emails;
     private List<String> categories;
     private List<String> states;
     private List<String> cities;
@@ -29,7 +31,7 @@ public class UsersSearchCriteria {
     private String equality = "ge"; // ge (greater than) is the default value for equality
     private boolean atleastOneVariableSet = false;
     private boolean notOnProduction = true;
-
+    private List<Long> storeIds;
     private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
 
     private boolean minInfo = false;
@@ -37,7 +39,6 @@ public class UsersSearchCriteria {
     public DetachedCriteria getSearchCriteria(boolean minInfo) {
         return getCriteriaFromBaseCriteria(minInfo);
     }
-
 
     private DetachedCriteria getCriteriaFromBaseCriteria(boolean fetchMinimumRequiredData) {
 
@@ -59,17 +60,16 @@ public class UsersSearchCriteria {
                 rolesCriteria = false,
                 baseOrderCategoryCriteria = false,
                 categoryCriteria = false,
-                userReportCriteria = false;
+                userReportCriteria = false,
+                userStoreCriteria = false;
 
-
-        /*
-     select u.login,u.email,u.name,ur.number_of_orders_by_user
-from user u, user_report ur
-where u.email is not null
-and u.id=ur.user_id
-and ur.number_of_orders_by_user <=10;
-        */
-
+        if (HKCollectionUtils.isNotBlank(storeIds)) {
+            if (!userStoreCriteria) {
+                userCriteria.createAlias("user.store", "store");
+                userStoreCriteria = true;
+            }
+            userCriteria.add(Restrictions.in("store.id", storeIds));
+        }
 
         if (userOrderCount != null) {
             if (!userReportCriteria) {
@@ -142,6 +142,10 @@ and ur.number_of_orders_by_user <=10;
             userCriteria.add(Restrictions.in("addr.city", cities));
         }
 
+        if (HKCollectionUtils.isNotBlank(emails)) {
+            userCriteria.add(Restrictions.in("user.email", emails));
+        }
+
         if (HKCollectionUtils.isNotBlank(states)) {
             if (!addrCriteria) {
                 userCriteria.createAlias("user.addresses", "addr");
@@ -212,67 +216,71 @@ and ur.number_of_orders_by_user <=10;
 
     public UsersSearchCriteria setZones(List<Long> zones) {
         this.zones = zones;
-        atleastOneVariableSet = true;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.zones) ? true : atleastOneVariableSet;
         return this;
     }
 
-    public UsersSearchCriteria setVerified(String verified) {
-        try {
-            this.verified = "true".equalsIgnoreCase(verified) ? true : "false".equalsIgnoreCase(verified) ? false : null;
-            atleastOneVariableSet = this.verified == null ? atleastOneVariableSet : true;
-        } catch (Exception e) {
-            this.verified = null;
+    public UsersSearchCriteria setVerified(Boolean verified) {
+        if (verified != null) {
+            this.verified = verified;
+            atleastOneVariableSet = true;
         }
         return this;
     }
 
-    public UsersSearchCriteria setProductIds(List<String> ids) {
-        this.productIds = ids;
-        atleastOneVariableSet = true;
+    public UsersSearchCriteria setProductIds(List<String> productIds) {
+        this.productIds = productIds;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.productIds) ? true : atleastOneVariableSet;
         return this;
     }
 
-    public UsersSearchCriteria setProductVariantIds(List<String> ids) {
-        this.productVariantIds = ids;
-        atleastOneVariableSet = true;
+    public UsersSearchCriteria setProductVariantIds(List<String> productVariantIds) {
+        this.productVariantIds = productVariantIds;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.productVariantIds) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setCities(List<String> cities) {
         this.cities = cities;
-        atleastOneVariableSet = true;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.cities) ? true : atleastOneVariableSet;
+        return this;
+    }
+
+    public UsersSearchCriteria setEmails(List<String> emails) {
+        this.emails = emails;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.emails) ? true : atleastOneVariableSet;
         return this;
     }
 
 
     public UsersSearchCriteria setStates(List<String> states) {
         this.states = states;
-        atleastOneVariableSet = true;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.states) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setCategories(List<String> categories) {
         this.categories = categories;
-        atleastOneVariableSet = true;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.categories) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setEquality(String equality) {
         this.equality = equality;
-        atleastOneVariableSet = true;
+        atleastOneVariableSet = StringUtils.isNotBlank(equality) ? true : atleastOneVariableSet;
         return this;
     }
 
-    public UsersSearchCriteria setUserOrderCount(String userOrderCount) {
-        try {
-            this.userOrderCount = Integer.parseInt(userOrderCount);
-            atleastOneVariableSet = this.userOrderCount == null ? atleastOneVariableSet : true;
-        } catch (Exception e) {
-            this.userOrderCount = null;
-        }
+
+    public UsersSearchCriteria setStoreIds(List<Long> storeIds) {
+        this.storeIds = storeIds;
+        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.storeIds) ? true : atleastOneVariableSet;
+        return this;
+    }
+
+    public UsersSearchCriteria setUserOrderCount(Integer userOrderCount) {
+        this.userOrderCount = userOrderCount;
+        atleastOneVariableSet = this.userOrderCount != null ? true : atleastOneVariableSet;
         return this;
     }
 }
-
-
-
