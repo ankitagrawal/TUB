@@ -141,7 +141,7 @@
             <%
             CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
             StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
-            if (storeVariantBasicDetails != null) {
+            if (storeVariantBasicDetails != null && storeVariantBasicDetails.getId() !=null) {
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
