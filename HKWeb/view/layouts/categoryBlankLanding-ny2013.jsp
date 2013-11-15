@@ -37,9 +37,6 @@
 
     <s:layout-component name="htmlHead"/>
   </head>
-  <s:layout-render name="/layouts/embed/tagManager.jsp"
-                   pageType="<%=TagConstants.PageType.CAMPAIGN_LANDING%>"
-      />
   <body id="${bodyId}">
   <div class="jqmWindow" id="discountCouponModal"></div>
   <s:layout-component name="modal"/>
