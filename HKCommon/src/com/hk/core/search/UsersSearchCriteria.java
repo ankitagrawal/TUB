@@ -47,7 +47,11 @@ public class UsersSearchCriteria {
         }
 
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
-        userCriteria.add(Restrictions.isNotNull("user.email"));
+        if (HKCollectionUtils.isNotBlank(emails)) {
+            userCriteria.add(Restrictions.in("user.email", emails));
+        } else {
+            userCriteria.add(Restrictions.isNotNull("user.email"));
+        }
 
         boolean orderCriteria = false,
                 cliCriteria = false,
@@ -140,10 +144,6 @@ public class UsersSearchCriteria {
                 addrCriteria = true;
             }
             userCriteria.add(Restrictions.in("addr.city", cities));
-        }
-
-        if (HKCollectionUtils.isNotBlank(emails)) {
-            userCriteria.add(Restrictions.in("user.email", emails));
         }
 
         if (HKCollectionUtils.isNotBlank(states)) {
