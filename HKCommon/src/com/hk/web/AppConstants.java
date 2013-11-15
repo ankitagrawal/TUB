@@ -5,6 +5,7 @@ public class AppConstants {
     public static String  contextPath;
     public static String  appBasePath;
     public static boolean isHybridRelease;
+    public static boolean syncEdge;
 
     public static String getContextPath() {
         return contextPath;
@@ -20,6 +21,10 @@ public class AppConstants {
 
     public static boolean isHybridRelease() {
         return isHybridRelease;
+    }
+
+    public static boolean isSyncEdge() {
+        return syncEdge;
     }
 
 }

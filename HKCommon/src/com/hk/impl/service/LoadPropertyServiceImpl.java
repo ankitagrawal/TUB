@@ -26,6 +26,9 @@ public class LoadPropertyServiceImpl implements LoadPropertyService {
     @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
     private boolean           hybridRelease;
 
+    
+    
+
     @Override
     public Object getProperty(String propertyName, String defaultValue) {
 
@@ -88,6 +91,10 @@ public class LoadPropertyServiceImpl implements LoadPropertyService {
 
     public boolean isHybridRelease() {
         return hybridRelease;
+    }
+
+    public boolean isSyncEdge() {
+        return Boolean.parseBoolean(getProperty(Keys.Env.syncEdge, "true").toString());
     }
 
 }
