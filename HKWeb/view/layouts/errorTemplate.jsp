@@ -36,10 +36,6 @@
       <%--css finish--%>
   </head>
   <body>
-  <s:layout-render name="/layouts/embed/tagManager.jsp"
-                   pageType="<%=TagConstants.PageType.ERROR%>"
-                   errorCode="${errorCode}"
-      />
   <div id="container" class="container_24">
     <s:layout-component name="analytics">
       <s:layout-render name="/layouts/embed/_analytics.jsp"/>
