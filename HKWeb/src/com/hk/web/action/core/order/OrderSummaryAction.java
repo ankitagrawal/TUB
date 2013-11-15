@@ -82,6 +82,9 @@ public class OrderSummaryAction extends BaseAction {
         if (netShopping >= codFreeAfter) {
             codCharges = 0.0;
         }
+        if (isHybridRelease()) {
+          return new ForwardResolution("/pages/orderSummaryBeta.jsp");
+        }
         return new ForwardResolution("/pages/orderSummary.jsp");
     }
 

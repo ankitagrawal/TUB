@@ -40,7 +40,18 @@
  <c:set var="product" value="${pa.product}"/>
  <c:set var="seoData" value="${pa.seoData}"/>
  <c:set var="subscriptionProduct" value="${pa.subscriptionProduct}"/>
- <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}" isOutOfStockPage="${pa.outOfStockPage}">
+ <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}" isOutOfStockPage="${pa.outOfStockPage}"
+                  primaryCategory="${product.primaryCategory.name}"
+                  secondaryCategory="${product.secondaryCategory.name}"
+                  brand="${product.brand}"
+                  productId="${product.id}"
+                  variantOfferPrice="${product.minimumHKPriceProductVariant.hkPrice}"
+                  variantMrp="${product.minimumHKPriceProductVariant.markedPrice}"
+                  variantDiscount="${product.minimumHKPriceProductVariant.discountPercent}"
+                  variantName="${product.name}"
+                  oldVariantId="${product.minimumHKPriceProductVariant.id}"
+                  oos="${pa.outOfStockPage}"
+     >
 <%--<s:layout-render name="/layouts/default.jsp" pageTitle="${seoData.title}">--%>
 
 
@@ -200,8 +211,8 @@
 <s:layout-component name="urlFragment">${pa.menuNodeUrlFragment}</s:layout-component>
 
 <s:layout-component name="topBanner">
-	<%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />--%>
-    <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" />
+	<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" categories="${product.secondaryCategory.name}" />
+    <%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}" />--%>
 	<div class="clear"></div>
 	<c:if test="${product.service}">
 		<s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>

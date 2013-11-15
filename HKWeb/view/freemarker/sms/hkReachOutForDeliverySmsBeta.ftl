@@ -1,0 +1,1 @@
+Dear ${customer}, your Order No. ${orderId?c} will be delivered today by HKReach agent ${deliveryAgent}.

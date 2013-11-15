@@ -191,4 +191,11 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 		String query = "from UserCodCall  where createDate >= :createDate and createDate <= :nextDate";
 		return getSession().createQuery(query).setDate("createDate",createDate).setDate("nextDate",nextDate).list();
 	}
+
+  public int getOrderCountByUser(Long userId){
+      String sql = "select count(*) from base_order where user_id = " + userId + " and order_status_id = " + EnumOrderStatus.Delivered.getId();
+      return countByNativeSql(sql);
+      
+      
+  }
 }

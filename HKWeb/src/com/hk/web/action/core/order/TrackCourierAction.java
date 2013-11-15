@@ -71,7 +71,10 @@ public class TrackCourierAction extends BaseAction {
         Resolution resolution = null;
         EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
 	    if(enumCourier == null){
-		 return new RedirectResolution("/pages/trackShipment.jsp");  
+         if(isHybridRelease())
+		    return new RedirectResolution("/pages/trackShipmentBeta.jsp");
+         else
+            return new RedirectResolution("/pages/trackShipment.jsp");
 	    }
         switch (enumCourier) {
             case Aramex:
@@ -94,9 +97,15 @@ public class TrackCourierAction extends BaseAction {
                     logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (chhotuCourierDelivery != null) {
-                    resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
+                    if(isHybridRelease())
+                        resolution = new ForwardResolution("/pages/chhotuCourierBeta.jsp");
+                    else
+                        resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                    if(isHybridRelease())
+                        resolution = new RedirectResolution("/pages/trackShipmentBeta.jsp");
+                    else
+                        resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
 
@@ -115,9 +124,15 @@ public class TrackCourierAction extends BaseAction {
                         awb = jsonObject.get(CourierConstants.DELHIVERY_AWB).getAsString();
                         paymentType = jsonObject.get(CourierConstants.DELHIVERY_ORDER_TYPE).getAsString();
                     }
-                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                    if(isHybridRelease())
+                        resolution = new ForwardResolution("/pages/courierDetailsBeta.jsp");
+                    else
+                        resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                    if(isHybridRelease())
+                        resolution = new RedirectResolution("/pages/trackShipmentBeta.jsp");
+                    else
+                        resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
             case BlueDart:
@@ -133,9 +148,16 @@ public class TrackCourierAction extends BaseAction {
                     if (!responseStatus.equals(CourierConstants.BLUEDART_ERROR_MSG)) {
                         status = xmlElement.getChildText(CourierConstants.BLUEDART_STATUS);
                     }
-                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                    if(isHybridRelease())
+                        resolution = new ForwardResolution("/pages/courierDetailsBeta.jsp");
+                    else
+                        resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
-                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                    if(isHybridRelease())
+                        resolution = new RedirectResolution("/pages/trackShipmentBeta.jsp");
+                    else
+                        resolution = new RedirectResolution("/pages/trackShipment.jsp");
+
                 }
                 break;
             case DTDC_COD:
@@ -168,10 +190,16 @@ public class TrackCourierAction extends BaseAction {
 				ThirdPartyTrackDetails thirdPartyTrackDetails = new FedExTrackShipmentUtil().trackFedExShipment(trackingId);				
 				if(thirdPartyTrackDetails != null){
 				  status = thirdPartyTrackDetails.getAwbStatus();
-				  resolution = new ForwardResolution("/pages/courierDetails.jsp");
-				}
+                  if(isHybridRelease())
+				      resolution = new ForwardResolution("/pages/courierDetailsBeta.jsp");
+                  else
+                      resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                }
 				else {
-                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                    if(isHybridRelease())
+                        resolution = new RedirectResolution("/pages/trackShipmentBeta.jsp");
+                    else
+                        resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
 				break;
 
@@ -180,13 +208,22 @@ public class TrackCourierAction extends BaseAction {
 			        consignment = consignmentService.getConsignmentByAwbNumber(trackingId);
 			        if (consignment != null) {
 				        consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
-				        resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
+                        if(isHybridRelease())
+                            resolution = new ForwardResolution("/pages/hkDeliveryTrackingBeta.jsp");
+                        else
+				            resolution = new ForwardResolution("/pages/hkDeliveryTracking.jsp");
 			        } else {
-				        resolution = new RedirectResolution("/pages/trackShipment.jsp");
-			        }
+                        if(isHybridRelease())
+				            resolution = new RedirectResolution("/pages/trackShipmentBeta.jsp");
+                        else
+                            resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                    }
 		        }
 		        else{
-			        resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                    if(isHybridRelease())
+                        resolution = new RedirectResolution("/pages/trackShipmentBeta.jsp");
+                    else
+                        resolution = new RedirectResolution("/pages/trackShipment.jsp");
 		        }
 	            
 	            break;
@@ -202,7 +239,10 @@ public class TrackCourierAction extends BaseAction {
 				break;
 			
             default:
-                resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                if(isHybridRelease())
+                    resolution = new RedirectResolution("/pages/trackShipmentBeta.jsp");
+                else
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
         }
         return resolution;
@@ -220,9 +260,15 @@ public class TrackCourierAction extends BaseAction {
 			if (courierDeliveryStatus != null) {
 				status = EnumQuantiumCourierCodes.valueOf(courierDeliveryStatus).getName();				
 			}
-			return new ForwardResolution("/pages/courierDetails.jsp");
+            if(isHybridRelease())
+                return new RedirectResolution("/pages/courierDetailsBeta.jsp");
+            else
+                return new RedirectResolution("/pages/courierDetails.jsp");
 		} else {
-			return new RedirectResolution("/pages/trackShipment.jsp");
+            if(isHybridRelease())
+                return new RedirectResolution("/pages/trackShipmentBeta.jsp");
+            else
+                return new RedirectResolution("/pages/trackShipment.jsp");
 		}
 	}	
 

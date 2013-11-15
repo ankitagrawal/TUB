@@ -7,6 +7,7 @@
 <%@ page import="com.hk.pact.service.UserService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -26,7 +27,8 @@
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India"
                  topCategory="home"
-                 allCategories="home"
+                 allCategories="home"  showNewHKLink ="false"
+                 pageType="<%=TagConstants.PageType.HOME%>"
     >
 
 <s:layout-component name="htmlHead">

@@ -22,7 +22,10 @@ public class PaymentPendingApprovalAction extends BaseAction {
 
 	public Resolution pre() {
 		payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-		return new ForwardResolution("/pages/payment/paymentPendingApproval.jsp");
+        if(isHybridRelease())
+            return new ForwardResolution("/pages/payment/paymentPendingApprovalBeta.jsp");
+        else
+            return new ForwardResolution("/pages/payment/paymentPendingApproval.jsp");
 	}
 
 	public String getGatewayOrderId() {

@@ -5,10 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.hk.domain.core.JSONObject;
+
 /**
- *
  * @author vaibhav
- *
  */
 public class JSONResponseBuilder {
 
@@ -34,6 +33,10 @@ public class JSONResponseBuilder {
         return this;
     }
 
+    public Object getParam(String fieldName) {
+        return params.get(fieldName);
+    }
+
     public String build() {
         StringBuilder sb = new StringBuilder();
         JSONObject.appendJSONMap(params, sb);
@@ -41,4 +44,3 @@ public class JSONResponseBuilder {
     }
 
 }
-
