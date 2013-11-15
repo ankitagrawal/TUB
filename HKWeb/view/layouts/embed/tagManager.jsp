@@ -20,12 +20,16 @@
     PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
     if (principal != null) {
       pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getUserHash());
-      pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, principal.getGender());
+      String gender = principal.getGender();
+      if (gender == null) {
+        gender = "n.a.";
+      }
+      pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, gender);
       pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, principal.getOrderCount());
     } else {
       pageContext.setAttribute(TagConstants.TagVars.USER_HASH, "guest");
       pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, "n.a.");
-      pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, "0");
+      pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, "n.a.");
     }
     String projectEnvTagManager = (String) ServiceLocatorFactory.getProperty(Keys.Env.projectEnv);
     CartAction cartAction = (CartAction) pageContext.getAttribute("cartAction");
@@ -33,6 +37,15 @@
     // for autocomplete
     pageContext.setAttribute("cartAction", cartAction);
     pageContext.setAttribute("paymentSuccessBean", paymentSuccessBean);
+    String ua = request.getHeader("User-Agent");
+    boolean browserCompat = true;
+    if (ua != null) {
+      if (ua.indexOf("MSIE 8.0") != -1 || ua.indexOf("MSIE 7.0") != -1) {
+        browserCompat = false;
+      }
+    } else {
+      browserCompat = false;
+    }
   %>
   <script type="text/javascript">
     dataLayer = [{
@@ -57,7 +70,8 @@
       'codebase' : 'hkr',
       'signup' : '${param["signup"]}',
       'login' : '${param["login"]}',
-      'errorCode' : '${errorCode}'
+      'errorCode' : '${errorCode}',
+      'browserCompat' : '<%=browserCompat%>'
     }];
   </script>
   <%
@@ -90,8 +104,10 @@
       List<String> variantIdList = new ArrayList<String>();
       for (CartLineItem cartLineItem : cartAction.getOrder().getExclusivelyProductCartLineItems()) {
         StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
-        productIdList.add("'"+storeVariantBasicDetails.getStoreProductId()+"'");
-        variantIdList.add("'"+storeVariantBasicDetails.getId()+"'");
+        if (storeVariantBasicDetails != null) {
+          productIdList.add("'"+storeVariantBasicDetails.getStoreProductId()+"'");
+          variantIdList.add("'"+storeVariantBasicDetails.getId()+"'");
+        }
       }
       String cartProductIds = StringUtils.join(productIdList.iterator(), ",");
       String cartVariantIds = StringUtils.join(variantIdList.iterator(), ",");
@@ -125,6 +141,7 @@
             <%
             CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
             StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
+            if (storeVariantBasicDetails != null) {
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
@@ -133,6 +150,9 @@
               'price' : ${hk:decimal2(productLineItem.hkPrice)},
               'quantity' : ${productLineItem.qty}
             }
+            <%
+            }
+            %>
             <c:if test="${idx.last eq false}">,</c:if>
             </c:forEach>
             <c:if test="${paymentSuccessBean.pricingDto.codSubTotal > 0}">
