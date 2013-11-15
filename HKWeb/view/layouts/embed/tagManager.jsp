@@ -104,8 +104,10 @@
       List<String> variantIdList = new ArrayList<String>();
       for (CartLineItem cartLineItem : cartAction.getOrder().getExclusivelyProductCartLineItems()) {
         StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
-        productIdList.add("'"+storeVariantBasicDetails.getStoreProductId()+"'");
-        variantIdList.add("'"+storeVariantBasicDetails.getId()+"'");
+        if (storeVariantBasicDetails != null) {
+          productIdList.add("'"+storeVariantBasicDetails.getStoreProductId()+"'");
+          variantIdList.add("'"+storeVariantBasicDetails.getId()+"'");
+        }
       }
       String cartProductIds = StringUtils.join(productIdList.iterator(), ",");
       String cartVariantIds = StringUtils.join(variantIdList.iterator(), ",");
@@ -139,6 +141,7 @@
             <%
             CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
             StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
+            if (storeVariantBasicDetails != null) {
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
@@ -147,6 +150,9 @@
               'price' : ${hk:decimal2(productLineItem.hkPrice)},
               'quantity' : ${productLineItem.qty}
             }
+            <%
+            }
+            %>
             <c:if test="${idx.last eq false}">,</c:if>
             </c:forEach>
             <c:if test="${paymentSuccessBean.pricingDto.codSubTotal > 0}">
