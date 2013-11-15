@@ -20,12 +20,16 @@
     PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
     if (principal != null) {
       pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getUserHash());
-      pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, principal.getGender());
+      String gender = principal.getGender();
+      if (gender == null) {
+        gender = "n.a.";
+      }
+      pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, gender);
       pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, principal.getOrderCount());
     } else {
       pageContext.setAttribute(TagConstants.TagVars.USER_HASH, "guest");
       pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, "n.a.");
-      pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, "0");
+      pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, "n.a.");
     }
     String projectEnvTagManager = (String) ServiceLocatorFactory.getProperty(Keys.Env.projectEnv);
     CartAction cartAction = (CartAction) pageContext.getAttribute("cartAction");

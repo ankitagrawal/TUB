@@ -587,7 +587,7 @@ function _updateTotals(responseData) {
 </script>
 
 <c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
-    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
+    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetailsCached(cartLineItem.productVariant.id, pageContext)}"/>
     <div class="lineItemRow product">
         <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 

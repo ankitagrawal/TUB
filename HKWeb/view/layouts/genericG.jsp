@@ -39,9 +39,6 @@ pageContext.setAttribute("hybridRelease", hybridRelease);
     <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
   </head>
   <body id="${bodyId}">
-  <s:layout-render name="/layouts/embed/tagManager.jsp"
-                   pageType="${pageType}"
-      />
   <s:layout-component name="modal"/>
   <div id="container" class="container_24">
 
