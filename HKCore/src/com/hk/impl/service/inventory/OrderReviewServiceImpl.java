@@ -22,6 +22,8 @@ import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.InventoryHealthService.FetchType;
 import com.hk.pact.service.inventory.InventoryHealthService.SkuFilter;
 import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
@@ -43,10 +45,13 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 	@Autowired UserService userService;
 	@Autowired FixedShippingOrderDao fixedShippingOrderDao;
 	@Autowired ShippingOrderService shippingOrderService;
+	@Autowired SkuItemLineItemService skuItemLineItemService;
+	@Autowired InventoryService inventoryService;
 	
 	@Override
 	@Transactional
 	public void fixLineItem(LineItem lineItem) throws CouldNotFixException {
+		skuItemLineItemService.freeInventoryForLineItem(lineItem);
 		ProductVariant variant = productVariantService.getVariantById(lineItem.getCartLineItem().getProductVariant().getId());
 		
 		SkuFilter filter = new SkuFilter();
@@ -90,7 +95,9 @@ public class OrderReviewServiceImpl implements OrderReviewService {
 		}
 		
 //		inventoryHealthService.checkInventoryHealth(variant);
-        inventoryHealthService.inventoryHealthCheck(variant);
+		
+		skuItemLineItemService.createFreshBookingAfterMarkedReview(lineItem);
+    inventoryHealthService.inventoryHealthCheck(variant);
 	}
 	
 	private void updateHighMrp(LineItem lineItem, SkuInfo skuInfo) {

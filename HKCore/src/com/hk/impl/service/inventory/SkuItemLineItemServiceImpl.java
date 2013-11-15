@@ -22,6 +22,7 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -64,6 +65,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   ShippingOrderService shippingOrderService;
 
   private InventoryHealthService inventoryHealthService;
+  private InventoryService inventoryService;
 
   private Logger logger = LoggerFactory.getLogger(SkuItemLineItemServiceImpl.class);
 
@@ -619,6 +621,113 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return true;
   }
 
+	public Boolean freeInventoryForLineItem(LineItem lineItem) {
+		List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+		List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+		List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+		skuItemLineItemsToBeDeleted.addAll(lineItem.getSkuItemLineItems());
+		for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()) {
+			SkuItem skuItem = skuItemLineItem.getSkuItem();
+			skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+			skuItem = (SkuItem) getSkuItemDao().save(skuItem);
+			skuItemsToBeFreed.add(skuItem);
+		}
+		for (SkuItemCLI skuItemCLI : lineItem.getCartLineItem().getSkuItemCLIs()) {
+			skuItemCLI.setSkuItemLineItems(null);
+			skuItemCLI = (SkuItemCLI) getSkuItemDao().save(skuItemCLI);
+			skuItemCLIsToBeDeleted.add(skuItemCLI);
+		}
+
+		CartLineItem cartLineItem = lineItem.getCartLineItem();
+		cartLineItem.setSkuItemCLIs(null);
+		cartLineItem = (CartLineItem) baseDao.save(cartLineItem);
+		lineItem.setSkuItemLineItems(null);
+		lineItem.setCartLineItem(cartLineItem);
+		lineItem = (LineItem) baseDao.save(lineItem);
+
+		for (Iterator<SkuItemLineItem> iterator = skuItemLineItemsToBeDeleted.iterator(); iterator.hasNext();) {
+			SkuItemLineItem skuItemLineItem = (SkuItemLineItem) iterator.next();
+			baseDao.delete(skuItemLineItem);
+			iterator.remove();
+		}
+		for (Iterator<SkuItemCLI> iterator = skuItemCLIsToBeDeleted.iterator(); iterator.hasNext();) {
+			SkuItemCLI skuItemCLI = (SkuItemCLI) iterator.next();
+			baseDao.refresh(skuItemCLI);
+			List<SkuItemLineItem> silis = skuItemCLI.getSkuItemLineItems();
+			if (silis != null && silis.size() > 0) {
+				skuItemCLI.setSkuItemLineItems(null);
+				skuItemCLI = (SkuItemCLI) baseDao.save(skuItemCLI);
+				baseDao.deleteAll(silis);
+			}
+			baseDao.delete(skuItemCLI);
+			iterator.remove();
+		}
+		return true;
+	}
+	
+	public void createFreshBookingAfterMarkedReview(LineItem lineItem) {
+
+    Long qty = lineItem.getQty();
+    List<SkuItemLineItem> skuItemLineItems = new ArrayList<SkuItemLineItem>();
+    List<SkuItemCLI> skuItemCLIs = new ArrayList<SkuItemCLI>();
+    List<Sku> skuList = new ArrayList<Sku>();
+    List<Long> skuStatusIdList = new ArrayList<Long>();
+    List<Long> skuItemOwnerList = new ArrayList<Long>();
+    skuStatusIdList.add(EnumSkuItemStatus.Checked_IN.getId());
+    skuList.add(lineItem.getSku());
+    skuItemOwnerList.add(EnumSkuItemOwner.SELF.getId());
+    List<SkuItem> checkAvailableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
+    logger.debug("Available Unbooked Inventory For Sku - " + lineItem.getSku() + " at MRP - " + lineItem.getMarkedPrice() + " is "
+                    + checkAvailableUnbookedSkuItems.size());
+    if (checkAvailableUnbookedSkuItems.size() >= qty) {
+            int i = 1;
+            while (i <= qty) {
+                    SkuItemLineItem skuItemLineItem = new SkuItemLineItem();
+                    SkuItemCLI skuItemCLI = new SkuItemCLI();
+                    // get available skuitems warehouse at given mrp
+                    List<SkuItem> availableUnbookedSkuItems = skuItemDao.getSkuItems(skuList, skuStatusIdList, skuItemOwnerList, lineItem.getMarkedPrice(), false);
+                    if (availableUnbookedSkuItems != null && availableUnbookedSkuItems.size() > 0) {
+                            SkuItem skuItem = availableUnbookedSkuItems.get(0);
+                            // Book the sku item first
+                            skuItem.setSkuItemStatus(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+                            skuItem = (SkuItem) baseDao.save(skuItem);
+                            // create skuItemCLI entry
+                            skuItemCLI.setSkuItem(skuItem);
+                            skuItemCLI.setCartLineItem(lineItem.getCartLineItem());
+                            skuItemCLI.setUnitNum((long) i);
+                            skuItemCLI.setCreateDate(new Date());
+                            skuItemCLI.setProductVariant(lineItem.getSku().getProductVariant());
+                            // create skuItemLineItem entry
+                            skuItemLineItem.setSkuItem(skuItem);
+                            skuItemLineItem.setLineItem(lineItem);
+                            skuItemLineItem.setUnitNum((long) i);
+                            skuItemLineItem.setSkuItemCLI(skuItemCLI);
+                            skuItemLineItem.setCreateDate(new Date());
+                            skuItemLineItem.setProductVariant(lineItem.getSku().getProductVariant());
+                            skuItemLineItems.add(skuItemLineItem);
+                            skuItemCLIs.add(skuItemCLI);
+                    }
+                    ++i;
+            }
+            baseDao.saveOrUpdate(skuItemCLIs);
+            baseDao.saveOrUpdate(skuItemLineItems);
+            lineItem.getCartLineItem().setSkuItemCLIs(skuItemCLIs);
+            baseDao.save(lineItem.getCartLineItem());
+            lineItem.setSkuItemLineItems(skuItemLineItems);
+            lineItem = (LineItem) baseDao.save(lineItem);
+            logger.debug("Fixed It - Populated Fresh Booking Table SkuItemLineItem for Line Item - " + lineItem.getId() + " for Cart Line Item - "
+                            + lineItem.getCartLineItem().getId() + " of Shipping Order - " + lineItem.getShippingOrder().getId());
+            getShippingOrderService().logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
+                            "Mark Review and FixIt- Inventory booked for variant:- " + lineItem.getSku().getProductVariant());
+            getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
+    } else {
+            logger.debug("Mark Review and Fix It - Could Not Populate Tables for Line Item - " + lineItem.getId() + " for Cart Line Item - "
+                            + lineItem.getCartLineItem().getId() + " of Shipping Order - " + lineItem.getShippingOrder().getId());
+            getShippingOrderService().logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
+                            "Mark Review and FixIt- Inventory could not be booked for variant:- " + lineItem.getSku().getProductVariant());
+    }
+}
+
 
   public boolean freeBookingInventoryAtBright(CartLineItem cartLineItem) {
     // Assumption is deleting of all entries but  in future partial deletion
@@ -1109,6 +1218,10 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
     }
     return true;
+  }
+  
+  public InventoryService getInventoryService() {
+    return ServiceLocatorFactory.getService(InventoryService.class);
   }
 
 }

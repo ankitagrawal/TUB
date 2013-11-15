@@ -16,12 +16,20 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.sku.EnumSkuGroupStatus;
+import com.hk.constants.sku.EnumSkuItemOwner;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.user.User;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.OrderReviewService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -49,6 +57,8 @@ public class SkuBatchesReviewAction extends BaseAction {
     @Autowired OrderReviewService orderReviewService;
     @Autowired LineItemDao lineItemDao;
     @Autowired ShippingOrderService shippingOrderService;
+    @Autowired AdminShippingOrderService adminShippingOrderService;
+    @Autowired UserService userService;
     
     @DefaultHandler
     public Resolution pre() {
@@ -80,23 +90,30 @@ public class SkuBatchesReviewAction extends BaseAction {
         return new ForwardResolution("/pages/admin/skuGroupReviewList.jsp");
     }
     
-    public Resolution fixLineItem() {
-    	try {
-    		orderReviewService.fixLineItem(lineItem);
-    		lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
-    		shippingOrderService.validateShippingOrderAB(lineItem.getShippingOrder());
-    		addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
-    	} catch (Exception e) {
-    		shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), 
-    				EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed, null, e.getMessage());
-    		logger.error("Error while fixing the line item", e.getMessage());
-    		addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
-    	}
-    	
-        return new RedirectResolution(InventoryCheckoutAction.class)
-        		.addParameter("checkout")
-        		.addParameter("gatewayOrderId", lineItem.getShippingOrder().getGatewayOrderId());
-    }
+	public Resolution fixLineItem() {
+		try {
+			User loggedOnUser = userService.getLoggedInUser();
+			for (SkuItemLineItem skuItemLineItem : lineItem.getSkuItemLineItems()) {
+				SkuItem skuItem = skuItemLineItem.getSkuItem();
+				if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_OUT.getId())) {
+					adminInventoryService.inventoryCheckinCheckout(lineItem.getSku(), skuItem, lineItem, lineItem.getShippingOrder(), null, null, null,
+							EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), 1L, loggedOnUser);
+				}
+			}
+			orderReviewService.fixLineItem(lineItem);
+			lineItem = lineItemDao.get(LineItem.class, lineItem.getId());
+			// shippingOrderService.validateShippingOrderAB(lineItem.getShippingOrder());
+			addRedirectAlertMessage(new SimpleMessage("Line item fixed with MRP: " + lineItem.getMarkedPrice()));
+		} catch (Exception e) {
+			shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.SO_LineItemCouldNotFixed, null,
+					e.getMessage());
+			logger.error("Error while fixing the line item", e.getMessage());
+			addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
+		}
+
+		return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId",
+				lineItem.getShippingOrder().getGatewayOrderId());
+	}
 
     public Resolution ChangeStatus() {
         if (searchSkuGroup == null) {

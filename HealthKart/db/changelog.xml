@@ -14405,7 +14405,7 @@
             <column name="fulfilment_center_code" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Ankit Agrawal (generated)" id="20131021-0808">
+    <changeSet author="Ankit Agrawal (generated)" id="20131021-08998">
         <sql>
             UPDATE warehouse SET fulfilment_center_code = 'GGN-AB' WHERE id = 10;
             UPDATE warehouse SET fulfilment_center_code = 'MUM-AB' WHERE id = 20;
