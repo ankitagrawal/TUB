@@ -760,7 +760,6 @@ public class ProductServiceImpl implements ProductService {
             productVariant.setOutOfStock(hKApiSkuResponse.isOutOfStock());
             productVariant.setMrpQty(hKApiSkuResponse.getQty());
             productVariant.setNetQty(hKApiSkuResponse.getNetQty());
-           // productVariant.setHkPrice(hKApiSkuResponse.getHkPrice());
             Warehouse warehouse = warehouseService.getWarehouse(hKApiSkuResponse.getFcCode());
             Double newHkPrice = hKApiSkuResponse.getMrp() * (1 - productVariant.getDiscountPercent());
             productVariant.setHkPrice(newHkPrice);

@@ -447,6 +447,31 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
 
       inventoryService.checkInventoryHealth(item.getSku().getProductVariant());
     }
+     boolean bookedAtBright = false;
+    for (LineItem lineItem : shippingOrder.getLineItems()) {
+      if (lineItem.getSkuItemLineItems().size() > 0) {
+
+        for (SkuItemLineItem skuItemLineItem :lineItem.getSkuItemLineItems()){
+          if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
+            bookedAtBright = true;
+          }
+        }
+      }
+    }
+
+    if (bookedAtBright){
+      if (shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ReadyForProcess.getId())
+          || shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_MarkedForPrinting.getId())
+        ||  shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
+        shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
+
+        logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_LoggedComment, null,
+            "shipping order move back to action awaiting as validate SO ran ");
+        baseDao.save(shippingOrder);
+
+      }
+    }
+
   }
 
 

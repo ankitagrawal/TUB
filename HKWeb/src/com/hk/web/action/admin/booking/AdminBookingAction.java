@@ -96,17 +96,31 @@ public class AdminBookingAction extends BaseAction {
 			return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuItemLineItems").addParameter("shippingOrderId", shippingOrderId);
 		} else if (baseOrderId != null) {
 			Order bo = orderService.find(baseOrderId);
-			Set<ShippingOrder> soSet = bo.getShippingOrders();
-			if (soSet != null && soSet.size() > 0) {
-				for (ShippingOrder so : soSet) {
-          List <LineItem> problamaticItems = skuItemLineItemService.freeBooking(so);
-          if (problamaticItems!= null && problamaticItems.size() > 0){
-            problamaticShippingOrders.add(so);
-          }
-				}
-			}
+//			Set<ShippingOrder> soSet = bo.getShippingOrders();
+//			if (soSet != null && soSet.size() > 0) {
+//				for (ShippingOrder so : soSet) {
+//          List <LineItem> problamaticItems = skuItemLineItemService.freeBooking(so);
+//          if (problamaticItems!= null && problamaticItems.size() > 0){
+//            problamaticShippingOrders.add(so);
+//          }
+//				}
+//			}
 
-      if (problamaticShippingOrders != null && problamaticShippingOrders.size() > 0){
+      boolean invnFreed = true;
+      List<CartLineItem>  problamaticCartlineItems = new ArrayList<CartLineItem>();
+      Set<CartLineItem> cartLineItems = bo.getCartLineItems();
+      if (cartLineItems != null && cartLineItems.size() > 0){
+        for (CartLineItem cli : cartLineItems){
+        invnFreed =  skuItemLineItemService.freeBookingItem(cli.getId());
+          if (!invnFreed){
+            problamaticCartlineItems.add(cli);
+          }
+
+        }
+      }
+
+
+      if (problamaticCartlineItems != null && problamaticCartlineItems.size() > 0){
         addRedirectAlertMessage(new SimpleMessage("Failed to Freed Booking Table For Base Order: " + bo.getId()));
       }else {
         addRedirectAlertMessage(new SimpleMessage("Freed Booking Table For Base Order: " + bo.getId()));

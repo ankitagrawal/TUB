@@ -1448,7 +1448,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
   public Date getFormattedDate(String strDate) {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    Date date = null;
+    Date date = null;v
     try {
       date = formatter.parse(strDate);
     } catch (ParseException e) {
