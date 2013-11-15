@@ -3,6 +3,7 @@ package com.hk.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.Product;
@@ -82,11 +83,11 @@ public class OrderUtil {
         for (ProductVariant productVariant : productVariants) {
             if (productVariant != null) {
                 Product product = productVariant.getProduct();
-                long productMinDays = product.isJit() ? product.getMinDays() : defaultMinDays;
+                long productMinDays = product.isJit() || product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)  ? product.getMinDays() : defaultMinDays;
                 if (product.getMinDays() != null && productMinDays > minDays) {
                     minDays = product.getMinDays();
                 }
-                long productMaxDays = product.isJit() ? product.getMaxDays() : defaultMaxDays;
+                long productMaxDays = product.isJit() || product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)   ? product.getMaxDays() : defaultMaxDays;
                 if (product.getMaxDays() != null && productMaxDays > maxDays) {
                     maxDays = product.getMaxDays();
                 }
