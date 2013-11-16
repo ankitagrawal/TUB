@@ -8,6 +8,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ include file="/includes/_taglibInclude.jsp"%>
 <s:useActionBean beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction" event="searchSO" var="shippingOrderUtil" />
+
+
+<c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="shippingOrderStatusCancelled" value="<%=EnumShippingOrderStatus.SO_Cancelled.getId()%>"/>
+<c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
+<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
+<c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
+<c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
+
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css" />
@@ -46,7 +55,7 @@
                                      label="name"/>
         		</s:select>
 				</td>
-				<td></td>
+				<td><label><strong>SO Status: </strong></label></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center" style="text-align: center;"><s:submit name="searchSO" value="Search SO" /></td>

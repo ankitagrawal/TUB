@@ -45,6 +45,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	private Integer defaultPerPage = 20;
 	private Page shippingOrderPage;
 	private ShippingOrderStatus   shippingOrderStatus;
+	private List<ShippingOrderStatus> shippingOrderStatusList;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -168,5 +169,13 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 
 	public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
 		this.shippingOrderStatus = shippingOrderStatus;
+	}
+
+	public List<ShippingOrderStatus> getShippingOrderStatusList() {
+		return shippingOrderStatusList;
+	}
+
+	public void setShippingOrderStatusList(List<ShippingOrderStatus> shippingOrderStatusList) {
+		this.shippingOrderStatusList = shippingOrderStatusList;
 	}
 }
