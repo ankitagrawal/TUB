@@ -93,7 +93,7 @@ public class AdminEmailManager {
     public static final String PURCHASE_REPORTING_EMAIL = "purchase.reporting@healthkart.com";
     public static final String WAREHOUSE_PURCHASE_EMAIL = "warehouse.purchase@healthkart.com";
 
-    public static final String WAREHOUSE_JIT_EMAIL = "oft.jit@healthkart.com";
+    public static final String WAREHOUSE_JIT_EMAIL = "ops.jit@healthkart.com";
     private Set<String> hkReportAdminEmails = null;
     private Set<String> marketingAdminEmails = null;
 
