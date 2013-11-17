@@ -1,5 +1,4 @@
 <%@ taglib prefix="shirp" uri="http://shiro.apache.org/tags" %>
-<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
@@ -20,117 +19,9 @@
         pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
     %>
     <table>
-        <s:form beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" id="selectWHForm">
-            <tr>
-                <td>
-                    get users from product Ids
-                </td>
-                <td>
-                    <s:textarea name="params"></s:textarea>
-                </td>
-                <td>
-            </tr>
-            <td>
-                <tr>
-                    <td>
-                        get projected info: 1 for projected info 0 for entire users
-                    </td>
-                    <td>
-                        <s:text name="minimum"></s:text>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        get verified: true, false or leave blank
-                    </td>
-                    <td>
-                        <s:text name="verified"></s:text>
-                    </td>
-                </tr>
-            </td>
-            </tr>
-            <tr>
-                <td>
-                    get users from product variant Ids
-                </td>
-                <td>
-                    <s:textarea name="pvs"></s:textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    cities
-                </td>
-                <td>
-                    <s:textarea name="cities"></s:textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    zones
-                </td>
-                <td>
-                    <s:textarea name="zones"></s:textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    states
-                </td>
-                <td>
-                    <s:textarea name="states"></s:textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    categories
-                </td>
-                <td>
-                    <s:textarea name="categories"></s:textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    emails
-                </td>
-                <td>
-                    <s:textarea name="emails"></s:textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    UserOrderCount
-                </td>
-                <td>
-                    <s:text name="userOrderCount"></s:text>
-                </td>
-                <td>
-                    equality
-                </td>
-                <td>
-                    <s:text name="equality"></s:text>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <s:submit name="search"></s:submit>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    number of results ${whAction.result}
-                </td>
-                <td>
-                    time taken (ms) ${whAction.time}
-                </td>
-            </tr>
-        </s:form>
-
         <tr>
             <td><b>Select a WH: </b></td>
             <td><s:form beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" id="selectWHForm">
-
-
                 <s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
                     <s:option value="0">-None-</s:option>
                     <c:forEach items="${whList}" var="wh">
@@ -168,10 +59,12 @@
     <h3><s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search Base Orders</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></h3>
+            beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link>
+    </h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.shippingOrder.FixedShippingOrderAction">Search Fixed Shipping Orders</s:link></h3>
+            beanclass="com.hk.web.action.admin.shippingOrder.FixedShippingOrderAction">Search Fixed Shipping
+        Orders</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction">Search Subscriptions</s:link></h3>
@@ -207,7 +100,8 @@
     </c:if>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction">Action Item Resolution Queue</s:link></h3>
+            beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction">Action Item Resolution
+        Queue</s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
     <shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
@@ -219,29 +113,33 @@
     </shiro:hasPermission>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
-                beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
+                beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link>
+        </h3>
     </shiro:hasRole>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
-                beanclass="com.hk.web.action.admin.user.PopulateUnsubscribeTokenAction"> Populate User Unsubscribe Token </s:link></h3>
+                beanclass="com.hk.web.action.admin.user.PopulateUnsubscribeTokenAction"> Populate User Unsubscribe
+            Token </s:link></h3>
     </shiro:hasRole>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
-                beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction"> Add/Assign Roles and Permissions </s:link></h3>
+                beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction"> Add/Assign Roles and
+            Permissions </s:link></h3>
     </shiro:hasRole>
 
     <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
         <h3><s:link
-                beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
+                beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup
+            List</s:link></h3>
     </shiro:hasPermission>
-        <%--
-            <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
-                <h3><s:link
-                        beanclass="com.hk.web.action.admin.util.RunGenericGroovyScriptAction"> Run generic groovy script </s:link></h3>
-            </shiro:hasRole>
-        --%>
+    <%--
+        <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+            <h3><s:link
+                    beanclass="com.hk.web.action.admin.util.RunGenericGroovyScriptAction"> Run generic groovy script </s:link></h3>
+        </shiro:hasRole>
+    --%>
 
-        <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
+    <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
 <div class="cl"></div>
@@ -250,44 +148,54 @@
     <h2>Warehouse</h2>
     <c:if test="${whAction.setWarehouse != null}">
         <h3><s:link
-                beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation(Per Sku Item)</s:link></h3>
+                beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation(Per
+            Sku Item)</s:link></h3>
 
         <h3><s:link
                 beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction"
                 event="uploadBinAllocationFile">Upload Bin Allocation File</s:link></h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction">Inventory Audit(Per Sku Item)</s:link></h3>
+                beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction">Inventory Audit(Per Sku
+            Item)</s:link></h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction"
-                event="auditList">Inventory Audit List</s:link></h3>
+                beanclass="com.hk.web.action.admin.inventory.audit.InventoryAuditAction" event="auditList">Inventory
+            Audit List</s:link></h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
+                beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link>
+        </h3>
 
         <h3>
             <s:link
-                    beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">Search Shipping Order & Checkout</s:link></h3>
+                    beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">Search Shipping Order &
+                Checkout</s:link></h3>
 
         <h3>
             <s:link
-                    beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Create Update Shipment</s:link></h3>
+                    beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Create Update
+                Shipment</s:link></h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>
+                beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link>
+        </h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
+                beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction">Search
+            Shipping Order & Checkin RTO</s:link></h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
+                beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link>
+        </h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction">Drop Shipping Queue</s:link></h3>
+                beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction">Drop Shipping Queue</s:link>
+        </h3>
 
         <h3><s:link
-                beanclass="com.hk.web.action.admin.queue.ShipmentInstallationAwaitingQueueAction">Installation Awaiting Queue</s:link></h3>
+                beanclass="com.hk.web.action.admin.queue.ShipmentInstallationAwaitingQueueAction">Installation Awaiting
+            Queue</s:link></h3>
     </c:if>
 
     <h3>
@@ -301,11 +209,12 @@
 
     <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
 
-    <h3><s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction"
-                event="reviewBatches">Batches To Review</s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.sku.SkuBatchesReviewAction" event="reviewBatches">Batches To
+        Review</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Replacement Order</s:link></h3>
+            beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Replacement
+        Order</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction"
@@ -357,19 +266,21 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
-            <%--   <h3><s:link
-                   beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
+        <%--   <h3><s:link
+               beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
 
-                 <h3>--%>
+             <h3>--%>
         <s:link
-                beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
+                beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher
+            List</s:link>
         </h3>
 
         <shiro:hasPermission name="<%=PermissionConstants.VIEW_REVERSE_PICKUP%>">
 
 
             <h3><s:link
-                    beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction">RPWarehouse Checkin</s:link></h3>
+                    beanclass="com.hk.web.action.admin.reversePickup.RPWarehouseCheckinAction">RPWarehouse
+                Checkin</s:link></h3>
         </shiro:hasPermission>
 
         <h3>
@@ -378,14 +289,16 @@
     </c:if>
 
     <h3>
-        <s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link>
+        <s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation
+            Report</s:link>
     </h3>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction">Search Available Batches </s:link></h3>
 
     <h3>
-        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
+        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link>
+    </h3>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction"
@@ -420,11 +333,11 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction">Close Grns</s:link>
         </h3>
-            <%--
-                    <h3>
-                        <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction" event="closeGrn">Close Grns(2 Months)</s:link>
-                    </h3>
-            --%>
+        <%--
+                <h3>
+                    <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction" event="closeGrn">Close Grns(2 Months)</s:link>
+                </h3>
+        --%>
     </shiro:hasRole>
 
 </div>
@@ -441,13 +354,15 @@
     <h3><s:link beanclass="com.hk.web.action.report.AdvReportAction">Adv. Reports</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.marketing.GoogleBannedWordAction">Google Banned Words Report</s:link></h3>
+            beanclass="com.hk.web.action.admin.marketing.GoogleBannedWordAction">Google Banned Words Report</s:link>
+    </h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.user.PendingRewardPointQueueAction">Pending Reward Points</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
+            beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product
+        Reviews</s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.hkbridge.UserCallResponseSummaryAction"
                 event="pre">COD/Payment Failure Order Summary</s:link></h3>
@@ -464,7 +379,8 @@
     <h3><s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">Category Level Discount</s:link></h3>
+            beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">Category Level Discount</s:link>
+    </h3>
 </div>
 
 <div class="cl"></div>
@@ -488,12 +404,14 @@
             beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction"> Add/Remove Products To Feeds </s:link></h3>
+            beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction"> Add/Remove Products To
+        Feeds </s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">Review Collection Framework</s:link></h3>
+            beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">Review Collection Framework</s:link>
+    </h3>
 
 </div>
 

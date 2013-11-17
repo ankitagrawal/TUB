@@ -30,7 +30,7 @@ public class UsersSearchCriteria {
     private Integer userOrderCount;
     private String equality = "ge"; // ge (greater than) is the default value for equality
     private boolean atleastOneVariableSet = false;
-    private boolean notOnProduction = true;
+    public static final boolean NOT_ON_PRODUCTION = true;
     private List<Long> storeIds;
     private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
 
@@ -171,7 +171,7 @@ public class UsersSearchCriteria {
         }
         if (fetchMinimumRequiredData) {
             ProjectionList projList = Projections.projectionList();
-            if (notOnProduction) {
+            if (NOT_ON_PRODUCTION) {
                 projList.add(Projections.distinct(Projections.property("user.login")));
                 projList.add(Projections.property("user.email"));
                 projList.add(Projections.property("user.name"));

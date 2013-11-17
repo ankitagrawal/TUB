@@ -130,6 +130,7 @@ public class SelectWHAction extends BaseAction {
     @Autowired
     UserSearchService userSearchService;
 
+    @DefaultHandler
     public Resolution pre() {
         //TODO #introducing gc as a hit n try solution for server performance
 //    System.gc();
@@ -160,7 +161,7 @@ public class SelectWHAction extends BaseAction {
         this.time = time;
     }
 
-    @DefaultHandler
+
     public Resolution testSQL() {
         Long startTime = System.currentTimeMillis();
         UsersSearchCriteria criteria = new UsersSearchCriteria();
