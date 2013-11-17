@@ -167,7 +167,7 @@ public class TestMailBoltServicesAction extends BaseAction {
         // write output to file
         StringBuffer sb = new StringBuffer();
         String summary = "result size: " + result + " time taken in millis: " + (endTime - startTime);
-        sb.append("Summary/n").append(summary).append("/n");
+        sb.append("Summary").append("\n").append(summary).append("\n");
 
         /*
         * if (NOT_ON_PRODUCTION) {
@@ -184,13 +184,13 @@ public class TestMailBoltServicesAction extends BaseAction {
                 projList.add(Projections.property("user.unsubscribeToken"));
             }
         * */
-        sb.append(UsersSearchCriteria.NOT_ON_PRODUCTION ?
+        sb.append("\n").append(UsersSearchCriteria.NOT_ON_PRODUCTION ?
                 "login, email, name, subscriptionMask, unsubscribeToken" :
                 "email, login, name, subscriptionMask, unsubscribeToken");
 
         if ("1".equals(minimum)) {
             for (Object[] o : ems) {
-                sb.append("/n");
+                sb.append("\n");
                 for (Object ob : o) {
                     sb.append(ob);
                     sb.append(",");
