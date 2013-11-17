@@ -2,6 +2,7 @@ package com.hk.constants.core;
 
 public class Keys {
     public static class Env {
+        public static final String mailBolt                        = "mailBolt";
         public static final String adminDownloads                  = "adminDownloads";
         public static final String adminUploads                    = "adminUploads";
         public static final String imageUploads                    = "imageUploads";

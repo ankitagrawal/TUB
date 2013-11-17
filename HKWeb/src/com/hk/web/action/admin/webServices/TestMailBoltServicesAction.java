@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.webServices;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.Keys;
 import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.user.UserDao;
@@ -9,6 +10,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -49,6 +51,11 @@ public class TestMailBoltServicesAction extends BaseAction {
     private int result;
     private Long time;
     private String resolutionPageString = "/pages/admin/webServices/mailServices.jsp";
+
+
+    @Value("#{hkEnvProps['" + Keys.Env.mailBolt + "']}")
+    String mailBoltDownloadsPath;
+
 
     ////////////////////////////////////////REMOVE////////////////////////////////////////////////////////////////////
     private Integer setUserOrderCount2(String userOrderCount) {
@@ -200,18 +207,33 @@ public class TestMailBoltServicesAction extends BaseAction {
             //TODO : implemnt this
         }
 
+        BufferedWriter bw = null;
         try {
-            File file = new File("D://temp/queryresults.csv");
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            BufferedWriter br = new BufferedWriter(new FileWriter(file));
-            br.write(sb.toString());
-            br.close();
+            File file = uniqueFile(mailBoltDownloadsPath + "/webServicesResult.csv");
+            bw = new BufferedWriter(new FileWriter(file));
+            bw.write(sb.toString());
+            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return new ForwardResolution(resolutionPageString);
+    }
+
+    private File uniqueFile(String initialName) {
+        String finalName = initialName;
+        File file = new File(finalName);
+        int index = 1;
+        while (file.exists()) {
+            finalName = initialName + "_" + index++;
+            file = new File(finalName);
+        }
+        try {
+            file.createNewFile();
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
+        }
     }
 
     public String getZones() {
