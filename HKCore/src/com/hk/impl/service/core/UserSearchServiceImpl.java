@@ -30,6 +30,4 @@ public class UserSearchServiceImpl implements UserSearchService {
     public List<Object[]> searchUserInfo(UsersSearchCriteria criteria) {
         return usersDao.findUserInfoBySearchCriteria(criteria);
     }
-
-
 }

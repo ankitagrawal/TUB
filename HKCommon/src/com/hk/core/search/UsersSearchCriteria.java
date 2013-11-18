@@ -5,8 +5,6 @@ import com.hk.util.HKCollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ import java.util.List;
 public class UsersSearchCriteria {
     // list of variables that might be received
     private List<String> emails;
-    private List<String> categories;
+//    private List<String> categories;
     private List<String> states;
     private List<String> cities;
     private List<Long> zones;
@@ -32,12 +30,10 @@ public class UsersSearchCriteria {
     private boolean atleastOneVariableSet = false;
     public static boolean NOT_ON_PRODUCTION = true;
     private List<Long> storeIds;
-    private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
-
-    private boolean minInfo = false;
+    private boolean fetchMinimumRequiredData = false;
 
     public DetachedCriteria getSearchCriteria(boolean minInfo) {
-        return getCriteriaFromBaseCriteria(minInfo);
+        return getCriteriaFromBaseCriteria(fetchMinimumRequiredData);
     }
 
     private DetachedCriteria getCriteriaFromBaseCriteria(boolean fetchMinimumRequiredData) {
@@ -94,7 +90,7 @@ public class UsersSearchCriteria {
         }
 
 
-        if (categories != null && !categories.isEmpty()) {
+        /*if (categories != null && !categories.isEmpty()) {
             if (!orderCriteria) {
                 userCriteria.createAlias("user.orders", "orders");
                 orderCriteria = true;
@@ -108,7 +104,7 @@ public class UsersSearchCriteria {
                 categoryCriteria = true;
             }
             userCriteria.add(Restrictions.in("cat.name", categories));
-        }
+        }*/
 
         if ((productIds != null && !productIds.isEmpty()) || (productVariantIds != null && !productVariantIds.isEmpty())) {
             if (!orderCriteria) {
@@ -261,12 +257,12 @@ public class UsersSearchCriteria {
         return this;
     }
 
-    public UsersSearchCriteria setCategories(List<String> categories) {
+  /*  public UsersSearchCriteria setCategories(List<String> categories) {
         this.categories = categories;
         atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.categories) ? true : atleastOneVariableSet;
         return this;
     }
-
+*/
     public UsersSearchCriteria setEquality(String equality) {
         this.equality = equality;
         atleastOneVariableSet = StringUtils.isNotBlank(equality) ? true : atleastOneVariableSet;

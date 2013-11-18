@@ -61,8 +61,8 @@ public class TestMailBoltServicesAction extends BaseAction {
     private String resolutionPageString = "/pages/admin/webServices/mailServices.jsp";
 
 
-    @Value("#{hkEnvProps['" + Keys.Env.mailBolt + "']}")
-    String mailBoltDownloadsPath;
+    /*@Value("#{hkEnvProps['" + Keys.Env.mailBolt + "']}")
+    String mailBoltDownloadsPath;*/
 
 
     ////////////////////////////////////////REMOVE////////////////////////////////////////////////////////////////////
@@ -219,27 +219,7 @@ public class TestMailBoltServicesAction extends BaseAction {
             //TODO : implemnt this
         }
 
-/*
-        BufferedWriter bw = null;
-        try {
-            File summaryFile = uniqueFile(mailBoltDownloadsPath + "/summary.csv");
-            bw = new BufferedWriter(new FileWriter(summaryFile));
-            bw.write(summarySB.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            File resultFile = uniqueFile(mailBoltDownloadsPath + "/queryResult.csv");
-            bw = new BufferedWriter(new FileWriter(resultFile));
-            bw.write(resultSB.toString());
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
-        return new StreamingResolution("text/csv", summarySB.toString() + "\n\n" + resultSB.toString()).setFilename("queryResult.csv");
-//        return new ForwardResolution(resolutionPageString);
+        return new StreamingResolution("text/csv", summarySB.append("\n\n").toString() + resultSB.toString()).setFilename("queryResult.csv");
     }
 
     private File uniqueFile(String initialName) {
@@ -254,7 +234,7 @@ public class TestMailBoltServicesAction extends BaseAction {
             file.createNewFile();
             return file;
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
             return null;
         }
     }

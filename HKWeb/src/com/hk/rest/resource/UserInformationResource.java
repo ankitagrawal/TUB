@@ -44,7 +44,6 @@ public class UserInformationResource {
     private List<String> states;
     private List<String> productIds;
     private List<String> productVariantIds;
-    //    private List<String> categories;
     private List<Long> storeIds;
     private Boolean verified;
     private Integer userOrderCount;

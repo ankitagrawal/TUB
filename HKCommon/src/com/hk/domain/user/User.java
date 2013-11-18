@@ -551,14 +551,14 @@ public class User {
         this.buckets = buckets;
     }
 
-    public Integer getOrderCount() {
-        int orderCount = 0;
-        //TODO: implement this correctly Lazy init exception
+    public Integer getOrderCount(){
+      int orderCount = 0;
+      //TODO: implement this correctly Lazy init exception
       /*for(Order order : this.orders){
          if(order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())){
            orderCount++;
          }
       }*/
-        return orderCount;
+      return orderCount;
     }
 }

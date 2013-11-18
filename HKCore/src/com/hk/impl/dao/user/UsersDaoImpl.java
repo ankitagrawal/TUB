@@ -26,7 +26,6 @@ public class UsersDaoImpl extends BaseDaoImpl implements UsersDao {
     @Override
     public List<User> findUserBySearchCriteria(UsersSearchCriteria criteria) {
         DetachedCriteria dc = criteria.getSearchCriteria(false);
-        //List<User> users = getHibernateTemplate().findByCriteria(dc);
         List<User> users = findByCriteria(dc);
         return users;
     }
@@ -35,7 +34,6 @@ public class UsersDaoImpl extends BaseDaoImpl implements UsersDao {
     @Override
     public List<Object[]> findUserInfoBySearchCriteria(UsersSearchCriteria criteria){
         DetachedCriteria dc = criteria.getSearchCriteria(true);
-        //List<User> users = getHibernateTemplate().findByCriteria(dc);
         List<Object[]> info = findByCriteria(dc);
         return info;
     }
