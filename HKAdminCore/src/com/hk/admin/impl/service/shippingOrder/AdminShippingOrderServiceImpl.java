@@ -161,7 +161,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
   @Autowired
   TaxDao taxDao;
 
-
+@Transactional
 	public void cancelShippingOrder(ShippingOrder shippingOrder,String cancellationRemark,Long reconciliationType,
                                   boolean reconcileAll) {
 		// Check if Order is in Action Queue before cancelling it.
