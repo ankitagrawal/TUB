@@ -44,7 +44,6 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	private List<ShippingOrder> shippingOrderMarked;
 	private Integer defaultPerPage = 20;
 	private Page shippingOrderPage;
-	private ShippingOrderStatus   shippingOrderStatus;
 	private List<ShippingOrderStatus> shippingOrderStatusList;
 
 	@DefaultHandler
@@ -55,24 +54,28 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	public Resolution searchSO() {
 		shippingOrders = new ArrayList<ShippingOrder>();
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-		List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
-		if(shippingOrderStatus!=null){
-			shippingOrderStatusList.add(shippingOrderStatus);
+		List<ShippingOrderStatus> shippingOrderStatus = new ArrayList<ShippingOrderStatus>();
+		if (shippingOrderStatusList != null && shippingOrderStatusList.size() > 0 && !shippingOrderStatusList.isEmpty()) {
+			for (ShippingOrderStatus status : shippingOrderStatusList) {
+				if (status != null) {
+					shippingOrderStatus.add(status);
+				}
+			}
 		}
-		if (startDate != null && endDate != null){
+		if (startDate != null && endDate != null) {
 			shippingOrderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
 		}
 		if (StringUtils.isNotBlank(gatewayOrderIds)) {
 			String[] orderArray = gatewayOrderIds.split(",");
 			for (String gatewayOrderId : orderArray) {
 				ShippingOrder shippingOrder = ShippingOrderService.findByGatewayOrderId(StringUtils.deleteWhitespace(gatewayOrderId));
-				if(shippingOrder!=null){
-				shippingOrders.add(shippingOrder);
+				if (shippingOrder != null) {
+					shippingOrders.add(shippingOrder);
 				}
 			}
 		} else {
 			shippingOrderSearchCriteria.setSortByDispatchDate(false);
-			shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList );
+			shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatus);
 			shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 			List<ShippingOrder> shippingOrdersList = shippingOrderPage.getList();
 			for (ShippingOrder shippingOrder : shippingOrdersList) {
@@ -161,14 +164,6 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 		params.add("startDate");
 		params.add("endDate");
 		return params;
-	}
-
-	public ShippingOrderStatus getShippingOrderStatus() {
-		return shippingOrderStatus;
-	}
-
-	public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
-		this.shippingOrderStatus = shippingOrderStatus;
 	}
 
 	public List<ShippingOrderStatus> getShippingOrderStatusList() {

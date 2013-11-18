@@ -1,3 +1,5 @@
+<%@page import="com.hk.service.ServiceLocatorFactory"%>
+<%@page import="com.hk.domain.order.ShippingOrderStatus"%>
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ taglib prefix="hk" uri="http://healthkart.com/taglibs/hkTagLib" %>
 <%@ page import="com.akube.framework.util.FormatUtils"%>
@@ -8,14 +10,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ include file="/includes/_taglibInclude.jsp"%>
 <s:useActionBean beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderUtilityAction" event="searchSO" var="shippingOrderUtil" />
+<%
+MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
+List<ShippingOrderStatus> shippingOrderStatusList = masterDataDao.getPreCheckoutShippingOrderStatusList();
+pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusList);
+%>
 
-
-<c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
-<c:set var="shippingOrderStatusCancelled" value="<%=EnumShippingOrderStatus.SO_Cancelled.getId()%>"/>
-<c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
-<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
-<c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
-<c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
+<c:set var="shippingOrderStatusActionAwaiting" value="<%=EnumShippingOrderStatus.SO_ActionAwaiting.getId()%>"/>
+<c:set var="shippingOrderStatusPicking" value="<%=EnumShippingOrderStatus.SO_Picking.getId()%>"/>
+<c:set var="shippingOrderStatusValidation" value="<%=EnumShippingOrderStatus.SO_Ready_For_Validation.getId()%>"/>
+<c:set var="shippingOrderStatusOnHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getId()%>"/>
+<c:set var="shippingOrderStatusReadyForProcess" value="<%=EnumShippingOrderStatus.SO_ReadyForProcess.getId()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 	<s:layout-component name="htmlHead">
@@ -48,14 +53,28 @@
 							name="endDate" /></td>
 				</tr>
 				<tr>
-				<td>
+				<%-- <td>
 				<label><strong>SO Status: </strong></label><s:select name="shippingOrderStatus">
           		<option value="">Any status</option>
-          		<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="shippingOrderStatusList" value="id"
+          		<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="preCheckoutShippingOrderStatusList" value="id"
                                      label="name"/>
         		</s:select>
+				</td> --%>
+				<%-- <td><label><strong>SO Status: </strong></label>
+				<s:checkbox name="shippingOrderStatusList[]" value="shippingOrderStatusActionAwaiting"></s:checkbox>
+				<s:checkbox name="" value="shippingOrderStatusPicking"></s:checkbox>
+				<s:checkbox name="" value="shippingOrderStatusValidation"></s:checkbox>
+				<s:checkbox name="" value="shippingOrderStatusOnHold"></s:checkbox>
+				<s:checkbox name="" value="shippingOrderStatusReadyForProcess"></s:checkbox>
+				</td> --%>
+				<td><label><strong>So Status: </strong></label></td>
+				<td>
+				<c:forEach items="${shippingOrderStatusList}" var="soStatus" varStatus="ctr">
+					<s:checkbox name="shippingOrderStatusList[${ctr.index}]" value="${soStatus.id }"></s:checkbox>${soStatus.name }<br>
+				</c:forEach>
 				</td>
-				<td><label><strong>SO Status: </strong></label></td>
+				
+				
 				</tr>
 				<tr>
 					<td colspan="2" align="center" style="text-align: center;"><s:submit name="searchSO" value="Search SO" /></td>

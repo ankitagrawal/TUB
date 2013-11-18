@@ -213,5 +213,5 @@ public interface MasterDataDao {
 
 	public List<Category> getCategoriesForPOS();
 	
-	public List<ShippingOrderStatus> getShippingOrderStatusList();
+	public List<ShippingOrderStatus> getPreCheckoutShippingOrderStatusList();
 }
