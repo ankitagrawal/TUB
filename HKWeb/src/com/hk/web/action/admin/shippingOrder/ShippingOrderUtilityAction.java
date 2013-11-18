@@ -45,6 +45,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	private Integer defaultPerPage = 20;
 	private Page shippingOrderPage;
 	private List<ShippingOrderStatus> shippingOrderStatusList;
+	private List<ShippingOrderStatus> shippingOrderStatus;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -54,7 +55,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	public Resolution searchSO() {
 		shippingOrders = new ArrayList<ShippingOrder>();
 		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-		List<ShippingOrderStatus> shippingOrderStatus = new ArrayList<ShippingOrderStatus>();
+		shippingOrderStatus = new ArrayList<ShippingOrderStatus>();
 		if (shippingOrderStatusList != null && shippingOrderStatusList.size() > 0 && !shippingOrderStatusList.isEmpty()) {
 			for (ShippingOrderStatus status : shippingOrderStatusList) {
 				if (status != null) {
@@ -160,9 +161,15 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 
 	public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
-		params.add("shippingOrderStatus");
 		params.add("startDate");
 		params.add("endDate");
+		int ctr = 0;
+		for(ShippingOrderStatus orderStatus : shippingOrderStatusList){
+			if(orderStatus != null){
+				params.add("shippingOrderStatusList[" + ctr + "]");
+			}
+			++ctr;
+		}
 		return params;
 	}
 
@@ -173,4 +180,13 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	public void setShippingOrderStatusList(List<ShippingOrderStatus> shippingOrderStatusList) {
 		this.shippingOrderStatusList = shippingOrderStatusList;
 	}
+
+	public List<ShippingOrderStatus> getShippingOrderStatus() {
+		return shippingOrderStatus;
+	}
+
+	public void setShippingOrderStatus(List<ShippingOrderStatus> shippingOrderStatus) {
+		this.shippingOrderStatus = shippingOrderStatus;
+	}
+	
 }
