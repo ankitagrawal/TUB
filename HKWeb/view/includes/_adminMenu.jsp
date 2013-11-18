@@ -62,7 +62,7 @@ pageContext.setAttribute("projectEnv", projectEnv);
             <li class='lvl1 menuItem trimPadding' title="">
                 <s:link class="invert" beanclass="com.hk.web.action.admin.webServices.TestMailBoltServicesAction">Test Web Services</s:link></li>
 
-            <li class='lvl1 menuItem trimPadding' title="">
+	        <li class='lvl1 menuItem trimPadding' title="">
 	        <shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">
 	            <c:if test="${whAction.userService.warehouseForLoggedInUser.store != null}">
 		            <a href="${pageContext.request.contextPath}/pages/pos/posAdminHome.jsp">Store Manager</a>
