@@ -14412,4 +14412,9 @@
             UPDATE warehouse SET fulfilment_center_code = 'DEL-AB' WHERE id = 402;
         </sql>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="20131021-0809">
+        <addColumn tableName="purchase_order">
+            <column name="bright_so_id" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

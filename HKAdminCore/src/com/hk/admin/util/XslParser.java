@@ -542,6 +542,11 @@ public class XslParser {
 
                         poLineItems.add(poLineItem);
                     }
+                    Long brightSoId = getLong(getCellValue(XslConstants.BRIGHT_SO_ID, rowMap, headerMap));
+                    if(brightSoId!=null){
+                    	purchaseOrder.setBrightSoId(brightSoId);
+                    	baseDao.save(purchaseOrder);
+                    }
 
                 }
                 logger.debug("read row " + rowCount);

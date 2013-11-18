@@ -74,6 +74,10 @@
           </s:link>
           <s:submit name="generateExcelReport" value="Download to Excel" /></td>
       </tr>
+      <tr>
+      <td><label>Bright SO ID:</label><s:text name="brightSoId"/></td>
+      <td></td>
+      </tr>
       </table>
       </s:form>
     </fieldset>
