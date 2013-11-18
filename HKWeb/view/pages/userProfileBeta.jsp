@@ -82,7 +82,7 @@
         <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
           <fieldset>
             <c:forEach items="${productVariants}" var="variant" varStatus="ctr">
-                <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(variant.id)}"/>
+                <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetailsCached(variant.id, pageContext)}"/>
                 <div class="cont footer_color" width="100%" style="font-size: smaller;">
                 <div style="border-bottom: 1px solid #f0f0f0;">
                   <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>

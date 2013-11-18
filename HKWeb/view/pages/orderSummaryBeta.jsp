@@ -332,7 +332,7 @@
       <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="invoiceLineItem"
                  varStatus="ctr1">
         <c:set var="storeVariantBasic"
-               value="${hk:getStoreVariantBasicDetails(invoiceLineItem.productVariant.id)}"/>
+               value="${hk:getStoreVariantBasicDetailsCached(invoiceLineItem.productVariant.id, pageContext)}"/>
 
         <c:if test="${invoiceLineItem.productVariant.product.groundShipping}">
           <tr>
@@ -422,7 +422,7 @@
     <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
 
       <c:set var="storeVariantBasic"
-             value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
+             value="${hk:getStoreVariantBasicDetailsCached(cartLineItem.productVariant.id, pageContext)}"/>
 
       <tr>
         <div class='product' style="border-bottom-style: solid;">
@@ -450,7 +450,7 @@
                 </c:when>
                 <c:otherwise>
                   <c:set var="storeVariantBasic"
-                         value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
+                         value="${hk:getStoreVariantBasicDetailsCached(cartLineItem.productVariant.id, pageContext)}"/>
                   <c:choose>
                     <c:when test="${storeVariantBasic.primaryImage.mlink!=null}">
                       <img class="prod48" src="${storeVariantBasic.primaryImage.mlink}"

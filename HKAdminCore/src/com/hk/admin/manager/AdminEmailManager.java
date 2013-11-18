@@ -93,6 +93,7 @@ public class AdminEmailManager {
     public static final String PURCHASE_REPORTING_EMAIL = "purchase.reporting@healthkart.com";
     public static final String WAREHOUSE_PURCHASE_EMAIL = "warehouse.purchase@healthkart.com";
 
+    public static final String WAREHOUSE_JIT_EMAIL = "oft.jit@healthkart.com";
     private Set<String> hkReportAdminEmails = null;
     private Set<String> marketingAdminEmails = null;
 
@@ -1136,12 +1137,19 @@ public class AdminEmailManager {
 
 		String fromPurchaseEmail = "purchase@healthkart.com";
 		Set<String> categoryAdmins = new HashSet<String>();
-		if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
-			Category category = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
-			categoryAdmins = emailManager.categoryAdmins(category);
+        Product product = purchaseOrder.getPoLineItems().get(0).getSku().getProductVariant().getProduct();
+        if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().get(0) != null) {
+			Category category = product.getPrimaryCategory();
+            categoryAdmins = emailManager.categoryAdmins(category);
 		}
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-		categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
+        if(product.isJit() || product.isDropShipping()){
+            categoryAdmins.add(WAREHOUSE_JIT_EMAIL);
+        }
+        else{
+            categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
+        }
+
 		File pdfFile = null;
 		File xlsFile = null;
 		try {

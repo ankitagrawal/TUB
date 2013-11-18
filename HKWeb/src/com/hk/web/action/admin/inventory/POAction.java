@@ -99,7 +99,7 @@ public class POAction extends BasePaginatedAction {
     private Boolean                           extraInventoryCreated;
 
     private Integer                           defaultPerPage    = 20;
-
+    private String                            poType;
     @DefaultHandler
     public Resolution pre() {
         if (productVariant != null) {
@@ -109,7 +109,7 @@ public class POAction extends BasePaginatedAction {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
             purchaseOrderPage = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,
-                    extraInventoryCreated, getPageNo(), getPerPage());
+                    extraInventoryCreated, getPageNo(), getPerPage(), startDate, endDate, poType);
             purchaseOrderList = purchaseOrderPage.getList();
         }
         return new ForwardResolution("/pages/admin/poList.jsp");
@@ -132,7 +132,7 @@ public class POAction extends BasePaginatedAction {
             if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
-            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null);
+            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null, null, null, null);
         }
 
         if (purchaseOrderList != null) {
@@ -431,6 +431,9 @@ public class POAction extends BasePaginatedAction {
         params.add("createdBy");
         params.add("warehouse");
         params.add("extraInventoryCreated");
+        params.add("poType");
+        params.add("startDate");
+        params.add("endDate");
         return params;
     }
 
@@ -514,4 +517,11 @@ public class POAction extends BasePaginatedAction {
         return extraInventoryCreated;
     }
 
+    public String getPoType() {
+        return poType;
+    }
+
+    public void setPoType(String poType) {
+        this.poType = poType;
+    }
 }

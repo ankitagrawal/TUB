@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/catalogLayout.jsp" pageTitle="HealthKart.com - India's premier e-healthstore for all consumer healthcare needs">
+<s:layout-render name="/layouts/errorLayout.jsp" pageTitle="Error 500 | Server Error" errorCode="500">
 
 
   <s:layout-component name="catalog">
