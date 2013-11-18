@@ -20,7 +20,12 @@
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
 
 <s:layout-render name="/layouts/catalogLayoutG.jsp"
-                 pageTitle="${ca.seoData.title}">
+                 pageTitle="${ca.seoData.title}"
+                 primaryCategory="${ca.topCategoryUrlSlug}"
+                 secondaryCategory="${ca.childCategorySlug}"
+                 tertiaryCategory="${ca.secondaryChildCategorySlug}"
+                 brand="${ca.brand}"
+    >
 <s:layout-component name="topCategory">${ca.topCategoryUrlSlug}</s:layout-component>
 <s:layout-component name="allCategories">${ca.allCategories}</s:layout-component>
 <s:layout-component name="brand">${ca.brand}</s:layout-component>

@@ -103,6 +103,7 @@ import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.jsp.PageContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -982,6 +983,7 @@ public class Functions {
         return orderService.getCountOfOrdersByStatus(order.getUser(), enumOrderStatus) >= 2;
     }
 
+  @Deprecated
     public static StoreVariantBasicResponse getStoreVariantBasicDetails(String oldVariantId) {
         if (AppConstants.isHybridRelease) {
             HybridStoreVariantService hybridStoreVariantService = ServiceLocatorFactory.getService(HybridStoreVariantService.class);
@@ -989,6 +991,26 @@ public class Functions {
         }
 
         throw new UnsupportedOperationException();
+    }
+
+    public static StoreVariantBasicResponse getStoreVariantBasicDetails(String oldVariantId, PageContext pageContext) {
+      Map<String, StoreVariantBasicResponse> oldNewVariantMap = null;
+      if (pageContext.getAttribute("oldNewVariantMap") != null) {
+        oldNewVariantMap = (Map<String, StoreVariantBasicResponse>) pageContext.getAttribute("oldNewVariantMap");
+      } else {
+        oldNewVariantMap = new HashMap<String, StoreVariantBasicResponse>();
+        pageContext.setAttribute("oldNewVariantMap", oldNewVariantMap);
+      }
+
+      StoreVariantBasicResponse storeVariantBasicResponse = null;
+      if (oldNewVariantMap.get(oldVariantId) == null) {
+        storeVariantBasicResponse = getStoreVariantBasicDetails(oldVariantId);
+        oldNewVariantMap.put(oldVariantId, storeVariantBasicResponse);
+      } else {
+        storeVariantBasicResponse = oldNewVariantMap.get(oldVariantId);
+      }
+
+      return storeVariantBasicResponse;
     }
 
 

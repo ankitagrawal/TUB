@@ -29,7 +29,10 @@
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 
 
-<s:layout-render name="/layouts/paymentSuccessBeta.jsp" pageTitle="Payment Successful">
+<s:layout-render name="/layouts/paymentSuccessBeta.jsp"
+                 pageTitle="Payment Successful"
+                 paymentSuccessBean="${actionBean}"
+    >
 <s:layout-component name="htmlHead">
   <script type="text/javascript">
     $(document).ready(function () {
@@ -158,55 +161,8 @@
       s.parentNode.insertBefore(ga, s);
     })();
 
-    (function (i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function () {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0];
-      a.async = 1;
-      a.src = g;
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-    ga('create', '<%=AnalyticsConstants.uaCode%>', 'healthkart.com');
-    ga('send', 'pageview');
-    ga('require', 'ecommerce', 'ecommerce.js');
-    ga('ecommerce:addTransaction', {
-      'id': '${actionBean.payment.gatewayOrderId}', <%-- Transaction ID. Required. --%>
-      'affiliation': 'HealthKart.com', <%-- Affiliation or store name. --%>
-      'revenue': '${hk:decimal2(actionBean.pricingDto.grandTotal)}', <%-- Grand Total. --%>
-      'shipping': '${hk:decimal2(actionBean.pricingDto.shippingSubTotal - actionBean.pricingDto.shippingDiscount)}', <%-- Shipping. --%>
-      'tax': '0.0'                                                      <%-- Tax. --%>
-    });
-
-    <c:forEach items="${actionBean.pricingDto.aggregateProductLineItems}" var="productLineItem">
-    ga('ecommerce:addItem', {
-      'id': '${actionBean.payment.gatewayOrderId}', <%-- Transaction ID. Required.   --%>
-      'name': '${productLineItem.productVariant.product.name}', <%-- Product name. Required.     --%>
-      'sku': '${productLineItem.productVariant.id}', <%-- SKU/code.                   --%>
-      'category': '<c:forEach items="${productLineItem.productVariant.product.categories}" var="category" varStatus="optionCtr">${category.name}${!optionCtr.last?',':''}</c:forEach>', <%-- Category or variation.      --%>
-      'price': '${hk:decimal2(productLineItem.hkPrice)}', <%-- Unit price.                 --%>
-      'quantity': '${productLineItem.qty}'                              <%-- Quantity.                   --%>
-    });
-    </c:forEach>
-
-    ga('ecommerce:send');
-
   </script>
 
-  <div id="sdt-js"></div>
-  <script type="text/javascript">
-    var _beaconping = _beaconping || [];
-    _beaconping.push({goalName: "Conversions", appId: "cb71699d-7566-45ad-9b77-a253b8fb25fb", event: "onloadbeacon"});
-    (function () {
-      var e = document.createElement('script');
-      e.src = 'http://sdtbeacon.appsdt.com/sdtbeacon.js';
-      e.async = true;
-      document.getElementById('sdt-js').appendChild(e);
-    }());
-  </script>
   <!-- Start AdRoll (FB Retargetting Conversion Tracking Code -->
   <script type="text/javascript">
     adroll_segments = "conversion"
@@ -232,41 +188,6 @@
     }());
   </script>
 
-  <!-- Start MicroAd Blade conversion Code -->
-  <%--<script type="text/javascript">
-      var blade_co_account_id='4184';
-      var blade_group_id='convtrack14344';
-
-      (function() {
-      var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
-      var path = '/js/bl_track_others.js';
-
-      var bs = document.createElement('script');
-      bs.type = 'text/javascript'; bs.async = true;
-      bs.charset = 'utf-8'; bs.src = host + path;
-
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(bs, s);
-      })();
-  </script>
-  <script type="text/javascript">
-      var blade_co_account_id='4184';
-      var blade_group_id='';
-      (function() {
-      var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
-      var path = '/js/bl_track_others.js';
-
-      var bs = document.createElement('script');
-      bs.type = 'text/javascript'; bs.async = true;
-      bs.charset = 'utf-8'; bs.src = host + path;
-
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(bs, s);
-      })();
-  </script>--%>
-  <!--End: Tracking code for MicroAd Blade-->
-
-
   <%
     }
   %>
@@ -282,19 +203,6 @@
 
 <c:choose>
 <c:when test="${actionBean.payment != null}">
-<%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
-    <div>
-        <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
-            <s:param name="order" value="${actionBean.order}"/>
-            <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner5.jpg">
-        </s:link>
-    </div>
-</c:if>--%>
-<%--<div class="right" style="float: right;">
-    <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
-        <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
-    </s:link>
-</div>--%>
 
 <style>
 

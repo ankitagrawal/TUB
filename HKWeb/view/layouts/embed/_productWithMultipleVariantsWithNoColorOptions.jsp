@@ -60,8 +60,7 @@
                           </c:choose>
                           <%-- for service product only--%>
 
-						<c:if
-							test="${hk:isNotBlank(variant.variantName) && (product.service)}}">
+						<c:if test="${hk:isNotBlank(variant.variantName) && (product.service)}">
 							<br />
 		                      ${variant.variantName}
 	                      </c:if>

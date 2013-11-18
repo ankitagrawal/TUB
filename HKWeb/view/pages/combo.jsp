@@ -4,6 +4,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
@@ -15,7 +16,7 @@
 
 <c:set var="productCombo" value="${productBean.product}"/>
 <c:set var="seoData" value="${productBean.seoData}"/>
-<s:layout-render name="/layouts/genericG.jsp" pageTitle="${seoData.title}">
+<s:layout-render name="/layouts/genericG.jsp" pageTitle="${seoData.title}" pageType="<%=TagConstants.PageType.COMBO%>">
 
 <s:layout-component name="htmlHead">
     <meta name="keywords" content="${seoData.metaKeyword}"/>
