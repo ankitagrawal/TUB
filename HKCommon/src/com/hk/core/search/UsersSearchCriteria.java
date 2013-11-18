@@ -30,7 +30,7 @@ public class UsersSearchCriteria {
     private Integer userOrderCount;
     private String equality = "ge"; // ge (greater than) is the default value for equality
     private boolean atleastOneVariableSet = false;
-    public static final boolean NOT_ON_PRODUCTION = true;
+    public static boolean NOT_ON_PRODUCTION = true;
     private List<Long> storeIds;
     private static Logger logger = LoggerFactory.getLogger(UsersSearchCriteria.class);
 
@@ -83,6 +83,7 @@ public class UsersSearchCriteria {
             SimpleExpression se = createRestriction(userOrderCount, equality);
             userCriteria.add(se);
         }
+
         if (verified != null) {
             if (!rolesCriteria) {
                 rolesCriteria = true;
@@ -91,6 +92,7 @@ public class UsersSearchCriteria {
             String roleName = (verified.booleanValue()) ? "HK_USER" : "HKUNVERIFIED";
             userCriteria.add(Restrictions.eq("roles.name", roleName));
         }
+
 
         if (categories != null && !categories.isEmpty()) {
             if (!orderCriteria) {

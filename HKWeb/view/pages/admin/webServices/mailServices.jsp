@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.webServices.TestMailBoltServicesAction" var="mbAction"/>
@@ -5,120 +6,87 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Test Web Services">
     <s:layout-component name="heading">Web Services</s:layout-component>
     <s:layout-component name="content">
-        <table>
-            <s:form beanclass="com.hk.web.action.admin.webServices.TestMailBoltServicesAction" event="testServices">
-                <tr>
-                    <td>
-                        get users from product Ids
-                    </td>
-                    <td>
-                        <s:textarea name="params"></s:textarea>
-                    </td>
-                    <td>
-                </tr>
-                <td>
+        <s:form beanclass="com.hk.web.action.admin.webServices.TestMailBoltServicesAction" event="testServices">
+            <table>
+                <table>
                     <tr>
-                        <td>
-                            get projected info: 1 for projected info 0 for entire users
-                        </td>
-                        <td>
-                            <s:text name="minimum"></s:text>
-                        </td>
+                        <strong>Search By Products</strong>
                     </tr>
                     <tr>
+                        <td>Product Ids (csv)</td>
+                        <td><s:textarea name="params"></s:textarea></td>
+                        <td>Product Variant Ids (csv)</td>
+                        <td><s:textarea name="pvs"></s:textarea></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <strong>Search By Orders</strong>
+                    </tr>
+                    <tr>
+                        <td>User Order Count (single integer value)</td>
+                        <td><s:text name="userOrderCount"></s:text></td>
+                        <td>Equality (single value, range: ge,gt,eq,le,lt)</td>
+                        <td><s:text name="equality"></s:text></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <strong>Search By Address</strong>
+                    </tr>
+                    <tr>
+                        <td>States (csv)</td>
+                        <td><s:textarea name="states"></s:textarea></td>
+                        <td>Cities (csv)</td>
+                        <td><s:textarea name="cities"></s:textarea></td>
+                        <td>Zones (csv), range : 1,2,3,4</td>
+                        <td><s:textarea name="zones"></s:textarea></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <strong>Search By Miscellaneous Criterion</strong>
+                    </tr>
+                    <tr>
+                        <td>Verfied (true, false or leave blank)</td>
+                        <td><s:text name="verified"></s:text></td>
+                        <td>Categories(csv)</td>
+                        <td><s:textarea name="categories"></s:textarea></td>
+                        <td>Emails (csv)</td>
+                        <td><s:textarea name="emails"></s:textarea></td>
+                        <td>Store Ids(csv)</td>
+                        <td><s:textarea name="storeIds"></s:textarea></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <strong>Advanced Options</strong>
+                    </tr>
+                    <tr>
+                        <td>Projected Info (Don't retrieve entire user)</td>
+                        <td><s:checkbox name="minimum"></s:checkbox></td>
+                        <td>Test as if on Production</td>
+                        <td><s:checkbox name="production"></s:checkbox></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
                         <td>
-                            get verified: true, false or leave blank
-                        </td>
-                        <td>
-                            <s:text name="verified"></s:text>
+                            <s:submit name="testServices" value="Search"></s:submit>
                         </td>
                     </tr>
-                </td>
-                </tr>
-                <tr>
-                    <td>
-                        get users from product variant Ids
-                    </td>
-                    <td>
-                        <s:textarea name="pvs"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        cities
-                    </td>
-                    <td>
-                        <s:textarea name="cities"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        zones
-                    </td>
-                    <td>
-                        <s:textarea name="zones"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        states
-                    </td>
-                    <td>
-                        <s:textarea name="states"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        categories
-                    </td>
-                    <td>
-                        <s:textarea name="categories"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        emails
-                    </td>
-                    <td>
-                        <s:textarea name="emails"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        storeIds
-                    </td>
-                    <td>
-                        <s:textarea name="storeIds"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        UserOrderCount
-                    </td>
-                    <td>
-                        <s:text name="userOrderCount"></s:text>
-                    </td>
-                    <td>
-                        equality
-                    </td>
-                    <td>
-                        <s:text name="equality"></s:text>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <s:submit name="testServices" value="Search"></s:submit>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        number of results ${mbAction.result}
-                    </td>
-                    <td>
-                        time taken (ms) ${mbAction.time}
-                    </td>
-                </tr>
-            </s:form>
-        </table>
+                </table>
+                    <%--<table>
+                        <tr>
+                            <td>
+                                <strong>Size of Results returned </strong> ${mbAction.result}
+                            </td>
+                            <td>
+                                <strong>Time taken (ms) </strong> ${mbAction.time}
+                            </td>
+                        </tr>
+                    </table>--%>
+            </table>
+        </s:form>
     </s:layout-component>
 </s:layout-render>

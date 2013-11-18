@@ -2,8 +2,11 @@ package com.hk.rest.resource;
 
 import com.akube.framework.util.StringUtils;
 import com.hk.core.search.UsersSearchCriteria;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserSearchService;
+import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.HKCollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,7 +44,7 @@ public class UserInformationResource {
     private List<String> states;
     private List<String> productIds;
     private List<String> productVariantIds;
-    private List<String> categories;
+    //    private List<String> categories;
     private List<Long> storeIds;
     private Boolean verified;
     private Integer userOrderCount;
@@ -49,7 +53,8 @@ public class UserInformationResource {
 
     @Autowired
     UserSearchService userSearchService;
-
+    @Autowired
+    CategoryService categoryService;
 
     @POST
     @Path("/all")
@@ -71,16 +76,14 @@ public class UserInformationResource {
         List<String> allCities = StringUtils.getListFromString(cities, ",");
         List<String> allStates = StringUtils.getListFromString(states, ",");
         List<String> allZones = StringUtils.getListFromString(zones, ",");
-        List<String> allCategories = StringUtils.getListFromString(categories, ",");
         List<String> allStores = StringUtils.getListFromString(storeIds, ",");
         List<String> allEmails = StringUtils.getListFromString(emails, ",");
 
         this.emails = allEmails;
-        this.productIds = allProdIds;
+        this.productIds = setProductIds(allProdIds, categories);
         this.productVariantIds = allProdVarIds;
         this.cities = allCities;
         this.states = allStates;
-        this.categories = allCategories;
         this.verified = setVerified(verified);
         this.userOrderCount = setUserOrderCount(userOrderCount);
         this.equality = equality;
@@ -112,9 +115,6 @@ public class UserInformationResource {
             }
             if (HKCollectionUtils.isNotBlank(emails)) {
                 criteria.setEmails(emails);
-            }
-            if (HKCollectionUtils.isNotBlank(categories)) {
-                criteria.setCategories(categories);
             }
             if (HKCollectionUtils.isNotBlank(productVariantIds)) {
                 criteria.setProductVariantIds(productVariantIds);
@@ -221,6 +221,20 @@ public class UserInformationResource {
         return ver;
     }
 
+    private List<String> setProductIds(List<String> allProdIds, String categories) {
+        Set<Category> cats = categoryService.getCategoriesFromCategoryNames(categories);
+        List<Product> prods = new ArrayList<Product>();
+        for (Category c : cats) {
+            List<Product> p = c.getProducts();
+            prods.addAll(p);
+        }
+        List<String> prodIds = new ArrayList<String>();
+        for (Product pr : prods) {
+            prodIds.add(pr.getId());
+        }
+        prodIds.addAll(allProdIds);
+        return prodIds;
+    }
 
     class UserDto {
         public String email;
