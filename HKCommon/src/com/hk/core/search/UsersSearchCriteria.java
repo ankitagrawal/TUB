@@ -34,22 +34,22 @@ public class UsersSearchCriteria {
     private static final short PIN_ZONE = 10;
     private static final short PRODUCT_CATEGORIES = 11;
 
-    // Map values are as follows {<joinEntity>,<alias>}
-    private static Map<Short, String[]> joinColumns = new HashMap<Short, String[]>();
+    // Map values are as follows {<String:joinEntity>,<String:alias>,<Boolean:joinCreated>}
+    private static Map<Short, Object[]> joinColumns = new HashMap<Short, Object[]>();
 
     static {
-        joinColumns.put(USER_STORE, new String[]{"user.store", "store"});
-        joinColumns.put(USER_REPORT, new String[]{"user.report", "report"});
-        joinColumns.put(USER_ROLES, new String[]{"user.roles", "roles"});
-        joinColumns.put(USER_ORDER, new String[]{"user.orders", "orders"});
-        joinColumns.put(ORDER_CARTLINEITEM, new String[]{"orders.cartLineItems", "cli"});
-        joinColumns.put(CARTLINEITEM_PRODUCTVARIANT, new String[]{"cli.productVariant", "pv"});
-        joinColumns.put(PRODUCTVARIANT_PRODUCT, new String[]{"pv.product", "prod"});
-        joinColumns.put(PRODUCT_PRODUCTVARIANT, new String[]{"prod.productVariants", "pv2"});
-        joinColumns.put(USER_ADDRESS, new String[]{"user.addresses", "addr"});
-        joinColumns.put(ADDRESS_PIN, new String[]{"addr.pincode", "pin"});
-        joinColumns.put(PIN_ZONE, new String[]{"pin.zone", "zone"});
-        joinColumns.put(PRODUCT_CATEGORIES, new String[]{"prod.categories", "cats"});
+        joinColumns.put(USER_STORE, new Object[]{"user.store", "store", Boolean.FALSE});
+        joinColumns.put(USER_REPORT, new Object[]{"user.report", "report", Boolean.FALSE});
+        joinColumns.put(USER_ROLES, new Object[]{"user.roles", "roles", Boolean.FALSE});
+        joinColumns.put(USER_ORDER, new Object[]{"user.orders", "orders", Boolean.FALSE});
+        joinColumns.put(ORDER_CARTLINEITEM, new Object[]{"orders.cartLineItems", "cli", Boolean.FALSE});
+        joinColumns.put(CARTLINEITEM_PRODUCTVARIANT, new Object[]{"cli.productVariant", "pv", Boolean.FALSE});
+        joinColumns.put(PRODUCTVARIANT_PRODUCT, new Object[]{"pv.product", "prod", Boolean.FALSE});
+        joinColumns.put(PRODUCT_PRODUCTVARIANT, new Object[]{"prod.productVariants", "pv2", Boolean.FALSE});
+        joinColumns.put(USER_ADDRESS, new Object[]{"user.addresses", "addr", Boolean.FALSE});
+        joinColumns.put(ADDRESS_PIN, new Object[]{"addr.pincode", "pin", Boolean.FALSE});
+        joinColumns.put(PIN_ZONE, new Object[]{"pin.zone", "zone", Boolean.FALSE});
+        joinColumns.put(PRODUCT_CATEGORIES, new Object[]{"prod.categories", "cats", Boolean.FALSE});
     }
 
     @Value("#{hkEnvProps['" + Keys.Env.debug_mode + "']}")
@@ -67,23 +67,8 @@ public class UsersSearchCriteria {
     private Integer userOrderCount;
     private String equality = "ge"; // ge (greater than) is the default value for equality
     private List<Long> storeIds;
-    private boolean fetchMinimumRequiredData = false;
 
-    // variables used for processing DetachedCriteria
-    private boolean orderCriteria = false,
-            cliCriteria = false,
-            pvCriteria = false,
-            prodCriteria = false,
-            addrCriteria = false,
-            pinCriteria = false,
-            zoneCriteria = false,
-            pv2Criteria = false,
-            rolesCriteria = false,
-            categoryCriteria = false,
-            userReportCriteria = false,
-            userStoreCriteria = false;
-
-    public DetachedCriteria getSearchCriteria(boolean minInfo) {
+    public DetachedCriteria getSearchCriteria(boolean fetchMinimumRequiredData) {
         return getCriteriaFromBaseCriteria(fetchMinimumRequiredData);
     }
 
@@ -99,18 +84,18 @@ public class UsersSearchCriteria {
         }
 
         if (HKCollectionUtils.isNotBlank(storeIds)) {
-            userCriteria = createJoin(userCriteria, userStoreCriteria, USER_STORE);
+            userCriteria = createJoin(userCriteria, USER_STORE);
             userCriteria.add(Restrictions.in("store.id", storeIds));
         }
 
         if (userOrderCount != null) {
-            userCriteria = createJoin(userCriteria, userReportCriteria, USER_REPORT);
+            userCriteria = createJoin(userCriteria, USER_REPORT);
             SimpleExpression se = createUserOrderRestriction(userOrderCount, equality);
             userCriteria.add(se);
         }
 
         if (verified != null) {
-            userCriteria = createJoin(userCriteria, rolesCriteria, USER_ROLES);
+            userCriteria = createJoin(userCriteria, USER_ROLES);
             String roleName = (verified.booleanValue()) ? "HK_USER" : "HKUNVERIFIED";
             userCriteria.add(Restrictions.eq("roles.name", roleName));
         }
@@ -120,37 +105,37 @@ public class UsersSearchCriteria {
         boolean catNotBlank = HKCollectionUtils.isNotBlank(categories);
 
         if (prodNotBlank || prodVarNotBlank || catNotBlank) {
-            userCriteria = createJoin(userCriteria, orderCriteria, USER_ORDER);
-            userCriteria = createJoin(userCriteria, cliCriteria, ORDER_CARTLINEITEM);
-            userCriteria = createJoin(userCriteria, pvCriteria, CARTLINEITEM_PRODUCTVARIANT);
-            userCriteria = createJoin(userCriteria, prodCriteria, PRODUCTVARIANT_PRODUCT);
+            userCriteria = createJoin(userCriteria, USER_ORDER);
+            userCriteria = createJoin(userCriteria, ORDER_CARTLINEITEM);
+            userCriteria = createJoin(userCriteria, CARTLINEITEM_PRODUCTVARIANT);
+            userCriteria = createJoin(userCriteria, PRODUCTVARIANT_PRODUCT);
 
             if (prodNotBlank) {
                 userCriteria.add(Restrictions.in("prod.id", productIds));
             } else if (prodVarNotBlank) {
-                userCriteria = createJoin(userCriteria, pv2Criteria, PRODUCT_PRODUCTVARIANT);
+                userCriteria = createJoin(userCriteria, PRODUCT_PRODUCTVARIANT);
                 userCriteria.add(Restrictions.in("pv2.id", productVariantIds));
             } else if (catNotBlank) {
-                userCriteria = createJoin(userCriteria, categoryCriteria, PRODUCT_CATEGORIES);
+                userCriteria = createJoin(userCriteria, PRODUCT_CATEGORIES);
 
                 userCriteria.add(Restrictions.in("cats.name", categories));
             }
         }
 
         if (HKCollectionUtils.isNotBlank(cities)) {
-            userCriteria = createJoin(userCriteria, addrCriteria, USER_ADDRESS);
+            userCriteria = createJoin(userCriteria, USER_ADDRESS);
             userCriteria.add(Restrictions.in("addr.city", cities));
         }
 
         if (HKCollectionUtils.isNotBlank(states)) {
-            userCriteria = createJoin(userCriteria, addrCriteria, USER_ADDRESS);
+            userCriteria = createJoin(userCriteria, USER_ADDRESS);
             userCriteria.add(Restrictions.in("addr.state", states));
         }
 
         if (HKCollectionUtils.isNotBlank(zones)) {
-            userCriteria = createJoin(userCriteria, addrCriteria, USER_ADDRESS);
-            userCriteria = createJoin(userCriteria, pinCriteria, ADDRESS_PIN);
-            userCriteria = createJoin(userCriteria, zoneCriteria, PIN_ZONE);
+            userCriteria = createJoin(userCriteria, USER_ADDRESS);
+            userCriteria = createJoin(userCriteria, ADDRESS_PIN);
+            userCriteria = createJoin(userCriteria, PIN_ZONE);
             userCriteria.add(Restrictions.in("zone.id", zones));
         }
 
@@ -257,17 +242,18 @@ public class UsersSearchCriteria {
         return this;
     }
 
-    private DetachedCriteria createJoin(DetachedCriteria criteria, boolean criteriaBool, Short joinColumnId) {
-        String[] vals = joinColumns.get(joinColumnId);
-        if (vals == null || vals.length < 2) {
+    private DetachedCriteria createJoin(DetachedCriteria criteria, Short joinColumnId) {
+        Object[] vals = joinColumns.get(joinColumnId);
+        if (vals == null || vals.length < 3) {
             return criteria;
         }
-        String joinColumn = vals[0];
-        String alias = vals[1];
-
+        String joinColumn = (String) vals[0];
+        String alias = (String) vals[1];
+        Boolean criteriaBool = (Boolean) vals[2];
         if (!criteriaBool) {
             criteria.createAlias(joinColumn, alias);
-            criteriaBool = true;
+            criteriaBool = Boolean.TRUE;
+            vals[2] = criteriaBool;
         }
         return criteria;
     }
