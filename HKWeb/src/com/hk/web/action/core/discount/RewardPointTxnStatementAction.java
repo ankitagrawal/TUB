@@ -14,7 +14,7 @@ import com.hk.pact.service.order.RewardPointService;
 import org.stripesstuff.plugin.security.Secure;
 
 @Component
-@Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED})
+@Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, authUrl = "/core/auth/Login.action?source=")
 @HttpCache(allow = false)
 public class RewardPointTxnStatementAction extends BaseAction {
 
