@@ -68,15 +68,12 @@
           </c:choose></td>
       </tr>
       <tr>
-      <td><label>Extra Inventory Created</label><s:checkbox name="extraInventoryCreated"/></td>
+      <td><label>Extra Inventory Created: </label><s:checkbox name="extraInventoryCreated"/></td>
+      <td><label>Bright SO ID:</label><s:text name="brightSoId"/></td>
       <td colspan="3"><s:submit name="pre" value="Search"/>
           <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="getExtraInventoryPO" class="addBtn button_orange">All ExInv PO              
           </s:link>
           <s:submit name="generateExcelReport" value="Download to Excel" /></td>
-      </tr>
-      <tr>
-      <td><label>Bright SO ID:</label><s:text name="brightSoId"/></td>
-      <td></td>
       </tr>
       </table>
       </s:form>
