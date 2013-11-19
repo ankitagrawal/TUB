@@ -3,6 +3,7 @@ package com.hk.web.action.admin.webServices;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
+import com.hk.dto.user.UserDTO;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -34,7 +35,6 @@ public class TestMailBoltServicesAction extends BaseAction {
     private String zones;
     private String pvs;
     private String prodnames;
-    private String minimum = "true";
     private String production;
     private String cities;
     private String states;
@@ -143,23 +143,15 @@ public class TestMailBoltServicesAction extends BaseAction {
         } else {
             UsersSearchCriteria.setNotOnProduction("true");
         }
-        List<Object[]> ems = null;
-        List<User> users = null;
+        List<UserDTO> ems = null;
         try {
-            if (minimum != null && "true".equals(minimum)) {
-                ems = userSearchService.searchUserInfo(criteria);
-            } else {
-                users = userSearchService.searchUsers(criteria);
-            }
+            ems = userSearchService.searchUserInfo(criteria);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (minimum != null && "true".equals(minimum)) {
-            result = ems.size();
-        } else {
-            result = users.size();
-        }
         Long endTime = System.currentTimeMillis();
+
+        result = ems.size();
         time = endTime - startTime;
 
         // write output to file
@@ -173,19 +165,14 @@ public class TestMailBoltServicesAction extends BaseAction {
                 "login, email, name, subscriptionMask, unsubscribeToken" :
                 "email, login, name, subscriptionMask, unsubscribeToken");
 
-        if (minimum != null && "true".equals(minimum)) {
-            for (Object[] o : ems) {
-                resultSB.append("\n");
-                for (int i = 0; i < o.length; i++) {
-                    Object ob = o[i];
-                    resultSB.append(ob);
-                    if (i < o.length - 1) {
-                        resultSB.append(",");
-                    }
-                }
+        for (UserDTO o : ems) {
+            resultSB.append("\n");
+
+            if (debug) {
+                resultSB.append(o.login).append(",").append(o.email).append(",").append(o.name).append(",").append(o.subscribedMask).append(",").append(o.unsubscribeToken);
+            } else {
+                resultSB.append(o.email).append(",").append(o.login).append(",").append(o.name).append(",").append(o.subscribedMask).append(",").append(o.unsubscribeToken);
             }
-        } else {
-            //TODO : implemnt this
         }
 
         return new StreamingResolution("text/csv", summarySB.append("\n\n").toString() + resultSB.toString()).setFilename("queryResult.csv");
@@ -230,14 +217,6 @@ public class TestMailBoltServicesAction extends BaseAction {
 
     public void setProdnames(String prodnames) {
         this.prodnames = prodnames;
-    }
-
-    public String getMinimum() {
-        return minimum;
-    }
-
-    public void setMinimum(String minimum) {
-        this.minimum = minimum;
     }
 
     public String getCities() {

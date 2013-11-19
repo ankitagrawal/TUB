@@ -4,6 +4,7 @@ import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
+import com.hk.dto.user.UserDTO;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.user.UsersDao;
 import org.hibernate.criterion.DetachedCriteria;
@@ -24,17 +25,9 @@ import java.util.List;
 public class UsersDaoImpl extends BaseDaoImpl implements UsersDao {
 
     @Override
-    public List<User> findUserBySearchCriteria(UsersSearchCriteria criteria) {
-        DetachedCriteria dc = criteria.getSearchCriteria(false);
-        List<User> users = findByCriteria(dc);
-        return users;
-    }
-
-
-    @Override
-    public List<Object[]> findUserInfoBySearchCriteria(UsersSearchCriteria criteria){
-        DetachedCriteria dc = criteria.getSearchCriteria(true);
-        List<Object[]> info = findByCriteria(dc);
+    public List<UserDTO> findUserInfoBySearchCriteria(UsersSearchCriteria criteria){
+        DetachedCriteria dc = criteria.getSearchCriteria();
+        List<UserDTO> info = findByCriteria(dc);
         return info;
     }
 

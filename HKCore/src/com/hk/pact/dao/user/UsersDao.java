@@ -4,6 +4,7 @@ import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
+import com.hk.dto.user.UserDTO;
 import com.hk.pact.dao.BaseDao;
 
 import java.util.List;
@@ -16,6 +17,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface UsersDao extends BaseDao {
-    public List<User> findUserBySearchCriteria(UsersSearchCriteria criteria);
-    public List<Object[]> findUserInfoBySearchCriteria(UsersSearchCriteria criteria);
+    public List<UserDTO> findUserInfoBySearchCriteria(UsersSearchCriteria criteria);
 }

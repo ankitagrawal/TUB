@@ -2,6 +2,7 @@ package com.hk.pact.service;
 
 import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
+import com.hk.dto.user.UserDTO;
 
 import java.util.List;
 
@@ -13,6 +14,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface UserSearchService {
-    List<User> searchUsers(UsersSearchCriteria criteria);
-    List<Object[]> searchUserInfo(UsersSearchCriteria criteria);
+    List<UserDTO> searchUserInfo(UsersSearchCriteria criteria);
 }

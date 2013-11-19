@@ -2,6 +2,7 @@ package com.hk.impl.service.core;
 
 import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.user.User;
+import com.hk.dto.user.UserDTO;
 import com.hk.pact.dao.user.UsersDao;
 import com.hk.pact.service.UserSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,7 @@ public class UserSearchServiceImpl implements UserSearchService {
     UsersDao usersDao;
 
     @Override
-    public List<User> searchUsers(UsersSearchCriteria criteria) {
-        return usersDao.findUserBySearchCriteria(criteria);
-    }
-
-    @Override
-    public List<Object[]> searchUserInfo(UsersSearchCriteria criteria) {
+    public List<UserDTO> searchUserInfo(UsersSearchCriteria criteria) {
         return usersDao.findUserInfoBySearchCriteria(criteria);
     }
 }

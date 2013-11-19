@@ -1,16 +1,16 @@
 package com.hk.core.search;
 
+import com.hk.dto.user.UserDTO;
 import com.hk.constants.core.Keys;
 import com.hk.domain.user.User;
 import com.hk.util.HKCollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,24 +34,6 @@ public class UsersSearchCriteria {
     private static final short PIN_ZONE = 10;
     private static final short PRODUCT_CATEGORIES = 11;
 
-    // Map values are as follows {<String:joinEntity>,<String:alias>,<Boolean:joinCreated>}
-    private static Map<Short, Object[]> joinColumns = new HashMap<Short, Object[]>();
-
-    static {
-        joinColumns.put(USER_STORE, new Object[]{"user.store", "store", Boolean.FALSE});
-        joinColumns.put(USER_REPORT, new Object[]{"user.report", "report", Boolean.FALSE});
-        joinColumns.put(USER_ROLES, new Object[]{"user.roles", "roles", Boolean.FALSE});
-        joinColumns.put(USER_ORDER, new Object[]{"user.orders", "orders", Boolean.FALSE});
-        joinColumns.put(ORDER_CARTLINEITEM, new Object[]{"orders.cartLineItems", "cli", Boolean.FALSE});
-        joinColumns.put(CARTLINEITEM_PRODUCTVARIANT, new Object[]{"cli.productVariant", "pv", Boolean.FALSE});
-        joinColumns.put(PRODUCTVARIANT_PRODUCT, new Object[]{"pv.product", "prod", Boolean.FALSE});
-        joinColumns.put(PRODUCT_PRODUCTVARIANT, new Object[]{"prod.productVariants", "pv2", Boolean.FALSE});
-        joinColumns.put(USER_ADDRESS, new Object[]{"user.addresses", "addr", Boolean.FALSE});
-        joinColumns.put(ADDRESS_PIN, new Object[]{"addr.pincode", "pin", Boolean.FALSE});
-        joinColumns.put(PIN_ZONE, new Object[]{"pin.zone", "zone", Boolean.FALSE});
-        joinColumns.put(PRODUCT_CATEGORIES, new Object[]{"prod.categories", "cats", Boolean.FALSE});
-    }
-
     @Value("#{hkEnvProps['" + Keys.Env.debug_mode + "']}")
     private static String notOnProduction;
 
@@ -68,12 +50,32 @@ public class UsersSearchCriteria {
     private String equality = "ge"; // ge (greater than) is the default value for equality
     private List<Long> storeIds;
 
-    public DetachedCriteria getSearchCriteria(boolean fetchMinimumRequiredData) {
-        return getCriteriaFromBaseCriteria(fetchMinimumRequiredData);
+    // Map values are as follows {<String:joinEntity>,<String:alias>,<Boolean:joinCreatedAlready>}
+    private Map<Short, Object[]> joinColumns = new HashMap<Short, Object[]>();
+
+    private void createMap() {
+        joinColumns.put(USER_STORE, new Object[]{"user.store", "store", Boolean.FALSE});
+        joinColumns.put(USER_REPORT, new Object[]{"user.report", "report", Boolean.FALSE});
+        joinColumns.put(USER_ROLES, new Object[]{"user.roles", "roles", Boolean.FALSE});
+        joinColumns.put(USER_ORDER, new Object[]{"user.orders", "orders", Boolean.FALSE});
+        joinColumns.put(ORDER_CARTLINEITEM, new Object[]{"orders.cartLineItems", "cli", Boolean.FALSE});
+        joinColumns.put(CARTLINEITEM_PRODUCTVARIANT, new Object[]{"cli.productVariant", "pv", Boolean.FALSE});
+        joinColumns.put(PRODUCTVARIANT_PRODUCT, new Object[]{"pv.product", "prod", Boolean.FALSE});
+        joinColumns.put(PRODUCT_PRODUCTVARIANT, new Object[]{"prod.productVariants", "pv2", Boolean.FALSE});
+        joinColumns.put(USER_ADDRESS, new Object[]{"user.addresses", "addr", Boolean.FALSE});
+        joinColumns.put(ADDRESS_PIN, new Object[]{"addr.pincode", "pin", Boolean.FALSE});
+        joinColumns.put(PIN_ZONE, new Object[]{"pin.zone", "zone", Boolean.FALSE});
+        joinColumns.put(PRODUCT_CATEGORIES, new Object[]{"prod.categories", "cats", Boolean.FALSE});
+    }
+
+    public DetachedCriteria getSearchCriteria() {
+        DetachedCriteria criteria = getCriteriaFromBaseCriteria();
+        resetMap();
+        return criteria;
     }
 
 
-    private DetachedCriteria getCriteriaFromBaseCriteria(boolean fetchMinimumRequiredData) {
+    private DetachedCriteria getCriteriaFromBaseCriteria() {
 
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
 
@@ -139,25 +141,23 @@ public class UsersSearchCriteria {
             userCriteria.add(Restrictions.in("zone.id", zones));
         }
 
-        if (fetchMinimumRequiredData) {
-            ProjectionList projList = Projections.projectionList();
-            if ("true".equalsIgnoreCase(notOnProduction)) {
-                projList.add(Projections.distinct(Projections.property("user.login")));
-                projList.add(Projections.property("user.email"));
-                projList.add(Projections.property("user.name"));
-                projList.add(Projections.property("user.subscribedMask"));
-                projList.add(Projections.property("user.unsubscribeToken"));
-            } else {
-                projList.add(Projections.distinct(Projections.property("user.email")));
-                projList.add(Projections.property("user.login"));
-                projList.add(Projections.property("user.name"));
-                projList.add(Projections.property("user.subscribedMask"));
-                projList.add(Projections.property("user.unsubscribeToken"));
-            }
-            userCriteria.setProjection(projList);
+        ProjectionList projList = Projections.projectionList();
+        if ("true".equalsIgnoreCase(notOnProduction)) {
+            projList.add(Projections.distinct(Projections.property("user.login")), "login");
+            projList.add(Projections.property("user.email"), "email");
+            projList.add(Projections.property("user.name"), "name");
+            projList.add(Projections.property("user.subscribedMask"), "subscribedMask");
+            projList.add(Projections.property("user.unsubscribeToken"), "unsubscribeToken");
         } else {
-            userCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            projList.add(Projections.distinct(Projections.property("user.email")), "email");
+            projList.add(Projections.property("user.login"), "login");
+            projList.add(Projections.property("user.name"), "name");
+            projList.add(Projections.property("user.subscribedMask"), "subscribedMask");
+            projList.add(Projections.property("user.unsubscribeToken"), "unsubscribeToken");
         }
+        userCriteria.setProjection(projList);
+        userCriteria.setResultTransformer(Transformers.aliasToBean(UserDTO.class));
+
         return userCriteria;
     }
 
@@ -269,5 +269,18 @@ public class UsersSearchCriteria {
      */
     public static void setNotOnProduction(String notOnProduction) {
         UsersSearchCriteria.notOnProduction = notOnProduction;
+    }
+
+    public UsersSearchCriteria() {
+        createMap();
+    }
+
+    private void resetMap() {
+        Collection<Object[]> vals = joinColumns.values();
+        Iterator<Object[]> it = vals.iterator();
+        while (it.hasNext()) {
+            Object[] ob = it.next();
+            ob[2] = Boolean.FALSE;
+        }
     }
 }

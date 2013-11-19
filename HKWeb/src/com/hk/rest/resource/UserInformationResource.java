@@ -5,6 +5,7 @@ import com.hk.core.search.UsersSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.User;
+import com.hk.dto.user.UserDTO;
 import com.hk.pact.service.UserSearchService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.HKCollectionUtils;
@@ -13,10 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -49,7 +47,6 @@ public class UserInformationResource {
     private Boolean verified;
     private Integer userOrderCount;
     private String equality;
-    private int minimum = 1;
 
     @Autowired
     UserSearchService userSearchService;
@@ -68,7 +65,6 @@ public class UserInformationResource {
                                       @FormParam("categories") List<String> categories,
                                       @FormParam("userOrderCount") Integer userOrderCount,
                                       @FormParam("equality") String equality,
-                                      @FormParam("minimum") int minimum,
                                       @FormParam("storeIds") List<Long> storeIds,
                                       @FormParam("emails") List<String> emails) {
         this.emails = emails;
@@ -81,7 +77,6 @@ public class UserInformationResource {
         this.equality = equality;
         this.zones = zones;
         this.storeIds = storeIds;
-        this.minimum = minimum;
         return getUsers();
     }
 
@@ -120,43 +115,15 @@ public class UserInformationResource {
                 criteria.setStates(states);
             }
 
-            List<User> users = null;
-            List<Object[]> userInfo = null;
+            List<UserDTO> userInfo = null;
 
-            if (minimum == 1) {
-                userInfo = userSearchService.searchUserInfo(criteria);
-            } else {
-                users = userSearchService.searchUsers(criteria);
-            }
+            userInfo = userSearchService.searchUserInfo(criteria);
 
-            List<UserDto> userDtos = new ArrayList<UserDto>();
-            if (userInfo != null) {
-                for (Object[] anUserInfo : userInfo) {
-                    Object[] user = (Object[]) anUserInfo;
-                    UserDto udto = new UserDto();
-                    udto.login = (String) user[0];
-                    udto.email = (String) user[1];
-                    udto.name = (String) user[2];
-                    udto.subscribedMask = (Integer) user[3];
-                    udto.unsubscribeToken = (String) user[4];
-                    userDtos.add(udto);
-                }
-            } else if (users != null) {
-                for (User user1 : users) {
-                    User user = (User) user1;
-                    UserDto udto = new UserDto();
-                    udto.name = user.getName();
-                    udto.email = user.getEmail();
-                    udto.login = user.getLogin();
-                    udto.subscribedMask = user.getSubscribedMask();
-                    udto.unsubscribeToken = user.getUnsubscribeToken();
-                    userDtos.add(udto);
-                }
-            } else {
+            if (userInfo == null) {
                 throw new Exception("Null Data");
             }
 
-            final GenericEntity<List<UserDto>> genericEntity = new GenericEntity<List<UserDto>>(userDtos) {
+            final GenericEntity<List<UserDTO>> genericEntity = new GenericEntity<List<UserDTO>>(userInfo) {
             };
             response = Response.status(Response.Status.OK).entity(genericEntity).build();
         } catch (Exception ex) {
@@ -164,13 +131,5 @@ public class UserInformationResource {
             logger.error("Unable to get User Details ", ex);
         }
         return response;
-    }
-
-    class UserDto {
-        public String email;
-        public String name;
-        public String login;
-        public Integer subscribedMask;
-        public String unsubscribeToken;
     }
 }

@@ -63,8 +63,6 @@
                         <strong>Advanced Options</strong>
                     </tr>
                     <tr>
-                        <td>Projected Info (Don't retrieve entire user)</td>
-                        <td><s:checkbox name="minimum"></s:checkbox></td>
                         <td>Test as if on Production DB(overrides setting in environment.properties)</td>
                         <td><s:checkbox name="production"></s:checkbox></td>
                     </tr>
