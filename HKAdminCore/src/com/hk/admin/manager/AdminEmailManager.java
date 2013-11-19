@@ -1143,9 +1143,10 @@ public class AdminEmailManager {
             categoryAdmins = emailManager.categoryAdmins(category);
 		}
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poMailToSupplier);
-        if(product.isJit() || product.isDropShipping()){
+        if(purchaseOrder.getPurchaseOrderType().getName().equals(EnumPurchaseOrderType.JIT.getName()) || purchaseOrder.getPurchaseOrderType().getName().equals(EnumPurchaseOrderType.DROP_SHIP.getName())) {
             categoryAdmins.add(WAREHOUSE_JIT_EMAIL);
         }
+
         else{
             categoryAdmins.add(WAREHOUSE_PURCHASE_EMAIL);
         }
