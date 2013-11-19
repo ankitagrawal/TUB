@@ -96,7 +96,7 @@ public class UsersSearchCriteria {
 
         if (verified != null) {
             userCriteria = createJoin(userCriteria, USER_ROLES);
-            String roleName = (verified.booleanValue()) ? "HK_USER" : "HKUNVERIFIED";
+            String roleName = (verified) ? "HK_USER" : "HKUNVERIFIED";
             userCriteria.add(Restrictions.eq("roles.name", roleName));
         }
 

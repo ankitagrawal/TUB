@@ -131,8 +131,8 @@ public class UserInformationResource {
 
             List<UserDto> userDtos = new ArrayList<UserDto>();
             if (userInfo != null) {
-                for (int i = 0; i < userInfo.size(); i++) {
-                    Object[] user = (Object[]) userInfo.get(i);
+                for (Object[] anUserInfo : userInfo) {
+                    Object[] user = (Object[]) anUserInfo;
                     UserDto udto = new UserDto();
                     udto.login = (String) user[0];
                     udto.email = (String) user[1];
@@ -142,8 +142,8 @@ public class UserInformationResource {
                     userDtos.add(udto);
                 }
             } else if (users != null) {
-                for (int i = 0; i < users.size(); i++) {
-                    User user = (User) users.get(i);
+                for (User user1 : users) {
+                    User user = (User) user1;
                     UserDto udto = new UserDto();
                     udto.name = user.getName();
                     udto.email = user.getEmail();
