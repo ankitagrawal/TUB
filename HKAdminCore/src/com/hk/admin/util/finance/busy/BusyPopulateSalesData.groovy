@@ -63,7 +63,8 @@ public class BusyPopulateSalesData {
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state, w.prefix_invoice_generation series
+							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state, w.prefix_invoice_generation series,
+                            bo.amount as base_order_amount
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
@@ -77,7 +78,7 @@ public class BusyPopulateSalesData {
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
 							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))
-							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
+                            and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36'
 							and (so.is_service_order <> 1 or so.is_service_order is null)
 							and (bo.is_b2b_order <> 1 or bo.is_b2b_order is null)
@@ -85,6 +86,7 @@ public class BusyPopulateSalesData {
 							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
       accountingInvoice ->
+
 
       Long shippingOrderId;
       String series;
@@ -110,7 +112,7 @@ public class BusyPopulateSalesData {
 
 	  String gateway_order_id;
 	  String awb_number;
-
+      Double base_order_amount;
       warehouse_state = accountingInvoice.warehouse_state;
       shippingOrderId = accountingInvoice.shipping_order_id
 	  Long warehouseId =  accountingInvoice.warehouse_id;
@@ -251,16 +253,17 @@ public class BusyPopulateSalesData {
 
 	  gateway_order_id = accountingInvoice.gateway_order_id;
 	  awb_number = accountingInvoice.awb_number;
+      base_order_amount = accountingInvoice.base_order_amount;
 
      try{
       def keys= busySql.executeInsert("""
     INSERT INTO transaction_header 
       (
         series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
-        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number)
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number, base_order_amount)
 
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
-        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}, ${base_order_amount}
       )
       ON DUPLICATE KEY UPDATE
       series = ${series},
@@ -284,7 +287,8 @@ public class BusyPopulateSalesData {
       create_date = NOW(),
       hk_ref_no = ${shippingOrderId},
       gateway_order_id = ${gateway_order_id},
-      awb_number = ${awb_number}
+      awb_number = ${awb_number},
+      base_order_amount = ${base_order_amount}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
@@ -311,7 +315,8 @@ public class BusyPopulateSalesData {
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-							so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state, w.prefix_invoice_generation series
+							so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state, w.prefix_invoice_generation series,
+                            bo.amount as base_order_amount
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
@@ -326,7 +331,7 @@ public class BusyPopulateSalesData {
 							inner join warehouse w on w.id = so.warehouse_id
 							left join healthkart_busy.`transaction_header` th on so.id=th.hk_ref_no
 							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))
-							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
+                            and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and so.is_service_order = 1
 							and th.hk_ref_no is null
 							GROUP BY so.id
@@ -358,6 +363,7 @@ public class BusyPopulateSalesData {
 
 	  String gateway_order_id;
 	  String awb_number;
+      Double base_order_amount;
 
       shippingOrderId = accountingInvoice.shipping_order_id
       warehouse_state = accountingInvoice.warehouse_state;
@@ -496,16 +502,17 @@ public class BusyPopulateSalesData {
 
 	  gateway_order_id = accountingInvoice.gateway_order_id;
 	  awb_number = accountingInvoice.awb_number;  
+      base_order_amount = accountingInvoice.base_order_amount;
 
      try{
       def keys= busySql.executeInsert("""
     INSERT INTO transaction_header
       (
         series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
-        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number)
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number, base_order_amount)
 
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
-        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}, ${base_order_amount}
       )
       ON DUPLICATE KEY UPDATE
       series = ${series},
@@ -529,7 +536,8 @@ public class BusyPopulateSalesData {
       create_date = NOW(),
       hk_ref_no = ${shippingOrderId},
       gateway_order_id = ${gateway_order_id},
-      awb_number = ${awb_number}
+      awb_number = ${awb_number},
+      base_order_amount = ${base_order_amount}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
@@ -555,7 +563,8 @@ public class BusyPopulateSalesData {
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type, th.hk_ref_no,
-							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state, w.prefix_invoice_generation series
+							so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number, w.state as warehouse_state, w.prefix_invoice_generation series,
+                            bo.amount as base_order_amount
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
@@ -570,7 +579,7 @@ public class BusyPopulateSalesData {
 							inner join warehouse w on w.id = so.warehouse_id
                             left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
 							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))
-							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
+                            and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and bo.is_b2b_order = 1
                             and th.hk_ref_no is null
 							GROUP BY so.id
@@ -602,6 +611,7 @@ public class BusyPopulateSalesData {
 
 	  String gateway_order_id;
 	  String awb_number;  
+      Double base_order_amount;
 
       shippingOrderId = accountingInvoice.shipping_order_id
       warehouse_state = accountingInvoice.warehouse_state;
@@ -741,16 +751,17 @@ public class BusyPopulateSalesData {
 
 	  gateway_order_id = accountingInvoice.gateway_order_id;
 	  awb_number = accountingInvoice.awb_number;
-	    
+	  base_order_amount = accountingInvoice.base_order_amount;
+
      try{
       def keys= busySql.executeInsert("""
     INSERT INTO transaction_header
       (
         series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
-        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number)
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number, base_order_amount)
 
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
-        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}, ${base_order_amount}
       )
       ON DUPLICATE KEY UPDATE
       series = ${series},
@@ -774,7 +785,8 @@ public class BusyPopulateSalesData {
       create_date = NOW(),
       hk_ref_no = ${shippingOrderId},
       gateway_order_id = ${gateway_order_id},
-      awb_number = ${awb_number}
+      awb_number = ${awb_number},
+      base_order_amount = ${base_order_amount}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
