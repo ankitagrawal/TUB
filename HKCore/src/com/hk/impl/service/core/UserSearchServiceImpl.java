@@ -1,7 +1,6 @@
 package com.hk.impl.service.core;
 
 import com.hk.core.search.UsersSearchCriteria;
-import com.hk.domain.user.User;
 import com.hk.dto.user.UserDTO;
 import com.hk.pact.dao.user.UsersDao;
 import com.hk.pact.service.UserSearchService;

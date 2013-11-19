@@ -1,10 +1,6 @@
 package com.hk.rest.resource;
 
-import com.akube.framework.util.StringUtils;
 import com.hk.core.search.UsersSearchCriteria;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.user.User;
 import com.hk.dto.user.UserDTO;
 import com.hk.pact.service.UserSearchService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -14,13 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

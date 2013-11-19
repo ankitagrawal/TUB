@@ -1,16 +1,12 @@
 package com.hk.impl.dao.user;
 
 import com.hk.core.search.UsersSearchCriteria;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.user.User;
 import com.hk.dto.user.UserDTO;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.user.UsersDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,12 +19,10 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 @Repository
 public class UsersDaoImpl extends BaseDaoImpl implements UsersDao {
-
     @Override
     public List<UserDTO> findUserInfoBySearchCriteria(UsersSearchCriteria criteria){
         DetachedCriteria dc = criteria.getSearchCriteria();
         List<UserDTO> info = findByCriteria(dc);
         return info;
     }
-
 }

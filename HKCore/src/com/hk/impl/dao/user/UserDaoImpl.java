@@ -1,19 +1,5 @@
 package com.hk.impl.dao.user;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
@@ -28,6 +14,15 @@ import com.hk.dto.user.UserFilterDto;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.user.UserDao;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.*;
 
 /**
  * Author: Kani Date: Sep 1, 2008

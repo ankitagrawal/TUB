@@ -1,7 +1,6 @@
 package com.hk.pact.service;
 
 import com.hk.core.search.UsersSearchCriteria;
-import com.hk.domain.user.User;
 import com.hk.dto.user.UserDTO;
 
 import java.util.List;

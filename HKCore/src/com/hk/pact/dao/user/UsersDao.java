@@ -1,9 +1,6 @@
 package com.hk.pact.dao.user;
 
 import com.hk.core.search.UsersSearchCriteria;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.user.User;
 import com.hk.dto.user.UserDTO;
 import com.hk.pact.dao.BaseDao;
 
