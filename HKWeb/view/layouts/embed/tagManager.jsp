@@ -125,6 +125,7 @@
   <%
     }
     if (paymentSuccessBean != null) {
+      List<String> tmVariantIds = new ArrayList<String>();
   %>
   <script type="text/javascript">
     dataLayer.push({
@@ -142,6 +143,7 @@
             CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
             StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
             if (storeVariantBasicDetails != null && storeVariantBasicDetails.getId() !=null) {
+            tmVariantIds.add(storeVariantBasicDetails.getId().toString());
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
@@ -170,7 +172,8 @@
       'couponAmount' : '<%=Math.round(paymentSuccessBean.getCouponAmount())%>',
       'transactionDate' : '${paymentSuccessBean.purchaseDate}',
       'transactionMode' : '${paymentSuccessBean.paymentMode.name}',
-      'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>'
+      'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>',
+      'tmVariantIds' : '<%=StringUtils.join(tmVariantIds.iterator(), ",")%>'
     });
   </script>
   <%
