@@ -65,8 +65,10 @@
 
           <a href="${pageContext.request.contextPath}/beta/hk/FAQ.action?reftag=return" target="_blank">14 day return policy</a>&nbsp;
           <a href="${pageContext.request.contextPath}/beta/hk/ContactUs.action" target="_blank">Contact Us</a>&nbsp;
-          <a href="http://www.healthkartplus.com" class="cont-rht" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/></a>&nbsp;&nbsp;
           <a href="http://www.healthkart.com/resources" class="cont-rht" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKResources-Logo.png" class="pad-r-10" alt="HK Resources"/></a>
+
+          <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" class="cont-rht" target="_blank"><img src="<hk:vhostImage/>/images/hk-loyalty-logo.png" class="pad-r-10" alt="HK Loyalty"/></s:link>
+          <a href="http://www.healthkartplus.com" class="cont-rht" target="_blank"><img src="<hk:vhostImage/>/images/logo/HKPlus-Logo.png" class="pad-r-10" alt="HK Plus"/></a>
       </div>
       <div style="text-align:center">
       <s:link href="/" title='go to healthkart home'>
@@ -237,11 +239,14 @@
                             <s:param name="tabId" value="1"/>
                         </li>
                     </s:link>
-                    <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction">
+                    <s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">
                         <li>
-                            Addresses
-                            <s:param name="manageAddresses" value=""/>
-
+                            Orders
+                        </li>
+                    </s:link>
+                    <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction">
+                        <li>
+                            Reward points
                         </li>
                     </s:link>
 

@@ -38,9 +38,6 @@
     </style>
   </head>
   <body id="${bodyId}">
-  <s:layout-render name="/layouts/embed/tagManager.jsp"
-                   pageType="<%=TagConstants.PageType.OTHER%>"
-      />
   <s:layout-component name="modal"/>
 
   <div id="container" class="container_24">
