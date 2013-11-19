@@ -59,7 +59,7 @@ public class BusyPopulateRtoData {
                                     a.line1 as address_1, a.line2 as address_2, a.city, a.state,
                                     w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
                                     c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number
+                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number, w.prefix_invoice_generation series
                                     from line_item li
                                     join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
                                     from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
@@ -107,8 +107,10 @@ public class BusyPopulateRtoData {
 	  String awb_number;
 	    
       shippingOrderId = accountingInvoice.shipping_order_id
-	     Long warehouseId =  accountingInvoice.warehouse_id;
-	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+	  Long warehouseId =  accountingInvoice.warehouse_id;
+
+       series = accountingInvoice.series;
+	    /*if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           series = "HR";
 	      }
 	      else if(warehouseId == 2 || warehouseId == 20){
@@ -128,7 +130,7 @@ public class BusyPopulateRtoData {
         }
         else if(warehouseId == 1001){
             series = "GK";
-        }
+        }*/
 
       date = accountingInvoice.return_date;	    
 
