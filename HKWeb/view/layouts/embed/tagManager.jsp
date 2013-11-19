@@ -19,7 +19,7 @@
   <%
     PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
     if (principal != null) {
-      pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getUserHash());
+      pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getId());
       String gender = principal.getGender();
       if (gender == null) {
         gender = "n.a.";
