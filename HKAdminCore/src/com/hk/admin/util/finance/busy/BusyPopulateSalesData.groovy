@@ -368,7 +368,7 @@ public class BusyPopulateSalesData {
       shippingOrderId = accountingInvoice.shipping_order_id
       warehouse_state = accountingInvoice.warehouse_state;
       Long warehouseId =  accountingInvoice.warehouse_id;
-      series = accountingInvoice.series
+      series = accountingInvoice.series;
 	    /*if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           series = "HR";
 	      }
