@@ -1,11 +1,9 @@
 package com.hk.core.search;
 
-import com.hk.dto.user.UserDTO;
 import com.hk.constants.core.Keys;
 import com.hk.domain.user.User;
+import com.hk.dto.user.UserDTO;
 import com.hk.util.HKCollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +33,7 @@ public class UsersSearchCriteria {
     private static final short PRODUCT_CATEGORIES = 11;
 
     @Value("#{hkEnvProps['" + Keys.Env.debug_mode + "']}")
-    private static String notOnProduction;
+    private static String debugMode;
 
     // list of variables that might be received
     private List<String> emails;
@@ -142,7 +140,7 @@ public class UsersSearchCriteria {
         }
 
         ProjectionList projList = Projections.projectionList();
-        if ("true".equalsIgnoreCase(notOnProduction)) {
+        if ("true".equalsIgnoreCase(debugMode)) {
             projList.add(Projections.distinct(Projections.property("user.login")), "login");
             projList.add(Projections.property("user.email"), "email");
             projList.add(Projections.property("user.name"), "name");
@@ -258,17 +256,17 @@ public class UsersSearchCriteria {
         return criteria;
     }
 
-    public static String getNotOnProduction() {
-        return notOnProduction;
+    public static String isDebugMode() {
+        return debugMode;
     }
 
     /**
-     * Overriding value of <code>notOnProduction</code> is for testing web services only
+     * Overriding value of <code>debugMode</code> is for testing web services only
      *
-     * @param notOnProduction
+     * @param debugMode
      */
-    public static void setNotOnProduction(String notOnProduction) {
-        UsersSearchCriteria.notOnProduction = notOnProduction;
+    public static void setDebugMode(String debugMode) {
+        UsersSearchCriteria.debugMode = debugMode;
     }
 
     public UsersSearchCriteria() {

@@ -2,7 +2,6 @@ package com.hk.web.action.admin.webServices;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.core.search.UsersSearchCriteria;
-import com.hk.domain.user.User;
 import com.hk.dto.user.UserDTO;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserSearchService;
@@ -139,9 +138,9 @@ public class TestMailBoltServicesAction extends BaseAction {
 
 
         if (production != null && "true".equalsIgnoreCase(production)) {
-            UsersSearchCriteria.setNotOnProduction("false");
+            UsersSearchCriteria.setDebugMode("false");
         } else {
-            UsersSearchCriteria.setNotOnProduction("true");
+            UsersSearchCriteria.setDebugMode("true");
         }
         List<UserDTO> ems = null;
         try {
@@ -157,11 +156,11 @@ public class TestMailBoltServicesAction extends BaseAction {
         // write output to file
         StringBuffer summarySB = new StringBuffer();
         String summary = "result size: " + result + " time taken in millis: " + (endTime - startTime);
-        summarySB.append("Summary").append("\n").append(summary).append("\n");
+        summarySB.append("Summary: ").append(summary).append("\n");
 
         boolean debug = !(production != null && "true".equalsIgnoreCase(production));
         StringBuffer resultSB = new StringBuffer();
-        resultSB.append("\n").append(debug ?
+        resultSB.append("\n\n").append(debug ?
                 "login, email, name, subscriptionMask, unsubscribeToken" :
                 "email, login, name, subscriptionMask, unsubscribeToken");
 
