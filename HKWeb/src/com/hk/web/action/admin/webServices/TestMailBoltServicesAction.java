@@ -1,29 +1,21 @@
 package com.hk.web.action.admin.webServices;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.Keys;
 import com.hk.core.search.UsersSearchCriteria;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserSearchService;
-import com.hk.pact.service.catalog.CategoryService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.StreamingResolution;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,13 +29,11 @@ public class TestMailBoltServicesAction extends BaseAction {
     UserDao userDao;
     @Autowired
     UserSearchService userSearchService;
-    @Autowired
-    CategoryService categoryService;
 
     // variables passed as params to services
     private String zones;
     private String pvs;
-    private String params;
+    private String prodnames;
     private String minimum = "true";
     private String production;
     private String cities;
@@ -61,12 +51,7 @@ public class TestMailBoltServicesAction extends BaseAction {
     private String resolutionPageString = "/pages/admin/webServices/mailServices.jsp";
 
 
-    /*@Value("#{hkEnvProps['" + Keys.Env.mailBolt + "']}")
-    String mailBoltDownloadsPath;*/
-
-
-    ////////////////////////////////////////REMOVE////////////////////////////////////////////////////////////////////
-    private Integer setUserOrderCount2(String userOrderCount) {
+    private Integer convertUserOrderCount(String userOrderCount) {
         Integer uoc = null;
         try {
             uoc = Integer.parseInt(userOrderCount);
@@ -76,7 +61,7 @@ public class TestMailBoltServicesAction extends BaseAction {
         return uoc;
     }
 
-    private Boolean setVerified2(String verified) {
+    private Boolean convertVerified(String verified) {
         Boolean ver = null;
         try {
             ver = "true".equalsIgnoreCase(verified) ? true : "false".equalsIgnoreCase(verified) ? false : null;
@@ -86,46 +71,30 @@ public class TestMailBoltServicesAction extends BaseAction {
         return ver;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // 1. add functionality for outputing result to csv file
-    // 2. improve ui
-    // 3. change functioanlity in order to send strings from services
     @DefaultHandler
     public Resolution pre() {
         return new ForwardResolution(resolutionPageString);
     }
 
-
     public Resolution testServices() {
         Long startTime = System.currentTimeMillis();
         UsersSearchCriteria criteria = new UsersSearchCriteria();
-        String prodnames = params;
         if (prodnames != null) {
             List<String> ids = Arrays.asList(prodnames.split(","));
-            if (categories != null) {
-                Set<Category> cats = categoryService.getCategoriesFromCategoryNames(categories);
-                List<Product> prods = new ArrayList<Product>();
-                for (Category c : cats) {
-                    List<Product> p = c.getProducts();
-                    prods.addAll(p);
-                }
-                List<String> prodIds = new ArrayList<String>();
-                for (Product pr : prods) {
-                    prodIds.add(pr.getId());
-                }
-                ids.addAll(prodIds);
-            }
             criteria.setProductIds(ids);
         }
+        if (categories != null) {
+            List<String> ids = Arrays.asList(categories.split(","));
+            criteria.setCategories(ids);
+        }
         if (userOrderCount != null) {
-            criteria.setUserOrderCount(setUserOrderCount2(userOrderCount));
+            criteria.setUserOrderCount(convertUserOrderCount(userOrderCount));
         }
         if (equality != null) {
             criteria.setEquality(equality);
         }
         if (verified != null) {
-            criteria.setVerified(setVerified2(verified));
+            criteria.setVerified(convertVerified(verified));
         }
         if (pvs != null) {
             List<String> pvids = Arrays.asList(pvs.split(","));
@@ -169,6 +138,11 @@ public class TestMailBoltServicesAction extends BaseAction {
         }
 
 
+        if (production != null && "true".equalsIgnoreCase(production)) {
+            UsersSearchCriteria.setNotOnProduction("false");
+        } else {
+            UsersSearchCriteria.setNotOnProduction("true");
+        }
         List<Object[]> ems = null;
         List<User> users = null;
         try {
@@ -193,14 +167,9 @@ public class TestMailBoltServicesAction extends BaseAction {
         String summary = "result size: " + result + " time taken in millis: " + (endTime - startTime);
         summarySB.append("Summary").append("\n").append(summary).append("\n");
 
-        if (production != null && "true".equals(production)) {
-            UsersSearchCriteria.NOT_ON_PRODUCTION = false;
-        } else {
-            UsersSearchCriteria.NOT_ON_PRODUCTION = true;
-        }
-
+        boolean debug = !(production != null && "true".equalsIgnoreCase(production));
         StringBuffer resultSB = new StringBuffer();
-        resultSB.append("\n").append(UsersSearchCriteria.NOT_ON_PRODUCTION ?
+        resultSB.append("\n").append(debug ?
                 "login, email, name, subscriptionMask, unsubscribeToken" :
                 "email, login, name, subscriptionMask, unsubscribeToken");
 
@@ -255,12 +224,12 @@ public class TestMailBoltServicesAction extends BaseAction {
         this.pvs = pvs;
     }
 
-    public String getParams() {
-        return params;
+    public String getProdnames() {
+        return prodnames;
     }
 
-    public void setParams(String params) {
-        this.params = params;
+    public void setProdnames(String prodnames) {
+        this.prodnames = prodnames;
     }
 
     public String getMinimum() {

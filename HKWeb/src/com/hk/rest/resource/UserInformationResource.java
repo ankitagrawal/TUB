@@ -20,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -58,38 +59,29 @@ public class UserInformationResource {
     @POST
     @Path("/all")
     @Produces("application/json")
-    public Response getUsersByProduct(@FormParam("productIds") String productIds,
-                                      @FormParam("productVariantIds") String productVariantIds,
-                                      @FormParam("cities") String cities,
-                                      @FormParam("zones") String zones,
-                                      @FormParam("states") String states,
-                                      @FormParam("verified") String verified,
-                                      @FormParam("categories") String categories,
-                                      @FormParam("userOrderCount") String userOrderCount,
+    public Response getUsersByProduct(@FormParam("productIds") List<String> productIds,
+                                      @FormParam("productVariantIds") List<String> productVariantIds,
+                                      @FormParam("cities") List<String> cities,
+                                      @FormParam("zones") List<Long> zones,
+                                      @FormParam("states") List<String> states,
+                                      @FormParam("verified") Boolean verified,
+                                      @FormParam("categories") List<String> categories,
+                                      @FormParam("userOrderCount") Integer userOrderCount,
                                       @FormParam("equality") String equality,
-                                      @FormParam("minimum") String minimum,
-                                      @FormParam("storeIds") String storeIds,
-                                      @FormParam("emails") String emails) {
-        List<String> allProdIds = StringUtils.getListFromString(productIds, ",");
-        List<String> allProdVarIds = StringUtils.getListFromString(productVariantIds, ",");
-        List<String> allCities = StringUtils.getListFromString(cities, ",");
-        List<String> allStates = StringUtils.getListFromString(states, ",");
-        List<String> allZones = StringUtils.getListFromString(zones, ",");
-        List<String> allStores = StringUtils.getListFromString(storeIds, ",");
-        List<String> allEmails = StringUtils.getListFromString(emails, ",");
-
-        this.emails = allEmails;
-        this.productIds = setProductIds(allProdIds, categories);
-        this.productVariantIds = allProdVarIds;
-        this.cities = allCities;
-        this.states = allStates;
-        this.verified = setVerified(verified);
-        this.userOrderCount = setUserOrderCount(userOrderCount);
+                                      @FormParam("minimum") int minimum,
+                                      @FormParam("storeIds") List<Long> storeIds,
+                                      @FormParam("emails") List<String> emails) {
+        this.emails = emails;
+        this.productIds = productIds;
+        this.productVariantIds = productVariantIds;
+        this.cities = cities;
+        this.states = states;
+        this.verified = verified;
+        this.userOrderCount = userOrderCount;
         this.equality = equality;
-        this.zones = setLongVals(allZones);
-        this.storeIds = setLongVals(allStores);
-        this.minimum = setMinimum(minimum);
-
+        this.zones = zones;
+        this.storeIds = storeIds;
+        this.minimum = minimum;
         return getUsers();
     }
 
@@ -171,68 +163,7 @@ public class UserInformationResource {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
         }
-
         return response;
-    }
-
-    private int setMinimum(String minimum) {
-        int min = 1;
-        try {
-            min = Integer.parseInt(minimum);
-        } catch (Exception ignore) {
-        }
-        return min;
-    }
-
-    private List<Long> setLongVals(List<String> allVals) {
-        if (allVals == null) {
-            return null;
-        }
-        List<Long> vals = new ArrayList<Long>();
-        for (String z : allVals) {
-            try {
-                Long id = Long.parseLong(z);
-                vals.add(id);
-            } catch (Exception ignore) {
-            }
-        }
-
-        return vals;
-    }
-
-    private Integer setUserOrderCount(String userOrderCount) {
-        Integer uoc = null;
-        try {
-            uoc = Integer.parseInt(userOrderCount);
-        } catch (Exception e) {
-            uoc = null;
-        }
-        return uoc;
-    }
-
-    private Boolean setVerified(String verified) {
-        Boolean ver = null;
-        try {
-            ver = "true".equalsIgnoreCase(verified) ? true : "false".equalsIgnoreCase(verified) ? false : null;
-        } catch (Exception e) {
-            this.verified = null;
-        }
-        return ver;
-    }
-
-    private List<String> setProductIds(List<String> allProdIds, String categories) {
-        Set<Category> cats = categoryService.getCategoriesFromCategoryNames(categories);
-        List<Product> prods = new ArrayList<Product>();
-        for (Category c : cats) {
-            List<Product> p = c.getProducts();
-            prods.addAll(p);
-        }
-        List<String> prodIds = new ArrayList<String>();
-        for (Product pr : prods) {
-            prodIds.add(pr.getId());
-        }
-        prodIds.addAll(allProdIds);
-        return prodIds;
     }
 
     class UserDto {

@@ -1,12 +1,16 @@
 package com.hk.core.search;
 
+import com.hk.constants.core.Keys;
 import com.hk.domain.user.User;
 import com.hk.util.HKCollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,9 +20,44 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class UsersSearchCriteria {
+    // Join Column Ids
+    private static final short USER_STORE = 0;
+    private static final short USER_REPORT = 1;
+    private static final short USER_ROLES = 2;
+    private static final short USER_ORDER = 3;
+    private static final short ORDER_CARTLINEITEM = 4;
+    private static final short CARTLINEITEM_PRODUCTVARIANT = 5;
+    private static final short PRODUCTVARIANT_PRODUCT = 6;
+    private static final short PRODUCT_PRODUCTVARIANT = 7;
+    private static final short USER_ADDRESS = 8;
+    private static final short ADDRESS_PIN = 9;
+    private static final short PIN_ZONE = 10;
+    private static final short PRODUCT_CATEGORIES = 11;
+
+    // Map values are as follows {<joinEntity>,<alias>}
+    private static Map<Short, String[]> joinColumns = new HashMap<Short, String[]>();
+
+    static {
+        joinColumns.put(USER_STORE, new String[]{"user.store", "store"});
+        joinColumns.put(USER_REPORT, new String[]{"user.report", "report"});
+        joinColumns.put(USER_ROLES, new String[]{"user.roles", "roles"});
+        joinColumns.put(USER_ORDER, new String[]{"user.orders", "orders"});
+        joinColumns.put(ORDER_CARTLINEITEM, new String[]{"orders.cartLineItems", "cli"});
+        joinColumns.put(CARTLINEITEM_PRODUCTVARIANT, new String[]{"cli.productVariant", "pv"});
+        joinColumns.put(PRODUCTVARIANT_PRODUCT, new String[]{"pv.product", "prod"});
+        joinColumns.put(PRODUCT_PRODUCTVARIANT, new String[]{"prod.productVariants", "pv2"});
+        joinColumns.put(USER_ADDRESS, new String[]{"user.addresses", "addr"});
+        joinColumns.put(ADDRESS_PIN, new String[]{"addr.pincode", "pin"});
+        joinColumns.put(PIN_ZONE, new String[]{"pin.zone", "zone"});
+        joinColumns.put(PRODUCT_CATEGORIES, new String[]{"prod.categories", "cats"});
+    }
+
+    @Value("#{hkEnvProps['" + Keys.Env.debug_mode + "']}")
+    private static String notOnProduction;
+
     // list of variables that might be received
     private List<String> emails;
-//    private List<String> categories;
+    private List<String> categories;
     private List<String> states;
     private List<String> cities;
     private List<Long> zones;
@@ -27,149 +66,97 @@ public class UsersSearchCriteria {
     private Boolean verified;
     private Integer userOrderCount;
     private String equality = "ge"; // ge (greater than) is the default value for equality
-    private boolean atleastOneVariableSet = false;
-    public static boolean NOT_ON_PRODUCTION = true;
     private List<Long> storeIds;
     private boolean fetchMinimumRequiredData = false;
+
+    // variables used for processing DetachedCriteria
+    private boolean orderCriteria = false,
+            cliCriteria = false,
+            pvCriteria = false,
+            prodCriteria = false,
+            addrCriteria = false,
+            pinCriteria = false,
+            zoneCriteria = false,
+            pv2Criteria = false,
+            rolesCriteria = false,
+            categoryCriteria = false,
+            userReportCriteria = false,
+            userStoreCriteria = false;
 
     public DetachedCriteria getSearchCriteria(boolean minInfo) {
         return getCriteriaFromBaseCriteria(fetchMinimumRequiredData);
     }
 
+
     private DetachedCriteria getCriteriaFromBaseCriteria(boolean fetchMinimumRequiredData) {
 
-        if (!atleastOneVariableSet) {
-            throw new RuntimeException("No parameter set");
-        }
-
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
+
         if (HKCollectionUtils.isNotBlank(emails)) {
             userCriteria.add(Restrictions.in("user.email", emails));
         } else {
             userCriteria.add(Restrictions.isNotNull("user.email"));
         }
 
-        boolean orderCriteria = false,
-                cliCriteria = false,
-                pvCriteria = false,
-                prodCriteria = false,
-                addrCriteria = false,
-                pinCriteria = false,
-                zoneCriteria = false,
-                pv2Criteria = false,
-                rolesCriteria = false,
-                baseOrderCategoryCriteria = false,
-                categoryCriteria = false,
-                userReportCriteria = false,
-                userStoreCriteria = false;
-
         if (HKCollectionUtils.isNotBlank(storeIds)) {
-            if (!userStoreCriteria) {
-                userCriteria.createAlias("user.store", "store");
-                userStoreCriteria = true;
-            }
+            userCriteria = createJoin(userCriteria, userStoreCriteria, USER_STORE);
             userCriteria.add(Restrictions.in("store.id", storeIds));
         }
 
         if (userOrderCount != null) {
-            if (!userReportCriteria) {
-                userCriteria.createAlias("user.report", "report");
-                userReportCriteria = true;
-            }
-            SimpleExpression se = createRestriction(userOrderCount, equality);
+            userCriteria = createJoin(userCriteria, userReportCriteria, USER_REPORT);
+            SimpleExpression se = createUserOrderRestriction(userOrderCount, equality);
             userCriteria.add(se);
         }
 
         if (verified != null) {
-            if (!rolesCriteria) {
-                rolesCriteria = true;
-                userCriteria.createAlias("user.roles", "roles");
-            }
+            userCriteria = createJoin(userCriteria, rolesCriteria, USER_ROLES);
             String roleName = (verified.booleanValue()) ? "HK_USER" : "HKUNVERIFIED";
             userCriteria.add(Restrictions.eq("roles.name", roleName));
         }
 
+        boolean prodNotBlank = HKCollectionUtils.isNotBlank(productIds);
+        boolean prodVarNotBlank = HKCollectionUtils.isNotBlank(productVariantIds);
+        boolean catNotBlank = HKCollectionUtils.isNotBlank(categories);
 
-        /*if (categories != null && !categories.isEmpty()) {
-            if (!orderCriteria) {
-                userCriteria.createAlias("user.orders", "orders");
-                orderCriteria = true;
-            }
-            if (!baseOrderCategoryCriteria) {
-                userCriteria.createAlias("orders.categories", "boc");
-                baseOrderCategoryCriteria = true;
-            }
-            if (!categoryCriteria) {
-                userCriteria.createAlias("boc.category", "cat");
-                categoryCriteria = true;
-            }
-            userCriteria.add(Restrictions.in("cat.name", categories));
-        }*/
+        if (prodNotBlank || prodVarNotBlank || catNotBlank) {
+            userCriteria = createJoin(userCriteria, orderCriteria, USER_ORDER);
+            userCriteria = createJoin(userCriteria, cliCriteria, ORDER_CARTLINEITEM);
+            userCriteria = createJoin(userCriteria, pvCriteria, CARTLINEITEM_PRODUCTVARIANT);
+            userCriteria = createJoin(userCriteria, prodCriteria, PRODUCTVARIANT_PRODUCT);
 
-        if ((productIds != null && !productIds.isEmpty()) || (productVariantIds != null && !productVariantIds.isEmpty())) {
-            if (!orderCriteria) {
-                userCriteria.createAlias("user.orders", "orders");
-                orderCriteria = true;
-            }
-            if (!cliCriteria) {
-                userCriteria.createAlias("orders.cartLineItems", "cli");
-                cliCriteria = true;
-            }
-            if (!pvCriteria) {
-                userCriteria.createAlias("cli.productVariant", "pv");
-                pvCriteria = true;
-            }
-            if (!prodCriteria) {
-                userCriteria.createAlias("pv.product", "prod");
-                prodCriteria = true;
-            }
-
-
-            if (productIds != null && !productIds.isEmpty()) {
+            if (prodNotBlank) {
                 userCriteria.add(Restrictions.in("prod.id", productIds));
-            } else if (productVariantIds != null && !productVariantIds.isEmpty()) {
-                if (!pv2Criteria) {
-                    userCriteria.createAlias("prod.productVariants", "pv2");
-                    pv2Criteria = true;
-                }
+            } else if (prodVarNotBlank) {
+                userCriteria = createJoin(userCriteria, pv2Criteria, PRODUCT_PRODUCTVARIANT);
                 userCriteria.add(Restrictions.in("pv2.id", productVariantIds));
+            } else if (catNotBlank) {
+                userCriteria = createJoin(userCriteria, categoryCriteria, PRODUCT_CATEGORIES);
+
+                userCriteria.add(Restrictions.in("cats.name", categories));
             }
         }
 
         if (HKCollectionUtils.isNotBlank(cities)) {
-            if (!addrCriteria) {
-                userCriteria.createAlias("user.addresses", "addr");
-                addrCriteria = true;
-            }
+            userCriteria = createJoin(userCriteria, addrCriteria, USER_ADDRESS);
             userCriteria.add(Restrictions.in("addr.city", cities));
         }
 
         if (HKCollectionUtils.isNotBlank(states)) {
-            if (!addrCriteria) {
-                userCriteria.createAlias("user.addresses", "addr");
-                addrCriteria = true;
-            }
+            userCriteria = createJoin(userCriteria, addrCriteria, USER_ADDRESS);
             userCriteria.add(Restrictions.in("addr.state", states));
         }
 
         if (HKCollectionUtils.isNotBlank(zones)) {
-            if (!addrCriteria) {
-                userCriteria.createAlias("user.addresses", "addr");
-                addrCriteria = true;
-            }
-            if (!pinCriteria) {
-                userCriteria.createAlias("addr.pincode", "pin");
-                pinCriteria = true;
-            }
-            if (!zoneCriteria) {
-                userCriteria.createAlias("pin.zone", "zone");
-                zoneCriteria = true;
-            }
+            userCriteria = createJoin(userCriteria, addrCriteria, USER_ADDRESS);
+            userCriteria = createJoin(userCriteria, pinCriteria, ADDRESS_PIN);
+            userCriteria = createJoin(userCriteria, zoneCriteria, PIN_ZONE);
             userCriteria.add(Restrictions.in("zone.id", zones));
         }
+
         if (fetchMinimumRequiredData) {
             ProjectionList projList = Projections.projectionList();
-            if (NOT_ON_PRODUCTION) {
+            if ("true".equalsIgnoreCase(notOnProduction)) {
                 projList.add(Projections.distinct(Projections.property("user.login")));
                 projList.add(Projections.property("user.email"));
                 projList.add(Projections.property("user.name"));
@@ -189,7 +176,8 @@ public class UsersSearchCriteria {
         return userCriteria;
     }
 
-    private SimpleExpression createRestriction(Integer userOrderCount, String equality) {
+
+    private SimpleExpression createUserOrderRestriction(Integer userOrderCount, String equality) {
         String condition = "report.numberOfOrdersByUser";
         int count = userOrderCount.intValue();
         SimpleExpression se = null;
@@ -214,71 +202,86 @@ public class UsersSearchCriteria {
 
     public UsersSearchCriteria setZones(List<Long> zones) {
         this.zones = zones;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.zones) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setVerified(Boolean verified) {
-        if (verified != null) {
-            this.verified = verified;
-            atleastOneVariableSet = true;
-        }
+        this.verified = verified;
         return this;
     }
 
     public UsersSearchCriteria setProductIds(List<String> productIds) {
         this.productIds = productIds;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.productIds) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setProductVariantIds(List<String> productVariantIds) {
         this.productVariantIds = productVariantIds;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.productVariantIds) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setCities(List<String> cities) {
         this.cities = cities;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.cities) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setEmails(List<String> emails) {
         this.emails = emails;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.emails) ? true : atleastOneVariableSet;
         return this;
     }
 
 
     public UsersSearchCriteria setStates(List<String> states) {
         this.states = states;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.states) ? true : atleastOneVariableSet;
         return this;
     }
 
-  /*  public UsersSearchCriteria setCategories(List<String> categories) {
+    public UsersSearchCriteria setCategories(List<String> categories) {
         this.categories = categories;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.categories) ? true : atleastOneVariableSet;
         return this;
     }
-*/
+
     public UsersSearchCriteria setEquality(String equality) {
         this.equality = equality;
-        atleastOneVariableSet = StringUtils.isNotBlank(equality) ? true : atleastOneVariableSet;
         return this;
     }
 
 
     public UsersSearchCriteria setStoreIds(List<Long> storeIds) {
         this.storeIds = storeIds;
-        atleastOneVariableSet = HKCollectionUtils.isNotBlank(this.storeIds) ? true : atleastOneVariableSet;
         return this;
     }
 
     public UsersSearchCriteria setUserOrderCount(Integer userOrderCount) {
         this.userOrderCount = userOrderCount;
-        atleastOneVariableSet = this.userOrderCount != null ? true : atleastOneVariableSet;
         return this;
+    }
+
+    private DetachedCriteria createJoin(DetachedCriteria criteria, boolean criteriaBool, Short joinColumnId) {
+        String[] vals = joinColumns.get(joinColumnId);
+        if (vals == null || vals.length < 2) {
+            return criteria;
+        }
+        String joinColumn = vals[0];
+        String alias = vals[1];
+
+        if (!criteriaBool) {
+            criteria.createAlias(joinColumn, alias);
+            criteriaBool = true;
+        }
+        return criteria;
+    }
+
+    public static String getNotOnProduction() {
+        return notOnProduction;
+    }
+
+    /**
+     * Overriding value of <code>notOnProduction</code> is for testing web services only
+     *
+     * @param notOnProduction
+     */
+    public static void setNotOnProduction(String notOnProduction) {
+        UsersSearchCriteria.notOnProduction = notOnProduction;
     }
 }

@@ -14,7 +14,7 @@
                     </tr>
                     <tr>
                         <td>Product Ids (csv)</td>
-                        <td><s:textarea name="params"></s:textarea></td>
+                        <td><s:textarea name="prodnames"></s:textarea></td>
                         <td>Product Variant Ids (csv)</td>
                         <td><s:textarea name="pvs"></s:textarea></td>
                     </tr>
@@ -65,7 +65,7 @@
                     <tr>
                         <td>Projected Info (Don't retrieve entire user)</td>
                         <td><s:checkbox name="minimum"></s:checkbox></td>
-                        <td>Test as if on Production</td>
+                        <td>Test as if on Production DB(overrides setting in environment.properties)</td>
                         <td><s:checkbox name="production"></s:checkbox></td>
                     </tr>
                 </table>
