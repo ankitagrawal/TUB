@@ -19,7 +19,7 @@
   <%
     PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
     if (principal != null) {
-      pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getUserHash());
+      pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getId());
       String gender = principal.getGender();
       if (gender == null) {
         gender = "n.a.";
@@ -125,6 +125,7 @@
   <%
     }
     if (paymentSuccessBean != null) {
+      List<String> tmVariantIds = new ArrayList<String>();
   %>
   <script type="text/javascript">
     dataLayer.push({
@@ -141,7 +142,8 @@
             <%
             CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
             StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
-            if (storeVariantBasicDetails != null) {
+            if (storeVariantBasicDetails != null && storeVariantBasicDetails.getId() !=null) {
+            tmVariantIds.add(storeVariantBasicDetails.getId().toString());
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
@@ -170,7 +172,8 @@
       'couponAmount' : '<%=Math.round(paymentSuccessBean.getCouponAmount())%>',
       'transactionDate' : '${paymentSuccessBean.purchaseDate}',
       'transactionMode' : '${paymentSuccessBean.paymentMode.name}',
-      'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>'
+      'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>',
+      'tmVariantIds' : '<%=StringUtils.join(tmVariantIds.iterator(), ",")%>'
     });
   </script>
   <%

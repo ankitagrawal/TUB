@@ -14353,6 +14353,14 @@
             <column name="sku_item_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="RD(generated)" id="20131030-01">
+        <sql>
+            insert into permission values ('OUTWARD_VALIDATE_SO');
+        </sql>
+    </changeSet>
+    <changeSet author="RD (generated)" id="20131114-1">
+        <addAutoIncrement tableName="hk_reach_pricing_engine" columnName="id" columnDataType="int"/>
+    </changeSet>
     <changeSet author="Rajesh Kumar" id="20131111-01">
         <sql>
             INSERT INTO store (id ,name ,prefix ,callback_rest_url)VALUES ('401', 'Bangalore', 'BLR', NULL);

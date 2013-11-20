@@ -1,18 +1,13 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.inventory.po.PurchaseInvoice;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +22,6 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -47,19 +41,19 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
     }
 
     public List<PurchaseOrder> searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                                        String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated) {
+                                        String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Date startDate, Date endDate, String poType) {
         return findByCriteria(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
-                tinNumber, supplierName, warehouse, extraInventoryCreated));
+                tinNumber, supplierName, warehouse, extraInventoryCreated, startDate, endDate, poType));
     }
 
     public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                         String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, int pageNo, int perPage) {
+                         String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, int pageNo, int perPage, Date startDate, Date endDate, String poType) {
         return list(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
-                tinNumber, supplierName, warehouse, extraInventoryCreated), pageNo, perPage);
+                tinNumber, supplierName, warehouse, extraInventoryCreated, startDate, endDate, poType), pageNo, perPage);
     }
 
     private DetachedCriteria getPurchaseOrderCriteria(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                                                      String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated) {
+                                                      String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Date startDate, Date endDate, String poType) {
         DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
         DetachedCriteria supplierCriteria = null;
         if (purchaseOrder != null) {
@@ -95,7 +89,16 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
       if(extraInventoryCreated!=null){
         purchaseOrderCriteria.add(Restrictions.eq("isExtraInventoryCreated",extraInventoryCreated));
       }
-
+      if(StringUtils.isNotBlank(poType)){
+          if (supplierCriteria == null) {
+              supplierCriteria = purchaseOrderCriteria.createCriteria("purchaseOrderType");
+          }
+          supplierCriteria.add(Restrictions.like("name", "%" + poType + "%"));
+           // purchaseOrderCriteria.add(Restrictions.eq("purchaseOrder.purchaseOrderType.name",poType));
+      }
+        if(startDate != null && endDate != null){
+            purchaseOrderCriteria.add(Restrictions.between("createDate",startDate, endDate));
+        }
         purchaseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 
         return purchaseOrderCriteria;
