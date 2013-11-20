@@ -64,7 +64,7 @@ public class BusyPopulatePurchaseData {
                        ,s.state as supState, s.pincode as supPincode , s.tin_number as supTin
                         ,w.name  as warehouseName ,w.state as warehouseState  , pv.final_payable_amount as finalPayable , pv.warehouse_id  as warehouseId
                           ,pv.id  as purchaseInvoiceId, pv.freight_forwarding_charges  as freight_forwarding_charges ,s.id as suppId, pv.invoice_date as purInvoiceDate
-                          ,pv.discount as purchaseleveldiscount, min(grn.grn_date) as grn_date, pv.rtv_amount, pv.short_amount
+                          ,pv.discount as purchaseleveldiscount, min(grn.grn_date) as grn_date, pv.rtv_amount, pv.short_amount, w.prefix_invoice_generation series
                            FROM purchase_invoice pv  INNER JOIN  supplier s ON  pv.supplier_id = s.id
       	                    INNER JOIN purchase_invoice_has_grn pigrn ON pigrn.purchase_invoice_id = pv.id
       	                    INNER JOIN goods_received_note grn ON grn.id = pigrn.goods_received_note_id
@@ -99,12 +99,12 @@ public class BusyPopulatePurchaseData {
                     warehouseName = "Greater Kailash Aqua Store";
                 }
 
-                String series = '';
+                String series = purchaseRow.series;
                 String invoiceDate = purchaseRow.purInvoiceDate;
                 String invoiceNumber = purchaseRow.invoiceNumber;
 
 
-                if (warehouseId == 1 || warehouseId == 10 || warehouseId == 101) {
+               /* if (warehouseId == 1 || warehouseId == 10 || warehouseId == 101) {
                     series = "HR";
                 } else if (warehouseId == 2 || warehouseId == 20) {
                     series = "MH";
@@ -119,7 +119,7 @@ public class BusyPopulatePurchaseData {
                 }
                 else if(warehouseId == 1001){
                     series = "GK";
-                }
+                }*/
 
                 int sameState = 0;
                 if (supplierState.equalsIgnoreCase(warehouseState)) {
