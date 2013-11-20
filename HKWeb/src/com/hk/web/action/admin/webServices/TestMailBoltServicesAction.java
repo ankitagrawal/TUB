@@ -160,7 +160,7 @@ public class TestMailBoltServicesAction extends BaseAction {
 
         boolean debug = !(production != null && "true".equalsIgnoreCase(production));
         StringBuffer resultSB = new StringBuffer();
-        resultSB.append("\n\n").append(debug ?
+        resultSB.append("\n").append(debug ?
                 "login, email, name, subscriptionMask, unsubscribeToken" :
                 "email, login, name, subscriptionMask, unsubscribeToken");
 
@@ -175,23 +175,6 @@ public class TestMailBoltServicesAction extends BaseAction {
         }
 
         return new StreamingResolution("text/csv", summarySB.append("\n\n").toString() + resultSB.toString()).setFilename("queryResult.csv");
-    }
-
-    private File uniqueFile(String initialName) {
-        String finalName = initialName;
-        File file = new File(finalName);
-        int index = 1;
-        while (file.exists()) {
-            finalName = initialName + "_" + index++;
-            file = new File(finalName);
-        }
-        try {
-            file.createNewFile();
-            return file;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public String getZones() {

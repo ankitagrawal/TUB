@@ -32,7 +32,7 @@ public class UsersSearchCriteria {
     private static final short PIN_ZONE = 10;
     private static final short PRODUCT_CATEGORIES = 11;
 
-    @Value("#{hkEnvProps['" + Keys.Env.debug_mode + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.debugMode + "']}")
     private static String debugMode;
 
     // list of variables that might be received
@@ -212,7 +212,6 @@ public class UsersSearchCriteria {
         this.emails = emails;
         return this;
     }
-
 
     public UsersSearchCriteria setStates(List<String> states) {
         this.states = states;
