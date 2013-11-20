@@ -48,33 +48,33 @@ public class UsersSearchCriteria {
     private String equality = "ge"; // ge (greater than) is the default value for equality
     private List<Long> storeIds;
 
-    // Map values are as follows {<String:joinEntity>,<String:alias>,<Boolean:joinCreatedAlready>}
-    private Map<Short, Object[]> joinColumns = new HashMap<Short, Object[]>();
+    private Set<Short> alreadyJoint = new HashSet<Short>();
+    // Map values are as follows {<String:joinEntity>,<String:alias>}
+    private static Map<Short, String[]> joinColumns = new HashMap<Short, String[]>();
 
-    private void createMap() {
-        joinColumns.put(USER_STORE, new Object[]{"user.store", "store", Boolean.FALSE});
-        joinColumns.put(USER_REPORT, new Object[]{"user.report", "report", Boolean.FALSE});
-        joinColumns.put(USER_ROLES, new Object[]{"user.roles", "roles", Boolean.FALSE});
-        joinColumns.put(USER_ORDER, new Object[]{"user.orders", "orders", Boolean.FALSE});
-        joinColumns.put(ORDER_CARTLINEITEM, new Object[]{"orders.cartLineItems", "cli", Boolean.FALSE});
-        joinColumns.put(CARTLINEITEM_PRODUCTVARIANT, new Object[]{"cli.productVariant", "pv", Boolean.FALSE});
-        joinColumns.put(PRODUCTVARIANT_PRODUCT, new Object[]{"pv.product", "prod", Boolean.FALSE});
-        joinColumns.put(PRODUCT_PRODUCTVARIANT, new Object[]{"prod.productVariants", "pv2", Boolean.FALSE});
-        joinColumns.put(USER_ADDRESS, new Object[]{"user.addresses", "addr", Boolean.FALSE});
-        joinColumns.put(ADDRESS_PIN, new Object[]{"addr.pincode", "pin", Boolean.FALSE});
-        joinColumns.put(PIN_ZONE, new Object[]{"pin.zone", "zone", Boolean.FALSE});
-        joinColumns.put(PRODUCT_CATEGORIES, new Object[]{"prod.categories", "cats", Boolean.FALSE});
+    static {
+        joinColumns.put(USER_STORE, new String[]{"user.store", "store"});
+        joinColumns.put(USER_REPORT, new String[]{"user.report", "report"});
+        joinColumns.put(USER_ROLES, new String[]{"user.roles", "roles"});
+        joinColumns.put(USER_ORDER, new String[]{"user.orders", "orders"});
+        joinColumns.put(ORDER_CARTLINEITEM, new String[]{"orders.cartLineItems", "cli"});
+        joinColumns.put(CARTLINEITEM_PRODUCTVARIANT, new String[]{"cli.productVariant", "pv"});
+        joinColumns.put(PRODUCTVARIANT_PRODUCT, new String[]{"pv.product", "prod"});
+        joinColumns.put(PRODUCT_PRODUCTVARIANT, new String[]{"prod.productVariants", "pv2"});
+        joinColumns.put(USER_ADDRESS, new String[]{"user.addresses", "addr"});
+        joinColumns.put(ADDRESS_PIN, new String[]{"addr.pincode", "pin"});
+        joinColumns.put(PIN_ZONE, new String[]{"pin.zone", "zone"});
+        joinColumns.put(PRODUCT_CATEGORIES, new String[]{"prod.categories", "cats"});
     }
 
     public DetachedCriteria getSearchCriteria() {
+        alreadyJoint.clear();
         DetachedCriteria criteria = getCriteriaFromBaseCriteria();
-        resetMap();
         return criteria;
     }
 
 
     private DetachedCriteria getCriteriaFromBaseCriteria() {
-
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
 
         if (HKCollectionUtils.isNotBlank(emails)) {
@@ -241,17 +241,16 @@ public class UsersSearchCriteria {
     }
 
     private DetachedCriteria createJoin(DetachedCriteria criteria, Short joinColumnId) {
-        Object[] vals = joinColumns.get(joinColumnId);
-        if (vals == null || vals.length < 3) {
-            return criteria;
-        }
-        String joinColumn = (String) vals[0];
-        String alias = (String) vals[1];
-        Boolean criteriaBool = (Boolean) vals[2];
+        Boolean criteriaBool = alreadyJoint.contains(joinColumnId);
         if (!criteriaBool) {
+            Object[] vals = joinColumns.get(joinColumnId);
+            if (vals == null || vals.length < 2) {
+                return criteria;
+            }
+            String joinColumn = (String) vals[0];
+            String alias = (String) vals[1];
             criteria.createAlias(joinColumn, alias);
-            criteriaBool = Boolean.TRUE;
-            vals[2] = criteriaBool;
+            alreadyJoint.add(joinColumnId);
         }
         return criteria;
     }
@@ -269,16 +268,4 @@ public class UsersSearchCriteria {
         UsersSearchCriteria.debugMode = debugMode;
     }
 
-    public UsersSearchCriteria() {
-        createMap();
-    }
-
-    private void resetMap() {
-        Collection<Object[]> vals = joinColumns.values();
-        Iterator<Object[]> it = vals.iterator();
-        while (it.hasNext()) {
-            Object[] ob = it.next();
-            ob[2] = Boolean.FALSE;
-        }
-    }
 }
