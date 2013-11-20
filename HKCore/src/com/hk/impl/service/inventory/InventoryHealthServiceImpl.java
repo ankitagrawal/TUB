@@ -608,6 +608,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             getBaseDao().save(productVariant);
         }
         getBaseDao().save(product);
+        getBaseDao().save(productVariant);
     }
 
     // Call this method from just action java
@@ -1000,7 +1001,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 logger.debug("Unbooked Qty of Bright - " + unBoookedInventoryOfBright);
                 HKApiSkuResponse hkApiSkuResponse = getPVInfoFromBright(productVariant);
                 logger.debug("hKApiSkuResponse got -" + hkApiSkuResponse.getVariantId() + ", qty - " + hkApiSkuResponse.getQty() + ", MRP -" + hkApiSkuResponse.getMrp());
-                productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
+                productVariant = (ProductVariant) productService.updatePVForBrightInventory(hkApiSkuResponse, productVariant);
 
             } else {
                 productVariant.setOutOfStock(true);
