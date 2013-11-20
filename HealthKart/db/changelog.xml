@@ -14380,7 +14380,7 @@
             UPDATE warehouse  SET prefix_invoice_generation='MH'  WHERE id in(2,20);
             UPDATE warehouse  SET prefix_invoice_generation='PB'  WHERE id =301;
             UPDATE warehouse  SET prefix_invoice_generation='HR'  WHERE id =999;
-            UPDATE warehouse  SET prefix_invoice_generation='DL'  WHERE id =401;
+            UPDATE warehouse  SET prefix_invoice_generation='DL'  WHERE id in(401,402);
             UPDATE warehouse  SET prefix_invoice_generation='CHD'  WHERE id =1000;
             UPDATE warehouse  SET prefix_invoice_generation='GK'  WHERE id =1001;
             UPDATE warehouse  SET prefix_invoice_generation='BLR'  WHERE id =1002;
