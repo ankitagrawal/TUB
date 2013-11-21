@@ -122,7 +122,6 @@ public class PurchaseOrder implements java.io.Serializable {
 	@Column(name = "fill_rate")
 	private Double fillRate;
 	
-	
 	@JsonSkip
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
@@ -148,6 +147,9 @@ public class PurchaseOrder implements java.io.Serializable {
 	
 	@Transient
 	private Long extraInventoryId; 
+	
+	@Column(name="bright_so_id")
+	private Long brightSoId;
 
 	public Long getId() {
 		return id;
@@ -399,6 +401,14 @@ public class PurchaseOrder implements java.io.Serializable {
 
 	public void setPurchaseOrderType(PurchaseOrderType purchaseOrderType) {
 		this.purchaseOrderType = purchaseOrderType;
+	}
+
+	public Long getBrightSoId() {
+		return brightSoId;
+	}
+
+	public void setBrightSoId(Long brightSoId) {
+		this.brightSoId = brightSoId;
 	}
   
 }

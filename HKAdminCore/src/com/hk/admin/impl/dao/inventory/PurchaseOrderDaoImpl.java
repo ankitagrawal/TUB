@@ -32,103 +32,112 @@ import com.hk.pact.service.inventory.InventoryHealthService.SkuInfo;
 @SuppressWarnings("unchecked")
 @Repository
 public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDao {
-	
+
 	@Autowired
 	BaseDao baseDao;
 
-    public List<PurchaseOrder> listPurchaseOrdersExcludingStatus(List<Long> purchaseOrderStatusList) {
-        return (List<PurchaseOrder>) getSession().createQuery("from PurchaseOrder o where o.purchaseOrderStatus.id not in (:purchaseOrderStatusList)").setParameterList(
-                "purchaseOrderStatusList", purchaseOrderStatusList).list();
-    }
+	public List<PurchaseOrder> listPurchaseOrdersExcludingStatus(List<Long> purchaseOrderStatusList) {
+		return (List<PurchaseOrder>) getSession().createQuery("from PurchaseOrder o where o.purchaseOrderStatus.id not in (:purchaseOrderStatusList)")
+				.setParameterList("purchaseOrderStatusList", purchaseOrderStatusList).list();
+	}
 
-    public List<PurchaseOrder> listPurchaseOrdersWithProductVariant(ProductVariant productVariant) {
-        return (List<PurchaseOrder>) getSession().createQuery("select distinct poli.purchaseOrder from PoLineItem poli where poli.sku.productVariant = (:productVariant)").setParameter(
-                "productVariant", productVariant).list();
-    }
+	public List<PurchaseOrder> listPurchaseOrdersWithProductVariant(ProductVariant productVariant) {
+		return (List<PurchaseOrder>) getSession()
+				.createQuery("select distinct poli.purchaseOrder from PoLineItem poli where poli.sku.productVariant = (:productVariant)")
+				.setParameter("productVariant", productVariant).list();
+	}
 
-    public List<PurchaseOrder> searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                                        String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated) {
-        return findByCriteria(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
-                tinNumber, supplierName, warehouse, extraInventoryCreated));
-    }
+	public List<PurchaseOrder> searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy,
+			String invoiceNumber, String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Long brightSoId) {
+		return findByCriteria(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName,
+				warehouse, extraInventoryCreated, brightSoId));
+	}
 
-    public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                         String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, int pageNo, int perPage) {
-        return list(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
-                tinNumber, supplierName, warehouse, extraInventoryCreated), pageNo, perPage);
-    }
+	public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
+			String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Long brightSoId, int pageNo, int perPage) {
+		return list(
+				getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,
+						extraInventoryCreated, brightSoId), pageNo, perPage);
+	}
 
-    private DetachedCriteria getPurchaseOrderCriteria(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                                                      String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated) {
-        DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
-        DetachedCriteria supplierCriteria = null;
-        if (purchaseOrder != null) {
-            purchaseOrderCriteria.add(Restrictions.eq("id",purchaseOrder.getId()));
-        }
-        if (purchaseOrderStatus != null) {
-            purchaseOrderCriteria.add(Restrictions.eq("purchaseOrderStatus", purchaseOrderStatus));
-        }
-        if (approvedBy != null) {
-            purchaseOrderCriteria.add(Restrictions.eq("approvedBy", approvedBy));
-        }
-        if (createdBy != null) {
-            purchaseOrderCriteria.add(Restrictions.eq("createdBy", createdBy));
-        }
-        if (StringUtils.isNotBlank(invoiceNumber)) {
-            purchaseOrderCriteria.add(Restrictions.eq("invoiceNumber", invoiceNumber));
-        }
-        if (warehouse != null) {
-            purchaseOrderCriteria.add(Restrictions.eq("warehouse", warehouse));
-        }
-        if (StringUtils.isNotBlank(tinNumber)) {
-            if (supplierCriteria == null) {
-                supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
-            }
-            supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
-        }
-        if (StringUtils.isNotBlank(supplierName)) {
-            if (supplierCriteria == null) {
-                supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
-            }
-            supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
-        }
-      if(extraInventoryCreated!=null){
-        purchaseOrderCriteria.add(Restrictions.eq("isExtraInventoryCreated",extraInventoryCreated));
-      }
+	private DetachedCriteria getPurchaseOrderCriteria(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy,
+			String invoiceNumber, String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Long brightSoId) {
+		DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
+		DetachedCriteria supplierCriteria = null;
+		if (purchaseOrder != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("id", purchaseOrder.getId()));
+		}
+		if (purchaseOrderStatus != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("purchaseOrderStatus", purchaseOrderStatus));
+		}
+		if (approvedBy != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("approvedBy", approvedBy));
+		}
+		if (createdBy != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("createdBy", createdBy));
+		}
+		if (StringUtils.isNotBlank(invoiceNumber)) {
+			purchaseOrderCriteria.add(Restrictions.eq("invoiceNumber", invoiceNumber));
+		}
+		if (warehouse != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("warehouse", warehouse));
+		}
+		if (StringUtils.isNotBlank(tinNumber)) {
+			if (supplierCriteria == null) {
+				supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+			}
+			supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
+		}
+		if (StringUtils.isNotBlank(supplierName)) {
+			if (supplierCriteria == null) {
+				supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+			}
+			supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
+		}
+		if (extraInventoryCreated != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("isExtraInventoryCreated", extraInventoryCreated));
+		}
+		if (brightSoId != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("brightSoId", brightSoId));
+		}
 
-        purchaseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+		purchaseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 
-        return purchaseOrderCriteria;
-    }
+		return purchaseOrderCriteria;
+	}
 
+	public List<PurchaseOrder> listPurchaseOrdersIncludingStatus(List<Long> purchaseOrderStatusList) {
+		return (List<PurchaseOrder>) getSession().createQuery("from PurchaseOrder o where o.purchaseOrderStatus.id in (:purchaseOrderStatusList)")
+				.setParameterList("purchaseOrderStatusList", purchaseOrderStatusList).list();
+	}
 
-    public List<PurchaseOrder> listPurchaseOrdersIncludingStatus(List<Long> purchaseOrderStatusList) {
-        return (List<PurchaseOrder>) getSession().createQuery("from PurchaseOrder o where o.purchaseOrderStatus.id in (:purchaseOrderStatusList)").setParameterList(
-                "purchaseOrderStatusList", purchaseOrderStatusList).list();
-    }
+	public List<PurchaseOrder> listPurchaseOrdersExcludingStatusInTimeFrame(List<Long> purchaseOrderStatusList, Date startDate, Date endDate) {
+		return (List<PurchaseOrder>) getSession()
+				.createQuery(
+						"from PurchaseOrder o where o.purchaseOrderStatus.id not in (:purchaseOrderStatusList) "
+								+ " and o.poDate >= (:startDate) and o.poDate <= (:endDate) ").setParameterList("purchaseOrderStatusList", purchaseOrderStatusList)
+				.setParameter("startDate", startDate).setParameter("endDate", endDate).list();
+	}
 
-    public List<PurchaseOrder> listPurchaseOrdersExcludingStatusInTimeFrame(List<Long> purchaseOrderStatusList, Date startDate, Date endDate) {
-        return (List<PurchaseOrder>) getSession().createQuery(
-                "from PurchaseOrder o where o.purchaseOrderStatus.id not in (:purchaseOrderStatusList) " + " and o.poDate >= (:startDate) and o.poDate <= (:endDate) ").setParameterList(
-                "purchaseOrderStatusList", purchaseOrderStatusList).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
-    }
-    public boolean isPiCreated(PurchaseOrder purchaseOrder){
-        List<GoodsReceivedNote> goodsReceivedNotes= purchaseOrder.getGoodsReceivedNotes();
-        for (GoodsReceivedNote grn :goodsReceivedNotes )    {
-                if(grn.getPurchaseInvoices()!=null && grn.getPurchaseInvoices().size()>0 ) {
-                    return true;
-                }
-             }
-        return false;
-    }
-    
-    public List<ProductVariant> getAllProductVariantFromPO(PurchaseOrder po){
-    	List<PoLineItem> poLineItems = po.getPoLineItems();
-    	return (List<ProductVariant>) getSession().createQuery( "Select p.sku.productVariant from PoLineItem p where p in (:poLineItems)").setParameterList("poLineItems", poLineItems).list();
-    }
-    
-    public List<ShippingOrder> getCancelledShippingOrderFromSoPo() {
-    	Long id = EnumShippingOrderStatus.SO_Cancelled.getId();
-    	return (List<ShippingOrder>) getSession().createQuery("from ShippingOrder so where so.shippingOrderStatus.id = :statusId and so.purchaseOrders.size>0").setLong("statusId", id).list();
-    }
+	public boolean isPiCreated(PurchaseOrder purchaseOrder) {
+		List<GoodsReceivedNote> goodsReceivedNotes = purchaseOrder.getGoodsReceivedNotes();
+		for (GoodsReceivedNote grn : goodsReceivedNotes) {
+			if (grn.getPurchaseInvoices() != null && grn.getPurchaseInvoices().size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public List<ProductVariant> getAllProductVariantFromPO(PurchaseOrder po) {
+		List<PoLineItem> poLineItems = po.getPoLineItems();
+		return (List<ProductVariant>) getSession().createQuery("Select p.sku.productVariant from PoLineItem p where p in (:poLineItems)")
+				.setParameterList("poLineItems", poLineItems).list();
+	}
+
+	public List<ShippingOrder> getCancelledShippingOrderFromSoPo() {
+		Long id = EnumShippingOrderStatus.SO_Cancelled.getId();
+		return (List<ShippingOrder>) getSession().createQuery("from ShippingOrder so where so.shippingOrderStatus.id = :statusId and so.purchaseOrders.size>0")
+				.setLong("statusId", id).list();
+	}
 }
