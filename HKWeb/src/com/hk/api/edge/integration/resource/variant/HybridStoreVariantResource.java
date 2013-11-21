@@ -73,9 +73,10 @@ public class HybridStoreVariantResource {
         }
         Long unbookedInventory = getInventoryService().getAvailableUnBookedInventory(productVariant);
 
-        if (unbookedInventory == null || unbookedInventory.equals(0L)) {
-            unbookedInventory = getInventoryHealthService().getUnbookedInventoryOfBright(productVariant);
+        if (unbookedInventory == null || unbookedInventory == 0L) {
             logger.error("Inv count for " + productVariantId + " from bright " + unbookedInventory);
+            unbookedInventory = getInventoryHealthService().getUnbookedInventoryOfBright(productVariant);
+            
         }
         inventoryResponseFromHkr.addMessage("Inventory available");
         inventoryResponseFromHkr.setUnbookedInventory(unbookedInventory);
