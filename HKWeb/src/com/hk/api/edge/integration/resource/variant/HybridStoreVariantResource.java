@@ -16,6 +16,7 @@ import com.hk.api.edge.integration.response.variant.response.FreeVariantResponse
 import com.hk.api.edge.integration.response.variant.response.InventoryResponseFromHkr;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.util.json.JSONResponseBuilder;
 
@@ -26,56 +27,70 @@ import com.hk.util.json.JSONResponseBuilder;
 @Path("/variant/")
 public class HybridStoreVariantResource {
 
-  @Autowired
-  private HybridStoreVariantServiceFromHKR hybridStoreVariantServiceFromHKR;
-  @Autowired
-  private ProductVariantService productVariantService;
-  @Autowired
-  private InventoryService inventoryService;
+    @Autowired
+    private HybridStoreVariantServiceFromHKR hybridStoreVariantServiceFromHKR;
+    @Autowired
+    private ProductVariantService            productVariantService;
+    @Autowired
+    private InventoryService                 inventoryService;
+    @Autowired
+    private InventoryHealthService           inventoryHealthService;
 
-  @GET
-  @Path("{id}/freeVariant/")
-  @Produces("application/json")
-  public String getFreeVariantsForProductVariantFromHKR(@PathParam("id") String productVariantId) {
-    FreeVariantResponseFromHKR freeVariantResponseFromHKR = getHybridStoreVariantServiceFromHKR().getFreeVariantForProductVariant(productVariantId);
-    return new JSONResponseBuilder().addField("results", freeVariantResponseFromHKR).build();
-  }
-
-  @GET
-  @Path("{id}/combos/")
-  @Produces("application/json")
-  public String getCombosForProductVariantFromHKR(@PathParam("id") String productVariantId,
-                                                  @QueryParam("noRs") @DefaultValue("6") int noOfResults) {
-    ComboResponseFromHKR comboResponseFromHKR = getHybridStoreVariantServiceFromHKR().getCombosForProductVariant(productVariantId, noOfResults);
-    return new JSONResponseBuilder().addField("results", comboResponseFromHKR).build();
-  }
-
-  @GET
-  @Path("/inventory/{id}")
-  @Produces("application/json")
-  public String getInventoryForProductVariant(@PathParam("id") String productVariantId) {
-    InventoryResponseFromHkr inventoryResponseFromHkr = new InventoryResponseFromHkr();
-    ProductVariant productVariant = getProductVariantService().getVariantById(productVariantId);
-    if (productVariant == null) {
-      inventoryResponseFromHkr.addMessage("Invalid Product Variant Id");
-      return new JSONResponseBuilder().addField("results", inventoryResponseFromHkr).build();
+    @GET
+    @Path("{id}/freeVariant/")
+    @Produces("application/json")
+    public String getFreeVariantsForProductVariantFromHKR(@PathParam("id")
+    String productVariantId) {
+        FreeVariantResponseFromHKR freeVariantResponseFromHKR = getHybridStoreVariantServiceFromHKR().getFreeVariantForProductVariant(productVariantId);
+        return new JSONResponseBuilder().addField("results", freeVariantResponseFromHKR).build();
     }
-    Long unbookedInventory = getInventoryService().getAvailableUnBookedInventory(productVariant);
-    inventoryResponseFromHkr.addMessage("Inventory available");
-    inventoryResponseFromHkr.setUnbookedInventory(unbookedInventory);
-    return new JSONResponseBuilder().addField("results", inventoryResponseFromHkr).build();
-  }
 
+    @GET
+    @Path("{id}/combos/")
+    @Produces("application/json")
+    public String getCombosForProductVariantFromHKR(@PathParam("id")
+    String productVariantId, @QueryParam("noRs")
+    @DefaultValue("6")
+    int noOfResults) {
+        ComboResponseFromHKR comboResponseFromHKR = getHybridStoreVariantServiceFromHKR().getCombosForProductVariant(productVariantId, noOfResults);
+        return new JSONResponseBuilder().addField("results", comboResponseFromHKR).build();
+    }
 
-  public HybridStoreVariantServiceFromHKR getHybridStoreVariantServiceFromHKR() {
-    return hybridStoreVariantServiceFromHKR;
-  }
+    @GET
+    @Path("/inventory/{id}")
+    @Produces("application/json")
+    public String getInventoryForProductVariant(@PathParam("id")
+    String productVariantId) {
+        InventoryResponseFromHkr inventoryResponseFromHkr = new InventoryResponseFromHkr();
+        ProductVariant productVariant = getProductVariantService().getVariantById(productVariantId);
+        if (productVariant == null) {
+            inventoryResponseFromHkr.addMessage("Invalid Product Variant Id");
+            return new JSONResponseBuilder().addField("results", inventoryResponseFromHkr).build();
+        }
+        Long unbookedInventory = getInventoryService().getAvailableUnBookedInventory(productVariant);
 
-  public ProductVariantService getProductVariantService() {
-    return productVariantService;
-  }
+        if (unbookedInventory == null || unbookedInventory.equals(0L)) {
+            unbookedInventory = getInventoryHealthService().getUnbookedInventoryOfBright(productVariant);
+        }
+        inventoryResponseFromHkr.addMessage("Inventory available");
+        inventoryResponseFromHkr.setUnbookedInventory(unbookedInventory);
+        return new JSONResponseBuilder().addField("results", inventoryResponseFromHkr).build();
+    }
 
-  public InventoryService getInventoryService() {
-    return inventoryService;
-  }
+    public HybridStoreVariantServiceFromHKR getHybridStoreVariantServiceFromHKR() {
+        return hybridStoreVariantServiceFromHKR;
+    }
+
+    public ProductVariantService getProductVariantService() {
+        return productVariantService;
+    }
+
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
+
+    public InventoryHealthService getInventoryHealthService() {
+        return inventoryHealthService;
+    }
+
 }
