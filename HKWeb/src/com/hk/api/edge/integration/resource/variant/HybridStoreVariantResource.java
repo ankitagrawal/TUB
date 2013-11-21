@@ -7,6 +7,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,8 @@ import com.hk.util.json.JSONResponseBuilder;
 @Component
 @Path("/variant/")
 public class HybridStoreVariantResource {
+
+    private static Logger                    logger = LoggerFactory.getLogger(HybridStoreVariantResource.class);
 
     @Autowired
     private HybridStoreVariantServiceFromHKR hybridStoreVariantServiceFromHKR;
@@ -71,6 +75,7 @@ public class HybridStoreVariantResource {
 
         if (unbookedInventory == null || unbookedInventory.equals(0L)) {
             unbookedInventory = getInventoryHealthService().getUnbookedInventoryOfBright(productVariant);
+            logger.error("Inv count for " + productVariantId + " from bright " + unbookedInventory);
         }
         inventoryResponseFromHkr.addMessage("Inventory available");
         inventoryResponseFromHkr.setUnbookedInventory(unbookedInventory);
