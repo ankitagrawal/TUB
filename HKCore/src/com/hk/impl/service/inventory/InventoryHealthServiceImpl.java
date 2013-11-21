@@ -1,10 +1,42 @@
 package com.hk.impl.service.inventory;
 
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -27,7 +59,12 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.*;
+import com.hk.domain.sku.ForeignSkuItemCLI;
+import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemCLI;
+import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.edge.pact.service.HybridStoreVariantService;
@@ -35,7 +72,6 @@ import com.hk.edge.request.VariantStockSyncRequest;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
-import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
@@ -45,31 +81,13 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.*;
-import java.util.*;
-import java.util.Date;
-import java.util.Map.Entry;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import com.hk.web.AppConstants;
 
 @Service
@@ -111,11 +129,14 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     private SkuItemLineItemDao        skuItemLineItemDao;
 
-    private Logger                    logger             = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
+    private ExecutorService           adminVariantSyncExecutorService = Executors.newFixedThreadPool(40);
 
-    private static final String       bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty"
-                                                                 + " from cart_line_item as a inner join base_order as b on a.order_id = b.id"
-                                                                 + " where a.product_variant_id = :pvId " + " and b.order_status_id in (:statusIds) " + " group by a.marked_price";
+    private Logger                    logger                          = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
+
+    private static final String       bookedInventorySql              = "select a.marked_price as mrp, sum(a.qty) as qty"
+                                                                              + " from cart_line_item as a inner join base_order as b on a.order_id = b.id"
+                                                                              + " where a.product_variant_id = :pvId " + " and b.order_status_id in (:statusIds) "
+                                                                              + " group by a.marked_price";
 
     private Map<Double, Long> getBookedInventoryQty(ProductVariant productVariant) {
         String sql = bookedInventorySql;
@@ -946,6 +967,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     @Transactional
     public void inventoryHealthCheck(ProductVariant productVariant) {
+        final String productVariantIdToSync = productVariant.getId();
         InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
         Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
 
@@ -988,7 +1010,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
                 if (availableUnBookedInvnListToUpdate.size() > 0) {
                     updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
-                    updateVariantInfoOnEdge(productVariant);
+                    // updateVariantInfoOnEdge(productVariant);
                 }
             }
 
@@ -1017,7 +1039,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             if (!updateStockStatus) {
                 productVariant.setOutOfStock(false);
             }
-            updateVariantInfoOnEdge(productVariant);
+            // updateVariantInfoOnEdge(productVariant);
             List<ProductVariant> inStockVariants = product.getInStockVariants();
             if (inStockVariants != null && inStockVariants.isEmpty()) {
                 product.setOutOfStock(true);
@@ -1026,10 +1048,30 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
             getBaseDao().save(product);
         }
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+
+            @Override
+            public void afterCompletion(int status) {
+                if (status == TransactionSynchronization.STATUS_COMMITTED) {
+                    adminVariantSyncExecutorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateVariantInfoOnEdge(productVariantIdToSync);
+                        }
+                    });
+                }
+            }
+        });
     }
 
+    private void updateVariantInfoOnEdge(String productVariantId) {
+        ProductVariant productVariant = productVariantService.getVariantById(productVariantId);
+        updateVariantInfoOnEdge(productVariant);
+    }
+    
     private void updateVariantInfoOnEdge(ProductVariant productVariant) {
-        
+
         logger.error("sync edge flag is " + AppConstants.syncEdge);
         if (AppConstants.syncEdge) {
             VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
