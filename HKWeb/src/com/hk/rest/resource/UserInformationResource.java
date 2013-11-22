@@ -43,6 +43,7 @@ public class UserInformationResource {
     private Boolean verified;
     private Integer userOrderCount;
     private String equality;
+    private List<String> categories;
 
     @Autowired
     UserSearchService userSearchService;
@@ -63,6 +64,7 @@ public class UserInformationResource {
                                       @FormParam("equality") String equality,
                                       @FormParam("storeIds") List<Long> storeIds,
                                       @FormParam("emails") List<String> emails) {
+        this.categories = categories;
         this.emails = emails;
         this.productIds = productIds;
         this.productVariantIds = productVariantIds;
@@ -80,6 +82,9 @@ public class UserInformationResource {
         Response response = null;
         criteria = new UsersSearchCriteria();
         try {
+            if (HKCollectionUtils.isNotBlank(categories)) {
+                criteria.setCategories(categories);
+            }
             if (verified != null) {
                 criteria.setVerified(verified);
             }
