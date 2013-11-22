@@ -130,11 +130,11 @@
                                                        label="affiliateCategoryName" value="affiliateCategoryName"/>
                         </s:select><br/>
                     </td>
-                    <c:if test="${pa.product.jit}">
+                    <%--<c:if test="${pa.product.jit}">
                         <td>
                             <s:checkbox name="productVariants[${ctr.index}].outOfStock"/>
                         </td>
-                    </c:if>
+                    </c:if>--%>
                     <c:if test="${!pa.product.jit}">
                         <td>
                             <shiro:hasRole name="<%=RoleConstants.GOD%>">
