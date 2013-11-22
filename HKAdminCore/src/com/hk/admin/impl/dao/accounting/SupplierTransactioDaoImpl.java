@@ -27,6 +27,11 @@ public class SupplierTransactioDaoImpl extends BaseDaoImpl implements SupplierTr
         return (SupplierTransaction) findUniqueByNamedParams(query, new String[]{"busyPaymentId"}, new Object[]{busyPaymentId});
     }
 
+    public SupplierTransaction getSupplierTransactionFromBusyPaymentId(Supplier supplier, String busyPaymentId) {
+        String query = "from SupplierTransaction st where st.supplier.id = :supplierId and st.busyPaymentId = :busyPaymentId ";
+        return (SupplierTransaction) findUniqueByNamedParams(query, new String[]{"busyPaymentId", "supplierId"}, new Object[]{busyPaymentId, supplier.getId()});
+    }
+
     @Override
     public SupplierTransaction getLastTransactionForSupplier(Supplier supplier) {
         String query = "from SupplierTransaction st where st.supplier.id = :supplierId ORDER BY id desc";
