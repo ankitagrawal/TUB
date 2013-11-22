@@ -1,26 +1,28 @@
 package com.hk.service.impl;
 
+import com.akube.framework.util.BaseUtils;
+import com.hk.constants.core.Keys;
+import com.hk.web.AppConstants;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import com.akube.framework.util.BaseUtils;
-import com.hk.web.AppConstants;
-
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
 @Service
 public class FreeMarkerService {
 
   private static Logger logger = LoggerFactory.getLogger(FreeMarkerService.class);
+  @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
+  private boolean hybridRelease;
 
   /*private Configuration cfg = null;*/
 
@@ -30,19 +32,30 @@ public class FreeMarkerService {
       this.cfg = cfg;
   }*/
 
-
   /**
    * This method takes a template's path, searches the corresponding template in the freemarker directory,
    * and then returns a freemarker template object for the template file found.
    *
    * @param templatePath
+   *
    * @return
    */
   public Template getCampaignTemplate(String templatePath) {
+    if (isHybridRelease() || templatePath.equals("/orderPlacedCodEmail.ftl") || templatePath.equals("/orderShippedEmailNew.ftl") || templatePath.equals("/orderPlacedAuthorizedCodEmail.ftl")
+        || templatePath.equals("/orderPlacedPaymentPendingEmail.ftl") || templatePath.equals("/orderShippedEmailNew.ftl") || templatePath.equals("/orderCancelEmailUserNew.ftl") ||
+        templatePath.equals("/partialOrderCancelEmailUser.ftl") || templatePath.equals("/orderDeliveredEmail.ftl") || templatePath.equals("/feedbackEmailNew.ftl") ||
+        templatePath.equals("/paymentFailEmail.ftl") || templatePath.equals("/orderCancelEmailUserLoyalty.ftl") || templatePath.equals("/newsletters//notifyUserEmailProductNew.ftl") ||
+        templatePath.equals("/newsletters//notifyEmailForSimilarProductsForMultipleVariants.ftl") || templatePath.equals("/newsletters//notifyUserEmailForSimilarProductsForSingleVariants.ftl") || templatePath.equals("/referralRewardPointEmail.ftl")
+        || templatePath.equals("/cashBackRewardPointEmail.ftl") || templatePath.equals("/discountCouponEmail.ftl") ||templatePath.equals("/partialOrderShippedEmail.ftl")||
+        templatePath.equals("/codConfirmEmail.ftl")||templatePath.equals("/orderPlacedCodEmailForSMSCountry.ftl")) {
+      String ftlName = templatePath.split("\\.")[0];
+      templatePath = ftlName + "Beta" + ".ftl";
+    }
+
     Template template = null;
     try {
       //File freemarkerDir = new File(AppConstants.appBasePath + "/freemarker");
-      File templateFile=new File(AppConstants.appBasePath+"/freemarker"+templatePath);
+      File templateFile = new File(AppConstants.appBasePath + "/freemarker" + templatePath);
       Configuration cfg = new Configuration();
       cfg.setDirectoryForTemplateLoading(templateFile.getParentFile());
       cfg.setObjectWrapper(new DefaultObjectWrapper());
@@ -99,26 +112,25 @@ public class FreeMarkerService {
     return renderOutput;
   }
 
-	public RenderOutput processSmsTemplate(Template template, Object templateValues) {
-		RenderOutput renderOutput = null;
-		try {
-			StringWriter stringWriter = new StringWriter();
-			template.process(templateValues, stringWriter);
-			// the first line in the template is the email subject
-			// the rest is the html body
-			String body = stringWriter.toString();
+  public RenderOutput processSmsTemplate(Template template, Object templateValues) {
+    RenderOutput renderOutput = null;
+    try {
+      StringWriter stringWriter = new StringWriter();
+      template.process(templateValues, stringWriter);
+      // the first line in the template is the email subject
+      // the rest is the html body
+      String body = stringWriter.toString();
 
-			renderOutput = new RenderOutput("", body);
-		} catch (IOException e) {
-			logger.error("IOException in getRenderOutputForTemplate for template ", e);
-		} catch (TemplateException e) {
-			logger.error("TemplateException in getRenderOutputForTemplate for template ", e);
-		}
-		return renderOutput;
-	}
+      renderOutput = new RenderOutput("", body);
+    } catch (IOException e) {
+      logger.error("IOException in getRenderOutputForTemplate for template ", e);
+    } catch (TemplateException e) {
+      logger.error("TemplateException in getRenderOutputForTemplate for template ", e);
+    }
+    return renderOutput;
+  }
 
-
-	/**
+  /**
    * This method takes a template's path and template values and tries to return a rendered message.
    *
    * @param template
@@ -127,6 +139,10 @@ public class FreeMarkerService {
    */
   public RenderOutput getRenderOutputForTemplate(Template template, Object templateValues) {
     return processCampaignTemplate(template, templateValues);
+  }
+
+  public boolean isHybridRelease() {
+    return hybridRelease;
   }
 
   public class RenderOutput {
@@ -154,5 +170,4 @@ public class FreeMarkerService {
       this.message = message;
     }
   }
-
 }

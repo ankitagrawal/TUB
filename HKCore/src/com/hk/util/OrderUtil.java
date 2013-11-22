@@ -3,6 +3,7 @@ package com.hk.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.Product;
@@ -36,7 +37,11 @@ public class OrderUtil {
         if (shippingOrder != null) {
             Set<ProductVariant> productVariants = new HashSet<ProductVariant>();
             for (LineItem lineItem : shippingOrder.getLineItems()) {
-                productVariants.add(lineItem.getSku().getProductVariant());
+                //todo eyeglasses bug fix
+//              if (lineItem.getCartLineItem().getCartLineItemConfig()!=null) {
+//                lineItem.getSku().getProductVariant().getProduct().setJit(true);
+//              }
+              productVariants.add(lineItem.getSku().getProductVariant());
             }
             return getDispatchDaysForVariants(productVariants);
         } else {
@@ -52,6 +57,9 @@ public class OrderUtil {
             Set<ProductVariant> productVariants = new HashSet<ProductVariant>();
 
             for (CartLineItem cartLineItem : productCartLineItems) {
+//              if (cartLineItem.getCartLineItemConfig() != null) {
+//                cartLineItem.getProductVariant().getProduct().setJit(true);
+//              }
                 productVariants.add(cartLineItem.getProductVariant());
             }
 
@@ -75,11 +83,11 @@ public class OrderUtil {
         for (ProductVariant productVariant : productVariants) {
             if (productVariant != null) {
                 Product product = productVariant.getProduct();
-                long productMinDays = product.isJit() ? product.getMinDays() : defaultMinDays;
+                long productMinDays = product.isJit() || product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)  ? product.getMinDays() : defaultMinDays;
                 if (product.getMinDays() != null && productMinDays > minDays) {
                     minDays = product.getMinDays();
                 }
-                long productMaxDays = product.isJit() ? product.getMaxDays() : defaultMaxDays;
+                long productMaxDays = product.isJit() || product.getPrimaryCategory().getName().equals(CategoryConstants.EYE)   ? product.getMaxDays() : defaultMaxDays;
                 if (product.getMaxDays() != null && productMaxDays > maxDays) {
                     maxDays = product.getMaxDays();
                 }

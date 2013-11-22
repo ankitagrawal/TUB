@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -38,7 +39,7 @@
       <s:layout-render name="/layouts/embed/_header.jsp"/>
     </s:layout-component>
     <s:layout-component name="menu">
-      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" allCategories="${allCategories}"/>
+      <s:layout-render name="/includes/_menu.jsp" topCategory="${topCategory}" allCategories="${allCategories}" showNewHKLink = "false"/>
     </s:layout-component>
     <s:layout-component name="breadcrumbs">
       <jsp:include page="/includes/_breadcrumbs.jsp"/>

@@ -52,33 +52,34 @@ public class BusyPopulateRtoData {
     sql.eachRow("""
 
 									select so.id as shipping_order_id,
-									ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
-									so.accounting_invoice_number as vch_no,
-									u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
-									pay_gate.name as payment_gateway_name,
-									a.line1 as address_1, a.line2 as address_2, a.city, a.state,
-									w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
-									c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-									so.shipping_order_status_id , ship.return_date as return_date, bo.gateway_order_id, aw.awb_number
-									from line_item li
-									inner join shipping_order so on li.shipping_order_id=so.id
-									inner join base_order bo on so.base_order_id = bo.id
-									left join payment p ON bo.payment_id = p.id
-									left join payment_mode pm ON pm.id = p.payment_mode_id
-									inner join user u on bo.user_id = u.id
-									inner join address a ON bo.address_id = a.id
-									left join shipment ship on ship.id = so.shipment_id
-									left join awb aw on ship.awb_id=aw.id
-									left join courier c on aw.courier_id = c.id
-									left join gateway pay_gate on p.gateway_id = pay_gate.id
-									inner join warehouse w on w.id = so.warehouse_id
-
-									where so.shipping_order_status_id in (200, 220, 230, 250, 260,270,280)
-									and (ship.return_date >=${lastUpdateDate}
-									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
-									and ship.return_date is not null
-									GROUP BY so.id
-									ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
+                                    ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
+                                    so.accounting_invoice_number as vch_no,
+                                    u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
+                                    pay_gate.name as payment_gateway_name,
+                                    a.line1 as address_1, a.line2 as address_2, a.city, a.state,
+                                    w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
+                                    c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number, w.prefix_invoice_generation series,
+                                    bo.amount as base_order_amount
+                                    from line_item li
+                                    join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+                                    from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
+                                    on li.id=pvi.line_item_id
+                                    inner join shipping_order so on li.shipping_order_id=so.id
+                                    inner join base_order bo on so.base_order_id = bo.id
+                                    left join payment p ON bo.payment_id = p.id
+                                    left join payment_mode pm ON pm.id = p.payment_mode_id
+                                    inner join user u on bo.user_id = u.id
+                                    inner join address a ON bo.address_id = a.id
+                                    left join shipment ship on ship.id = so.shipment_id
+                                    left join awb aw on ship.awb_id=aw.id
+                                    left join courier c on aw.courier_id = c.id
+                                    left join gateway pay_gate on p.gateway_id = pay_gate.id
+                                    inner join warehouse w on w.id = so.warehouse_id
+                                    where so.shipping_order_status_id between 180 and 280
+                                    and ifnull(ship.return_date, pvi.txn_date) >= ${lastUpdateDate}
+                                    GROUP BY so.id
+                                    ORDER BY pvi.txn_date ASC
                  """) {
       accountingInvoice ->
 
@@ -101,14 +102,18 @@ public class BusyPopulateRtoData {
       byte out_of_state;
       String against_form;
       Double net_amount;
+      Double base_order_amount;
       byte imported_flag;
 
 	  String gateway_order_id;
 	  String awb_number;
 	    
       shippingOrderId = accountingInvoice.shipping_order_id
-	     Long warehouseId =  accountingInvoice.warehouse_id;
-	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+	  Long warehouseId =  accountingInvoice.warehouse_id;
+      base_order_amount = accountingInvoice.base_order_amount;
+
+      series = accountingInvoice.series;
+	    /*if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           series = "HR";
 	      }
 	      else if(warehouseId == 2 || warehouseId == 20){
@@ -128,7 +133,7 @@ public class BusyPopulateRtoData {
         }
         else if(warehouseId == 1001){
             series = "GK";
-        }
+        }*/
 
       date = accountingInvoice.return_date;	    
 
@@ -161,7 +166,11 @@ public class BusyPopulateRtoData {
 	    else{
         sale_type = "VAT TAX INC";
 	    }
+
       account_name = accountingInvoice.account_name;
+      if(account_name.length() > 40){
+          account_name = account_name.substring(0,39);
+      }
 
       if(accountingInvoice.payment_mode_id == 40){
 			debtors  = "COD_"+accountingInvoice.courier_name;
@@ -242,10 +251,10 @@ public class BusyPopulateRtoData {
     INSERT INTO transaction_header
       (
         series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
-        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number)
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number, base_order_amount)
 
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
-        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}, ${base_order_amount}
       )
       ON DUPLICATE KEY UPDATE
       series = ${series},
@@ -269,7 +278,8 @@ public class BusyPopulateRtoData {
       create_date = NOW(),
       hk_ref_no = ${shippingOrderId},
       gateway_order_id = ${gateway_order_id},
-      awb_number = ${awb_number}
+      awb_number = ${awb_number},
+      base_order_amount = ${base_order_amount}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
@@ -284,11 +294,20 @@ public class BusyPopulateRtoData {
     public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
       int s_no = 0;
       sql.eachRow("""
-                      select li.id, li.sku_id, li.qty, li.marked_price, li.hk_price, li.discount_on_hk_price, li.reward_point_discount,
-                      t.value as tax_value,li.order_level_discount, li.cost_price
+                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, (pvi.qty)*(li.discount_on_hk_price)/(li.qty) as discount_on_hk_price, (pvi.qty*li.reward_point_discount)/li.qty as reward_point_discount,
+                      t.value as tax_value,(pvi.qty)*(li.order_level_discount)/(li.qty) as order_level_discount, li.cost_price
+
                       from line_item li
                       inner join tax t on li.tax_id = t.id
+                      join shipping_order so on li.shipping_order_id=so.id
+
+                      left join shipment ship on so.shipment_id=ship.id
+                      join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+                      from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
+
+                      on li.id=pvi.line_item_id
                       where li.shipping_order_id = ${shipping_order_id}
+                      group by li.id
                    """) {
         invoiceItems ->
 
@@ -301,7 +320,7 @@ public class BusyPopulateRtoData {
 
       String unit = "pcs";
       Double mrp = invoiceItems.marked_price;
-      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty);
+      Double discount = (invoiceItems.discount_on_hk_price + invoiceItems.order_level_discount)/qty;
       Double rate = invoiceItems.hk_price - discount;
       Double vat = invoiceItems.tax_value;
       Double amount = rate*qty;
@@ -333,8 +352,16 @@ public class BusyPopulateRtoData {
                     select sum(shipping_charge) as shipping_charge, sum(cod_charge) as cod_charge, sum(reward_point_discount)  as reward_points
                     from line_item li
                     inner join tax t on li.tax_id = t.id
+
+                    join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+
+                    from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
+
+                    on li.id=pvi.line_item_id
+                    join shipping_order so on li.shipping_order_id=so.id
+                    left join shipment ship on so.shipment_id=ship.id
                     where li.shipping_order_id = ${shipping_order_id}
-                    group by shipping_order_id
+                    group by li.shipping_order_id
                  """) {
       footerItems ->
 

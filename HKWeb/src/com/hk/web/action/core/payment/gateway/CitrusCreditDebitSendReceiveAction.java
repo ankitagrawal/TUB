@@ -111,7 +111,10 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
             String signature = sigGenerator.generateHMAC(data, key);
              if (gatewayOrderId == null || StringUtils.isEmpty(gatewayOrderId)) {
                 logger.info("Received Empty gateway Id  from Citrus NetBank Gateway, redirecting to failure page");
-                return new ForwardResolution("/pages/payment/paymentFail.jsp");
+                 if(isHybridRelease())
+                     return new ForwardResolution("/pages/payment/paymentFailBeta.jsp");
+                 else
+                     return new ForwardResolution("/pages/payment/paymentFail.jsp");
             }
             if (signature == null || StringUtils.isEmpty(signature) || reqSignature == null || StringUtils.isEmpty(reqSignature)) {
                 logger.info("Exception in generating either signature  -->" + signature + " or  Request Signature -->" + reqSignature);

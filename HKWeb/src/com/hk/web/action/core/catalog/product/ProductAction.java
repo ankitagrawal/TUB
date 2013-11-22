@@ -151,7 +151,7 @@ public class ProductAction extends BaseAction {
       if (!product.isDeleted()) {
         if (product.getProductVariants() != null && !product.getProductVariants().isEmpty() && product.getProductVariants().size() > 1) {
           // multiple products
-	        isOutOfStockPage = true;
+            isOutOfStockPage = true;
           for (ProductVariant productVariant: product.getProductVariants()) {
             if (!productVariant.isDeleted() && !productVariant.isOutOfStock()) {
               isOutOfStockPage = false;
@@ -176,7 +176,7 @@ public class ProductAction extends BaseAction {
 
         if (!isUserHkEmployee && product.isDeleted() != null && product.isDeleted() == true) {
             WebContext.getResponse().setStatus(404); // redirection
-            return new ForwardResolution("/pages/error/noPage.html");
+            return new ForwardResolution("/pages/error/404.jsp");
         }
 
         List<Product> relatedProducts = product.getRelatedProducts();
