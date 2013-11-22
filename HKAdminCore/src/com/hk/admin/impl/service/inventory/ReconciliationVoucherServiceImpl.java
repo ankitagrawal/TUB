@@ -157,14 +157,17 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
             invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_INCORRECT_COUNTING);
             break;
           case VendorReplacement:
-            invTxnType=inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_VENDOR_REPLACEMENT);
+            invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_VENDOR_REPLACEMENT);
             break;
-            case VendorRejected:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_VENDOR_REJECTED);
-                break;
-            case FoundAdd:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_FOUND_ADD);
-                break;
+          case VendorRejected:
+            invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_VENDOR_REJECTED);
+            break;
+          case FoundAdd:
+            invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_FOUND_ADD);
+            break;
+          case AuditAdd:
+            invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_AUDIT_ADD);
+            break;
         }
 
         rvLineItem.setSku(sku);
@@ -298,6 +301,10 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
       case NearExpirySubstract:
         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBSTRACT_NEAR_EXPIRY);
         skuItemStatus = EnumSkuItemStatus.NearExpiry.getSkuItemStatus();
+        break;
+      case AuditSubstract:
+        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_AUDIT_SUBSTRACT);
+        skuItemStatus = EnumSkuItemStatus.AuditSubstract.getSkuItemStatus();
         break;
 
     }
