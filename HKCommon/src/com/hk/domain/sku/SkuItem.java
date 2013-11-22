@@ -43,15 +43,6 @@ public class SkuItem implements java.io.Serializable, Comparable<SkuItem> {
 	@JoinColumn(name = "sku_item_owner_id", nullable = false)
 	private SkuItemOwner skuItemOwner;
 
-	@JsonSkip
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(
-			name = "bin_has_sku_item",
-			joinColumns = {@JoinColumn(name = "sku_item_id", nullable = false, updatable = false)},
-			inverseJoinColumns = {@JoinColumn(name = "bin_id", nullable = false, updatable = false)}
-	)
-	private List<Bin> bins = new ArrayList<Bin>(0);
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "foreign_si_cli_id")
 	private ForeignSkuItemCLI foreignSkuItemCLI;
@@ -138,14 +129,6 @@ public class SkuItem implements java.io.Serializable, Comparable<SkuItem> {
 
 	public void setBin(Bin bin) {
 		this.bin = bin;
-	}
-
-	public List<Bin> getBins() {
-		return bins;
-	}
-
-	public void setBins(List<Bin> bins) {
-		this.bins = bins;
 	}
 
 	public ForeignSkuItemCLI getForeignSkuItemCLI() {
