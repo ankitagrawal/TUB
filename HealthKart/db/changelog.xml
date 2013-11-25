@@ -14452,7 +14452,7 @@
         </addColumn>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1377076644551-3">
-        <addColumn tableName="shipping_order">
+        <addColumn tableName="foreign_si_cli">
             <column name="shipping_order_booking_type" type="INT"/>
         </addColumn>
     </changeSet>
