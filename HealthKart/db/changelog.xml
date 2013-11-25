@@ -14440,6 +14440,7 @@
         <sql>
             INSERT INTO box_size values(90,'L3',33.5,578,4900),(100,'XL2',33.5,500,5400);
         </sql>
+        </changeSet>
     <changeSet author="Nihal (generated)" id="20131021-0809">
         <addColumn tableName="purchase_order">
             <column name="bright_so_id" type="INT"/>
