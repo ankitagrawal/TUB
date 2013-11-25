@@ -116,7 +116,7 @@ public class TestMailBoltServicesAction extends BaseAction {
             criteria.setStates(state);
         }
         if (zones != null) {
-            List<String> zo = Arrays.asList(states.split(","));
+            List<String> zo = Arrays.asList(zones.split(","));
             criteria.setZones(zo);
         }
         if (storeIds != null) {

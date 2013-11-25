@@ -58,7 +58,7 @@
                         <td><s:textarea name="storeIds"></s:textarea></td>
                     </tr>
                     <tr>
-                        <td>Badge Names(csv)</td>
+                        <td>BadgeNames (csv, range: Copper,Bronze,Silver,Gold, Platinum)</td>
                         <td><s:text name="badgeNames"></s:text></td>
                     </tr>
                 </table>
