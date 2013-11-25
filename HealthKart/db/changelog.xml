@@ -14412,7 +14412,6 @@
             UPDATE warehouse SET fulfilment_center_code = 'DEL-AB' WHERE id = 402;
         </sql>
     </changeSet>
-<<<<<<< HEAD
     <changeSet author="RD(generated)" id="20131015-01">
         <sql>
             insert  into classification values(2150,'SO Could not be Auto-escalated','Due to Fitness Pro');
