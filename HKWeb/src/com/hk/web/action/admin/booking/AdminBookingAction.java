@@ -19,6 +19,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItemCLI;
 import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -34,6 +35,8 @@ public class AdminBookingAction extends BaseAction {
 	OrderService orderService;
 	@Autowired
 	SkuItemLineItemService skuItemLineItemService;
+	@Autowired
+	InventoryService inventoryService;
 
 	private Long shippingOrderId;
 	private Long baseOrderId;
@@ -86,7 +89,6 @@ public class AdminBookingAction extends BaseAction {
     Set <ShippingOrder> problamaticShippingOrders = new HashSet<ShippingOrder>();
 		if (shippingOrderId != null) {
 			ShippingOrder so = shippingOrderService.find(shippingOrderId);
-//			skuItemLineItemService.freeBookingTable(so);
       List <LineItem> problamaticItems = skuItemLineItemService.freeBooking(so);
       if (problamaticItems != null && problamaticItems.size() > 0){
         addRedirectAlertMessage(new SimpleMessage(" Failed to Freed Booking Table For Shipping Order: " + so.getId()));
@@ -96,15 +98,6 @@ public class AdminBookingAction extends BaseAction {
 			return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuItemLineItems").addParameter("shippingOrderId", shippingOrderId);
 		} else if (baseOrderId != null) {
 			Order bo = orderService.find(baseOrderId);
-//			Set<ShippingOrder> soSet = bo.getShippingOrders();
-//			if (soSet != null && soSet.size() > 0) {
-//				for (ShippingOrder so : soSet) {
-//          List <LineItem> problamaticItems = skuItemLineItemService.freeBooking(so);
-//          if (problamaticItems!= null && problamaticItems.size() > 0){
-//            problamaticShippingOrders.add(so);
-//          }
-//				}
-//			}
 
       boolean invnFreed = true;
       List<CartLineItem>  problamaticCartlineItems = new ArrayList<CartLineItem>();
@@ -134,6 +127,8 @@ public class AdminBookingAction extends BaseAction {
   @Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
   public Resolution freeBookingLineItem() {
    boolean invFreed =  skuItemLineItemService.freeBookingItem(cartLineItemId);
+   CartLineItem cartLineItem = getBaseDao().get(CartLineItem.class, cartLineItemId);
+   inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
    if (!invFreed) {
      addRedirectAlertMessage(new SimpleMessage(" Failed to Free Booking  For item  " +  cartLineItemId));
    }else{
