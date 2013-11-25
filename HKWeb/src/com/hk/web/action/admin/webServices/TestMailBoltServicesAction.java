@@ -38,6 +38,7 @@ public class TestMailBoltServicesAction extends BaseAction {
     private String cities;
     private String states;
     private String categories;
+    private String badgeNames;
     private String verified;
     private String equality;
     private String userOrderCount;
@@ -86,6 +87,10 @@ public class TestMailBoltServicesAction extends BaseAction {
             List<String> ids = Arrays.asList(categories.split(","));
             criteria.setCategories(ids);
         }
+        if (badgeNames != null) {
+            List<String> ids = Arrays.asList(badgeNames.split(","));
+            criteria.setBadgeNames(ids);
+        }
         if (userOrderCount != null) {
             criteria.setUserOrderCount(convertUserOrderCount(userOrderCount));
         }
@@ -112,16 +117,8 @@ public class TestMailBoltServicesAction extends BaseAction {
             criteria.setStates(state);
         }
         if (zones != null) {
-            List<String> zone = Arrays.asList(zones.split(","));
-            List<Long> zonel = new ArrayList<Long>();
-            for (String s : zone) {
-                try {
-                    Long l = Long.parseLong(s);
-                    zonel.add(l);
-                } catch (Exception e) {
-                }
-            }
-            criteria.setZones(zonel);
+            List<String> zo = Arrays.asList(states.split(","));
+            criteria.setZones(zo);
         }
         if (storeIds != null) {
             List<String> st = Arrays.asList(storeIds.split(","));
@@ -215,6 +212,14 @@ public class TestMailBoltServicesAction extends BaseAction {
 
     public void setStates(String states) {
         this.states = states;
+    }
+
+    public String getBadgeNames() {
+        return badgeNames;
+    }
+
+    public void setBadgeNames(String badgeNames) {
+        this.badgeNames = badgeNames;
     }
 
     public String getCategories() {

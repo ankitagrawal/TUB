@@ -31,21 +31,25 @@ public class UsersSearchCriteria {
     private static final short ADDRESS_PIN = 9;
     private static final short PIN_ZONE = 10;
     private static final short PRODUCT_CATEGORIES = 11;
+    private static final short USER_USERBADGEINFO = 12;
+    private static final short USERBADGEINFO_BADGE = 13;
+
 
     @Value("#{hkEnvProps['" + Keys.Env.debugMode + "']}")
     private static String debugMode;
 
     // list of variables that might be received
+    private List<String> badgeNames;
     private List<String> emails;
     private List<String> categories;
     private List<String> states;
     private List<String> cities;
-    private List<Long> zones;
+    private List<String> zones;
     private List<String> productVariantIds;
     private List<String> productIds;
     private Boolean verified;
     private Integer userOrderCount;
-    private String equality = "ge"; // ge (greater than) is the default value for equality
+    private String equality = "eq"; // eq (equals) is the default value for equality
     private List<Long> storeIds;
 
     private Set<Short> alreadyJoint = new HashSet<Short>();
@@ -65,6 +69,8 @@ public class UsersSearchCriteria {
         joinColumns.put(ADDRESS_PIN, new String[]{"addr.pincode", "pin"});
         joinColumns.put(PIN_ZONE, new String[]{"pin.zone", "zone"});
         joinColumns.put(PRODUCT_CATEGORIES, new String[]{"prod.categories", "cats"});
+        joinColumns.put(USER_USERBADGEINFO, new String[]{"user.userBadgeInfo", "ubi"});
+        joinColumns.put(USERBADGEINFO_BADGE, new String[]{"ubi.badge", "badge"});
     }
 
     public DetachedCriteria getSearchCriteria() {
@@ -81,6 +87,12 @@ public class UsersSearchCriteria {
             userCriteria.add(Restrictions.in("user.email", emails));
         } else {
             userCriteria.add(Restrictions.isNotNull("user.email"));
+        }
+
+        if (HKCollectionUtils.isNotBlank(badgeNames)) {
+            userCriteria = createJoin(userCriteria, USER_USERBADGEINFO);
+            userCriteria = createJoin(userCriteria, USERBADGEINFO_BADGE);
+            userCriteria.add(Restrictions.in("badge.badgeName", badgeNames));
         }
 
         if (HKCollectionUtils.isNotBlank(storeIds)) {
@@ -117,8 +129,7 @@ public class UsersSearchCriteria {
                 userCriteria.add(Restrictions.in("pv2.id", productVariantIds));
             } else if (catNotBlank) {
                 userCriteria = createJoin(userCriteria, PRODUCT_CATEGORIES);
-
-                userCriteria.add(Restrictions.in("cats.name", categories));
+                userCriteria.add(Restrictions.in("cats.displayName", categories));
             }
         }
 
@@ -136,7 +147,7 @@ public class UsersSearchCriteria {
             userCriteria = createJoin(userCriteria, USER_ADDRESS);
             userCriteria = createJoin(userCriteria, ADDRESS_PIN);
             userCriteria = createJoin(userCriteria, PIN_ZONE);
-            userCriteria.add(Restrictions.in("zone.id", zones));
+            userCriteria.add(Restrictions.in("zone.name", zones));
         }
 
         ProjectionList projList = Projections.projectionList();
@@ -183,7 +194,7 @@ public class UsersSearchCriteria {
         return se;
     }
 
-    public UsersSearchCriteria setZones(List<Long> zones) {
+    public UsersSearchCriteria setZones(List<String> zones) {
         this.zones = zones;
         return this;
     }
@@ -238,6 +249,12 @@ public class UsersSearchCriteria {
         this.userOrderCount = userOrderCount;
         return this;
     }
+
+    public UsersSearchCriteria setBadgeNames(List<String> badgeNames) {
+        this.badgeNames = badgeNames;
+        return this;
+    }
+
 
     private DetachedCriteria createJoin(DetachedCriteria criteria, Short joinColumnId) {
         Boolean criteriaBool = alreadyJoint.contains(joinColumnId);

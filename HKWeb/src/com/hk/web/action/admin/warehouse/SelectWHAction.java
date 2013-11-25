@@ -1,5 +1,17 @@
 package com.hk.web.action.admin.warehouse;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.user.User;
@@ -8,16 +20,6 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class SelectWHAction extends BaseAction {

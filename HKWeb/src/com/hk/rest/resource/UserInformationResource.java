@@ -33,7 +33,7 @@ public class UserInformationResource {
     private UsersSearchCriteria criteria;
 
     // variables that can be set
-    private List<Long> zones;
+    private List<String> zones;
     private List<String> cities;
     private List<String> emails;
     private List<String> states;
@@ -44,6 +44,7 @@ public class UserInformationResource {
     private Integer userOrderCount;
     private String equality;
     private List<String> categories;
+    private List<String> badgeNames;
 
     @Autowired
     UserSearchService userSearchService;
@@ -56,14 +57,16 @@ public class UserInformationResource {
     public Response getUsersByProduct(@FormParam("productIds") List<String> productIds,
                                       @FormParam("productVariantIds") List<String> productVariantIds,
                                       @FormParam("cities") List<String> cities,
-                                      @FormParam("zones") List<Long> zones,
+                                      @FormParam("zones") List<String> zones,
                                       @FormParam("states") List<String> states,
                                       @FormParam("verified") Boolean verified,
+                                      @FormParam("badgeNames") List<String> badgeNames,
                                       @FormParam("categories") List<String> categories,
                                       @FormParam("userOrderCount") Integer userOrderCount,
                                       @FormParam("equality") String equality,
                                       @FormParam("storeIds") List<Long> storeIds,
                                       @FormParam("emails") List<String> emails) {
+        this.badgeNames = badgeNames;
         this.categories = categories;
         this.emails = emails;
         this.productIds = productIds;
@@ -82,6 +85,9 @@ public class UserInformationResource {
         Response response = null;
         criteria = new UsersSearchCriteria();
         try {
+            if (HKCollectionUtils.isNotBlank(badgeNames)) {
+                criteria.setBadgeNames(badgeNames);
+            }
             if (HKCollectionUtils.isNotBlank(categories)) {
                 criteria.setCategories(categories);
             }

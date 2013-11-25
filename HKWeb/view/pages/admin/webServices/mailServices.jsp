@@ -39,7 +39,7 @@
                         <td><s:textarea name="states"></s:textarea></td>
                         <td>Cities (csv)</td>
                         <td><s:textarea name="cities"></s:textarea></td>
-                        <td>Zones (csv), range : 1,2,3,4</td>
+                        <td>Zones (csv), range : North, South, East ,West</td>
                         <td><s:textarea name="zones"></s:textarea></td>
                     </tr>
                 </table>
@@ -56,6 +56,10 @@
                         <td><s:textarea name="emails"></s:textarea></td>
                         <td>Store Ids(csv)</td>
                         <td><s:textarea name="storeIds"></s:textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Badge Names(csv)</td>
+                        <td><s:text name="badgeNames"></s:text></td>
                     </tr>
                 </table>
                 <table>
