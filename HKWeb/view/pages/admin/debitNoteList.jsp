@@ -1,6 +1,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumDebitNoteStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Debit Note List">
@@ -26,8 +27,10 @@
         <label>Supplier Name:</label><s:text name="supplierName"/>
         <label>Status:</label><s:select name="debitNoteStatus">
         <s:option value="">-All-</s:option>
-        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList" value="id"
-                                   label="name"/>
+          <c:forEach items="<%=EnumDebitNoteStatus.getAllDebitNoteStatus()%>"
+                     var="allDebitNote">
+              <s:option value="${allDebitNote.id}">${allDebitNote.name}</s:option>
+          </c:forEach>
         </s:select>
         <label>Warehouse: </label>
         <s:select name="warehouse">
