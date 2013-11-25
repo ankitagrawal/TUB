@@ -124,7 +124,8 @@ public class UsersSearchCriteria {
             } else if (prodVarNotBlank) {
                 userCriteria = createJoin(userCriteria, PRODUCT_PRODUCTVARIANT);
                 userCriteria.add(Restrictions.in("pv2.id", productVariantIds));
-            } else if (catNotBlank) {
+            }
+            if (catNotBlank) {
                 userCriteria = createJoin(userCriteria, PRODUCT_CATEGORIES);
                 userCriteria.add(Restrictions.in("cats.displayName", categories));
             }
