@@ -32,7 +32,7 @@ import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.taglibs.Functions;
 import com.hk.util.HKImageUtils;
 import com.hk.util.http.HkHttpClient;
@@ -56,6 +56,8 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
+    private InventoryService      inventoryService;
     @Autowired
     private BaseDao               baseDao;
 
@@ -88,6 +90,21 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
 
         try {
             if (productVariant != null) {
+                Product product = getProductService().getProductById(variantSavedSyncRequest.getOldProductId());
+
+                if (product.isJit() && !variantSavedSyncRequest.isJit()) {
+                    // this is jit to non-jit case sync from catalog admin, so checking for inv, might change with A/B
+                    // separation
+
+                    Long unbookedInventory = getInventoryService().getAvailableUnBookedInventory(productVariant);
+                    if (unbookedInventory > 0) {
+                        productVariant.setOutOfStock(false);
+                    } else {
+                        productVariant.setOutOfStock(true);
+                    }
+
+                }
+
                 productVariant.setHkPrice(Double.valueOf(((Integer) variantSavedSyncRequest.getOfferPrice()).toString()));
                 productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
                 productVariant.setDeleted(variantSavedSyncRequest.isDeleted());
@@ -95,17 +112,15 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
                 logger.error("variant save sync request recived 1 " + productVariant.isDeleted());
                 getBaseDao().save(productVariant);
 
-                Product product = getProductService().getProductById(variantSavedSyncRequest.getOldProductId());
                 product.setCodAllowed(variantSavedSyncRequest.isCodAllowed());
                 product.setJit(variantSavedSyncRequest.isJit());
                 product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
                 product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
 
-                
                 logger.error("variant save sync request recived 2 " + product.isJit());
                 logger.error("variant save sync request recived 3 " + product.getMaxDays());
                 logger.error("variant save sync request recived 4 " + product.getMinDays());
-                
+
                 boolean isProductDeleted = true;
                 for (ProductVariant productVariantTemp : product.getProductVariants()) {
                     isProductDeleted = isProductDeleted && productVariantTemp.isDeleted();
@@ -124,7 +139,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
                 logger.error("variant save sync request recived 5 " + product.isJit());
                 logger.error("variant save sync request recived 6 " + product.getMaxDays());
                 logger.error("variant save sync request recived 7 " + product.getMinDays());
-                
+
             }
         } catch (Throwable t) {
             logger.error("Error syncing save from edge", t);
@@ -226,4 +241,9 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     public BaseDao getBaseDao() {
         return baseDao;
     }
+
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
+
 }
