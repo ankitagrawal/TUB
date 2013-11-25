@@ -33,6 +33,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.taglibs.Functions;
 import com.hk.util.HKImageUtils;
 import com.hk.util.http.HkHttpClient;
@@ -56,7 +57,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
-    @Autowired
+
     private InventoryService      inventoryService;
     @Autowired
     private BaseDao               baseDao;
@@ -243,6 +244,9 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     }
 
     public InventoryService getInventoryService() {
+        if (inventoryService == null) {
+            inventoryService = (InventoryService) ServiceLocatorFactory.getService(InventoryService.class);
+        }
         return inventoryService;
     }
 
