@@ -34,7 +34,6 @@ public class TestMailBoltServicesAction extends BaseAction {
     private String zones;
     private String pvs;
     private String prodnames;
-    private String production;
     private String cities;
     private String states;
     private String categories;
@@ -134,11 +133,6 @@ public class TestMailBoltServicesAction extends BaseAction {
         }
 
 
-        if (production != null && "true".equalsIgnoreCase(production)) {
-            UsersSearchCriteria.setDebugMode("false");
-        } else {
-            UsersSearchCriteria.setDebugMode("true");
-        }
         List<UserDTO> ems = null;
         try {
             ems = userSearchService.searchUserInfo(criteria);
@@ -153,25 +147,17 @@ public class TestMailBoltServicesAction extends BaseAction {
         // write output to file
         StringBuffer summarySB = new StringBuffer();
         String summary = "result size: " + result + " time taken in millis: " + (endTime - startTime);
-        summarySB.append("Summary: ").append(summary).append("\n");
+        summarySB.append("Summary: ").append(summary).append(System.getProperty("line.separator"));
 
-        boolean debug = !(production != null && "true".equalsIgnoreCase(production));
         StringBuffer resultSB = new StringBuffer();
-        resultSB.append("\n").append(debug ?
-                "login, email, name, subscriptionMask, unsubscribeToken" :
-                "email, login, name, subscriptionMask, unsubscribeToken");
+        resultSB.append(System.getProperty("line.separator")).append("email, login, name, subscribedMask, unsubscribeToken");
 
         for (UserDTO o : ems) {
-            resultSB.append("\n");
-
-            if (debug) {
-                resultSB.append(o.login).append(",").append(o.email).append(",").append(o.name).append(",").append(o.subscribedMask).append(",").append(o.unsubscribeToken);
-            } else {
-                resultSB.append(o.email).append(",").append(o.login).append(",").append(o.name).append(",").append(o.subscribedMask).append(",").append(o.unsubscribeToken);
-            }
+            resultSB.append(System.getProperty("line.separator"));
+            resultSB.append(o.email).append(",").append(o.login).append(",").append(o.name).append(",").append(o.subscribedMask).append(",").append(o.unsubscribeToken);
         }
 
-        return new StreamingResolution("text/csv", summarySB.append("\n\n").toString() + resultSB.toString()).setFilename("queryResult.csv");
+        return new StreamingResolution("text/csv", summarySB.append(System.getProperty("line.separator")).toString() + resultSB.toString()).setFilename("queryResult.csv");
     }
 
     public String getZones() {
@@ -286,11 +272,4 @@ public class TestMailBoltServicesAction extends BaseAction {
         this.time = time;
     }
 
-    public String getProduction() {
-        return production;
-    }
-
-    public void setProduction(String production) {
-        this.production = production;
-    }
 }

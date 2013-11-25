@@ -64,15 +64,6 @@
                 </table>
                 <table>
                     <tr>
-                        <strong>Advanced Options</strong>
-                    </tr>
-                    <tr>
-                        <td>Test as if on Production DB(overrides setting in environment.properties)</td>
-                        <td><s:checkbox name="production"></s:checkbox></td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
                         <td>
                             <s:submit name="testServices" value="Search"></s:submit>
                         </td>

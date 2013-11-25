@@ -35,9 +35,6 @@ public class UsersSearchCriteria {
     private static final short USERBADGEINFO_BADGE = 13;
 
 
-    @Value("#{hkEnvProps['" + Keys.Env.debugMode + "']}")
-    private static String debugMode;
-
     // list of variables that might be received
     private List<String> badgeNames;
     private List<String> emails;
@@ -151,19 +148,11 @@ public class UsersSearchCriteria {
         }
 
         ProjectionList projList = Projections.projectionList();
-        if ("true".equalsIgnoreCase(debugMode)) {
-            projList.add(Projections.distinct(Projections.property("user.login")), "login");
-            projList.add(Projections.property("user.email"), "email");
-            projList.add(Projections.property("user.name"), "name");
-            projList.add(Projections.property("user.subscribedMask"), "subscribedMask");
-            projList.add(Projections.property("user.unsubscribeToken"), "unsubscribeToken");
-        } else {
-            projList.add(Projections.distinct(Projections.property("user.email")), "email");
-            projList.add(Projections.property("user.login"), "login");
-            projList.add(Projections.property("user.name"), "name");
-            projList.add(Projections.property("user.subscribedMask"), "subscribedMask");
-            projList.add(Projections.property("user.unsubscribeToken"), "unsubscribeToken");
-        }
+        projList.add(Projections.distinct(Projections.property("user.email")), "email");
+        projList.add(Projections.property("user.login"), "login");
+        projList.add(Projections.property("user.name"), "name");
+        projList.add(Projections.property("user.subscribedMask"), "subscribedMask");
+        projList.add(Projections.property("user.unsubscribeToken"), "unsubscribeToken");
         userCriteria.setProjection(projList);
         userCriteria.setResultTransformer(Transformers.aliasToBean(UserDTO.class));
 
@@ -269,19 +258,6 @@ public class UsersSearchCriteria {
             alreadyJoint.add(joinColumnId);
         }
         return criteria;
-    }
-
-    public static String isDebugMode() {
-        return debugMode;
-    }
-
-    /**
-     * Overriding value of <code>debugMode</code> is for testing web services only
-     *
-     * @param debugMode
-     */
-    public static void setDebugMode(String debugMode) {
-        UsersSearchCriteria.debugMode = debugMode;
     }
 
 }
