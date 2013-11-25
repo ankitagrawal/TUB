@@ -14446,4 +14446,14 @@
             <column name="bright_so_id" type="INT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1377076644551-2">
+        <addColumn tableName="shipping_order">
+            <column name="shipping_order_booking_type" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1377076644551-3">
+        <addColumn tableName="shipping_order">
+            <column name="shipping_order_booking_type" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
