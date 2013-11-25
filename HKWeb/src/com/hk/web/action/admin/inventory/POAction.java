@@ -108,6 +108,7 @@ public class POAction extends BasePaginatedAction {
     private Boolean                           extraInventoryCreated;
 
     private Integer                           defaultPerPage    = 20;
+    private Long 															brightSoId;
 
     @DefaultHandler
     public Resolution pre() {
@@ -118,7 +119,7 @@ public class POAction extends BasePaginatedAction {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
             purchaseOrderPage = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,
-                    extraInventoryCreated, getPageNo(), getPerPage());
+                    extraInventoryCreated, brightSoId, getPageNo(), getPerPage());
             purchaseOrderList = purchaseOrderPage.getList();
         }
         return new ForwardResolution("/pages/admin/poList.jsp");
@@ -141,7 +142,7 @@ public class POAction extends BasePaginatedAction {
             if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
-            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null);
+            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null, null);
         }
 
         if (purchaseOrderList != null) {
@@ -185,7 +186,11 @@ public class POAction extends BasePaginatedAction {
         grn.setPurchaseOrder(purchaseOrder);
         grn.setGrnDate(new Date());
         grn.setInvoiceDate(new Date());
-        grn.setInvoiceNumber("-");
+        if(purchaseOrder.getBrightSoId()!=null){
+        	grn.setInvoiceNumber(purchaseOrder.getBrightSoId().toString());
+        }else{
+        	grn.setInvoiceNumber("-");
+        }
         grn.setReceivedBy(loggedOnUser);
         grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.GoodsReceived.getId()));
         grn.setWarehouse(warehouse);
@@ -551,4 +556,12 @@ public class POAction extends BasePaginatedAction {
     public void setFileBean(FileBean fileBean) {
       this.fileBean = fileBean;
     }
+
+		public Long getBrightSoId() {
+			return brightSoId;
+		}
+
+		public void setBrightSoId(Long brightSoId) {
+			this.brightSoId = brightSoId;
+		}
 }

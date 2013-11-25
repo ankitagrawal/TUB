@@ -152,6 +152,12 @@
                           style="font-size:0.9em"/>
 
             </div>
+            <br>
+            <div align="center">
+                <label>Bright SO ID</label><s:text name="brightSoId"/>
+                <s:submit name="searchOrdersForPrinting" value="Search By Bright So Id"
+                          style="font-size:0.9em"/>
+                </div>
 		</s:form>
 
 		<s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" autocomplete="off">

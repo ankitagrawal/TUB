@@ -40,7 +40,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
 @Component
 public class EditPurchaseOrderAction extends BaseAction {
 
@@ -62,8 +62,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 	AdminEmailManager adminEmailManager;
 	@Autowired
 	SkuService skuService;
-    @Autowired
-    private SupplierDao supplierDao;
+	@Autowired
+	private SupplierDao supplierDao;
 
 	// @Named(Keys.Env.adminUploads)
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
@@ -72,7 +72,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 	@Validate(required = true, on = "parse")
 	private FileBean fileBean;
 
-    private  Supplier supplier;
+	private Supplier supplier;
 
 	private PurchaseOrder purchaseOrder;
 	private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
@@ -81,26 +81,26 @@ public class EditPurchaseOrderAction extends BaseAction {
 	public Warehouse warehouse;
 	private PurchaseOrderStatus previousPurchaseOrderStatus;
 	private List<Long> newSkuIdList = new ArrayList<Long>();
-    private List<Supplier> suppliers = new ArrayList<Supplier>();
-    public String supplierEmail=null;
+	private List<Supplier> suppliers = new ArrayList<Supplier>();
+	public String supplierEmail = null;
 
+	private boolean isPiCreated;
 
-    private boolean isPiCreated;
 	@DefaultHandler
 	public Resolution pre() {
-		if(purchaseOrder != null){
+		if (purchaseOrder != null) {
 			logger.info("purchaseOrder@Pre: " + purchaseOrder.getId());
 		}
-        suppliers = supplierDao.getListOrderedByName();
+		suppliers = supplierDao.getListOrderedByName();
 		purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
-		for(PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
-			if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+		for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
+			if (poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
 				newSkuIdList.add(poLineItem.getSku().getId());
 			}
 		}
 
-        isPiCreated=purchaseOrderDao.isPiCreated(purchaseOrder);
-         return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
+		isPiCreated = purchaseOrderDao.isPiCreated(purchaseOrder);
+		return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -120,16 +120,16 @@ public class EditPurchaseOrderAction extends BaseAction {
 								dataMap.put("tax", sku.getTax().getValue());
 								dataMap.put("tax_id", sku.getTax().getId());
 							}
-							if(poLineItemDao.getPoLineItemCountBySku(sku) == 0) {
+							if (poLineItemDao.getPoLineItemCountBySku(sku) == 0) {
 								dataMap.put("newSku", true);
 							} else {
 								dataMap.put("newSku", false);
 							}
 						}
 					}
-					if(purchaseOrder != null) {
+					if (purchaseOrder != null) {
 						ProductVariantSupplierInfo productVariantSupplierInfo = Functions.getPVSupplierInfo(purchaseOrder.getSupplier(), pv);
-						if(productVariantSupplierInfo != null) {
+						if (productVariantSupplierInfo != null) {
 							dataMap.put("historicalFillRate", productVariantSupplierInfo.getFillRate());
 						}
 					}
@@ -161,7 +161,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 			}
 
-			if(previousPurchaseOrderStatus.equals(EnumPurchaseOrderStatus.SentToSupplier.getPurchaseOrderStatus())
+			if (previousPurchaseOrderStatus.equals(EnumPurchaseOrderStatus.SentToSupplier.getPurchaseOrderStatus())
 					&& purchaseOrder.getPurchaseOrderStatus().equals(EnumPurchaseOrderStatus.Cancelled.getPurchaseOrderStatus())
 					&& purchaseOrder.getGoodsReceivedNotes() != null && purchaseOrder.getGoodsReceivedNotes().size() > 0) {
 				addRedirectAlertMessage(new SimpleMessage("GRN has already been created, cannot cancel PO now."));
@@ -169,7 +169,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 			}
 
 			List<PurchaseOrderStatus> allowedNewPOStatusList = EnumPurchaseOrderStatus.getAllowedPOStatusToChange(previousPurchaseOrderStatus);
-			if(! allowedNewPOStatusList.contains(purchaseOrder.getPurchaseOrderStatus())) {
+			if (!allowedNewPOStatusList.contains(purchaseOrder.getPurchaseOrderStatus())) {
 				addRedirectAlertMessage(new SimpleMessage("Invalid Status chosen."));
 				return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 			}
@@ -179,8 +179,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 				discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
 			}
 			for (PoLineItem poLineItem : poLineItems) {
-					if (poLineItem!=null && poLineItem.getQty() != null) {
-					if(poLineItem.getMrp() < poLineItem.getCostPrice()){
+				if (poLineItem != null && poLineItem.getQty() != null) {
+					if (poLineItem.getMrp() < poLineItem.getCostPrice()) {
 						addRedirectAlertMessage(new SimpleMessage("MRP cannot be less than cost price for variant " + poLineItem.getProductVariant().getId()));
 						return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 					}
@@ -188,7 +188,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 						getBaseDao().delete(poLineItem);
 					} else if (poLineItem.getQty() > 0) {
 						if (poLineItem.getPayableAmount() != null) {
-							poLineItem.setProcurementPrice((poLineItem.getPayableAmount() / poLineItem.getQty()) - (poLineItem.getPayableAmount() / poLineItem.getQty() * discountRatio));
+							poLineItem.setProcurementPrice((poLineItem.getPayableAmount() / poLineItem.getQty())
+									- (poLineItem.getPayableAmount() / poLineItem.getQty() * discountRatio));
 						}
 						Sku sku = null;
 						try {
@@ -216,22 +217,20 @@ public class EditPurchaseOrderAction extends BaseAction {
 			purchaseOrder.setFinalPayableAmount(purchaseOrder.getPayable() - overallDiscount);
 			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-
 			if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentForApproval.getId())) {
 				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
 				adminEmailManager.sendPOApprovedEmail(purchaseOrder);
-				if(purchaseOrder.getPoLineItems()!=null && purchaseOrder.getPoLineItems().size()>0){
-					if(purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem()==null){
-						if(purchaseOrder.getSupplier().getEmail_id()!=null){
+				if (purchaseOrder.getPoLineItems() != null && purchaseOrder.getPoLineItems().size() > 0) {
+					if (purchaseOrder.getPoLineItems().get(0).getExtraInventoryLineItem() == null) {
+						if (purchaseOrder.getSupplier().getEmail_id() != null) {
 							adminEmailManager.sendPOMailToSupplier(purchaseOrder, purchaseOrder.getSupplier().getEmail_id());
-							}
-							else{
-								adminEmailManager.sendPOMailToSupplier(purchaseOrder, supplierEmail);
-							}
+						} else {
+							adminEmailManager.sendPOMailToSupplier(purchaseOrder, supplierEmail);
+						}
 					}
 				}
-				
+
 				purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
 				purchaseOrder.setPoPlaceDate(new Date());
 				Calendar calendar = Calendar.getInstance();
@@ -246,7 +245,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 				}
 				purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-				//emailManager.sendPOPlacedEmail(purchaseOrder);
+				// emailManager.sendPOPlacedEmail(purchaseOrder);
 				if (purchaseOrder.getSupplier().getCreditDays() < 0 && purchaseOrder.getAdvPayment() > 0) {
 					try {
 						PaymentHistory paymentHistoryNew = new PaymentHistory();
@@ -297,11 +296,11 @@ public class EditPurchaseOrderAction extends BaseAction {
 		return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 	}
 
-    public Resolution saveSupplier(){
-        purchaseOrder.setSupplier(supplier);
-        getBaseDao().save(purchaseOrder);
-        return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
-    }
+	public Resolution saveSupplier() {
+		purchaseOrder.setSupplier(supplier);
+		getBaseDao().save(purchaseOrder);
+		return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+	}
 
 	public PurchaseOrder getPurchaseOrder() {
 		return purchaseOrder;
@@ -383,27 +382,27 @@ public class EditPurchaseOrderAction extends BaseAction {
 		this.newSkuIdList = newSkuIdList;
 	}
 
-    public List<Supplier> getSuppliers() {
-        return suppliers;
-    }
+	public List<Supplier> getSuppliers() {
+		return suppliers;
+	}
 
-    public void setSuppliers(List<Supplier> suppliers) {
-        this.suppliers = suppliers;
-    }
+	public void setSuppliers(List<Supplier> suppliers) {
+		this.suppliers = suppliers;
+	}
 
-    public Supplier getSupplier() {
-        return supplier;
-    }
+	public Supplier getSupplier() {
+		return supplier;
+	}
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
+	}
 
-    public boolean isPiCreated() {
-        return isPiCreated;
-    }
+	public boolean isPiCreated() {
+		return isPiCreated;
+	}
 
-    public void setPiCreated(boolean piCreated) {
-        isPiCreated = piCreated;
-    }
+	public void setPiCreated(boolean piCreated) {
+		isPiCreated = piCreated;
+	}
 }
