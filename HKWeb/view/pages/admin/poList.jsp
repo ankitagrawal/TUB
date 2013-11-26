@@ -2,6 +2,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -67,8 +68,24 @@
             </c:otherwise>
           </c:choose></td>
       </tr>
+          <tr>
+              <td>
+                  <label>Po Start Date: </label>  <s:text class="date_input startDate"  formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+              </td>
+              <td>
+                  <label>Po End Date:</label>   <s:text class="date_input endDate"   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"  name="endDate"/>
+              </td>
+              <td><label>Po Type: </label>
+                  <s:select name="poType">
+                      <s:option value="">-All-</s:option>
+                      <s:option value="jit">JIT</s:option>
+                      <s:option value="drop ship">DROP SHIP</s:option>
+                  </s:select>
+
+              </td>
+          </tr>
       <tr>
-      <td><label>Extra Inventory Created: </label><s:checkbox name="extraInventoryCreated"/></td>
+      <td><label>Extra Inventory Created</label><s:checkbox name="extraInventoryCreated"/></td>
       <td><label>Bright SO ID:</label><s:text name="brightSoId"/></td>
       <td colspan="3"><s:submit name="pre" value="Search"/>
           <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="getExtraInventoryPO" class="addBtn button_orange">All ExInv PO              
@@ -175,8 +192,10 @@
 		        </div>
                 
 		        <br/>
+                <c:if test="${purchaseOrder.supplier.active}">
 		                    (<s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
 			                    <s:param name="supplier" value="${purchaseOrder.supplier.id}"/></s:link>)
+                </c:if>
 	        </td>
             <td>
                 <c:if test="${purchaseOrder.extraInventoryCreated}">

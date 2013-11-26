@@ -43,7 +43,7 @@
             <c:choose>
               <c:when test="${!empty oa.lineItems}">
                 <c:forEach items="${oa.lineItems}" var="lineItem" varStatus="ctr">
-                  <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(lineItem.sku.productVariant.id)}"/>
+                  <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetailsCached(lineItem.sku.productVariant.id, pageContext)}"/>
                   <c:set var="cartLineItem" value="${lineItem.cartLineItem}"/>
                   <c:set var="variant" value="${lineItem.sku.productVariant}"/>
                     <c:if test="${ctr.first}">
@@ -151,7 +151,7 @@
               </c:when>
               <c:otherwise>
                 <c:forEach items="${oa.cartLineItems}" var="cartLineItem" varStatus="ctr">
-                    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetails(cartLineItem.productVariant.id)}"/>
+                    <c:set var="storeVariantBasic" value="${hk:getStoreVariantBasicDetailsCached(cartLineItem.productVariant.id, pageContext)}"/>
                     <c:if test="${ctr.first}">
                         <tr class="order-tr top-brdr">
                     </c:if>

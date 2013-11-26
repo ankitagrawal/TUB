@@ -121,6 +121,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         return getWarehouseById(WarehouseService.MUM_AQUA_WH_ID);
       } else if (shippingOrder.getWarehouse().getId().equals(WarehouseService.GGN_BRIGHT_WH_ID)) {
         return getWarehouseById(WarehouseService.GGN_AQUA_WH_ID);
+      } else if (shippingOrder.getWarehouse().getId().equals(WarehouseService.DEL_KAPASHERA_BRIGHT_WH_ID)) {
+        return getWarehouseById(WarehouseService.DEL_KAPASHERA_AQUA_WH_ID);
       }
     }
     return shippingOrder.getWarehouse();
