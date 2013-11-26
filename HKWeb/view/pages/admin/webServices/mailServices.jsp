@@ -39,7 +39,7 @@
                         <td><s:textarea name="states"></s:textarea></td>
                         <td>Cities (csv)</td>
                         <td><s:textarea name="cities"></s:textarea></td>
-                        <td>Zones (csv), range : North, South, East ,West</td>
+                        <td>Zones (csv)</td>
                         <td><s:textarea name="zones"></s:textarea></td>
                     </tr>
                 </table>
@@ -48,7 +48,7 @@
                         <strong>Search By Miscellaneous Criterion</strong>
                     </tr>
                     <tr>
-                        <td>Verfied (true, false or leave blank)</td>
+                        <td>Verified (true, false or leave blank)</td>
                         <td><s:text name="verified"></s:text></td>
                         <td>Categories(csv)</td>
                         <td><s:textarea name="categories"></s:textarea></td>
@@ -58,7 +58,7 @@
                         <td><s:textarea name="storeIds"></s:textarea></td>
                     </tr>
                     <tr>
-                        <td>BadgeNames (csv, range: Copper,Bronze,Silver,Gold, Platinum)</td>
+                        <td>BadgeNames (csv)</td>
                         <td><s:text name="badgeNames"></s:text></td>
                     </tr>
                 </table>
