@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.order.EnumBookingType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;
@@ -480,6 +481,24 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
       inventoryService.bookInventory(lineItem.getCartLineItem());
 
     }
+  }
+
+
+  public Long getShippingOrderBookingType(ShippingOrder shippingOrder){
+
+    if (shippingOrder.getLineItems() != null && shippingOrder.getLineItems().size() == 1){
+      return EnumBookingType.SINGLE_BOOKED.getId();
+    }
+
+    for (LineItem lineItem : shippingOrder.getLineItems()){
+       for (SkuItemLineItem sili : lineItem.getSkuItemLineItems()){
+         if (!(sili.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId()))){
+            return EnumBookingType.PARTIAL_BOOKED.getId();
+         }
+       }
+    }
+
+    return EnumBookingType.COMPLETE_BOOKED.getId();
   }
 
   public UserService getUserService() {

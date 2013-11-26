@@ -114,6 +114,9 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "contains_jit_products")
     private boolean containsJitProducts;
 
+   @Column(name="shipping_order_booking_type")
+   private Long shippingOrderBookingTypeId;
+
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private Set<ShippingOrderCategory> shippingOrderCategories = new HashSet<ShippingOrderCategory>();
@@ -368,7 +371,17 @@ public class ShippingOrder implements java.io.Serializable {
         return reversePickupOrders;
     }
 
-    public void setReversePickupOrders(List<ReversePickupOrder> reversePickupOrders) {
+  public Long getShippingOrderBookingTypeId() {
+    return shippingOrderBookingTypeId;
+  }
+
+  public void setShippingOrderBookingTypeId(Long shippingOrderBookingTypeId) {
+    this.shippingOrderBookingTypeId = shippingOrderBookingTypeId;
+  }
+
+  public void setReversePickupOrders(List<ReversePickupOrder> reversePickupOrders) {
         this.reversePickupOrders = reversePickupOrders;
     }
+
+
 }

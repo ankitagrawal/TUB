@@ -88,7 +88,8 @@ public class ForeignSkuItemCLI {
   @Column(name="processed_status")
   private String processedStatus;
 
-
+  @Column(name="shipping_order_booking_type")
+  private Long shippingOrderBookingTypeId;
 
   public Long getId() {
     return id;
@@ -242,4 +243,11 @@ public class ForeignSkuItemCLI {
 		this.processedStatus = processedStatus;
 	}
 
+  public Long getShippingOrderBookingTypeId() {
+    return shippingOrderBookingTypeId;
+  }
+
+  public void setShippingOrderBookingTypeId(Long shippingOrderBookingTypeId) {
+    this.shippingOrderBookingTypeId = shippingOrderBookingTypeId;
+  }
 }
