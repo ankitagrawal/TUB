@@ -84,7 +84,7 @@ public class PopulateBusyDataAction extends BaseAction {
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Busy Retail sales updated !!"));
+		addRedirectAlertMessage(new SimpleMessage("Busy Retail sales invoices [" +getRetailSalesPopulated()+"] updated !!"));
 		return new RedirectResolution("/pages/admin/busyUpdates.jsp");
 	}
 
@@ -111,7 +111,7 @@ public class PopulateBusyDataAction extends BaseAction {
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Busy Service sales upadted !!"));
+		addRedirectAlertMessage(new SimpleMessage("Busy Service sales invoices [" +getServiceSalesPopulated()+"] updated !!"));
 		return new RedirectResolution("/pages/admin/busyUpdates.jsp");
 	}
 
@@ -139,7 +139,7 @@ public class PopulateBusyDataAction extends BaseAction {
 			logger.error("Unable to insert: ", e);
 		}
 
-		addRedirectAlertMessage(new SimpleMessage("Busy b2b sales upadted !!"));
+		addRedirectAlertMessage(new SimpleMessage("Busy b2b sales invoices [" +getB2bSalesPopulated()+"] updated !!"));
 		return new RedirectResolution("/pages/admin/busyUpdates.jsp");
 	}
 
@@ -166,7 +166,7 @@ public class PopulateBusyDataAction extends BaseAction {
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Busy RTO data upadted !!"));
+		addRedirectAlertMessage(new SimpleMessage("Busy RTO invoices [" +getRtoPopulated()+"] updated !!"));
 		return new RedirectResolution("/pages/admin/busyUpdates.jsp");
 	}
 
@@ -181,7 +181,7 @@ public class PopulateBusyDataAction extends BaseAction {
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Busy purchases upadted !!"));
+		addRedirectAlertMessage(new SimpleMessage("Busy purchases updated !!"));
 		return new RedirectResolution("/pages/admin/busyUpdates.jsp");
 	}
 

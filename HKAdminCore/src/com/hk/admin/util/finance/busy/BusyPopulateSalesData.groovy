@@ -335,7 +335,7 @@ public class BusyPopulateSalesData {
                                 left join courier c on aw.courier_id = c.id                                         \
                                 left join gateway pay_gate on p.gateway_id = pay_gate.id                            \
                                 inner join warehouse w on w.id = so.warehouse_id                                    \
-                                left join" + dbBusyName + "." + tableName + "th on so.id=th.hk_ref_no               \
+                                left join " + dbBusyName + "." + tableName + " th on so.id=th.hk_ref_no               \
                        where    (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) " +
                                 "and so.shipping_order_status_id <> 999)) \
                                 and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}   \
