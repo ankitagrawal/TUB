@@ -71,7 +71,7 @@
 
 <s:layout-component name="content">
 
-<span id="ajaxLoader" style="display:none;"><img src="<hk:vhostImage/>/common/images/ajax-loader.gif"/></span>
+<span id="ajaxLoader" style="display:none;"><img src="<hk:vhostImage/>/images/ajax-loader.gif"/></span>
 
 <c:set var="lineItemType_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <c:set var="linItemStatusShipped" value="<%=EnumOrderStatus.Shipped.getId()%>"/>

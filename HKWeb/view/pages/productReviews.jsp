@@ -1,8 +1,9 @@
+<%@ page import="com.hk.constants.marketing.TagConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" var="pa" event="pre"/>
-<s:layout-render name="/layouts/genericG.jsp" pageTitle="Product Reviews of ${pa.product.name}">
+<s:layout-render name="/layouts/genericG.jsp" pageTitle="Product Reviews of ${pa.product.name}" pageType="<%=TagConstants.PageType.REVIEW%>">
 
   <s:layout-component name="htmlHead">
 

@@ -18,6 +18,7 @@ import com.hk.constants.payment.EnumGateway;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.sku.ForeignSkuItemCLI;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.payment.PaymentService;
 
@@ -148,6 +149,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Autowired
     PaymentService paymentService;
+    @Autowired
+    OrderEventPublisher orderEventPublisher;
 
     @Override
 	@Transactional
@@ -202,10 +205,26 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                  List<HKAPIForeignBookingResponseInfo> infos =   skuItemLineItemService.freeBrightInventoryAgainstBOCancellation(cartLineItem);
                   skuItemToBeDeleted =  skuItemLineItemService.updateForeignSICLIForCancelledOrder(infos);
                   skuItemLineItemService. deleteSicliAndSili(cartLineItem);
+                  lineItemDao.deleteAll(skuItemToBeDeleted);
+                }else{
+                	List<SkuItem> skuItemsToBeFreed = new ArrayList<SkuItem>();
+                  List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
+                  List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
+                  for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
+                      SkuItem skuItem = skuItemCLI.getSkuItem();
+                      skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                      skuItemsToBeFreed.add(skuItem);
+                      if(skuItemCLI.getSkuItemLineItems()!=null){
+                      	skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
+                      }
+                  }
+                  skuItemCLIsToBeDeleted.addAll(cartLineItem.getSkuItemCLIs());
+                  lineItemDao.saveOrUpdate(skuItemsToBeFreed);
+                  cartLineItem.setSkuItemCLIs(null);
+                  cartLineItem = (CartLineItem) lineItemDao.save(cartLineItem);
+                  lineItemDao.deleteAll(skuItemLineItemsToBeDeleted);
+                  lineItemDao.deleteAll(skuItemCLIsToBeDeleted);
                 }
-
-                lineItemDao.deleteAll(skuItemToBeDeleted);
-
                 inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
               }
             }
@@ -236,6 +255,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 this.emailManager.sendOrderCancelEmailToUser(order);
             }
             emailManager.sendOrderCancelEmailToAdmin(order);
+
+            // notify HKBridge regarding order-cancellation
+            orderEventPublisher.publishCodStatus(order);
 
             this.logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), cancellationRemark);
         } else {
@@ -591,6 +613,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         orderService.save(order);
         orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
         emailManager.sendCodConfirmEmailToUser(order);
+        orderEventPublisher.publishCodStatus(order);
         getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         return payment;
     }

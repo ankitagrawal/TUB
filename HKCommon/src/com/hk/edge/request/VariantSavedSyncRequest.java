@@ -81,7 +81,7 @@ public class VariantSavedSyncRequest extends VariantPricingSyncRequest {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append(oldVariantId).append(oldVariantId).append(" op: ").append(offerPrice).append(" dis :").append(discount);
         strBuilder.append(" mrp :").append(mrp).append(" cp: ").append(costPrice).append(" oldPRoductId: ").append(oldProductId).append(" minD: ").append(minDispatchDays);
-        strBuilder.append(" maxD:").append(maxDispatchDays);
+        strBuilder.append(" maxD:").append(maxDispatchDays).append(" jit :").append(jit);
 
         return strBuilder.toString();
 

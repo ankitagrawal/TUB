@@ -108,6 +108,7 @@ public class POAction extends BasePaginatedAction {
     private Boolean                           extraInventoryCreated;
 
     private Integer                           defaultPerPage    = 20;
+	private String                            poType;
     private Long 															brightSoId;
 
     @DefaultHandler
@@ -119,7 +120,7 @@ public class POAction extends BasePaginatedAction {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
             purchaseOrderPage = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,
-                    extraInventoryCreated, brightSoId, getPageNo(), getPerPage());
+                    extraInventoryCreated, brightSoId, startDate, endDate, poType, getPageNo(), getPerPage());
             purchaseOrderList = purchaseOrderPage.getList();
         }
         return new ForwardResolution("/pages/admin/poList.jsp");
@@ -142,7 +143,7 @@ public class POAction extends BasePaginatedAction {
             if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
-            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null, null);
+            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null, null, startDate, endDate, poType);
         }
 
         if (purchaseOrderList != null) {
@@ -470,6 +471,9 @@ public class POAction extends BasePaginatedAction {
         params.add("createdBy");
         params.add("warehouse");
         params.add("extraInventoryCreated");
+        params.add("poType");
+        params.add("startDate");
+        params.add("endDate");
         return params;
     }
 
@@ -564,4 +568,12 @@ public class POAction extends BasePaginatedAction {
 		public void setBrightSoId(Long brightSoId) {
 			this.brightSoId = brightSoId;
 		}
+		
+		public String getPoType() {
+        return poType;
+    }
+
+    public void setPoType(String poType) {
+        this.poType = poType;
+    }
 }

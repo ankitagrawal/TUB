@@ -79,6 +79,9 @@ public class Warehouse implements java.io.Serializable {
 
   @Column(name = "active", nullable = false)
   private boolean active;
+  
+  @Column(name = "prefix_invoice_generation", nullable = false)
+  private String prefixInvoiceGeneration;
 
   @Column(name="fulfilment_center_code")
   private String fulfilmentCenterCode;
@@ -227,6 +230,14 @@ public class Warehouse implements java.io.Serializable {
 
   public boolean getActive() {
     return active;
+  }
+
+  public String getPrefixInvoiceGeneration() {
+        return prefixInvoiceGeneration;
+  }
+
+  public void setPrefixInvoiceGeneration(String prefixInvoiceGeneration) {
+        this.prefixInvoiceGeneration = prefixInvoiceGeneration;
   }
 
   public void setActive(boolean active) {

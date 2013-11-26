@@ -1074,8 +1074,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     private void updateVariantInfoOnEdge(ProductVariant productVariant) {
 
-        logger.error("sync edge flag is " + AppConstants.syncEdge);
-        if (AppConstants.syncEdge) {
+        /*logger.error("sync edge flag is " + AppConstants.syncEdge);
+        if (AppConstants.syncEdge) {*/
             VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
             variantStockSyncRequest.setOldVariantId(productVariant.getId());
             variantStockSyncRequest.setCostPrice(productVariant.getCostPrice());
@@ -1083,7 +1083,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             variantStockSyncRequest.setOos(productVariant.isOutOfStock());
 
             getHybridStoreVariantService().syncStockOnEdge(variantStockSyncRequest);
-        }
+        /*}*/
     }
 
     public void pendingOrdersInventoryHealthCheck(ProductVariant productVariant) {

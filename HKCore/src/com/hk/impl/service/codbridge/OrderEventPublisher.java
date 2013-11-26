@@ -6,10 +6,12 @@ import com.google.gson.Gson;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.hkjunction.observers.OrderStatusMessage;
+import com.hk.hkjunction.observers.OrderStatusUpdate;
 import com.hk.hkjunction.observers.OrderType;
 import com.hk.hkjunction.producer.Producer;
 import com.hk.hkjunction.producer.ProducerFactory;
@@ -20,6 +22,7 @@ import com.hk.pact.service.codbridge.UserCartDetail;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.inventory.InventoryHealthService;
+import com.hk.service.ServiceLocatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,6 +219,30 @@ public class OrderEventPublisher {
       //userCallResponseObserver.subscribe();
     } catch (Exception ex) {
       logger.error("Error while publishing event for Order " + order.getId());
-    }
+	      }
   }
+  
+  public void publishCodStatus(Order order) {
+        Producer producer = null;
+        try {
+            OrderStatusUpdate orderStatusUpdate = getOrderStatusUpdate(order);
+            if (codRoute != null && codRoute.equalsIgnoreCase("smsCountry")) {
+                producer = producerFactory.getProducer(ProducerTypeEnum.ORDER_STATUS_NOTIFY);
+                producer.publishMessage(orderStatusUpdate);
+            }
+        } catch (Exception e) {
+            logger.error("Error while publishing event for Order " + order.getId() );
+        }
+    }
+
+    private OrderStatusUpdate getOrderStatusUpdate(Order order) {
+        OrderStatusUpdate orderStatusUpdate = new OrderStatusUpdate();
+        orderStatusUpdate.setOrderId(order.getId().toString());
+        if (!EnumOrderStatus.Cancelled.getId().equals(order.getOrderStatus().getId())) {
+            orderStatusUpdate.setOrderStatusType(OrderStatusUpdate.OrderStatusType.CONFIRMED);
+        } else {
+            orderStatusUpdate.setOrderStatusType(OrderStatusUpdate.OrderStatusType.CANCELED);
+        }
+        return orderStatusUpdate;
+    }
 }

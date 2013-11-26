@@ -28,6 +28,8 @@ public enum EnumSkuItemStatus {
   NonMoving(100L, "Non Moving"),
   ProductVariantAudited(110L, "Product Variant Audited"),
   IncorrectCounting(120L, "Incorrect Counting"),
+  NearExpiry(130L,"Near Expiry"),
+  AuditSubstract(140L,"Audit Substract"),
   TEMP_BOOKED(150L, "TEMP BOOKED"),
   BOOKED(160L, "BOOKED"),
   EXPECTED_CHECKED_IN(170L , "EXPECTED CHECKED IN");
