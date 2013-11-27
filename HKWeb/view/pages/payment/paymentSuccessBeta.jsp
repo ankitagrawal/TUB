@@ -63,9 +63,13 @@
     <div>
       <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
         <c:choose>
-          <c:when test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
-            <img src="${pageContext.request.contextPath}/images/banners/hkplus-15off-banner2.jpg"
+          <c:when test="${city == 'DELHI' || city == 'NEW DELHI'  || city == 'GURGAON' || city == 'NOIDA'}">
+            <img src="${pageContext.request.contextPath}/images/banners/banner01A.png"
                  alt="HealthKartPlus 15% Off"/>
+          </c:when>
+          <c:when test="${city == 'BANGALORE' || city == 'BENGALURU'  || city == 'BANGALURU'}">
+            <img src="${pageContext.request.contextPath}/images/banners/banner02B.png"
+                 alt="HealthKartPlus 25% Off"/>
           </c:when>
           <c:otherwise>
             <img src="${pageContext.request.contextPath}/images/banners/hkplus-app2.jpg" alt="HealthKartPlus App"/>
