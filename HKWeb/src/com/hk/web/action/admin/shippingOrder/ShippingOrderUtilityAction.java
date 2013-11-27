@@ -164,11 +164,13 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 		params.add("startDate");
 		params.add("endDate");
 		int ctr = 0;
-		for(ShippingOrderStatus orderStatus : shippingOrderStatusList){
-			if(orderStatus != null){
-				params.add("shippingOrderStatusList[" + ctr + "]");
+		if (shippingOrderStatusList != null && shippingOrderStatusList.size() > 0) {
+			for (ShippingOrderStatus orderStatus : shippingOrderStatusList) {
+				if (orderStatus != null) {
+					params.add("shippingOrderStatusList[" + ctr + "]");
+				}
+				++ctr;
 			}
-			++ctr;
 		}
 		return params;
 	}
