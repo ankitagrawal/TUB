@@ -51,11 +51,12 @@
                     return false;
                 };
 
+                $('.saveButton').click(function(){
+                    $(this).hide();
+                });
             });
 
-            $('.saveButton').click(function(){
-               $(this).hide();
-            });
+
         });
 
     </script>
