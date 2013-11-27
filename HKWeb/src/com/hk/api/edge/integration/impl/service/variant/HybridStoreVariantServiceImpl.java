@@ -32,6 +32,7 @@ import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.taglibs.Functions;
@@ -45,22 +46,25 @@ import com.hk.util.http.URIBuilder;
 @Service
 public class HybridStoreVariantServiceImpl implements HybridStoreVariantService, HybridStoreVariantServiceFromHKR {
 
-    private static Logger         logger                     = LoggerFactory.getLogger(HybridStoreVariantServiceImpl.class);
+    private static Logger          logger                     = LoggerFactory.getLogger(HybridStoreVariantServiceImpl.class);
 
-    private static final String   BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
-    private static final String   VARIANT_STOCK              = "variant/stock/";
-
-    @Autowired
-    private LinkManager           linkManager;
+    private static final String    BASIC_STORE_VARIANT_SUFFIX = "oldVariant/";
+    private static final String    VARIANT_STOCK              = "variant/stock/";
 
     @Autowired
-    private ProductService        productService;
-    @Autowired
-    private ProductVariantService productVariantService;
+    private LinkManager            linkManager;
 
-    private InventoryService      inventoryService;
     @Autowired
-    private BaseDao               baseDao;
+    private ProductService         productService;
+    @Autowired
+    private ProductVariantService  productVariantService;
+
+    private InventoryService       inventoryService;
+
+    private InventoryHealthService inventoryHealthService;
+
+    @Autowired
+    private BaseDao                baseDao;
 
     @Override
     public StoreVariantBasicResponse getStoreVariantBasicDetailsFromEdge(String oldVariantId) {
@@ -98,6 +102,11 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
                     // separation
 
                     Long unbookedInventory = getInventoryService().getAvailableUnBookedInventory(productVariant);
+
+                    if (unbookedInventory == null || unbookedInventory == 0L) {
+                        unbookedInventory = getInventoryHealthService().getUnbookedInventoryOfBright(productVariant);
+                    }
+
                     if (unbookedInventory > 0) {
                         productVariant.setOutOfStock(false);
                     } else {
@@ -248,6 +257,13 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             inventoryService = (InventoryService) ServiceLocatorFactory.getService(InventoryService.class);
         }
         return inventoryService;
+    }
+
+    public InventoryHealthService getInventoryHealthService() {
+        if (inventoryHealthService == null) {
+            inventoryHealthService = (InventoryHealthService) ServiceLocatorFactory.getService(InventoryHealthService.class);
+        }
+        return inventoryHealthService;
     }
 
 }
