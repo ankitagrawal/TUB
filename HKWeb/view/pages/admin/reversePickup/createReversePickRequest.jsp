@@ -52,6 +52,10 @@
                 };
 
             });
+
+            $('.saveButton').click(function(){
+               $(this).hide();
+            });
         });
 
     </script>
