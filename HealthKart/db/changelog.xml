@@ -14390,7 +14390,10 @@
         <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="prefix_invoice_generation" tableName="warehouse"/>
     </changeSet>
 
-    <changeSet>
+    <changeSet author="abhay (generated)" id="1384775891669-5">
+        <preConditions>
+            <not><tableExists tableName="user_report"/></not>
+        </preConditions>
         <createTable tableName="user_report">
             <column name="user_id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -14399,7 +14402,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet>
+    <changeSet author="abhay (generated)" id="1384775891669-6">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_report" constraintName="fk_user_report_user1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
     </changeSet>
 </databaseChangeLog>
