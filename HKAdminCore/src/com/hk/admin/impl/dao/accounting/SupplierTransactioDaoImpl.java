@@ -11,6 +11,7 @@ import com.hk.domain.inventory.creditNote.CreditNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -94,6 +95,8 @@ public class SupplierTransactioDaoImpl extends BaseDaoImpl implements SupplierTr
         if(endDate != null){
             supplierTransactionCriteria.add(Restrictions.le("date", endDate));
         }
+
+        supplierTransactionCriteria.addOrder(Order.asc("date"));
 
         return (List<SupplierTransaction>) findByCriteria(supplierTransactionCriteria);
     }
