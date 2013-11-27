@@ -846,6 +846,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       if (foreignSkuItemCLI != null) {
         foreignSkuItemCLI.setSkuItemId(info.getFsiId());
         foreignSkuItemCLI.setForeignBarcode(info.getBarcode());
+        foreignSkuItemCLI.setShippingOrderBookingTypeId(info.getBkTyId());
         foreignSkuItemCLI = (ForeignSkuItemCLI) baseDao.save(foreignSkuItemCLI);
 
         SkuItem skuItem = getSkuItem(foreignSkuItemCLI.getId());
