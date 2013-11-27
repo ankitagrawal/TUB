@@ -818,7 +818,7 @@ public class BusyPopulateSalesData {
         def tableName = 'transaction_header';
         def query = "select ship.delivery_date, th.hk_ref_no from shipment ship " +
                 "inner join shipping_order so on ship.id = so.shipment_id " +
-                "inner join " + dbBusyName + "." + tableName + "th on th.hk_ref_no = so.id " +
+                "inner join " + dbBusyName + "." + tableName + " th on th.hk_ref_no = so.id " +
                 "where th.delivery_date is null";
         sql.eachRow(query) {
             accountingInvoice ->
