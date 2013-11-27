@@ -59,7 +59,8 @@ public class BusyPopulateRtoData {
                                     a.line1 as address_1, a.line2 as address_2, a.city, a.state,
                                     w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
                                     c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number
+                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number, w.prefix_invoice_generation series,
+                                    bo.amount as base_order_amount
                                     from line_item li
                                     join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
                                     from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
@@ -101,14 +102,18 @@ public class BusyPopulateRtoData {
       byte out_of_state;
       String against_form;
       Double net_amount;
+      Double base_order_amount;
       byte imported_flag;
 
 	  String gateway_order_id;
 	  String awb_number;
 	    
       shippingOrderId = accountingInvoice.shipping_order_id
-	     Long warehouseId =  accountingInvoice.warehouse_id;
-	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+	  Long warehouseId =  accountingInvoice.warehouse_id;
+      base_order_amount = accountingInvoice.base_order_amount;
+
+      series = accountingInvoice.series;
+	    /*if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           series = "HR";
 	      }
 	      else if(warehouseId == 2 || warehouseId == 20){
@@ -128,7 +133,7 @@ public class BusyPopulateRtoData {
         }
         else if(warehouseId == 1001){
             series = "GK";
-        }
+        }*/
 
       date = accountingInvoice.return_date;	    
 
@@ -246,10 +251,10 @@ public class BusyPopulateRtoData {
     INSERT INTO transaction_header
       (
         series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
-        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number)
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number, base_order_amount)
 
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
-        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}, ${base_order_amount}
       )
       ON DUPLICATE KEY UPDATE
       series = ${series},
@@ -273,7 +278,8 @@ public class BusyPopulateRtoData {
       create_date = NOW(),
       hk_ref_no = ${shippingOrderId},
       gateway_order_id = ${gateway_order_id},
-      awb_number = ${awb_number}
+      awb_number = ${awb_number},
+      base_order_amount = ${base_order_amount}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);

@@ -132,7 +132,7 @@ public class POAction extends BasePaginatedAction {
             if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
-            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null, null, null, null);
+            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null,startDate, endDate, poType);
         }
 
         if (purchaseOrderList != null) {
