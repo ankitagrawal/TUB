@@ -130,22 +130,28 @@
                                                        label="affiliateCategoryName" value="affiliateCategoryName"/>
                         </s:select><br/>
                     </td>
-                    <c:if test="${pa.product.jit}">
-                        <td>
-                            <s:checkbox name="productVariants[${ctr.index}].outOfStock"/>
-                        </td>
-                    </c:if>
-                    <c:if test="${!pa.product.jit}">
-                        <td>
-                            <shiro:hasRole name="<%=RoleConstants.GOD%>">
+                        <%--<c:if test="${pa.product.jit}">
+                            <td>
                                 <s:checkbox name="productVariants[${ctr.index}].outOfStock"/>
-                            </shiro:hasRole>
-                                ${productVariant.outOfStock}
-                        </td>
-                    </c:if>
+                            </td>
+                        </c:if>--%>
+                        <%--<c:if test="${!pa.product.jit}">
+                            <td>
+                                <shiro:hasRole name="<%=RoleConstants.GOD%>">
+                                    <s:checkbox name="productVariants[${ctr.index}].outOfStock"/>
+                                </shiro:hasRole>
+                                    ${productVariant.outOfStock}
+                            </td>
+                        </c:if>--%>
+                    <td>
+                        <shiro:hasRole name="<%=RoleConstants.GOD%>">
+                            <s:checkbox name="productVariants[${ctr.index}].outOfStock"/>
+                        </shiro:hasRole>
+                            ${productVariant.outOfStock}
+                    </td>
                     <td>
                             <%--${productVariant.deleted}--%>
-                            <s:checkbox name="productVariants[${ctr.index}].deleted"/>
+                        <s:checkbox name="productVariants[${ctr.index}].deleted"/>
                     </td>
                     <td>
                         <s:checkbox name="productVariants[${ctr.index}].clearanceSale" class="clearanceSale"/>

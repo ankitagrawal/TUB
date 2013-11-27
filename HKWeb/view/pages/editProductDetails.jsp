@@ -71,15 +71,16 @@
             </li>
             <li>
                 <label>Is Out Of Stock</label>
-                <c:choose>
+                <%--<c:choose>
                     <c:when test="${pa.combo or pa.product.jit}">
                         <s:checkbox name="product.outOfStock"/>
                     </c:when>
                     <c:otherwise>
                         ${pa.product.outOfStock}
                     </c:otherwise>
-                </c:choose>
+                </c:choose>--%>
                     <%--<s:checkbox name="product.outOfStock"/>--%>
+                ${pa.product.outOfStock}
             </li>
           <li><label>Is Service</label><s:checkbox name="product.service"/></li>
           <li><label>Color Product</label><s:checkbox name="product.productHaveColorOptions"/></li>
