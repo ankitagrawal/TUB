@@ -346,8 +346,16 @@
                     </div>
                 </li>
                 <li>
-                    <label style="float:left;width: 60px;">Has JIT</label>
-
+                    <label style="float:left;width: 60px;">Booked On Bright</label>
+                    <div class="checkBoxList">
+                        <s:select name="bookedOnBright" value="">
+                            <s:option value="">--Select--</s:option>
+                            <s:option value="0">N</s:option>
+                            <s:option value="1">Y</s:option>
+                        </s:select>
+                    </div>
+                    </li><li>
+                    <label style="float:left;width: 60px;">Contains JIT</label>
                     <div class="checkBoxList">
                         <s:select name="containsJit" value="">
                             <s:option value="">--Select--</s:option>

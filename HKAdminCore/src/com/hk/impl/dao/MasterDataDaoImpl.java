@@ -586,4 +586,15 @@ public class MasterDataDaoImpl implements MasterDataDao {
 				}
 				return posCategoryList;
 		}
+    
+    public List<ShippingOrderStatus> getPreCheckoutShippingOrderStatusList(){
+    	List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
+    	List<EnumShippingOrderStatus> enumShippingOrderStatus =  EnumShippingOrderStatus.getStatusForBookedInventory();
+    	for(EnumShippingOrderStatus status : enumShippingOrderStatus){
+    		ShippingOrderStatus orderStatus = status.asShippingOrderStatus();
+    		shippingOrderStatusList.add(orderStatus);
+    	}
+    	return shippingOrderStatusList; 
+    	
+    }
 }

@@ -10,6 +10,7 @@ import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
@@ -119,7 +120,7 @@ public interface MasterDataDao {
     public List<RegionType> getRegionTypeList();
 
     public List<Store> getStoreList();
-
+    
     public List<State> getStateList();
 
     public List<City> getCityList();
@@ -211,4 +212,6 @@ public interface MasterDataDao {
     public List<ReversePickupType> getAllReversePickUpType();
 
 	public List<Category> getCategoriesForPOS();
+	
+	public List<ShippingOrderStatus> getPreCheckoutShippingOrderStatusList();
 }

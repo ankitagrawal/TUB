@@ -13,6 +13,7 @@ import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.courier.StateList;
@@ -86,6 +87,7 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
@@ -1026,6 +1028,12 @@ public class Functions {
 
       return storeVariantBasicResponse;
     }
+	
+	public static boolean bookedOnBright(ShippingOrder shippingOrder){
+    	AdminShippingOrderService adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
+    	return adminShippingOrderService.bookedOnBright(shippingOrder);
+    }
+
 
 
 }

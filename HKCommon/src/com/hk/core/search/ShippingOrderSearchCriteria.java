@@ -18,6 +18,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;

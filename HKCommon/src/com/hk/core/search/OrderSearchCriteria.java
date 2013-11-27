@@ -1,5 +1,6 @@
 package com.hk.core.search;
 
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
@@ -9,9 +10,12 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.queue.TrafficState;
+import com.hk.domain.sku.SkuItemStatus;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +46,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     private Boolean dropShip;
     private Boolean containsJit;
+    private Boolean bookedOnBright;
     private boolean isB2BOrder;
     private Integer userCodCallStatus;
 
@@ -53,6 +58,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;
     private List<TrafficState> trafficStates;
     private Set<Reason> reasonList;
+		
 
     public OrderSearchCriteria setLogin(String login) {
         this.login = login;
@@ -268,6 +274,26 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             DetachedCriteria  codCallCriteria  =   criteria.createCriteria("userCodCall");
             codCallCriteria.add(Restrictions.eq("callStatus", userCodCallStatus));
         }
+        
+        //Check if Booked on Bright
+        DetachedCriteria lineItemsCriteria = null;
+    		DetachedCriteria skuItemLineItemCriteria = null;
+    		DetachedCriteria skuItemCriteria = null;
+        if(bookedOnBright!=null && getBookedOnBright()){
+       	 	lineItemsCriteria = shippingOrderCriteria.createCriteria("lineItems");
+          skuItemLineItemCriteria = lineItemsCriteria.createCriteria("skuItemLineItems");
+          skuItemCriteria = skuItemLineItemCriteria.createCriteria("skuItem");
+          skuItemCriteria.add(Restrictions.eq("skuItemStatus", EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus()));
+        }
+        else if(bookedOnBright!=null && !getBookedOnBright()){
+        	lineItemsCriteria = shippingOrderCriteria.createCriteria("lineItems");
+          skuItemLineItemCriteria = lineItemsCriteria.createCriteria("skuItemLineItems");
+          skuItemCriteria = skuItemLineItemCriteria.createCriteria("skuItem");
+          List<SkuItemStatus> skuItemStatusList = new ArrayList<SkuItemStatus>();
+          skuItemStatusList.add(EnumSkuItemStatus.TEMP_BOOKED.getSkuItemStatus());
+          skuItemStatusList.add(EnumSkuItemStatus.BOOKED.getSkuItemStatus());
+          skuItemCriteria.add(Restrictions.in("skuItemStatus", skuItemStatusList));
+        }
         return criteria;
     }
 
@@ -310,4 +336,13 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     public void setTrafficStates(List<TrafficState> trafficStates) {
         this.trafficStates = trafficStates;
     }
+
+		public Boolean getBookedOnBright() {
+			return bookedOnBright;
+		}
+
+		public void setBookedOnBright(Boolean bookedOnBright) {
+			this.bookedOnBright = bookedOnBright;
+		}
+    
 }

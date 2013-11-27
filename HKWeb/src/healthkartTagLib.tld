@@ -1412,4 +1412,15 @@
             ${hk:getStoreVariantBasicDetailsCached(${productVariantId}, pageContext)}
         </example>
     </function>
+    <function>
+        <description>
+            return if SO has bookings on Bright
+        </description>
+        <name>bookedOnBright</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean bookedOnBright(com.hk.domain.order.ShippingOrder)</function-signature>
+        <example>
+            ${hk:bookedOnBright(${shippingOrder})}
+        </example>
+    </function>
 </taglib>
