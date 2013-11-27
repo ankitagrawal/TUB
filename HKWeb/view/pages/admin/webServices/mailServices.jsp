@@ -24,9 +24,9 @@
                         <strong>Search By User properties</strong>
                     </tr>
                     <tr>
-                        <td>Gender(male, female or leave blank)</td>
+                        <td>Gender(male, female, all or leave blank)</td>
                         <td><s:text name="gender"></s:text></td>
-                        <td>Verified (true, false or leave blank)</td>
+                        <td>Verified</td>
                         <td><s:text name="verified"></s:text></td>
                         <td>Emails (csv)</td>
                         <td><s:textarea name="emails"></s:textarea></td>

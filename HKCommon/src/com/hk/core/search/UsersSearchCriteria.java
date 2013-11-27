@@ -117,8 +117,7 @@ public class UsersSearchCriteria {
                 //do nothing - should return users who have HK_User,HKUnverified, and other users as well
             } else {
                 userCriteria = createJoin(userCriteria, USER_ROLES);
-                String roleName = ("true".equalsIgnoreCase(verified)) ? "HK_USER" : "HKUNVERIFIED";
-                userCriteria.add(Restrictions.eq("roles.name", roleName));
+                userCriteria.add(Restrictions.eq("roles.name", verified));
             }
         }
 
@@ -140,7 +139,7 @@ public class UsersSearchCriteria {
             }
             if (catNotBlank) {
                 userCriteria = createJoin(userCriteria, PRODUCT_CATEGORIES);
-                userCriteria.add(Restrictions.in("cats.displayName", categories));
+                userCriteria.add(Restrictions.in("cats.name", categories));
             }
         }
 
@@ -204,9 +203,6 @@ public class UsersSearchCriteria {
 
     public UsersSearchCriteria setVerified(String verified) {
         String v = (verified != null) ? verified.trim() : null;
-        if (!"true".equalsIgnoreCase(v) && !"false".equalsIgnoreCase(v) && !"all".equalsIgnoreCase(v)) {
-            throw new RuntimeException("Illegal verified value");
-        }
         this.verified = v;
         return this;
     }
