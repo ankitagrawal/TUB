@@ -49,9 +49,10 @@
                     alert('Please select Booking Type');
                     $('[name="reversePickupOrder.reversePickupType.id"]').focus();
                     return false;
-                    $('.saveButton').click(function(){
-                        $(this).show();
-                    });
+                    $('.saveButton').show();
+//                    $('.saveButton').click(function(){
+//                        $(this).show();
+//                    });
                 };
 
 //                $('.saveButton').click(function(){
