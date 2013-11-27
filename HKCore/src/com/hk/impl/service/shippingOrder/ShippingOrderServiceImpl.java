@@ -487,17 +487,20 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
   public Long getShippingOrderBookingType(ShippingOrder shippingOrder){
 
     if (shippingOrder.getLineItems() != null && shippingOrder.getLineItems().size() == 1){
+      shippingOrder.setShippingOrderBookingTypeId(EnumBookingType.SINGLE_BOOKED.getId());
+
       return EnumBookingType.SINGLE_BOOKED.getId();
     }
 
     for (LineItem lineItem : shippingOrder.getLineItems()){
        for (SkuItemLineItem sili : lineItem.getSkuItemLineItems()){
          if (!(sili.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId()))){
+           shippingOrder.setShippingOrderBookingTypeId(EnumBookingType.PARTIAL_BOOKED.getId());
             return EnumBookingType.PARTIAL_BOOKED.getId();
          }
        }
     }
-
+    shippingOrder.setShippingOrderBookingTypeId(EnumBookingType.COMPLETE_BOOKED.getId());
     return EnumBookingType.COMPLETE_BOOKED.getId();
   }
 
