@@ -43,6 +43,7 @@ public class TestMailBoltServicesAction extends BaseAction {
     private String userOrderCount;
     private String emails;
     private String storeIds;
+    private String gender;
 
     // result showing variables
     private int result;
@@ -58,16 +59,6 @@ public class TestMailBoltServicesAction extends BaseAction {
             uoc = null;
         }
         return uoc;
-    }
-
-    private Boolean convertVerified(String verified) {
-        Boolean ver = null;
-        try {
-            ver = "true".equalsIgnoreCase(verified) ? true : "false".equalsIgnoreCase(verified) ? false : null;
-        } catch (Exception e) {
-            this.verified = null;
-        }
-        return ver;
     }
 
     @DefaultHandler
@@ -96,8 +87,11 @@ public class TestMailBoltServicesAction extends BaseAction {
         if (equality != null) {
             criteria.setEquality(equality);
         }
+        if (gender != null) {
+            criteria.setGender(gender);
+        }
         if (verified != null) {
-            criteria.setVerified(convertVerified(verified));
+            criteria.setVerified(verified);
         }
         if (pvs != null) {
             List<String> pvids = Arrays.asList(pvs.split(","));
@@ -272,4 +266,11 @@ public class TestMailBoltServicesAction extends BaseAction {
         this.time = time;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 }

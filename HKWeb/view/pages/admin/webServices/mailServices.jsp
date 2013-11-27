@@ -21,6 +21,19 @@
                 </table>
                 <table>
                     <tr>
+                        <strong>Search By User properties</strong>
+                    </tr>
+                    <tr>
+                        <td>Gender(male, female or leave blank)</td>
+                        <td><s:text name="gender"></s:text></td>
+                        <td>Verified (true, false or leave blank)</td>
+                        <td><s:text name="verified"></s:text></td>
+                        <td>Emails (csv)</td>
+                        <td><s:textarea name="emails"></s:textarea></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
                         <strong>Search By Orders</strong>
                     </tr>
                     <tr>
@@ -48,18 +61,12 @@
                         <strong>Search By Miscellaneous Criterion</strong>
                     </tr>
                     <tr>
-                        <td>Verified (true, false or leave blank)</td>
-                        <td><s:text name="verified"></s:text></td>
-                        <td>Categories(csv)</td>
-                        <td><s:textarea name="categories"></s:textarea></td>
-                        <td>Emails (csv)</td>
-                        <td><s:textarea name="emails"></s:textarea></td>
-                        <td>Store Ids(csv)</td>
-                        <td><s:textarea name="storeIds"></s:textarea></td>
-                    </tr>
-                    <tr>
                         <td>BadgeNames (csv)</td>
                         <td><s:text name="badgeNames"></s:text></td>
+                        <td>Categories(csv)</td>
+                        <td><s:textarea name="categories"></s:textarea></td>
+                        <td>Store Ids(csv)</td>
+                        <td><s:textarea name="storeIds"></s:textarea></td>
                     </tr>
                 </table>
                 <table>

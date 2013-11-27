@@ -40,11 +40,12 @@ public class UserInformationResource {
     private List<String> productIds;
     private List<String> productVariantIds;
     private List<Long> storeIds;
-    private Boolean verified;
+    private String verified;
     private Integer userOrderCount;
     private String equality;
     private List<String> categories;
     private List<String> badgeNames;
+    private String gender;
 
     @Autowired
     UserSearchService userSearchService;
@@ -59,13 +60,14 @@ public class UserInformationResource {
                                       @FormParam("cities") List<String> cities,
                                       @FormParam("zones") List<String> zones,
                                       @FormParam("states") List<String> states,
-                                      @FormParam("verified") Boolean verified,
+                                      @FormParam("verified") String verified,
                                       @FormParam("badgeNames") List<String> badgeNames,
                                       @FormParam("categories") List<String> categories,
                                       @FormParam("userOrderCount") Integer userOrderCount,
                                       @FormParam("equality") String equality,
                                       @FormParam("storeIds") List<Long> storeIds,
-                                      @FormParam("emails") List<String> emails) {
+                                      @FormParam("emails") List<String> emails,
+                                      @FormParam("gender") String gender) {
         this.badgeNames = badgeNames;
         this.categories = categories;
         this.emails = emails;
@@ -78,6 +80,7 @@ public class UserInformationResource {
         this.equality = equality;
         this.zones = zones;
         this.storeIds = storeIds;
+        this.gender = gender;
         return getUsers();
     }
 
@@ -99,6 +102,9 @@ public class UserInformationResource {
             }
             if (org.apache.commons.lang.StringUtils.isNotBlank(equality)) {
                 criteria.setEquality(equality);
+            }
+            if (org.apache.commons.lang.StringUtils.isNotBlank(gender)) {
+                criteria.setGender(gender);
             }
             if (HKCollectionUtils.isNotBlank(storeIds)) {
                 criteria.setStoreIds(storeIds);

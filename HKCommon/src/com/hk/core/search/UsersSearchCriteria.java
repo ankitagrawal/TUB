@@ -44,9 +44,10 @@ public class UsersSearchCriteria {
     private List<String> zones;
     private List<String> productVariantIds;
     private List<String> productIds;
-    private Boolean verified;
+    private String verified;
     private Integer userOrderCount;
     private String equality = "eq"; // eq (equals) is the default value for equality
+    private String gender;
     private List<Long> storeIds;
 
     private Set<Short> alreadyJoint = new HashSet<Short>();
@@ -80,6 +81,14 @@ public class UsersSearchCriteria {
     private DetachedCriteria getCriteriaFromBaseCriteria() {
         DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class, "user");
 
+        if (gender != null) {
+            if ("all".equalsIgnoreCase(gender)) {
+                //do nothing - should return users who have male,female and null
+            } else {
+                userCriteria.add(Restrictions.eq("user.gender", gender));
+            }
+        }
+
         if (HKCollectionUtils.isNotBlank(emails)) {
             userCriteria.add(Restrictions.in("user.email", emails));
         } else {
@@ -104,9 +113,13 @@ public class UsersSearchCriteria {
         }
 
         if (verified != null) {
-            userCriteria = createJoin(userCriteria, USER_ROLES);
-            String roleName = (verified) ? "HK_USER" : "HKUNVERIFIED";
-            userCriteria.add(Restrictions.eq("roles.name", roleName));
+            if ("all".equalsIgnoreCase(verified)) {
+                //do nothing - should return users who have HK_User,HKUnverified, and other users as well
+            } else {
+                userCriteria = createJoin(userCriteria, USER_ROLES);
+                String roleName = ("true".equalsIgnoreCase(verified)) ? "HK_USER" : "HKUNVERIFIED";
+                userCriteria.add(Restrictions.eq("roles.name", roleName));
+            }
         }
 
         boolean prodNotBlank = HKCollectionUtils.isNotBlank(productIds);
@@ -189,8 +202,12 @@ public class UsersSearchCriteria {
         return this;
     }
 
-    public UsersSearchCriteria setVerified(Boolean verified) {
-        this.verified = verified;
+    public UsersSearchCriteria setVerified(String verified) {
+        String v = (verified != null) ? verified.trim() : null;
+        if (!"true".equalsIgnoreCase(v) && !"false".equalsIgnoreCase(v) && !"all".equalsIgnoreCase(v)) {
+            throw new RuntimeException("Illegal verified value");
+        }
+        this.verified = v;
         return this;
     }
 
@@ -242,6 +259,15 @@ public class UsersSearchCriteria {
 
     public UsersSearchCriteria setBadgeNames(List<String> badgeNames) {
         this.badgeNames = badgeNames;
+        return this;
+    }
+
+    public UsersSearchCriteria setGender(String gender) {
+        String g = (gender != null) ? gender.trim() : null;
+        if (!"male".equalsIgnoreCase(g) && !"female".equalsIgnoreCase(g) && !"all".equalsIgnoreCase(g)) {
+            throw new RuntimeException("Illegal gender value");
+        }
+        this.gender = g;
         return this;
     }
 
