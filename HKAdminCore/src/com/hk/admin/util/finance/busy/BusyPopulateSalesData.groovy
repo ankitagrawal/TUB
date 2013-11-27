@@ -559,6 +559,7 @@ public class BusyPopulateSalesData {
 
     public void transactionHeaderForB2BSalesGenerator() {
         String lastUpdateDate;
+        deliveryDateInTransactionHeader();
 
         lastUpdateDate = "2013-04-01";
         def tableName = 'transaction_header'
@@ -810,6 +811,25 @@ public class BusyPopulateSalesData {
                 catch (Exception e) {
                     logger.info("Unable to insert in  transaction header: ",e);
                 }
+        }
+    }
+
+    public void deliveryDateInTransactionHeader(){
+        def tableName = 'transaction_header';
+        def query = "select ship.delivery_date, th.hk_ref_no from shipment ship " +
+                "inner join shipping_order so on ship.id = so.shipment_id " +
+                "inner join " + dbBusyName + "." + tableName + "th on th.hk_ref_no = so.id " +
+                "where th.delivery_date is null";
+        sql.eachRow(query) {
+            accountingInvoice ->
+
+                Date delivery_date = accountingInvoice.delivery_date;
+                String hk_ref_no = accountingInvoice.hk_ref_no;
+
+                busySql.executeUpdate("""
+            UPDATE transaction_header set delivery_date = delivery_date where hk_ref_no = hk_ref_no
+            """)
+
         }
     }
 
