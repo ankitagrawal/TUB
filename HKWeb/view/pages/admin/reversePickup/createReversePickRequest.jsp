@@ -55,7 +55,6 @@
 
             $('.saveButton').click(function(){
                 if($('[name="reversePickupOrder.reversePickupType.id"]').val()!='-1'){
-                    alert("test");
                     $(this).hide();
                 }
             });
