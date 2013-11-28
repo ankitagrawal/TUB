@@ -14389,4 +14389,9 @@
     <changeSet author="arjun (generated)" id="1384775891669-4">
         <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="prefix_invoice_generation" tableName="warehouse"/>
     </changeSet>
+    <changeSet author="RD (generated)" id="20131127-01">
+        <sql>
+            update reverse_pickup_type set name='RTO' where id=20;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
