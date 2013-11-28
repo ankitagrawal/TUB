@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.shippingOrder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Set;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
@@ -29,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 import org.apache.commons.lang.StringUtils;
 
+@Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
 public class ShippingOrderUtilityAction extends BasePaginatedAction {
 
 	private static Logger logger = LoggerFactory.getLogger(ShippingOrderUtilityAction.class);
@@ -63,6 +67,14 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 					shippingOrderStatus.add(status);
 				}
 			}
+		}
+		else{
+			shippingOrderStatus.addAll(Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus(), 
+					EnumShippingOrderStatus.SO_Ready_For_Validation.asShippingOrderStatus(), 
+					EnumShippingOrderStatus.SO_MarkedForPrinting.asShippingOrderStatus(), 
+					EnumShippingOrderStatus.SO_Picking.asShippingOrderStatus(), 
+					EnumShippingOrderStatus.SO_OnHold.asShippingOrderStatus(),
+					EnumShippingOrderStatus.SO_ReadyForProcess.asShippingOrderStatus()));
 		}
 		if (startDate != null && endDate != null) {
 			shippingOrderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
@@ -151,7 +163,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	}
 
 	public int getResultCount() {
-		return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalResults();
+		return shippingOrderPage == null ? (shippingOrders == null ? 0 : shippingOrders.size()) : shippingOrderPage.getTotalResults();
 	}
 
 	public Integer getDefaultPerPage() {

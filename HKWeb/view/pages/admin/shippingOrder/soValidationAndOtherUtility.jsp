@@ -86,6 +86,7 @@ pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusList);
 				<th>SO Status</th>
 				<th>Dispatch Date</th>
 				<th>Booked On Bright</th>
+				<th>Warehouse</th>
 				<th></th>
 			</tr>
 			<c:forEach items="${shippingOrderUtil.shippingOrders}" var="so"
@@ -111,6 +112,7 @@ pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusList);
 				<td>No</td>
 				</c:otherwise>
 				</c:choose>
+				<td>${so.warehouse.identifier }</td>
 				<td><input type="checkbox" dataId="${so.id}" class="shippingOrderDetailCheckbox"/></td>
 				<s:hidden name="shippingOrderMarked[${item.count-1}]" value="${so.id}"/>
 			</tr>
