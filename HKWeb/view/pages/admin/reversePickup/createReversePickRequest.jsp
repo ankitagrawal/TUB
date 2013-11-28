@@ -54,7 +54,10 @@
             });
 
             $('.saveButton').click(function(){
-                $(this).hide();
+                if($('[name="reversePickupOrder.reversePickupType.id"]').val()!='-1'){
+                    alert("test");
+                    $(this).hide();
+                }
             });
 
         });
