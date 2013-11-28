@@ -27,10 +27,9 @@ pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusList);
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp" />
 	</s:layout-component>
 	<s:layout-component name="content">
-		<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp" />
-		
 		
 		<div align="center"><label><font size="6px">Validate Shipping Orders</font></label></div><br><br><br>
 
@@ -47,26 +46,18 @@ pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusList);
 				</tr>
 				<tr>
 					<td colspan="2"><label><strong>Start Date :</strong> </label>
-					<s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+					<%-- <s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
 							name="startDate" /> <label><strong>End Date :</strong></label>
 					<s:text class="date_input endDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-							name="endDate" /></td>
+							name="endDate" /></td> --%>
+			<s:text class="date_input startDate" style="width:150px"
+				                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+			<label><strong>End Date :</strong> </label>
+			<s:text class="date_input endDate" style="width:150px"
+				                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+
 				</tr>
 				<tr>
-				<%-- <td>
-				<label><strong>SO Status: </strong></label><s:select name="shippingOrderStatus">
-          		<option value="">Any status</option>
-          		<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="preCheckoutShippingOrderStatusList" value="id"
-                                     label="name"/>
-        		</s:select>
-				</td> --%>
-				<%-- <td><label><strong>SO Status: </strong></label>
-				<s:checkbox name="shippingOrderStatusList[]" value="shippingOrderStatusActionAwaiting"></s:checkbox>
-				<s:checkbox name="" value="shippingOrderStatusPicking"></s:checkbox>
-				<s:checkbox name="" value="shippingOrderStatusValidation"></s:checkbox>
-				<s:checkbox name="" value="shippingOrderStatusOnHold"></s:checkbox>
-				<s:checkbox name="" value="shippingOrderStatusReadyForProcess"></s:checkbox>
-				</td> --%>
 				<td><label><strong>So Status: </strong></label></td>
 				<td>
 				<c:forEach items="${shippingOrderStatusList}" var="soStatus" varStatus="ctr">

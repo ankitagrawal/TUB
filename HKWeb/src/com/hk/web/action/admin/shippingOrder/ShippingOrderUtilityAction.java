@@ -13,7 +13,7 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
+import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -21,6 +21,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +112,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 		return startDate;
 	}
 
+	@Validate(converter = CustomDateTypeConvertor.class)
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
@@ -119,6 +121,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 		return endDate;
 	}
 
+	@Validate(converter = CustomDateTypeConvertor.class)
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
