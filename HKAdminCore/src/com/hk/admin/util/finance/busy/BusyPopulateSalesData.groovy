@@ -583,13 +583,14 @@ public class BusyPopulateSalesData {
                                 c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type, \
                                 th.hk_ref_no, so.shipping_order_status_id , ship.return_date as return_date,   \
                                 bo.gateway_order_id, aw.awb_number, w.state as warehouse_state, w.prefix_invoice_generation series, \
-                                w.state as warehouse_state, bo.amount as base_order_amount, ship.delivery_date as delivery_date \
+                                w.state as warehouse_state, bo.amount as base_order_amount, ship.delivery_date as delivery_date, b2b.tin as tin_number \
                      from       line_item li    \
                                 inner join shipping_order so on li.shipping_order_id=so.id       \
                                 inner join base_order bo on so.base_order_id = bo.id             \
                                 left join payment p ON bo.payment_id = p.id                      \
                                 left join payment_mode pm ON pm.id = p.payment_mode_id           \
                                 inner join user u on bo.user_id = u.id                           \
+                                left join b2b_user_details b2b on b2b.user_id = u.id             \
                                 inner join address a ON bo.address_id = a.id                     \
                                 left join shipment ship on ship.id = so.shipment_id              \
                                 left join awb aw on ship.awb_id=aw.id                            \
@@ -767,7 +768,7 @@ public class BusyPopulateSalesData {
                 }
                 net_amount = accountingInvoice.net_amount;
                 imported_flag = 0;
-                tin_number = " ";
+                tin_number = accountingInvoice.tin_number;
                 against_form  = " "
                 narration = " ";
 
