@@ -272,6 +272,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
   }
 
 
+  @Transactional
   public Boolean validateShippingOrder(ShippingOrder shippingOrder) {
 if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_CheckedOut.getId()){
       return false;
