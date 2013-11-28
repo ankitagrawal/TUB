@@ -50,6 +50,19 @@ public class TestMailBoltServicesAction extends BaseAction {
     private Long time;
     private String resolutionPageString = "/pages/admin/webServices/mailServices.jsp";
 
+    public static List<String> trimStringList(List<String> list) {
+        if (list == null) {
+            return null;
+        }
+        List<String> retList = new ArrayList<String>();
+        for (String s : list) {
+            String cleaned = (s == null) ? null : s.trim();
+            if (cleaned != null) {
+                retList.add(cleaned);
+            }
+        }
+        return retList;
+    }
 
     private Integer convertUserOrderCount(String userOrderCount) {
         Integer uoc = null;
@@ -70,15 +83,15 @@ public class TestMailBoltServicesAction extends BaseAction {
         Long startTime = System.currentTimeMillis();
         UsersSearchCriteria criteria = new UsersSearchCriteria();
         if (prodnames != null) {
-            List<String> ids = Arrays.asList(prodnames.split(","));
+            List<String> ids = trimStringList(Arrays.asList(prodnames.split(",")));
             criteria.setProductIds(ids);
         }
         if (categories != null) {
-            List<String> ids = Arrays.asList(categories.split(","));
+            List<String> ids = trimStringList(Arrays.asList(categories.split(",")));
             criteria.setCategories(ids);
         }
         if (badgeNames != null) {
-            List<String> ids = Arrays.asList(badgeNames.split(","));
+            List<String> ids = trimStringList(Arrays.asList(badgeNames.split(",")));
             criteria.setBadgeNames(ids);
         }
         if (userOrderCount != null) {
@@ -94,27 +107,27 @@ public class TestMailBoltServicesAction extends BaseAction {
             criteria.setVerified(verified);
         }
         if (pvs != null) {
-            List<String> pvids = Arrays.asList(pvs.split(","));
+            List<String> pvids = trimStringList(Arrays.asList(pvs.split(",")));
             criteria.setProductVariantIds(pvids);
         }
         if (emails != null) {
-            List<String> em = Arrays.asList(emails.split(","));
+            List<String> em = trimStringList(Arrays.asList(emails.split(",")));
             criteria.setEmails(em);
         }
         if (cities != null) {
-            List<String> city = Arrays.asList(cities.split(","));
+            List<String> city = trimStringList(Arrays.asList(cities.split(",")));
             criteria.setCities(city);
         }
         if (states != null) {
-            List<String> state = Arrays.asList(states.split(","));
+            List<String> state = trimStringList(Arrays.asList(states.split(",")));
             criteria.setStates(state);
         }
         if (zones != null) {
-            List<String> zo = Arrays.asList(zones.split(","));
+            List<String> zo = trimStringList(Arrays.asList(zones.split(",")));
             criteria.setZones(zo);
         }
         if (storeIds != null) {
-            List<String> st = Arrays.asList(storeIds.split(","));
+            List<String> st = trimStringList(Arrays.asList(storeIds.split(",")));
             List<Long> storel = new ArrayList<Long>();
             for (String s : st) {
                 try {

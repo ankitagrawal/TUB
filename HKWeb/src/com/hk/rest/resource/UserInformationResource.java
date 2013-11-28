@@ -5,6 +5,7 @@ import com.hk.dto.user.UserDTO;
 import com.hk.pact.service.UserSearchService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.HKCollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,10 +101,10 @@ public class UserInformationResource {
             if (userOrderCount != null) {
                 criteria.setUserOrderCount(userOrderCount);
             }
-            if (org.apache.commons.lang.StringUtils.isNotBlank(equality)) {
+            if (StringUtils.isNotBlank(equality)) {
                 criteria.setEquality(equality);
             }
-            if (org.apache.commons.lang.StringUtils.isNotBlank(gender)) {
+            if (StringUtils.isNotBlank(gender)) {
                 criteria.setGender(gender);
             }
             if (HKCollectionUtils.isNotBlank(storeIds)) {
