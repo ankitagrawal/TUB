@@ -18,19 +18,21 @@ public class BusyPopulatePurchaseReturn {
     private String dbName;
     private String serverUser;
     private String serverPassword;
+    private String dbBusyName;
     Sql sql;
     Sql busySql;
 
-    BusyPopulatePurchaseReturn(String hostName, String dbName, String serverUser, String serverPassword){
+    BusyPopulatePurchaseReturn(String hostName, String dbName, String serverUser, String serverPassword, String dbBusyName){
         this.hostName = hostName;
         this.dbName = dbName;
         this.serverUser = serverUser;
         this.serverPassword = serverPassword;
+        this.dbBusyName = dbBusyName;
 
         sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
                 serverPassword, "com.mysql.jdbc.Driver");
 
-        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbBusyName, serverUser,
                 serverPassword, "com.mysql.jdbc.Driver");
     }
 
