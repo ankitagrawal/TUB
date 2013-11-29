@@ -14395,7 +14395,7 @@
         </sql>
     </changeSet>
     <changeSet author="abhay (generated)" id="1384775891669-5">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="user_report"/></not>
         </preConditions>
         <createTable tableName="user_report">
