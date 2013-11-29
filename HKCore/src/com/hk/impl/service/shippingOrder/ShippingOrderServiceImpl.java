@@ -493,8 +493,9 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
     }
 
     for (LineItem lineItem : shippingOrder.getLineItems()){
-       for (SkuItemLineItem sili : lineItem.getSkuItemLineItems()){
-         if (!(sili.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId()))){
+        CartLineItem cartLineItem =   lineItem.getCartLineItem();
+       for (SkuItemCLI sicli : cartLineItem.getSkuItemCLIs()){
+         if (!(sicli.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId()))){
            shippingOrder.setShippingOrderBookingTypeId(EnumBookingType.PARTIAL_BOOKED.getId());
             return EnumBookingType.PARTIAL_BOOKED.getId();
          }
