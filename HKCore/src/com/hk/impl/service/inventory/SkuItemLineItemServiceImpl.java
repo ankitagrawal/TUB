@@ -1118,7 +1118,6 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
       }
     }
-
     return bookingRemoved;
   }
 

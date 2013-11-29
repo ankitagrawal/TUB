@@ -86,7 +86,6 @@ public class AdminBookingAction extends BaseAction {
 
 	@Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
 	public Resolution freeBookingTable() {
-    Set <ShippingOrder> problamaticShippingOrders = new HashSet<ShippingOrder>();
 		if (shippingOrderId != null) {
 			ShippingOrder so = shippingOrderService.find(shippingOrderId);
       List <LineItem> problamaticItems = skuItemLineItemService.freeBooking(so);
@@ -111,8 +110,6 @@ public class AdminBookingAction extends BaseAction {
 
         }
       }
-
-
       if (problamaticCartlineItems != null && problamaticCartlineItems.size() > 0){
         addRedirectAlertMessage(new SimpleMessage("Failed to Freed Booking Table For Base Order: " + bo.getId()));
       }else {

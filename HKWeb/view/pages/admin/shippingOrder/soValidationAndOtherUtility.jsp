@@ -13,6 +13,7 @@
 <%
 MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
 List<ShippingOrderStatus> shippingOrderStatusList = masterDataDao.getPreCheckoutShippingOrderStatusList();
+shippingOrderStatusList.remove(EnumShippingOrderStatus.SO_EscalatedBack.asShippingOrderStatus());
 pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusList);
 %>
 

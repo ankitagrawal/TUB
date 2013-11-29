@@ -450,8 +450,7 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
     }
      boolean bookedAtBright = false;
     for (LineItem lineItem : shippingOrder.getLineItems()) {
-      if (lineItem.getSkuItemLineItems().size() > 0) {
-
+      if (lineItem.getSkuItemLineItems()!=null && lineItem.getSkuItemLineItems().size() > 0) {
         for (SkuItemLineItem skuItemLineItem :lineItem.getSkuItemLineItems()){
           if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
             bookedAtBright = true;
