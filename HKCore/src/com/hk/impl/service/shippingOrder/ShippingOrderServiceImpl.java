@@ -399,6 +399,7 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
   }
 
 
+  @Transactional
   public void validateShippingOrderAB(ShippingOrder shippingOrder) {
 
     Set<LineItem> lineItems = shippingOrder.getLineItems();
