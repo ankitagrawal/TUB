@@ -809,6 +809,9 @@ public class OrderServiceImpl implements OrderService {
         hkapiBookingInfo.setFcCode(fulfilmentCenterCode);
         hkapiBookingInfo.setBkTyId(bookingTypeId);
 
+        foreignSkuItemCLI.setShippingOrderBookingTypeId(bookingTypeId);
+        getBaseDao().save(foreignSkuItemCLI);
+
         Gson gson = new Gson();
         String json = gson.toJson(Arrays.asList(hkapiBookingInfo));
 
