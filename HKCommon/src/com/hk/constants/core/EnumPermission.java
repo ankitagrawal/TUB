@@ -134,7 +134,9 @@ public enum EnumPermission {
   CANCEL_REVERSE_PICKUP                          (PermissionConstants.CANCEL_REVERSE_PICKUP),
   CLOSE_REVERSE_PICKUP                           (PermissionConstants.CLOSE_REVERSE_PICKUP),
   RECONCILE_REVERSE_PICKUP                       (PermissionConstants.RECONCILE_REVERSE_PICKUP),
-  EDIT_DROP_SHIP                                  (PermissionConstants.EDIT_DROP_SHIP),
+  EDIT_DROP_SHIP                                 (PermissionConstants.EDIT_DROP_SHIP),
+  EDIT_GRN_STATUS                                (PermissionConstants.EDIT_GRN_STATUS),
+  OLD_REPLACEMENT_ORDER_CHANGE                   (PermissionConstants.OLD_REPLACEMENT_ORDER_CHANGE),
 
     MARK_RP_APPEASEMENT                       (PermissionConstants.MARK_RP_APPEASEMENT)
   ;

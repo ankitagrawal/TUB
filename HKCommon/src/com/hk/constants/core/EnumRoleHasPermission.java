@@ -122,7 +122,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.GRN_CREATION,
                     EnumPermission.RECON_VOUCHER_MANAGEMENT,
                     EnumPermission.SUPPLIER_MANAGEMENT,
-                    EnumPermission.EDIT_GRN
+                    EnumPermission.EDIT_GRN,
+                    EnumPermission.EDIT_GRN_STATUS
             )),
 
     WH_MANAGER_L1(
